@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ANTRENAMENT FIZICĂ - GALA GALACTION</title>
+    <style>
+        :root { 
+            --primary: #2563eb; --success: #16a34a; --error: #dc2626; 
+            --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8;
+        }
+
+        * { box-sizing: border-box; }
+        body { 
+            font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); 
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            min-height: 100vh; margin: 0; padding: 15px;
+        }
+
+        .header {
+            text-align: center; width: 100%; max-width: 700px;
+            border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px;
+        }
+        .school-name { font-size: 1.1rem; font-weight: bold; color: var(--accent); text-transform: uppercase; }
+        .prof-name { font-size: 1rem; color: #94a3b8; margin-top: 5px; }
+
+        .container { 
+            width: 100%; max-width: 650px; background: var(--card); border-radius: 20px; 
+            padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155;
+        }
+
+        .question-box { font-size: 1.25rem; font-weight: 500; margin-bottom: 20px; text-align: center; color: #e2e8f0; }
+
+        .options-grid { display: grid; gap: 10px; }
+        .option-btn { 
+            background: #2d3748; border: 2px solid #4a5568; padding: 14px; border-radius: 12px; 
+            cursor: pointer; color: white; font-size: 1rem; transition: 0.2s; width: 100%;
+        }
+        .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #334155; }
+
+        input[type="text"], input[type="number"] { 
+            width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; 
+            background: #0f172a; color: white; font-size: 1.2rem; text-align: center; margin-bottom: 10px;
+        }
+
+        .check-btn { 
+            width: 100%; background: var(--primary); color: white; border: none; 
+            padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.1rem;
+        }
+
+        #feedback { 
+            margin: 15px 0; padding: 15px; border-radius: 12px; display: none; 
+            text-align: center; font-weight: bold;
+        }
+        .feedback-correct { background: rgba(22, 163, 74, 0.2); color: #4ade80; border: 1px solid var(--success); }
+        .feedback-wrong { background: rgba(220, 38, 38, 0.2); color: #f87171; border: 1px solid var(--error); }
+
+        .next-btn { 
+            width: 100%; background: #475569; color: white; border: none; 
+            padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer;
+            margin-top: 10px; display: none;
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="school-name">ȘCOALA GIMNAZIALĂ GALA GALACTION MANGALIA</div>
+        <div class="prof-name">Prof. DĂNUȚ ANDRONIE</div>
+    </div>
+
+    <div class="container" id="screen-login">
+        <h2 style="text-align:center">🔥 Fenomene Termice ❄️</h2>
+        <input type="text" id="p-name" placeholder="Numele și prenumele">
+        <select id="p-class" style="width:100%; padding:15px; margin: 15px 0; border-radius:12px; background:#0f172a; color:white; border: 2px solid #4a5568;">
+            <option value="">Alege clasa...</option>
+            <option value="6A">Clasa a VI-a A</option>
+            <option value="6B">Clasa a VI-a B</option>
+            <option value="6C">Clasa a VI-a C</option>
+            <option value="6D">Clasa a VI-a D</option>
+        </select>
+        <button class="check-btn" onclick="startGame()">ÎNCEPE TESTUL</button>
+    </div>
+
+    <div class="container hidden" id="screen-game">
+        <div id="q-info" style="color: var(--accent); font-weight: bold; margin-bottom: 10px; text-align: center;"></div>
+        <div class="question-box" id="question"></div>
+        <div id="input-area"></div>
+        <div id="feedback"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">URMĂTOAREA ÎNTREBARE ➡️</button>
+    </div>
+
+    <div class="container hidden" id="screen-end">
+        <h2 style="text-align:center">Test Finalizat</h2>
+        <p style="text-align:center">Felicitări pentru efortul depus!</p>
+        <div style="font-size: 3rem; text-align: center; margin: 20px 0; color: var(--accent); font-weight: bold;" id="final-score"></div>
+        <button class="check-btn" style="margin-top:20px;" onclick="location.reload()">REIA TESTUL (ANTRENAMENT)</button>
+    </div>
+
+<script>
+    // INSEREAZĂ LINK-UL TĂU DE WEB APP MAI JOS
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyXSi9LiOQBqCOzyWJ0-7XFL9wkEoCGgkqJRHnmPUzfjXCb4gQbyajPGQ4DtpL3OcD5/exec"; 
+
+    let state = { name: "", class: "", score: 0, currentIdx: 0, questions: [] };
+
+    const baseQuestions = [
+        { q: "Ce este temperatura?", type: "choice", o: ["O mărime fizică ce indică starea de încălzire", "O energie care curge", "Viteza de deplasare a corpului"], a: "O mărime fizică ce indică starea de încălzire" },
+        { q: "Cu ce instrument se măsoară temperatura?", type: "fill", a: ["termometru"] },
+        { q: "Unitatea de măsură a temperaturii în Sistemul Internațional este:", type: "choice", o: ["Kelvin (K)", "Grad Celsius (°C)", "Joule (J)"], a: "Kelvin (K)" },
+        { q: "Cum se numește fenomenul de mărire a dimensiunilor la încălzire?", type: "fill", a: ["dilatare"] },
+        { q: "Cum se numește fenomenul de micșorare a dimensiunilor la răcire?", type: "fill", a: ["contractie", "contracție"] },
+        { q: "Modul de transfer prin care se încălzește o lingură metalică în ceai fierbinte este:", type: "fill", a: ["conductie", "conducție"] },
+        { q: "Căldura de la Soare ajunge la Pământ prin:", type: "fill", a: ["radiatie", "radiație"] },
+        { q: "Apa se transformă din solid în lichid prin fenomenul de:", type: "fill", a: ["topire"] },
+        { q: "Hainele groase ne țin de cald deoarece aerul din ele este un bun izolator.", type: "tf", a: "Adevărat" },
+        { q: "De ce se lasă spații între plăcile de beton la trotuare?", type: "choice", o: ["Pentru a permite dilatarea vara", "Pentru scurgerea apei", "Pentru design"], a: "Pentru a permite dilatarea vara" },
+        { q: "Cum se numește transformarea vaporilor în picături de apă?", type: "fill", a: ["condensare"] },
+        { q: "Transformarea directă din solid în gaz se numește sublimare.", type: "tf", a: "Adevărat" },
+        { q: "Direcția de transfer a căldurii este de la corpul cald la cel rece.", type: "tf", a: "Adevărat" },
+        { q: "Metalul pare mai rece decât lemnul deoarece este un bun conductor termic.", type: "tf", a: "Adevărat" }
+    ];
+
+    function generateMath() {
+        let math = [];
+        let t = Math.floor(Math.random() * 45) + 5;
+        math.push({ q: `Transformă temperatura t = ${t}°C în scara Kelvin (T).`, type: "math", a: (t + 273.15).toFixed(2) });
+        let K = (280 + Math.random() * 25).toFixed(2);
+        math.push({ q: `Transformă temperatura T = ${K} K în scara Celsius (t).`, type: "math", a: (K - 273.15).toFixed(2) });
+        return math;
+    }
+
+    function startGame() {
+        state.name = document.getElementById('p-name').value;
+        state.class = document.getElementById('p-class').value;
+        if(state.name.length < 3 || !state.class) return alert("Introdu numele și clasa!");
+        
+        state.questions = [...baseQuestions, ...generateMath()].sort(() => Math.random() - 0.5);
+        state.score = 0;
+        state.currentIdx = 0;
+        
+        document.getElementById('screen-login').classList.add('hidden');
+        document.getElementById('screen-game').classList.remove('hidden');
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const q = state.questions[state.currentIdx];
+        document.getElementById('q-info').innerText = `Întrebarea ${state.currentIdx + 1} / ${state.questions.length}`;
+        document.getElementById('question').innerText = q.q;
+        const area = document.getElementById('input-area');
+        area.innerHTML = '';
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
+
+        if(q.type === 'choice' || q.type === 'tf') {
+            const opts = q.type === 'tf' ? ["Adevărat", "Fals"] : q.o.sort(() => Math.random() - 0.5);
+            opts.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.style.marginBottom = "8px";
+                btn.innerText = opt;
+                btn.onclick = () => checkAns(opt);
+                area.appendChild(btn);
+            });
+        } else {
+            const input = document.createElement('input');
+            input.type = q.type === 'math' ? 'number' : 'text';
+            input.id = 'user-input';
+            input.placeholder = "Răspunsul tău...";
+            const btn = document.createElement('button');
+            btn.className = 'check-btn';
+            btn.innerText = 'VERIFICĂ';
+            btn.onclick = () => checkAns(document.getElementById('user-input').value);
+            area.appendChild(input);
+            area.appendChild(btn);
+        }
+    }
+
+    function checkAns(user) {
+        const q = state.questions[state.currentIdx];
+        let isCorrect = false;
+
+        if(q.type === 'fill') {
+            const clean = (s) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+            isCorrect = q.a.some(ans => clean(user) === clean(ans));
+        } else if(q.type === 'math') {
+            isCorrect = Math.abs(parseFloat(user) - parseFloat(q.a)) < 0.15;
+        } else {
+            isCorrect = user === q.a;
+        }
+
+        const f = document.getElementById('feedback');
+        f.style.display = 'block';
+        if(isCorrect) {
+            state.score++;
+            f.className = 'feedback-correct';
+            f.innerText = "Excelent! ✅";
+        } else {
+            f.className = 'feedback-wrong';
+            f.innerText = `Răspuns corect: ${Array.isArray(q.a) ? q.a[0] : q.a} ❌`;
+        }
+        
+        document.querySelectorAll('.option-btn, .check-btn').forEach(b => b.disabled = true);
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        state.currentIdx++;
+        if(state.currentIdx < state.questions.length) {
+            showQuestion();
+        } else {
+            finishGame();
+        }
+    }
+
+    function finishGame() {
+        document.getElementById('screen-game').classList.add('hidden');
+        document.getElementById('screen-end').classList.remove('hidden');
+        document.getElementById('final-score').innerText = `${state.score} / ${state.questions.length}`;
+        
+        // Trimitere date către Google Sheets
+        if(SCRIPT_URL && SCRIPT_URL !== "URL_SCRIPT_AICI") {
+            const formData = new FormData();
+            formData.append("nume", state.name);
+            formData.append("clasa", state.class);
+            formData.append("scor", state.score + "/" + state.questions.length);
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                body: formData,
+                mode: 'no-cors'
+            }).catch(err => console.log("Eroare trimitere: ", err));
+        }
+    }
+</script>
+</body>
+</html>

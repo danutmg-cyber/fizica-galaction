@@ -37,7 +37,7 @@
     <audio id="finish-sound" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
 
     <div class="container" id="screen-login">
-        <h2 style="text-align:center;">🚀 Evaluare clasa a VI-a Fenomene Termice</h2>
+        <h2 style="text-align:center;">🚀 Evaluare clasa a VI-a, Fenomene termice</h2>
         <p style="text-align:center; color:#94a3b8;">30 întrebări | Limită: 50 minute</p>
         <input type="text" id="p-name" placeholder="Numele tău complet">
         <select id="p-class" style="width:100%; padding:15px; margin: 15px 0; border-radius:12px; background:#0f172a; color:white; border: 2px solid #4a5568;">
@@ -52,7 +52,7 @@
         <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
         <img id="q-img" class="q-image" alt="Suport vizual">
         <div class="question-box" id="question"></div>
-        <div id="instruction" class="instruction-box">📝 Calculează cu 2 zecimale!</div>
+        <div id="instruction" class="instruction-box">📝 Calculează rezultatul corect!</div>
         <div id="input-area"></div>
         <div id="feedback"></div>
         <button class="next-btn" id="next-btn" onclick="nextQuestion()">URMĂTOAREA ➡️</button>
@@ -62,7 +62,7 @@
         <h2 style="text-align:center;">REZULTAT FINAL</h2>
         <div style="font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center;" id="final-score"></div>
         <p style="text-align:center; color: #94a3b8;" id="raw-points"></p>
-        <button class="check-btn" onclick="location.reload()">REIA TESTUL ORI DE CÂTE ORI DOREȘTI. CU CÂT TE VEI ANTRENA MAI MULT CU ATÂT TE VEI APROPIA DE NOTA 10.</button>
+        <button class="check-btn" onclick="location.reload()">REIA TESTUL ORI DE CÂTE ORI DOREȘTI. CU CÂT TE VEI ANTRENA MAI MULT CU ATÂT TE VEI APROPIA DE NOTA 10 LA TESTUL SCRIS. SUCCES!</button>
     </div>
 
 <script>
@@ -128,11 +128,9 @@
         state.name = document.getElementById('p-name').value.trim();
         state.class = document.getElementById('p-class').value;
         if(!state.name || !state.class) return alert("Completează datele!");
-
         const maths = generateMathProblems();
         const theory = theoryPool.sort(() => 0.5 - Math.random()).slice(0, 26);
         state.questions = [...theory, ...maths].sort(() => 0.5 - Math.random());
-        
         document.getElementById('screen-login').classList.add('hidden');
         document.getElementById('screen-game').classList.remove('hidden');
         timerInterval = setInterval(updateTimer, 1000);
@@ -144,15 +142,12 @@
         document.getElementById('q-info').innerText = `ÎNTREBAREA ${state.currentIdx + 1} / 30`;
         document.getElementById('question').innerText = q.q;
         document.getElementById('instruction').style.display = (q.type === 'math') ? 'block' : 'none';
-        
         const img = document.getElementById('q-img');
         if(q.img) { img.src = q.img; img.style.display = 'block'; } else { img.style.display = 'none'; }
-        
         const area = document.getElementById('input-area');
         area.innerHTML = '';
         document.getElementById('feedback').style.display = 'none';
         document.getElementById('next-btn').style.display = 'none';
-
         if(q.type === 'choice') {
             const opts = q.o.includes("Adevărat") ? ["Adevărat", "Fals"] : q.o.sort(() => 0.5 - Math.random());
             opts.forEach(opt => {
@@ -171,9 +166,9 @@
         let isCorrect = false;
 
         if (q.type === 'math') {
-            // Logica noua: compara numeric pentru a ignora zerourile de la final (ex: 25.5 == 25.50)
             const userNum = parseFloat(user.toString().replace(",", "."));
             const targetNum = parseFloat(q.a[0]);
+            // Comparație numerică: ignoră zerourile inutile și acceptă eroare de 0.001
             isCorrect = !isNaN(userNum) && Math.abs(userNum - targetNum) < 0.001;
         } else if (q.type === 'fill') {
             const clean = (s) => s.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
@@ -205,9 +200,8 @@
         document.getElementById('screen-end').classList.remove('hidden');
         const nota = (1 + (state.correctAnswers * 0.3)).toFixed(2);
         document.getElementById('final-score').innerText = nota > 10 ? "10.00" : nota;
-        document.getElementById('raw-points').innerText = `Punctaj: ${state.correctAnswers} / 30`;
+        document.getElementById('raw-points').innerText = `Ai răspuns corect la ${state.correctAnswers} întrebări din 30.`;
         document.getElementById('finish-sound').play().catch(() => {});
-
         const fd = new FormData();
         fd.append("nume", state.name); fd.append("clasa", state.class); fd.append("scor", nota);
         fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });

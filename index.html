@@ -13,7 +13,7 @@
         .header { text-align: center; width: 100%; max-width: 700px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
         .timer-bar { background: #334155; height: 10px; border-radius: 5px; width: 100%; margin: 10px 0; overflow: hidden; }
         #timer-progress { background: var(--accent); height: 100%; width: 100%; transition: width 1s linear; }
-        .container { width: 100%; max-width: 650px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; position: relative; }
+        .container { width: 100%; max-width: 650px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
         .q-image { width: 100%; max-height: 180px; object-fit: contain; border-radius: 12px; margin-bottom: 15px; background: white; padding: 5px; display: none; margin: 0 auto 15px; }
         .question-box { font-size: 1.2rem; font-weight: 500; margin-bottom: 10px; text-align: center; min-height: 60px; }
         .instruction-box { font-size: 0.95rem; color: #fbbf24; text-align: center; margin-bottom: 15px; font-weight: bold; display: none; background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 8px; }
@@ -24,13 +24,12 @@
         #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; }
         .next-btn { width: 100%; background: #059669; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
         .hidden { display: none; }
-        #timer-text { font-weight: bold; color: var(--accent); }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div style="font-size: 1.1rem; font-weight: bold; color: var(--accent);">🏫 ȘCOALA GIMNAZIALĂ GALA GALACTION MANGALIA</div>
+        <div style="font-size: 1.1rem; font-weight: bold; color: var(--accent);">🏫 GALA GALACTION MANGALIA</div>
         <div style="font-size: 0.9rem; color: #94a3b8;">TIMP RĂMAS: <span id="timer-text">50:00</span></div>
         <div class="timer-bar"><div id="timer-progress"></div></div>
     </div>
@@ -38,7 +37,7 @@
     <audio id="finish-sound" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
 
     <div class="container" id="screen-login">
-        <h2 style="text-align:center;">🚀 Evaluare fenomene termice</h2>
+        <h2 style="text-align:center;">🚀 Evaluare Termodinamică</h2>
         <p style="text-align:center; color:#94a3b8;">30 întrebări | Limită: 50 minute</p>
         <input type="text" id="p-name" placeholder="Numele tău complet">
         <select id="p-class" style="width:100%; padding:15px; margin: 15px 0; border-radius:12px; background:#0f172a; color:white; border: 2px solid #4a5568;">
@@ -51,9 +50,9 @@
 
     <div class="container hidden" id="screen-game">
         <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
-        <img id="q-img" class="q-image" alt="Fizica">
+        <img id="q-img" class="q-image" alt="Suport vizual">
         <div class="question-box" id="question"></div>
-        <div id="instruction" class="instruction-box">📝 Calculează cu 2 zecimale! (Ex: 273.15)</div>
+        <div id="instruction" class="instruction-box">📝 Calculează cu 2 zecimale! (Folosește 273.15)</div>
         <div id="input-area"></div>
         <div id="feedback"></div>
         <button class="next-btn" id="next-btn" onclick="nextQuestion()">URMĂTOAREA ➡️</button>
@@ -68,43 +67,41 @@
 
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec"; 
-    let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [], timeLeft: 3000 }; // 3000 secunde = 50 min
+    let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [], timeLeft: 3000 };
     let timerInterval;
 
     const theoryPool = [
         { q: "Trecerea din stare solidă în stare lichidă se numește:", type: "fill", a: ["topire"], img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Phase_change_diagram.svg/1024px-Phase_change_diagram.svg.png" },
         { q: "Trecerea din stare lichidă în stare solidă se numește:", type: "fill", a: ["solidificare"] },
-        { q: "Unitatea de măsură în S.I. pentru temperatură este:", type: "choice", o: ["Kelvin (K)", "Celsius (°C)", "Joule"], a: "Kelvin (K)" },
-        { q: "La ce temperatură fierbe apa pură la presiune normală?", type: "choice", o: ["100°C", "373.15 K", "0°C", "273.15 K"], a: "100°C" },
+        { q: "Unitatea de măsură în S.I. pentru temperatură este:", type: "choice", o: ["Kelvin (K)", "Celsius (°C)", "Fahrenheit (°F)"], a: "Kelvin (K)" },
+        { q: "La ce temperatură fierbe apa pură la presiune normală?", type: "choice", o: ["100°C", "200°C", "0°C", "273.15 K"], a: "100°C" },
+        { q: "Temperatura de topire a gheții pure este:", type: "choice", o: ["0°C (sau 273.15 K)", "100°C", "373.15 K", "10°C"], a: "0°C (sau 273.15 K)" },
         { q: "Densitatea unui corp scade atunci când acesta se dilată. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Convecția este posibilă în vid. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Fals" },
-        { q: "Zero absolut este 0 K. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" }
-        // ... restul de întrebări se pot adăuga aici identic
+        { q: "Echilibrul termic presupune temperaturi egale. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Convecția este transfer de căldură cu transport de substanță. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Metalele sunt bune izolatoare termice. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Fals" },
+        { q: "Vaporizarea în toată masa lichidului se numește fierbere. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Transmiterea căldurii prin vid se face prin ...........", type: "fill", a: ["radiatie", "radiație"] }
     ];
 
     function updateTimer() {
-        if (state.timeLeft <= 0) {
-            clearInterval(timerInterval);
-            finishGame();
-            return;
-        }
+        if (state.timeLeft <= 0) { clearInterval(timerInterval); finishGame(); return; }
         state.timeLeft--;
         const mins = Math.floor(state.timeLeft / 60);
         const secs = state.timeLeft % 60;
         document.getElementById('timer-text').innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
         document.getElementById('timer-progress').style.width = (state.timeLeft / 3000 * 100) + "%";
-        if(state.timeLeft < 300) document.getElementById('timer-text').style.color = "var(--danger)";
     }
 
     function generateMathProblems() {
         const p = [];
         let v1 = Math.floor(Math.random() * 200);
         p.push({ q: `Transformă t = ${v1}°C în Kelvin (T).`, type: "math", a: [(v1 + 273.15).toFixed(2)] });
-        let v2 = Math.floor(Math.random() * 200) + 273;
+        let v2 = Math.floor(Math.random() * 300) + 100;
         p.push({ q: `Transformă T = ${v2} K în Celsius (t).`, type: "math", a: [(v2 - 273.15).toFixed(2)] });
-        let v3 = Math.floor(Math.random() * 50);
+        let v3 = Math.floor(Math.random() * 100);
         p.push({ q: `Transformă t = ${v3}°C în Fahrenheit (F).`, type: "math", a: [(v3 * 1.8 + 32).toFixed(2)] });
-        let v4 = Math.floor(Math.random() * 100);
+        let v4 = Math.floor(Math.random() * 200);
         p.push({ q: `Transformă F = ${v4}°F în Celsius (t).`, type: "math", a: [((v4 - 32) / 1.8).toFixed(2)] });
         return p;
     }
@@ -120,7 +117,6 @@
         
         document.getElementById('screen-login').classList.add('hidden');
         document.getElementById('screen-game').classList.remove('hidden');
-        
         timerInterval = setInterval(updateTimer, 1000);
         showQuestion();
     }
@@ -178,13 +174,10 @@
         clearInterval(timerInterval);
         document.getElementById('screen-game').classList.add('hidden');
         document.getElementById('screen-end').classList.remove('hidden');
-        
         const nota = (1 + (state.correctAnswers * 0.3)).toFixed(2);
         document.getElementById('final-score').innerText = nota > 10 ? "10.00" : nota;
-        document.getElementById('raw-points').innerText = `Ai răspuns corect la ${state.correctAnswers} din 30 întrebări.`;
-        
-        // Play Sound
-        document.getElementById('finish-sound').play().catch(e => console.log("Audio block: ", e));
+        document.getElementById('raw-points').innerText = `Punctaj: ${state.correctAnswers} / 30`;
+        document.getElementById('finish-sound').play().catch(() => {});
 
         const fd = new FormData();
         fd.append("nume", state.name); fd.append("clasa", state.class); fd.append("scor", nota);
@@ -193,4 +186,3 @@
 </script>
 </body>
 </html>
-

@@ -37,7 +37,7 @@
     <audio id="finish-sound" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
 
     <div class="container" id="screen-login">
-        <h2 style="text-align:center;">🚀 Evaluare clasa a VI-a Fenomene termice</h2>
+        <h2 style="text-align:center;">🚀 Evaluare clasa a VI-a Fenomene Termice</h2>
         <p style="text-align:center; color:#94a3b8;">30 întrebări | Limită: 50 minute</p>
         <input type="text" id="p-name" placeholder="Numele tău complet">
         <select id="p-class" style="width:100%; padding:15px; margin: 15px 0; border-radius:12px; background:#0f172a; color:white; border: 2px solid #4a5568;">
@@ -62,7 +62,7 @@
         <h2 style="text-align:center;">REZULTAT FINAL</h2>
         <div style="font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center;" id="final-score"></div>
         <p style="text-align:center; color: #94a3b8;" id="raw-points"></p>
-        <button class="check-btn" onclick="location.reload()">REIA TESTUL ORI DE CÂTE ORI DOREȘTI. CU CÂT TE VEI ANTRENA MAI MULT CU ATÂT TE VEI APROPIA MAI MULT DE NOTA 10.</button>
+        <button class="check-btn" onclick="location.reload()">REIA TESTUL ORI DE CÂTE ORI DOREȘTI. CU CÂT TE VEI ANTRENA MAI MULT CU ATÂT TE VEI APROPIA DE NOTA 10.</button>
     </div>
 
 <script>
@@ -168,8 +168,19 @@
 
     function checkAns(user) {
         const q = state.questions[state.currentIdx];
-        const clean = (s) => s.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(",", ".").trim();
-        const isCorrect = q.type === 'choice' ? user === q.a : q.a.some(ans => clean(user) === clean(ans));
+        let isCorrect = false;
+
+        if (q.type === 'math') {
+            // Logica noua: compara numeric pentru a ignora zerourile de la final (ex: 25.5 == 25.50)
+            const userNum = parseFloat(user.toString().replace(",", "."));
+            const targetNum = parseFloat(q.a[0]);
+            isCorrect = !isNaN(userNum) && Math.abs(userNum - targetNum) < 0.001;
+        } else if (q.type === 'fill') {
+            const clean = (s) => s.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+            isCorrect = q.a.some(ans => clean(user) === clean(ans));
+        } else {
+            isCorrect = user === q.a;
+        }
 
         const f = document.getElementById('feedback');
         f.style.display = 'block';
@@ -204,4 +215,3 @@
 </script>
 </body>
 </html>
-

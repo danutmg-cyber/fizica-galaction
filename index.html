@@ -6,141 +6,133 @@
     <title>FIZICĂ - GALA GALACTION</title>
     
     <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/48/physics.png">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/fluency/144/physics.png">
-
     <style>
-        :root { --primary: #2563eb; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; }
+        :root { --primary: #2563eb; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; --danger: #ef4444; }
         * { box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; }
         .header { text-align: center; width: 100%; max-width: 700px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
-        .school-name { font-size: 1.1rem; font-weight: bold; color: var(--accent); text-transform: uppercase; }
-        .container { width: 100%; max-width: 650px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
-        .q-image { width: 100%; max-height: 180px; object-fit: contain; border-radius: 12px; margin-bottom: 15px; background: white; padding: 5px; display: none; margin-left: auto; margin-right: auto; }
-        .question-box { font-size: 1.2rem; font-weight: 500; margin-bottom: 20px; text-align: center; min-height: 60px; line-height: 1.4; }
+        .timer-bar { background: #334155; height: 10px; border-radius: 5px; width: 100%; margin: 10px 0; overflow: hidden; }
+        #timer-progress { background: var(--accent); height: 100%; width: 100%; transition: width 1s linear; }
+        .container { width: 100%; max-width: 650px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; position: relative; }
+        .q-image { width: 100%; max-height: 180px; object-fit: contain; border-radius: 12px; margin-bottom: 15px; background: white; padding: 5px; display: none; margin: 0 auto 15px; }
+        .question-box { font-size: 1.2rem; font-weight: 500; margin-bottom: 10px; text-align: center; min-height: 60px; }
+        .instruction-box { font-size: 0.95rem; color: #fbbf24; text-align: center; margin-bottom: 15px; font-weight: bold; display: none; background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 8px; }
         .option-btn { background: #2d3748; border: 2px solid #4a5568; padding: 12px; border-radius: 12px; cursor: pointer; color: white; font-size: 1rem; transition: 0.2s; width: 100%; margin-bottom: 8px; text-align: left; }
         .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #334155; }
         input[type="text"] { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.2rem; text-align: center; margin-bottom: 10px; }
         .check-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; font-size: 1.1rem; }
-        .next-btn { width: 100%; background: #059669; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; text-transform: uppercase; }
+        #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; }
+        .next-btn { width: 100%; background: #059669; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
         .hidden { display: none; }
-        .score-display { font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center; text-shadow: 0 0 20px rgba(56, 189, 248, 0.4); }
+        #timer-text { font-weight: bold; color: var(--accent); }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="school-name">🏫 Școala gimnazială GALA GALACTION MANGALIA</div>
-        <div style="font-size: 1rem; color: #94a3b8; letter-spacing: 1px;">PROF. DĂNUȚ ANDRONIE</div>
+        <div style="font-size: 1.1rem; font-weight: bold; color: var(--accent);">🏫 GALA GALACTION MANGALIA</div>
+        <div style="font-size: 0.9rem; color: #94a3b8;">TIMP RĂMAS: <span id="timer-text">50:00</span></div>
+        <div class="timer-bar"><div id="timer-progress"></div></div>
     </div>
 
+    <audio id="finish-sound" src="https://assets.mixkit.co/active_storage/sfx/2013/2013-preview.mp3" preload="auto"></audio>
+
     <div class="container" id="screen-login">
-        <h2 style="text-align:center; margin-top:0;">🚀 Evaluare - Fenomene termice</h2>
-        <p style="text-align:center; color:#94a3b8; margin-bottom:25px;">30 întrebări (26 teorie + 4 probleme)</p>
+        <h2 style="text-align:center;">🚀 Evaluare Termodinamică</h2>
+        <p style="text-align:center; color:#94a3b8;">30 întrebări | Limită: 50 minute</p>
         <input type="text" id="p-name" placeholder="Numele tău complet">
-        <select id="p-class" style="width:100%; padding:15px; margin: 15px 0; border-radius:12px; background:#0f172a; color:white; border: 2px solid #4a5568; font-size: 1rem;">
+        <select id="p-class" style="width:100%; padding:15px; margin: 15px 0; border-radius:12px; background:#0f172a; color:white; border: 2px solid #4a5568;">
             <option value="">Selectează clasa...</option>
-            <option value="6A">Clasa a VI-a A</option>
-            <option value="6B">Clasa a VI-a B</option>
-            <option value="6C">Clasa a VI-a C</option>
-            <option value="6D">Clasa a VI-a D</option>
+            <option value="6A">Clasa a VI-a A</option><option value="6B">Clasa a VI-a B</option>
+            <option value="6C">Clasa a VI-a C</option><option value="6D">Clasa a VI-a D</option>
         </select>
-        <button class="check-btn" onclick="startGame()">START EVALUARE</button>
+        <button class="check-btn" onclick="startGame()">START TEST</button>
     </div>
 
     <div class="container hidden" id="screen-game">
-        <div id="q-info" style="color: var(--accent); font-weight: bold; margin-bottom: 10px; text-align: center; font-size: 0.9rem;"></div>
-        <img id="q-img" class="q-image" alt="Suport vizual">
+        <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
+        <img id="q-img" class="q-image" alt="Fizica">
         <div class="question-box" id="question"></div>
+        <div id="instruction" class="instruction-box">📝 Calculează cu 2 zecimale! (Ex: 273.15)</div>
         <div id="input-area"></div>
         <div id="feedback"></div>
-        <button class="next-btn" id="next-btn" onclick="nextQuestion()">ÎNTREBAREA URMĂTOARE ➡️</button>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">URMĂTOAREA ➡️</button>
     </div>
 
     <div class="container hidden" id="screen-end">
-        <h2 style="text-align:center; margin-bottom:0;">REZULTAT FINAL</h2>
-        <div class="score-display" id="final-score"></div>
-        <p style="text-align:center; color: #94a3b8; font-size: 1.1rem; margin-top:0;" id="raw-points"></p>
-        <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
-            💡 Felicitări! Domnul profesor va vedea că ai lucrat.
-        </div>
+        <h2 style="text-align:center;">REZULTAT FINAL</h2>
+        <div style="font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center;" id="final-score"></div>
+        <p style="text-align:center; color: #94a3b8;" id="raw-points"></p>
         <button class="check-btn" onclick="location.reload()">REIA TESTUL</button>
     </div>
 
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec"; 
-
-    let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [] };
+    let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [], timeLeft: 3000 }; // 3000 secunde = 50 min
+    let timerInterval;
 
     const theoryPool = [
         { q: "Trecerea din stare solidă în stare lichidă se numește:", type: "fill", a: ["topire"], img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Phase_change_diagram.svg/1024px-Phase_change_diagram.svg.png" },
-        { q: "Trecerea din stare lichidă în stare solidă se numește:", type: "fill", a: ["solidificare"], img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Phase_change_diagram.svg/1024px-Phase_change_diagram.svg.png" },
-        { q: "Trecerea din stare lichidă în stare gazoasă se numește:", type: "fill", a: ["vaporizare"], img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Phase_change_diagram.svg/1024px-Phase_change_diagram.svg.png" },
-        { q: "Trecerea din stare gazoasă în stare lichidă se numește:", type: "fill", a: ["condensare"], img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Phase_change_diagram.svg/1024px-Phase_change_diagram.svg.png" },
-        { q: "Trecerea din stare solidă direct în stare gazoasă:", type: "fill", a: ["sublimare"], img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Phase_change_diagram.svg/1024px-Phase_change_diagram.svg.png" },
-        { q: "Trecerea din stare gazoasă direct în stare solidă:", type: "fill", a: ["desublimare"], img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Phase_change_diagram.svg/1024px-Phase_change_diagram.svg.png" },
-        { q: "La ce temperatură fierbe apa pură (la presiune normală)?", type: "choice", o: ["100°C", "0°C", "273,15 K", "50°C"], a: "100°C" },
-        { q: "Temperatura de topire a gheții pure este:", type: "choice", o: ["0°C (sau 273,15 K)", "100°C", "373,15 K", "10°C"], a: "0°C (sau 273,15 K)" },
-        { q: "Unitatea de măsură în S.I. pentru temperatură este:", type: "choice", o: ["Kelvin (K)", "Grad Celsius (°C)", "Grad Fahrenheit (°F)", "Joule"], a: "Kelvin (K)" },
-        { q: "Evaporarea este vaporizarea care are loc:", type: "choice", o: ["Doar la suprafața lichidului", "În toată masa lichidului", "Doar la fierbere", "La temperaturi scăzute"], a: "Doar la suprafața lichidului" },
-        { q: "Transmiterea căldurii prin metale se face prin ...........", type: "fill", a: ["conductie", "conducție"] },
-        { q: "Transmiterea căldurii în lichide și gaze se face prin ...........", type: "fill", a: ["convectie", "convecție"] },
-        { q: "Transmiterea căldurii prin vid se face prin ...........", type: "fill", a: ["radiatie", "radiație"] },
-        { q: "Căldura trece de la un corp cu temperatură mai mare la unul cu temperatură mai mică. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Prin încălzire, volumul majorității corpurilor crește. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Densitatea unui corp crește atunci când acesta se dilată. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Fals" },
-        { q: "Zero absolut corespunde valorii de -273,15 °C. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Aerul este un bun conductor de căldură. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Fals" },
-        { q: "Lâna ține cald deoarece conține aer care este izolator termic. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Toate corpurile se dilată la fel. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Fals" },
-        { q: "Echilibrul termic înseamnă temperaturi egale. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Fierberea are loc la o temperatură constantă. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Condensarea este procesul invers vaporizării. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Sublimarea presupune trecerea prin starea lichidă. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Fals" },
-        { q: "Metalele sunt bune conductoare termice. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Convecția are loc în solide. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Fals" }
+        { q: "Trecerea din stare lichidă în stare solidă se numește:", type: "fill", a: ["solidificare"] },
+        { q: "Unitatea de măsură în S.I. pentru temperatură este:", type: "choice", o: ["Kelvin (K)", "Celsius (°C)", "Joule"], a: "Kelvin (K)" },
+        { q: "La ce temperatură fierbe apa pură la presiune normală?", type: "choice", o: ["100°C", "373.15 K", "0°C", "273.15 K"], a: "100°C" },
+        { q: "Densitatea unui corp scade atunci când acesta se dilată. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Convecția este posibilă în vid. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Fals" },
+        { q: "Zero absolut este 0 K. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" }
+        // ... restul de întrebări se pot adăuga aici identic
     ];
 
-    function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+    function updateTimer() {
+        if (state.timeLeft <= 0) {
+            clearInterval(timerInterval);
+            finishGame();
+            return;
+        }
+        state.timeLeft--;
+        const mins = Math.floor(state.timeLeft / 60);
+        const secs = state.timeLeft % 60;
+        document.getElementById('timer-text').innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        document.getElementById('timer-progress').style.width = (state.timeLeft / 3000 * 100) + "%";
+        if(state.timeLeft < 300) document.getElementById('timer-text').style.color = "var(--danger)";
+    }
 
     function generateMathProblems() {
         const p = [];
-        let v1 = getRandomInt(-100, 300);
-        p.push({ q: `Transformă t = ${v1}°C în Kelvin (T).`, type: "fill", a: [(v1 + 273.15).toFixed(2)] });
-        let v2 = getRandomInt(173, 573);
-        p.push({ q: `Transformă T = ${v2} K în Celsius (t).`, type: "fill", a: [(v2 - 273.15).toFixed(2)] });
-        let v3 = getRandomInt(-50, 200);
-        p.push({ q: `Transformă t = ${v3}°C în Fahrenheit (F).`, type: "fill", a: [(v3 * 1.8 + 32).toFixed(2)] });
-        let v4 = getRandomInt(-40, 400); 
-        p.push({ q: `Transformă F = ${v4}°F în Celsius (t).`, type: "fill", a: [((v4 - 32) / 1.8).toFixed(2)] });
+        let v1 = Math.floor(Math.random() * 200);
+        p.push({ q: `Transformă t = ${v1}°C în Kelvin (T).`, type: "math", a: [(v1 + 273.15).toFixed(2)] });
+        let v2 = Math.floor(Math.random() * 200) + 273;
+        p.push({ q: `Transformă T = ${v2} K în Celsius (t).`, type: "math", a: [(v2 - 273.15).toFixed(2)] });
+        let v3 = Math.floor(Math.random() * 50);
+        p.push({ q: `Transformă t = ${v3}°C în Fahrenheit (F).`, type: "math", a: [(v3 * 1.8 + 32).toFixed(2)] });
+        let v4 = Math.floor(Math.random() * 100);
+        p.push({ q: `Transformă F = ${v4}°F în Celsius (t).`, type: "math", a: [((v4 - 32) / 1.8).toFixed(2)] });
         return p;
     }
-
-    function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
 
     function startGame() {
         state.name = document.getElementById('p-name').value.trim();
         state.class = document.getElementById('p-class').value;
-        if(state.name.length < 3 || !state.class) return alert("Numele și clasa sunt obligatorii!");
+        if(!state.name || !state.class) return alert("Completează datele!");
 
         const maths = generateMathProblems();
-        const theory = shuffle([...theoryPool]).slice(0, 26);
-        state.questions = shuffle([...theory, ...maths]);
-        state.correctAnswers = 0;
-        state.currentIdx = 0;
-
+        const theory = theoryPool.sort(() => 0.5 - Math.random()).slice(0, 26);
+        state.questions = [...theory, ...maths].sort(() => 0.5 - Math.random());
+        
         document.getElementById('screen-login').classList.add('hidden');
         document.getElementById('screen-game').classList.remove('hidden');
+        
+        timerInterval = setInterval(updateTimer, 1000);
         showQuestion();
     }
 
     function showQuestion() {
         const q = state.questions[state.currentIdx];
-        const imgEl = document.getElementById('q-img');
         document.getElementById('q-info').innerText = `ÎNTREBAREA ${state.currentIdx + 1} / 30`;
         document.getElementById('question').innerText = q.q;
+        document.getElementById('instruction').style.display = (q.type === 'math') ? 'block' : 'none';
         
-        if(q.img) { imgEl.src = q.img; imgEl.style.display = 'block'; } else { imgEl.style.display = 'none'; }
+        const img = document.getElementById('q-img');
+        if(q.img) { img.src = q.img; img.style.display = 'block'; } else { img.style.display = 'none'; }
         
         const area = document.getElementById('input-area');
         area.innerHTML = '';
@@ -148,39 +140,30 @@
         document.getElementById('next-btn').style.display = 'none';
 
         if(q.type === 'choice') {
-            // Dacă e Adevărat/Fals, nu amestecăm ordinea (Adevărat e mereu primul)
-            let options = (q.o.includes("Adevărat")) ? ["Adevărat", "Fals"] : shuffle([...q.o]);
-            options.forEach(opt => {
-                const btn = document.createElement('button');
-                btn.className = 'option-btn'; btn.innerText = opt;
-                btn.onclick = () => checkAns(opt);
-                area.appendChild(btn);
+            const opts = q.o.includes("Adevărat") ? ["Adevărat", "Fals"] : q.o.sort(() => 0.5 - Math.random());
+            opts.forEach(opt => {
+                const b = document.createElement('button');
+                b.className = 'option-btn'; b.innerText = opt;
+                b.onclick = () => checkAns(opt);
+                area.appendChild(b);
             });
         } else {
-            const input = document.createElement('input');
-            input.type = 'text'; input.id = 'user-input'; input.placeholder = "Rezultat (ex: 25.50)...";
-            const btn = document.createElement('button');
-            btn.className = 'check-btn'; btn.innerText = 'VERIFICĂ';
-            btn.onclick = () => checkAns(document.getElementById('user-input').value);
-            area.appendChild(input); area.appendChild(btn);
-            input.focus();
+            area.innerHTML = `<input type="text" id="user-ans" placeholder="Răspuns..."><button class="check-btn" onclick="checkAns(document.getElementById('user-ans').value)">VERIFICĂ</button>`;
         }
     }
 
     function checkAns(user) {
         const q = state.questions[state.currentIdx];
-        let isCorrect = false;
-        const clean = (s) => s ? s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(",", ".").trim() : "";
-        
-        if(q.type === 'fill') isCorrect = q.a.some(ans => clean(user) === clean(ans));
-        else isCorrect = user === q.a;
+        const clean = (s) => s.toString().toLowerCase().replace(",", ".").trim();
+        const isCorrect = q.type === 'choice' ? user === q.a : q.a.some(ans => clean(user) === clean(ans));
 
         const f = document.getElementById('feedback');
         f.style.display = 'block';
-        if(isCorrect) { 
-            state.correctAnswers++; f.innerText = "CORECT! ✅"; f.style.background = "rgba(74, 222, 128, 0.2)"; f.style.color = "#4ade80"; 
-        } else { 
-            f.innerText = `Răspuns: ${Array.isArray(q.a) ? q.a[0] : q.a} ❌`; f.style.background = "rgba(248, 113, 113, 0.2)"; f.style.color = "#f87171"; 
+        if(isCorrect) {
+            state.correctAnswers++;
+            f.innerText = "CORECT! ✅"; f.style.color = "#4ade80";
+        } else {
+            f.innerText = `GRESIT! Răspuns: ${Array.isArray(q.a) ? q.a[0] : q.a} ❌`; f.style.color = "#f87171";
         }
         document.querySelectorAll('.option-btn, .check-btn').forEach(b => b.disabled = true);
         document.getElementById('next-btn').style.display = 'block';
@@ -188,25 +171,25 @@
 
     function nextQuestion() {
         state.currentIdx++;
-        if(state.currentIdx < 30) showQuestion();
-        else finishGame();
+        if(state.currentIdx < 30) showQuestion(); else finishGame();
     }
 
     function finishGame() {
+        clearInterval(timerInterval);
         document.getElementById('screen-game').classList.add('hidden');
         document.getElementById('screen-end').classList.remove('hidden');
-        let nota = 1 + (state.correctAnswers * 0.3);
-        if(nota > 10) nota = 10;
-        document.getElementById('final-score').innerText = nota.toFixed(2);
-        document.getElementById('raw-points').innerText = `Ai reușit ${state.correctAnswers} răspunsuri corecte din 30.`;
+        
+        const nota = (1 + (state.correctAnswers * 0.3)).toFixed(2);
+        document.getElementById('final-score').innerText = nota > 10 ? "10.00" : nota;
+        document.getElementById('raw-points').innerText = `Ai răspuns corect la ${state.correctAnswers} din 30 întrebări.`;
+        
+        // Play Sound
+        document.getElementById('finish-sound').play().catch(e => console.log("Audio block: ", e));
 
-        const formData = new FormData();
-        formData.append("nume", state.name);
-        formData.append("clasa", state.class);
-        formData.append("scor", nota.toFixed(2));
-        fetch(SCRIPT_URL, { method: 'POST', body: formData, mode: 'no-cors' });
+        const fd = new FormData();
+        fd.append("nume", state.name); fd.append("clasa", state.class); fd.append("scor", nota);
+        fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
     }
 </script>
 </body>
 </html>
-

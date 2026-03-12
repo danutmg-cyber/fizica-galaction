@@ -35,8 +35,8 @@
     </div>
 
     <div class="container" id="screen-login">
-        <h2 style="text-align:center; margin-top:0;">🚀 Antrenament pentru testul Fenomene termice</h2>
-        <p style="text-align:center; color:#94a3b8; margin-bottom:25px;">30 întrebări selectate aleatoriu (Nota max: 10)</p>
+        <h2 style="text-align:center; margin-top:0;">🚀 Evaluare - Fenomene termice</h2>
+        <p style="text-align:center; color:#94a3b8; margin-bottom:25px;">30 întrebări (26 teorie + 4 probleme)</p>
         <input type="text" id="p-name" placeholder="Numele tău complet">
         <select id="p-class" style="width:100%; padding:15px; margin: 15px 0; border-radius:12px; background:#0f172a; color:white; border: 2px solid #4a5568; font-size: 1rem;">
             <option value="">Selectează clasa...</option>
@@ -62,9 +62,9 @@
         <div class="score-display" id="final-score"></div>
         <p style="text-align:center; color: #94a3b8; font-size: 1.1rem; margin-top:0;" id="raw-points"></p>
         <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
-            💡 FELICITĂRI! Domnul profesor va vedea că te-ai străduit.
+            💡 Felicitări! Domnul profesor va vedea că ai lucrat.
         </div>
-        <button class="check-btn" onclick="location.reload()">REIA TESTUL ORI DE CÂTE ORI DOREȘTI. CU CÂT TE VEI ANTRENA MAI MULT, CU ATÂT TE VEI APROPIA DE NOTA 10 LA TEST</button>
+        <button class="check-btn" onclick="location.reload()">REIA TESTUL</button>
     </div>
 
 <script>
@@ -72,77 +72,48 @@
 
     let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [] };
 
-    // Rezervor mare de întrebări (Teorie)
     const theoryPool = [
-        // Completare / Fill-in
         { q: "Trecerea din stare solidă în stare lichidă se numește:", type: "fill", a: ["topire"], img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Phase_change_diagram.svg/1024px-Phase_change_diagram.svg.png" },
         { q: "Trecerea din stare lichidă în stare solidă se numește:", type: "fill", a: ["solidificare"], img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Phase_change_diagram.svg/1024px-Phase_change_diagram.svg.png" },
         { q: "Trecerea din stare lichidă în stare gazoasă se numește:", type: "fill", a: ["vaporizare"], img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Phase_change_diagram.svg/1024px-Phase_change_diagram.svg.png" },
         { q: "Trecerea din stare gazoasă în stare lichidă se numește:", type: "fill", a: ["condensare"], img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Phase_change_diagram.svg/1024px-Phase_change_diagram.svg.png" },
         { q: "Trecerea din stare solidă direct în stare gazoasă:", type: "fill", a: ["sublimare"], img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Phase_change_diagram.svg/1024px-Phase_change_diagram.svg.png" },
         { q: "Trecerea din stare gazoasă direct în stare solidă:", type: "fill", a: ["desublimare"], img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Phase_change_diagram.svg/1024px-Phase_change_diagram.svg.png" },
-        { q: "Corpul cald ......... căldură celui rece și se răcește.", type: "fill", a: ["cedeaza", "cedează"] },
-        { q: "Corpul rece ......... căldură de la corpul cald și se încălzește.", type: "fill", a: ["primeste", "primește"] },
+        { q: "La ce temperatură fierbe apa pură (la presiune normală)?", type: "choice", o: ["100°C", "0°C", "273,15 K", "50°C"], a: "100°C" },
+        { q: "Temperatura de topire a gheții pure este:", type: "choice", o: ["0°C (sau 273,15 K)", "100°C", "373,15 K", "10°C"], a: "0°C (sau 273,15 K)" },
+        { q: "Unitatea de măsură în S.I. pentru temperatură este:", type: "choice", o: ["Kelvin (K)", "Grad Celsius (°C)", "Grad Fahrenheit (°F)", "Joule"], a: "Kelvin (K)" },
+        { q: "Evaporarea este vaporizarea care are loc:", type: "choice", o: ["Doar la suprafața lichidului", "În toată masa lichidului", "Doar la fierbere", "La temperaturi scăzute"], a: "Doar la suprafața lichidului" },
         { q: "Transmiterea căldurii prin metale se face prin ...........", type: "fill", a: ["conductie", "conducție"] },
         { q: "Transmiterea căldurii în lichide și gaze se face prin ...........", type: "fill", a: ["convectie", "convecție"] },
         { q: "Transmiterea căldurii prin vid se face prin ...........", type: "fill", a: ["radiatie", "radiație"] },
-        { q: "Solidele sub formă de bară (tije) prin încălzire își măresc ..........", type: "fill", a: ["lungimea"] },
-        { q: "Solidele sub formă de sferă (bilă) prin încălzire își măresc ..........", type: "fill", a: ["volumul"] },
-        { q: "Echilibrul ............ se instalează când două corpuri au aceeași temperatură.", type: "fill", a: ["termic"] },
-
-        // Alegere Multiplă (Choice)
-        { q: "La ce temperatură fierbe apa pură (la presiune normală)?", type: "choice", o: ["100°C", "0°C", "273,15 K", "373,15 K"], a: "100°C" },
-        { q: "Temperatura de topire a gheții pure este:", type: "choice", o: ["0°C", "100°C", "-10°C", "273,15 K"], a: "0°C" },
-        { q: "Unitatea de măsură în S.I. pentru temperatură este:", type: "choice", o: ["Kelvin (K)", "Grad Celsius (°C)", "Grad Fahrenheit (°F)", "Joule (J)"], a: "Kelvin (K)" },
-        { q: "Scara Celsius se bazează pe:", type: "choice", o: ["Punctele de îngheț și fierbere ale apei", "Zero absolut", "Temperatura corpului uman", "Viteza luminii"], a: "Punctele de îngheț și fierbere ale apei" },
-        { q: "Vaporizarea care are loc doar la suprafața lichidului se numește:", type: "choice", o: ["Evaporare", "Fierbere", "Condensare", "Topire"], a: "Evaporare" },
-        { q: "Vaporizarea care are loc în toată masa lichidului se numește:", type: "choice", o: ["Fierbere", "Evaporare", "Sublimare", "Topire"], a: "Fierbere" },
-        { q: "Care metal este cel mai bun conductor termic?", type: "choice", o: ["Argintul", "Fierul", "Plumbul", "Mercurul"], a: "Argintul" },
-        { q: "Termosul funcționează prin reducerea transferului prin:", type: "choice", o: ["Toate cele trei moduri", "Doar conducție", "Doar convecție", "Doar radiație"], a: "Toate cele trei moduri" },
-        { q: "Ce se întâmplă cu densitatea majorității corpurilor la încălzire?", type: "choice", o: ["Scade", "Crește", "Rămâne la fel", "Se dublează"], a: "Scade" },
-        { q: "Gazele se dilată:", type: "choice", o: ["Mult mai mult decât solidele", "Mai puțin decât solidele", "La fel ca solidele", "Deloc"], a: "Mult mai mult decât solidele" },
-        { q: "Lichidul dintr-un termometru se ridică deoarece:", type: "choice", o: ["Se dilată", "Se contractă", "Își schimbă culoarea", "Fierbe"], a: "Se dilată" },
-
-        // Adevărat / Fals
-        { q: "Prin topire, volumul gheții scade. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Temperatura de fierbere depinde de presiunea exterioară. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Căldura și temperatura reprezintă aceeași mărime fizică. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" },
-        { q: "Aerul este un bun izolator termic. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "În vid căldura se poate transmite prin convecție. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" },
-        { q: "Metalele se dilată mai mult decât gazele. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" },
-        { q: "Zero absolut (0 K) este cea mai mică temperatură posibilă. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Evaporarea depinde de suprafața de expunere a lichidului. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "La echilibru termic, corpurile au temperaturi diferite. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" },
-        { q: "Lâna ține cald deoarece este un bun conductor termic. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" },
-        { q: "Toate solidele se dilată la fel la aceeași variație de temperatură. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" },
-        { q: "Vaporizarea este un fenomen invers condensării. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Sublimarea este trecerea din solid în gaz. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Radiatorul unei mașini folosește convecția pentru răcire. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Zăpada protejează grâul deoarece este izolator termic. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Un corp care cedează căldură își mărește temperatura. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" },
-        { q: "Scara Fahrenheit este utilizată oficial în România. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" },
-        { q: "Dilatarea este o mărire a dimensiunilor la răcire. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" },
-        { q: "Apa fierbe la 100°C doar la nivelul mării (1 atm). (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Conducția termică are loc cu transport de substanță. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" }
+        { q: "Căldura trece de la un corp cu temperatură mai mare la unul cu temperatură mai mică. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Prin încălzire, volumul majorității corpurilor crește. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Densitatea unui corp crește atunci când acesta se dilată. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Fals" },
+        { q: "Zero absolut corespunde valorii de -273,15 °C. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Aerul este un bun conductor de căldură. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Fals" },
+        { q: "Lâna ține cald deoarece conține aer care este izolator termic. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Toate corpurile se dilată la fel. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Fals" },
+        { q: "Echilibrul termic înseamnă temperaturi egale. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Fierberea are loc la o temperatură constantă. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Condensarea este procesul invers vaporizării. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Sublimarea presupune trecerea prin starea lichidă. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Fals" },
+        { q: "Metalele sunt bune conductoare termice. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Convecția are loc în solide. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Fals" }
     ];
 
     function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
 
     function generateMathProblems() {
-        const problems = [];
-        // C -> K
-        let val1 = getRandomInt(-100, 300);
-        problems.push({ q: `Transformă t = ${val1}°C în Kelvin (T).`, type: "fill", a: [(val1 + 273.15).toFixed(2)] });
-        // K -> C
-        let val2 = getRandomInt(173, 573);
-        problems.push({ q: `Transformă T = ${val2} K în Celsius (t).`, type: "fill", a: [(val2 - 273.15).toFixed(2)] });
-        // C -> F
-        let val3 = getRandomInt(-100, 300);
-        problems.push({ q: `Transformă t = ${val3}°C în Fahrenheit (F).`, type: "fill", a: [(val3 * 1.8 + 32).toFixed(2)] });
-        // F -> C
-        let val4 = getRandomInt(-148, 572); 
-        problems.push({ q: `Transformă F = ${val4}°F în Celsius (t).`, type: "fill", a: [((val4 - 32) / 1.8).toFixed(2)] });
-        return problems;
+        const p = [];
+        let v1 = getRandomInt(-100, 300);
+        p.push({ q: `Transformă t = ${v1}°C în Kelvin (T).`, type: "fill", a: [(v1 + 273.15).toFixed(2)] });
+        let v2 = getRandomInt(173, 573);
+        p.push({ q: `Transformă T = ${v2} K în Celsius (t).`, type: "fill", a: [(v2 - 273.15).toFixed(2)] });
+        let v3 = getRandomInt(-50, 200);
+        p.push({ q: `Transformă t = ${v3}°C în Fahrenheit (F).`, type: "fill", a: [(v3 * 1.8 + 32).toFixed(2)] });
+        let v4 = getRandomInt(-40, 400); 
+        p.push({ q: `Transformă F = ${v4}°F în Celsius (t).`, type: "fill", a: [((v4 - 32) / 1.8).toFixed(2)] });
+        return p;
     }
 
     function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
@@ -150,13 +121,11 @@
     function startGame() {
         state.name = document.getElementById('p-name').value.trim();
         state.class = document.getElementById('p-class').value;
-        if(state.name.length < 3 || !state.class) return alert("Introdu numele complet și clasa!");
+        if(state.name.length < 3 || !state.class) return alert("Numele și clasa sunt obligatorii!");
 
-        const mathPart = generateMathProblems();
-        // Selectăm aleatoriu 26 de întrebări din bază
-        const theorySelection = shuffle([...theoryPool]).slice(0, 26);
-        
-        state.questions = shuffle([...theorySelection, ...mathPart]);
+        const maths = generateMathProblems();
+        const theory = shuffle([...theoryPool]).slice(0, 26);
+        state.questions = shuffle([...theory, ...maths]);
         state.correctAnswers = 0;
         state.currentIdx = 0;
 
@@ -179,8 +148,8 @@
         document.getElementById('next-btn').style.display = 'none';
 
         if(q.type === 'choice') {
-            // Pentru Adevărat/Fals nu amestecăm, punem Adevărat primul. Pentru restul, amestecăm.
-            let options = (q.o.includes("Adevărat")) ? q.o : shuffle([...q.o]);
+            // Dacă e Adevărat/Fals, nu amestecăm ordinea (Adevărat e mereu primul)
+            let options = (q.o.includes("Adevărat")) ? ["Adevărat", "Fals"] : shuffle([...q.o]);
             options.forEach(opt => {
                 const btn = document.createElement('button');
                 btn.className = 'option-btn'; btn.innerText = opt;
@@ -189,7 +158,7 @@
             });
         } else {
             const input = document.createElement('input');
-            input.type = 'text'; input.id = 'user-input'; input.placeholder = "Scrie răspunsul...";
+            input.type = 'text'; input.id = 'user-input'; input.placeholder = "Rezultat (ex: 25.50)...";
             const btn = document.createElement('button');
             btn.className = 'check-btn'; btn.innerText = 'VERIFICĂ';
             btn.onclick = () => checkAns(document.getElementById('user-input').value);
@@ -209,9 +178,9 @@
         const f = document.getElementById('feedback');
         f.style.display = 'block';
         if(isCorrect) { 
-            state.correctAnswers++; f.innerText = "Corect! ✅"; f.style.background = "rgba(74, 222, 128, 0.2)"; f.style.color = "#4ade80"; 
+            state.correctAnswers++; f.innerText = "CORECT! ✅"; f.style.background = "rgba(74, 222, 128, 0.2)"; f.style.color = "#4ade80"; 
         } else { 
-            f.innerText = `Greșit! Răspuns corect: ${Array.isArray(q.a) ? q.a[0] : q.a} ❌`; f.style.background = "rgba(248, 113, 113, 0.2)"; f.style.color = "#f87171"; 
+            f.innerText = `Răspuns: ${Array.isArray(q.a) ? q.a[0] : q.a} ❌`; f.style.background = "rgba(248, 113, 113, 0.2)"; f.style.color = "#f87171"; 
         }
         document.querySelectorAll('.option-btn, .check-btn').forEach(b => b.disabled = true);
         document.getElementById('next-btn').style.display = 'block';
@@ -229,7 +198,7 @@
         let nota = 1 + (state.correctAnswers * 0.3);
         if(nota > 10) nota = 10;
         document.getElementById('final-score').innerText = nota.toFixed(2);
-        document.getElementById('raw-points').innerText = `Scor: ${state.correctAnswers} corecte din 30`;
+        document.getElementById('raw-points').innerText = `Ai reușit ${state.correctAnswers} răspunsuri corecte din 30.`;
 
         const formData = new FormData();
         formData.append("nume", state.name);
@@ -240,3 +209,4 @@
 </script>
 </body>
 </html>
+

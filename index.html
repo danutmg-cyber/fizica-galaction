@@ -15,9 +15,9 @@
         .header { text-align: center; width: 100%; max-width: 700px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
         .school-name { font-size: 1.1rem; font-weight: bold; color: var(--accent); text-transform: uppercase; }
         .container { width: 100%; max-width: 650px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
-        .q-image { width: 100%; max-height: 200px; object-fit: contain; border-radius: 12px; margin-bottom: 15px; background: white; padding: 5px; display: none; margin-left: auto; margin-right: auto; }
-        .question-box { font-size: 1.25rem; font-weight: 500; margin-bottom: 20px; text-align: center; min-height: 60px; line-height: 1.4; }
-        .option-btn { background: #2d3748; border: 2px solid #4a5568; padding: 14px; border-radius: 12px; cursor: pointer; color: white; font-size: 1rem; transition: 0.2s; width: 100%; margin-bottom: 8px; text-align: left; }
+        .q-image { width: 100%; max-height: 180px; object-fit: contain; border-radius: 12px; margin-bottom: 15px; background: white; padding: 5px; display: none; margin-left: auto; margin-right: auto; }
+        .question-box { font-size: 1.2rem; font-weight: 500; margin-bottom: 20px; text-align: center; min-height: 60px; line-height: 1.4; }
+        .option-btn { background: #2d3748; border: 2px solid #4a5568; padding: 12px; border-radius: 12px; cursor: pointer; color: white; font-size: 1rem; transition: 0.2s; width: 100%; margin-bottom: 8px; text-align: left; }
         .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #334155; }
         input[type="text"] { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.2rem; text-align: center; margin-bottom: 10px; }
         .check-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
@@ -35,14 +35,15 @@
     </div>
 
     <div class="container" id="screen-login">
-        <h2 style="text-align:center; margin-top:0;">🚀 Test Fenomene termice</h2>
-        <p style="text-align:center; color:#94a3b8; margin-bottom:25px;">Pregătește-te pentru nota 10!</p>
+        <h2 style="text-align:center; margin-top:0;">🚀 Antrenament pentru testul Fenomene termice</h2>
+        <p style="text-align:center; color:#94a3b8; margin-bottom:25px;">30 întrebări selectate aleatoriu (Nota max: 10)</p>
         <input type="text" id="p-name" placeholder="Numele tău complet">
         <select id="p-class" style="width:100%; padding:15px; margin: 15px 0; border-radius:12px; background:#0f172a; color:white; border: 2px solid #4a5568; font-size: 1rem;">
             <option value="">Selectează clasa...</option>
             <option value="6A">Clasa a VI-a A</option>
             <option value="6B">Clasa a VI-a B</option>
             <option value="6C">Clasa a VI-a C</option>
+            <option value="6D">Clasa a VI-a D</option>
         </select>
         <button class="check-btn" onclick="startGame()">START EVALUARE</button>
     </div>
@@ -61,38 +62,88 @@
         <div class="score-display" id="final-score"></div>
         <p style="text-align:center; color: #94a3b8; font-size: 1.1rem; margin-top:0;" id="raw-points"></p>
         <div style="background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: center;">
-            💡 Rezultatul a fost trimis automat către domnul profesor.
+            💡 FELICITĂRI! Domnul profesor va vedea că te-ai străduit.
         </div>
-        <button class="check-btn" onclick="location.reload()">POȚI REVENI MAI TÂRZIU PENTRU UN NOU ANTRENAMENT. CU CÂT TE VEI ANTRENA MAI MULT, CU ATÂT TE VE APROPIA DE NOTA 10</button>
+        <button class="check-btn" onclick="location.reload()">REIA TESTUL ORI DE CÂTE ORI DOREȘTI. CU CÂT TE VEI ANTRENA MAI MULT, CU ATÂT TE VEI APROPIA DE NOTA 10 LA TEST</button>
     </div>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec"; // <--- Pune aici link-ul tau de Google Apps Script (terminat in /exec)
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec"; 
 
     let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [] };
 
-    const pool = [
+    // Rezervor mare de întrebări (Teorie)
+    const theoryPool = [
+        // Completare / Fill-in
         { q: "Trecerea din stare solidă în stare lichidă se numește:", type: "fill", a: ["topire"], img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Phase_change_diagram.svg/1024px-Phase_change_diagram.svg.png" },
         { q: "Trecerea din stare lichidă în stare solidă se numește:", type: "fill", a: ["solidificare"], img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Phase_change_diagram.svg/1024px-Phase_change_diagram.svg.png" },
         { q: "Trecerea din stare lichidă în stare gazoasă se numește:", type: "fill", a: ["vaporizare"], img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Phase_change_diagram.svg/1024px-Phase_change_diagram.svg.png" },
         { q: "Trecerea din stare gazoasă în stare lichidă se numește:", type: "fill", a: ["condensare"], img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Phase_change_diagram.svg/1024px-Phase_change_diagram.svg.png" },
         { q: "Trecerea din stare solidă direct în stare gazoasă:", type: "fill", a: ["sublimare"], img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Phase_change_diagram.svg/1024px-Phase_change_diagram.svg.png" },
         { q: "Trecerea din stare gazoasă direct în stare solidă:", type: "fill", a: ["desublimare"], img: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Phase_change_diagram.svg/1024px-Phase_change_diagram.svg.png" },
-        { q: "La ce temperatură fierbe apa pură (la presiune normală)?", type: "choice", o: ["100°C", "0°C", "273,15 K"], a: "100°C" },
-        { q: "Temperatura de topire a gheții pure este:", type: "choice", o: ["0°C", "100°C", "-10°C"], a: "0°C" },
-        { q: "Relația de transformare din scara Celsius (t) în Kelvin (T) este:", type: "choice", o: ["T = t + 273,15", "T = t - 273,15", "T = t * 1,8"], a: "T = t + 273,15" },
-        { q: "Relația de transformare din Celsius (t) în Fahrenheit (F) este:", type: "choice", o: ["F = t * 1,8 + 32", "F = t + 32", "F = (t-32)/1,8"], a: "F = t * 1,8 + 32" },
-        { q: "........ este fenomenul termic în care corpul își mărește temperatura.", type: "fill", a: ["incalzirea", "încălzirea"] },
-        { q: "........ este fenomenul termic în care corpul își micșorează temperatura.", type: "fill", a: ["racirea", "răcirea"] },
         { q: "Corpul cald ......... căldură celui rece și se răcește.", type: "fill", a: ["cedeaza", "cedează"] },
         { q: "Corpul rece ......... căldură de la corpul cald și se încălzește.", type: "fill", a: ["primeste", "primește"] },
-        { q: "Transmiterea căldurii prin metale se face prin ...........", type: "fill", a: ["conductie", "conducție"], img: "https://cdn-icons-png.flaticon.com/512/3043/3043640.png" },
-        { q: "Transmiterea căldurii în lichide și gaze se face prin ...........", type: "fill", a: ["convectie", "convecție"], img: "https://cdn-icons-png.flaticon.com/512/3043/3043640.png" },
-        { q: "Transmiterea căldurii prin vid se face prin ...........", type: "fill", a: ["radiatie", "radiație"], img: "https://cdn-icons-png.flaticon.com/512/3043/3043640.png" },
+        { q: "Transmiterea căldurii prin metale se face prin ...........", type: "fill", a: ["conductie", "conducție"] },
+        { q: "Transmiterea căldurii în lichide și gaze se face prin ...........", type: "fill", a: ["convectie", "convecție"] },
+        { q: "Transmiterea căldurii prin vid se face prin ...........", type: "fill", a: ["radiatie", "radiație"] },
         { q: "Solidele sub formă de bară (tije) prin încălzire își măresc ..........", type: "fill", a: ["lungimea"] },
         { q: "Solidele sub formă de sferă (bilă) prin încălzire își măresc ..........", type: "fill", a: ["volumul"] },
-        { q: ".......... nu au nici formă nici volum propriu (se adaptează recipientului).", type: "fill", a: ["gazele", "starea gazoasa"] }
+        { q: "Echilibrul ............ se instalează când două corpuri au aceeași temperatură.", type: "fill", a: ["termic"] },
+
+        // Alegere Multiplă (Choice)
+        { q: "La ce temperatură fierbe apa pură (la presiune normală)?", type: "choice", o: ["100°C", "0°C", "273,15 K", "373,15 K"], a: "100°C" },
+        { q: "Temperatura de topire a gheții pure este:", type: "choice", o: ["0°C", "100°C", "-10°C", "273,15 K"], a: "0°C" },
+        { q: "Unitatea de măsură în S.I. pentru temperatură este:", type: "choice", o: ["Kelvin (K)", "Grad Celsius (°C)", "Grad Fahrenheit (°F)", "Joule (J)"], a: "Kelvin (K)" },
+        { q: "Scara Celsius se bazează pe:", type: "choice", o: ["Punctele de îngheț și fierbere ale apei", "Zero absolut", "Temperatura corpului uman", "Viteza luminii"], a: "Punctele de îngheț și fierbere ale apei" },
+        { q: "Vaporizarea care are loc doar la suprafața lichidului se numește:", type: "choice", o: ["Evaporare", "Fierbere", "Condensare", "Topire"], a: "Evaporare" },
+        { q: "Vaporizarea care are loc în toată masa lichidului se numește:", type: "choice", o: ["Fierbere", "Evaporare", "Sublimare", "Topire"], a: "Fierbere" },
+        { q: "Care metal este cel mai bun conductor termic?", type: "choice", o: ["Argintul", "Fierul", "Plumbul", "Mercurul"], a: "Argintul" },
+        { q: "Termosul funcționează prin reducerea transferului prin:", type: "choice", o: ["Toate cele trei moduri", "Doar conducție", "Doar convecție", "Doar radiație"], a: "Toate cele trei moduri" },
+        { q: "Ce se întâmplă cu densitatea majorității corpurilor la încălzire?", type: "choice", o: ["Scade", "Crește", "Rămâne la fel", "Se dublează"], a: "Scade" },
+        { q: "Gazele se dilată:", type: "choice", o: ["Mult mai mult decât solidele", "Mai puțin decât solidele", "La fel ca solidele", "Deloc"], a: "Mult mai mult decât solidele" },
+        { q: "Lichidul dintr-un termometru se ridică deoarece:", type: "choice", o: ["Se dilată", "Se contractă", "Își schimbă culoarea", "Fierbe"], a: "Se dilată" },
+
+        // Adevărat / Fals
+        { q: "Prin topire, volumul gheții scade. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Temperatura de fierbere depinde de presiunea exterioară. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Căldura și temperatura reprezintă aceeași mărime fizică. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" },
+        { q: "Aerul este un bun izolator termic. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "În vid căldura se poate transmite prin convecție. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" },
+        { q: "Metalele se dilată mai mult decât gazele. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" },
+        { q: "Zero absolut (0 K) este cea mai mică temperatură posibilă. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Evaporarea depinde de suprafața de expunere a lichidului. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "La echilibru termic, corpurile au temperaturi diferite. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" },
+        { q: "Lâna ține cald deoarece este un bun conductor termic. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" },
+        { q: "Toate solidele se dilată la fel la aceeași variație de temperatură. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" },
+        { q: "Vaporizarea este un fenomen invers condensării. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Sublimarea este trecerea din solid în gaz. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Radiatorul unei mașini folosește convecția pentru răcire. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Zăpada protejează grâul deoarece este izolator termic. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Un corp care cedează căldură își mărește temperatura. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" },
+        { q: "Scara Fahrenheit este utilizată oficial în România. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" },
+        { q: "Dilatarea este o mărire a dimensiunilor la răcire. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" },
+        { q: "Apa fierbe la 100°C doar la nivelul mării (1 atm). (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Conducția termică are loc cu transport de substanță. (A/F)", type: "choice", o: ["Fals", "Adevărat"], a: "Fals" }
     ];
+
+    function getRandomInt(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+    function generateMathProblems() {
+        const problems = [];
+        // C -> K
+        let val1 = getRandomInt(-100, 300);
+        problems.push({ q: `Transformă t = ${val1}°C în Kelvin (T).`, type: "fill", a: [(val1 + 273.15).toFixed(2)] });
+        // K -> C
+        let val2 = getRandomInt(173, 573);
+        problems.push({ q: `Transformă T = ${val2} K în Celsius (t).`, type: "fill", a: [(val2 - 273.15).toFixed(2)] });
+        // C -> F
+        let val3 = getRandomInt(-100, 300);
+        problems.push({ q: `Transformă t = ${val3}°C în Fahrenheit (F).`, type: "fill", a: [(val3 * 1.8 + 32).toFixed(2)] });
+        // F -> C
+        let val4 = getRandomInt(-148, 572); 
+        problems.push({ q: `Transformă F = ${val4}°F în Celsius (t).`, type: "fill", a: [((val4 - 32) / 1.8).toFixed(2)] });
+        return problems;
+    }
 
     function shuffle(arr) { return arr.sort(() => Math.random() - 0.5); }
 
@@ -100,7 +151,15 @@
         state.name = document.getElementById('p-name').value.trim();
         state.class = document.getElementById('p-class').value;
         if(state.name.length < 3 || !state.class) return alert("Introdu numele complet și clasa!");
-        state.questions = shuffle([...pool]);
+
+        const mathPart = generateMathProblems();
+        // Selectăm aleatoriu 26 de întrebări din bază
+        const theorySelection = shuffle([...theoryPool]).slice(0, 26);
+        
+        state.questions = shuffle([...theorySelection, ...mathPart]);
+        state.correctAnswers = 0;
+        state.currentIdx = 0;
+
         document.getElementById('screen-login').classList.add('hidden');
         document.getElementById('screen-game').classList.remove('hidden');
         showQuestion();
@@ -109,16 +168,20 @@
     function showQuestion() {
         const q = state.questions[state.currentIdx];
         const imgEl = document.getElementById('q-img');
-        document.getElementById('q-info').innerText = `PROGRES: ${state.currentIdx + 1} / 20`;
+        document.getElementById('q-info').innerText = `ÎNTREBAREA ${state.currentIdx + 1} / 30`;
         document.getElementById('question').innerText = q.q;
+        
         if(q.img) { imgEl.src = q.img; imgEl.style.display = 'block'; } else { imgEl.style.display = 'none'; }
+        
         const area = document.getElementById('input-area');
         area.innerHTML = '';
         document.getElementById('feedback').style.display = 'none';
         document.getElementById('next-btn').style.display = 'none';
 
         if(q.type === 'choice') {
-            shuffle([...q.o]).forEach(opt => {
+            // Pentru Adevărat/Fals nu amestecăm, punem Adevărat primul. Pentru restul, amestecăm.
+            let options = (q.o.includes("Adevărat")) ? q.o : shuffle([...q.o]);
+            options.forEach(opt => {
                 const btn = document.createElement('button');
                 btn.className = 'option-btn'; btn.innerText = opt;
                 btn.onclick = () => checkAns(opt);
@@ -126,7 +189,7 @@
             });
         } else {
             const input = document.createElement('input');
-            input.type = 'text'; input.id = 'user-input'; input.placeholder = "Răspunsul tău aici...";
+            input.type = 'text'; input.id = 'user-input'; input.placeholder = "Scrie răspunsul...";
             const btn = document.createElement('button');
             btn.className = 'check-btn'; btn.innerText = 'VERIFICĂ';
             btn.onclick = () => checkAns(document.getElementById('user-input').value);
@@ -138,16 +201,17 @@
     function checkAns(user) {
         const q = state.questions[state.currentIdx];
         let isCorrect = false;
-        const clean = (s) => s ? s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim() : "";
+        const clean = (s) => s ? s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(",", ".").trim() : "";
+        
         if(q.type === 'fill') isCorrect = q.a.some(ans => clean(user) === clean(ans));
         else isCorrect = user === q.a;
 
         const f = document.getElementById('feedback');
         f.style.display = 'block';
         if(isCorrect) { 
-            state.correctAnswers++; f.innerText = "Excelent! Corect ✅"; f.style.background = "rgba(74, 222, 128, 0.2)"; f.style.color = "#4ade80"; 
+            state.correctAnswers++; f.innerText = "Corect! ✅"; f.style.background = "rgba(74, 222, 128, 0.2)"; f.style.color = "#4ade80"; 
         } else { 
-            f.innerText = `Răspuns corect: ${Array.isArray(q.a) ? q.a[0] : q.a} ❌`; f.style.background = "rgba(248, 113, 113, 0.2)"; f.style.color = "#f87171"; 
+            f.innerText = `Greșit! Răspuns corect: ${Array.isArray(q.a) ? q.a[0] : q.a} ❌`; f.style.background = "rgba(248, 113, 113, 0.2)"; f.style.color = "#f87171"; 
         }
         document.querySelectorAll('.option-btn, .check-btn').forEach(b => b.disabled = true);
         document.getElementById('next-btn').style.display = 'block';
@@ -155,27 +219,24 @@
 
     function nextQuestion() {
         state.currentIdx++;
-        if(state.currentIdx < 20) showQuestion();
+        if(state.currentIdx < 30) showQuestion();
         else finishGame();
     }
 
     function finishGame() {
         document.getElementById('screen-game').classList.add('hidden');
         document.getElementById('screen-end').classList.remove('hidden');
-        let nota = 1 + (state.correctAnswers * 0.45);
+        let nota = 1 + (state.correctAnswers * 0.3);
+        if(nota > 10) nota = 10;
         document.getElementById('final-score').innerText = nota.toFixed(2);
-        document.getElementById('raw-points').innerText = `Ai rezolvat corect ${state.correctAnswers} întrebări din 20.`;
+        document.getElementById('raw-points').innerText = `Scor: ${state.correctAnswers} corecte din 30`;
 
-        if(SCRIPT_URL !== "URL_SCRIPT_AICI") {
-            const formData = new FormData();
-            formData.append("nume", state.name);
-            formData.append("clasa", state.class);
-            formData.append("scor", nota.toFixed(2));
-            fetch(SCRIPT_URL, { method: 'POST', body: formData, mode: 'no-cors' });
-        }
+        const formData = new FormData();
+        formData.append("nume", state.name);
+        formData.append("clasa", state.class);
+        formData.append("scor", nota.toFixed(2));
+        fetch(SCRIPT_URL, { method: 'POST', body: formData, mode: 'no-cors' });
     }
 </script>
 </body>
 </html>
-
-

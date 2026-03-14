@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FIZICĂ VIII - ELECTROSTATICĂ</title>
+    <style>
+        :root { --primary: #8b5cf6; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #a78bfa; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; }
+        .header { text-align: center; width: 100%; max-width: 750px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
+        .container { width: 100%; max-width: 700px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
+        
+        .learning-card { background: rgba(139, 92, 246, 0.1); border: 1px solid var(--primary); border-radius: 12px; padding: 15px; margin-bottom: 20px; font-size: 0.9rem; }
+        .learning-card h4 { margin: 0 0 10px 0; color: var(--accent); text-align: center; }
+        
+        .question-box { font-size: 1.2rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; }
+        input[type="text"] { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.3rem; text-align: center; margin-bottom: 15px; }
+        .check-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .next-btn { width: 100%; background: #10b981; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
+        #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div style="font-size: 1.1rem; font-weight: bold; color: var(--accent);">⚡ FIZICĂ VIII - ELECTROSTATICĂ</div>
+        <p style="font-size: 0.9rem; color: #94a3b8;">Sarcini electrice și Interacțiuni</p>
+    </div>
+
+    <div class="container" id="screen-login">
+        <h2 style="text-align:center;">⚛️ Sarcina Electrică</h2>
+        <input type="text" id="p-name" placeholder="Numele elevului">
+        <select id="p-class" style="width:100%; padding:15px; margin: 15px 0; border-radius:12px; background:#0f172a; color:white; border: 2px solid #4a5568;">
+            <option value="">Alege clasa...</option>
+            <option value="8A">8A</option><option value="8B">8B</option><option value="8C">8C</option>
+        </select>
+        <button class="check-btn" onclick="startGame()">START ANTRENAMENT</button>
+    </div>
+
+    <div class="container hidden" id="screen-game">
+        <div class="learning-card">
+            <h4>📘 REPRODUCERE FORMULE</h4>
+            • <b>Legea lui Coulomb:</b> $F = k \cdot \frac{q_1 \cdot q_2}{r^2}$ unde $k = 9 \cdot 10^9 \, \text{N}\cdot\text{m}^2/\text{C}^2$<br>
+            • <b>Câmpul Electric:</b> $E = \frac{F}{q}$ (N/C)<br>
+            • <b>Sarcina elementară:</b> $e = 1,6 \cdot 10^{-19} \, \text{C}$
+        </div>
+
+        <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
+        <div class="question-box" id="question"></div>
+        <div id="input-area"></div>
+        <div id="feedback"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">CONTINUĂ ➡️</button>
+    </div>
+
+    <div class="container hidden" id="screen-end">
+        <h2 style="text-align:center;">REZULTAT FINAL</h2>
+        <div style="font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center;" id="final-score"></div>
+        <button class="check-btn" onclick="location.reload()">REIA TESTUL</button>
+    </div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec"; 
+    let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [] };
+
+    function generateElectro() {
+        let qSet = [
+            { q: "Sarcina electrică a electronului este ........... (pozitivă/negativă).", type: "fill", a: ["negativa"] },
+            { q: "Procesul prin care un corp neutru capătă sarcină electrică se numește ...........", type: "fill", a: ["electrizare"] },
+            { q: "Două sarcini de același semn se ...........", type: "fill", a: ["resping"] },
+            { q: "Unitatea de măsură pentru sarcina electrică în S.I. este ...........", type: "fill", a: ["coulomb", "c"] },
+            { q: "Regiunea din spațiu în care se manifestă forțe electrice se numește ........... electric.", type: "fill", a: ["camp"] }
+        ];
+
+        // Probleme de calcul simple
+        let r = Math.floor(Math.random() * 3 + 1); // 1, 2, 3 metri
+        let q1 = 1e-6; // 1 microCoulomb
+        let q2 = 2e-6; // 2 microCoulomb
+        let force = (9e9 * q1 * q2 / (r * r)).toFixed(4);
+        qSet.push({ q: `Calculați forța de respingere între două sarcini q1=1μC și q2=2μC aflate la distanța r=${r}m. (N)`, type: "math", a: [force.toString()] });
+
+        let f_field = Math.floor(Math.random() * 10 + 2);
+        let q_field = Math.floor(Math.random() * 5 + 1);
+        let e_field = (f_field / q_field).toFixed(2);
+        qSet.push({ q: `O sarcină q=${q_field}C este plasată într-un câmp electric și asupra ei acționează o forță F=${f_field}N. Intensitatea câmpului E este? (N/C)`, type: "math", a: [e_field.toString()] });
+
+        return qSet.sort(() => 0.5 - Math.random());
+    }
+
+    function startGame() {
+        state.name = document.getElementById('p-name').value.trim();
+        state.class = document.getElementById('p-class').value;
+        if(!state.name || !state.class) return alert("Introdu datele!");
+        state.questions = generateElectro();
+        document.getElementById('screen-login').classList.add('hidden');
+        document.getElementById('screen-game').classList.remove('hidden');
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const q = state.questions[state.currentIdx];
+        document.getElementById('q-info').innerText = `ÎNTREBAREA ${state.currentIdx + 1} / ${state.questions.length}`;
+        document.getElementById('question').innerText = q.q;
+        const area = document.getElementById('input-area');
+        area.innerHTML = `<input type="text" id="user-ans" placeholder="Răspuns...">
+                          <button class="check-btn" onclick="checkAns(document.getElementById('user-ans').value)">VERIFICĂ</button>`;
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    function checkAns(user) {
+        const q = state.questions[state.currentIdx];
+        const clean = (s) => s.toString().toLowerCase().trim().replace(",", ".");
+        let isCorrect = false;
+
+        if(q.type === "math") {
+            isCorrect = Math.abs(parseFloat(clean(user)) - parseFloat(q.a[0])) < 0.05;
+        } else {
+            isCorrect = q.a.some(ans => clean(user) === clean(ans));
+        }
+
+        const f = document.getElementById('feedback');
+        f.style.display = 'block';
+        if(isCorrect) { state.correctAnswers++; f.innerText = "CORECT! ⚡"; f.style.color = "#4ade80"; }
+        else { f.innerText = `GREȘIT! Răspuns corect: ${q.a[0]}`; f.style.color = "#f87171"; }
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        state.currentIdx++;
+        if(state.currentIdx < state.questions.length) showQuestion(); else finishGame();
+    }
+
+    function finishGame() {
+        document.getElementById('screen-game').classList.add('hidden');
+        document.getElementById('screen-end').classList.remove('hidden');
+        const nota = (1 + (state.correctAnswers / state.questions.length) * 9).toFixed(2);
+        document.getElementById('final-score').innerText = nota;
+        
+        const fd = new FormData();
+        fd.append("nume", state.name); fd.append("clasa", state.class + " - Electrostatica 8"); fd.append("scor", nota);
+        fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluare Finală Fizică VI - Gala Galaction</title>
+    <style>
+        :root { --primary: #2563eb; --accent: #f59e0b; --bg: #f8fafc; --text: #1e293b; --card: #ffffff; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; margin: 0; padding: 20px; }
+        .paper { max-width: 850px; background: var(--card); margin: 0 auto; padding: 40px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); border-radius: 8px; border-top: 10px solid var(--primary); }
+        
+        /* ANTET */
+        .school-header { text-align: center; border-bottom: 2px solid var(--accent); padding-bottom: 10px; margin-bottom: 20px; }
+        .school-name { font-size: 1.4rem; font-weight: bold; color: var(--primary); }
+        .prof-name { font-size: 1.1rem; color: #64748b; margin-top: 5px; }
+        .motto { font-style: italic; color: #b45309; background: #fffbeb; padding: 10px; border-radius: 5px; margin: 15px 0; font-weight: 500; font-size: 0.95rem; }
+        
+        .student-info { display: flex; gap: 20px; margin-bottom: 30px; background: #f1f5f9; padding: 15px; border-radius: 8px; }
+        .student-info input { border: 1px solid #cbd5e1; padding: 8px; border-radius: 4px; flex: 1; }
+
+        .item { margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px dashed #e2e8f0; }
+        .item-title { font-weight: bold; margin-bottom: 10px; color: var(--primary); }
+        .options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-left: 20px; }
+        .option { cursor: pointer; padding: 5px; }
+        .option input { margin-right: 10px; }
+
+        .footer-note { font-size: 0.85rem; color: #64748b; margin-top: 40px; border-top: 1px solid #e2e8f0; padding-top: 20px; }
+        .btn-finish { background: var(--primary); color: white; border: none; padding: 15px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1.1rem; }
+        
+        @media print { .btn-finish, .student-info { display: none; } .paper { box-shadow: none; border: none; } }
+    </style>
+</head>
+<body>
+
+<div class="paper">
+    <div class="school-header">
+        <div class="school-name">ȘCOALA GIMNAZIALĂ "GALA GALACTION"</div>
+        <div class="prof-name">Prof. DĂNUȚ ANDRONIE</div>
+        <div class="motto">"FIZICA NU ESTE DOMINATĂ DE FORMULE CI DE LOGICĂ"</div>
+        <h2 style="margin-top: 20px;">TEST DE EVALUARE FINALĂ - CLASA A VI-A</h2>
+    </div>
+
+    <div class="student-info">
+        <input type="text" id="studentName" placeholder="Nume și prenume elev">
+        <input type="text" id="studentClass" placeholder="Clasa (ex: 6A)">
+    </div>
+
+    <div id="test-content">
+        </div>
+
+    <div id="results-area" style="display:none; text-align:center; padding: 20px; background: #dcfce7; border-radius: 8px; margin-bottom: 20px;">
+        <h2 id="score-display">Nota: 10.00</h2>
+    </div>
+
+    <button class="btn-finish" onclick="correctTest()">FINALIZEAZĂ ȘI TRIMITE RĂSPUNSURILE</button>
+
+    <div class="footer-note">
+        Nota: Se acordă 10 puncte din oficiu. Fiecare item corect valorează 4.5 puncte. Timp de lucru: 45 minute. 
+        <strong>Punctaj total: 100 puncte.</strong>
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec";
+    let questionsData = [];
+
+    function generateUniqueTest() {
+        const container = document.getElementById('test-content');
+        
+        // 1. Teorie: Măsurare
+        addQuestion({
+            q: "Ce înseamnă a măsura o mărime fizică:",
+            options: [
+                "a aflarea lungimii ei prin compararea cu o altă mărime;",
+                "a vedea cât de mare este raportat la obiecte din jur;",
+                "a o compara cu o altă mărime fizică de același fel, considerată unitate de măsură;",
+                "a utiliza un instrument de măsură electronic fără etalon."
+            ],
+            correct: 2
+        });
+
+        // 2. Calcul Arie (Variabil)
+        let L = Math.floor(Math.random() * 5 + 2); // dam
+        let l = (Math.random() * 0.5 + 0.1).toFixed(2); // hm
+        let arie = (L * 10) * (l * 100); 
+        addQuestion({
+            q: `Terenul din curtea școlii are dimensiunile: L = ${L} dam și l = ${l} hm. Valoarea ariei suprafeței este:`,
+            options: [`${arie*0.1} m²`, `${arie} m²`, `${arie/10} m²`, `${arie*10} m²`],
+            correct: 1
+        });
+
+        // 3. Mișcare Uniformă - Definiție
+        addQuestion({
+            q: "Cum se definește mișcarea uniformă?",
+            options: [
+                "mișcarea în care viteza se modifică cu aceeași valoare;",
+                "mișcarea în care traiectoria este o linie curbă;",
+                "mișcarea în care viteza se modifică constant;",
+                "mișcarea în care valoarea vitezei rămâne constantă."
+            ],
+            correct: 3
+        });
+
+        // 4. Transformare Viteză (Variabil)
+        let v_kmh = [36, 54, 72, 90, 108][Math.floor(Math.random() * 5)];
+        let v_ms = v_kmh / 3.6;
+        addQuestion({
+            q: `Un vehicul se deplasează cu v = ${v_kmh} km/h. Această viteză exprimată în m/s este:`,
+            options: [`${v_ms} m/s`, `${v_ms/2} m/s`, `${v_ms*2} m/s`, `${v_kmh} m/s`],
+            correct: 0
+        });
+
+        // 5. Densitate (Variabil)
+        let vol = 800 + Math.floor(Math.random() * 100); // ml
+        let dens = 1.2 + (Math.random() * 0.4); // g/cm3
+        let masa_miere = (vol * dens).toFixed(0);
+        addQuestion({
+            q: `Un borcan cu volumul de ${vol} ml se umple cu miere (ρ = ${dens.toFixed(1)} g/cm³). Masa mierii din borcan este:`,
+            options: [`${(masa_miere/10).toFixed(0)} g`, `${masa_miere} g`, `${masa_miere*2} g`, `${(masa_miere/100).toFixed(0)} g`],
+            correct: 1
+        });
+
+        // 6. Forța Elastică (Variabil)
+        let k = [20, 40, 50, 100][Math.floor(Math.random() * 4)];
+        let dl = Math.floor(Math.random() * 5 + 2); // cm
+        let Fe = (k * (dl/100)).toFixed(2);
+        addQuestion({
+            q: `Un resort are k = ${k} N/m. Forța necesară pentru a-l alungi cu Δl = ${dl} cm este:`,
+            options: [`${Fe} N`, `${Fe*10} N`, `${(Fe/10).toFixed(2)} N`, `${(Fe*2).toFixed(2)} N`],
+            correct: 0
+        });
+
+        // 7. Optică - Oglindă plană
+        addQuestion({
+            q: "Care este natura imaginii unui obiect real într-o oglindă plană?",
+            options: [
+                "virtuală, răsturnată, egală cu obiectul;",
+                "reală, dreaptă, mai mică decât obiectul;",
+                "virtuală, dreaptă, egală cu obiectul;",
+                "virtuală, dreaptă, mai mare decât obiectul."
+            ],
+            correct: 2
+        });
+
+        // 8. Greutate (Variabil)
+        let m_kg = Math.floor(Math.random() * 10 + 2);
+        let G = m_kg * 10;
+        addQuestion({
+            q: `Care este greutatea unui corp cu masa m = ${m_kg} kg pe Pământ (g ≈ 10 N/kg)?`,
+            options: [`${m_kg} N`, `${G/2} N`, `${G} N`, `${G*10} N`],
+            correct: 2
+        });
+
+        // 9. Instrumente de măsură
+        addQuestion({
+            q: "Instrumentul utilizat pentru măsurarea forței se numește:",
+            options: ["balanță", "termometru", "dinamometru", "cronometru"],
+            correct: 2
+        });
+
+        // 10. Electricitate - Conectare
+        addQuestion({
+            q: "Dacă scoatem un bec dintr-un circuit cu becuri legate în serie, celelalte becuri:",
+            options: ["luminează mai tare;", "se sting;", "luminează la fel;", "se ard."],
+            correct: 1
+        });
+    }
+
+    function addQuestion(data) {
+        const container = document.getElementById('test-content');
+        const qIdx = questionsData.length;
+        questionsData.push(data);
+
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'item';
+        itemDiv.innerHTML = `
+            <div class="item-title">${qIdx + 1}. ${data.q}</div>
+            <div class="options">
+                ${data.options.map((opt, i) => `
+                    <label class="option">
+                        <input type="radio" name="q${qIdx}" value="${i}"> ${opt}
+                    </label>
+                `).join('')}
+            </div>
+        `;
+        container.appendChild(itemDiv);
+    }
+
+    function correctTest() {
+        const name = document.getElementById('studentName').value;
+        if(!name) return alert("Te rugăm să introduci numele!");
+
+        let correctCount = 0;
+        questionsData.forEach((q, i) => {
+            const selected = document.querySelector(`input[name="q${i}"]:checked`);
+            if(selected && parseInt(selected.value) === q.correct) {
+                correctCount++;
+            }
+        });
+
+        const nota = (1 + (correctCount * 0.9)).toFixed(2);
+        document.getElementById('results-area').style.display = 'block';
+        document.getElementById('score-display').innerText = `Rezultat final pentru ${name}: Nota ${nota}`;
+        window.scrollTo(0, 0);
+
+        // Trimitere date către profesor (Google Sheets)
+        const fd = new FormData();
+        fd.append("nume", name);
+        fd.append("clasa", document.getElementById('studentClass').value);
+        fd.append("scor", nota);
+        fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+    }
+
+    window.onload = generateUniqueTest;
+</script>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FIZICĂ - OPTICĂ GEOMETRICĂ</title>
+    <style>
+        :root { --primary: #fbbf24; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #f59e0b; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; }
+        .header { text-align: center; width: 100%; max-width: 750px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
+        .container { width: 100%; max-width: 700px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
+        
+        .learning-card { background: rgba(251, 191, 36, 0.1); border: 1px solid var(--primary); border-radius: 12px; padding: 15px; margin-bottom: 20px; font-size: 0.85rem; }
+        .learning-card h4 { margin: 0 0 10px 0; color: var(--accent); text-align: center; }
+        .trig-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.8rem; text-align: center; }
+        .trig-table td, .trig-table th { border: 1px solid #444; padding: 4px; }
+
+        .question-box { font-size: 1.15rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; color: #e2e8f0; }
+        input[type="text"] { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.3rem; text-align: center; margin-bottom: 15px; }
+        .check-btn { width: 100%; background: var(--primary); color: #0f172a; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .next-btn { width: 100%; background: #10b981; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
+        #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div style="font-size: 1.1rem; font-weight: bold; color: var(--accent);">🔦 OPTICĂ: REFLEXIA ȘI REFRACȚIA</div>
+        <p style="font-size: 0.9rem; color: #94a3b8;">Lumina la suprafața de separare</p>
+    </div>
+
+    <div class="container" id="screen-login">
+        <h2 style="text-align:center;">🌈 Fenomene Optice</h2>
+        <input type="text" id="p-name" placeholder="Numele elevului">
+        <select id="p-class" style="width:100%; padding:15px; margin: 15px 0; border-radius:12px; background:#0f172a; color:white; border: 2px solid #4a5568;">
+            <option value="">Alege clasa...</option>
+            <option value="9A">9A</option><option value="9B">9B</option><option value="8A">8A</option>
+        </select>
+        <button class="check-btn" onclick="startGame()">START EXERSARE</button>
+    </div>
+
+    <div class="container hidden" id="screen-game">
+        <div class="learning-card">
+            <h4>📘 SUPORT MATEMATIC & FORMULE</h4>
+            • <b>Reflexia:</b> i = r | <b>Refracția:</b> n₁·sin(i) = n₂·sin(r)<br>
+            • <b>Unghi Limită:</b> sin(l) = n₂ / n₁ (unde n₁ > n₂)<br>
+            <table class="trig-table">
+                <tr><th>Unghi</th><th>30°</th><th>45°</th><th>60°</th></tr>
+                <tr><td>sin</td><td>1/2 (0.5)</td><td>√2/2 (≈0.707)</td><td>√3/2 (≈0.866)</td></tr>
+            </table>
+        </div>
+
+        <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
+        <div class="question-box" id="question"></div>
+        <div id="input-area"></div>
+        <div id="feedback"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">URMĂTOAREA ➡️</button>
+    </div>
+
+    <div class="container hidden" id="screen-end">
+        <h2 style="text-align:center;">SCOR FINAL</h2>
+        <div style="font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center;" id="final-score"></div>
+        <button class="check-btn" onclick="location.reload()">REIA TESTUL</button>
+    </div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec"; 
+    let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [] };
+
+    function generateOptics() {
+        let qSet = [
+            { q: "Raza de lumină care se întoarce în mediul din care a venit se numește rază ...........", type: "fill", a: ["reflectata"] },
+            { q: "Indicele de refracție al vidului (și aproximativ al aerului) este n = ...........", type: "fill", a: ["1"] },
+            { q: "Dacă unghiul de incidență este 0°, unghiul de reflexie este ........... grade.", type: "fill", a: ["0"] },
+            { q: "Fenomenul în care lumina nu mai trece în al doilea mediu și se reflectă integral se numește reflexie ...........", type: "fill", a: ["totala"] }
+        ];
+
+        // 1. Problemă Refracție (Aer n=1 -> Mediu n=√2)
+        qSet.push({ 
+            q: "O rază trece din aer (n1=1) într-un mediu cu n2=√2. Dacă unghiul de incidență i=45°, cât este unghiul de refracție r? (grade)", 
+            type: "math", a: ["30"] 
+        });
+
+        // 2. Problemă Refracție (Aer n=1 -> Mediu n=√3)
+        qSet.push({ 
+            q: "O rază trece din aer (n1=1) într-un mediu cu n2=√3. Dacă i=60°, cât este unghiul de refracție r? (grade)", 
+            type: "math", a: ["30"] 
+        });
+
+        // 3. Unghi Limită (Diamant n=2 -> Aer n=1)
+        qSet.push({ 
+            q: "Calculați unghiul limită (l) pentru trecerea luminii din diamant (n1=2) în aer (n2=1). (grade)", 
+            type: "math", a: ["30"] 
+        });
+
+        // 4. Unghi Limită (Sticlă n=√2 -> Aer n=1)
+        qSet.push({ 
+            q: "Calculați unghiul limită (l) pentru trecerea luminii dintr-o sticlă cu n1=√2 în aer (n2=1). (grade)", 
+            type: "math", a: ["45"] 
+        });
+
+        return qSet.sort(() => 0.5 - Math.random());
+    }
+
+    function startGame() {
+        state.name = document.getElementById('p-name').value.trim();
+        state.class = document.getElementById('p-class').value;
+        if(!state.name || !state.class) return alert("Introdu datele!");
+        state.questions = generateOptics();
+        document.getElementById('screen-login').classList.add('hidden');
+        document.getElementById('screen-game').classList.remove('hidden');
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const q = state.questions[state.currentIdx];
+        document.getElementById('q-info').innerText = `ETAPA ${state.currentIdx + 1} / ${state.questions.length}`;
+        document.getElementById('question').innerText = q.q;
+        const area = document.getElementById('input-area');
+        area.innerHTML = `<input type="text" id="user-ans" placeholder="Răspuns...">
+                          <button class="check-btn" onclick="checkAns(document.getElementById('user-ans').value)">VERIFICĂ</button>`;
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    function checkAns(user) {
+        const q = state.questions[state.currentIdx];
+        const clean = (s) => s.toString().toLowerCase().trim().replace(" grade", "").replace("°", "");
+        let isCorrect = clean(user) === clean(q.a[0]);
+
+        const f = document.getElementById('feedback');
+        f.style.display = 'block';
+        if(isCorrect) { state.correctAnswers++; f.innerText = "CORECT! ✨"; f.style.color = "#4ade80"; }
+        else { f.innerText = `MAI CALCULĂM? Răspuns corect: ${q.a[0]}`; f.style.color = "#f87171"; }
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        state.currentIdx++;
+        if(state.currentIdx < state.questions.length) showQuestion(); else finishGame();
+    }
+
+    function finishGame() {
+        document.getElementById('screen-game').classList.add('hidden');
+        document.getElementById('screen-end').classList.remove('hidden');
+        const nota = (1 + (state.correctAnswers / state.questions.length) * 9).toFixed(2);
+        document.getElementById('final-score').innerText = nota;
+        
+        const fd = new FormData();
+        fd.append("nume", state.name); fd.append("clasa", state.class + " - Optica"); fd.append("scor", nota);
+        fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+    }
+</script>
+</body>
+</html>

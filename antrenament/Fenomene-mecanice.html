@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FIZICĂ - FENOMENE MECANICE</title>
+    <style>
+        :root { --primary: #0284c7; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; }
+        .header { text-align: center; width: 100%; max-width: 700px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
+        .timer-bar { background: #334155; height: 10px; border-radius: 5px; width: 100%; margin: 10px 0; overflow: hidden; }
+        #timer-progress { background: var(--accent); height: 100%; width: 100%; transition: width 1s linear; }
+        .container { width: 100%; max-width: 650px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
+        .question-box { font-size: 1.25rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; }
+        .instruction-box { font-size: 0.9rem; color: #fbbf24; text-align: center; margin-bottom: 10px; font-weight: bold; background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 8px; }
+        .option-btn { background: #2d3748; border: 2px solid #4a5568; padding: 14px; border-radius: 12px; cursor: pointer; color: white; font-size: 1rem; transition: 0.2s; width: 100%; margin-bottom: 10px; text-align: left; }
+        .option-btn:hover:not(:disabled) { border-color: var(--primary); background: #334155; }
+        input[type="text"] { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.3rem; text-align: center; margin-bottom: 15px; }
+        .check-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; }
+        #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; }
+        .next-btn { width: 100%; background: #059669; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div style="font-size: 1.1rem; font-weight: bold; color: var(--accent);">🏫 ANTRENAMENT - FENOMENE MECANICE</div>
+        <div style="font-size: 0.9rem; color: #94a3b8;">TIMP RĂMAS: <span id="timer-text">45:00</span></div>
+        <div class="timer-bar"><div id="timer-progress"></div></div>
+    </div>
+
+    <div class="container" id="screen-login">
+        <h2 style="text-align:center;">🚗 Mișcare, Viteză, Densitate</h2>
+        <input type="text" id="p-name" placeholder="Numele elevului">
+        <select id="p-class" style="width:100%; padding:15px; margin: 15px 0; border-radius:12px; background:#0f172a; color:white; border: 2px solid #4a5568;">
+            <option value="">Alege clasa...</option>
+            <option value="6A">6A</option><option value="6B">6B</option><option value="6C">6C</option>
+        </select>
+        <button class="check-btn" onclick="startGame()">START ANTRENAMENT</button>
+    </div>
+
+    <div class="container hidden" id="screen-game">
+        <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
+        <div id="instruction" class="instruction-box">📝 CALCULEAZĂ ȘI INTRODU REZULTATUL</div>
+        <div class="question-box" id="question"></div>
+        <div id="input-area"></div>
+        <div id="feedback"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">URMĂTOAREA ➡️</button>
+    </div>
+
+    <div class="container hidden" id="screen-end">
+        <h2 style="text-align:center;">REZULTAT ANTRENAMENT</h2>
+        <div style="font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center;" id="final-score"></div>
+        <p style="text-align:center; color: #94a3b8;" id="raw-points"></p>
+        <button class="check-btn" onclick="location.reload()">REIA CU ALTE CIFRE</button>
+    </div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec"; 
+    let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [], timeLeft: 2700 };
+    let timerInterval;
+
+    const theoryPool = [
+        { q: "Corpul față de care se determină starea de mișcare se numește corp de ...........", type: "fill", a: ["referinta"] },
+        { q: "Linia descrisă de un corp în timpul mișcării se numește ...........", type: "fill", a: ["traiectorie"] },
+        { q: "Dacă traiectoria este o dreaptă, mișcarea se numește ...........", type: "fill", a: ["rectilinie"] },
+        { q: "Mișcarea și repausul sunt stări ........... (depind de corpul de referință).", type: "fill", a: ["relative"] },
+        { q: "Un corp care își schimbă poziția față de corpul de referință este în ...........", type: "fill", a: ["miscare"] },
+        { q: "Viteza medie este raportul dintre distanța parcursă și ...........", type: "fill", a: ["durata", "timp", "timpul"] },
+        { q: "Densitatea este raportul dintre masă și ...........", type: "fill", a: ["volum"] },
+        { q: "Instrumentul de măsură pentru masă este ...........", type: "fill", a: ["balanta", "cantarul"] },
+        { q: "Traiectoria circulară are forma unui cerc. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Viteza se măsoară în S.I. în metri pe secundă (m/s). (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" }
+    ];
+
+    function generateMath() {
+        let mathQ = [];
+        // 1. Probleme Viteză (v = d / t)
+        for(let i=0; i<5; i++) {
+            let d = Math.floor(Math.random() * 200 + 10);
+            let t = Math.floor(Math.random() * 10 + 2);
+            let res = (d / t).toFixed(2);
+            mathQ.push({ q: `Un mobil parcurge d = ${d} m în t = ${t} s. Viteza medie este ? m/s.`, type: "math", a: [parseFloat(res).toString()] });
+        }
+        // 2. Probleme Densitate (rho = m / V)
+        for(let i=0; i<5; i++) {
+            let m = Math.floor(Math.random() * 500 + 50);
+            let V = Math.floor(Math.random() * 100 + 10);
+            let res = (m / V).toFixed(2);
+            mathQ.push({ q: `Un corp are masa m = ${m} g și volumul V = ${V} cm³. Densitatea este ? g/cm³.`, type: "math", a: [parseFloat(res).toString()] });
+        }
+        return mathQ;
+    }
+
+    function startGame() {
+        state.name = document.getElementById('p-name').value.trim();
+        state.class = document.getElementById('p-class').value;
+        if(!state.name || !state.class) return alert("Completează datele!");
+        
+        state.questions = [...theoryPool, ...generateMath()].sort(() => 0.5 - Math.random()).slice(0, 15);
+        document.getElementById('screen-login').classList.add('hidden');
+        document.getElementById('screen-game').classList.remove('hidden');
+        timerInterval = setInterval(updateTimer, 1000);
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const q = state.questions[state.currentIdx];
+        document.getElementById('q-info').innerText = `ÎNTREBAREA ${state.currentIdx + 1} / 15`;
+        document.getElementById('question').innerText = q.q;
+        document.getElementById('instruction').style.display = (q.type === 'math') ? 'block' : 'none';
+        const area = document.getElementById('input-area');
+        area.innerHTML = '';
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
+        
+        if(q.type === 'choice') {
+            q.o.forEach(opt => {
+                const b = document.createElement('button');
+                b.className = 'option-btn'; b.innerText = opt;
+                b.onclick = () => checkAns(opt);
+                area.appendChild(b);
+            });
+        } else {
+            area.innerHTML = `<input type="text" id="user-ans" placeholder="Răspuns..."><button class="check-btn" onclick="checkAns(document.getElementById('user-ans').value)">VERIFICĂ</button>`;
+        }
+    }
+
+    function checkAns(user) {
+        const q = state.questions[state.currentIdx];
+        let isCorrect = false;
+        const clean = (s) => s.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().replace(",", ".");
+
+        if(q.type === 'math') {
+            isCorrect = Math.abs(parseFloat(clean(user)) - parseFloat(q.a[0])) < 0.15;
+        } else {
+            isCorrect = q.a.some(ans => clean(user) === clean(ans));
+        }
+        
+        const f = document.getElementById('feedback');
+        f.style.display = 'block';
+        if(isCorrect) { state.correctAnswers++; f.innerText = "CORECT! ✅"; f.style.color = "#4ade80"; }
+        else { f.innerText = `GREȘIT! Răspuns: ${q.a[0]} ❌`; f.style.color = "#f87171"; }
+        document.querySelectorAll('.option-btn, .check-btn').forEach(b => b.disabled = true);
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        state.currentIdx++;
+        if(state.currentIdx < 15) showQuestion(); else finishGame();
+    }
+
+    function updateTimer() {
+        if (state.timeLeft <= 0) { finishGame(); return; }
+        state.timeLeft--;
+        const mins = Math.floor(state.timeLeft / 60);
+        const secs = state.timeLeft % 60;
+        document.getElementById('timer-text').innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        document.getElementById('timer-progress').style.width = (state.timeLeft / 2700 * 100) + "%";
+    }
+
+    function finishGame() {
+        clearInterval(timerInterval);
+        document.getElementById('screen-game').classList.add('hidden');
+        document.getElementById('screen-end').classList.remove('hidden');
+        const nota = (1 + (state.correctAnswers * 0.6)).toFixed(2);
+        document.getElementById('final-score').innerText = nota > 10 ? "10.00" : nota;
+        document.getElementById('raw-points').innerText = `Scor: ${state.correctAnswers} / 15 corecte.`;
+        
+        const fd = new FormData();
+        fd.append("nume", state.name); fd.append("clasa", state.class + " - Mecanica 6"); fd.append("scor", nota);
+        fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+    }
+</script>
+</body>
+</html>

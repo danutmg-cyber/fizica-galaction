@@ -54,38 +54,33 @@
         }
         .active .test-list { max-height: 1000px; }
 
-        /* Stil pentru link-uri transformat în butoane de acțiune */
         .test-item { 
             padding: 15px 25px; color: #e2e8f0; text-decoration: none; border-bottom: 1px solid #334155;
             display: flex; align-items: center; font-size: 1rem; transition: 0.2s; cursor: pointer;
-            background: none; border: none; width: 100%; text-align: left;
+            background: none; border: none; width: 100%; text-align: left; box-sizing: border-box;
         }
         .test-item:hover { background: #334155; color: var(--accent); padding-left: 30px; }
         .final { font-weight: bold; color: #f87171 !important; border-left: 4px solid #ef4444; }
 
-        /* MODAL (Fereastra de selecție nume și clasă) */
+        /* MODAL */
         .modal {
-            display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.8); align-items: center; justify-content: center;
+            display: none; position: fixed; z-index: 9999; left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.85); align-items: center; justify-content: center;
         }
         .modal-content {
             background: var(--card); padding: 30px; border-radius: 12px; border: 2px solid var(--accent);
-            width: 90%; max-width: 400px; text-align: center;
+            width: 90%; max-width: 400px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
-        .modal-content h3 { color: var(--accent); margin-top: 0; }
+        .modal-content h3 { color: var(--accent); margin-top: 0; margin-bottom: 20px; }
         input, select {
             width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #475569;
             background: #0f172a; color: white; font-size: 1rem; box-sizing: border-box;
         }
         .btn-start {
             background: var(--accent); color: #000; border: none; padding: 15px 30px;
-            font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 10px;
+            font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 15px; font-size: 1rem;
         }
-
-        @media (max-width: 600px) {
-            .header h1 { font-size: 1.2rem; }
-            .test-item { font-size: 1.1rem; }
-        }
+        .btn-cancel { background:none; color:#94a3b8; border:none; margin-top:10px; cursor:pointer; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -98,7 +93,7 @@
 
     <div class="container">
         <div class="class-section">
-            <button class="class-trigger" onclick="this.parentElement.classList.toggle('active')">CLASA A VI-A <span>⊕</span></button>
+            <button class="class-trigger" onclick="toggleSection(this)">CLASA A VI-A <span>⊕</span></button>
             <div class="test-list">
                 <div class="test-item" onclick="openModal('antrenament/Concepte-baza-6.html', 'VI')">1. CONCEPTE DE BAZĂ ÎN FIZICĂ</div>
                 <div class="test-item" onclick="openModal('antrenament/Unitati-SI.html', 'VI')">2. UNITĂȚI DE MĂSURĂ</div>
@@ -111,7 +106,7 @@
         </div>
 
         <div class="class-section">
-            <button class="class-trigger" onclick="this.parentElement.classList.toggle('active')">CLASA A VII-A <span>⊕</span></button>
+            <button class="class-trigger" onclick="toggleSection(this)">CLASA A VII-A <span>⊕</span></button>
             <div class="test-list">
                 <div class="test-item" onclick="openModal('antrenament/Concepte-baza-7.html', 'VII')">1. CONCEPTE DE BAZĂ ÎN FIZICĂ</div>
                 <div class="test-item" onclick="openModal('antrenament/Interactiuni-7.html', 'VII')">2. INTERACȚIUNI</div>
@@ -125,7 +120,7 @@
         </div>
 
         <div class="class-section">
-            <button class="class-trigger" onclick="this.parentElement.classList.toggle('active')">CLASA A VIII-A <span>⊕</span></button>
+            <button class="class-trigger" onclick="toggleSection(this)">CLASA A VIII-A <span>⊕</span></button>
             <div class="test-list">
                 <div class="test-item" onclick="openModal('antrenament/Fenomene-termice-8.html', 'VIII')">1. FENOMENE TERMICE</div>
                 <div class="test-item" onclick="openModal('antrenament/Electrostatica-8.html', 'VIII')">2. ELECTROSTATICA</div>
@@ -143,25 +138,31 @@
         <div class="modal-content">
             <h3>Identificare Elev</h3>
             <input type="text" id="studentName" placeholder="Nume și Prenume">
-            <select id="studentClass">
-                </select>
+            <select id="studentClass"></select>
             <button class="btn-start" onclick="startTest()">ÎNCEPE TESTUL</button>
-            <button style="background:none; color:gray; border:none; margin-top:10px; cursor:pointer;" onclick="closeModal()">Anulează</button>
+            <button class="btn-cancel" onclick="closeModal()">Anulează</button>
         </div>
     </div>
 
     <script>
         let currentUrl = "";
+        let isModalOpen = false;
+
+        function toggleSection(btn) {
+            btn.parentElement.classList.toggle('active');
+        }
 
         function openModal(url, grade) {
+            if (isModalOpen) return; // Previne deschiderea dublă
+            
+            isModalOpen = true;
             currentUrl = url;
             const select = document.getElementById('studentClass');
-            select.innerHTML = ""; // Curăță opțiunile
+            select.innerHTML = "";
             
-            // Adaugă opțiunile A, B, C, D pentru clasa respectivă
             ['A', 'B', 'C', 'D'].forEach(letter => {
                 let opt = document.createElement('option');
-                opt.value = `a ${grade}-a ${letter}`;
+                opt.value = `Clasa a ${grade}-a ${letter}`;
                 opt.innerHTML = `Clasa a ${grade}-a ${letter}`;
                 select.appendChild(opt);
             });
@@ -171,21 +172,20 @@
 
         function closeModal() {
             document.getElementById('idModal').style.display = "none";
+            isModalOpen = false;
         }
 
         function startTest() {
-            const name = document.getElementById('studentName').value;
+            const name = document.getElementById('studentName').value.trim();
             const className = document.getElementById('studentClass').value;
             
-            if(name.trim().length < 3) {
+            if(name.length < 3) {
                 alert("Vă rugăm să introduceți numele complet.");
                 return;
             }
 
-            // Trimite datele către fișierul HTML al testului prin URL
             window.location.href = `${currentUrl}?nume=${encodeURIComponent(name)}&clasa=${encodeURIComponent(className)}`;
         }
     </script>
-
 </body>
 </html>

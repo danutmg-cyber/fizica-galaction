@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FIZICĂ VIII - ENERGIA ȘI VIAȚA</title>
+    <style>
+        :root { --primary: #10b981; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #34d399; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; }
+        .header { text-align: center; width: 100%; max-width: 750px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
+        .container { width: 100%; max-width: 700px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
+        
+        .learning-card { background: rgba(16, 185, 129, 0.1); border: 1px solid var(--primary); border-radius: 12px; padding: 15px; margin-bottom: 20px; font-size: 0.85rem; }
+        .learning-card h4 { margin: 0 0 10px 0; color: var(--accent); text-align: center; text-transform: uppercase; }
+        .concept-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        .question-box { font-size: 1.15rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; color: #e2e8f0; }
+        input[type="text"] { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.3rem; text-align: center; margin-bottom: 15px; }
+        .check-btn { width: 100%; background: var(--primary); color: #0f172a; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .next-btn { width: 100%; background: #3b82f6; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
+        #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div style="font-size: 1.1rem; font-weight: bold; color: var(--accent);">🌿 FIZICĂ VIII - ENERGIA ȘI VIAȚA</div>
+        <p style="font-size: 0.9rem; color: #94a3b8;">Surse, Resurse și Dezvoltare Durabilă</p>
+    </div>
+
+    <div class="container" id="screen-login">
+        <h2 style="text-align:center;">🌍 Eco-Fizică</h2>
+        <input type="text" id="p-name" placeholder="Numele elevului">
+        <select id="p-class" style="width:100%; padding:15px; margin: 15px 0; border-radius:12px; background:#0f172a; color:white; border: 2px solid #4a5568;">
+            <option value="">Alege clasa...</option>
+            <option value="8A">8A</option><option value="8B">8B</option><option value="8C">8C</option>
+        </select>
+        <button class="check-btn" onclick="startGame()">START SESIUNE</button>
+    </div>
+
+    <div class="container hidden" id="screen-game">
+        <div class="learning-card">
+            <h4>📘 INFO-POINT: ENERGIE & MEDIU</h4>
+            <div class="concept-grid">
+                <div>• <b>Surse regenerabile:</b> Soare, Vânt, Apă, Biomasă.</div>
+                <div>• <b>Surse neregenerabile:</b> Cărbune, Petrol, Gaz, Uraniu.</div>
+                <div>• <b>Randament (η):</b> η = E_utilă / E_consumată</div>
+                <div>• <b>1 kcal:</b> ≈ 4180 Joule</div>
+            </div>
+        </div>
+
+        <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
+        <div class="question-box" id="question"></div>
+        <div id="input-area"></div>
+        <div id="feedback"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">PASUL URMĂTOR ➡️</button>
+    </div>
+
+    <div class="container hidden" id="screen-end">
+        <h2 style="text-align:center;">CONCLUZIE ANTRENAMENT</h2>
+        <div style="font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center;" id="final-score"></div>
+        <button class="check-btn" onclick="location.reload()">REIA TESTUL</button>
+    </div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec"; 
+    let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [] };
+
+    function generateBioEnergy() {
+        let qSet = [
+            { q: "Procesul prin care plantele transformă energia luminoasă în energie chimică se numește ...........", type: "fill", a: ["fotosinteza"] },
+            { q: "Gazele care rețin căldura în atmosfera terestră produc efectul de ...........", type: "fill", a: ["sera"] },
+            { q: "Energia stocată în plante și deșeuri organice se numește ...........", type: "fill", a: ["biomasa"] },
+            { q: "Panourile care transformă direct lumina solară în energie electrică se numesc panouri ...........", type: "fill", a: ["fotovoltaice"] }
+        ];
+
+        // 1. Calcul Energie Alimentară (Joule -> kcal)
+        let kcal = Math.floor(Math.random() * 200 + 50);
+        let joule = Math.round(kcal * 4.18); 
+        qSet.push({ q: `Un aliment furnizează ${kcal} kcal. Știind că 1 kcal ≈ 4,18 kJ, care este energia exprimată în kJ?`, type: "math", a: [joule.toString()] });
+
+        // 2. Calcul Randament
+        let e_cons = 1000;
+        let e_util = Math.floor(Math.random() * 400 + 200);
+        let randament = (e_util / e_cons).toFixed(2);
+        qSet.push({ q: `O mașină electrică consumă ${e_cons} J pentru a efectua un lucru util de ${e_util} J. Care este randamentul sistemului (sub formă de zecimală, ex: 0,35)?`, type: "math", a: [randament.toString().replace(".",",")] });
+
+        return qSet.sort(() => 0.5 - Math.random());
+    }
+
+    function startGame() {
+        state.name = document.getElementById('p-name').value.trim();
+        state.class = document.getElementById('p-class').value;
+        if(!state.name || !state.class) return alert("Introdu datele!");
+        state.questions = generateBioEnergy();
+        document.getElementById('screen-login').classList.add('hidden');
+        document.getElementById('screen-game').classList.remove('hidden');
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const q = state.questions[state.currentIdx];
+        document.getElementById('q-info').innerText = `ÎNTREBAREA ${state.currentIdx + 1} / ${state.questions.length}`;
+        document.getElementById('question').innerText = q.q;
+        const area = document.getElementById('input-area');
+        area.innerHTML = `<input type="text" id="user-ans" placeholder="Răspuns...">
+                          <button class="check-btn" onclick="checkAns(document.getElementById('user-ans').value)">VERIFICĂ</button>`;
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    function checkAns(user) {
+        const q = state.questions[state.currentIdx];
+        const clean = (s) => s.toString().toLowerCase().trim().replace(",", ".");
+        let isCorrect = false;
+
+        if(q.type === "math") {
+            isCorrect = Math.abs(parseFloat(clean(user)) - parseFloat(q.a[0].replace(",", "."))) < 0.1;
+        } else {
+            isCorrect = q.a.some(ans => clean(user) === clean(ans));
+        }
+
+        const f = document.getElementById('feedback');
+        f.style.display = 'block';
+        if(isCorrect) { state.correctAnswers++; f.innerText = "CORECT! 🌱"; f.style.color = "#4ade80"; }
+        else { f.innerText = `MAI ÎNCEARCĂ! Răspuns: ${q.a[0]}`; f.style.color = "#f87171"; }
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        state.currentIdx++;
+        if(state.currentIdx < state.questions.length) showQuestion(); else finishGame();
+    }
+
+    function finishGame() {
+        document.getElementById('screen-game').classList.add('hidden');
+        document.getElementById('screen-end').classList.remove('hidden');
+        const nota = (1 + (state.correctAnswers / state.questions.length) * 9).toFixed(2);
+        document.getElementById('final-score').innerText = nota;
+        
+        const fd = new FormData();
+        fd.append("nume", state.name); fd.append("clasa", state.class + " - EnergieViata 8"); fd.append("scor", nota);
+        fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+    }
+</script>
+</body>
+</html>

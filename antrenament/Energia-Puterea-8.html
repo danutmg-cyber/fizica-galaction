@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FIZICĂ VIII - ENERGIA ȘI PUTEREA ELECTRICĂ</title>
+    <style>
+        :root { --primary: #e11d48; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #fb7185; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; }
+        .header { text-align: center; width: 100%; max-width: 750px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
+        .container { width: 100%; max-width: 700px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
+        
+        .learning-card { background: rgba(225, 29, 72, 0.1); border: 1px solid var(--primary); border-radius: 12px; padding: 15px; margin-bottom: 20px; font-size: 0.85rem; line-height: 1.4; }
+        .learning-card h4 { margin: 0 0 10px 0; color: var(--accent); text-align: center; }
+        .formula-box { display: flex; justify-content: space-around; flex-wrap: wrap; gap: 10px; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; }
+        
+        .question-box { font-size: 1.2rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; }
+        input[type="text"] { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.3rem; text-align: center; margin-bottom: 15px; }
+        .check-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .next-btn { width: 100%; background: #22c55e; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
+        #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div style="font-size: 1.1rem; font-weight: bold; color: var(--accent);">🔋 FIZICĂ VIII - ENERGIA ȘI PUTEREA</div>
+        <p style="font-size: 0.9rem; color: #94a3b8;">Legea lui Joule și Consumul Electric</p>
+    </div>
+
+    <div class="container" id="screen-login">
+        <h2 style="text-align:center;">⚡ Efectul Termic</h2>
+        <input type="text" id="p-name" placeholder="Numele elevului">
+        <select id="p-class" style="width:100%; padding:15px; margin: 15px 0; border-radius:12px; background:#0f172a; color:white; border: 2px solid #4a5568;">
+            <option value="">Alege clasa...</option>
+            <option value="8A">8A</option><option value="8B">8B</option><option value="8C">8C</option>
+        </select>
+        <button class="check-btn" onclick="startGame()">START TEST</button>
+    </div>
+
+    <div class="container hidden" id="screen-game">
+        <div class="learning-card">
+            <h4>📘 GHID DE FORMULE (ENERGIE & PUTERE)</h4>
+            <div class="formula-box">
+                <span><b>P = U · I</b></span>
+                <span><b>P = I² · R</b></span>
+                <span><b>P = U² / R</b></span>
+                <span><b>W = P · t</b> (Joule)</span>
+            </div>
+            <p style="text-align:center; margin-top:10px; font-size:0.8rem;">* Unități: P [Watt], W [Joule], t [secunde]</p>
+        </div>
+
+        <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
+        <div class="question-box" id="question"></div>
+        <div id="input-area"></div>
+        <div id="feedback"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">URMĂTORUL PAS ➡️</button>
+    </div>
+
+    <div class="container hidden" id="screen-end">
+        <h2 style="text-align:center;">REZULTAT EVALUARE</h2>
+        <div style="font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center;" id="final-score"></div>
+        <p style="text-align:center; color: #94a3b8;" id="raw-points"></p>
+        <button class="check-btn" onclick="location.reload()">REIA CU ALTE CIFRE</button>
+    </div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec"; 
+    let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [] };
+
+    function generateJouleMath() {
+        let qSet = [
+            { q: "Transformarea energiei electrice în energie termică se numește efectul ...........", type: "fill", a: ["joule"] },
+            { q: "Unitatea de măsură pentru puterea electrică în S.I. este ...........", type: "fill", a: ["watt", "w"] },
+            { q: "1 kWh (kilowatt-oră) este o unitate de măsură pentru ...........", type: "fill", a: ["energie", "energia electrica"] },
+            { q: "Aparatul care măsoară energia electrică consumată la domiciliu este ...........", type: "fill", a: ["contorul"] }
+        ];
+
+        // 1. Calcul Putere (P = U * I)
+        let u1 = 220;
+        let i1 = (Math.random() * 5 + 0.5).toFixed(1);
+        let p1 = Math.round(u1 * i1);
+        qSet.push({ q: `Un consumator este alimentat la U = ${u1}V și prin el trece un curent I = ${i1}A. Ce putere are acesta? (W)`, type: "math", a: [p1.toString()] });
+
+        // 2. Legea lui Joule (Q = I^2 * R * t)
+        let r2 = Math.floor(Math.random() * 10 + 2);
+        let i2 = 2; 
+        let t2 = 60; // 1 minut
+        let q2 = i2 * i2 * r2 * t2;
+        qSet.push({ q: `Un rezistor R = ${r2}Ω este parcurs de I = ${i2}A timp de 1 minut. Câtă căldură degajă? (J)`, type: "math", a: [q2.toString()] });
+
+        // 3. Putere din Rezistență (P = U^2 / R)
+        let r3 = 100;
+        let u3 = 10 * Math.floor(Math.random() * 5 + 1);
+        let p3 = (u3 * u3) / r3;
+        qSet.push({ q: `La bornele unui rezistor R = ${r3}Ω se aplică U = ${u3}V. Puterea consumată este ? W.`, type: "math", a: [p3.toString()] });
+
+        return qSet.sort(() => 0.5 - Math.random());
+    }
+
+    function startGame() {
+        state.name = document.getElementById('p-name').value.trim();
+        state.class = document.getElementById('p-class').value;
+        if(!state.name || !state.class) return alert("Introdu datele!");
+        state.questions = generateJouleMath();
+        document.getElementById('screen-login').classList.add('hidden');
+        document.getElementById('screen-game').classList.remove('hidden');
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const q = state.questions[state.currentIdx];
+        document.getElementById('q-info').innerText = `ÎNTREBAREA ${state.currentIdx + 1} / ${state.questions.length}`;
+        document.getElementById('question').innerText = q.q;
+        const area = document.getElementById('input-area');
+        area.innerHTML = `<input type="text" id="user-ans" placeholder="Valoare numerică...">
+                          <button class="check-btn" onclick="checkAns(document.getElementById('user-ans').value)">VERIFICĂ</button>`;
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    function checkAns(user) {
+        const q = state.questions[state.currentIdx];
+        const clean = (s) => s.toString().toLowerCase().trim().replace(",", ".");
+        let isCorrect = false;
+
+        if(q.type === "math") {
+            isCorrect = Math.abs(parseFloat(clean(user)) - parseFloat(q.a[0])) < 1;
+        } else {
+            isCorrect = q.a.some(ans => clean(user) === clean(ans));
+        }
+
+        const f = document.getElementById('feedback');
+        f.style.display = 'block';
+        if(isCorrect) { state.correctAnswers++; f.innerText = "CORECT! 💡"; f.style.color = "#4ade80"; }
+        else { f.innerText = `MAI CALCULĂM? Răspuns: ${q.a[0]}`; f.style.color = "#f87171"; }
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        state.currentIdx++;
+        if(state.currentIdx < state.questions.length) showQuestion(); else finishGame();
+    }
+
+    function finishGame() {
+        document.getElementById('screen-game').classList.add('hidden');
+        document.getElementById('screen-end').classList.remove('hidden');
+        const nota = (1 + (state.correctAnswers / state.questions.length) * 9).toFixed(2);
+        document.getElementById('final-score').innerText = nota;
+        document.getElementById('raw-points').innerText = `Corecte: ${state.correctAnswers} / ${state.questions.length}`;
+        
+        const fd = new FormData();
+        fd.append("nume", state.name); fd.append("clasa", state.class + " - Energie 8"); fd.append("scor", nota);
+        fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+    }
+</script>
+</body>
+</html>

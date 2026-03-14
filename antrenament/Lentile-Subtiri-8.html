@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FIZICĂ VIII - LENTILE SUBȚIRI</title>
+    <style>
+        :root { --primary: #0ea5e9; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; }
+        .header { text-align: center; width: 100%; max-width: 750px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
+        .container { width: 100%; max-width: 700px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
+        
+        .learning-card { background: rgba(14, 165, 233, 0.1); border: 1px solid var(--primary); border-radius: 12px; padding: 15px; margin-bottom: 20px; font-size: 0.85rem; line-height: 1.4; }
+        .learning-card h4 { margin: 0 0 10px 0; color: var(--accent); text-align: center; }
+        .formula-box { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; text-align: center; font-weight: bold; }
+        
+        .question-box { font-size: 1.15rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; }
+        input[type="text"] { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.3rem; text-align: center; margin-bottom: 15px; }
+        .check-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .next-btn { width: 100%; background: #10b981; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
+        #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div style="font-size: 1.1rem; font-weight: bold; color: var(--accent);">🔍 FIZICĂ VIII - LENTILE SUBȚIRI</div>
+        <p style="font-size: 0.9rem; color: #94a3b8;">Imagini, Distanțe focale și Convergență</p>
+    </div>
+
+    <div class="container" id="screen-login">
+        <h2 style="text-align:center;">👓 Sisteme Optice</h2>
+        <input type="text" id="p-name" placeholder="Numele elevului">
+        <select id="p-class" style="width:100%; padding:15px; margin: 15px 0; border-radius:12px; background:#0f172a; color:white; border: 2px solid #4a5568;">
+            <option value="">Alege clasa...</option>
+            <option value="8A">8A</option><option value="8B">8B</option><option value="8C">8C</option>
+        </select>
+        <button class="check-btn" onclick="startGame()">ÎNCEPE ANTRENAMENTUL</button>
+    </div>
+
+    <div class="container hidden" id="screen-game">
+        <div class="learning-card">
+            <h4>📘 GHID: FORMULA LENTILELOR</h4>
+            <div class="formula-box">
+                1/x₂ - 1/x₁ = 1/f &nbsp; | &nbsp; C = 1/f (dioptrii)
+            </div>
+            <p style="margin-top:10px; font-size:0.8rem;">
+                • <b>Convergentă:</b> f > 0 | <b>Divergentă:</b> f < 0 <br>
+                • <b>x₁:</b> distanța obiect (negativă) | <b>x₂:</b> distanța imagine
+            </p>
+        </div>
+
+        <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
+        <div class="question-box" id="question"></div>
+        <div id="input-area"></div>
+        <div id="feedback"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">URMĂTORUL PAS ➡️</button>
+    </div>
+
+    <div class="container hidden" id="screen-end">
+        <h2 style="text-align:center;">REZULTAT TEST</h2>
+        <div style="font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center;" id="final-score"></div>
+        <button class="check-btn" onclick="location.reload()">REIA EXERSAREA</button>
+    </div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec"; 
+    let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [] };
+
+    function generateLensMath() {
+        let qSet = [
+            { q: "Lentila care este mai groasă la mijloc decât la margini se numește lentilă ...........", type: "fill", a: ["convergenta"] },
+            { q: "Punctul de pe axa optică în care converg razele paralele după refracție se numește ...........", type: "fill", a: ["focar"] },
+            { q: "Unitatea de măsură pentru convergența unei lentile este ...........", type: "fill", a: ["dioptria", "dioptrii"] },
+            { q: "Lentilele divergente formează întotdeauna imagini ........... (reale/virtuale).", type: "fill", a: ["virtuale"] }
+        ];
+
+        // 1. Calcul Convergență C = 1/f
+        let f1_cm = [10, 20, 25, 50][Math.floor(Math.random() * 4)];
+        let f1_m = f1_cm / 100;
+        let c1 = (1 / f1_m).toFixed(0);
+        qSet.push({ q: `O lentilă are distanța focală f = ${f1_cm} cm. Care este convergența sa C în dioptrii?`, type: "math", a: [c1.toString()] });
+
+        // 2. Calcul x2 (Imaginea) - Obiect la 2f
+        let f2 = Math.floor(Math.random() * 10 + 5);
+        let x1 = -2 * f2;
+        let x2 = 2 * f2; // La 2f imaginea e tot la 2f
+        qSet.push({ q: `Un obiect e plasat la x1 = ${x1} cm de o lentilă cu f = ${f2} cm. La ce distanță x2 apare imaginea? (cm)`, type: "math", a: [x2.toString()] });
+
+        return qSet.sort(() => 0.5 - Math.random());
+    }
+
+    function startGame() {
+        state.name = document.getElementById('p-name').value.trim();
+        state.class = document.getElementById('p-class').value;
+        if(!state.name || !state.class) return alert("Introdu datele!");
+        state.questions = generateLensMath();
+        document.getElementById('screen-login').classList.add('hidden');
+        document.getElementById('screen-game').classList.remove('hidden');
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const q = state.questions[state.currentIdx];
+        document.getElementById('q-info').innerText = `ÎNTREBAREA ${state.currentIdx + 1} / ${state.questions.length}`;
+        document.getElementById('question').innerText = q.q;
+        const area = document.getElementById('input-area');
+        area.innerHTML = `<input type="text" id="user-ans" placeholder="Răspuns...">
+                          <button class="check-btn" onclick="checkAns(document.getElementById('user-ans').value)">VERIFICĂ</button>`;
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
+    }
+
+    function checkAns(user) {
+        const q = state.questions[state.currentIdx];
+        const clean = (s) => s.toString().toLowerCase().trim().replace(",", ".");
+        let isCorrect = false;
+
+        if(q.type === "math") {
+            isCorrect = Math.abs(parseFloat(clean(user)) - parseFloat(q.a[0])) < 0.1;
+        } else {
+            isCorrect = q.a.some(ans => clean(user) === clean(ans));
+        }
+
+        const f = document.getElementById('feedback');
+        f.style.display = 'block';
+        if(isCorrect) { state.correctAnswers++; f.innerText = "EXACT! 🔎"; f.style.color = "#4ade80"; }
+        else { f.innerText = `MAI ÎNCEARCĂ! Răspuns: ${q.a[0]}`; f.style.color = "#f87171"; }
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        state.currentIdx++;
+        if(state.currentIdx < state.questions.length) showQuestion(); else finishGame();
+    }
+
+    function finishGame() {
+        document.getElementById('screen-game').classList.add('hidden');
+        document.getElementById('screen-end').classList.remove('hidden');
+        const nota = (1 + (state.correctAnswers / state.questions.length) * 9).toFixed(2);
+        document.getElementById('final-score').innerText = nota;
+        
+        const fd = new FormData();
+        fd.append("nume", state.name); fd.append("clasa", state.class + " - Lentile 8"); fd.append("scor", nota);
+        fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+    }
+</script>
+</body>
+</html>

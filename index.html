@@ -6,79 +6,71 @@
     <title>Fizica - Gala Galaction</title>
     <style>
         :root { 
-            --primary: #1e3a8a; 
-            --secondary: #1d4ed8;
             --accent: #f59e0b; 
             --bg: #0f172a; 
             --card: #1e293b; 
-            --text: #f8fafc; 
+            --text: #f8fafc;
+            /* Nuanțe Butoane */
+            --cls6: #2563eb; /* Albastru Regal */
+            --cls7: #1d4ed8; /* Albastru Intens */
+            --cls8: #1e3a8a; /* Albastru Închis */
         }
         
         body { 
             font-family: 'Segoe UI', system-ui, sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            margin: 0; 
-            padding: 15px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
+            background: var(--bg); color: var(--text); margin: 0; padding: 15px; 
+            display: flex; flex-direction: column; align-items: center; 
         }
         
         .header { 
-            text-align: center; 
-            margin-bottom: 25px; 
-            border-bottom: 2px solid var(--accent); 
-            padding-bottom: 15px; 
-            width: 100%; 
-            max-width: 800px; 
+            text-align: center; margin-bottom: 25px; border-bottom: 2px solid var(--accent); 
+            padding-bottom: 15px; width: 100%; max-width: 800px; 
         }
-        .header h1 { margin: 0; font-size: 1.5rem; color: white; text-transform: uppercase; }
-        .header h2 { margin: 5px 0; font-size: 1.3rem; color: #cbd5e1; font-weight: bold; }
+        .header h1 { margin: 0; font-size: 1.5rem; text-transform: uppercase; }
+        .header h2 { margin: 5px 0; font-size: 1.3rem; color: #cbd5e1; }
         .motto { font-style: italic; font-size: 0.85rem; color: var(--accent); margin-top: 5px; }
 
         .container { width: 100%; max-width: 800px; }
-        .class-section { margin-bottom: 12px; border-radius: 8px; overflow: hidden; border: 1px solid #334155; background: var(--card); }
+        .class-section { margin-bottom: 15px; border-radius: 10px; overflow: hidden; background: var(--card); box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); }
         
+        /* Stiluri specifice pentru butoanele claselor */
         .class-trigger { 
-            width: 100%; padding: 20px; background: var(--primary); color: white; border: none; 
+            width: 100%; padding: 22px; color: white; border: none; 
             font-size: 1.2rem; font-weight: bold; cursor: pointer; display: flex; 
-            justify-content: space-between; align-items: center;
+            justify-content: space-between; align-items: center; transition: filter 0.2s;
         }
+        .btn-vi { background: var(--cls6); }
+        .btn-vii { background: var(--cls7); }
+        .btn-viii { background: var(--cls8); }
+        .class-trigger:hover { filter: brightness(1.1); }
         
-        .active .class-trigger { background: var(--secondary); border-bottom: 2px solid var(--accent); }
+        .active .class-trigger { border-bottom: 3px solid var(--accent); }
         
-        .test-list { 
-            max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out;
-            display: flex; flex-direction: column; 
-        }
+        .test-list { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; display: flex; flex-direction: column; }
         .active .test-list { max-height: 1000px; }
 
-        /* Butonul de test - curățat de interferențe */
         .test-btn { 
-            padding: 15px 25px; color: #e2e8f0; text-decoration: none; border: none;
-            border-bottom: 1px solid #334155; background: none; text-align: left;
-            display: block; width: 100%; font-size: 1rem; cursor: pointer;
-            transition: 0.2s;
+            padding: 16px 25px; color: #e2e8f0; border: none; border-bottom: 1px solid #334155;
+            background: none; text-align: left; width: 100%; font-size: 1rem; cursor: pointer; transition: 0.2s;
         }
-        .test-btn:hover { background: #334155; color: var(--accent); padding-left: 30px; }
+        .test-btn:hover { background: #334155; color: var(--accent); padding-left: 35px; }
         .final { font-weight: bold; color: #f87171 !important; border-left: 4px solid #ef4444; }
 
-        /* MODAL (Identificare) */
+        /* MODAL */
         .modal {
             display: none; position: fixed; z-index: 10000; left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.9); align-items: center; justify-content: center;
+            background: rgba(0,0,0,0.9); align-items: center; justify-content: center;
         }
         .modal-content {
             background: var(--card); padding: 30px; border-radius: 12px; border: 2px solid var(--accent);
-            width: 90%; max-width: 400px; text-align: center;
+            width: 90%; max-width: 380px; text-align: center;
         }
         input, select {
             width: 100%; padding: 12px; margin: 10px 0; border-radius: 6px; border: 1px solid #475569;
-            background: #0f172a; color: white; font-size: 1rem;
+            background: #0f172a; color: white; font-size: 1rem; box-sizing: border-box;
         }
         .btn-start {
-            background: var(--accent); color: #000; border: none; padding: 15px 30px;
+            background: var(--accent); color: #000; border: none; padding: 15px;
             font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 10px;
         }
     </style>
@@ -93,7 +85,7 @@
 
     <div class="container">
         <div class="class-section">
-            <button class="class-trigger" onclick="toggleClasa(this)">CLASA A VI-A <span>⊕</span></button>
+            <button class="class-trigger btn-vi" onclick="toggleClasa(this)">CLASA A VI-A <span>⊕</span></button>
             <div class="test-list">
                 <button class="test-btn" onclick="pregatesteTest('antrenament/Concepte-baza-6.html', 'VI')">1. CONCEPTE DE BAZĂ ÎN FIZICĂ</button>
                 <button class="test-btn" onclick="pregatesteTest('antrenament/Unitati-SI.html', 'VI')">2. UNITĂȚI DE MĂSURĂ</button>
@@ -106,7 +98,7 @@
         </div>
 
         <div class="class-section">
-            <button class="class-trigger" onclick="toggleClasa(this)">CLASA A VII-A <span>⊕</span></button>
+            <button class="class-trigger btn-vii" onclick="toggleClasa(this)">CLASA A VII-A <span>⊕</span></button>
             <div class="test-list">
                 <button class="test-btn" onclick="pregatesteTest('antrenament/Concepte-baza-7.html', 'VII')">1. CONCEPTE DE BAZĂ ÎN FIZICĂ</button>
                 <button class="test-btn" onclick="pregatesteTest('antrenament/Interactiuni-7.html', 'VII')">2. INTERACȚIUNI</button>
@@ -120,7 +112,7 @@
         </div>
 
         <div class="class-section">
-            <button class="class-trigger" onclick="toggleClasa(this)">CLASA A VIII-A <span>⊕</span></button>
+            <button class="class-trigger btn-viii" onclick="toggleClasa(this)">CLASA A VIII-A <span>⊕</span></button>
             <div class="test-list">
                 <button class="test-btn" onclick="pregatesteTest('antrenament/Fenomene-termice-8.html', 'VIII')">1. FENOMENE TERMICE</button>
                 <button class="test-btn" onclick="pregatesteTest('antrenament/Electrostatica-8.html', 'VIII')">2. ELECTROSTATICA</button>
@@ -136,11 +128,11 @@
 
     <div id="modalNume" class="modal">
         <div class="modal-content">
-            <h3 style="color:var(--accent)">Identificare Elev</h3>
+            <h3 style="color:var(--accent); margin-top:0;">Identificare Elev</h3>
             <input type="text" id="numeElev" placeholder="Nume și Prenume">
             <select id="selectClasa"></select>
             <button class="btn-start" onclick="incepeTestul()">ÎNCEPE TESTUL</button>
-            <p onclick="inchideModal()" style="cursor:pointer; color:gray; margin-top:15px;">Anulează</p>
+            <p onclick="inchideModal()" style="cursor:pointer; color:gray; margin-top:15px; font-size:0.9rem;">Anulează</p>
         </div>
     </div>
 
@@ -153,21 +145,17 @@
         }
 
         function pregatesteTest(url, clasa) {
-            if(modalActiv) return; // Blochează dacă e deja deschis
-            
+            if(modalActiv) return;
             modalActiv = true;
             testDestinatie = url;
             const select = document.getElementById('selectClasa');
             select.innerHTML = "";
-            
-            // Creează opțiunile A, B, C, D
             ['A', 'B', 'C', 'D'].forEach(litera => {
                 let opt = document.createElement('option');
-                opt.value = `a ${clasa}-a ${litera}`;
+                opt.value = `Clasa a ${clasa}-a ${litera}`;
                 opt.textContent = `Clasa a ${clasa}-a ${litera}`;
                 select.appendChild(opt);
             });
-
             document.getElementById('modalNume').style.display = "flex";
         }
 
@@ -179,13 +167,7 @@
         function incepeTestul() {
             const nume = document.getElementById('numeElev').value.trim();
             const clasa = document.getElementById('selectClasa').value;
-
-            if(nume.length < 3) {
-                alert("Te rugăm să introduci numele complet.");
-                return;
-            }
-
-            // Redirecționare curată
+            if(nume.length < 3) { alert("Introdu numele tău complet."); return; }
             window.location.href = testDestinatie + "?nume=" + encodeURIComponent(nume) + "&clasa=" + encodeURIComponent(clasa);
         }
     </script>

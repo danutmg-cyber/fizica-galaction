@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FIZICĂ - FENOMENE OPTICE</title>
-    <link rel="icon" type="image/png" href="https://img.icons8.com/fluency/48/light.png">
     <style>
         :root { --primary: #7c3aed; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #a78bfa; }
         * { box-sizing: border-box; }
@@ -34,11 +33,11 @@
 
     <div class="container" id="screen-login">
         <h2 style="text-align:center;">💡 Fenomene Optice</h2>
-        <p style="text-align:center; color:#94a3b8;">30 întrebări | Clasa a VIII-a</p>
         <input type="text" id="p-name" placeholder="Numele tău complet">
         <select id="p-class" style="width:100%; padding:15px; margin: 15px 0; border-radius:12px; background:#0f172a; color:white; border: 2px solid #4a5568;">
             <option value="">Selectează clasa...</option>
-            <option value="8A">Clasa a VIII-a A</option><option value="8B">Clasa a VIII-a B</option>
+            <option value="8A">Clasa a VIII-a A</option>
+            <option value="8B">Clasa a VIII-a B</option>
             <option value="8C">Clasa a VIII-a C</option>
         </select>
         <button class="check-btn" onclick="startGame()">START TEST</button>
@@ -47,7 +46,7 @@
     <div class="container hidden" id="screen-game">
         <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
         <div class="question-box" id="question"></div>
-        <div id="instruction" class="instruction-box">📝 Calculează rezultatul corect!</div>
+        <div id="instruction" class="instruction-box">📝 Calculează rezultatul!</div>
         <div id="input-area"></div>
         <div id="feedback"></div>
         <button class="next-btn" id="next-btn" onclick="nextQuestion()">URMĂTOAREA ➡️</button>
@@ -66,43 +65,49 @@
     let timerInterval;
 
     const theoryPool = [
-        { q: "Corpul care lasă să treacă toată lumina prin el se numește ...........", type: "fill", a: ["transparent"] },
-        { q: "Unghiul de incidență este egal cu unghiul de reflexie. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Viteza luminii în vid este de aproximativ ........... km/s.", type: "fill", a: ["300000"] },
-        { q: "Oglinda plană formează o imagine virtuală și simetrică. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Schimbarea direcției luminii la trecerea dintr-un mediu în altul se numește ...........", type: "fill", a: ["refractie"] },
-        { q: "Lentila convergentă este mai subțire la mijloc decât la margini. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Fals" },
-        { q: "Punctul în care converg razele paralele după trecerea prin lentilă se numește ...........", type: "fill", a: ["focar"] },
+        { q: "Corpul care lasă să treacă aproape toată lumina prin el se numește corp ...........", type: "fill", a: ["transparent"] },
+        { q: "Unghiul de incidență este egal cu cel de reflexie. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Viteza luminii în vid este de aproximativ 300.000 km/s. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Oglinda plană formează o imagine virtuală și răsturnată. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Fals" },
+        { q: "Schimbarea direcției la trecerea dintr-un mediu în altul se numește ...........", type: "fill", a: ["refractie"] },
+        { q: "Lentila convergentă transformă razele paralele într-un fascicul convergent. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Punctul în care se adună razele după refracție într-o lentilă se numește ...........", type: "fill", a: ["focar"] },
         { q: "Convergența unei lentile se măsoară în ...........", type: "fill", a: ["dioptrii"] },
-        { q: "Ochiul miop folosește pentru corecție lentile divergente. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Miopia se corectează cu lentile convergente. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Fals" },
         { q: "Curcubeul apare datorită fenomenului de ........... a luminii.", type: "fill", a: ["dispersie"] },
-        { q: "Lumina albă este compusă din 7 culori spectrale. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Imaginea formată pe retina ochiului este răsturnată. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Distanța focală este inversul convergenței. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Indicele de refracție al vidului este egal cu ...........", type: "fill", a: ["1"] },
-        { q: "Reflexia totală poate apărea doar la trecerea într-un mediu mai puțin optic. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Lentila divergentă transformă un fascicul paralel într-unul divergent. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
-        { q: "Focarul unei lentile divergente este un focar virtual. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" }
+        { q: "Lumina albă se descompune în 7 culori prin prismă. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Imaginea de pe retina ochiului este reală și răsturnată. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Distanța focală este distanța de la centrul lentilei la focar. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Indicele de refracție al apei este mai mare decât al vidului. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Lumina se propagă în medii omogene sub formă de linii ...........", type: "fill", a: ["drepte"] },
+        { q: "Umbra apare din cauza propagării rectilinii a luminii. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Oglinda convexă oferă un câmp vizual mai mare decât cea plană. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Lentila divergentă este mai groasă la margini decât la mijloc. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Indicele de refracție se notează cu litera ...........", type: "fill", a: ["n"] },
+        { q: "Hipermetropia se corectează cu lentile convergente. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Vidul este mediul cu cel mai mic indice de refracție. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Lentila convergentă are convergența pozitivă (+). (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Lentila divergentă are focarul virtual. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" },
+        { q: "Pata oarbă este zona din ochi unde nu există receptori vizuali. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" }
     ];
 
-    function generateMathProblems() {
-        const p = [];
-        // Convergența C = 1/f
-        let f1 = (Math.floor(Math.random() * 4) + 1) * 0.2; // 0.2, 0.4 etc
-        p.push({ q: `Calculați convergența (C) a unei lentile cu distanța focală f = ${f1} m.`, type: "math", a: [(1/f1).toFixed(2)] });
-        // Unghiuri
-        let i2 = Math.floor(Math.random() * 40) + 10;
-        p.push({ q: `Dacă unghiul dintre raza incidentă și oglindă este de ${i2}°, cât este unghiul de reflexie?`, type: "math", a: [(90 - i2).toString()] });
-        return p;
+    function generateMath() {
+        const m = [];
+        for(let i=0; i<10; i++) {
+            let val = (Math.random() * 2 + 0.1).toFixed(1);
+            m.push({ q: `Calculați convergența C (în dioptrii) pentru o lentilă cu f = ${val} m. (C=1/f)`, type: "math", a: [(1/val).toFixed(2)] });
+        }
+        return m;
     }
 
     function startGame() {
         state.name = document.getElementById('p-name').value.trim();
         state.class = document.getElementById('p-class').value;
         if(!state.name || !state.class) return alert("Completează datele!");
-        const maths = generateMathProblems();
-        const theory = theoryPool.sort(() => 0.5 - Math.random()).slice(0, 28);
-        state.questions = [...theory, ...maths].sort(() => 0.5 - Math.random());
+        
+        let allPossible = [...theoryPool, ...generateMath()].sort(() => 0.5 - Math.random());
+        state.questions = allPossible.slice(0, 30);
+        
         document.getElementById('screen-login').classList.add('hidden');
         document.getElementById('screen-game').classList.remove('hidden');
         timerInterval = setInterval(updateTimer, 1000);
@@ -118,9 +123,9 @@
         area.innerHTML = '';
         document.getElementById('feedback').style.display = 'none';
         document.getElementById('next-btn').style.display = 'none';
+        
         if(q.type === 'choice') {
-            const opts = q.o.includes("Adevărat") ? ["Adevărat", "Fals"] : q.o.sort(() => 0.5 - Math.random());
-            opts.forEach(opt => {
+            q.o.forEach(opt => {
                 const b = document.createElement('button');
                 b.className = 'option-btn'; b.innerText = opt;
                 b.onclick = () => checkAns(opt);
@@ -136,12 +141,11 @@
         let isCorrect = false;
         if (q.type === 'math') {
             const userNum = parseFloat(user.toString().replace(",", "."));
-            const targetNum = parseFloat(q.a[0]);
-            isCorrect = !isNaN(userNum) && Math.abs(userNum - targetNum) < 0.01;
-        } else if (q.type === 'fill') {
+            isCorrect = !isNaN(userNum) && Math.abs(userNum - parseFloat(q.a[0])) < 0.1;
+        } else {
             const clean = (s) => s.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
-            isCorrect = q.a.some(ans => clean(user) === clean(ans));
-        } else { isCorrect = user === q.a; }
+            isCorrect = Array.isArray(q.a) ? q.a.some(ans => clean(user) === clean(ans)) : user === q.a;
+        }
         const f = document.getElementById('feedback');
         f.style.display = 'block';
         if(isCorrect) { state.correctAnswers++; f.innerText = "CORECT! ✅"; f.style.color = "#4ade80"; }
@@ -152,7 +156,7 @@
 
     function nextQuestion() {
         state.currentIdx++;
-        if(state.currentIdx < 30) showQuestion(); else finishGame();
+        if(state.currentIdx < state.questions.length) showQuestion(); else finishGame();
     }
 
     function updateTimer() {
@@ -170,7 +174,7 @@
         document.getElementById('screen-end').classList.remove('hidden');
         const nota = (1 + (state.correctAnswers * 0.3)).toFixed(2);
         document.getElementById('final-score').innerText = nota > 10 ? "10.00" : nota;
-        document.getElementById('raw-points').innerText = `Ai obținut ${state.correctAnswers} puncte din 30.`;
+        document.getElementById('raw-points').innerText = `Ai rezolvat ${state.correctAnswers} din 30 corect.`;
         const fd = new FormData();
         fd.append("nume", state.name); fd.append("clasa", state.class); fd.append("scor", nota);
         fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });

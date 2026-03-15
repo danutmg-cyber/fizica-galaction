@@ -266,18 +266,26 @@ if (showAngles.checked) {
     "i"
   );
 
-  // Unghiul de refracție (jos) – definit invers, de la rază spre normală
-  drawArcLabel(
-    cx,
-    cy,
-    64,
-    Math.PI / 2 + rRad,
-    Math.PI / 2,
-    "#f59e0b",
-    "r",
-    true
-  );
+ // Unghiul de refracție (jos) – arc stabil
+let startR = Math.PI / 2;
+let endR = Math.PI / 2 + rRad;
+
+// Dacă arcul ar ieși pe partea cealaltă, inversăm sensul
+let anticlock = false;
+if (endR < startR) {
+  anticlock = true;
 }
+
+drawArcLabel(
+  cx,
+  cy,
+  64,
+  startR,
+  endR,
+  "#f59e0b",
+  "r",
+  anticlock
+);
 
   if (showLabels.checked) {
     ctx.fillStyle = "#f8fafc";

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Laborator Digital de Optică</title>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+
+body{
+font-family:Segoe UI;
+background:#0f172a;
+color:white;
+margin:0;
+display:flex;
+justify-content:center;
+}
+
+.app{
+width:1000px;
+padding:20px;
+}
+
+h1{
+text-align:center;
+color:#fbbf24;
+}
+
+.tabs{
+text-align:center;
+margin-bottom:20px;
+}
+
+button{
+padding:10px 18px;
+margin:5px;
+border:none;
+border-radius:8px;
+background:#fbbf24;
+font-weight:bold;
+cursor:pointer;
+}
+
+.card{
+background:#1e293b;
+padding:20px;
+border-radius:15px;
+margin:15px 0;
+}
+
+canvas{
+background:#020617;
+border-radius:10px;
+margin-top:10px;
+}
+
+input,select{
+padding:8px;
+border-radius:8px;
+border:none;
+margin:5px;
+}
+
+.hidden{
+display:none;
+}
+
+table{
+border-collapse:collapse;
+width:100%;
+margin-top:10px;
+}
+
+td,th{
+border:1px solid #334155;
+padding:6px;
+text-align:center;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+<h1>Laborator Digital de Optică</h1>
+
+<div class="tabs">
+
+<button onclick="showSection('optics')">Reflexia și Refracția</button>
+
+<button onclick="showSection('lenses')">Lentile Subțiri</button>
+
+</div>
+
+<!-- REFLEXIE + REFRACȚIE -->
+
+<div id="optics">
+
+<div class="card">
+
+<h3>Simulare Reflexie</h3>
+
+Unghi incidență
+
+<input type="range" min="0" max="80" value="30" id="angle">
+
+<span id="aval">30°</span>
+
+<canvas id="mirror" width="500" height="300"></canvas>
+
+</div>
+
+<div class="card">
+
+<h3>Simulare Refracție</h3>
+
+n1
+
+<select id="n1">
+
+<option value="1">1</option>
+<option value="1.41">√2</option>
+<option value="1.73">√3</option>
+<option value="2">2</option>
+
+</select>
+
+n2
+
+<select id="n2">
+
+<option value="1">1</option>
+<option value="1.41">√2</option>
+<option value="1.73">√3</option>
+<option value="2">2</option>
+
+</select>
+
+Unghi i
+
+<input type="range" min="0" max="80" value="30" id="i">
+
+<span id="ival">30°</span>
+
+<canvas id="refract" width="500" height="300"></canvas>
+
+</div>
+
+</div>
+
+<!-- LENTILE -->
+
+<div id="lenses" class="hidden">
+
+<div class="card">
+
+<h3>Simulare Lentile Subțiri</h3>
+
+Tip lentilă
+
+<select id="lensType">
+
+<option value="conv">Convergentă</option>
+<option value="div">Divergentă</option>
+
+</select>
+
+Distanță obiect
+
+<input type="range" min="50" max="200" value="120" id="obj">
+
+<span id="oval">120</span> px
+
+Distanță focală
+
+<input type="range" min="40" max="120" value="80" id="focus">
+
+<span id="fval">80</span> px
+
+<canvas id="lensCanvas" width="600" height="300"></canvas>
+
+</div>
+
+<div class="card">
+
+<h3>Formula Lentilei</h3>
+
+\[
+\frac{1}{f}=\frac{1}{d_o}+\frac{1}{d_i}
+\]
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function showSection(id){
+
+document.getElementById("optics").classList.add("hidden")
+
+document.getElementById("lenses").classList.add("hidden")
+
+document.getElementById(id).classList.remove("hidden")
+
+}
+
+/* REFLEXIE */
+
+let mirror=document.getElementById("mirror")
+
+let ctx=mirror.getContext("2d")
+
+function drawMirror(){
+
+let a=document.getElementById("angle").value
+
+document.getElementById("aval").innerText=a+"°"
+
+ctx.clearRect(0,0,500,300)
+
+ctx.strokeStyle="white"
+
+ctx.beginPath()
+
+ctx.moveTo(250,0)
+
+ctx.lineTo(250,300)
+
+ctx.stroke()
+
+let rad=a*Math.PI/180
+
+let x=250-150*Math.sin(rad)
+
+let y=150-150*Math.cos(rad)
+
+ctx.strokeStyle="yellow"
+
+ctx.beginPath()
+
+ctx.moveTo(x,y)
+
+ctx.lineTo(250,150)
+
+ctx.stroke()
+
+ctx.strokeStyle="orange"
+
+ctx.beginPath()
+
+ctx.moveTo(250,150)
+
+ctx.lineTo(250+150*Math.sin(rad),150-150*Math.cos(rad))
+
+ctx.stroke()
+
+}
+
+document.getElementById("angle").oninput=drawMirror
+
+drawMirror()
+
+/* REFRACȚIE */
+
+let refract=document.getElementById("refract")
+
+let rctx=refract.getContext("2d")
+
+function drawRefract(){
+
+let n1=parseFloat(document.getElementById("n1").value)
+
+let n2=parseFloat(document.getElementById("n2").value)
+
+let i=document.getElementById("i").value
+
+document.getElementById("ival").innerText=i+"°"
+
+let ir=i*Math.PI/180
+
+let sinr=(n1*Math.sin(ir))/n2
+
+rctx.clearRect(0,0,500,300)
+
+rctx.strokeStyle="white"
+
+rctx.beginPath()
+
+rctx.moveTo(0,150)
+
+rctx.lineTo(500,150)
+
+rctx.stroke()
+
+let xi=250-120*Math.sin(ir)
+
+let yi=150-120*Math.cos(ir)
+
+rctx.strokeStyle="yellow"
+
+rctx.beginPath()
+
+rctx.moveTo(xi,yi)
+
+rctx.lineTo(250,150)
+
+rctx.stroke()
+
+if(sinr<=1){
+
+let r=Math.asin(sinr)
+
+rctx.strokeStyle="cyan"
+
+rctx.beginPath()
+
+rctx.moveTo(250,150)
+
+rctx.lineTo(250+120*Math.sin(r),150+120*Math.cos(r))
+
+rctx.stroke()
+
+}
+
+else{
+
+rctx.fillText("Reflexie totală!",300,200)
+
+}
+
+}
+
+document.getElementById("i").oninput=drawRefract
+
+document.getElementById("n1").onchange=drawRefract
+
+document.getElementById("n2").onchange=drawRefract
+
+drawRefract()
+
+/* LENTILE */
+
+let lens=document.getElementById("lensCanvas")
+
+let lctx=lens.getContext("2d")
+
+function drawLens(){
+
+let type=document.getElementById("lensType").value
+
+let obj=document.getElementById("obj").value
+
+let f=document.getElementById("focus").value
+
+document.getElementById("oval").innerText=obj
+
+document.getElementById("fval").innerText=f
+
+lctx.clearRect(0,0,600,300)
+
+let center=300
+
+let objx=center-obj
+
+lctx.strokeStyle="white"
+
+lctx.beginPath()
+
+lctx.moveTo(0,150)
+
+lctx.lineTo(600,150)
+
+lctx.stroke()
+
+lctx.strokeStyle="yellow"
+
+lctx.beginPath()
+
+lctx.moveTo(objx,150)
+
+lctx.lineTo(objx,100)
+
+lctx.stroke()
+
+lctx.fillText("O",objx-10,90)
+
+lctx.strokeStyle="cyan"
+
+lctx.beginPath()
+
+lctx.moveTo(center,0)
+
+lctx.lineTo(center,300)
+
+lctx.stroke()
+
+let di=(obj*f)/(obj-f)
+
+if(type==="div") di=-(obj*f)/(obj+f)
+
+let imgx=center+di
+
+lctx.strokeStyle="orange"
+
+lctx.beginPath()
+
+lctx.moveTo(imgx,150)
+
+lctx.lineTo(imgx,180)
+
+lctx.stroke()
+
+lctx.fillText("I",imgx-10,195)
+
+}
+
+document.getElementById("lensType").onchange=drawLens
+
+document.getElementById("obj").oninput=drawLens
+
+document.getElementById("focus").oninput=drawLens
+
+drawLens()
+
+</script>
+
+</body>
+</html>

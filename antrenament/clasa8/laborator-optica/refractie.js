@@ -257,14 +257,15 @@ function draw() {
   if (showAngles.checked) {
     // Unghiul de incidență
     drawArcLabel(
-      cx,
-      cy,
-      48,
-      -Math.PI / 2 - iRad,
-      -Math.PI / 2,
-      "#38bdf8",
-      "i"
-    );
+  cx,
+  cy,
+  64,
+  Math.PI / 2,
+  Math.PI / 2 + rRad,
+  "#f59e0b",
+  "r",
+  false
+);
 
     // Unghiul de refracție:
     // pornim de la normala de jos și mergem în sens trigonometric

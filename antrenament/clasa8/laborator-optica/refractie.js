@@ -121,7 +121,9 @@ function drawArcLabel(cx, cy, radius, start, end, color, text, anticlockwise = f
   ctx.arc(cx, cy, radius, start, end, anticlockwise);
   ctx.stroke();
 
+  // Poziția corectă a etichetei
   const mid = (start + end) / 2;
+
   const tx = cx + Math.cos(mid) * (radius + 18);
   const ty = cy + Math.sin(mid) * (radius + 18);
 

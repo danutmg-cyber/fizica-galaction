@@ -263,7 +263,7 @@ function draw() {
 // =========================================================
 function updatePencil() {
   const shift = Number(pencilSlider.value);
-  const refractionOffset = 4;
+  const refractionOffset = 3;
 
   pencilTop.style.transform = `translateX(calc(-50% + ${shift}px)) rotate(23deg)`;
   pencilBottom.style.transform = `translateX(calc(-50% + ${shift + refractionOffset}px)) rotate(21deg)`;

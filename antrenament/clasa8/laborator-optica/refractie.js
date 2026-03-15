@@ -267,20 +267,16 @@ function draw() {
   false
 );
 
-    // Unghiul de refracție:
-    // pornim de la normala de jos și mergem în sens trigonometric
-    // până la raza refractată
     drawArcLabel(
-      cx,
-      cy,
-      64,
-      Math.PI / 2,
-      Math.PI / 2 - rRad,
-      "#f59e0b",
-      "r",
-      true
-    );
-  }
+  cx,
+  cy,
+  64,
+  Math.PI / 2,
+  Math.PI / 2 + rRad,
+  "#f59e0b",
+  "r",
+  false
+);
 
   if (showLabels.checked) {
     ctx.fillStyle = "#f8fafc";

@@ -254,29 +254,30 @@ function draw() {
   drawArrow(incStartX, incStartY, cx, cy, "#38bdf8", "raza incidentă");
   drawArrow(cx, cy, refrEndX, refrEndY, "#f59e0b", "raza refractată");
 
-  if (showAngles.checked) {
-    // Unghiul de incidență
-    drawArcLabel(
-  cx,
-  cy,
-  64,
-  Math.PI / 2,
-  Math.PI / 2 + rRad,
-  "#f59e0b",
-  "i",
-  false
-);
+if (showAngles.checked) {
+  // Unghiul de incidență
+  drawArcLabel(
+    cx,
+    cy,
+    48,
+    -Math.PI / 2 - iRad,
+    -Math.PI / 2,
+    "#38bdf8",
+    "i"
+  );
 
-    drawArcLabel(
-  cx,
-  cy,
-  64,
-  Math.PI / 2,
-  Math.PI / 2 + rRad,
-  "#f59e0b",
-  "r",
-  false
-);
+  // Unghiul de refracție
+  drawArcLabel(
+    cx,
+    cy,
+    64,
+    Math.PI / 2,
+    Math.PI / 2 + rRad,
+    "#f59e0b",
+    "r",
+    false
+  );
+}
 
   if (showLabels.checked) {
     ctx.fillStyle = "#f8fafc";

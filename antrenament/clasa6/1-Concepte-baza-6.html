@@ -124,41 +124,50 @@
     }
 
     function processAnswer() {
-        const userRaw = document.getElementById('user-ans').value.trim();
-        if(!userRaw) return;
-        const q = state.questions[state.currentIdx];
-        
-        // Funcția de normalizare text: elimină diacritice, spații și "ul" de la final
+    const userRaw = document.getElementById('user-ans').value.trim().replace(",", ".");
+    if(!userRaw) return;
+
+    const q = state.questions[state.currentIdx];
+    let isCorrect = false;
+
+    if(q.type === "math" || q.type === "div") {
+        // CONVERTIM AMBELE VALORI ÎN NUMERE PENTRU COMPARAȚIE MATEMATICĂ
+        const userNum = parseFloat(userRaw);
+        const correctNum = parseFloat(q.a.toString().replace(",", "."));
+
+        // Verificăm dacă sunt egale, permițând o marjă minusculă de eroare (pentru siguranță)
+        isCorrect = !isNaN(userNum) && Math.abs(userNum - correctNum) < 0.0001;
+    } else {
+        // Logica existentă pentru teorie (normalizare text)
         const normalize = (s) => s.toLowerCase()
             .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
             .replace(/ul$/, "")
             .replace(/\s/g, "");
-
-        let isCorrect = false;
-        if(q.type === "math" || q.type === "div") {
-            isCorrect = (userRaw.replace(",", ".") === q.a.replace(",", "."));
-        } else {
-            // Verificare dacă inputul se potrivește cu oricare variantă din array
-            isCorrect = q.a.some(varianta => normalize(userRaw) === normalize(varianta));
-        }
-
-        const f = document.getElementById('feedback');
-        f.style.display = 'block';
-        if(isCorrect) {
-            state.correctAnswers++;
-            f.innerHTML = "CORECT! ✅";
-            f.style.color = "var(--success)";
-            f.style.background = "rgba(34, 197, 94, 0.1)";
-        } else {
-            const afisaj = Array.isArray(q.a) ? q.a[0] : q.a;
-            f.innerHTML = `GREȘIT! Răspuns corect: ${afisaj} ❌`;
-            f.style.color = "var(--error)";
-            f.style.background = "rgba(239, 68, 68, 0.1)";
-        }
-        document.getElementById('user-ans').disabled = true;
-        document.getElementById('submit-btn').style.display = 'none';
-        document.getElementById('next-btn').style.display = 'block';
+            
+        isCorrect = q.a.some(varianta => normalize(userRaw) === normalize(varianta));
     }
+
+    // AFIȘARE FEEDBACK
+    const f = document.getElementById('feedback');
+    f.style.display = 'block';
+    
+    if(isCorrect) {
+        state.correctAnswers++;
+        f.innerHTML = "CORECT! ✅";
+        f.style.color = "var(--success)";
+        f.style.background = "rgba(34, 197, 94, 0.1)";
+    } else {
+        // Arătăm răspunsul exact așa cum a fost generat, dar fără zecimale inutile în afișaj
+        const raspunsAfisat = (q.type === "math" || q.type === "div") ? q.a.toString().replace(".", ",") : (Array.isArray(q.a) ? q.a[0] : q.a);
+        f.innerHTML = `GREȘIT! Răspuns corect: ${raspunsAfisat} ❌`;
+        f.style.color = "var(--error)";
+        f.style.background = "rgba(239, 68, 68, 0.1)";
+    }
+
+    document.getElementById('user-ans').disabled = true;
+    document.getElementById('submit-btn').style.display = 'none';
+    document.getElementById('next-btn').style.display = 'block';
+}
 
     function nextQuestion() {
         state.currentIdx++;

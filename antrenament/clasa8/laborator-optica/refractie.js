@@ -266,16 +266,16 @@ if (showAngles.checked) {
     "i"
   );
 
-  // Unghiul de refracție (jos)
+  // Unghiul de refracție (jos) – definit invers, de la rază spre normală
   drawArcLabel(
     cx,
     cy,
     64,
+    Math.PI / 2 + rRad,
     Math.PI / 2,
-    Math.PI / 2 - rRad,
     "#f59e0b",
     "r",
-    false
+    true
   );
 }
 

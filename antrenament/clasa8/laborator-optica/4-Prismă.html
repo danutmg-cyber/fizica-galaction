@@ -1,1 +1,261 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <title>Prisma – Deviația luminii</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      text-align: center;
+      padding: 0.3rem;
+      background: #222;
+      font-size: 0.8rem;
+      line-height: 1.2;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 0.4rem;
+      gap: 0.4rem;
+    }
+
+    .controls {
+      background: #1b1b1b;
+      padding: 0.5rem;
+      border-radius: 6px;
+      font-size: 0.9rem;
+    }
+
+    .controls input[type="range"],
+    .controls input[type="number"] {
+      width: 100%;
+      margin-top: 0.2rem;
+    }
+
+    .values {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      font-size: 0.9rem;
+    }
+
+    .canvas-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    canvas {
+      width: 100%;
+      height: auto;
+      display: block;
+      background: #000;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.9rem;
+      padding: 0.4rem;
+      background: #222;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</h1>
+  <h2>LABORATORUL VIRTUAL DE FIZICĂ</h2>
+  <h3>Prof. DĂNUȚ ANDRONIE</h3>
+</header>
+
+<main>
+
+  <section class="controls">
+    <label>Unghiul de incidență i (°):</label>
+    <input type="range" id="angleSlider" min="0" max="80" value="20">
+
+    <label>Unghiul prismei A (°):</label>
+    <input type="range" id="apexSlider" min="20" max="80" value="40">
+
+    <label>Indice de refracție n:</label>
+    <input type="number" id="nInput" min="1.00" max="2.00" step="0.01" value="1.50">
+
+    <div class="values">
+      <span>i = <span id="angleI">20</span>°</span>
+      <span>r₁ = <span id="angleR1">0</span>°</span>
+      <span>r₂ = <span id="angleR2">0</span>°</span>
+      <span>D = <span id="angleD">0</span>°</span>
+    </div>
+  </section>
+
+  <section class="canvas-container">
+    <canvas id="canvas"></canvas>
+  </section>
+
+</main>
+
+<footer>
+  Deviația luminii într-o prismă: <b>D = i + e – A</b>
+</footer>
+
+<script>
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+
+  const angleSlider = document.getElementById("angleSlider");
+  const apexSlider = document.getElementById("apexSlider");
+  const nInput = document.getElementById("nInput");
+
+  const angleIText = document.getElementById("angleI");
+  const angleR1Text = document.getElementById("angleR1");
+  const angleR2Text = document.getElementById("angleR2");
+  const angleDText = document.getElementById("angleD");
+
+  function resizeCanvas() {
+    canvas.width = canvas.parentElement.clientWidth;
+    canvas.height = window.innerHeight * 0.78;
+    drawScene();
+  }
+
+  function drawScene() {
+    const w = canvas.width;
+    const h = canvas.height;
+
+    ctx.clearRect(0, 0, w, h);
+
+    const centerX = w * 0.35;
+    const centerY = h * 0.55;
+
+    const iDeg = parseFloat(angleSlider.value);
+    const Adeg = parseFloat(apexSlider.value);
+    const n = parseFloat(nInput.value);
+
+    angleIText.textContent = iDeg.toFixed(0);
+
+    const iRad = iDeg * Math.PI / 180;
+    const ARad = Adeg * Math.PI / 180;
+
+    const incidentColor = "#00bfff";
+    const refractedColor = "#00ff66";
+    const emergentColor = "#ffcc00";
+    const prismColor = "#4444ff";
+
+    ctx.lineWidth = 4;
+    ctx.font = Math.round(h * 0.05) + "px Arial Black";
+
+    // desenăm prisma
+    const side = Math.min(w, h) * 0.35;
+    const x1 = centerX;
+    const y1 = centerY - side / 2;
+
+    const x2 = centerX;
+    const y2 = centerY + side / 2;
+
+    const x3 = centerX + side * Math.cos(ARad);
+    const y3 = centerY;
+
+    ctx.strokeStyle = prismColor;
+    ctx.lineWidth = 5;
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.lineTo(x3, y3);
+    ctx.closePath();
+    ctx.stroke();
+
+    // raza incidentă
+    const rayLen = side * 0.8;
+    const incX = x1 - rayLen * Math.sin(iRad);
+    const incY = y1 - rayLen * Math.cos(iRad);
+
+    ctx.strokeStyle = incidentColor;
+    ctx.lineWidth = 6;
+    ctx.beginPath();
+    ctx.moveTo(incX, incY);
+    ctx.lineTo(x1, y1);
+    ctx.stroke();
+
+    // refracție în prima suprafață
+    let sin_r1 = Math.sin(iRad) / n;
+    let totalInternal = false;
+
+    if (sin_r1 > 1) {
+      totalInternal = true;
+    }
+
+    let r1Rad = totalInternal ? 0 : Math.asin(sin_r1);
+    let r1Deg = r1Rad * 180 / Math.PI;
+    angleR1Text.textContent = totalInternal ? "-" : r1Deg.toFixed(0);
+
+    // direcția în interiorul prismei
+    const midX = x1 + rayLen * Math.sin(r1Rad);
+    const midY = y1 + rayLen * Math.cos(r1Rad);
+
+    if (!totalInternal) {
+      ctx.strokeStyle = refractedColor;
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(midX, midY);
+      ctx.stroke();
+    }
+
+    // refracție la ieșire
+    const internalAngle = ARad - r1Rad;
+    let sin_r2 = n * Math.sin(internalAngle);
+
+    let totalInternal2 = false;
+    if (sin_r2 > 1) totalInternal2 = true;
+
+    let r2Rad = totalInternal2 ? 0 : Math.asin(sin_r2);
+    let r2Deg = r2Rad * 180 / Math.PI;
+    angleR2Text.textContent = totalInternal2 ? "-" : r2Deg.toFixed(0);
+
+    // raza emergentă
+    if (!totalInternal && !totalInternal2) {
+      const outX = x3 + rayLen * Math.sin(r2Rad);
+      const outY = y3 - rayLen * Math.cos(r2Rad);
+
+      ctx.strokeStyle = emergentColor;
+      ctx.beginPath();
+      ctx.moveTo(x3, y3);
+      ctx.lineTo(outX, outY);
+      ctx.stroke();
+
+      // deviația totală
+      const D = iDeg + r2Deg - Adeg;
+      angleDText.textContent = D.toFixed(0);
+    } else {
+      angleDText.textContent = "-";
+    }
+  }
+
+  angleSlider.addEventListener("input", drawScene);
+  apexSlider.addEventListener("input", drawScene);
+  nInput.addEventListener("input", drawScene);
+
+  window.addEventListener("resize", resizeCanvas);
+
+  resizeCanvas();
+</script>
+
+</body>
+</html>

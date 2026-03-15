@@ -242,11 +242,11 @@ function draw() {
   if (showAngles.checked) {
     drawArcLabel(cx, cy, 48, -Math.PI / 2 - iRad, -Math.PI / 2, "#38bdf8", "i");
 
-    let startR = Math.PI / 2;
-    let endR = Math.PI / 2 + rRad;
-    let anticlock = endR < startR;
+    let startR = Math.PI / 2;          // normală în jos
+let endR = Math.PI / 2 + rRad;     // raza refractată în dreapta
+let anticlock = false;             // arcul merge spre dreapta, niciodată invers
 
-    drawArcLabel(cx, cy, 64, startR, endR, "#f59e0b", "r", anticlock);
+drawArcLabel(cx, cy, 64, startR, endR, "#f59e0b", "r", anticlock);
   }
 
   // Etichete

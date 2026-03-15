@@ -29,6 +29,8 @@ const pencilSlider = document.getElementById("pencilSlider");
 const checkQuizBtn = document.getElementById("checkQuizBtn");
 const quizResult = document.getElementById("quizResult");
 
+// Dimensiuni logice pentru canvas.
+// CSS îl afișează responsive, dar coordonatele interne rămân stabile.
 const CANVAS_WIDTH = 760;
 const CANVAS_HEIGHT = 460;
 
@@ -36,16 +38,17 @@ canvas.width = CANVAS_WIDTH;
 canvas.height = CANVAS_HEIGHT;
 
 // =========================================================
-// Utilitare
+// Funcții utilitare
 // =========================================================
 function degToRad(deg) {
-  return deg * Math.PI / 180;
+  return (deg * Math.PI) / 180;
 }
 
 function radToDeg(rad) {
-  return rad * 180 / Math.PI;
+  return (rad * 180) / Math.PI;
 }
 
+// Creează un pattern discret pentru gridul de fundal.
 function createGridPattern() {
   const patternCanvas = document.createElement("canvas");
   patternCanvas.width = 40;
@@ -67,6 +70,7 @@ function createGridPattern() {
 
 const gridPattern = createGridPattern();
 
+// Desenează o săgeată între două puncte.
 function drawArrow(x1, y1, x2, y2, color, label) {
   const head = 14;
   const dx = x2 - x1;
@@ -102,6 +106,7 @@ function drawArrow(x1, y1, x2, y2, color, label) {
   }
 }
 
+// Desenează arcul unui unghi și eticheta lui.
 function drawArcLabel(cx, cy, radius, start, end, color, text) {
   ctx.beginPath();
   ctx.strokeStyle = color;
@@ -118,8 +123,16 @@ function drawArcLabel(cx, cy, radius, start, end, color, text) {
   ctx.fillText(text, tx - 8, ty + 6);
 }
 
+function getMediumLabel() {
+  const n2 = Number(mediumSelect.value);
+
+  if (n2 === 1.33) return "apă";
+  if (n2 === 1.5) return "sticlă";
+  return "diamant";
+}
+
 // =========================================================
-// Simulator principal
+// Simulator principal: refracția luminii
 // =========================================================
 function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -129,23 +142,29 @@ function draw() {
   const cx = w / 2;
   const cy = h / 2;
 
+  // Unghiul de incidență ales de utilizator
   const iDeg = Number(angleRange.value);
   const iRad = degToRad(iDeg);
 
-  const n1 = 1.0; // aer
+  // Indicii de refracție:
+  // n1 = aer, n2 = mediul ales
+  const n1 = 1.0;
   const n2 = Number(mediumSelect.value);
 
+  // Legea refracției (forma simplificată numerică)
   let sinR = (n1 / n2) * Math.sin(iRad);
   sinR = Math.max(-1, Math.min(1, sinR));
+
   const rRad = Math.asin(sinR);
   const rDeg = radToDeg(rRad);
 
+  // Actualizare afișaj numeric
   angleLabel.textContent = iDeg + "°";
   incidenceVal.textContent = iDeg + "°";
   refractionVal.textContent = rDeg.toFixed(1) + "°";
   conclusionVal.textContent = rDeg < iDeg ? "spre normală" : "egal / limită";
 
-  // fundal tip grilă
+  // Grid discret de fundal
   if (gridPattern) {
     ctx.save();
     ctx.fillStyle = gridPattern;
@@ -153,14 +172,15 @@ function draw() {
     ctx.restore();
   }
 
-  // aer / apă
+  // Reprezentarea celor două medii:
+  // sus = aer, jos = mediul 2
   ctx.fillStyle = "rgba(125, 211, 252, 0.04)";
   ctx.fillRect(0, 0, w, cy);
 
   ctx.fillStyle = "rgba(14, 165, 233, 0.18)";
   ctx.fillRect(0, cy, w, h - cy);
 
-  // suprafața de separare
+  // Suprafața de separare dintre medii
   ctx.beginPath();
   ctx.moveTo(40, cy);
   ctx.lineTo(w - 40, cy);
@@ -168,7 +188,7 @@ function draw() {
   ctx.lineWidth = 3;
   ctx.stroke();
 
-  // normala
+  // Normala în punctul de incidență
   if (showNormal.checked) {
     ctx.setLineDash([8, 8]);
     ctx.beginPath();
@@ -186,7 +206,7 @@ function draw() {
     }
   }
 
-  // punct incidență
+  // Punctul de incidență
   ctx.beginPath();
   ctx.arc(cx, cy, 6, 0, Math.PI * 2);
   ctx.fillStyle = "#ffffff";
@@ -195,21 +215,26 @@ function draw() {
   const lenIncident = 190;
   const lenRefracted = 190;
 
-  // raza incidentă: de sus spre suprafață
+  // Raza incidentă vine din stânga sus spre punctul de incidență.
+  // Unghiul de incidență este măsurat față de normala verticală.
   const incStartX = cx - Math.sin(iRad) * lenIncident;
   const incStartY = cy - Math.cos(iRad) * lenIncident;
 
-  // raza refractată: în jos, mai aproape de normală
-  const refrEndX = cx + Math.sin(rRad) * lenRefracted;
+  // Raza refractată trebuie să rămână de aceeași parte a normalei
+  // ca raza incidentă, dar să se apropie de normală în mediul mai dens.
+  const refrEndX = cx - Math.sin(rRad) * lenRefracted;
   const refrEndY = cy + Math.cos(rRad) * lenRefracted;
 
   drawArrow(incStartX, incStartY, cx, cy, "#38bdf8", "raza incidentă");
   drawArrow(cx, cy, refrEndX, refrEndY, "#f59e0b", "raza refractată");
 
- if (showAngles.checked) {
-  drawArcLabel(cx, cy, 48, -Math.PI / 2 - iRad, -Math.PI / 2, "#38bdf8", "i");
-  drawArcLabel(cx, cy, 64, -Math.PI / 2, -Math.PI / 2 + rRad, "#f59e0b", "r");
+  // Desen corect al unghiurilor mici față de normală
+  if (showAngles.checked) {
+    // i = unghiul dintre normala de sus și raza incidentă
+    drawArcLabel(cx, cy, 48, -Math.PI / 2 - iRad, -Math.PI / 2, "#38bdf8", "i");
 
+    // r = unghiul dintre normala de jos și raza refractată
+    drawArcLabel(cx, cy, 64, Math.PI / 2, Math.PI / 2 + rRad, "#f59e0b", "r");
   }
 
   if (showLabels.checked) {
@@ -222,26 +247,23 @@ function draw() {
   }
 }
 
-function getMediumLabel() {
-  const n2 = Number(mediumSelect.value);
-  if (n2 === 1.33) return "apă";
-  if (n2 === 1.5) return "sticlă";
-  return "diamant";
-}
-
 // =========================================================
 // Iluzia creionului în apă
+// Efect discret, nu exagerat.
 // =========================================================
 function updatePencil() {
   const shift = Number(pencilSlider.value);
-  const refractionOffset = 10;
 
-  pencilTop.style.transform = `translateX(calc(-50% + ${shift}px)) rotate(24deg)`;
-  pencilBottom.style.transform = `translateX(calc(-50% + ${shift + refractionOffset}px)) rotate(20deg)`;
+  // Defazaj discret: aproximativ jumătate din grosimea creionului
+  // dacă în CSS ai width: 20px, atunci 4-6px arată natural.
+  const refractionOffset = 4;
+
+  pencilTop.style.transform = `translateX(calc(-50% + ${shift}px)) rotate(23deg)`;
+  pencilBottom.style.transform = `translateX(calc(-50% + ${shift + refractionOffset}px)) rotate(21deg)`;
 }
 
 // =========================================================
-// Tabel
+// Tabel de observații
 // =========================================================
 function addTableRow() {
   const rowCount = dataTableBody.querySelectorAll("tr").length + 1;
@@ -323,6 +345,8 @@ checkQuizBtn.addEventListener("click", checkQuiz);
 window.addEventListener("resize", draw);
 window.addEventListener("orientationchange", () => setTimeout(draw, 200));
 
-// inițializare
+// =========================================================
+// Inițializare
+// =========================================================
 updatePencil();
 draw();

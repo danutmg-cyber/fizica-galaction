@@ -43,10 +43,10 @@
         <input type="text" id="p-name" placeholder="Nume Prenume Elev">
         <select id="p-class">
             <option value="">Alege clasa...</option>
-            <option value="VIII A">VIII A</option>
-            <option value="VIII B">VIII B</option>
-            <option value="VIII C">VIII C</option>
-            <option value="VIII D">VIII D</option>
+            <option value="VII A">VII A</option>
+            <option value="VII B">VII B</option>
+            <option value="VII C">VII C</option>
+            <option value="VII D">VII D</option>
         </select>
         <button class="check-btn" onclick="startGame()">START EXERSARE</button>
     </div>
@@ -81,27 +81,51 @@
     let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [] };
 
     function generateOptics() {
-        return [
-            // COMPLETĂRE DEFINIȚII
-            { q: "Fenomenul de întoarcere a luminii în mediul din care a venit, la suprafața de separare a două medii, se numește ...........", a: ["reflexie", "reflexia luminii"] },
-            { q: "Schimbarea direcției de propagare a luminii la trecerea dintr-un mediu transparent în altul se numește ...........", a: ["refractie", "refractia luminii"] },
-            { q: "Pentru a se produce reflexia totală, lumina trebuie să vină dintr-un mediu mai ........... din punct de vedere optic.", a: ["dens", "refringent"] },
-            { q: "Reflexia totală apare doar dacă unghiul de incidență este ........... decât unghiul limită.", a: ["mai mare", "mai mare sau egal"] },
+        let qSet = [
+            // Cerințe specifice: Definiții și condiții
+            { q: "Fenomenul de întoarcere a luminii în mediul din care a venit se numește ...........", a: ["reflexie", "reflexia"] },
+            { q: "Schimbarea direcției de propagare a luminii la trecerea dintr-un mediu în altul se numește ...........", a: ["refractie", "refractia"] },
+            { q: "Reflexia totală are loc doar dacă lumina vine dintr-un mediu mai ........... optic.", a: ["dens", "refringent"] },
+            { q: "Reflexia totală apare dacă unghiul de incidență este mai ........... decât unghiul limită.", a: ["mare"] },
             
-            // LEGILE REFLEXIEI (ALEGERE / LOGICĂ)
+            // Legile reflexiei/refracției (Legea I și II)
             { q: "Conform legii I a reflexiei, raza incidentă, normala și raza reflectată sunt ...........", a: ["coplanare", "in acelasi plan"] },
-            { q: "Legea a II-a a reflexiei afirmă că unghiul de incidență este ........... cu unghiul de reflexie.", a: ["egal"] },
-            
-            // LEGILE REFRACȚIEI
-            { q: "Legea I a refracției spune că raza incidentă, normala și raza refractată se află în ...........", a: ["acelasi plan", "coplanare"] },
+            { q: "Legea I a refracției afirmă că raza incidentă, normala și raza refractată se află în ...........", a: ["acelasi plan", "coplanare"] },
+            { q: "Legea II a reflexiei spune că unghiul de incidență este ........... cu cel de reflexie.", a: ["egal"] },
+            { q: "Legea II a refracției este dată de relația matematică n1 * sin(i) = n2 * ...........", a: ["sin(r)", "sin r"] },
             { q: "Viteza luminii în vid are valoarea de aproximativ ........... km/s.", a: ["300000", "300.000"] },
+
+            // Cerințe noi: n1 vs n2
+            { q: "Dacă n1 > n2, unghiul de refracție este mai ........... decât unghiul de incidență.", a: ["mare"] },
+            { q: "Dacă n1 < n2, unghiul de refracție este mai ........... decât unghiul de incidență.", a: ["mic"] },
+            { q: "Dacă n1 = n2, unghiul de refracție este ........... cu unghiul de incidență.", a: ["egal"] },
+
+            // Probleme noi de logică reflexie
+            { q: "Dacă unghiul de reflexie este 42°, unghiul de incidență este ........... grade.", a: ["42"] },
+            { q: "Dacă unghiul de reflexie formează cu suprafața oglinzii 56 grade, unghiul de incidență este ........... grade.", a: ["34"] },
+            { q: "Dacă unghiul dintre raza incidentă și cea reflectată este 80°, unghiul de incidență este ........... grade.", a: ["40"] },
+            { q: "Dacă raza incidentă este perpendiculară pe oglindă, unghiul de reflexie este ........... grade.", a: ["0"] },
+            { q: "Dacă unghiul de incidență este 25°, unghiul format de raza reflectată cu suprafața oglinzii este ........... grade.", a: ["65"] },
+
+            // Probleme refracție și unghi limită (Calcule)
+            { q: "Aer (n=1) -> Sticlă (n=√2). Dacă i=45°, unghiul de refracție r este ........... grade.", a: ["30"] },
+            { q: "Lumina trece din diamant (n=2) în aer (n=1). Unghiul limită l este ........... grade.", a: ["30"] },
+            { q: "Aer (n=1) -> Mediu (n=√3). Dacă i=60°, unghiul de refracție r este ........... grade.", a: ["30"] },
+            { q: "Sticlă (n=√2) -> Aer (n=1). Unghiul limită l este ........... grade.", a: ["45"] },
+            { q: "Dacă i=0°, indiferent de mediile n1 și n2, unghiul de refracție r va fi ........... grade.", a: ["0"] },
             
-            // PROBLEME DE CALCUL
-            { q: "Dacă unghiul dintre raza incidentă și suprafața oglinzii este de 30°, cât este unghiul de reflexie? (grade)", a: ["60"] },
-            { q: "O rază trece din aer (n1=1) în sticlă (n2=√2). Dacă i=45°, cât este unghiul de refracție r? (grade)", a: ["30"] },
-            { q: "Calculați unghiul limită (l) pentru trecerea luminii din apă (n1=2) în aer (n2=1). (grade)", a: ["30"] },
-            { q: "Dacă o rază cade perpendicular pe suprafața de separare (i=0°), unghiul de refracție este ........... grade.", a: ["0"] }
-        ].sort(() => 0.5 - Math.random());
+            // Alte întrebări până la 30
+            { q: "Indicele de refracție al vidului este n = ...........", a: ["1"] },
+            { q: "Raportul dintre viteza luminii în vid și viteza ei în mediu se numește indice de ...........", a: ["refractie"] },
+            { q: "Oglinda plană formează o imagine virtuală, dreaptă și ........... cu obiectul.", a: ["egala", "simetrica"] },
+            { q: "Punctul în care raza de lumină lovește suprafața se numește punct de ...........", a: ["incidenta"] },
+            { q: "Dreapta perpendiculară pe suprafață în punctul de incidență se numește ...........", a: ["normala"] },
+            { q: "Dacă n1=1.5 și n2=1.5, raza de lumină își schimbă direcția? (Da/Nu)", a: ["nu"] },
+            { q: "Unghiul format de raza incidentă cu normala se numește unghi de ...........", a: ["incidenta"] },
+            { q: "Poate apărea reflexia totală la trecerea din aer în apă? (Da/Nu)", a: ["nu"] }
+        ];
+
+        return qSet.sort(() => 0.5 - Math.random());
     }
 
     function startGame() {
@@ -120,7 +144,7 @@
         document.getElementById('q-info').innerText = `ÎNTREBAREA ${state.currentIdx + 1} / ${state.questions.length}`;
         document.getElementById('question').innerText = q.q;
         const area = document.getElementById('input-area');
-        area.innerHTML = `<input type="text" id="user-ans" placeholder="Scrie răspunsul aici..." autocomplete="off">
+        area.innerHTML = `<input type="text" id="user-ans" placeholder="Răspunsul tău..." autocomplete="off">
                           <button class="check-btn" onclick="handleCheck()">VERIFICĂ</button>`;
         document.getElementById('feedback').style.display = 'none';
         document.getElementById('next-btn').style.display = 'none';
@@ -144,7 +168,7 @@
             state.correctAnswers++; 
             f.innerText = "CORECT! ✨"; f.style.color = "#4ade80"; 
         } else { 
-            f.innerText = `INCORECT! Răspuns corect: ${q.a[0]}`; f.style.color = "#f87171"; 
+            f.innerText = `MAI ÎNCEARCĂ! Răspuns corect: ${q.a[0]}`; f.style.color = "#f87171"; 
         }
         document.getElementById('next-btn').style.display = 'block';
     }
@@ -159,14 +183,13 @@
         document.getElementById('screen-end').classList.remove('hidden');
         const nota = (1 + (state.correctAnswers / state.questions.length) * 9).toFixed(2);
         document.getElementById('final-score').innerText = nota;
-        document.getElementById('raw-score').innerText = `Ai răspuns corect la ${state.correctAnswers} din ${state.questions.length} întrebări.`;
+        document.getElementById('raw-score').innerText = `Scor: ${state.correctAnswers} răspunsuri corecte din ${state.questions.length}`;
         
         const fd = new FormData();
         fd.append("nume", state.name); fd.append("clasa", state.class + " - Optica"); fd.append("scor", nota);
         fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
     }
 
-    // Permite trimiterea prin tasta Enter
     document.addEventListener('keypress', function (e) {
         if (e.key === 'Enter') {
             const nextBtn = document.getElementById('next-btn');

@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FIZICĂ - OPTICĂ GEOMETRICĂ</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
     <style>
         :root { --primary: #fbbf24; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #f59e0b; }
         * { box-sizing: border-box; }
@@ -11,59 +14,61 @@
         .header { text-align: center; width: 100%; max-width: 750px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
         .container { width: 100%; max-width: 700px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
         
-        /* SUPORT MATEMATIC - FONT ADAPTIV */
+        /* SUPORT MATEMATIC IMBUNATATIT */
         .learning-card { 
-            background: rgba(251, 191, 36, 0.1); 
-            border: 1px solid var(--primary); 
-            border-radius: 12px; 
-            padding: 15px; 
-            margin-bottom: 20px; 
-            /* Fontul se adaptează după lățimea ecranului: minim 0.9rem, maxim adaptat */
-            font-size: clamp(0.9rem, 2.5vw, 1.2rem); 
-            line-height: 1.6;
+            background: rgba(251, 191, 36, 0.05); 
+            border: 2px solid var(--primary); 
+            border-radius: 15px; 
+            padding: 20px; 
+            margin-bottom: 25px; 
+            font-size: clamp(1rem, 2.5vw, 1.3rem); /* Font mai mare și adaptiv */
+            line-height: 1.8;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.2);
         }
-        .learning-card h4 { margin: 0 0 10px 0; color: var(--accent); text-align: center; font-size: 1.2em; }
+        .learning-card h4 { margin: 0 0 15px 0; color: var(--accent); text-align: center; font-size: 1.4rem; text-transform: uppercase; letter-spacing: 1px; }
         
         .trig-table { 
             width: 100%; 
             border-collapse: collapse; 
-            margin-top: 10px; 
-            font-size: 0.9em; /* Relativ la părintele .learning-card */
-            text-align: center; 
+            margin-top: 15px; 
+            font-size: 1.1rem;
+            text-align: center;
+            background: rgba(15, 23, 42, 0.5);
         }
-        .trig-table td, .trig-table th { border: 1px solid #444; padding: 8px; }
+        .trig-table td, .trig-table th { border: 1px solid #4a5568; padding: 10px; }
+        .trig-table th { background: rgba(251, 191, 36, 0.1); color: var(--primary); }
 
-        .question-box { font-size: 1.2rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; color: #e2e8f0; line-height: 1.5; }
-        input[type="text"], select { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.2rem; text-align: center; margin-bottom: 15px; outline: none; }
-        .check-btn { width: 100%; background: var(--primary); color: #0f172a; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .next-btn { width: 100%; background: #10b981; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
-        #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; }
+        .question-box { font-size: 1.3rem; font-weight: 500; margin-bottom: 20px; text-align: center; min-height: 80px; color: #e2e8f0; line-height: 1.5; }
+        input[type="text"], select { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.2rem; text-align: center; margin-bottom: 15px; outline: none; transition: 0.3s; }
+        input[type="text"]:focus { border-color: var(--primary); box-shadow: 0 0 10px rgba(251, 191, 36, 0.3); }
+        .check-btn { width: 100%; background: var(--primary); color: #0f172a; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 1.1rem; }
+        .next-btn { width: 100%; background: #10b981; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; font-size: 1.1rem; }
+        #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; font-size: 1.2rem; }
         .hidden { display: none; }
 
-        /* Ajustare pentru ecrane foarte mici (telefoane) */
         @media (max-width: 480px) {
             .container { padding: 15px; }
-            .question-box { font-size: 1.1rem; }
-            .trig-table td { padding: 4px; }
+            .learning-card { padding: 12px; font-size: 0.95rem; }
+            .trig-table td, .trig-table th { padding: 5px; }
         }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div style="font-size: 1.1rem; font-weight: bold; color: var(--accent); margin-bottom: 2px;">
+        <div style="font-size: 1.2rem; font-weight: bold; color: var(--accent); margin-bottom: 2px;">
             ȘCOALA GIMNAZIALĂ "GALA GALACTION" MANGALIA
         </div>
-        <div style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 12px; letter-spacing: 1px;">
+        <div style="font-size: 1rem; color: #94a3b8; margin-bottom: 12px; letter-spacing: 1px;">
             Prof. DĂNUȚ ANDRONIE
         </div>
-        <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--accent); padding: 8px; margin-bottom: 15px; font-style: italic; color: #fef08a; font-size: 0.95rem;">
+        <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--accent); padding: 10px; margin-bottom: 15px; font-style: italic; color: #fef08a; font-size: 1.1rem;">
             "FIZICA NU ESTE DOMINATĂ DE FORMULE CI DE LOGICĂ"
         </div>
     </div>
 
     <div class="container" id="screen-login">
-        <h2 style="text-align:center;">🌈 Fenomene Optice</h2>
+        <h2 style="text-align:center; color: var(--primary);">🌈 Fenomene Optice</h2>
         <input type="text" id="p-name" placeholder="Nume Prenume Elev">
         <select id="p-class">
             <option value="">Alege clasa...</option>
@@ -77,18 +82,18 @@
 
     <div class="container hidden" id="screen-game">
         <div class="learning-card">
-            <h4>📘 SUPORT MATEMATIC & FORMULE</h4>
-            • <b>Reflexia:</b> $i = r$ <br>
-            • <b>Refracția:</b> $n_1 \cdot \sin(i) = n_2 \cdot \sin(r)$ <br>
-            • <b>Viteza luminii (c):</b> 300.000 km/s <br>
-            • <b>Unghi Limită:</b> $\sin(l) = n_2 / n_1$
+            <h4>📘 SUPORT MATEMATIC</h4>
+            • <b>Reflexia:</b> \( i = r \) <br>
+            • <b>Refracția:</b> \( n_1 \cdot \sin(i) = n_2 \cdot \sin(r) \) <br>
+            • <b>Viteza luminii (c):</b> \( 300.000 \, \text{km/s} \) <br>
+            • <b>Unghi Limită:</b> \( \sin(l) = \frac{n_2}{n_1} \)
             <table class="trig-table">
                 <tr><th>Unghi</th><th>30°</th><th>45°</th><th>60°</th></tr>
-                <tr><td>$\sin$</td><td>0.5</td><td>0.707</td><td>0.866</td></tr>
+                <tr><td>\( \sin \)</td><td>0.5</td><td>0.707</td><td>0.866</td></tr>
             </table>
         </div>
 
-        <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
+        <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 10px; font-size: 1.1rem;"></div>
         <div class="question-box" id="question"></div>
         <div id="input-area"></div>
         <div id="feedback"></div>
@@ -96,9 +101,9 @@
     </div>
 
     <div class="container hidden" id="screen-end">
-        <h2 style="text-align:center;">REZULTAT FINAL</h2>
+        <h2 style="text-align:center; color: var(--primary);">REZULTAT FINAL</h2>
         <div style="font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center;" id="final-score"></div>
-        <p id="raw-score" style="text-align:center; color: #94a3b8;"></p>
+        <p id="raw-score" style="text-align:center; color: #94a3b8; font-size: 1.2rem;"></p>
         <button class="check-btn" onclick="location.reload()">REIA TESTUL</button>
     </div>
 
@@ -139,7 +144,6 @@
             { q: "Poate apărea reflexia totală la trecerea din aer în apă? (Da/Nu)", a: ["nu"] },
             { q: "Mediul cu indice de refracție mai mare este mai dens din punct de vedere ...........", a: ["optic"] }
         ];
-
         return qSet.sort(() => 0.5 - Math.random());
     }
 
@@ -147,7 +151,6 @@
         state.name = document.getElementById('p-name').value.trim();
         state.class = document.getElementById('p-class').value;
         if(!state.name || !state.class) return alert("Introdu numele și clasa!");
-        
         state.questions = generateOptics();
         document.getElementById('screen-login').classList.add('hidden');
         document.getElementById('screen-game').classList.remove('hidden');
@@ -174,9 +177,7 @@
     function checkAns(user) {
         const q = state.questions[state.currentIdx];
         const clean = (s) => s.toString().toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(" grade", "").replace("°", "");
-        
         let isCorrect = q.a.some(possibleAns => clean(user) === clean(possibleAns));
-
         const f = document.getElementById('feedback');
         f.style.display = 'block';
         if(isCorrect) { 
@@ -199,7 +200,6 @@
         const nota = (1 + (state.correctAnswers / state.questions.length) * 9).toFixed(2);
         document.getElementById('final-score').innerText = nota;
         document.getElementById('raw-score').innerText = `Scor: ${state.correctAnswers} răspunsuri corecte din ${state.questions.length}`;
-        
         const fd = new FormData();
         fd.append("nume", state.name); fd.append("clasa", state.class + " - Optica"); fd.append("scor", nota);
         fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });

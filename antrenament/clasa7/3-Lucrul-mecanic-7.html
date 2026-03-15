@@ -10,9 +10,10 @@
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; }
         .header { text-align: center; width: 100%; max-width: 700px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
         .container { width: 100%; max-width: 650px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
-        .question-box { font-size: 1.2rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; }
-        .instruction-box { font-size: 0.9rem; color: #fbbf24; text-align: center; margin-bottom: 10px; font-weight: bold; background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 8px; }
-        input[type="text"] { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.3rem; text-align: center; margin-bottom: 15px; }
+        .question-box { font-size: 1.15rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; line-height: 1.4; }
+        .instruction-box { font-size: 0.85rem; color: #fbbf24; text-align: center; margin-bottom: 10px; font-weight: bold; background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 8px; }
+        input[type="text"], select { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.2rem; text-align: center; margin-bottom: 15px; outline: none; }
+        input[type="text"]:focus { border-color: var(--accent); }
         .check-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         .next-btn { width: 100%; background: #2563eb; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
         #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; }
@@ -21,36 +22,34 @@
 </head>
 <body>
 
-     <div class="header">
+    <div class="header">
         <div style="font-size: 1.1rem; font-weight: bold; color: var(--accent); margin-bottom: 2px;">
             ȘCOALA GIMNAZIALĂ "GALA GALACTION" MANGALIA
         </div>
         <div style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 12px; letter-spacing: 1px;">
             Prof. DĂNUȚ ANDRONIE
         </div>
-        
         <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--accent); padding: 8px; margin-bottom: 15px; font-style: italic; color: #fef08a; font-size: 0.95rem;">
             "FIZICA NU ESTE DOMINATĂ DE FORMULE CI DE LOGICĂ"
         </div>
-
-        <hr style="border: 0; border-top: 1px solid #334155; margin-bottom: 15px;">
     </div>
 
     <div class="container" id="screen-login">
-        <h2 style="text-align:center;">🛠️ Test de Antrenament</h2>
-        <input type="text" id="stdName" class="full-input" placeholder="Nume Prenume Elev">
-    <select id="stdClass" style="width: 120px; padding: 8px; border-radius: 4px; border: 1px solid #cbd5e1;">
-        <option value="">Clasa...</option>
-        <option value="VII A">VII A</option>
-        <option value="VII B">VII B</option>
-        <option value="VII C">VII C</option>
-        <option value="VII D">VII D</option> </select>
-        <button class="check-btn" onclick="startGame()">START TEST</button>
+        <h2 style="text-align:center;">🛠️ Lucru, Putere, Randament</h2>
+        <input type="text" id="stdName" placeholder="Nume Prenume Elev">
+        <select id="stdClass">
+            <option value="">Alege clasa...</option>
+            <option value="VII A">VII A</option>
+            <option value="VII B">VII B</option>
+            <option value="VII C">VII C</option>
+            <option value="VII D">VII D</option>
+        </select>
+        <button class="check-btn" onclick="startGame()">START TEST (20 ITEMI)</button>
     </div>
 
     <div class="container hidden" id="screen-game">
         <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
-        <div class="instruction-box">Rotunjește rezultatele la 2 zecimale!</div>
+        <div class="instruction-box">Rotunjește la 2 zecimale. Folosește virgula pentru zecimale!</div>
         <div class="question-box" id="question"></div>
         <div id="input-area"></div>
         <div id="feedback"></div>
@@ -61,7 +60,7 @@
         <h2 style="text-align:center;">SCOR FINAL</h2>
         <div style="font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center;" id="final-score"></div>
         <p style="text-align:center; color: #94a3b8;" id="raw-points"></p>
-        <button class="check-btn" onclick="location.reload()">REIA CU ALTE CIFRE</button>
+        <button class="check-btn" onclick="location.reload()">REIA CU ALTE VALORI</button>
     </div>
 
 <script>
@@ -69,45 +68,59 @@
     let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [] };
 
     const theoryPool = [
-        { q: "Unitatea de măsură pentru puterea mecanică în S.I. este ...........", type: "fill", a: ["watt", "w"] },
-        { q: "Raportul dintre lucrul mecanic util și lucrul mecanic consumat se numește ...........", type: "fill", a: ["randament"] },
-        { q: "Randamentul unei mașini mecanice este întotdeauna mai ........... decât 1 (sau 100%).", type: "fill", a: ["mic"] },
-        { q: "Puterea mecanică este mărimea fizică egală cu raportul dintre lucru și ...........", type: "fill", a: ["timp", "durata"] },
-        { q: "Un cal-putere (CP) este o unitate de măsură pentru ...........", type: "fill", a: ["putere"] },
-        { q: "Randamentul nu are unitate de măsură, fiind o mărime ...........", type: "fill", a: ["adimensionala"] }
+        { q: "Unitatea de măsură pentru lucrul mecanic în S.I. este ...........", a: ["joule", "j"] },
+        { q: "Unitatea de măsură pentru puterea mecanică în S.I. este ...........", a: ["watt", "w"] },
+        { q: "Raportul dintre lucrul mecanic util și cel consumat se numește ...........", a: ["randament"] },
+        { q: "Randamentul este o mărime fizică ........... (fără unitate de măsură).", a: ["adimensionala"] },
+        { q: "Un kilowatt (kW) are ........... wați.", a: ["1000"] },
+        { q: "Randamentul este întotdeauna mai ........... decât 1.", a: ["mic"] },
+        { q: "Lucrul mecanic al unei forțe perpendiculare pe direcția deplasării este ...........", a: ["0", "zero"] },
+        { q: "Produsul dintre forță și viteza medie reprezintă ........... medie.", a: ["puterea"] },
+        { q: "Dacă forța are același sens cu deplasarea, lucrul mecanic este ...........", a: ["motor"] },
+        { q: "Dacă forța are sens opus deplasării (frecarea), lucrul mecanic este ...........", a: ["rezistent"] }
     ];
 
-    function generateAdvancedMath() {
+    function generateMath() {
         let mathQ = [];
-        // 1. Calcul Putere (P = L / t)
+        // L = F * d
+        mathQ.push({ q: "O forță de 50N deplasează un corp pe 4m. Lucrul mecanic este ? J.", a: ["200"], type: "math" });
+        mathQ.push({ q: "Pentru a efectua L=1kJ pe o distanță de 10m, forța necesară este ? N.", a: ["100"], type: "math" });
+        
+        // P = L / t
+        mathQ.push({ q: "Un motor efectuează L=1200J în t=1 minut. Puterea este ? W.", a: ["20"], type: "math" });
+        mathQ.push({ q: "Ce lucru mecanic efectuează un motor de 500W în 10 secunde? L = ? J.", a: ["5000"], type: "math" });
+        
+        // Randament
+        mathQ.push({ q: "Lu=80J, Lc=100J. Randamentul este ? (zecimal).", a: ["0.8", "0,8"], type: "math" });
+        mathQ.push({ q: "Lc=200J, randamentul eta=0,75. Lucrul mecanic util este ? J.", a: ["150"], type: "math" });
+        
+        // P = F * v
+        mathQ.push({ q: "O mașină dezvoltă F=1000N la v=72 km/h. Puterea este ? W.", a: ["20000"], type: "math" }); // 72km/h = 20m/s
+        
+        // Dinamice (generare random pentru varietate la restart)
         for(let i=0; i<3; i++) {
-            let L = Math.floor(Math.random() * 500 + 100);
-            let t = Math.floor(Math.random() * 20 + 5);
+            let F = Math.floor(Math.random() * 40 + 10);
+            let v = Math.floor(Math.random() * 5 + 2);
+            let P = (F * v).toFixed(2);
+            mathQ.push({ q: `Un motor exercită o forță F=${F}N menținând v=${v}m/s. Puterea este ? W.`, a: [P.toString()], type: "math" });
+        }
+        
+        for(let i=0; i<3; i++) {
+            let L = Math.floor(Math.random() * 1000 + 200);
+            let t = Math.floor(Math.random() * 50 + 10);
             let P = (L / t).toFixed(2);
-            mathQ.push({ q: `O mașină efectuează un lucru mecanic L = ${L} J într-un timp t = ${t} s. Puterea medie este ? W.`, type: "math", a: [P.toString().replace(".",",")] });
+            mathQ.push({ q: `Se efectuează L=${L}J în timpul t=${t}s. Puterea este ? W.`, a: [P.toString()], type: "math" });
         }
-        // 2. Calcul Randament (eta = Lu / Lc)
-        for(let i=0; i<3; i++) {
-            let Lc = Math.floor(Math.random() * 1000 + 500);
-            let Lu = Math.floor(Lc * (Math.random() * 0.3 + 0.6)); // Lu între 60% și 90% din Lc
-            let eta = (Lu / Lc).toFixed(2);
-            mathQ.push({ q: `Un sistem primește L_consumat = ${Lc} J și produce L_util = ${Lu} J. Randamentul este ? (sub formă zecimală).`, type: "math", a: [eta.toString().replace(".",",")] });
-        }
-        // 3. Lucru Mecanic (L = F * d)
-        for(let i=0; i<2; i++) {
-            let F = Math.floor(Math.random() * 50 + 10);
-            let d = Math.floor(Math.random() * 20 + 2);
-            let L = F * d;
-            mathQ.push({ q: `Pentru a deplasa un obiect pe d = ${d} m s-a aplicat o forță F = ${F} N. Lucrul mecanic este ? J.`, type: "math", a: [L.toString()] });
-        }
+
         return mathQ;
     }
 
     function startGame() {
-        state.name = document.getElementById('p-name').value.trim();
-        state.class = document.getElementById('p-class').value;
+        state.name = document.getElementById('stdName').value.trim();
+        state.class = document.getElementById('stdClass').value;
         if(!state.name || !state.class) return alert("Completează datele!");
-        state.questions = [...theoryPool, ...generateAdvancedMath()].sort(() => 0.5 - Math.random()).slice(0, 12);
+        
+        state.questions = [...theoryPool, ...generateMath()].sort(() => 0.5 - Math.random()).slice(0, 20);
         document.getElementById('screen-login').classList.add('hidden');
         document.getElementById('screen-game').classList.remove('hidden');
         showQuestion();
@@ -115,47 +128,74 @@
 
     function showQuestion() {
         const q = state.questions[state.currentIdx];
-        document.getElementById('q-info').innerText = `CERINȚA ${state.currentIdx + 1} / 12`;
+        document.getElementById('q-info').innerText = `ITEM ${state.currentIdx + 1} / 20`;
         document.getElementById('question').innerText = q.q;
         const area = document.getElementById('input-area');
-        area.innerHTML = `<input type="text" id="user-ans" placeholder="Răspuns...">
-                          <button class="check-btn" onclick="checkAns(document.getElementById('user-ans').value)">VERIFICĂ</button>`;
+        area.innerHTML = `
+            <input type="text" id="user-ans" placeholder="Răspuns..." autocomplete="off">
+            <button class="check-btn" id="btn-submit" onclick="handleSubmit()">VERIFICĂ</button>
+        `;
         document.getElementById('feedback').style.display = 'none';
         document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('user-ans').focus();
+    }
+
+    function handleSubmit() {
+        const val = document.getElementById('user-ans').value;
+        if(!val.trim()) return;
+        checkAns(val);
     }
 
     function checkAns(user) {
         const q = state.questions[state.currentIdx];
         const clean = (s) => s.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().replace(",", ".");
-        let isCorrect = q.a.some(ans => clean(user) === clean(ans));
         
+        let isCorrect = false;
         if(q.type === "math") {
             isCorrect = Math.abs(parseFloat(clean(user)) - parseFloat(clean(q.a[0]))) < 0.05;
+        } else {
+            isCorrect = q.a.some(ans => clean(user) === clean(ans));
         }
 
         const f = document.getElementById('feedback');
         f.style.display = 'block';
-        if(isCorrect) { state.correctAnswers++; f.innerText = "CORECT! ✅"; f.style.color = "#4ade80"; }
-        else { f.innerText = `GREȘIT! Răspuns corect: ${q.a[0]} ❌`; f.style.color = "#f87171"; }
+        if(isCorrect) { 
+            state.correctAnswers++; 
+            f.innerText = "CORECT! ✅"; f.style.color = "#4ade80"; 
+        } else { 
+            f.innerText = `GREȘIT! Răspuns corect: ${q.a[0]} ❌`; f.style.color = "#f87171"; 
+        }
+        
+        document.getElementById('btn-submit').style.display = 'none';
         document.getElementById('next-btn').style.display = 'block';
     }
 
     function nextQuestion() {
         state.currentIdx++;
-        if(state.currentIdx < 12) showQuestion(); else finishGame();
+        if(state.currentIdx < 20) showQuestion(); else finishGame();
     }
 
     function finishGame() {
         document.getElementById('screen-game').classList.add('hidden');
         document.getElementById('screen-end').classList.remove('hidden');
-        const nota = (1 + state.correctAnswers * 0.75).toFixed(2);
+        const nota = (1 + (state.correctAnswers * 0.45)).toFixed(2);
         document.getElementById('final-score').innerText = nota;
-        document.getElementById('raw-points').innerText = `Ai rezolvat corect ${state.correctAnswers} din 12.`;
+        document.getElementById('raw-points').innerText = `Ai rezolvat corect ${state.correctAnswers} din 20 itemi.`;
         
         const fd = new FormData();
-        fd.append("nume", state.name); fd.append("clasa", state.class + " - Lucru/Putere 7"); fd.append("scor", nota);
+        fd.append("nume", state.name); 
+        fd.append("clasa", state.class + " - Lucru/Putere 7"); 
+        fd.append("scor", nota);
         fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
     }
+
+    document.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') {
+            const next = document.getElementById('next-btn');
+            if(next && next.style.display === 'block') nextQuestion();
+            else handleSubmit();
+        }
+    });
 </script>
 </body>
 </html>

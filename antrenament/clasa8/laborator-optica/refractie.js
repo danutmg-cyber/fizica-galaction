@@ -151,7 +151,10 @@ function getMediumLabel() {
 // Funcția principală de desen
 // =========================================================
 function draw() {
+  console.log("DRAW START");
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
 
   const w = canvas.width;
   const h = canvas.height;

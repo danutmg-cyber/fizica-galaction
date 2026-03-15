@@ -27,6 +27,7 @@
         }
 
         .question-box { font-size: 1.4rem; font-weight: 500; margin-bottom: 20px; text-align: center; min-height: 80px; line-height: 1.4; }
+        .instruction-box { font-size: 0.9rem; color: #fbbf24; text-align: center; margin-bottom: 15px; font-weight: bold; background: rgba(251, 191, 36, 0.1); padding: 10px; border-radius: 8px; }
         
         input[type="text"], select { 
             width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; 
@@ -42,6 +43,9 @@
         .hidden { display: none; }
         .timer-bar { background: #334155; height: 8px; border-radius: 4px; width: 100%; margin: 15px 0; overflow: hidden; }
         #timer-progress { background: var(--accent); height: 100%; width: 100%; transition: width 1s linear; }
+
+        .img-container { text-align: center; margin-bottom: 20px; width: 100%; max-width: 700px; }
+        .img-container img { width: 100%; border-radius: 20px; border: 2px solid var(--primary); box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3); }
     </style>
 </head>
 <body>
@@ -54,13 +58,17 @@
             Prof. DĂNUȚ ANDRONIE
         </div>
         <div style="background: rgba(139, 92, 246, 0.1); border-left: 4px solid var(--primary); padding: 10px; font-style: italic; color: var(--accent); font-size: 1rem; font-weight: 500;">
-            "FIZICA NU ESTE DOMINATĂ DE FORMULE CI ESTE LOGICĂ"
+            "FIZICA NU ESTE DOMINATĂ DE FORMULE CI DE LOGICĂ"
         </div>
+    </div>
+
+    <div class="img-container" id="intro-img">
+        <img src="fizica_optica.png" alt="Fenomene Optice">
     </div>
 
     <div class="container" id="screen-login">
         <h2 style="text-align:center; margin-top:0;">🌟 Fenomene Optice</h2>
-        <p style="text-align:center; color:#94a3b8; margin-bottom:25px;">Lumina, Reflexia și Culoarea</p>
+        <p style="text-align:center; color:#94a3b8; margin-bottom:25px;">Lumina, Reflexia, Refracția și Dispersia</p>
         
         <input type="text" id="p-name" placeholder="Nume și Prenume Elev">
         
@@ -78,6 +86,7 @@
     <div class="container hidden" id="screen-game">
         <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
         <div class="timer-bar"><div id="timer-progress"></div></div>
+        <div class="instruction-box">COMPLETEAZĂ SPAȚIUL PUNCTAT</div>
         <div class="question-box" id="question"></div>
         <div id="input-area"></div>
         <div id="feedback"></div>
@@ -98,17 +107,19 @@
 
     const theoryPool = [
         { q: "Corpurile care emit lumină se numesc ........... de lumină.", a: ["surse"] },
-        { q: "Soarele este o sursă de lumină ...........", a: ["naturala"] },
-        { q: "Becul și lumânarea aprinsă sunt surse ...........", a: ["artificiale"] },
-        { q: "Lumina se propagă în linie ...........", a: ["dreapta"] },
-        { q: "Corpurile care lasă lumina să treacă și permit vizualizarea obiectelor sunt ...........", a: ["transparente"] },
+        { q: "Lumina se propagă în medii omogene în linie ...........", a: ["dreapta"] },
+        { q: "Corpurile care lasă lumina să treacă și permit vizualizarea clară sunt ...........", a: ["transparente"] },
+        { q: "Corpurile care lasă lumina să treacă doar parțial, fără a vedea clar prin ele, se numesc ...........", a: ["translucide"] },
         { q: "Corpurile prin care lumina nu trece deloc se numesc ...........", a: ["opace"] },
-        { q: "Spațiul întunecat din spatele unui corp opac luminat se numește ...........", a: ["umbra"] },
-        { q: "Fenomenul de întoarcere a luminii în primul mediu se numește ...........", a: ["reflexie"] },
-        { q: "Unghiul de incidență este egal cu unghiul de ...........", a: ["reflexie"] },
-        { q: "Oglinda este un corp care reflectă lumina ...........", a: ["regulat"] },
-        { q: "Lumina albă se descompune în cele șapte culori ale ...........", a: ["curcubeului"] },
-        { q: "Viteza luminii în vid este de aproximativ 300.000 ........... pe secundă.", a: ["km", "kilometri"] }
+        { q: "Fenomenul de întoarcere a luminii în mediul din care a venit se numește ...........", a: ["reflexie"] },
+        { q: "Schimbarea direcției de propagare la trecerea luminii dintr-un mediu în altul se numește ...........", a: ["refractie"] },
+        { q: "Descompunerea luminii albe în culorile componente se numește ........... luminii.", a: ["dispersia", "dispersie"] },
+        { q: "Fenomenul în care lumina este reținută de un corp și transformată în căldură se numește ...........", a: ["absorbtie"] },
+        { q: "Unghiul de incidență este întotdeauna egal cu unghiul de ...........", a: ["reflexie"] },
+        { q: "Viteza luminii în vid este de aproximativ 300.000 ........... pe secundă.", a: ["km", "kilometri"] },
+        { q: "Oglinda este un exemplu de corp care produce o reflexie ...........", a: ["regulata"] },
+        { q: "Spațiul întunecat format în spatele unui corp opac se numește ...........", a: ["umbra"] },
+        { q: "Lumina albă este un amestec din cele șapte culori ale ...........", a: ["curcubeului", "spectrului"] }
     ];
 
     function startGame() {
@@ -117,6 +128,7 @@
         if(!state.name || !state.class) return alert("Completează numele și clasa!");
         
         state.questions = theoryPool.sort(() => 0.5 - Math.random()).slice(0, 10);
+        document.getElementById('intro-img').classList.add('hidden');
         document.getElementById('screen-login').classList.add('hidden');
         document.getElementById('screen-game').classList.remove('hidden');
         timerInterval = setInterval(updateTimer, 1000);
@@ -129,8 +141,8 @@
         document.getElementById('question').innerText = q.q;
         const area = document.getElementById('input-area');
         area.innerHTML = `
-            <input type="text" id="user-ans" placeholder="Răspunsul tău...">
-            <button class="check-btn" onclick="checkAns(document.getElementById('user-ans').value)">VERIFICĂ</button>
+            <input type="text" id="user-ans" placeholder="Răspunsul tău..." autocomplete="off">
+            <button class="check-btn" id="submit-btn" onclick="checkAns(document.getElementById('user-ans').value)">VERIFICĂ</button>
         `;
         document.getElementById('feedback').style.display = 'none';
         document.getElementById('next-btn').style.display = 'none';
@@ -140,8 +152,13 @@
     function checkAns(user) {
         if(!user) return;
         const q = state.questions[state.currentIdx];
-        const clean = (s) => s.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
-        let isCorrect = q.a.some(ans => clean(user) === clean(ans));
+        
+        const normalize = (s) => s.toString().toLowerCase()
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // scoate diacriticele
+            .replace(/ul$/, "").replace(/a$/, "") // normalizează articulările
+            .replace(/\s/g, "").trim();
+
+        let isCorrect = q.a.some(ans => normalize(user) === normalize(ans));
         
         const f = document.getElementById('feedback');
         f.style.display = 'block';
@@ -149,11 +166,11 @@
             state.correctAnswers++; 
             f.innerText = "CORECT! 🌟"; f.style.color = "#4ade80"; f.style.background = "rgba(74, 222, 128, 0.1)";
         } else { 
-            f.innerText = `MAI ÎNCEARCĂ! Răspunsul era: ${q.a[0]} ❌`; f.style.color = "#f87171"; f.style.background = "rgba(248, 113, 113, 0.1)";
+            f.innerText = `Răspunsul corect: ${q.a[0]} ❌`; f.style.color = "#f87171"; f.style.background = "rgba(248, 113, 113, 0.1)";
         }
         
         document.getElementById('user-ans').disabled = true;
-        document.querySelector('#input-area .check-btn').disabled = true;
+        document.getElementById('submit-btn').style.display = 'none';
         document.getElementById('next-btn').style.display = 'block';
     }
 
@@ -182,6 +199,15 @@
         fd.append("scor", nota);
         fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
     }
+
+    document.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') {
+            const next = document.getElementById('next-btn');
+            const submit = document.getElementById('submit-btn');
+            if(next && next.style.display === 'block') nextQuestion();
+            else if(submit) submit.click();
+        }
+    });
 </script>
 </body>
 </html>

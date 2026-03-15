@@ -255,7 +255,7 @@ function draw() {
   drawArrow(cx, cy, refrEndX, refrEndY, "#f59e0b", "raza refractată");
 
 if (showAngles.checked) {
-  // Unghiul de incidență
+  // Unghiul de incidență (sus)
   drawArcLabel(
     cx,
     cy,
@@ -266,7 +266,7 @@ if (showAngles.checked) {
     "i"
   );
 
-  // Unghiul de refracție
+  // Unghiul de refracție (jos)
   drawArcLabel(
     cx,
     cy,

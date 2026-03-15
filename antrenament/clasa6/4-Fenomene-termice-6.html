@@ -55,7 +55,7 @@
             Prof. DĂNUȚ ANDRONIE
         </div>
         <div style="background: rgba(225, 29, 72, 0.1); border-left: 4px solid var(--primary); padding: 10px; font-style: italic; color: var(--accent); font-size: 1rem; font-weight: 500;">
-            "FIZICA NU ESTE DOMINATĂ DE FORMULE CI ESTE LOGICĂ"
+            "FIZICA NU ESTE DOMINATĂ DE FORMULE CI DE LOGICĂ"
         </div>
     </div>
 
@@ -79,7 +79,7 @@
     <div class="container hidden" id="screen-game">
         <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
         <div class="timer-bar"><div id="timer-progress"></div></div>
-        <div id="instruction" class="instruction-box">PENTRU REZULTATE CU ZECIMALE, FOLOSEȘTE VIRGULA</div>
+        <div id="instruction" class="instruction-box">PENTRU REZULTATE CU ZECIMALE, POȚI FOLOSI ȘI VIRGULA</div>
         <div class="question-box" id="question"></div>
         <div id="input-area"></div>
         <div id="feedback"></div>
@@ -100,28 +100,28 @@
 
     const theoryPool = [
         { q: "Temperatura de topire a gheții este de ........... grade Celsius.", type: "fill", a: ["0"] },
-        { q: "Trecerea din stare lichidă în stare gazoasă se numește ...........", type: "fill", a: ["vaporizare"] },
+        { q: "Trecerea din stare lichidă în stare gazoasă se numește ...........", type: "fill", a: ["vaporizare", "evaporare"] },
         { q: "Fenomenul invers topirii se numește ...........", type: "fill", a: ["solidificare"] },
         { q: "Căldura se măsoară în Sistemul Internațional în ...........", type: "fill", a: ["joule", "j"] },
         { q: "Un corp care primește căldură își poate mări ...........", type: "fill", a: ["temperatura"] },
-        { q: "Echilibrul termic se atinge când corpurile au aceeași temperatură. (A/F)", type: "choice", a: ["adevarat", "a"] }
+        { q: "Echilibrul termic se atinge când corpurile au aceeași temperatură. (A/F)", type: "fill", a: ["adevarat", "adevarata", "a"] }
     ];
 
     function generateThermalMath() {
         let mathQ = [];
-        // Celsius -> Fahrenheit
+        // Celsius -> Fahrenheit: T(°F) = T(°C) × 1.8 + 32
         for(let i=0; i<3; i++) {
             let c = Math.floor(Math.random() * 40);
             let f = (c * 1.8 + 32).toFixed(1);
-            mathQ.push({ q: `Transformă t = ${c} °C în grade Fahrenheit (°F).`, type: "math", a: [f.replace(".", ",")] });
+            mathQ.push({ q: `Transformă t = ${c} °C în grade Fahrenheit (°F).`, type: "math", a: [f] });
         }
-        // Fahrenheit -> Celsius
+        // Fahrenheit -> Celsius: T(°C) = (T(°F) - 32) / 1.8
         for(let i=0; i<3; i++) {
             let f = Math.floor(Math.random() * 100 + 32);
             let c = ((f - 32) / 1.8).toFixed(1);
-            mathQ.push({ q: `Transformă t = ${f} °F în grade Celsius (°C).`, type: "math", a: [c.replace(".", ",")] });
+            mathQ.push({ q: `Transformă t = ${f} °F în grade Celsius (°C).`, type: "math", a: [c] });
         }
-        // Celsius -> Kelvin
+        // Celsius -> Kelvin: T(K) = T(°C) + 273.15 (rotunjit la 273 pentru gimnaziu)
         for(let i=0; i<4; i++) {
             let c = Math.floor(Math.random() * 100);
             let k = c + 273;
@@ -148,8 +148,8 @@
         document.getElementById('question').innerText = q.q;
         const area = document.getElementById('input-area');
         area.innerHTML = `
-            <input type="text" id="user-ans" placeholder="Răspunsul tău...">
-            <button class="check-btn" onclick="checkAns(document.getElementById('user-ans').value)">VERIFICĂ</button>
+            <input type="text" id="user-ans" placeholder="Răspunsul tău..." autocomplete="off">
+            <button class="check-btn" id="submit-btn" onclick="checkAns(document.getElementById('user-ans').value)">VERIFICĂ</button>
         `;
         document.getElementById('feedback').style.display = 'none';
         document.getElementById('next-btn').style.display = 'none';
@@ -157,15 +157,23 @@
     }
 
     function checkAns(user) {
-        if(!user) return;
+        if(!user && user !== "0") return;
         const q = state.questions[state.currentIdx];
-        const clean = (s) => s.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().replace(",", ".");
         
+        // Normalizare text (diacritice, articulat/nearticulat)
+        const normalize = (s) => s.toString().toLowerCase()
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .replace(/ul$/, "").replace(/a$/, "")
+            .replace(/\s/g, "").trim();
+
         let isCorrect = false;
         if(q.type === "math") {
-            isCorrect = Math.abs(parseFloat(clean(user)) - parseFloat(clean(q.a[0]))) < 0.2;
+            // Verificare numerică (permite 25.5 să fie egal cu 25.50)
+            const userNum = parseFloat(user.toString().replace(",", "."));
+            const correctNum = parseFloat(q.a[0].toString().replace(",", "."));
+            isCorrect = !isNaN(userNum) && Math.abs(userNum - correctNum) < 0.15;
         } else {
-            isCorrect = q.a.some(ans => clean(user) === clean(ans));
+            isCorrect = q.a.some(ans => normalize(user) === normalize(ans));
         }
 
         const f = document.getElementById('feedback');
@@ -174,11 +182,12 @@
             state.correctAnswers++;
             f.innerText = "CORECT! ✅"; f.style.color = "#4ade80"; f.style.background = "rgba(74, 222, 128, 0.1)";
         } else {
-            f.innerText = `GREȘIT! Răspuns corect: ${q.a[0]} ❌`; f.style.color = "#f87171"; f.style.background = "rgba(248, 113, 113, 0.1)";
+            const afisaj = q.a[0].toString().replace(".", ",");
+            f.innerText = `GREȘIT! Răspuns corect: ${afisaj} ❌`; f.style.color = "#f87171"; f.style.background = "rgba(248, 113, 113, 0.1)";
         }
         
         document.getElementById('user-ans').disabled = true;
-        document.querySelector('#input-area .check-btn').disabled = true;
+        document.getElementById('submit-btn').style.display = 'none';
         document.getElementById('next-btn').style.display = 'block';
     }
 
@@ -199,7 +208,7 @@
         document.getElementById('screen-end').classList.remove('hidden');
         const nota = (1 + (state.correctAnswers * (9/state.questions.length))).toFixed(2);
         document.getElementById('final-score').innerText = nota > 10 ? "10.00" : nota;
-        document.getElementById('raw-points').innerText = `Scor: ${state.correctAnswers} / ${state.questions.length}`;
+        document.getElementById('raw-points').innerText = `Scor: ${state.correctAnswers} / ${state.questions.length} corecte`;
         
         const fd = new FormData();
         fd.append("nume", state.name);
@@ -207,6 +216,16 @@
         fd.append("scor", nota);
         fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
     }
+
+    // Suport pentru Enter
+    document.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') {
+            const next = document.getElementById('next-btn');
+            const submit = document.getElementById('submit-btn');
+            if(next && next.style.display === 'block') nextQuestion();
+            else if(submit) submit.click();
+        }
+    });
 </script>
 </body>
 </html>

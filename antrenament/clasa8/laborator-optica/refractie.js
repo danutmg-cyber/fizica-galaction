@@ -52,6 +52,7 @@ function normalizeAngle(angle) {
   return ((angle % twoPi) + twoPi) % twoPi;
 }
 
+// Creează pattern discret pentru fundal
 function createGridPattern() {
   const patternCanvas = document.createElement("canvas");
   patternCanvas.width = 40;
@@ -73,9 +74,7 @@ function createGridPattern() {
 
 const gridPattern = createGridPattern();
 
-// =========================================================
-// Desenare săgeată
-// =========================================================
+// Desenează o săgeată între două puncte
 function drawArrow(x1, y1, x2, y2, color, label) {
   const head = 14;
   const dx = x2 - x1;
@@ -111,18 +110,40 @@ function drawArrow(x1, y1, x2, y2, color, label) {
   }
 }
 
-// =========================================================
-// Desenare arc unghi
-// =========================================================
-function drawArcLabel(cx, cy, radius, start, end, color, text, anticlockwise = false) {
+// Desenează un arc pentru unghi și eticheta lui
+// anticlockwise = true => sens trigonometric
+function drawArcLabel(
+  cx,
+  cy,
+  radius,
+  start,
+  end,
+  color,
+  text,
+  anticlockwise = false
+) {
   ctx.beginPath();
   ctx.strokeStyle = color;
   ctx.lineWidth = 3;
   ctx.arc(cx, cy, radius, start, end, anticlockwise);
   ctx.stroke();
 
-  // Poziția corectă a etichetei
-  const mid = (start + end) / 2;
+  const twoPi = 2 * Math.PI;
+  let startNorm = normalizeAngle(start);
+  let endNorm = normalizeAngle(end);
+  let mid;
+
+  if (!anticlockwise) {
+    if (endNorm < startNorm) {
+      endNorm += twoPi;
+    }
+    mid = (startNorm + endNorm) / 2;
+  } else {
+    if (startNorm < endNorm) {
+      startNorm += twoPi;
+    }
+    mid = (startNorm + endNorm) / 2;
+  }
 
   const tx = cx + Math.cos(mid) * (radius + 18);
   const ty = cy + Math.sin(mid) * (radius + 18);
@@ -134,19 +155,17 @@ function drawArcLabel(cx, cy, radius, start, end, color, text, anticlockwise = f
 
 function getMediumLabel() {
   const n2 = Number(mediumSelect.value);
+
   if (n2 === 1.33) return "apă";
   if (n2 === 1.5) return "sticlă";
   return "diamant";
 }
 
 // =========================================================
-// Funcția principală de desen
+// Simulator principal – refracția luminii
 // =========================================================
 function draw() {
-  console.log("DRAW START");
-
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
 
   const w = canvas.width;
   const h = canvas.height;
@@ -156,21 +175,24 @@ function draw() {
   const iDeg = Number(angleRange.value);
   const iRad = degToRad(iDeg);
 
-  const n1 = 1.0;
+  // Indicii de refracție
+  const n1 = 1.0; // aer
   const n2 = Number(mediumSelect.value);
 
+  // Legea refracției: n1 * sin(i) = n2 * sin(r)
   let sinR = (n1 / n2) * Math.sin(iRad);
   sinR = Math.max(-1, Math.min(1, sinR));
 
   const rRad = Math.asin(sinR);
   const rDeg = radToDeg(rRad);
 
+  // Actualizare valori afișate
   angleLabel.textContent = iDeg + "°";
   incidenceVal.textContent = iDeg + "°";
   refractionVal.textContent = rDeg.toFixed(1) + "°";
   conclusionVal.textContent = rDeg < iDeg ? "spre normală" : "departe de normală";
 
-  // Fundal
+  // Grid de fundal
   if (gridPattern) {
     ctx.save();
     ctx.fillStyle = gridPattern;
@@ -178,13 +200,14 @@ function draw() {
     ctx.restore();
   }
 
+  // Medii: sus = aer, jos = mediul 2
   ctx.fillStyle = "rgba(125, 211, 252, 0.04)";
   ctx.fillRect(0, 0, w, cy);
 
   ctx.fillStyle = "rgba(14, 165, 233, 0.18)";
   ctx.fillRect(0, cy, w, h - cy);
 
-  // Linie de separare
+  // Suprafața de separare
   ctx.beginPath();
   ctx.moveTo(40, cy);
   ctx.lineTo(w - 40, cy);
@@ -210,7 +233,7 @@ function draw() {
     }
   }
 
-  // Punctul P
+  // Punctul de incidență
   ctx.beginPath();
   ctx.arc(cx, cy, 6, 0, Math.PI * 2);
   ctx.fillStyle = "#ffffff";
@@ -219,41 +242,59 @@ function draw() {
   const lenIncident = 190;
   const lenRefracted = 190;
 
-  // Raza incidentă
+  // Raza incidentă: din stânga sus spre punct
   const incStartX = cx - Math.sin(iRad) * lenIncident;
   const incStartY = cy - Math.cos(iRad) * lenIncident;
 
-  // Raza refractată
+  // Raza refractată: în jos-dreapta
   const refrEndX = cx + Math.sin(rRad) * lenRefracted;
   const refrEndY = cy + Math.cos(rRad) * lenRefracted;
 
   drawArrow(incStartX, incStartY, cx, cy, "#38bdf8", "raza incidentă");
   drawArrow(cx, cy, refrEndX, refrEndY, "#f59e0b", "raza refractată");
 
-  // Unghiuri
   if (showAngles.checked) {
-    drawArcLabel(cx, cy, 48, -Math.PI / 2 - iRad, -Math.PI / 2, "#38bdf8", "i");
+    // Unghiul de incidență
+    drawArcLabel(
+      cx,
+      cy,
+      48,
+      -Math.PI / 2 - iRad,
+      -Math.PI / 2,
+      "#38bdf8",
+      "i"
+    );
 
-    let startR = Math.PI / 2;          // normală în jos
-let endR = Math.PI / 2 + rRad;     // raza refractată în dreapta
-let anticlock = false;             // arcul merge spre dreapta, niciodată invers
-
-drawArcLabel(cx, cy, 64, startR, endR, "#f59e0b", "r", anticlock);
+    // Unghiul de refracție:
+    // pornim de la normala de jos și mergem în sens trigonometric
+    // spre raza refractată
+    drawArcLabel(
+      cx,
+      cy,
+      64,
+      Math.PI / 2,
+      Math.PI / 2 - rRad,
+      "#f59e0b",
+      "r",
+      true
+    );
   }
 
-  // Etichete
   if (showLabels.checked) {
     ctx.fillStyle = "#f8fafc";
     ctx.font = "bold 18px Segoe UI";
     ctx.fillText("aer", 60, 40);
     ctx.fillText(getMediumLabel(), 60, h - 26);
-    ctx.fillText("suprafață de separare", cx - 92, cy - 12);
+
+    // Mutat mai la stânga
+    ctx.fillText("suprafață de separare", cx - 130, cy - 12);
+
     ctx.fillText("P", cx + 10, cy - 10);
   }
 }
 
 // =========================================================
-// Iluzia creionului
+// Iluzia creionului în apă
 // =========================================================
 function updatePencil() {
   const shift = Number(pencilSlider.value);
@@ -264,7 +305,7 @@ function updatePencil() {
 }
 
 // =========================================================
-// Tabel
+// Tabel observații
 // =========================================================
 function addTableRow() {
   const rowCount = dataTableBody.querySelectorAll("tr").length + 1;
@@ -293,19 +334,25 @@ function checkQuiz() {
   let score = 0;
 
   answers.forEach((answer) => {
-    if (answer && answer.value === "corect") score++;
+    if (answer && answer.value === "corect") {
+      score++;
+    }
   });
 
   quizResult.style.display = "block";
 
   if (score === 3) {
-    quizResult.innerHTML = "<strong>Bravo!</strong> Ai obținut 3/3.";
+    quizResult.innerHTML =
+      "<strong>Bravo!</strong> Ai obținut 3/3. Ai înțeles foarte bine refracția luminii.";
   } else if (score === 2) {
-    quizResult.innerHTML = "<strong>Foarte bine!</strong> Ai obținut 2/3.";
+    quizResult.innerHTML =
+      "<strong>Foarte bine!</strong> Ai obținut 2/3. Mai recitește puțin și ești gata.";
   } else if (score === 1) {
-    quizResult.innerHTML = "<strong>Ai obținut 1/3.</strong>";
+    quizResult.innerHTML =
+      "<strong>Ai obținut 1/3.</strong> Reia ideea cu apropierea de normală și încearcă din nou.";
   } else {
-    quizResult.innerHTML = "<strong>Ai obținut 0/3.</strong>";
+    quizResult.innerHTML =
+      "<strong>Ai obținut 0/3.</strong> Nicio problemă. Refracția pare complicată doar la început.";
   }
 }
 

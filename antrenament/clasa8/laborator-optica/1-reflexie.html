@@ -1,262 +1,951 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <title>Reflexia luminii</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Laborator de optică – Reflexia luminii</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
+    :root{
+      --bg:#0f172a;
+      --card:#111827;
+      --card-2:#1f2937;
+      --text:#e5e7eb;
+      --muted:#94a3b8;
+      --accent:#38bdf8;
+      --accent-2:#22c55e;
+      --accent-3:#f59e0b;
+      --danger:#ef4444;
+      --white:#ffffff;
+      --shadow:0 10px 30px rgba(0,0,0,.25);
+      --radius:20px;
     }
 
-    body {
-      font-family: Arial, sans-serif;
-      background: #111;
-      color: #f5f5f5;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      background: linear-gradient(180deg,#020617 0%, #0f172a 100%);
+      color:var(--text);
+      line-height:1.6;
     }
 
-    header {
-      text-align: center;
-      padding: 0.5rem;
-      background: #222;
-      font-size: 0.9rem;
-      line-height: 1.4;
+    .container{
+      width:min(1200px, 92%);
+      margin:0 auto;
     }
 
-    header h1 {
-      font-size: 1.1rem;
-      margin-bottom: 0.2rem;
+    header.hero{
+      padding:36px 0 22px;
+      position:relative;
+      overflow:hidden;
     }
 
-    header h2 {
-      font-size: 1rem;
-      margin-bottom: 0.2rem;
+    .hero::before{
+      content:"";
+      position:absolute;
+      inset:auto -120px -120px auto;
+      width:260px;
+      height:260px;
+      background:radial-gradient(circle, rgba(56,189,248,.18), transparent 70%);
+      filter:blur(10px);
     }
 
-    header h3 {
-      font-size: 0.9rem;
-      font-weight: normal;
-      opacity: 0.9;
+    .hero-grid{
+      display:grid;
+      grid-template-columns: 1.3fr .9fr;
+      gap:24px;
+      align-items:stretch;
     }
 
-    main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      padding: 0.5rem;
-      gap: 0.5rem;
+    .panel{
+      background:rgba(17,24,39,.9);
+      border:1px solid rgba(148,163,184,.18);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:24px;
+      backdrop-filter: blur(6px);
     }
 
-    .controls {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-      background: #1b1b1b;
-      padding: 0.5rem;
-      border-radius: 6px;
-      font-size: 0.9rem;
+    h1,h2,h3{
+      margin:0 0 14px;
+      line-height:1.2;
     }
 
-    input[type="range"] {
-      width: 100%;
+    h1{
+      font-size:clamp(2rem, 4vw, 3.2rem);
+      color:#f8fafc;
     }
 
-    .values {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.9rem;
-      flex-wrap: wrap;
-      gap: 0.3rem;
+    h2{
+      font-size:1.55rem;
+      color:#f8fafc;
+      margin-bottom:16px;
     }
 
-    .canvas-container {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: #000;
-      border-radius: 6px;
-      overflow: hidden;
+    h3{
+      font-size:1.1rem;
+      color:#f8fafc;
+      margin-top:18px;
     }
 
-    canvas {
-      width: 100%;
-      height: auto;
-      display: block;
-      background: #000;
+    .subtitle{
+      font-size:1.05rem;
+      color:var(--muted);
+      max-width:72ch;
     }
 
-    footer {
-      text-align: center;
-      font-size: 0.75rem;
-      padding: 0.3rem;
-      background: #222;
-      opacity: 0.9;
+    .quote{
+      margin-top:18px;
+      padding:14px 16px;
+      border-left:4px solid var(--accent);
+      background:rgba(56,189,248,.08);
+      border-radius:12px;
+      color:#dbeafe;
+      font-weight:600;
+    }
+
+    .joke{
+      margin-top:14px;
+      padding:14px 16px;
+      background:rgba(34,197,94,.08);
+      border:1px solid rgba(34,197,94,.2);
+      border-radius:12px;
+      color:#dcfce7;
+    }
+
+    .badge-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .badge{
+      padding:8px 12px;
+      border-radius:999px;
+      background:#0b1220;
+      border:1px solid rgba(148,163,184,.18);
+      color:#cbd5e1;
+      font-size:.92rem;
+    }
+
+    .hero-card{
+      display:grid;
+      align-content:center;
+      gap:12px;
+      min-height:100%;
+      background:
+        linear-gradient(145deg, rgba(56,189,248,.1), rgba(245,158,11,.08)),
+        rgba(17,24,39,.9);
+    }
+
+    .law{
+      background:rgba(255,255,255,.04);
+      border-radius:16px;
+      padding:16px;
+      border:1px solid rgba(148,163,184,.14);
+    }
+
+    .law strong{
+      color:#fef3c7;
+    }
+
+    main{
+      padding:6px 0 42px;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:24px;
+      margin:22px 0;
+    }
+
+    .full{ grid-column:1 / -1; }
+
+    .info-list{
+      margin:0;
+      padding-left:18px;
+    }
+
+    .info-list li{
+      margin-bottom:8px;
+    }
+
+    .steps{
+      counter-reset: lab;
+      display:grid;
+      gap:14px;
+      margin-top:10px;
+    }
+
+    .step{
+      position:relative;
+      padding:14px 16px 14px 58px;
+      background:rgba(255,255,255,.04);
+      border-radius:16px;
+      border:1px solid rgba(148,163,184,.14);
+    }
+
+    .step::before{
+      counter-increment: lab;
+      content: counter(lab);
+      position:absolute;
+      left:14px;
+      top:14px;
+      width:30px;
+      height:30px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:linear-gradient(135deg,var(--accent),#0ea5e9);
+      color:#082f49;
+      font-weight:800;
+    }
+
+    .warn{
+      padding:14px 16px;
+      border-radius:14px;
+      background:rgba(239,68,68,.08);
+      border:1px solid rgba(239,68,68,.2);
+      color:#fee2e2;
+      margin-top:12px;
+    }
+
+    .sim-wrap{
+      display:grid;
+      grid-template-columns: 1.25fr .75fr;
+      gap:20px;
+      align-items:start;
+    }
+
+    canvas{
+      width:100%;
+      max-width:100%;
+      background:
+        radial-gradient(circle at 50% 15%, rgba(56,189,248,.09), transparent 40%),
+        linear-gradient(180deg,#0b1220,#0f172a);
+      border:1px solid rgba(148,163,184,.18);
+      border-radius:18px;
+      display:block;
+    }
+
+    .controls{
+      display:grid;
+      gap:14px;
+    }
+
+    .control-box{
+      padding:14px;
+      background:rgba(255,255,255,.04);
+      border-radius:16px;
+      border:1px solid rgba(148,163,184,.14);
+    }
+
+    label{
+      display:block;
+      font-weight:600;
+      margin-bottom:8px;
+      color:#e2e8f0;
+    }
+
+    input[type="range"]{
+      width:100%;
+      accent-color:var(--accent);
+      cursor:pointer;
+    }
+
+    .readout{
+      display:grid;
+      gap:8px;
+      font-size:1rem;
+    }
+
+    .readout div{
+      display:flex;
+      justify-content:space-between;
+      gap:16px;
+      padding:10px 12px;
+      background:#0b1220;
+      border-radius:12px;
+    }
+
+    .readout span:last-child{
+      font-weight:700;
+      color:#bae6fd;
+    }
+
+    .btn-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:6px;
+    }
+
+    button{
+      border:none;
+      border-radius:12px;
+      padding:11px 14px;
+      font-weight:700;
+      cursor:pointer;
+      transition:transform .15s ease, opacity .15s ease;
+    }
+
+    button:hover{ transform:translateY(-1px); }
+    .primary{ background:linear-gradient(135deg,var(--accent),#0284c7); color:#082f49; }
+    .secondary{ background:#1e293b; color:#e2e8f0; border:1px solid rgba(148,163,184,.18); }
+    .success{ background:linear-gradient(135deg,var(--accent-2),#16a34a); color:#052e16; }
+
+    .table-wrap{
+      overflow:auto;
+      border-radius:16px;
+      border:1px solid rgba(148,163,184,.14);
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:640px;
+      background:rgba(255,255,255,.03);
+    }
+
+    th, td{
+      padding:12px 10px;
+      text-align:center;
+      border-bottom:1px solid rgba(148,163,184,.12);
+    }
+
+    th{
+      background:#0b1220;
+      color:#e0f2fe;
+      position:sticky;
+      top:0;
+    }
+
+    tr:nth-child(even) td{
+      background:rgba(255,255,255,.02);
+    }
+
+    .small{
+      color:var(--muted);
+      font-size:.95rem;
+    }
+
+    .formula{
+      margin:10px 0 0;
+      padding:12px 14px;
+      border-radius:14px;
+      background:rgba(245,158,11,.08);
+      border:1px solid rgba(245,158,11,.2);
+      color:#fef3c7;
+      font-weight:700;
+      text-align:center;
+    }
+
+    .mirror-box{
+      position:relative;
+      min-height:300px;
+      border-radius:18px;
+      background:
+        linear-gradient(90deg, rgba(56,189,248,.03) 0 49.5%, rgba(255,255,255,.15) 49.5% 50.5%, rgba(245,158,11,.03) 50.5% 100%),
+        #0b1220;
+      border:1px solid rgba(148,163,184,.18);
+      overflow:hidden;
+    }
+
+    .obj, .img-point{
+      position:absolute;
+      width:18px;
+      height:18px;
+      border-radius:50%;
+      top:50%;
+      transform:translate(-50%,-50%);
+    }
+
+    .obj{
+      background:#38bdf8;
+      box-shadow:0 0 0 8px rgba(56,189,248,.12);
+    }
+
+    .img-point{
+      background:#f59e0b;
+      box-shadow:0 0 0 8px rgba(245,158,11,.12);
+    }
+
+    .mirror-line-label{
+      position:absolute;
+      top:12px;
+      left:50%;
+      transform:translateX(-50%);
+      background:rgba(15,23,42,.85);
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:.9rem;
+      border:1px solid rgba(148,163,184,.18);
+    }
+
+    .legend{
+      display:flex;
+      flex-wrap:wrap;
+      gap:14px;
+      margin-top:12px;
+      color:#cbd5e1;
+      font-size:.95rem;
+    }
+
+    .dot{
+      display:inline-block;
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      margin-right:6px;
+    }
+
+    .quiz-q{
+      padding:14px;
+      border-radius:16px;
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(148,163,184,.14);
+      margin-bottom:14px;
+    }
+
+    .quiz-q p{
+      margin:0 0 10px;
+      font-weight:700;
+    }
+
+    .quiz-q label{
+      font-weight:500;
+      margin:6px 0;
+      display:block;
+      cursor:pointer;
+    }
+
+    .result{
+      margin-top:14px;
+      padding:14px 16px;
+      border-radius:14px;
+      background:rgba(56,189,248,.08);
+      border:1px solid rgba(56,189,248,.18);
+      color:#e0f2fe;
+      display:none;
+    }
+
+    .footer-note{
+      text-align:center;
+      color:var(--muted);
+      padding:10px 0 24px;
+    }
+
+    @media (max-width: 980px){
+      .hero-grid, .grid, .sim-wrap{
+        grid-template-columns:1fr;
+      }
+    }
+
+    @media (max-width: 640px){
+      .panel{ padding:18px; }
+      h2{ font-size:1.35rem; }
+      .step{ padding-left:52px; }
     }
   </style>
 </head>
 <body>
+  <header class="hero">
+    <div class="container hero-grid">
+      <section class="panel">
+        <h1>Laborator de optică – Reflexia luminii</h1>
+        <p class="subtitle">
+          Lecție interactivă pentru elevii de clasa a VIII-a: observăm, experimentăm,
+          măsurăm și descoperim singuri legile reflexiei.
+        </p>
 
-<header>
-  <h1>ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</h1>
-  <h2>LABORATORUL VIRTUAL DE FIZICĂ</h2>
-  <h3>Prof. DĂNUȚ ANDRONIE</h3>
-</header>
+        <div class="quote">„Fizica nu este o materie dominată de formule ci de logică”.</div>
 
-<main>
-  <section class="controls">
-    <label for="angleSlider">Unghiul de incidență \( i \) (°):</label>
-    <input type="range" id="angleSlider" min="0" max="80" value="30">
-    <div class="values">
-      <span>i = <span id="angleI">30</span>°</span>
-      <span>r = <span id="angleR">30</span>°</span>
-      <span>n₁ – mediul de sus &nbsp;&nbsp; n₂ – mediul de jos</span>
+        <div class="joke">
+          <strong>Gluma cu Chuck Norris:</strong> Chuck Norris nu verifică dacă unghiul de incidență este egal cu unghiul de reflexie.
+          Lumina se aliniază singură când îl vede.
+        </div>
+
+        <div class="badge-row">
+          <span class="badge">Clasa a VIII-a</span>
+          <span class="badge">Fenomene optice</span>
+          <span class="badge">Laborator virtual</span>
+          <span class="badge">Interactiv</span>
+        </div>
+      </section>
+
+      <aside class="panel hero-card">
+        <h2>Ce vei afla azi?</h2>
+        <div class="law">
+          <strong>Legea 1:</strong> raza incidentă, raza reflectată și normala în punctul de incidență sunt în același plan.
+        </div>
+        <div class="law">
+          <strong>Legea 2:</strong> unghiul de incidență este egal cu unghiul de reflexie.
+        </div>
+        <div class="law">
+          <strong>Imaginea în oglinda plană:</strong> este virtuală, dreaptă, egală ca mărime cu obiectul și apare la aceeași distanță în spatele oglinzii.
+        </div>
+      </aside>
     </div>
-  </section>
+  </header>
 
-  <section class="canvas-container">
-    <canvas id="canvas"></canvas>
-  </section>
-</main>
+  <main>
+    <div class="container">
+      <section class="grid">
+        <article class="panel">
+          <h2>Scopul laboratorului</h2>
+          <ul class="info-list">
+            <li>Să observi cum se reflectă lumina pe o suprafață plană.</li>
+            <li>Să identifici raza incidentă, raza reflectată și normala.</li>
+            <li>Să măsori unghiul de incidență și unghiul de reflexie.</li>
+            <li>Să formulezi concluzii pe baza observațiilor experimentale.</li>
+          </ul>
 
-<footer>
-  Reflexia luminii – unghiul de incidență este egal cu unghiul de reflexie: i = r
-</footer>
+          <h3>Materiale necesare</h3>
+          <ul class="info-list">
+            <li>pointer laser sau lanternă cu fascicul îngust;</li>
+            <li>oglindă plană;</li>
+            <li>coală albă;</li>
+            <li>riglă, creion, raportor;</li>
+            <li>bandă adezivă.</li>
+          </ul>
+        </article>
 
-<script>
-  const canvas = document.getElementById('canvas');
-  const ctx = canvas.getContext('2d');
+        <article class="panel">
+          <h2>Reguli de siguranță</h2>
+          <div class="warn">
+            Nu îndrepta niciodată fasciculul laser spre ochii colegilor sau spre suprafețe care pot reflecta lumina direct în ochi.
+          </div>
+          <ul class="info-list">
+            <li>Lucrează calm și atent.</li>
+            <li>Fixează bine oglinda și foaia de lucru.</li>
+            <li>Nu folosi surse de lumină periculoase.</li>
+            <li>Respectă indicațiile profesorului.</li>
+          </ul>
+        </article>
 
-  const angleSlider = document.getElementById('angleSlider');
-  const angleIText = document.getElementById('angleI');
-  const angleRText = document.getElementById('angleR');
+        <article class="panel full">
+          <h2>Desfășurarea experimentului</h2>
+          <div class="steps">
+            <div class="step">
+              Așază o coală albă pe bancă și fixează oglinda plană vertical, pe marginea colii.
+            </div>
+            <div class="step">
+              Trimite un fascicul luminos spre oglindă, astfel încât să lovească suprafața reflectătoare într-un punct clar.
+            </div>
+            <div class="step">
+              Marchează traseul razei incidente și traseul razei reflectate.
+            </div>
+            <div class="step">
+              Trasează normala în punctul de incidență, adică perpendiculara pe oglindă în acel punct.
+            </div>
+            <div class="step">
+              Măsoară cu raportorul unghiul de incidență <strong>i</strong> și unghiul de reflexie <strong>r</strong>.
+            </div>
+            <div class="step">
+              Repetă experimentul pentru mai multe valori ale unghiului de incidență și completează tabelul.
+            </div>
+            <div class="step">
+              Compară valorile și scrie concluzia ta.
+            </div>
+          </div>
+        </article>
+      </section>
 
-  function resizeCanvas() {
-    const width = canvas.parentElement.clientWidth;
-    const height = window.innerHeight * 0.75; 
-    canvas.width = width;
-    canvas.height = height;
-    drawScene(parseFloat(angleSlider.value));
-  }
+      <section class="panel">
+        <h2>Simulator – Legile reflexiei</h2>
+        <div class="sim-wrap">
+          <div>
+            <canvas id="labCanvas" width="760" height="460" aria-label="Simulator reflexia luminii"></canvas>
+            <p class="small">
+              În desen: oglinda este verticală, normala este linia punctată, raza incidentă este albastră, iar raza reflectată este portocalie.
+            </p>
+          </div>
 
-  function drawScene(angleDeg) {
-    const w = canvas.width;
-    const h = canvas.height;
-    ctx.clearRect(0, 0, w, h);
+          <div class="controls">
+            <div class="control-box">
+              <label for="angleRange">Unghiul de incidență: <span id="angleLabel">30°</span></label>
+              <input id="angleRange" type="range" min="0" max="80" value="30" />
+            </div>
 
-    const centerX = w / 2;
-    const interfaceY = h / 2;
+            <div class="control-box">
+              <label for="showNormal">
+                <input id="showNormal" type="checkbox" checked />
+                Afișează normala
+              </label>
+              <label for="showAngles">
+                <input id="showAngles" type="checkbox" checked />
+                Afișează unghiurile
+              </label>
+              <label for="showLabels">
+                <input id="showLabels" type="checkbox" checked />
+                Afișează etichetele
+              </label>
+            </div>
 
-    const lineColor = '#ffffff';
-    const dashedColor = '#aaaaaa';
-    const incidentColor = '#00bfff';
-    const reflectedColor = '#ffcc00';
-    const textColor = '#ffffff';
+            <div class="control-box readout">
+              <div><span>Unghi de incidență</span><span id="incidenceVal">30°</span></div>
+              <div><span>Unghi de reflexie</span><span id="reflectionVal">30°</span></div>
+              <div><span>Concluzie</span><span>i = r</span></div>
+            </div>
 
-    ctx.lineWidth = 4;
-    ctx.font = Math.round(h * 0.06) + 'px Arial Black';
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
+            <div class="control-box">
+              <div class="btn-row">
+                <button class="primary" id="randomBtn">Exemplu aleator</button>
+                <button class="secondary" id="resetBtn">Reset</button>
+              </div>
+            </div>
 
-    ctx.strokeStyle = lineColor;
-    ctx.beginPath();
-    ctx.moveTo(0, interfaceY);
-    ctx.lineTo(w, interfaceY);
-    ctx.stroke();
+            <div class="formula">Legea reflexiei: i = r</div>
+          </div>
+        </div>
+      </section>
 
-    ctx.fillStyle = textColor;
-    ctx.textAlign = 'left';
-    ctx.fillText('n₁', 20, interfaceY - h * 0.25);
-    ctx.fillText('n₂', 20, interfaceY + h * 0.25);
+      <section class="grid">
+        <article class="panel">
+          <h2>Fișa de observație</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nr. crt.</th>
+                  <th>Unghi de incidență i</th>
+                  <th>Unghi de reflexie r</th>
+                  <th>Observație</th>
+                </tr>
+              </thead>
+              <tbody id="dataTableBody">
+                <tr><td>1</td><td contenteditable="true">10°</td><td contenteditable="true">10°</td><td contenteditable="true">egale</td></tr>
+                <tr><td>2</td><td contenteditable="true">20°</td><td contenteditable="true">20°</td><td contenteditable="true">egale</td></tr>
+                <tr><td>3</td><td contenteditable="true">30°</td><td contenteditable="true">30°</td><td contenteditable="true">egale</td></tr>
+                <tr><td>4</td><td contenteditable="true">40°</td><td contenteditable="true">40°</td><td contenteditable="true">egale</td></tr>
+                <tr><td>5</td><td contenteditable="true"></td><td contenteditable="true"></td><td contenteditable="true"></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="btn-row">
+            <button class="success" id="addRowBtn">Adaugă rând</button>
+          </div>
+        </article>
 
-    ctx.strokeStyle = dashedColor;
-    ctx.setLineDash([10, 8]);
-    ctx.beginPath();
-    ctx.moveTo(centerX, 0);
-    ctx.lineTo(centerX, h);
-    ctx.stroke();
-    ctx.setLineDash([]);
+        <article class="panel">
+          <h2>Concluzii de reținut</h2>
+          <ul class="info-list">
+            <li>Reflexia luminii înseamnă întoarcerea luminii în mediul din care a venit.</li>
+            <li>Raza incidentă, raza reflectată și normala sunt coplanare.</li>
+            <li>Unghiul de incidență este egal cu unghiul de reflexie.</li>
+            <li>Dacă raza cade perpendicular pe oglindă, se întoarce pe aceeași direcție.</li>
+          </ul>
 
-    const Px = centerX;
-    const Py = interfaceY;
+          <h3>Unde vedem reflexia în viața reală?</h3>
+          <ul class="info-list">
+            <li>în oglinzi;</li>
+            <li>pe suprafața liniștită a apei;</li>
+            <li>pe geamuri, metal lustruit, ecranul telefonului;</li>
+            <li>în reflectoare și periscoape.</li>
+          </ul>
+        </article>
 
-    const angleRad = angleDeg * Math.PI / 180;
-    const rayLen = Math.min(w, h) * 0.45;
+        <article class="panel">
+          <h2>Imaginea într-o oglindă plană</h2>
+          <p>
+            Mută punctul-obiect și observă unde apare imaginea lui în raport cu oglinda.
+          </p>
 
-    const incX = Px - rayLen * Math.sin(angleRad);
-    const incY = Py - rayLen * Math.cos(angleRad);
+          <div class="mirror-box" id="mirrorBox">
+            <div class="mirror-line-label">oglindă plană</div>
+            <div class="obj" id="objectPoint" title="Obiect" style="left:34%;"></div>
+            <div class="img-point" id="imagePoint" title="Imagine" style="left:66%;"></div>
+          </div>
 
-    ctx.strokeStyle = incidentColor;
-    ctx.lineWidth = 6;
-    ctx.beginPath();
-    ctx.moveTo(incX, incY);
-    ctx.lineTo(Px, Py);
-    ctx.stroke();
+          <input id="objectSlider" type="range" min="10" max="45" value="34" style="width:100%; margin-top:14px;" />
+          <div class="legend">
+            <span><span class="dot" style="background:#38bdf8;"></span>obiect</span>
+            <span><span class="dot" style="background:#f59e0b;"></span>imagine virtuală</span>
+          </div>
+          <p class="small">
+            Observație: imaginea apare în spatele oglinzii, la aceeași distanță față de oglindă ca obiectul.
+          </p>
+        </article>
 
-    const refX = Px + rayLen * Math.sin(angleRad);
-    const refY = Py - rayLen * Math.cos(angleRad);
+        <article class="panel">
+          <h2>Verifică-te!</h2>
 
-    ctx.strokeStyle = reflectedColor;
-    ctx.beginPath();
-    ctx.moveTo(Px, Py);
-    ctx.lineTo(refX, refY);
-    ctx.stroke();
+          <div class="quiz-q">
+            <p>1. Cum se numește unghiul dintre raza incidentă și normală?</p>
+            <label><input type="radio" name="q1" value="corect"> Unghi de incidență</label>
+            <label><input type="radio" name="q1" value="gresit"> Unghi de refracție</label>
+            <label><input type="radio" name="q1" value="gresit"> Unghi de dispersie</label>
+          </div>
 
-    const arcRadius = Math.min(w, h) * 0.18;
+          <div class="quiz-q">
+            <p>2. Ce relație există între unghiul de incidență și unghiul de reflexie?</p>
+            <label><input type="radio" name="q2" value="gresit"> i &gt; r</label>
+            <label><input type="radio" name="q2" value="corect"> i = r</label>
+            <label><input type="radio" name="q2" value="gresit"> i &lt; r</label>
+          </div>
 
-    const normalCanvasAngle = -Math.PI / 2;
+          <div class="quiz-q">
+            <p>3. Imaginea într-o oglindă plană este:</p>
+            <label><input type="radio" name="q3" value="gresit"> reală și poate fi proiectată pe ecran</label>
+            <label><input type="radio" name="q3" value="corect"> virtuală și nu poate fi proiectată pe ecran</label>
+            <label><input type="radio" name="q3" value="gresit"> mereu răsturnată</label>
+          </div>
 
-    ctx.strokeStyle = incidentColor;
-    ctx.lineWidth = 4;
-    ctx.beginPath();
-    ctx.arc(Px, Py, arcRadius,
-      normalCanvasAngle - angleRad,
-      normalCanvasAngle,
-      false
-    );
-    ctx.stroke();
+          <button class="primary" id="checkQuizBtn">Verifică răspunsurile</button>
+          <div class="result" id="quizResult"></div>
+        </article>
+      </section>
+    </div>
+  </main>
 
-    ctx.strokeStyle = reflectedColor;
-    ctx.beginPath();
-    ctx.arc(Px, Py, arcRadius,
-      normalCanvasAngle,
-      normalCanvasAngle + angleRad,
-      false
-    );
-    ctx.stroke();
+  <div class="container footer-note">
+    Platformă de antrenare la fizică • Laborator de optică • Reflexia luminii
+  </div>
 
-    ctx.fillStyle = incidentColor;
-    const iLabelAngle = normalCanvasAngle - angleRad / 2;
-    ctx.fillText('i',
-      Px + (arcRadius + 40) * Math.cos(iLabelAngle),
-      Py + (arcRadius + 40) * Math.sin(iLabelAngle)
-    );
+  <script>
+    const canvas = document.getElementById("labCanvas");
+    const ctx = canvas.getContext("2d");
 
-    ctx.fillStyle = reflectedColor;
-    const rLabelAngle = normalCanvasAngle + angleRad / 2;
-    ctx.fillText('r',
-      Px + (arcRadius + 40) * Math.cos(rLabelAngle),
-      Py + (arcRadius + 40) * Math.sin(rLabelAngle)
-    );
+    const angleRange = document.getElementById("angleRange");
+    const angleLabel = document.getElementById("angleLabel");
+    const incidenceVal = document.getElementById("incidenceVal");
+    const reflectionVal = document.getElementById("reflectionVal");
 
-    angleIText.textContent = angleDeg.toFixed(0);
-    angleRText.textContent = angleDeg.toFixed(0);
-  }
+    const showNormal = document.getElementById("showNormal");
+    const showAngles = document.getElementById("showAngles");
+    const showLabels = document.getElementById("showLabels");
 
-  angleSlider.addEventListener('input', () => {
-    drawScene(parseFloat(angleSlider.value));
-  });
+    const randomBtn = document.getElementById("randomBtn");
+    const resetBtn = document.getElementById("resetBtn");
 
-  window.addEventListener('resize', resizeCanvas);
+    const addRowBtn = document.getElementById("addRowBtn");
+    const dataTableBody = document.getElementById("dataTableBody");
 
-  resizeCanvas();
-</script>
+    const mirrorBox = document.getElementById("mirrorBox");
+    const objectPoint = document.getElementById("objectPoint");
+    const imagePoint = document.getElementById("imagePoint");
+    const objectSlider = document.getElementById("objectSlider");
 
+    const checkQuizBtn = document.getElementById("checkQuizBtn");
+    const quizResult = document.getElementById("quizResult");
+
+    function degToRad(deg){
+      return deg * Math.PI / 180;
+    }
+
+    function drawArcLabel(cx, cy, radius, start, end, color, text){
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 3;
+      ctx.arc(cx, cy, radius, start, end, false);
+      ctx.stroke();
+
+      const mid = (start + end) / 2;
+      const tx = cx + Math.cos(mid) * (radius + 18);
+      const ty = cy + Math.sin(mid) * (radius + 18);
+      ctx.fillStyle = color;
+      ctx.font = "bold 18px Segoe UI";
+      ctx.fillText(text, tx - 8, ty + 6);
+    }
+
+    function drawArrow(x1, y1, x2, y2, color, label){
+      const head = 14;
+      const dx = x2 - x1;
+      const dy = y2 - y1;
+      const angle = Math.atan2(dy, dx);
+
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 4;
+      ctx.lineCap = "round";
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(x2, y2);
+      ctx.lineTo(x2 - head * Math.cos(angle - Math.PI / 7), y2 - head * Math.sin(angle - Math.PI / 7));
+      ctx.lineTo(x2 - head * Math.cos(angle + Math.PI / 7), y2 - head * Math.sin(angle + Math.PI / 7));
+      ctx.closePath();
+      ctx.fillStyle = color;
+      ctx.fill();
+
+      if(showLabels.checked && label){
+        ctx.fillStyle = color;
+        ctx.font = "bold 18px Segoe UI";
+        ctx.fillText(label, (x1 + x2)/2 + 8, (y1 + y2)/2 - 8);
+      }
+    }
+
+    function draw(){
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+
+      const w = canvas.width;
+      const h = canvas.height;
+      const bx = w/2;
+      const by = h/2;
+      const mirrorX = bx;
+      const angleDeg = Number(angleRange.value);
+      const angle = degToRad(angleDeg);
+
+      angleLabel.textContent = angleDeg + "°";
+      incidenceVal.textContent = angleDeg + "°";
+      reflectionVal.textContent = angleDeg + "°";
+
+      // background grid
+      ctx.save();
+      ctx.strokeStyle = "rgba(148,163,184,.08)";
+      ctx.lineWidth = 1;
+      for(let x=40; x<w; x+=40){
+        ctx.beginPath();
+        ctx.moveTo(x,0);
+        ctx.lineTo(x,h);
+        ctx.stroke();
+      }
+      for(let y=40; y<h; y+=40){
+        ctx.beginPath();
+        ctx.moveTo(0,y);
+        ctx.lineTo(w,y);
+        ctx.stroke();
+      }
+      ctx.restore();
+
+      // mirror
+      ctx.beginPath();
+      ctx.moveTo(mirrorX, 40);
+      ctx.lineTo(mirrorX, h-40);
+      ctx.strokeStyle = "#e5e7eb";
+      ctx.lineWidth = 6;
+      ctx.stroke();
+
+      // shiny effect
+      ctx.beginPath();
+      ctx.moveTo(mirrorX + 6, 40);
+      ctx.lineTo(mirrorX + 6, h-40);
+      ctx.strokeStyle = "rgba(56,189,248,.35)";
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // normal
+      if(showNormal.checked){
+        ctx.setLineDash([8,8]);
+        ctx.beginPath();
+        ctx.moveTo(80, by);
+        ctx.lineTo(w-80, by);
+        ctx.strokeStyle = "rgba(148,163,184,.9)";
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        if(showLabels.checked){
+          ctx.fillStyle = "#cbd5e1";
+          ctx.font = "bold 17px Segoe UI";
+          ctx.fillText("normală", w - 150, by - 10);
+        }
+      }
+
+      // incidence point
+      ctx.beginPath();
+      ctx.arc(bx, by, 6, 0, Math.PI*2);
+      ctx.fillStyle = "#ffffff";
+      ctx.fill();
+
+      // Compute ray points using angle to normal (horizontal normal in this drawing)
+      const len = 230;
+
+      const incStartX = bx - Math.cos(angle) * len;
+      const incStartY = by - Math.sin(angle) * len;
+
+      const refEndX = bx - Math.cos(angle) * len;
+      const refEndY = by + Math.sin(angle) * len;
+
+      drawArrow(incStartX, incStartY, bx, by, "#38bdf8", "raza incidentă");
+      drawArrow(bx, by, refEndX, refEndY, "#f59e0b", "raza reflectată");
+
+      if(showAngles.checked){
+        drawArcLabel(bx, by, 48, Math.PI, Math.PI + angle, "#38bdf8", "i");
+        drawArcLabel(bx, by, 64, Math.PI - angle, Math.PI, "#f59e0b", "r");
+      }
+
+      if(showLabels.checked){
+        ctx.fillStyle = "#f8fafc";
+        ctx.font = "bold 18px Segoe UI";
+        ctx.fillText("oglindă plană", bx - 48, 28);
+
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText("P", bx + 10, by - 10);
+      }
+    }
+
+    angleRange.addEventListener("input", draw);
+    showNormal.addEventListener("change", draw);
+    showAngles.addEventListener("change", draw);
+    showLabels.addEventListener("change", draw);
+
+    randomBtn.addEventListener("click", () => {
+      angleRange.value = Math.floor(Math.random() * 81);
+      draw();
+    });
+
+    resetBtn.addEventListener("click", () => {
+      angleRange.value = 30;
+      showNormal.checked = true;
+      showAngles.checked = true;
+      showLabels.checked = true;
+      draw();
+    });
+
+    addRowBtn.addEventListener("click", () => {
+      const rowCount = dataTableBody.querySelectorAll("tr").length + 1;
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${rowCount}</td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+        <td contenteditable="true"></td>
+      `;
+      dataTableBody.appendChild(tr);
+    });
+
+    function updateMirror(){
+      const objPercent = Number(objectSlider.value);
+      const imgPercent = 100 - objPercent;
+      objectPoint.style.left = objPercent + "%";
+      imagePoint.style.left = imgPercent + "%";
+    }
+
+    objectSlider.addEventListener("input", updateMirror);
+    updateMirror();
+
+    checkQuizBtn.addEventListener("click", () => {
+      const answers = [
+        document.querySelector('input[name="q1"]:checked'),
+        document.querySelector('input[name="q2"]:checked'),
+        document.querySelector('input[name="q3"]:checked')
+      ];
+
+      let score = 0;
+      answers.forEach(a => {
+        if(a && a.value === "corect") score++;
+      });
+
+      quizResult.style.display = "block";
+
+      if(score === 3){
+        quizResult.innerHTML = "<strong>Bravo!</strong> Ai obținut 3/3. Se vede că lumina nu te-a prins pe nepregătite.";
+      } else if(score === 2){
+        quizResult.innerHTML = "<strong>Foarte bine!</strong> Ai obținut 2/3. Mai verifică puțin teoria și ești gata.";
+      } else if(score === 1){
+        quizResult.innerHTML = "<strong>Ai obținut 1/3.</strong> Recitește legile reflexiei și încearcă din nou.";
+      } else {
+        quizResult.innerHTML = "<strong>Ai obținut 0/3.</strong> Nicio problemă: în laborator greșelile sunt pași spre învățare.";
+      }
+    });
+
+    draw();
+  </script>
 </body>
 </html>

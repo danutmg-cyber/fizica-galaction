@@ -272,7 +272,7 @@ if (showAngles.checked) {
     cy,
     64,
     Math.PI / 2,
-    Math.PI / 2 + rRad,
+    Math.PI / 2 - rRad,
     "#f59e0b",
     "r",
     false

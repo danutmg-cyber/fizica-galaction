@@ -213,28 +213,22 @@ function draw() {
   ctx.fill();
 
   const lenIncident = 190;
-  const lenRefracted = 190;
+const lenRefracted = 190;
 
-  // Raza incidentă vine din stânga sus spre punctul de incidență.
-  // Unghiul de incidență este măsurat față de normala verticală.
-  const incStartX = cx - Math.sin(iRad) * lenIncident;
-  const incStartY = cy - Math.cos(iRad) * lenIncident;
+// raza incidentă: de sus-stânga spre punctul de incidență
+const incStartX = cx - Math.sin(iRad) * lenIncident;
+const incStartY = cy - Math.cos(iRad) * lenIncident;
 
-  // Raza refractată trebuie să rămână de aceeași parte a normalei
-  // ca raza incidentă, dar să se apropie de normală în mediul mai dens.
-  const refrEndX = cx - Math.sin(rRad) * lenRefracted;
-  const refrEndY = cy + Math.cos(rRad) * lenRefracted;
+// raza refractată: continuă în mediul 2, în jos-dreapta
+const refrEndX = cx + Math.sin(rRad) * lenRefracted;
+const refrEndY = cy + Math.cos(rRad) * lenRefracted;
 
-  drawArrow(incStartX, incStartY, cx, cy, "#38bdf8", "raza incidentă");
-  drawArrow(cx, cy, refrEndX, refrEndY, "#f59e0b", "raza refractată");
+drawArrow(incStartX, incStartY, cx, cy, "#38bdf8", "raza incidentă");
+drawArrow(cx, cy, refrEndX, refrEndY, "#f59e0b", "raza refractată");
 
-  // Desen corect al unghiurilor mici față de normală
-  if (showAngles.checked) {
-    // i = unghiul dintre normala de sus și raza incidentă
-    drawArcLabel(cx, cy, 48, -Math.PI / 2 - iRad, -Math.PI / 2, "#38bdf8", "i");
-
-    // r = unghiul dintre normala de jos și raza refractată
-    drawArcLabel(cx, cy, 64, Math.PI / 2, Math.PI / 2 + rRad, "#f59e0b", "r");
+if (showAngles.checked) {
+  drawArcLabel(cx, cy, 48, -Math.PI / 2 - iRad, -Math.PI / 2, "#38bdf8", "i");
+  drawArcLabel(cx, cy, 64, Math.PI / 2, Math.PI / 2 - rRad, "#f59e0b", "r");
   }
 
   if (showLabels.checked) {

@@ -271,7 +271,7 @@ if (showAngles.checked) {
     cx,
     cy,
     64,
-    Math.PI / 2 + rRad,
+    Math.PI / 2 - rRad,
     Math.PI / 2,
     "#f59e0b",
     "r",

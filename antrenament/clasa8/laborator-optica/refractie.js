@@ -287,7 +287,7 @@ function draw() {
     ctx.fillText(getMediumLabel(), 60, h - 26);
 
     // Mutat mai la stânga
-    ctx.fillText("suprafață de separare", cx - 180, cy - 12);
+    ctx.fillText("suprafață de separare", cx - 280, cy - 12);
 
     ctx.fillText("P", cx + 10, cy - 10);
   }

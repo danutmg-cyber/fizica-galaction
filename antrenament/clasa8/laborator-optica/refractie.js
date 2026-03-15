@@ -206,9 +206,10 @@ function draw() {
   drawArrow(incStartX, incStartY, cx, cy, "#38bdf8", "raza incidentă");
   drawArrow(cx, cy, refrEndX, refrEndY, "#f59e0b", "raza refractată");
 
-  if (showAngles.checked) {
-    drawArcLabel(cx, cy, 48, -Math.PI / 2 - iRad, -Math.PI / 2, "#38bdf8", "i");
-    drawArcLabel(cx, cy, 64, Math.PI / 2, Math.PI / 2 - rRad, "#f59e0b", "r");
+ if (showAngles.checked) {
+  drawArcLabel(cx, cy, 48, -Math.PI / 2 - iRad, -Math.PI / 2, "#38bdf8", "i");
+  drawArcLabel(cx, cy, 64, -Math.PI / 2, -Math.PI / 2 + rRad, "#f59e0b", "r");
+
   }
 
   if (showLabels.checked) {

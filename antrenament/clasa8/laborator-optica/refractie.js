@@ -121,17 +121,7 @@ function drawArcLabel(cx, cy, radius, start, end, color, text, anticlockwise = f
   ctx.arc(cx, cy, radius, start, end, anticlockwise);
   ctx.stroke();
 
-  let startNorm = normalizeAngle(start);
-  let endNorm = normalizeAngle(end);
-  const twoPi = 2 * Math.PI;
-
-  if (!anticlockwise) {
-    if (endNorm < startNorm) endNorm += twoPi;
-  } else {
-    if (startNorm < endNorm) startNorm += twoPi;
-  }
-
-  const mid = (startNorm + endNorm) / 2;
+  const mid = (start + end) / 2;
   const tx = cx + Math.cos(mid) * (radius + 18);
   const ty = cy + Math.sin(mid) * (radius + 18);
 

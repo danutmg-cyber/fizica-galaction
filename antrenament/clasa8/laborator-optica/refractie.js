@@ -235,8 +235,11 @@ function getMediumLabel() {
 function updatePencil() {
   const shift = Number(pencilSlider.value);
 
+  // Defazaj mic: aproximativ jumătate din grosimea creionului
+  const refractionOffset = 10;
+
   pencilTop.style.transform = `translateX(calc(-50% + ${shift}px)) rotate(28deg)`;
-  pencilBottom.style.transform = `translateX(calc(-50% + ${shift + 18}px)) rotate(18deg)`;
+  pencilBottom.style.transform = `translateX(calc(-50% + ${shift + refractionOffset}px)) rotate(18deg)`;
 }
 
 // =========================================================

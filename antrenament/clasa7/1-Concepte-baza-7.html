@@ -10,10 +10,12 @@
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; }
         .header { text-align: center; width: 100%; max-width: 700px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
         .container { width: 100%; max-width: 650px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
-        .question-box { font-size: 1.25rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; }
+        .question-box { font-size: 1.2rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; line-height: 1.5; }
         .instruction-box { font-size: 0.9rem; color: #fbbf24; text-align: center; margin-bottom: 10px; font-weight: bold; background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 8px; }
-        input[type="text"] { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.3rem; text-align: center; margin-bottom: 15px; }
-        .check-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        input[type="text"], select { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.2rem; text-align: center; margin-bottom: 15px; outline: none; }
+        input[type="text"]:focus { border-color: var(--accent); }
+        .check-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
+        .check-btn:hover { filter: brightness(1.1); }
         .next-btn { width: 100%; background: #059669; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
         #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; }
         .hidden { display: none; }
@@ -28,24 +30,22 @@
         <div style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 12px; letter-spacing: 1px;">
             Prof. DĂNUȚ ANDRONIE
         </div>
-        
         <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--accent); padding: 8px; margin-bottom: 15px; font-style: italic; color: #fef08a; font-size: 0.95rem;">
             "FIZICA NU ESTE DOMINATĂ DE FORMULE CI DE LOGICĂ"
         </div>
-
-        <hr style="border: 0; border-top: 1px solid #334155; margin-bottom: 15px;">
     </div>
 
     <div class="container" id="screen-login">
         <h2 style="text-align:center;">📐 Introducere în Fizică</h2>
         <input type="text" id="p-name" placeholder="Numele elevului">
-        <select id="clasa">
-    <option value="">Alege clasa...</option>
-    <option value="6A">6A</option>
-    <option value="6B">6B</option>
-    <option value="6C">6C</option>
-    <option value="6D">6D</option> </select>
-        <button class="check-btn" onclick="startGame()">START ANTRENAMENT</button>
+        <select id="p-class">
+            <option value="">Alege clasa...</option>
+            <option value="7A">7A</option>
+            <option value="7B">7B</option>
+            <option value="7C">7C</option>
+            <option value="7D">7D</option>
+        </select>
+        <button class="check-btn" onclick="startGame()">START TEST (20 ITEMI)</button>
     </div>
 
     <div class="container hidden" id="screen-game">
@@ -61,37 +61,54 @@
         <h2 style="text-align:center;">REZULTAT ANTRENAMENT VII</h2>
         <div style="font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center;" id="final-score"></div>
         <p style="text-align:center; color: #94a3b8;" id="raw-points"></p>
-        <button class="check-btn" onclick="location.reload()">GENEREAZĂ NOI EXERCIȚII</button>
+        <button class="check-btn" onclick="location.reload()">REIA TESTUL</button>
     </div>
 
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec"; 
     let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [] };
 
+    // Pool de teorie (15 itemi)
     const theoryPool = [
-        { q: "Mărimile fizice care sunt complet determinate de valoare numerică și unitate de măsură se numesc mărimi ...........", type: "fill", a: ["scalare"] },
-        { q: "Mărimile fizice care au și direcție, sens și punct de aplicație se numesc mărimi ...........", type: "fill", a: ["vectoriale"] },
-        { q: "Modulul unui vector reprezintă ........... acestuia.", type: "fill", a: ["valoarea", "lungimea", "marimea"] },
-        { q: "Diferența dintre valoarea măsurată și valoarea adevărată se numește ........... de măsurare.", type: "fill", a: ["eroare"] },
-        { q: "Unitatea de măsură fundamentală pentru lungime în S.I. este ...........", type: "fill", a: ["metrul", "m"] },
-        { q: "Timpul este o mărime fizică vectorială. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Fals" },
-        { q: "Viteza este o mărime fizică vectorială. (A/F)", type: "choice", o: ["Adevărat", "Fals"], a: "Adevărat" }
+        { q: "Mărimile fizice care sunt complet determinate de valoare numerică și unitate se numesc mărimi ...........", a: ["scalare"] },
+        { q: "Mărimile fizice care au și direcție, sens și punct de aplicație se numesc mărimi ...........", a: ["vectoriale"] },
+        { q: "Modulul unui vector reprezintă ........... acestuia.", a: ["valoarea", "lungimea", "marimea"] },
+        { q: "Diferența dintre valoarea măsurată și valoarea adevărată se numește ........... de măsurare.", a: ["eroare"] },
+        { q: "Unitatea de măsură fundamentală pentru lungime în S.I. este ...........", a: ["metrul", "m"] },
+        { q: "Timpul este o mărime fizică vectorială. (A/F)", a: ["fals", "f"] },
+        { q: "Viteza este o mărime fizică vectorială. (A/F)", a: ["adevarat", "a"] },
+        { q: "Instrumentul de măsură pentru volumul lichidelor este ...........", a: ["cilindrul gradat", "menzura"] },
+        { q: "Forța este o mărime fizică ........... (scalară/vectorială).", a: ["vectoriala"] },
+        { q: "Lungimea segmentului orientat care reprezintă un vector se numește ...........", a: ["modul", "marime"] },
+        { q: "Aria unei suprafețe de formă pătrată cu latura l este l la puterea ...........", a: ["2", "a doua", "doua"] },
+        { q: "Masa este o mărime fizică ........... (scalară/vectorială).", a: ["scalara"] },
+        { q: "Rezultatul mediu al mai multor măsurări se numește ........... aritmetică.", a: ["media"] },
+        { q: "Simbolul unității de măsură pentru arie în S.I. este m la puterea ...........", a: ["2", "a doua"] },
+        { q: "Un litru este echivalent cu un decimetru ...........", a: ["cub", "3"] }
     ];
 
-    function generateAdvancedMath() {
+    function generateMath() {
         let mathQ = [];
-        // 1. Calculul erorii absolute: Delta x = |x_adevarat - x_masurat|
-        for(let i=0; i<4; i++) {
-            let real = (Math.random() * 10 + 20).toFixed(1);
-            let meas = (parseFloat(real) + (Math.random() * 0.4 - 0.2)).toFixed(1);
-            let err = Math.abs(parseFloat(real) - parseFloat(meas)).toFixed(1);
-            mathQ.push({ q: `Valoarea adevărată este ${real} cm, iar cea măsurată este ${meas} cm. Care este eroarea absolută? (cm)`, type: "math", a: [err.toString().replace(".",",")] });
+        // Erori absolute
+        for(let i=0; i<5; i++) {
+            let real = (Math.floor(Math.random() * 50) + 10).toFixed(1);
+            let diff = (Math.random() * 0.5 + 0.1).toFixed(1);
+            let meas = (parseFloat(real) + parseFloat(diff)).toFixed(1);
+            mathQ.push({ q: `Valoarea adevărată este ${real} cm, iar cea măsurată este ${meas} cm. Eroarea absolută este ? cm.`, type: "math", a: [diff.toString()] });
         }
-        // 2. Transformări Arii/Volume complexe (S.I.)
-        for(let i=0; i<4; i++) {
-            let val = Math.floor(Math.random() * 5000 + 100);
-            let res = (val / 10000).toString().replace(".",",");
-            mathQ.push({ q: `Transformă aria A = ${val} cm² în metri pătrați (m²).`, type: "math", a: [res] });
+        // Transformări Arii (cm2 -> m2)
+        for(let i=0; i<5; i++) {
+            let val = (Math.floor(Math.random() * 9) + 1) * 10000;
+            let res = (val / 10000).toString();
+            mathQ.push({ q: `Transformă aria A = ${val} cm² în m².`, type: "math", a: [res] });
+        }
+        // Valoare medie
+        for(let i=0; i<5; i++) {
+            let n1 = Math.floor(Math.random() * 5) + 10;
+            let n2 = n1 + 2;
+            let n3 = n1 + 4;
+            let med = (n1 + n2 + n3) / 3;
+            mathQ.push({ q: `Valorile măsurate sunt: ${n1} cm, ${n2} cm și ${n3} cm. Valoarea medie este ? cm.`, type: "math", a: [med.toString()] });
         }
         return mathQ;
     }
@@ -99,9 +116,9 @@
     function startGame() {
         state.name = document.getElementById('p-name').value.trim();
         state.class = document.getElementById('p-class').value;
-        if(!state.name || !state.class) return alert("Completează datele!");
+        if(!state.name || !state.class) return alert("Introdu numele și clasa!");
         
-        state.questions = [...theoryPool, ...generateAdvancedMath()].sort(() => 0.5 - Math.random()).slice(0, 12);
+        state.questions = [...theoryPool, ...generateMath()].sort(() => 0.5 - Math.random()).slice(0, 20);
         document.getElementById('screen-login').classList.add('hidden');
         document.getElementById('screen-game').classList.remove('hidden');
         showQuestion();
@@ -109,46 +126,72 @@
 
     function showQuestion() {
         const q = state.questions[state.currentIdx];
-        document.getElementById('q-info').innerText = `CERINȚA ${state.currentIdx + 1} / 12`;
+        document.getElementById('q-info').innerText = `ITEM ${state.currentIdx + 1} / 20`;
         document.getElementById('question').innerText = q.q;
         const area = document.getElementById('input-area');
-        area.innerHTML = `<input type="text" id="user-ans" placeholder="Răspuns...">
-                          <button class="check-btn" onclick="checkAns(document.getElementById('user-ans').value)">VERIFICĂ</button>`;
+        area.innerHTML = `
+            <input type="text" id="user-ans" placeholder="Răspuns..." autocomplete="off">
+            <button class="check-btn" id="btn-submit" onclick="handleCheck()">VERIFICĂ</button>
+        `;
         document.getElementById('feedback').style.display = 'none';
         document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('user-ans').focus();
+    }
+
+    function handleCheck() {
+        const val = document.getElementById('user-ans').value;
+        if(val.trim() === "") return;
+        checkAns(val);
     }
 
     function checkAns(user) {
         const q = state.questions[state.currentIdx];
         const clean = (s) => s.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().replace(",", ".");
-        let isCorrect = q.a.some(ans => clean(user) === clean(ans));
         
-        // Toleranță mică pentru matematică
-        if(q.type === "math") isCorrect = Math.abs(parseFloat(clean(user)) - parseFloat(clean(q.a[0]))) < 0.01;
+        let isCorrect = false;
+        if(q.type === "math") {
+            isCorrect = Math.abs(parseFloat(clean(user)) - parseFloat(clean(q.a[0]))) < 0.01;
+        } else {
+            isCorrect = q.a.some(ans => clean(user) === clean(ans));
+        }
 
         const f = document.getElementById('feedback');
         f.style.display = 'block';
-        if(isCorrect) { state.correctAnswers++; f.innerText = "CORECT! ✅"; f.style.color = "#4ade80"; }
-        else { f.innerText = `INCORECT! Răspuns: ${q.a[0]} ❌`; f.style.color = "#f87171"; }
+        if(isCorrect) { 
+            state.correctAnswers++; 
+            f.innerText = "CORECT! ✅"; f.style.color = "#4ade80"; 
+        } else { 
+            f.innerText = `GREȘIT! Răspuns corect: ${q.a[0]} ❌`; f.style.color = "#f87171"; 
+        }
+        
+        document.getElementById('btn-submit').style.display = 'none';
         document.getElementById('next-btn').style.display = 'block';
     }
 
     function nextQuestion() {
         state.currentIdx++;
-        if(state.currentIdx < 12) showQuestion(); else finishGame();
+        if(state.currentIdx < 20) showQuestion(); else finishGame();
     }
 
     function finishGame() {
         document.getElementById('screen-game').classList.add('hidden');
         document.getElementById('screen-end').classList.remove('hidden');
-        const nota = (1 + (state.correctAnswers * 0.75)).toFixed(2);
+        const nota = (1 + (state.correctAnswers * 0.45)).toFixed(2);
         document.getElementById('final-score').innerText = nota;
-        document.getElementById('raw-points').innerText = `Punctaj: ${state.correctAnswers} / 12`;
+        document.getElementById('raw-points').innerText = `Răspunsuri corecte: ${state.correctAnswers} / 20`;
         
         const fd = new FormData();
         fd.append("nume", state.name); fd.append("clasa", state.class + " - Concepte 7"); fd.append("scor", nota);
         fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
     }
+
+    document.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') {
+            const next = document.getElementById('next-btn');
+            if(next && next.style.display === 'block') nextQuestion();
+            else handleCheck();
+        }
+    });
 </script>
 </body>
 </html>

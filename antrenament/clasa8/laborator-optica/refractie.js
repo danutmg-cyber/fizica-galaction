@@ -47,7 +47,13 @@ function radToDeg(rad) {
   return (rad * 180) / Math.PI;
 }
 
-// Creează pattern-ul discret pentru gridul de fundal
+// Normalizează un unghi în intervalul [0, 2π)
+function normalizeAngle(angle) {
+  const twoPi = 2 * Math.PI;
+  return ((angle % twoPi) + twoPi) % twoPi;
+}
+
+// Creează pattern discret pentru gridul de fundal
 function createGridPattern() {
   const patternCanvas = document.createElement("canvas");
   patternCanvas.width = 40;
@@ -105,28 +111,39 @@ function drawArrow(x1, y1, x2, y2, color, label) {
   }
 }
 
-// Desenează un arc pentru unghi și eticheta lui
-function drawArcLabel(cx, cy, radius, start, end, color, text, anticlockwise = false) {
+// Desenează un arc de cerc pentru unghi și eticheta lui.
+// Parametrul anticlockwise = true îl trasează în sens trigonometric.
+function drawArcLabel(
+  cx,
+  cy,
+  radius,
+  start,
+  end,
+  color,
+  text,
+  anticlockwise = false
+) {
   ctx.beginPath();
   ctx.strokeStyle = color;
   ctx.lineWidth = 3;
   ctx.arc(cx, cy, radius, start, end, anticlockwise);
   ctx.stroke();
 
+  const twoPi = 2 * Math.PI;
+  let startNorm = normalizeAngle(start);
+  let endNorm = normalizeAngle(end);
   let mid;
 
   if (!anticlockwise) {
-    mid = (start + end) / 2;
-  } else {
-    // calculăm un punct de mijloc convenabil pentru etichetă
-    let s = start;
-    let e = end;
-
-    if (e < s) {
-      e += 2 * Math.PI;
+    if (endNorm < startNorm) {
+      endNorm += twoPi;
     }
-
-    mid = (s + e) / 2;
+    mid = (startNorm + endNorm) / 2;
+  } else {
+    if (startNorm < endNorm) {
+      startNorm += twoPi;
+    }
+    mid = (startNorm + endNorm) / 2;
   }
 
   const tx = cx + Math.cos(mid) * (radius + 18);
@@ -184,7 +201,7 @@ function draw() {
     ctx.restore();
   }
 
-  // Medii
+  // Medii: sus = aer, jos = mediul 2
   ctx.fillStyle = "rgba(125, 211, 252, 0.04)";
   ctx.fillRect(0, 0, w, cy);
 
@@ -231,7 +248,6 @@ function draw() {
   const incStartY = cy - Math.cos(iRad) * lenIncident;
 
   // Raza refractată: continuă în mediul 2 în jos-dreapta
-  // și este deviată spre normală dacă n2 > n1
   const refrEndX = cx + Math.sin(rRad) * lenRefracted;
   const refrEndY = cy + Math.cos(rRad) * lenRefracted;
 
@@ -239,7 +255,7 @@ function draw() {
   drawArrow(cx, cy, refrEndX, refrEndY, "#f59e0b", "raza refractată");
 
   if (showAngles.checked) {
-    // Unghiul de incidență: între normala de sus și raza incidentă
+    // Unghiul de incidență
     drawArcLabel(
       cx,
       cy,
@@ -250,15 +266,18 @@ function draw() {
       "i"
     );
 
-    // Unghiul de refracție: între normala de jos și raza refractată
+    // Unghiul de refracție:
+    // pornim de la normala de jos și mergem în sens trigonometric
+    // până la raza refractată
     drawArcLabel(
       cx,
       cy,
       64,
       Math.PI / 2,
-      Math.PI / 2 + rRad,
+      Math.PI / 2 - rRad,
       "#f59e0b",
-      "r"
+      "r",
+      true
     );
   }
 
@@ -278,7 +297,7 @@ function draw() {
 // =========================================================
 function updatePencil() {
   const shift = Number(pencilSlider.value);
-  const refractionOffset = 0.5;
+  const refractionOffset = 4;
 
   pencilTop.style.transform = `translateX(calc(-50% + ${shift}px)) rotate(23deg)`;
   pencilBottom.style.transform = `translateX(calc(-50% + ${shift + refractionOffset}px)) rotate(21deg)`;

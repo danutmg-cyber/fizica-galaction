@@ -210,7 +210,7 @@ function draw() {
   // Suprafața de separare
   ctx.beginPath();
   ctx.moveTo(40, cy);
-  ctx.lineTo(w - 140, cy);
+  ctx.lineTo(w - 40, cy);
   ctx.strokeStyle = "rgba(255,255,255,.9)";
   ctx.lineWidth = 3;
   ctx.stroke();
@@ -287,7 +287,7 @@ function draw() {
     ctx.fillText(getMediumLabel(), 60, h - 26);
 
     // Mutat mai la stânga
-    ctx.fillText("suprafață de separare", cx - 130, cy - 12);
+    ctx.fillText("suprafață de separare", cx - 180, cy - 12);
 
     ctx.fillText("P", cx + 10, cy - 10);
   }

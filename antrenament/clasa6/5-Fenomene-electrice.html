@@ -27,6 +27,7 @@
         }
 
         .question-box { font-size: 1.4rem; font-weight: 500; margin-bottom: 20px; text-align: center; min-height: 80px; line-height: 1.4; }
+        .instruction-box { font-size: 0.9rem; color: #fbbf24; text-align: center; margin-bottom: 15px; font-weight: bold; background: rgba(251, 191, 36, 0.1); padding: 10px; border-radius: 8px; }
         
         input[type="text"], select { 
             width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; 
@@ -54,7 +55,7 @@
             Prof. DĂNUȚ ANDRONIE
         </div>
         <div style="background: rgba(251, 191, 36, 0.1); border-left: 4px solid var(--primary); padding: 10px; font-style: italic; color: var(--primary); font-size: 1rem; font-weight: 500;">
-            "FIZICA NU ESTE DOMINATĂ DE FORMULE CI ESTE LOGICĂ"
+            "FIZICA NU ESTE DOMINATĂ DE FORMULE CI DE LOGICĂ"
         </div>
     </div>
 
@@ -78,6 +79,7 @@
     <div class="container hidden" id="screen-game">
         <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
         <div class="timer-bar"><div id="timer-progress"></div></div>
+        <div class="instruction-box">RECOMPLETEAZĂ SPAȚIUL PUNCTAT</div>
         <div class="question-box" id="question"></div>
         <div id="input-area"></div>
         <div id="feedback"></div>
@@ -97,7 +99,7 @@
     let timerInterval;
 
     const theoryPool = [
-        { q: "Regiunile magnetului unde proprietățile magnetice sunt cele mai puternice se numesc ...........", a: ["poli", "polii"] },
+        { q: "Regiunile magnetului unde proprietățile magnetice sunt cele mai puternice se numesc ...........", a: ["poli"] },
         { q: "Polii magnetici de același nume se ...........", a: ["resping"] },
         { q: "Polii magnetici de nume diferite se ...........", a: ["atrag"] },
         { q: "Dispozitivul care utilizează un ac magnetic pentru orientare este ...........", a: ["busola"] },
@@ -129,8 +131,8 @@
         document.getElementById('question').innerText = q.q;
         const area = document.getElementById('input-area');
         area.innerHTML = `
-            <input type="text" id="user-ans" placeholder="Răspunsul tău...">
-            <button class="check-btn" onclick="checkAns(document.getElementById('user-ans').value)">VERIFICĂ</button>
+            <input type="text" id="user-ans" placeholder="Răspunsul tău..." autocomplete="off">
+            <button class="check-btn" id="submit-btn" onclick="checkAns(document.getElementById('user-ans').value)">VERIFICĂ</button>
         `;
         document.getElementById('feedback').style.display = 'none';
         document.getElementById('next-btn').style.display = 'none';
@@ -138,10 +140,16 @@
     }
 
     function checkAns(user) {
-        if(!user) return;
+        if(!user && user !== "0") return;
         const q = state.questions[state.currentIdx];
-        const clean = (s) => s.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
-        let isCorrect = q.a.some(ans => clean(user) === clean(ans));
+        
+        // Normalizare text (diacritice, articulat/nearticulat)
+        const normalize = (s) => s.toString().toLowerCase()
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .replace(/ul$/, "").replace(/a$/, "") // Elimină "ul" sau "a" (ex: polul -> pol, sursa -> surs)
+            .replace(/\s/g, "").trim();
+
+        let isCorrect = q.a.some(ans => normalize(user) === normalize(ans));
         
         const f = document.getElementById('feedback');
         f.style.display = 'block';
@@ -153,7 +161,7 @@
         }
         
         document.getElementById('user-ans').disabled = true;
-        document.querySelector('#input-area .check-btn').disabled = true;
+        document.getElementById('submit-btn').style.display = 'none';
         document.getElementById('next-btn').style.display = 'block';
     }
 
@@ -182,6 +190,16 @@
         fd.append("scor", nota);
         fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
     }
+
+    // Suport pentru tasta Enter
+    document.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') {
+            const next = document.getElementById('next-btn');
+            const submit = document.getElementById('submit-btn');
+            if(next && next.style.display === 'block') nextQuestion();
+            else if(submit) submit.click();
+        }
+    });
 </script>
 </body>
 </html>

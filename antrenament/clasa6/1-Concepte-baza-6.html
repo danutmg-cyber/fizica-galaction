@@ -67,37 +67,30 @@
     let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [] };
 
     const theoryData = [
-        // Instrumente de măsură
-        { q: "Instrumentul de măsură pentru lungime este:", a: "rigla", instr: "Sistemul Internațional" },
-        { q: "Instrumentul de măsură pentru masă este:", a: "balanta", instr: "Sistemul Internațional" },
-        { q: "Instrumentul pentru măsurarea ariei unei figuri neregulate este:", a: "hirtia milimetrica", instr: "Sistemul Internațional" },
-        { q: "Instrumentul de măsură pentru volumul lichidelor este:", a: "cilindrul gradat", instr: "Sistemul Internațional" },
-        
-        // Unități SI
-        { q: "Unitatea de măsură în SI pentru distanță este:", a: "metrul", instr: "Sistemul Internațional" },
-        { q: "Unitatea de măsură în SI pentru timp este:", a: "secunda", instr: "Sistemul Internațional" },
-        { q: "Unitatea de măsură în SI pentru viteză este (simbol):", a: "m/s", instr: "Sistemul Internațional" },
-        { q: "Unitatea de măsură în SI pentru arie este (simbol):", a: "m2", instr: "Sistemul Internațional" },
-        { q: "Unitatea de măsură în SI pentru volum este (simbol):", a: "m3", instr: "Sistemul Internațional" },
-        { q: "Unitatea de măsură în SI pentru masă este:", a: "kilogramul", instr: "Sistemul Internațional" },
-        { q: "Unitatea de măsură în SI pentru temperatură este:", a: "kelvin", instr: "Sistemul Internațional" },
-        { q: "Unitatea de măsură în SI pentru intensitatea curentului electric este:", a: "amperul", instr: "Sistemul Internațional" }
+        { q: "Instrumentul de măsură pentru lungime este:", a: ["rigla", "ruleta", "metru"], instr: "Sistemul Internațional" },
+        { q: "Instrumentul de măsură pentru masă este:", a: ["balanta", "cantar"], instr: "Sistemul Internațional" },
+        { q: "Instrumentul pentru măsurarea ariei unei figuri neregulate este:", a: ["hirtia milimetrica"], instr: "Sistemul Internațional" },
+        { q: "Instrumentul de măsură pentru volumul lichidelor este:", a: ["cilindrul gradat", "mensura"], instr: "Sistemul Internațional" },
+        { q: "Unitatea de măsură în SI pentru distanță este:", a: ["metrul"], instr: "Sistemul Internațional" },
+        { q: "Unitatea de măsură în SI pentru timp este:", a: ["secunda"], instr: "Sistemul Internațional" },
+        { q: "Unitatea de măsură în SI pentru viteză este (simbol):", a: ["m/s"], instr: "Sistemul Internațional" },
+        { q: "Unitatea de măsură în SI pentru arie este (simbol):", a: ["m2"], instr: "Sistemul Internațional" },
+        { q: "Unitatea de măsură în SI pentru volum este (simbol):", a: ["m3"], instr: "Sistemul Internațional" },
+        { q: "Unitatea de măsură în SI pentru masă este:", a: ["kilogramul", "kg"], instr: "Sistemul Internațional" },
+        { q: "Unitatea de măsură în SI pentru temperatură este:", a: ["kelvin"], instr: "Sistemul Internațional" },
+        { q: "Unitatea de măsură în SI pentru intensitatea curentului electric este:", a: ["amperul"], instr: "Sistemul Internațional" }
     ];
 
     function generateProblems() {
         const units = ["mm", "cm", "dm", "dam", "hm", "km"];
         const factors = { "mm": 0.001, "cm": 0.01, "dm": 0.1, "dam": 10, "hm": 100, "km": 1000 };
         let problems = [];
-
-        // 4 Probleme de transformare strictă SI (fără rotunjire)
         for(let i=0; i<4; i++) {
             let u = units[Math.floor(Math.random() * units.length)];
             let val = (Math.random() * 95 + 1).toFixed(1);
             let res = (val * factors[u]).toString();
-            problems.push({ q: `Transformă în SI: ${val} ${u} = ? m`, a: res, type: "math", instr: "TRANSFORMĂ ÎN SISTEMUL INTERNAȚIONAL (FĂRĂ ROTUNJIRE)" });
+            problems.push({ q: `Transformă în SI: ${val} ${u} = ? m`, a: res, type: "math", instr: "TRANSFORMĂ ÎN SISTEMUL INTERNAȚIONAL" });
         }
-
-        // 4 Probleme de diviziune (cu 2 zecimale)
         for(let i=0; i<4; i++) {
             let d = (Math.random() * 50 + 10).toFixed(0);
             let t = (Math.random() * 7 + 2).toFixed(0);
@@ -111,7 +104,6 @@
         state.name = document.getElementById('p-name').value.trim();
         state.class = document.getElementById('p-class').value;
         if(!state.name || !state.class) return alert("Completează datele!");
-        
         state.questions = [...theoryData, ...generateProblems()].sort(() => 0.5 - Math.random());
         document.getElementById('screen-login').classList.add('hidden');
         document.getElementById('screen-game').classList.remove('hidden');
@@ -123,7 +115,6 @@
         document.getElementById('q-info').innerText = `ÎNTREBAREA ${state.currentIdx + 1} / ${state.questions.length}`;
         document.getElementById('instruction').innerText = q.instr;
         document.getElementById('question').innerText = q.q;
-        
         document.getElementById('user-ans').value = "";
         document.getElementById('user-ans').disabled = false;
         document.getElementById('feedback').style.display = 'none';
@@ -133,35 +124,37 @@
     }
 
     function processAnswer() {
-        const userRaw = document.getElementById('user-ans').value.trim().replace(",", ".");
+        const userRaw = document.getElementById('user-ans').value.trim();
         if(!userRaw) return;
-
         const q = state.questions[state.currentIdx];
         
-        // Curățare diacritice pentru teorie
-        const clean = (s) => s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s/g, "");
-        
+        // Funcția de normalizare text: elimină diacritice, spații și "ul" de la final
+        const normalize = (s) => s.toLowerCase()
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .replace(/ul$/, "")
+            .replace(/\s/g, "");
+
         let isCorrect = false;
         if(q.type === "math" || q.type === "div") {
-            isCorrect = (userRaw === q.a.replace(",", "."));
+            isCorrect = (userRaw.replace(",", ".") === q.a.replace(",", "."));
         } else {
-            isCorrect = (clean(userRaw) === clean(q.a));
+            // Verificare dacă inputul se potrivește cu oricare variantă din array
+            isCorrect = q.a.some(varianta => normalize(userRaw) === normalize(varianta));
         }
-        
+
         const f = document.getElementById('feedback');
         f.style.display = 'block';
-        
         if(isCorrect) {
             state.correctAnswers++;
             f.innerHTML = "CORECT! ✅";
             f.style.color = "var(--success)";
             f.style.background = "rgba(34, 197, 94, 0.1)";
         } else {
-            f.innerHTML = `GREȘIT! Răspuns corect: ${q.a} ❌`;
+            const afisaj = Array.isArray(q.a) ? q.a[0] : q.a;
+            f.innerHTML = `GREȘIT! Răspuns corect: ${afisaj} ❌`;
             f.style.color = "var(--error)";
             f.style.background = "rgba(239, 68, 68, 0.1)";
         }
-
         document.getElementById('user-ans').disabled = true;
         document.getElementById('submit-btn').style.display = 'none';
         document.getElementById('next-btn').style.display = 'block';
@@ -169,11 +162,8 @@
 
     function nextQuestion() {
         state.currentIdx++;
-        if(state.currentIdx < state.questions.length) {
-            showQuestion();
-        } else {
-            finishGame();
-        }
+        if(state.currentIdx < state.questions.length) showQuestion(); 
+        else finishGame();
     }
 
     function finishGame() {
@@ -182,7 +172,6 @@
         const nota = (1 + (state.correctAnswers * (9 / state.questions.length))).toFixed(2);
         document.getElementById('final-score').innerText = nota;
         document.getElementById('raw-points').innerText = `Ai rezolvat corect ${state.correctAnswers} din ${state.questions.length}.`;
-        
         const fd = new FormData();
         fd.append("nume", state.name);
         fd.append("clasa", state.class + " - Concepte");

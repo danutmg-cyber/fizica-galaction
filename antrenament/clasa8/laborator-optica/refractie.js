@@ -106,14 +106,29 @@ function drawArrow(x1, y1, x2, y2, color, label) {
 }
 
 // Desenează un arc pentru unghi și eticheta lui
-function drawArcLabel(cx, cy, radius, start, end, color, text) {
+function drawArcLabel(cx, cy, radius, start, end, color, text, anticlockwise = false) {
   ctx.beginPath();
   ctx.strokeStyle = color;
   ctx.lineWidth = 3;
-  ctx.arc(cx, cy, radius, start, end, false);
+  ctx.arc(cx, cy, radius, start, end, anticlockwise);
   ctx.stroke();
 
-  const mid = (start + end) / 2;
+  let mid;
+
+  if (!anticlockwise) {
+    mid = (start + end) / 2;
+  } else {
+    // calculăm un punct de mijloc convenabil pentru etichetă
+    let s = start;
+    let e = end;
+
+    if (e < s) {
+      e += 2 * Math.PI;
+    }
+
+    mid = (s + e) / 2;
+  }
+
   const tx = cx + Math.cos(mid) * (radius + 18);
   const ty = cy + Math.sin(mid) * (radius + 18);
 

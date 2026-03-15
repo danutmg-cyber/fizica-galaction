@@ -11,17 +11,41 @@
         .header { text-align: center; width: 100%; max-width: 750px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
         .container { width: 100%; max-width: 700px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
         
-        .learning-card { background: rgba(251, 191, 36, 0.1); border: 1px solid var(--primary); border-radius: 12px; padding: 15px; margin-bottom: 20px; font-size: 0.85rem; }
-        .learning-card h4 { margin: 0 0 10px 0; color: var(--accent); text-align: center; }
-        .trig-table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.8rem; text-align: center; }
-        .trig-table td, .trig-table th { border: 1px solid #444; padding: 4px; }
+        /* SUPORT MATEMATIC - FONT ADAPTIV */
+        .learning-card { 
+            background: rgba(251, 191, 36, 0.1); 
+            border: 1px solid var(--primary); 
+            border-radius: 12px; 
+            padding: 15px; 
+            margin-bottom: 20px; 
+            /* Fontul se adaptează după lățimea ecranului: minim 0.9rem, maxim adaptat */
+            font-size: clamp(0.9rem, 2.5vw, 1.2rem); 
+            line-height: 1.6;
+        }
+        .learning-card h4 { margin: 0 0 10px 0; color: var(--accent); text-align: center; font-size: 1.2em; }
+        
+        .trig-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            margin-top: 10px; 
+            font-size: 0.9em; /* Relativ la părintele .learning-card */
+            text-align: center; 
+        }
+        .trig-table td, .trig-table th { border: 1px solid #444; padding: 8px; }
 
-        .question-box { font-size: 1.15rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; color: #e2e8f0; line-height: 1.5; }
+        .question-box { font-size: 1.2rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; color: #e2e8f0; line-height: 1.5; }
         input[type="text"], select { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.2rem; text-align: center; margin-bottom: 15px; outline: none; }
         .check-btn { width: 100%; background: var(--primary); color: #0f172a; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         .next-btn { width: 100%; background: #10b981; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
         #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; }
         .hidden { display: none; }
+
+        /* Ajustare pentru ecrane foarte mici (telefoane) */
+        @media (max-width: 480px) {
+            .container { padding: 15px; }
+            .question-box { font-size: 1.1rem; }
+            .trig-table td { padding: 4px; }
+        }
     </style>
 </head>
 <body>
@@ -54,11 +78,13 @@
     <div class="container hidden" id="screen-game">
         <div class="learning-card">
             <h4>📘 SUPORT MATEMATIC & FORMULE</h4>
-            • <b>Reflexia:</b> i = r | <b>Refracția:</b> n₁·sin(i) = n₂·sin(r)<br>
-            • <b>Viteza luminii (c):</b> 300.000 km/s | <b>Unghi Limită:</b> sin(l) = n₂ / n₁<br>
+            • <b>Reflexia:</b> $i = r$ <br>
+            • <b>Refracția:</b> $n_1 \cdot \sin(i) = n_2 \cdot \sin(r)$ <br>
+            • <b>Viteza luminii (c):</b> 300.000 km/s <br>
+            • <b>Unghi Limită:</b> $\sin(l) = n_2 / n_1$
             <table class="trig-table">
                 <tr><th>Unghi</th><th>30°</th><th>45°</th><th>60°</th></tr>
-                <tr><td>sin</td><td>0.5</td><td>0.707</td><td>0.866</td></tr>
+                <tr><td>$\sin$</td><td>0.5</td><td>0.707</td><td>0.866</td></tr>
             </table>
         </div>
 
@@ -82,39 +108,27 @@
 
     function generateOptics() {
         let qSet = [
-            // Cerințe specifice: Definiții și condiții
             { q: "Fenomenul de întoarcere a luminii în mediul din care a venit se numește ...........", a: ["reflexie", "reflexia"] },
             { q: "Schimbarea direcției de propagare a luminii la trecerea dintr-un mediu în altul se numește ...........", a: ["refractie", "refractia"] },
             { q: "Reflexia totală are loc doar dacă lumina vine dintr-un mediu mai ........... optic.", a: ["dens", "refringent"] },
             { q: "Reflexia totală apare dacă unghiul de incidență este mai ........... decât unghiul limită.", a: ["mare"] },
-            
-            // Legile reflexiei/refracției (Legea I și II)
             { q: "Conform legii I a reflexiei, raza incidentă, normala și raza reflectată sunt ...........", a: ["coplanare", "in acelasi plan"] },
             { q: "Legea I a refracției afirmă că raza incidentă, normala și raza refractată se află în ...........", a: ["acelasi plan", "coplanare"] },
             { q: "Legea II a reflexiei spune că unghiul de incidență este ........... cu cel de reflexie.", a: ["egal"] },
-            { q: "Legea II a refracției este dată de relația matematică n1 * sin(i) = n2 * ...........", a: ["sin(r)", "sin r"] },
             { q: "Viteza luminii în vid are valoarea de aproximativ ........... km/s.", a: ["300000", "300.000"] },
-
-            // Cerințe noi: n1 vs n2
             { q: "Dacă n1 > n2, unghiul de refracție este mai ........... decât unghiul de incidență.", a: ["mare"] },
             { q: "Dacă n1 < n2, unghiul de refracție este mai ........... decât unghiul de incidență.", a: ["mic"] },
             { q: "Dacă n1 = n2, unghiul de refracție este ........... cu unghiul de incidență.", a: ["egal"] },
-
-            // Probleme noi de logică reflexie
             { q: "Dacă unghiul de reflexie este 42°, unghiul de incidență este ........... grade.", a: ["42"] },
             { q: "Dacă unghiul de reflexie formează cu suprafața oglinzii 56 grade, unghiul de incidență este ........... grade.", a: ["34"] },
             { q: "Dacă unghiul dintre raza incidentă și cea reflectată este 80°, unghiul de incidență este ........... grade.", a: ["40"] },
             { q: "Dacă raza incidentă este perpendiculară pe oglindă, unghiul de reflexie este ........... grade.", a: ["0"] },
             { q: "Dacă unghiul de incidență este 25°, unghiul format de raza reflectată cu suprafața oglinzii este ........... grade.", a: ["65"] },
-
-            // Probleme refracție și unghi limită (Calcule)
             { q: "Aer (n=1) -> Sticlă (n=√2). Dacă i=45°, unghiul de refracție r este ........... grade.", a: ["30"] },
             { q: "Lumina trece din diamant (n=2) în aer (n=1). Unghiul limită l este ........... grade.", a: ["30"] },
             { q: "Aer (n=1) -> Mediu (n=√3). Dacă i=60°, unghiul de refracție r este ........... grade.", a: ["30"] },
             { q: "Sticlă (n=√2) -> Aer (n=1). Unghiul limită l este ........... grade.", a: ["45"] },
             { q: "Dacă i=0°, indiferent de mediile n1 și n2, unghiul de refracție r va fi ........... grade.", a: ["0"] },
-            
-            // Alte întrebări până la 30
             { q: "Indicele de refracție al vidului este n = ...........", a: ["1"] },
             { q: "Raportul dintre viteza luminii în vid și viteza ei în mediu se numește indice de ...........", a: ["refractie"] },
             { q: "Oglinda plană formează o imagine virtuală, dreaptă și ........... cu obiectul.", a: ["egala", "simetrica"] },
@@ -122,7 +136,8 @@
             { q: "Dreapta perpendiculară pe suprafață în punctul de incidență se numește ...........", a: ["normala"] },
             { q: "Dacă n1=1.5 și n2=1.5, raza de lumină își schimbă direcția? (Da/Nu)", a: ["nu"] },
             { q: "Unghiul format de raza incidentă cu normala se numește unghi de ...........", a: ["incidenta"] },
-            { q: "Poate apărea reflexia totală la trecerea din aer în apă? (Da/Nu)", a: ["nu"] }
+            { q: "Poate apărea reflexia totală la trecerea din aer în apă? (Da/Nu)", a: ["nu"] },
+            { q: "Mediul cu indice de refracție mai mare este mai dens din punct de vedere ...........", a: ["optic"] }
         ];
 
         return qSet.sort(() => 0.5 - Math.random());

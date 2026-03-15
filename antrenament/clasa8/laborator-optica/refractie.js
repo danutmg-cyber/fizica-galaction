@@ -210,7 +210,7 @@ function draw() {
   // Suprafața de separare
   ctx.beginPath();
   ctx.moveTo(40, cy);
-  ctx.lineTo(w - 40, cy);
+  ctx.lineTo(w - 140, cy);
   ctx.strokeStyle = "rgba(255,255,255,.9)";
   ctx.lineWidth = 3;
   ctx.stroke();

@@ -63,18 +63,6 @@
       font-size: 0.9rem;
     }
 
-    .controls-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .controls label {
-      font-weight: bold;
-    }
-
     input[type="range"] {
       width: 100%;
     }
@@ -82,7 +70,7 @@
     .values {
       display: flex;
       justify-content: space-between;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       flex-wrap: wrap;
       gap: 0.3rem;
     }
@@ -99,10 +87,9 @@
 
     canvas {
       width: 100%;
-      max-width: 900px;
       height: auto;
-      background: #000;
       display: block;
+      background: #000;
     }
 
     footer {
@@ -124,9 +111,7 @@
 
 <main>
   <section class="controls">
-    <div class="controls-row">
-      <label for="angleSlider">Unghiul de incidență \( i \) (°):</label>
-    </div>
+    <label for="angleSlider">Unghiul de incidență \( i \) (°):</label>
     <input type="range" id="angleSlider" min="0" max="80" value="30">
     <div class="values">
       <span>i = <span id="angleI">30</span>°</span>
@@ -153,77 +138,67 @@
   const angleRText = document.getElementById('angleR');
 
   function resizeCanvas() {
-  const width = canvas.parentElement.clientWidth;
-  const height = window.innerHeight * 0.75; // CANVAS MAI ÎNALT
-  canvas.width = width;
-  canvas.height = height;
-  drawScene(parseFloat(angleSlider.value));
-}
+    const width = canvas.parentElement.clientWidth;
+    const height = window.innerHeight * 0.75; 
+    canvas.width = width;
+    canvas.height = height;
+    drawScene(parseFloat(angleSlider.value));
+  }
 
   function drawScene(angleDeg) {
     const w = canvas.width;
     const h = canvas.height;
     ctx.clearRect(0, 0, w, h);
 
-    // coordonate de bază
     const centerX = w / 2;
     const interfaceY = h / 2;
 
-    // culori
     const lineColor = '#ffffff';
     const dashedColor = '#aaaaaa';
     const incidentColor = '#00bfff';
     const reflectedColor = '#ffcc00';
     const textColor = '#ffffff';
 
-    ctx.lineWidth = 2;
-    ctx.font = Math.round(h * 0.04) + 'px Arial';
+    ctx.lineWidth = 4;
+    ctx.font = Math.round(h * 0.06) + 'px Arial Black';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
-    // linia de separare a mediilor
     ctx.strokeStyle = lineColor;
     ctx.beginPath();
     ctx.moveTo(0, interfaceY);
     ctx.lineTo(w, interfaceY);
     ctx.stroke();
 
-    // etichete n1, n2
     ctx.fillStyle = textColor;
-    ctx.fillText('n₁', centerX, interfaceY - h * 0.2);
-    ctx.fillText('n₂', centerX, interfaceY + h * 0.2);
+    ctx.textAlign = 'left';
+    ctx.fillText('n₁', 20, interfaceY - h * 0.25);
+    ctx.fillText('n₂', 20, interfaceY + h * 0.25);
 
-    // normala (linie punctată)
     ctx.strokeStyle = dashedColor;
-    ctx.setLineDash([8, 6]);
+    ctx.setLineDash([10, 8]);
     ctx.beginPath();
     ctx.moveTo(centerX, 0);
     ctx.lineTo(centerX, h);
     ctx.stroke();
     ctx.setLineDash([]);
 
-    // punctul de incidență
     const Px = centerX;
     const Py = interfaceY;
 
-    // unghiul față de normala (în grade)
     const angleRad = angleDeg * Math.PI / 180;
+    const rayLen = Math.min(w, h) * 0.45;
 
-    // lungimea razelor
-    const rayLen = Math.min(w, h) * 0.4;
-
-    // rază incidentă (de sus, din stânga)
     const incX = Px - rayLen * Math.sin(angleRad);
     const incY = Py - rayLen * Math.cos(angleRad);
 
     ctx.strokeStyle = incidentColor;
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 6;
     ctx.beginPath();
     ctx.moveTo(incX, incY);
     ctx.lineTo(Px, Py);
     ctx.stroke();
 
-    // rază reflectată (simetrică față de normala)
     const refX = Px + rayLen * Math.sin(angleRad);
     const refY = Py - rayLen * Math.cos(angleRad);
 
@@ -233,17 +208,12 @@
     ctx.lineTo(refX, refY);
     ctx.stroke();
 
-    // marcarea unghiurilor i și r (arce)
-    const arcRadius = Math.min(w, h) * 0.12;
+    const arcRadius = Math.min(w, h) * 0.18;
 
-    // unghiul 0 (normala) este în sus; pentru arc folosim sistemul canvas (0 rad la dreapta)
-    // pentru a desena corect, transformăm: unghi față de normala -> față de axa Ox
-    // normala în sus corespunde la -90° (sau 270°) în sistem canvas
     const normalCanvasAngle = -Math.PI / 2;
 
-    // arc pentru i (în partea stângă)
     ctx.strokeStyle = incidentColor;
-    ctx.lineWidth = 2;
+    ctx.lineWidth = 4;
     ctx.beginPath();
     ctx.arc(Px, Py, arcRadius,
       normalCanvasAngle - angleRad,
@@ -252,7 +222,6 @@
     );
     ctx.stroke();
 
-    // arc pentru r (în partea dreaptă)
     ctx.strokeStyle = reflectedColor;
     ctx.beginPath();
     ctx.arc(Px, Py, arcRadius,
@@ -262,20 +231,20 @@
     );
     ctx.stroke();
 
-    // etichete i și r
     ctx.fillStyle = incidentColor;
     const iLabelAngle = normalCanvasAngle - angleRad / 2;
-    const iLabelX = Px + (arcRadius + 20) * Math.cos(iLabelAngle);
-    const iLabelY = Py + (arcRadius + 20) * Math.sin(iLabelAngle);
-    ctx.fillText('i', iLabelX, iLabelY);
+    ctx.fillText('i',
+      Px + (arcRadius + 40) * Math.cos(iLabelAngle),
+      Py + (arcRadius + 40) * Math.sin(iLabelAngle)
+    );
 
     ctx.fillStyle = reflectedColor;
     const rLabelAngle = normalCanvasAngle + angleRad / 2;
-    const rLabelX = Px + (arcRadius + 20) * Math.cos(rLabelAngle);
-    const rLabelY = Py + (arcRadius + 20) * Math.sin(rLabelAngle);
-    ctx.fillText('r', rLabelX, rLabelY);
+    ctx.fillText('r',
+      Px + (arcRadius + 40) * Math.cos(rLabelAngle),
+      Py + (arcRadius + 40) * Math.sin(rLabelAngle)
+    );
 
-    // actualizare valori text
     angleIText.textContent = angleDeg.toFixed(0);
     angleRText.textContent = angleDeg.toFixed(0);
   }
@@ -286,7 +255,6 @@
 
   window.addEventListener('resize', resizeCanvas);
 
-  // inițializare
   resizeCanvas();
 </script>
 

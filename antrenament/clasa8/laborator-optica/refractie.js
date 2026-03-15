@@ -266,35 +266,35 @@ if (showAngles.checked) {
     "i"
   );
 
- // Unghiul de refracție (jos) – arc stabil
-let startR = Math.PI / 2;
-let endR = Math.PI / 2 + rRad;
+  // Unghiul de refracție (jos) – arc stabil
+  let startR = Math.PI / 2;
+  let endR = Math.PI / 2 + rRad;
 
-// Dacă arcul ar ieși pe partea cealaltă, inversăm sensul
-let anticlock = false;
-if (endR < startR) {
-  anticlock = true;
+  let anticlock = false;
+  if (endR < startR) {
+    anticlock = true;
+  }
+
+  drawArcLabel(
+    cx,
+    cy,
+    64,
+    startR,
+    endR,
+    "#f59e0b",
+    "r",
+    anticlock
+  );
 }
 
-drawArcLabel(
-  cx,
-  cy,
-  64,
-  startR,
-  endR,
-  "#f59e0b",
-  "r",
-  anticlock
-);
-
-  if (showLabels.checked) {
-    ctx.fillStyle = "#f8fafc";
-    ctx.font = "bold 18px Segoe UI";
-    ctx.fillText("aer", 60, 40);
-    ctx.fillText(getMediumLabel(), 60, h - 26);
-    ctx.fillText("suprafață de separare", cx - 92, cy - 12);
-    ctx.fillText("P", cx + 10, cy - 10);
-  }
+// ETICHETELE TREBUIE SĂ FIE ÎN AFARA IF-ULUI DE MAI SUS
+if (showLabels.checked) {
+  ctx.fillStyle = "#f8fafc";
+  ctx.font = "bold 18px Segoe UI";
+  ctx.fillText("aer", 60, 40);
+  ctx.fillText(getMediumLabel(), 60, h - 26);
+  ctx.fillText("suprafață de separare", cx - 92, cy - 12);
+  ctx.fillText("P", cx + 10, cy - 10);
 }
 
 // =========================================================

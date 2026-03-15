@@ -10,9 +10,9 @@
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; }
         .header { text-align: center; width: 100%; max-width: 700px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
         .container { width: 100%; max-width: 650px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
-        .question-box { font-size: 1.25rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; }
-        .instruction-box { font-size: 0.9rem; color: #fbbf24; text-align: center; margin-bottom: 10px; font-weight: bold; background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 8px; }
-        input[type="text"] { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.3rem; text-align: center; margin-bottom: 15px; }
+        .question-box { font-size: 1.15rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; line-height: 1.4; }
+        .instruction-box { font-size: 0.85rem; color: #fbbf24; text-align: center; margin-bottom: 10px; font-weight: bold; background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 8px; }
+        input[type="text"], select { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.2rem; text-align: center; margin-bottom: 15px; }
         .check-btn { width: 100%; background: var(--primary); color: #0f172a; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         .next-btn { width: 100%; background: #059669; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
         #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; }
@@ -28,30 +28,27 @@
         <div style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 12px; letter-spacing: 1px;">
             Prof. DĂNUȚ ANDRONIE
         </div>
-        
         <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--accent); padding: 8px; margin-bottom: 15px; font-style: italic; color: #fef08a; font-size: 0.95rem;">
             "FIZICA NU ESTE DOMINATĂ DE FORMULE CI DE LOGICĂ"
         </div>
-
-        <hr style="border: 0; border-top: 1px solid #334155; margin-bottom: 15px;">
     </div>
 
     <div class="container" id="screen-login">
-        <h2 style="text-align:center;">⚡ Forme de Energie</h2>
+        <h2 style="text-align:center;">⚡ Energia Mecanică (30 Itemi)</h2>
         <input type="text" id="p-name" placeholder="Numele elevului">
-          <select id="clasa">
-    <option value="">Alege clasa...</option>
-    <option value="6A">6A</option>
-    <option value="6B">6B</option>
-    <option value="6C">6C</option>
-    <option value="6D">6D</option>
+        <select id="p-class">
+            <option value="">Alege clasa...</option>
+            <option value="7A">7A</option>
+            <option value="7B">7B</option>
+            <option value="7C">7C</option>
+            <option value="7D">7D</option>
         </select>
-        <button class="check-btn" onclick="startGame()">START ANTRENAMENT</button>
+        <button class="check-btn" onclick="startGame()">START TEST FINAL</button>
     </div>
 
     <div class="container hidden" id="screen-game">
         <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
-        <div class="instruction-box">Se consideră g = 10 N/kg</div>
+        <div class="instruction-box">Se consideră g = 10 N/kg. Atenție la unitățile S.I.!</div>
         <div class="question-box" id="question"></div>
         <div id="input-area"></div>
         <div id="feedback"></div>
@@ -59,51 +56,86 @@
     </div>
 
     <div class="container hidden" id="screen-end">
-        <h2 style="text-align:center;">REZULTAT ANTRENAMENT</h2>
+        <h2 style="text-align:center;">REZULTAT FINAL</h2>
         <div style="font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center;" id="final-score"></div>
         <p style="text-align:center; color: #94a3b8;" id="raw-points"></p>
-        <button class="check-btn" onclick="location.reload()">REIA CU ALTE VALORI</button>
+        <button class="check-btn" onclick="location.reload()">REIA TESTUL</button>
     </div>
 
 <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec"; 
     let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [] };
 
+    // 1. POOL TEORIE (10 întrebări)
     const theoryPool = [
-        { q: "Energia mecanică a unui corp este suma dintre energia cinematică și energia ...........", type: "fill", a: ["potentiala"] },
-        { q: "Energia pe care o posedă un corp aflat în mișcare se numește energie ...........", type: "fill", a: ["cinematica"] },
-        { q: "Energia pe care o posedă un corp datorită poziției sale față de Pământ se numește energie potențială ...........", type: "fill", a: ["gravitationala"] },
-        { q: "Unitatea de măsură pentru energie în S.I. este ...........", type: "fill", a: ["joule", "j"] },
-        { q: "În absența frecărilor, energia mecanică totală se ...........", type: "fill", a: ["conserva", "pastreaza"] },
-        { q: "Energia potențială elastică apare în corpurile ...........", type: "fill", a: ["deformate", "elastice"] },
-        { q: "Dacă viteza unui corp se dublează, energia sa cinematică crește de ........... ori.", type: "fill", a: ["4", "patru"] }
+        { q: "Energia mecanică totală este suma energiei cinetice și a energiei ...........", a: ["potentiale"] },
+        { q: "Unitatea de măsură a energiei în S.I. este ...........", a: ["joule", "j"] },
+        { q: "Energia cinetică depinde de masa corpului și de ........... acestuia.", a: ["viteza"] },
+        { q: "În absența frecărilor, energia mecanică a unui sistem izolat se ...........", a: ["conserva", "pastreaza"] },
+        { q: "Energia potențială elastică depinde de constanta elastică și de ...........", a: ["deformatie", "alungire", "comprimare"] },
+        { q: "Teorema variației energiei cinetice spune că ΔEc este egală cu ........... mecanic total.", a: ["lucrul"] },
+        { q: "Un corp lăsat să cadă liber își transformă energia potențială în energie ...........", a: ["cinetica"] },
+        { q: "La înălțimea maximă a unei aruncări pe verticală, viteza este egală cu ...........", a: ["0", "zero"] },
+        { q: "Energia potențială gravitațională depinde de masă, accelerația gravitațională și ...........", a: ["inaltime"] },
+        { q: "Dacă viteza unui corp se triplează, energia sa cinetică crește de ........... ori.", a: ["9", "noua"] }
     ];
 
-    function generateEnergyMath() {
-        let mathQ = [];
-        // 1. Ec = m*v^2 / 2
-        for(let i=0; i<4; i++) {
-            let m = Math.floor(Math.random() * 8 + 2) * 2; // masă pară pentru calcul ușor
-            let v = Math.floor(Math.random() * 5 + 2);
-            let res = (m * v * v) / 2;
-            mathQ.push({ q: `Un corp de masă m = ${m} kg se mișcă cu viteza v = ${v} m/s. Energia sa cinematică este ? J.`, type: "math", a: [res.toString()] });
-        }
-        // 2. Ep = m*g*h
-        for(let i=0; i<4; i++) {
-            let m = Math.floor(Math.random() * 10 + 1);
-            let h = Math.floor(Math.random() * 15 + 2);
-            let res = m * 10 * h;
-            mathQ.push({ q: `Un corp de masă m = ${m} kg este ridicat la înălțimea h = ${h} m. Energia sa potențială gravitațională este ? J.`, type: "math", a: [res.toString()] });
-        }
-        return mathQ;
+    // 2. GENERATOR PROBLEME (20 întrebări calculate progresiv)
+    function generateProblems() {
+        let p = [];
+        
+        // Energie Cinetică (Calcul simplu m, v)
+        p.push({ q: "Un corp de 400g are viteza de 10 m/s. Ec = ? J", a: ["20"], type: "math" });
+        p.push({ q: "Un mobil de 2 tone se deplasează cu 72 km/h. Ec = ? J", a: ["400000"], type: "math" });
+        
+        // Energie Potențială Gravitațională
+        p.push({ q: "O piatră de 500g este la înălțimea de 400cm. Ep = ? J", a: ["20"], type: "math" });
+        p.push({ q: "Ce masă are un corp care la h=5m are Ep=100J?", a: ["2"], type: "math" });
+
+        // Energie Potențială Elastică (k, delta l)
+        p.push({ q: "Un resort cu k=500 N/m este comprimat cu 20cm. Epe = ? J", a: ["10"], type: "math" });
+        p.push({ q: "Un resort cu k=2000 N/m are Epe=10J. Alungirea este ? cm", a: ["10"], type: "math" });
+
+        // Conservare: Cădere liberă (Viteza la sol) - Radicali perfecți
+        p.push({ q: "Un corp cade liber de la h=20m. Viteza la impactul cu solul este ? m/s", a: ["20"], type: "math" }); // v = sqrt(2*10*20) = 20
+        p.push({ q: "Un corp cade liber de la h=45m. Viteza la sol este ? m/s", a: ["30"], type: "math" }); // v = sqrt(2*10*45) = 30
+
+        // Conservare: Aruncare pe verticală (Înălțime maximă)
+        p.push({ q: "Un corp este aruncat în sus cu v=40 m/s. Înălțimea maximă h = ? m", a: ["80"], type: "math" }); // h = v^2/2g = 1600/20
+        p.push({ q: "Un corp este aruncat în sus cu v=10 m/s. Înălțimea maximă h = ? m", a: ["5"], type: "math" });
+
+        // Variația Energiei Potențiale
+        p.push({ q: "Un corp de 2kg coboară de la h1=10m la h2=2m. |ΔEp| = ? J", a: ["160"], type: "math" });
+        p.push({ q: "Un sac de 50kg este ridicat de la sol la h=1.5m. ΔEp = ? J", a: ["750"], type: "math" });
+
+        // Variația Ec -> Lucru Mecanic Total
+        p.push({ q: "Un corp de 4kg accelerează de la 2m/s la 4m/s. L_total = ? J", a: ["24"], type: "math" }); // 0.5*4*(16-4)
+        p.push({ q: "Un obiect de 10kg încetinește de la 10m/s la 0m/s. |L_frecare| = ? J", a: ["500"], type: "math" });
+
+        // Probleme complexe (Viteză la h/2)
+        p.push({ q: "Un corp cade de la h=40m. Viteza la jumătatea înălțimii (h=20m) este ? m/s", a: ["20"], type: "math" });
+        
+        // Mai multe de energie elastică
+        p.push({ q: "O forță de 20N alungește un resort cu 10cm. Energia elastică stocată este ? J", a: ["1"], type: "math" }); // k=200, E=0.5*200*0.01
+
+        // Transformări km/h -> m/s progresive
+        p.push({ q: "Un vultur de 2kg zboară la h=10m cu v=36 km/h. E_mecanica_totala = ? J", a: ["300"], type: "math" }); // Ep=200, Ec=100
+        p.push({ q: "Un obiect de 1kg are Ec=50J. Viteza sa este ? m/s", a: ["10"], type: "math" });
+        p.push({ q: "O minge de 200g este aruncată cu v=20m/s. Ec = ? J", a: ["40"], type: "math" });
+        p.push({ q: "Energia potențială a unui corp de 3kg crește cu 150J. Cu cât a fost ridicat? (h = ? m)", a: ["5"], type: "math" });
+
+        return p;
     }
 
     function startGame() {
         state.name = document.getElementById('p-name').value.trim();
         state.class = document.getElementById('p-class').value;
-        if(!state.name || !state.class) return alert("Completează datele!");
+        if(!state.name || !state.class) return alert("Introdu numele și clasa!");
         
-        state.questions = [...theoryPool, ...generateEnergyMath()].sort(() => 0.5 - Math.random()).slice(0, 10);
+        // Combinăm pool-ul (10 teorie + 20 probleme = 30 itemi)
+        state.questions = [...theoryPool, ...generateProblems()];
+        // Putem amesteca întrebările dacă dorim: state.questions.sort(() => 0.5 - Math.random());
+        
         document.getElementById('screen-login').classList.add('hidden');
         document.getElementById('screen-game').classList.remove('hidden');
         showQuestion();
@@ -111,43 +143,57 @@
 
     function showQuestion() {
         const q = state.questions[state.currentIdx];
-        document.getElementById('q-info').innerText = `CERINȚA ${state.currentIdx + 1} / 10`;
+        document.getElementById('q-info').innerText = `ITEM ${state.currentIdx + 1} / 30`;
         document.getElementById('question').innerText = q.q;
         const area = document.getElementById('input-area');
-        area.innerHTML = `<input type="text" id="user-ans" placeholder="Răspuns...">
-                          <button class="check-btn" onclick="checkAns(document.getElementById('user-ans').value)">VERIFICĂ</button>`;
+        area.innerHTML = `<input type="text" id="user-ans" placeholder="Scrie rezultatul numeric sau cuvântul" autocomplete="off">
+                          <button class="check-btn" id="btn-check" onclick="checkAns()">VERIFICĂ</button>`;
         document.getElementById('feedback').style.display = 'none';
         document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('user-ans').focus();
     }
 
-    function checkAns(user) {
+    function checkAns() {
+        const user = document.getElementById('user-ans').value;
+        if(!user.trim()) return;
+
         const q = state.questions[state.currentIdx];
         const clean = (s) => s.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().replace(",", ".");
-        let isCorrect = q.a.some(ans => clean(user) === clean(ans));
         
-        if(q.type === "math") isCorrect = Math.abs(parseFloat(clean(user)) - parseFloat(clean(q.a[0]))) < 0.1;
+        let isCorrect = q.a.some(ans => clean(user) === clean(ans));
 
         const f = document.getElementById('feedback');
         f.style.display = 'block';
-        if(isCorrect) { state.correctAnswers++; f.innerText = "CORECT! ✅"; f.style.color = "#4ade80"; }
-        else { f.innerText = `GREȘIT! Răspuns: ${q.a[0]} ❌`; f.style.color = "#f87171"; }
+        if(isCorrect) { 
+            state.correctAnswers++; 
+            f.innerText = "CORECT! ✅"; f.style.color = "#4ade80"; 
+        } else { 
+            f.innerText = `GREȘIT! Răspuns: ${q.a[0]} ❌`; f.style.color = "#f87171"; 
+        }
+        
+        document.getElementById('btn-check').classList.add('hidden');
         document.getElementById('next-btn').style.display = 'block';
     }
 
     function nextQuestion() {
         state.currentIdx++;
-        if(state.currentIdx < 10) showQuestion(); else finishGame();
+        if(state.currentIdx < 30) showQuestion(); else finishGame();
     }
 
     function finishGame() {
         document.getElementById('screen-game').classList.add('hidden');
         document.getElementById('screen-end').classList.remove('hidden');
-        const nota = (1 + state.correctAnswers * 0.9).toFixed(2);
+        
+        // Calcul notă: 1 punct din oficiu + (9 puncte / 30 întrebări) * răspunsuri_corecte
+        const nota = (1 + (state.correctAnswers * 0.3)).toFixed(2);
+        
         document.getElementById('final-score').innerText = nota;
-        document.getElementById('raw-points').innerText = `Corecte: ${state.correctAnswers} / 10`;
+        document.getElementById('raw-points').innerText = `Ai rezolvat corect ${state.correctAnswers} itemi din 30.`;
         
         const fd = new FormData();
-        fd.append("nume", state.name); fd.append("clasa", state.class + " - Energia 7"); fd.append("scor", nota);
+        fd.append("nume", state.name); 
+        fd.append("clasa", state.class + " - Energia 30 Itemi"); 
+        fd.append("scor", nota);
         fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
     }
 </script>

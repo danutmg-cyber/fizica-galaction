@@ -235,7 +235,7 @@
 
     <div class="container" id="screen-login">
       <h1 class="title">🌊 Fluide în echilibru</h1>
-      <p class="subtle">10 variante automate • valori generate diferit pentru fiecare elev</p>
+      <p class="subtle">20 itemi • 10 completare / adevărat-fals • 10 numerici • 100 puncte</p>
 
       <div class="grid">
         <input type="text" id="stdName" placeholder="Nume și prenume elev" autocomplete="name" />
@@ -249,6 +249,8 @@
       </div>
 
       <div class="instruction-box">
+        Testul conține <strong>10 itemi de completare sau adevărat/fals</strong> și <strong>10 itemi numerici</strong>.<br />
+        Punctaj total: <strong>100 puncte</strong> (<strong>5 puncte / item</strong>).<br />
         Folosește: <strong>g = 10 N/kg</strong>, <strong>ρ<sub>apă</sub> = 1000 kg/m³</strong>, <strong>p<sub>atm</sub> = 100000 Pa</strong>.<br />
         La exercițiile cu împărțire scrie rezultatul cu <strong>cel mult 2 zecimale, fără rotunjire</strong>.
       </div>
@@ -258,7 +260,7 @@
 
     <div class="container hidden" id="screen-game">
       <div class="meta-row">
-        <div class="pill" id="q-info">Cerința 1 / 10</div>
+        <div class="pill" id="q-info">Cerința 1 / 20</div>
         <div class="pill" id="variant-info">Varianta 1</div>
         <div class="pill" id="test-code">Cod test</div>
       </div>
@@ -288,7 +290,12 @@
 
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec";
-    const TOTAL_QUESTIONS = 10;
+    const TOTAL_QUESTIONS = 20;
+    const MIXED_COUNT = 10;
+    const NUMERIC_COUNT = 10;
+    const POINTS_PER_ITEM = 5;
+    const TOTAL_POINTS = 100;
+    const VARIANT_COUNT = 100;
 
     const state = {
       name: "",
@@ -331,14 +338,11 @@
       { q: "Unitatea de măsură pentru presiune în S.I. este ..........", a: ["pascal", "pa"] },
       { q: "Simbolul unității de măsură pascal este ..........", a: ["pa"] },
       { q: "1 Pa = 1 N / ..........", a: ["m2", "m^2", "m²"] },
-      { q: "Presiunea crește atunci când aceeași forță acționează pe o suprafață mai ..........", a: ["mica", "mică"] },
-      { q: "Presiunea scade atunci când aceeași forță acționează pe o suprafață mai ..........", a: ["mare"] },
       { q: "Presiunea din interiorul unui lichid aflat în repaus se numește presiune ..........", a: ["hidrostatica", "hidrostatică"] },
       { q: "Formula presiunii hidrostatice este p = ρ · g · ..........", a: ["h"] },
       { q: "În formula p = ρ · g · h, litera h reprezintă ..........", a: ["adancimea", "adâncimea"] },
       { q: "În formula p = ρ · g · h, litera ρ reprezintă .......... lichidului", a: ["densitatea"] },
       { q: "Presiunea hidrostatică depinde de densitate, accelerația gravitațională și de ..........", a: ["adancime", "adâncime"] },
-      { q: "La aceeași adâncime, în același lichid, presiunea hidrostatică este ..........", a: ["aceeasi", "aceeași"] },
       { q: "Presiunea exterioară exercitată asupra unui lichid se transmite integral în toată masa lui. Aceasta este legea lui ..........", a: ["pascal"] },
       { q: "Instrumentul cu care măsurăm presiunea gazelor închise se numește ..........", a: ["manometru", "manometrul"] },
       { q: "Instrumentul cu care se măsoară presiunea atmosferică se numește ..........", a: ["barometru", "barometrul"] },
@@ -352,26 +356,27 @@
       { q: "În vasele comunicante, lichidul de același fel ajunge la aceeași ..........", a: ["inaltime", "înălțime"] },
       { q: "Presiunea atmosferică este exercitată de stratul de .......... care înconjoară Pământul", a: ["aer"] },
       { q: "Dacă într-un lichid coborâm mai adânc, presiunea hidrostatică ..........", a: ["creste", "crește"] },
-      { q: "Dacă densitatea lichidului este mai mare, la aceeași adâncime presiunea hidrostatică este mai ..........", a: ["mare"] },
       { q: "În formula densității ρ = m / V, litera m reprezintă ..........", a: ["masa"] },
       { q: "În formula densității ρ = m / V, litera V reprezintă ..........", a: ["volumul"] },
       { q: "Pascalul este unitate de măsură pentru ..........", a: ["presiune", "presiunea"] },
-      { q: "Newtonul este unitate de măsură pentru ..........", a: ["forta", "forță", "forta elastica", "forța"] },
-      { q: "Dacă mărim suprafața de contact, presiunea exercitată de aceeași forță se ..........", a: ["micsoreaza", "micșorează", "scade"] },
-      { q: "Dacă micșorăm suprafața de contact, presiunea exercitată de aceeași forță se ..........", a: ["mareste", "mărește", "creste", "crește"] }
+      { q: "Newtonul este unitate de măsură pentru ..........", a: ["forta", "forță", "forța"] },
+      { q: "Presiunea atmosferică normală are valoarea aproximativă de .......... Pa", a: ["100000"] },
+      { q: "Densitatea apei este aproximativ .......... kg/m³", a: ["1000"] }
     ];
 
-    const variantProfiles = [
-      ["fill", "fill", "fill", "fill", "fill", "pressure", "surface", "hydro", "arch", "force"],
-      ["fill", "fill", "fill", "fill", "fill", "pressure", "hydro", "arch", "surface", "totalPressure"],
-      ["fill", "fill", "fill", "fill", "fill", "force", "surface", "hydro", "arch", "density"],
-      ["fill", "fill", "fill", "fill", "fill", "pressure", "surface", "density", "arch", "hydro"],
-      ["fill", "fill", "fill", "fill", "fill", "totalPressure", "pressure", "arch", "hydro", "force"],
-      ["fill", "fill", "fill", "fill", "fill", "surface", "hydro", "arch", "density", "pressure"],
-      ["fill", "fill", "fill", "fill", "fill", "force", "arch", "pressure", "hydro", "surface"],
-      ["fill", "fill", "fill", "fill", "fill", "density", "hydro", "surface", "arch", "totalPressure"],
-      ["fill", "fill", "fill", "fill", "fill", "pressure", "force", "totalPressure", "arch", "hydro"],
-      ["fill", "fill", "fill", "fill", "fill", "surface", "pressure", "hydro", "density", "arch"]
+    const tfPool = [
+      { q: "Presiunea se măsoară în pascali.", a: ["adevarat", "adevărat"] },
+      { q: "Presiunea scade dacă aceeași forță acționează pe o suprafață mai mică.", a: ["fals"] },
+      { q: "Presiunea hidrostatică crește cu adâncimea.", a: ["adevarat", "adevărat"] },
+      { q: "Barometrul măsoară presiunea atmosferică.", a: ["adevarat", "adevărat"] },
+      { q: "Manometrul se folosește pentru măsurarea presiunii gazelor închise.", a: ["adevarat", "adevărat"] },
+      { q: "Forța lui Arhimede are sens vertical, de sus în jos.", a: ["fals"] },
+      { q: "În apă, la aceeași adâncime, presiunea hidrostatică este aceeași.", a: ["adevarat", "adevărat"] },
+      { q: "Densitatea apei este aproximativ 1000 kg/m³.", a: ["adevarat", "adevărat"] },
+      { q: "Un corp plutește dacă densitatea lui este mai mare decât densitatea lichidului.", a: ["fals"] },
+      { q: "Forța lui Arhimede depinde de volumul de lichid dezlocuit.", a: ["adevarat", "adevărat"] },
+      { q: "Presiunea atmosferică normală este aproximativ 100 Pa.", a: ["fals"] },
+      { q: "În vasele comunicante, lichidul de același fel ajunge la același nivel.", a: ["adevarat", "adevărat"] }
     ];
 
     function normalizeText(value) {
@@ -449,12 +454,30 @@
       return result;
     }
 
+    function shuffleArray(rng, arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
     function questionFill(item) {
       return {
         type: "fill",
         q: item.q,
         answers: item.a,
         instruction: "Completează cu termenul corect."
+      };
+    }
+
+    function questionTrueFalse(item) {
+      return {
+        type: "tf",
+        q: item.q,
+        answers: item.a,
+        instruction: "Scrie: adevărat sau fals."
       };
     }
 
@@ -565,6 +588,8 @@
       density: genDensity
     };
 
+    const numericGeneratorFns = Object.values(generators);
+
     function generateSessionSalt() {
       if (window.crypto && window.crypto.getRandomValues) {
         const arr = new Uint32Array(1);
@@ -583,25 +608,22 @@
     function buildTest() {
       const baseKey = `${state.name}|${state.className}|${getMinuteKey()}|${state.sessionSalt}`;
       state.seed = hashString(baseKey);
-      state.variant = (state.seed % 10) + 1;
-      state.testCode = `SF7-V${state.variant}-${shortCode(state.seed)}`;
+      state.variant = (state.seed % VARIANT_COUNT) + 1;
+      state.testCode = `SF7-V${String(state.variant).padStart(3, "0")}-${shortCode(state.seed)}`;
 
       const rng = mulberry32(state.seed);
-      const profile = variantProfiles[state.variant - 1];
-      const fillsNeeded = profile.filter((item) => item === "fill").length;
-      const selectedFills = pickUnique(rng, fillPool, fillsNeeded).map(questionFill);
-      const questions = [];
-      let fillIndex = 0;
+      const mixedPool = [
+        ...fillPool.map((item) => ({ ...item, itemType: "fill" })),
+        ...tfPool.map((item) => ({ ...item, itemType: "tf" }))
+      ];
 
-      for (const slot of profile) {
-        if (slot === "fill") {
-          questions.push(selectedFills[fillIndex++]);
-        } else {
-          questions.push(generators[slot](rng));
-        }
-      }
+      const mixedQuestions = pickUnique(rng, mixedPool, MIXED_COUNT).map((item) =>
+        item.itemType === "fill" ? questionFill(item) : questionTrueFalse(item)
+      );
 
-      state.questions = questions.slice(0, TOTAL_QUESTIONS);
+      const numericQuestions = Array.from({ length: NUMERIC_COUNT }, () => randFrom(rng, numericGeneratorFns)(rng));
+
+      state.questions = shuffleArray(rng, [...mixedQuestions, ...numericQuestions]);
       state.currentIdx = 0;
       state.correctAnswers = 0;
     }
@@ -633,7 +655,7 @@
     }
 
     function evaluateAnswer(userValue, q) {
-      if (q.type === "fill") {
+      if (q.type === "fill" || q.type === "tf") {
         const clean = normalizeText(userValue);
         return q.answers.some((ans) => normalizeText(ans) === clean);
       }
@@ -663,10 +685,10 @@
       if (correct) {
         state.correctAnswers++;
         el.feedback.className = "feedback ok";
-        el.feedback.innerHTML = "Corect ✅";
+        el.feedback.innerHTML = `Corect ✅<br>+${POINTS_PER_ITEM} puncte`;
       } else {
         el.feedback.className = "feedback bad";
-        const rightAnswer = q.type === "fill" ? q.answers[0] : q.displayAnswer;
+        const rightAnswer = (q.type === "fill" || q.type === "tf") ? q.answers[0] : q.displayAnswer;
         el.feedback.innerHTML = `Greșit ❌<br>Răspuns corect: <strong>${rightAnswer}</strong>`;
       }
       el.nextBtn.classList.remove("hidden");
@@ -685,19 +707,22 @@
       el.screenGame.classList.add("hidden");
       el.screenEnd.classList.remove("hidden");
 
-      const grade = (1 + (state.correctAnswers * 9) / TOTAL_QUESTIONS).toFixed(2);
-      el.finalScore.textContent = grade;
-      el.rawPoints.textContent = `Scor: ${state.correctAnswers} / ${TOTAL_QUESTIONS} răspunsuri corecte.`;
+      const points = state.correctAnswers * POINTS_PER_ITEM;
+      const grade = (1 + (points * 9) / TOTAL_POINTS).toFixed(2);
+      el.finalScore.textContent = `${points}p`;
+      el.rawPoints.textContent = `Scor: ${state.correctAnswers} / ${TOTAL_QUESTIONS} răspunsuri corecte • ${points} / ${TOTAL_POINTS} puncte.`;
       el.endVariant.textContent = `Varianta ${state.variant}`;
-      el.endCode.textContent = `Cod test: ${state.testCode}`;
+      el.endCode.textContent = `Cod test: ${state.testCode} • Notă orientativă: ${grade}`;
 
       const fd = new FormData();
       fd.append("nume", state.name);
       fd.append("clasa", `${state.className} - Statica fluidelor 7`);
       fd.append("varianta", String(state.variant));
       fd.append("cod_test", state.testCode);
-      fd.append("scor", grade);
+      fd.append("scor", String(points));
       fd.append("corecte", String(state.correctAnswers));
+      fd.append("total_itemi", String(TOTAL_QUESTIONS));
+      fd.append("punctaj_total", String(TOTAL_POINTS));
 
       fetch(SCRIPT_URL, { method: "POST", body: fd, mode: "no-cors" }).catch(() => {});
     }

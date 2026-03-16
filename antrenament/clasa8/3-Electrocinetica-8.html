@@ -1,172 +1,855 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FIZICĂ VIII - ELECTROCINETICĂ</title>
-    <style>
-        :root { --primary: #ffb703; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #ffb703; }
-        * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; }
-        .header { text-align: center; width: 100%; max-width: 750px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
-        .container { width: 100%; max-width: 700px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
-        
-        .learning-card { background: rgba(255, 183, 3, 0.1); border: 1px dashed var(--primary); border-radius: 12px; padding: 15px; margin-bottom: 20px; font-size: 0.85rem; line-height: 1.4; }
-        .learning-card h4 { margin: 0 0 10px 0; color: var(--accent); text-align: center; font-size: 0.9rem; }
-        .formula-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        
-        .question-box { font-size: 1.2rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; }
-        input[type="text"] { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.3rem; text-align: center; margin-bottom: 15px; }
-        .check-btn { width: 100%; background: var(--primary); color: #0f172a; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .next-btn { width: 100%; background: #22c55e; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
-        #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; }
-        .hidden { display: none; }
-    </style>
-</head>
-<body>
-
-     <div class="header">
-        <div style="font-size: 1.1rem; font-weight: bold; color: var(--accent); margin-bottom: 2px;">
-            ȘCOALA GIMNAZIALĂ "GALA GALACTION" MANGALIA
-        </div>
-        <div style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 12px; letter-spacing: 1px;">
-            Prof. DĂNUȚ ANDRONIE
-        </div>
-        
-        <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--accent); padding: 8px; margin-bottom: 15px; font-style: italic; color: #fef08a; font-size: 0.95rem;">
-            "FIZICA NU ESTE DOMINATĂ DE FORMULE CI DE LOGICĂ"
-        </div>
-
-        <hr style="border: 0; border-top: 1px solid #334155; margin-bottom: 15px;">
-    </div>
-
-    <div class="container" id="screen-login">
-        <h2 style="text-align:center;">💡 Mișcarea Sarcinilor</h2>
-        <input type="text" id="p-name" placeholder="Numele elevului">
-          <select id="clasa">
-    <option value="">Alege clasa...</option>
-    <option value="6A">6A</option>
-    <option value="6B">6B</option>
-    <option value="6C">6C</option>
-    <option value="6D">6D</option>
-        </select>
-        <button class="check-btn" onclick="startGame()">ÎNCEPE TESTUL</button>
-    </div>
-
-    <div class="container hidden" id="screen-game">
-        <div class="learning-card">
-            <h4>📘 MEMO: ELECTRO-FORMULE</h4>
-            <div class="formula-grid">
-                <div>• Intensitate: <b>I = Q / t</b> (A)</div>
-                <div>• Legea lui Ohm: <b>I = U / R</b></div>
-                <div>• Rezistența: <b>R = ρ · l / S</b></div>
-                <div>• Kirchhoff I: <b>Σ I_intrare = Σ I_ieșire</b></div>
-            </div>
-        </div>
-
-        <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
-        <div class="question-box" id="question"></div>
-        <div id="input-area"></div>
-        <div id="feedback"></div>
-        <button class="next-btn" id="next-btn" onclick="nextQuestion()">URMĂTORUL PAS ➡️</button>
-    </div>
-
-    <div class="container hidden" id="screen-end">
-        <h2 style="text-align:center;">PERFORMANȚĂ FINALĂ</h2>
-        <div style="font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center;" id="final-score"></div>
-        <p style="text-align:center; color: #94a3b8;" id="raw-points"></p>
-        <button class="check-btn" onclick="location.reload()">REIA EXERSAREA</button>
-    </div>
-
-<script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec"; 
-    let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [] };
-
-    function generateCircuitMath() {
-        let qSet = [
-            { q: "Aparatul folosit pentru măsurarea intensității curentului este ...........", type: "fill", a: ["ampermetrul"] },
-            { q: "Ampermetrul se montează întotdeauna în ........... cu consumatorul.", type: "fill", a: ["serie"] },
-            { q: "Viteza de deplasare a sarcinilor electrice se numește ........... curentului.", type: "fill", a: ["intensitatea"] },
-            { q: "Materialele care nu permit trecerea curentului electric se numesc ...........", type: "fill", a: ["izolatoare", "izolatori"] }
-        ];
-
-        // 1. Legea lui Ohm: I = U / R
-        let r1 = Math.floor(Math.random() * 20 + 5);
-        let u1 = r1 * Math.floor(Math.random() * 5 + 1);
-        let i1 = (u1 / r1).toFixed(1);
-        qSet.push({ q: `La bornele unui rezistor R = ${r1} Ω se aplică o tensiune U = ${u1} V. Intensitatea curentului este I = ? A.`, type: "math", a: [i1.toString().replace(".",",")] });
-
-        // 2. Intensitate: I = Q / t
-        let q2 = Math.floor(Math.random() * 50 + 10);
-        let t2 = Math.floor(Math.random() * 10 + 2);
-        let i2 = (q2 / t2).toFixed(2);
-        qSet.push({ q: `Prin secțiunea unui conductor trece o sarcină Q = ${q2} C în timpul t = ${t2} s. Intensitatea curentului este ? A.`, type: "math", a: [i2.toString().replace(".",",")] });
-
-        // 3. Kirchhoff I (Nod de rețea)
-        let in1 = Math.floor(Math.random() * 10 + 2);
-        let in2 = Math.floor(Math.random() * 10 + 2);
-        let out1 = Math.floor(Math.random() * 5 + 1);
-        let out2 = (in1 + in2 - out1);
-        qSet.push({ q: `Într-un nod de rețea intră curenții I1 = ${in1}A și I2 = ${in2}A. Dacă dintr-o ramură iese I3 = ${out1}A, ce curent I4 iese prin a doua ramură? (A)`, type: "math", a: [out2.toString()] });
-
-        return qSet.sort(() => 0.5 - Math.random());
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>FIZICĂ VIII - Electrocinetică</title>
+  <style>
+    :root {
+      --primary: #0ea5e9;
+      --primary-dark: #0284c7;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --ok: #4ade80;
+      --bad: #f87171;
+      --border: #334155;
+      --panel: rgba(15, 23, 42, 0.92);
     }
 
-    function startGame() {
-        state.name = document.getElementById('p-name').value.trim();
-        state.class = document.getElementById('p-class').value;
-        if(!state.name || !state.class) return alert("Completează datele!");
-        state.questions = generateCircuitMath();
-        document.getElementById('screen-login').classList.add('hidden');
-        document.getElementById('screen-game').classList.remove('hidden');
-        showQuestion();
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    .app {
+      width: 100vw;
+      height: 100vh;
+      padding: 12px;
+    }
+
+    .screen {
+      width: 100%;
+      height: 100%;
+      display: none;
+    }
+
+    .screen.active { display: block; }
+
+    .card {
+      width: 100%;
+      height: 100%;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+      padding: 24px;
+      overflow: auto;
+    }
+
+    .start-wrap {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+
+    .school {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .teacher {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+      letter-spacing: 0.6px;
+    }
+
+    .quote {
+      color: #fef08a;
+      font-style: italic;
+      background: rgba(251, 191, 36, 0.10);
+      border-left: 4px solid var(--accent);
+      border-radius: 12px;
+      padding: 10px 12px;
+      display: inline-block;
+      max-width: 100%;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 1.8rem;
+      margin: 0 0 8px;
+    }
+
+    .subtle {
+      text-align: center;
+      color: var(--muted);
+      margin: 0 0 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      min-height: 56px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 2px solid #475569;
+      background: #0b1220;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    select {
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      padding-right: 44px;
+      background-image: linear-gradient(45deg, transparent 50%, #38bdf8 50%), linear-gradient(135deg, #38bdf8 50%, transparent 50%);
+      background-position: calc(100% - 22px) calc(50% - 3px), calc(100% - 16px) calc(50% - 3px);
+      background-size: 6px 6px, 6px 6px;
+      background-repeat: no-repeat;
+      font-weight: 700;
+    }
+
+    select option { font-size: 1rem; white-space: normal; }
+
+    input[type="text"]:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
+    }
+
+    .info-box {
+      text-align: center;
+      color: #fde68a;
+      background: rgba(251, 191, 36, 0.10);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 16px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .btn {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      transition: transform 0.08s ease, opacity 0.2s ease;
+    }
+
+    .btn:hover { opacity: 0.96; }
+    .btn:active { transform: scale(0.99); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: var(--primary-dark); color: white; }
+    .btn-disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .game-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .pill {
+      background: rgba(14, 165, 233, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 800;
+      font-size: 0.92rem;
+    }
+
+    .question-box {
+      font-size: 1.38rem;
+      font-weight: 700;
+      line-height: 1.5;
+      text-align: center;
+      margin: 8px auto 18px;
+      max-width: 1050px;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .answer-box {
+      max-width: 760px;
+      width: 100%;
+      margin: 0 auto;
+      display: grid;
+      gap: 12px;
+    }
+
+    .feedback {
+      margin: 18px auto 0;
+      padding: 14px;
+      border-radius: 14px;
+      display: none;
+      text-align: center;
+      font-weight: 700;
+      line-height: 1.55;
+      border: 1px solid transparent;
+      max-width: 920px;
+    }
+
+    .feedback.ok {
+      color: var(--ok);
+      background: rgba(74, 222, 128, 0.08);
+      border-color: rgba(74, 222, 128, 0.22);
+    }
+
+    .feedback.bad {
+      color: #fecaca;
+      background: rgba(248, 113, 113, 0.10);
+      border-color: rgba(248, 113, 113, 0.22);
+    }
+
+    .result-score {
+      font-size: 4.8rem;
+      color: var(--accent);
+      font-weight: 900;
+      text-align: center;
+      line-height: 1;
+      margin: 24px 0 10px;
+    }
+
+    .center { text-align: center; }
+    .muted { color: var(--muted); }
+    .hidden { display: none; }
+
+    @media (max-width: 760px) {
+      .app { padding: 8px; }
+      .card { padding: 16px; border-radius: 18px; }
+      .grid { grid-template-columns: 1fr; }
+      .question-box { font-size: 1.1rem; min-height: 100px; }
+      .title { font-size: 1.45rem; }
+      input[type="text"], select { min-height: 60px; font-size: 1.05rem; }
+      select { padding-right: 48px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <section class="screen active" id="screen-login">
+      <div class="card">
+        <div class="start-wrap">
+          <div class="header">
+            <div class="school">ȘCOALA GIMNAZIALĂ ....</div>
+            <div class="teacher">Prof. DĂNUȚ ANDRONIE</div>
+            <div class="quote">FIZICA NU ESTE O MATERIE DOMINATĂ DE FORMULE CI DE LOGICĂ</div>
+          </div>
+
+          <h1 class="title">Electrocinetică</h1>
+          <p class="subtle">Clasa a VIII-a • 20 itemi • 100 puncte • minimum 100 variante</p>
+
+          <div class="grid">
+            <input type="text" id="stdName" placeholder="Nume și prenume elev" autocomplete="name" />
+            <select id="stdClass" aria-label="Selectează clasa">
+              <option value="">Clasa...</option>
+              <option value="CLASA a VIII-a A">CLASA a VIII-a A</option>
+              <option value="CLASA a VIII-a B">CLASA a VIII-a B</option>
+              <option value="CLASA a VIII-a C">CLASA a VIII-a C</option>
+              <option value="CLASA a VIII-a D">CLASA a VIII-a D</option>
+            </select>
+          </div>
+
+          <div class="info-box">Scrie numai valoarea numerică, cu maximum 2 zecimale.</div>
+
+          <button class="btn btn-primary" id="startBtn">Începe testul</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-game">
+      <div class="card game-card">
+        <div>
+          <div class="meta-row">
+            <div class="pill" id="q-info">Cerința 1 / 20</div>
+            <div class="pill" id="points-info">5 puncte</div>
+            <div class="pill" id="variant-info">Varianta 1 / 100</div>
+            <div class="pill" id="test-code">Cod test</div>
+          </div>
+
+          <div class="question-box" id="question"></div>
+          <div class="answer-box" id="input-area"></div>
+          <div class="feedback" id="feedback"></div>
+        </div>
+
+        <button class="btn btn-secondary hidden" id="nextBtn">Următoarea</button>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-end">
+      <div class="card">
+        <h2 class="title">Rezultat</h2>
+        <div class="center muted" id="end-variant"></div>
+        <div class="result-score" id="final-score"></div>
+        <p class="center muted" id="raw-points"></p>
+        <p class="center muted" id="final-grade"></p>
+        <p class="center muted" id="end-code"></p>
+        <button class="btn btn-primary" id="restartBtn">Reia testul</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec";
+    const TOTAL_QUESTIONS = 20;
+    const MIXED_COUNT = 10;
+    const NUMERIC_COUNT = 10;
+    const POINTS_PER_ITEM = 5;
+    const TOTAL_POINTS = 100;
+    const VARIANT_COUNT = 100;
+
+    const state = {
+      name: "",
+      className: "",
+      correctAnswers: 0,
+      currentIdx: 0,
+      questions: [],
+      variant: 1,
+      testCode: "",
+      seed: 0,
+      sessionSalt: ""
+    };
+
+    const el = {
+      login: document.getElementById("screen-login"),
+      game: document.getElementById("screen-game"),
+      end: document.getElementById("screen-end"),
+      stdName: document.getElementById("stdName"),
+      stdClass: document.getElementById("stdClass"),
+      startBtn: document.getElementById("startBtn"),
+      qInfo: document.getElementById("q-info"),
+      pointsInfo: document.getElementById("points-info"),
+      variantInfo: document.getElementById("variant-info"),
+      testCode: document.getElementById("test-code"),
+      question: document.getElementById("question"),
+      inputArea: document.getElementById("input-area"),
+      feedback: document.getElementById("feedback"),
+      nextBtn: document.getElementById("nextBtn"),
+      finalScore: document.getElementById("final-score"),
+      rawPoints: document.getElementById("raw-points"),
+      finalGrade: document.getElementById("final-grade"),
+      endVariant: document.getElementById("end-variant"),
+      endCode: document.getElementById("end-code"),
+      restartBtn: document.getElementById("restartBtn")
+    };
+
+    const fillPool = [
+      { q: "Mărimea fizică ce caracterizează trecerea sarcinii electrice prin conductor se numește intensitatea curentului ..........", a: ["electric"] },
+      { q: "Unitatea de măsură pentru intensitatea curentului electric este ..........", a: ["amper", "a"] },
+      { q: "Tensiunea electrică se măsoară în ..........", a: ["volt", "v"] },
+      { q: "Rezistența electrică se măsoară în ..........", a: ["ohm", "ω"] },
+      { q: "Legea lui Ohm pentru o porțiune de circuit se scrie I = U / ..........", a: ["r", "rezistență", "rezistenta"] },
+      { q: "Puterea electrică se calculează cu relația P = U · ..........", a: ["i"] },
+      { q: "Energia electrică se poate calcula cu relația W = P · ..........", a: ["t"] },
+      { q: "Aparatul pentru măsurarea intensității curentului electric se numește ..........", a: ["ampermetru", "ampermetrul"] },
+      { q: "Aparatul pentru măsurarea tensiunii electrice se numește ..........", a: ["voltmetru", "voltmetrul"] },
+      { q: "Într-un circuit serie, intensitatea curentului este .......... în toate elementele", a: ["aceeași", "aceeasi"] },
+      { q: "Într-un circuit paralel, tensiunea pe ramuri este ..........", a: ["aceeași", "aceeasi"] },
+      { q: "Rezistența echivalentă a două rezistențe montate în serie este .......... lor", a: ["suma"] },
+      { q: "Rezistența echivalentă într-un circuit paralel este mai .......... decât oricare dintre rezistențe", a: ["mică", "mica"] },
+      { q: "Generatorul electric menține diferența de .......... în circuit", a: ["potențial", "potential"] },
+      { q: "Pentru un conductor metalic, dacă tensiunea crește și rezistența rămâne constantă, intensitatea curentului ..........", a: ["crește", "creste"] },
+      { q: "Consumul de energie electrică se poate exprima și în kilowatt-..........", a: ["oră", "ora"] }
+    ];
+
+    const tfPool = [
+      { q: "Legea lui Ohm se poate scrie U = R · I.", a: ["adevărat", "adevarat"] },
+      { q: "Intensitatea curentului electric se măsoară în volți.", a: ["fals"] },
+      { q: "Un ampermetru se montează în serie în circuit.", a: ["adevărat", "adevarat"] },
+      { q: "Un voltmetru se montează în paralel pe elementul studiat.", a: ["adevărat", "adevarat"] },
+      { q: "Într-un circuit serie, rezistențele echivalente se adună.", a: ["adevărat", "adevarat"] },
+      { q: "Într-un circuit paralel, intensitatea totală este suma intensităților pe ramuri.", a: ["adevărat", "adevarat"] },
+      { q: "Puterea electrică se calculează cu formula P = U / I.", a: ["fals"] },
+      { q: "Energia electrică depinde de putere și de timp.", a: ["adevărat", "adevarat"] },
+      { q: "Dacă rezistența crește la aceeași tensiune, intensitatea curentului crește.", a: ["fals"] },
+      { q: "Ohmul este unitatea de măsură pentru rezistența electrică.", a: ["adevărat", "adevarat"] },
+      { q: "Într-un circuit paralel, tensiunea pe fiecare ramură este aceeași cu tensiunea sursei.", a: ["adevărat", "adevarat"] },
+      { q: "Energia electrică se poate exprima și în kWh.", a: ["adevărat", "adevarat"] }
+    ];
+
+    function normalizeText(value) {
+      return String(value)
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function normalizeNumberString(value) {
+      return String(value).trim().replace(/,/g, ".").replace(/\s+/g, "");
+    }
+
+    function parseLocaleNumber(value) {
+      const cleaned = normalizeNumberString(value);
+      if (!/^[-+]?\d+(\.\d+)?$/.test(cleaned)) return NaN;
+      return Number(cleaned);
+    }
+
+    function decimalCount(value) {
+      const cleaned = normalizeNumberString(value);
+      return cleaned.includes(".") ? cleaned.split(".")[1].length : 0;
+    }
+
+    function truncateTo(num, decimals = 2) {
+      const factor = Math.pow(10, decimals);
+      return Math.trunc(num * factor) / factor;
+    }
+
+    function roundTo(num, decimals = 2) {
+      const factor = Math.pow(10, decimals);
+      return Math.round(num * factor) / factor;
+    }
+
+    function formatNumber(num, maxDecimals = 2) {
+      if (Number.isInteger(num)) return String(num);
+      return Number(num.toFixed(maxDecimals)).toString();
+    }
+
+    function formatPrecise(num) {
+      if (Number.isInteger(num)) return String(num);
+      return Number(num.toFixed(6)).toString();
+    }
+
+    function shortCode(seed) {
+      return (seed >>> 0).toString(36).toUpperCase().slice(0, 6);
+    }
+
+    function hashString(str) {
+      let h = 2166136261;
+      for (let i = 0; i < str.length; i++) {
+        h ^= str.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return h >>> 0;
+    }
+
+    function mulberry32(a) {
+      return function () {
+        let t = a += 0x6D2B79F5;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function randFrom(rng, arr) {
+      return arr[Math.floor(rng() * arr.length)];
+    }
+
+    function pickUnique(rng, pool, count) {
+      const copy = [...pool];
+      const result = [];
+      while (result.length < count && copy.length) {
+        const idx = Math.floor(rng() * copy.length);
+        result.push(copy.splice(idx, 1)[0]);
+      }
+      return result;
+    }
+
+    function shuffleArray(rng, arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function questionFill(item) {
+      return { type: "fill", q: item.q, answers: item.a, points: POINTS_PER_ITEM };
+    }
+
+    function questionTrueFalse(item) {
+      return { type: "tf", q: item.q, answers: item.a, points: POINTS_PER_ITEM };
+    }
+
+    function questionNumeric({ q, exactAnswer, unit = "", formula = "", constants = "" }) {
+      return {
+        type: "numeric",
+        q,
+        exactAnswer,
+        unit,
+        formula,
+        constants,
+        points: POINTS_PER_ITEM,
+        displayAnswer: `${formatPrecise(exactAnswer)}${unit ? " " + unit : ""}`
+      };
+    }
+
+    function genCurrentFromOhm(rng) {
+      const U = randFrom(rng, [3, 4.5, 6, 9, 12, 18, 24]);
+      const R = randFrom(rng, [1, 2, 3, 4, 5, 6, 8, 10, 12]);
+      return questionNumeric({
+        q: `Calculează intensitatea curentului dacă tensiunea este U = ${formatNumber(U)} V, iar rezistența este R = ${R} Ω.`,
+        exactAnswer: U / R,
+        unit: "A",
+        formula: "I = U / R"
+      });
+    }
+
+    function genVoltageFromOhm(rng) {
+      const I = randFrom(rng, [0.2, 0.5, 1, 1.5, 2, 2.5, 3, 4]);
+      const R = randFrom(rng, [1, 2, 3, 4, 5, 6, 8, 10]);
+      return questionNumeric({
+        q: `Calculează tensiunea electrică dacă intensitatea curentului este I = ${formatNumber(I)} A, iar rezistența este R = ${R} Ω.`,
+        exactAnswer: I * R,
+        unit: "V",
+        formula: "U = R · I"
+      });
+    }
+
+    function genResistanceFromOhm(rng) {
+      const U = randFrom(rng, [3, 4.5, 6, 9, 12, 18, 24]);
+      const I = randFrom(rng, [0.5, 1, 1.5, 2, 3, 4, 6]);
+      return questionNumeric({
+        q: `Calculează rezistența electrică dacă tensiunea este U = ${formatNumber(U)} V, iar intensitatea curentului este I = ${formatNumber(I)} A.`,
+        exactAnswer: U / I,
+        unit: "Ω",
+        formula: "R = U / I"
+      });
+    }
+
+    function genPowerFromUI(rng) {
+      const U = randFrom(rng, [3, 4.5, 6, 9, 12, 18, 24]);
+      const I = randFrom(rng, [0.2, 0.5, 1, 1.5, 2, 3, 4]);
+      return questionNumeric({
+        q: `Calculează puterea electrică dacă tensiunea este U = ${formatNumber(U)} V și intensitatea curentului este I = ${formatNumber(I)} A.`,
+        exactAnswer: U * I,
+        unit: "W",
+        formula: "P = U · I"
+      });
+    }
+
+    function genEnergyFromPower(rng) {
+      const P = randFrom(rng, [10, 20, 30, 40, 50, 60, 75, 100, 120]);
+      const t = randFrom(rng, [10, 20, 30, 40, 50, 60, 120, 180, 300]);
+      return questionNumeric({
+        q: `Calculează energia electrică dacă puterea este P = ${P} W și timpul este t = ${t} s.`,
+        exactAnswer: P * t,
+        unit: "J",
+        formula: "W = P · t"
+      });
+    }
+
+    function genTimeFromEnergy(rng) {
+      const P = randFrom(rng, [20, 40, 50, 60, 75, 100, 120]);
+      const t = randFrom(rng, [10, 20, 30, 40, 60, 120, 180]);
+      const W = P * t;
+      return questionNumeric({
+        q: `Un receptor consumă energia electrică W = ${W} J la puterea P = ${P} W. Calculează timpul de funcționare.`,
+        exactAnswer: W / P,
+        unit: "s",
+        formula: "t = W / P"
+      });
+    }
+
+    function genSeriesEquivalent(rng) {
+      const R1 = randFrom(rng, [1, 2, 3, 4, 5, 6, 8, 10]);
+      const R2 = randFrom(rng, [1, 2, 3, 4, 5, 6, 8, 10]);
+      return questionNumeric({
+        q: `Două rezistențe au valorile R₁ = ${R1} Ω și R₂ = ${R2} Ω și sunt legate în serie. Calculează rezistența echivalentă.`,
+        exactAnswer: R1 + R2,
+        unit: "Ω",
+        formula: "R_e = R₁ + R₂"
+      });
+    }
+
+    function genParallelEquivalent(rng) {
+      const R1 = randFrom(rng, [2, 3, 4, 6, 8, 10, 12]);
+      const R2 = randFrom(rng, [2, 3, 4, 6, 8, 10, 12]);
+      return questionNumeric({
+        q: `Două rezistențe au valorile R₁ = ${R1} Ω și R₂ = ${R2} Ω și sunt legate în paralel. Calculează rezistența echivalentă.`,
+        exactAnswer: (R1 * R2) / (R1 + R2),
+        unit: "Ω",
+        formula: "R_e = (R₁ · R₂) / (R₁ + R₂)"
+      });
+    }
+
+    function genCurrentSeriesCircuit(rng) {
+      const U = randFrom(rng, [6, 9, 12, 18, 24]);
+      const R1 = randFrom(rng, [1, 2, 3, 4, 5, 6]);
+      const R2 = randFrom(rng, [1, 2, 3, 4, 5, 6]);
+      return questionNumeric({
+        q: `Două rezistențe R₁ = ${R1} Ω și R₂ = ${R2} Ω sunt montate în serie la tensiunea U = ${U} V. Calculează intensitatea curentului din circuit.`,
+        exactAnswer: U / (R1 + R2),
+        unit: "A",
+        formula: "R_e = R₁ + R₂, apoi I = U / R_e"
+      });
+    }
+
+    function genEnergyKwh(rng) {
+      const P = randFrom(rng, [0.5, 1, 1.2, 1.5, 2, 2.5, 3]);
+      const t = randFrom(rng, [1, 2, 3, 4, 5, 6, 8]);
+      return questionNumeric({
+        q: `Un aparat are puterea P = ${formatNumber(P)} kW și funcționează timp de ${t} h. Calculează energia consumată în kWh.`,
+        exactAnswer: P * t,
+        unit: "kWh",
+        formula: "E = P · t"
+      });
+    }
+
+    const numericGenerators = [
+      genCurrentFromOhm,
+      genVoltageFromOhm,
+      genResistanceFromOhm,
+      genPowerFromUI,
+      genEnergyFromPower,
+      genTimeFromEnergy,
+      genSeriesEquivalent,
+      genParallelEquivalent,
+      genCurrentSeriesCircuit,
+      genEnergyKwh
+    ];
+
+    function generateSessionSalt() {
+      if (window.crypto && window.crypto.getRandomValues) {
+        const arr = new Uint32Array(1);
+        window.crypto.getRandomValues(arr);
+        return String(arr[0]);
+      }
+      return String(Math.floor(Math.random() * 1e9));
+    }
+
+    function getMinuteKey() {
+      const now = new Date();
+      const pad = (n) => String(n).padStart(2, "0");
+      return `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}`;
+    }
+
+    function buildTest() {
+      const baseKey = `${state.name}|${state.className}|${getMinuteKey()}|${state.sessionSalt}`;
+      state.seed = hashString(baseKey);
+      state.variant = (state.seed % VARIANT_COUNT) + 1;
+      state.testCode = `EK8-V${String(state.variant).padStart(3, "0")}-${shortCode(state.seed)}`;
+
+      const rng = mulberry32(state.seed);
+      const mixedPool = [
+        ...fillPool.map((item) => ({ ...item, itemType: "fill" })),
+        ...tfPool.map((item) => ({ ...item, itemType: "tf" }))
+      ];
+
+      const mixedQuestions = pickUnique(rng, mixedPool, MIXED_COUNT).map((item) =>
+        item.itemType === "fill" ? questionFill(item) : questionTrueFalse(item)
+      );
+
+      const numericQuestions = pickUnique(rng, numericGenerators, NUMERIC_COUNT).map((fn) => fn(rng));
+      state.questions = shuffleArray(rng, [...mixedQuestions, ...numericQuestions]);
+      state.currentIdx = 0;
+      state.correctAnswers = 0;
+    }
+
+    function showScreen(screen) {
+      [el.login, el.game, el.end].forEach((node) => node.classList.remove("active"));
+      screen.classList.add("active");
     }
 
     function showQuestion() {
-        const q = state.questions[state.currentIdx];
-        document.getElementById('q-info').innerText = `CERINȚA ${state.currentIdx + 1} / ${state.questions.length}`;
-        document.getElementById('question').innerText = q.q;
-        const area = document.getElementById('input-area');
-        area.innerHTML = `<input type="text" id="user-ans" placeholder="Răspuns...">
-                          <button class="check-btn" onclick="checkAns(document.getElementById('user-ans').value)">VERIFICĂ</button>`;
-        document.getElementById('feedback').style.display = 'none';
-        document.getElementById('next-btn').style.display = 'none';
+      const q = state.questions[state.currentIdx];
+      el.qInfo.textContent = `Cerința ${state.currentIdx + 1} / ${TOTAL_QUESTIONS}`;
+      el.pointsInfo.textContent = `${q.points} puncte`;
+      el.variantInfo.textContent = `Varianta ${state.variant} / ${VARIANT_COUNT}`;
+      el.testCode.textContent = state.testCode;
+      if (q.type === "numeric" && q.constants) {
+        el.question.innerHTML = `${q.q}<br><br><span style="font-size:0.82em;color:#fde68a;font-weight:600;line-height:1.5;display:inline-block;">${q.constants}</span>`;
+      } else {
+        el.question.textContent = q.q;
+      }
+      el.feedback.className = "feedback";
+      el.feedback.style.display = "none";
+      el.feedback.innerHTML = "";
+      el.nextBtn.classList.add("hidden");
+
+      el.inputArea.innerHTML = `
+        <input type="text" id="userAnswer" placeholder="Răspuns..." autocomplete="off" />
+        <button class="btn btn-primary" id="checkBtn">Verifică</button>
+      `;
+
+      const answerInput = document.getElementById("userAnswer");
+      const checkBtn = document.getElementById("checkBtn");
+      checkBtn.addEventListener("click", checkAnswer);
+      answerInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") checkAnswer();
+      });
+      answerInput.focus();
     }
 
-    function checkAns(user) {
-        const q = state.questions[state.currentIdx];
-        const clean = (s) => s.toString().toLowerCase().trim().replace(",", ".");
-        let isCorrect = false;
+    function numericAccepted(userValue, exactAnswer) {
+      if (decimalCount(userValue) > 2) return false;
+      const userNum = parseLocaleNumber(userValue);
+      if (Number.isNaN(userNum)) return false;
 
-        if(q.type === "math") {
-            isCorrect = Math.abs(parseFloat(clean(user)) - parseFloat(q.a[0].replace(",", "."))) < 0.05;
+      const accepted = new Set([
+        exactAnswer,
+        truncateTo(exactAnswer, 2),
+        roundTo(exactAnswer, 2)
+      ].map((n) => Number(n.toFixed(6))));
+
+      return accepted.has(Number(userNum.toFixed(6)));
+    }
+
+    function evaluateAnswer(userValue, q) {
+      if (q.type === "fill" || q.type === "tf") {
+        const clean = normalizeText(userValue);
+        return q.answers.some((ans) => normalizeText(ans) === clean);
+      }
+      if (q.type === "numeric") {
+        return numericAccepted(userValue, q.exactAnswer);
+      }
+      return false;
+    }
+
+    function checkAnswer() {
+      const q = state.questions[state.currentIdx];
+      const answerInput = document.getElementById("userAnswer");
+      const userValue = answerInput.value;
+      const correct = evaluateAnswer(userValue, q);
+
+      answerInput.disabled = true;
+      const checkBtn = document.getElementById("checkBtn");
+      checkBtn.disabled = true;
+      checkBtn.classList.add("btn-disabled");
+
+      el.feedback.style.display = "block";
+      if (correct) {
+        state.correctAnswers++;
+        el.feedback.className = "feedback ok";
+        el.feedback.innerHTML = `Corect ✅<br>+${q.points} puncte`;
+      } else {
+        el.feedback.className = "feedback bad";
+        if (q.type === "numeric") {
+          el.feedback.innerHTML = `Greșit ❌<br>Formula: <strong>${q.formula}</strong><br>Rezultat corect: <strong>${q.displayAnswer}</strong>`;
         } else {
-            isCorrect = q.a.some(ans => clean(user) === clean(ans));
+          el.feedback.innerHTML = `Greșit ❌<br>Răspuns corect: <strong>${q.answers[0]}</strong>`;
         }
-
-        const f = document.getElementById('feedback');
-        f.style.display = 'block';
-        if(isCorrect) { state.correctAnswers++; f.innerText = "CORECT! ⚡"; f.style.color = "#4ade80"; }
-        else { f.innerText = `GREȘIT! Răspuns corect: ${q.a[0]}`; f.style.color = "#f87171"; }
-        document.getElementById('next-btn').style.display = 'block';
+      }
+      el.nextBtn.classList.remove("hidden");
     }
 
     function nextQuestion() {
-        state.currentIdx++;
-        if(state.currentIdx < state.questions.length) showQuestion(); else finishGame();
+      state.currentIdx++;
+      if (state.currentIdx < TOTAL_QUESTIONS) {
+        showQuestion();
+      } else {
+        finishGame();
+      }
     }
 
     function finishGame() {
-        document.getElementById('screen-game').classList.add('hidden');
-        document.getElementById('screen-end').classList.remove('hidden');
-        const nota = (1 + (state.correctAnswers / state.questions.length) * 9).toFixed(2);
-        document.getElementById('final-score').innerText = nota;
-        document.getElementById('raw-points').innerText = `Scor: ${state.correctAnswers} / ${state.questions.length}`;
-        
-        const fd = new FormData();
-        fd.append("nume", state.name); fd.append("clasa", state.class + " - Electrocinetica 8"); fd.append("scor", nota);
-        fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+      const points = state.correctAnswers * POINTS_PER_ITEM;
+      const grade = (1 + (points * 9) / TOTAL_POINTS).toFixed(2);
+
+      showScreen(el.end);
+      el.finalScore.textContent = `${points}p`;
+      el.rawPoints.textContent = `Scor: ${state.correctAnswers} / ${TOTAL_QUESTIONS} răspunsuri corecte • ${points} / ${TOTAL_POINTS} puncte.`;
+      el.finalGrade.textContent = `Notă orientativă: ${grade}`;
+      el.endVariant.textContent = `Varianta ${state.variant} din ${VARIANT_COUNT}`;
+      el.endCode.textContent = `Cod test: ${state.testCode}`;
+
+      const fd = new FormData();
+      fd.append("nume", state.name);
+      fd.append("clasa", `${state.className} - Electrocinetică 8`);
+      fd.append("varianta", String(state.variant));
+      fd.append("cod_test", state.testCode);
+      fd.append("scor", String(points));
+      fd.append("corecte", String(state.correctAnswers));
+      fd.append("total_itemi", String(TOTAL_QUESTIONS));
+      fd.append("punctaj_total", String(TOTAL_POINTS));
+
+      fetch(SCRIPT_URL, { method: "POST", body: fd, mode: "no-cors" }).catch(() => {});
     }
-</script>
+
+    async function enterFullscreen() {
+      const elem = document.documentElement;
+      try {
+        if (elem.requestFullscreen && !document.fullscreenElement) {
+          await elem.requestFullscreen();
+          return;
+        }
+        if (elem.webkitRequestFullscreen && !document.webkitFullscreenElement) {
+          elem.webkitRequestFullscreen();
+          return;
+        }
+        if (elem.msRequestFullscreen && !document.msFullscreenElement) {
+          elem.msRequestFullscreen();
+          return;
+        }
+      } catch (_) {}
+    }
+
+    async function startGame() {
+      state.name = el.stdName.value.trim();
+      state.className = el.stdClass.value;
+      state.sessionSalt = generateSessionSalt();
+
+      if (!state.name || !state.className) {
+        alert("Completează numele și clasa!");
+        return;
+      }
+
+      try {
+        await enterFullscreen();
+      } catch (_) {}
+
+      buildTest();
+      showScreen(el.game);
+      showQuestion();
+    }
+
+    function restartApp() {
+      showScreen(el.login);
+      el.stdName.focus();
+    }
+
+    function bindEvents() {
+      el.startBtn.addEventListener("click", startGame);
+      el.nextBtn.addEventListener("click", nextQuestion);
+      el.restartBtn.addEventListener("click", restartApp);
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bindEvents);
+    } else {
+      bindEvents();
+    }
+  </script>
 </body>
 </html>

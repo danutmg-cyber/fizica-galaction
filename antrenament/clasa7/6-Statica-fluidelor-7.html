@@ -1,152 +1,733 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FIZICĂ VII - STATICA FLUIDELOR</title>
-    <style>
-        :root { --primary: #0ea5e9; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; }
-        * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; }
-        .header { text-align: center; width: 100%; max-width: 700px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
-        .container { width: 100%; max-width: 650px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
-        .question-box { font-size: 1.2rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; }
-        .instruction-box { font-size: 0.9rem; color: #fbbf24; text-align: center; margin-bottom: 10px; font-weight: bold; background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 8px; }
-        input[type="text"] { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.3rem; text-align: center; margin-bottom: 15px; }
-        .check-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .next-btn { width: 100%; background: #0284c7; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
-        #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; }
-        .hidden { display: none; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>FIZICĂ VII - Statica fluidelor - 10 variante</title>
+  <style>
+    :root {
+      --primary: #0ea5e9;
+      --primary-dark: #0284c7;
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --ok: #4ade80;
+      --bad: #f87171;
+      --warn: #fbbf24;
+      --border: #334155;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+      color: var(--text);
+      margin: 0;
+      padding: 16px;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 760px;
+    }
+
+    .header {
+      text-align: center;
+      width: 100%;
+      border-bottom: 2px solid var(--primary);
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+    }
+
+    .school {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .teacher {
+      font-size: 0.92rem;
+      color: var(--muted);
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+    }
+
+    .quote {
+      background: rgba(245, 158, 11, 0.1);
+      border-left: 4px solid var(--accent);
+      padding: 10px;
+      border-radius: 10px;
+      color: #fef08a;
+      font-style: italic;
+      font-size: 0.95rem;
+    }
+
+    .container {
+      width: 100%;
+      background: rgba(30, 41, 59, 0.98);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 22px 55px rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border);
+    }
+
+    .hidden { display: none; }
+
+    .title {
+      text-align: center;
+      margin: 0 0 18px;
+      font-size: 1.7rem;
+    }
+
+    .subtle {
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-top: -8px;
+      margin-bottom: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 140px;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 2px solid #475569;
+      background: #0f172a;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    input[type="text"]:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
+    }
+
+    .btn {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      transition: transform 0.08s ease, opacity 0.2s ease, background 0.2s ease;
+    }
+
+    .btn:hover { opacity: 0.96; }
+    .btn:active { transform: scale(0.99); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: var(--primary-dark); color: white; }
+    .btn-disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .instruction-box {
+      font-size: 0.93rem;
+      color: #fde68a;
+      text-align: center;
+      margin-bottom: 14px;
+      font-weight: 700;
+      background: rgba(251, 191, 36, 0.10);
+      padding: 10px;
+      border-radius: 12px;
+      line-height: 1.5;
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .pill {
+      background: rgba(14, 165, 233, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .question-box {
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 18px 0 14px;
+      text-align: center;
+      min-height: 90px;
+      line-height: 1.45;
+    }
+
+    .answer-box {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .feedback {
+      margin: 16px 0 0;
+      padding: 14px;
+      border-radius: 14px;
+      display: none;
+      text-align: center;
+      font-weight: 700;
+      line-height: 1.45;
+      border: 1px solid transparent;
+    }
+
+    .feedback.ok {
+      color: var(--ok);
+      background: rgba(74, 222, 128, 0.08);
+      border-color: rgba(74, 222, 128, 0.22);
+    }
+
+    .feedback.bad {
+      color: #fecaca;
+      background: rgba(248, 113, 113, 0.10);
+      border-color: rgba(248, 113, 113, 0.22);
+    }
+
+    .result-score {
+      font-size: 5rem;
+      color: var(--accent);
+      font-weight: 800;
+      text-align: center;
+      line-height: 1;
+      margin: 18px 0 10px;
+    }
+
+    .center { text-align: center; }
+    .muted { color: var(--muted); }
+    .spacer { height: 8px; }
+
+    @media (max-width: 640px) {
+      .grid { grid-template-columns: 1fr; }
+      .container { padding: 18px; }
+      .question-box { font-size: 1.08rem; }
+      .title { font-size: 1.45rem; }
+    }
+  </style>
 </head>
 <body>
-
-     <div class="header">
-        <div style="font-size: 1.1rem; font-weight: bold; color: var(--accent); margin-bottom: 2px;">
-            ȘCOALA GIMNAZIALĂ "GALA GALACTION" MANGALIA
-        </div>
-        <div style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 12px; letter-spacing: 1px;">
-            Prof. DĂNUȚ ANDRONIE
-        </div>
-        
-        <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--accent); padding: 8px; margin-bottom: 15px; font-style: italic; color: #fef08a; font-size: 0.95rem;">
-            "FIZICA NU ESTE DOMINATĂ DE FORMULE CI DE LOGICĂ"
-        </div>
-
-        <hr style="border: 0; border-top: 1px solid #334155; margin-bottom: 15px;">
+  <div class="app">
+    <div class="header">
+      <div class="school">ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</div>
+      <div class="teacher">Prof. DĂNUȚ ANDRONIE</div>
+      <div class="quote">„Fizica nu este o materie dominată de formule ci de logică.”</div>
     </div>
 
     <div class="container" id="screen-login">
-        <h2 style="text-align:center;">🌊 Fluide în Echilibru</h2>
-       <input type="text" id="stdName" class="full-input" placeholder="Nume Prenume Elev">
-    <select id="stdClass" style="width: 120px; padding: 8px; border-radius: 4px; border: 1px solid #cbd5e1;">
-        <option value="">Clasa...</option>
-        <option value="VII A">VII A</option>
-        <option value="VII B">VII B</option>
-        <option value="VII C">VII C</option>
-        <option value="VII D">VII D</option>
+      <h1 class="title">🌊 Fluide în echilibru</h1>
+      <p class="subtle">10 variante automate • valori generate diferit pentru fiecare elev</p>
+
+      <div class="grid">
+        <input type="text" id="stdName" placeholder="Nume și prenume elev" autocomplete="name" />
+        <select id="stdClass">
+          <option value="">Clasa...</option>
+          <option value="VII A">VII A</option>
+          <option value="VII B">VII B</option>
+          <option value="VII C">VII C</option>
+          <option value="VII D">VII D</option>
         </select>
-        <button class="check-btn" onclick="startGame()">ÎNCEPE TESTUL</button>
+      </div>
+
+      <div class="instruction-box">
+        Folosește: <strong>g = 10 N/kg</strong>, <strong>ρ<sub>apă</sub> = 1000 kg/m³</strong>, <strong>p<sub>atm</sub> = 100000 Pa</strong>.<br />
+        La exercițiile cu împărțire scrie rezultatul cu <strong>cel mult 2 zecimale, fără rotunjire</strong>.
+      </div>
+
+      <button class="btn btn-primary" id="startBtn">Începe testul</button>
     </div>
 
     <div class="container hidden" id="screen-game">
-        <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
-        <div class="instruction-box">Folosește g = 10 N/kg și ρ_apă = 1000 kg/m³</div>
-        <div class="question-box" id="question"></div>
-        <div id="input-area"></div>
-        <div id="feedback"></div>
-        <button class="next-btn" id="next-btn" onclick="nextQuestion()">URMĂTOAREA ➡️</button>
+      <div class="meta-row">
+        <div class="pill" id="q-info">Cerința 1 / 10</div>
+        <div class="pill" id="variant-info">Varianta 1</div>
+        <div class="pill" id="test-code">Cod test</div>
+      </div>
+
+      <div class="instruction-box" id="live-instruction">
+        Răspunde clar. La calcule, introdu doar rezultatul numeric, fără unitate.
+      </div>
+
+      <div class="question-box" id="question"></div>
+
+      <div class="answer-box" id="input-area"></div>
+
+      <div class="feedback" id="feedback"></div>
+      <div class="spacer"></div>
+      <button class="btn btn-secondary hidden" id="nextBtn">Următoarea ➜</button>
     </div>
 
     <div class="container hidden" id="screen-end">
-        <h2 style="text-align:center;">REZULTAT ANTRENAMENT</h2>
-        <div style="font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center;" id="final-score"></div>
-        <p style="text-align:center; color: #94a3b8;" id="raw-points"></p>
-        <button class="check-btn" onclick="location.reload()">REIA CU ALTE PROBLEME</button>
+      <h2 class="title">Rezultat antrenament</h2>
+      <div class="center muted" id="end-variant"></div>
+      <div class="result-score" id="final-score"></div>
+      <p class="center muted" id="raw-points"></p>
+      <p class="center muted" id="end-code"></p>
+      <button class="btn btn-primary" id="restartBtn">Reia cu alt set de itemi</button>
     </div>
+  </div>
 
-<script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec"; 
-    let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [] };
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec";
+    const TOTAL_QUESTIONS = 10;
 
-    const theoryPool = [
-        { q: "Presiunea exercitată de o forță pe o suprafață este p = F / ...........", type: "fill", a: ["s", "suprafata"] },
-        { q: "Unitatea de măsură pentru presiune în S.I. este ...........", type: "fill", a: ["pascal", "pa"] },
-        { q: "Presiunea din interiorul unui lichid aflat în repaus se numește presiune ...........", type: "fill", a: ["hidrostatica"] },
-        { q: "Forța care împinge de jos în sus corpurile scufundate în fluide se numește forța lui ...........", type: "fill", a: ["arhimede"] },
-        { q: "Presiunea exterioară exercitată asupra unui lichid se transmite integral în toată masa acestuia. (Legea lui ...........)", type: "fill", a: ["pascal"] },
-        { q: "Corpul plutește la suprafață dacă densitatea sa este mai ........... decât a lichidului.", type: "fill", a: ["mica"] },
-        { q: "Instrumentul pentru măsurarea presiunii gazelor închise este ...........", type: "fill", a: ["manometrul"] }
+    const state = {
+      name: "",
+      className: "",
+      correctAnswers: 0,
+      currentIdx: 0,
+      questions: [],
+      variant: 1,
+      testCode: "",
+      seed: 0,
+      sessionSalt: ""
+    };
+
+    const el = {
+      screenLogin: document.getElementById("screen-login"),
+      screenGame: document.getElementById("screen-game"),
+      screenEnd: document.getElementById("screen-end"),
+      stdName: document.getElementById("stdName"),
+      stdClass: document.getElementById("stdClass"),
+      startBtn: document.getElementById("startBtn"),
+      qInfo: document.getElementById("q-info"),
+      variantInfo: document.getElementById("variant-info"),
+      testCode: document.getElementById("test-code"),
+      liveInstruction: document.getElementById("live-instruction"),
+      question: document.getElementById("question"),
+      inputArea: document.getElementById("input-area"),
+      feedback: document.getElementById("feedback"),
+      nextBtn: document.getElementById("nextBtn"),
+      finalScore: document.getElementById("final-score"),
+      rawPoints: document.getElementById("raw-points"),
+      endVariant: document.getElementById("end-variant"),
+      endCode: document.getElementById("end-code"),
+      restartBtn: document.getElementById("restartBtn")
+    };
+
+    const fillPool = [
+      { q: "Presiunea exercitată de o forță pe o suprafață este p = F / ..........", a: ["s", "suprafata", "suprafața"] },
+      { q: "În formula p = F / S, litera F reprezintă ..........", a: ["forta", "forța"] },
+      { q: "În formula p = F / S, litera S reprezintă ..........", a: ["suprafata", "suprafața", "aria"] },
+      { q: "Unitatea de măsură pentru presiune în S.I. este ..........", a: ["pascal", "pa"] },
+      { q: "Simbolul unității de măsură pascal este ..........", a: ["pa"] },
+      { q: "1 Pa = 1 N / ..........", a: ["m2", "m^2", "m²"] },
+      { q: "Presiunea crește atunci când aceeași forță acționează pe o suprafață mai ..........", a: ["mica", "mică"] },
+      { q: "Presiunea scade atunci când aceeași forță acționează pe o suprafață mai ..........", a: ["mare"] },
+      { q: "Presiunea din interiorul unui lichid aflat în repaus se numește presiune ..........", a: ["hidrostatica", "hidrostatică"] },
+      { q: "Formula presiunii hidrostatice este p = ρ · g · ..........", a: ["h"] },
+      { q: "În formula p = ρ · g · h, litera h reprezintă ..........", a: ["adancimea", "adâncimea"] },
+      { q: "În formula p = ρ · g · h, litera ρ reprezintă .......... lichidului", a: ["densitatea"] },
+      { q: "Presiunea hidrostatică depinde de densitate, accelerația gravitațională și de ..........", a: ["adancime", "adâncime"] },
+      { q: "La aceeași adâncime, în același lichid, presiunea hidrostatică este ..........", a: ["aceeasi", "aceeași"] },
+      { q: "Presiunea exterioară exercitată asupra unui lichid se transmite integral în toată masa lui. Aceasta este legea lui ..........", a: ["pascal"] },
+      { q: "Instrumentul cu care măsurăm presiunea gazelor închise se numește ..........", a: ["manometru", "manometrul"] },
+      { q: "Instrumentul cu care se măsoară presiunea atmosferică se numește ..........", a: ["barometru", "barometrul"] },
+      { q: "Forța care acționează de jos în sus asupra unui corp introdus într-un fluid se numește forța lui ..........", a: ["arhimede"] },
+      { q: "Forța lui Arhimede are direcție ..........", a: ["verticala", "verticală"] },
+      { q: "Sensul forței lui Arhimede este de jos în ..........", a: ["sus"] },
+      { q: "Formula forței arhimedice este F_A = ρ · g · ..........", a: ["v", "vdezlocuit", "v_dezlocuit", "volum", "volumul deplasat", "volumul dezlocuit"] },
+      { q: "Mărimea care arată câtă masă se află în unitatea de volum se numește ..........", a: ["densitate", "densitatea"] },
+      { q: "Corpul plutește la suprafață dacă densitatea lui este mai .......... decât densitatea lichidului", a: ["mica", "mică"] },
+      { q: "Corpul se scufundă dacă densitatea lui este mai .......... decât densitatea lichidului", a: ["mare"] },
+      { q: "În vasele comunicante, lichidul de același fel ajunge la aceeași ..........", a: ["inaltime", "înălțime"] },
+      { q: "Presiunea atmosferică este exercitată de stratul de .......... care înconjoară Pământul", a: ["aer"] },
+      { q: "Dacă într-un lichid coborâm mai adânc, presiunea hidrostatică ..........", a: ["creste", "crește"] },
+      { q: "Dacă densitatea lichidului este mai mare, la aceeași adâncime presiunea hidrostatică este mai ..........", a: ["mare"] },
+      { q: "În formula densității ρ = m / V, litera m reprezintă ..........", a: ["masa"] },
+      { q: "În formula densității ρ = m / V, litera V reprezintă ..........", a: ["volumul"] },
+      { q: "Pascalul este unitate de măsură pentru ..........", a: ["presiune", "presiunea"] },
+      { q: "Newtonul este unitate de măsură pentru ..........", a: ["forta", "forță", "forta elastica", "forța"] },
+      { q: "Dacă mărim suprafața de contact, presiunea exercitată de aceeași forță se ..........", a: ["micsoreaza", "micșorează", "scade"] },
+      { q: "Dacă micșorăm suprafața de contact, presiunea exercitată de aceeași forță se ..........", a: ["mareste", "mărește", "creste", "crește"] }
     ];
 
-    function generateFluidMath() {
-        let mathQ = [];
-        // 1. Presiune Hidrostatică: p = rho * g * h
-        for(let i=0; i<3; i++) {
-            let h = Math.floor(Math.random() * 20 + 2); // metri
-            let p = 1000 * 10 * h;
-            mathQ.push({ q: `Calculați presiunea hidrostatică în apă (ρ=1000kg/m³) la adâncimea h = ${h} m. (Pa)`, type: "math", a: [p.toString()] });
-        }
-        // 2. Forța Arhimedică: Fa = rho * g * V_dezlocuit
-        for(let i=0; i<3; i++) {
-            let v_dm3 = Math.floor(Math.random() * 50 + 5); // dm3
-            let fa = (1000 * 10 * (v_dm3 / 1000)); 
-            mathQ.push({ q: `Un corp cu volumul V = ${v_dm3} dm³ este scufundat total în apă. Forța Arhimedică este ? N.`, type: "math", a: [fa.toString()] });
-        }
-        return mathQ;
+    const variantProfiles = [
+      ["fill", "fill", "fill", "fill", "fill", "pressure", "surface", "hydro", "arch", "force"],
+      ["fill", "fill", "fill", "fill", "fill", "pressure", "hydro", "arch", "surface", "totalPressure"],
+      ["fill", "fill", "fill", "fill", "fill", "force", "surface", "hydro", "arch", "density"],
+      ["fill", "fill", "fill", "fill", "fill", "pressure", "surface", "density", "arch", "hydro"],
+      ["fill", "fill", "fill", "fill", "fill", "totalPressure", "pressure", "arch", "hydro", "force"],
+      ["fill", "fill", "fill", "fill", "fill", "surface", "hydro", "arch", "density", "pressure"],
+      ["fill", "fill", "fill", "fill", "fill", "force", "arch", "pressure", "hydro", "surface"],
+      ["fill", "fill", "fill", "fill", "fill", "density", "hydro", "surface", "arch", "totalPressure"],
+      ["fill", "fill", "fill", "fill", "fill", "pressure", "force", "totalPressure", "arch", "hydro"],
+      ["fill", "fill", "fill", "fill", "fill", "surface", "pressure", "hydro", "density", "arch"]
+    ];
+
+    function normalizeText(value) {
+      return String(value)
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
     }
 
-    function startGame() {
-        state.name = document.getElementById('p-name').value.trim();
-        state.class = document.getElementById('p-class').value;
-        if(!state.name || !state.class) return alert("Completează datele!");
-        state.questions = [...theoryPool, ...generateFluidMath()].sort(() => 0.5 - Math.random()).slice(0, 10);
-        document.getElementById('screen-login').classList.add('hidden');
-        document.getElementById('screen-game').classList.remove('hidden');
-        showQuestion();
+    function normalizeNumberString(value) {
+      return String(value).trim().replace(/,/g, ".").replace(/\s+/g, "");
+    }
+
+    function parseLocaleNumber(value) {
+      const cleaned = normalizeNumberString(value);
+      if (!/^[-+]?\d+(\.\d+)?$/.test(cleaned)) return NaN;
+      return Number(cleaned);
+    }
+
+    function decimalCount(value) {
+      const cleaned = normalizeNumberString(value);
+      return cleaned.includes(".") ? cleaned.split(".")[1].length : 0;
+    }
+
+    function truncateTo(num, decimals = 2) {
+      const factor = Math.pow(10, decimals);
+      return Math.trunc(num * factor) / factor;
+    }
+
+    function formatNumber(num, maxDecimals = 2) {
+      const truncated = truncateTo(num, maxDecimals);
+      if (Number.isInteger(truncated)) return String(truncated);
+      return truncated.toFixed(maxDecimals).replace(/\.0+$/, "").replace(/(\.\d*[1-9])0+$/, "$1");
+    }
+
+    function shortCode(seed) {
+      return (seed >>> 0).toString(36).toUpperCase().slice(0, 6);
+    }
+
+    function hashString(str) {
+      let h = 2166136261;
+      for (let i = 0; i < str.length; i++) {
+        h ^= str.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return h >>> 0;
+    }
+
+    function mulberry32(a) {
+      return function () {
+        let t = a += 0x6D2B79F5;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function randInt(rng, min, max) {
+      return Math.floor(rng() * (max - min + 1)) + min;
+    }
+
+    function randFrom(rng, arr) {
+      return arr[Math.floor(rng() * arr.length)];
+    }
+
+    function pickUnique(rng, pool, count) {
+      const copy = [...pool];
+      const result = [];
+      while (result.length < count && copy.length) {
+        const idx = Math.floor(rng() * copy.length);
+        result.push(copy.splice(idx, 1)[0]);
+      }
+      return result;
+    }
+
+    function questionFill(item) {
+      return {
+        type: "fill",
+        q: item.q,
+        answers: item.a,
+        instruction: "Completează cu termenul corect."
+      };
+    }
+
+    function questionNumeric({ q, answer, unit = "", instruction = "Introdu doar rezultatul numeric, fără unitate.", maxDecimals = 2, strictDecimals = false }) {
+      return {
+        type: "numeric",
+        q,
+        answer,
+        unit,
+        instruction,
+        maxDecimals,
+        strictDecimals,
+        displayAnswer: `${formatNumber(answer, maxDecimals)}${unit ? " " + unit : ""}`
+      };
+    }
+
+    function genPressure(rng) {
+      const force = randFrom(rng, [120, 140, 160, 180, 200, 240, 300, 360, 420, 480, 540, 600, 720, 840]);
+      const area = randFrom(rng, [0.2, 0.25, 0.4, 0.5, 0.6, 0.75, 1.2, 1.5, 2, 2.5]);
+      const p = truncateTo(force / area, 2);
+      return questionNumeric({
+        q: `O forță de ${force} N acționează perpendicular pe o suprafață de ${formatNumber(area, 2)} m². Calculează presiunea exercitată.`,
+        answer: p,
+        unit: "Pa",
+        strictDecimals: true,
+        instruction: "Aplică formula p = F / S. Scrie cel mult 2 zecimale, fără rotunjire."
+      });
+    }
+
+    function genSurface(rng) {
+      const force = randFrom(rng, [150, 180, 210, 240, 270, 300, 360, 420, 450, 480, 540, 600]);
+      const pressure = randFrom(rng, [80, 90, 100, 120, 150, 160, 180, 200, 225, 240, 300, 400, 500, 600]);
+      const area = truncateTo(force / pressure, 2);
+      return questionNumeric({
+        q: `Un corp apasă cu o forță de ${force} N și produce o presiune de ${pressure} Pa. Calculează aria suprafeței de contact.`,
+        answer: area,
+        unit: "m²",
+        strictDecimals: true,
+        instruction: "Aplică formula S = F / p. Scrie cel mult 2 zecimale, fără rotunjire."
+      });
+    }
+
+    function genForce(rng) {
+      const pressure = randFrom(rng, [120, 150, 180, 200, 240, 300, 360, 400, 450, 500]);
+      const area = randFrom(rng, [0.2, 0.4, 0.5, 0.6, 0.75, 1.2, 1.5, 2, 2.5]);
+      const force = truncateTo(pressure * area, 2);
+      return questionNumeric({
+        q: `Pe o suprafață de ${formatNumber(area, 2)} m² acționează o presiune de ${pressure} Pa. Calculează forța apăsătoare.`,
+        answer: force,
+        unit: "N",
+        instruction: "Aplică formula F = p · S. Introdu doar rezultatul numeric."
+      });
+    }
+
+    function genHydro(rng) {
+      const h = randInt(rng, 2, 20);
+      const p = 1000 * 10 * h;
+      return questionNumeric({
+        q: `Calculează presiunea hidrostatică în apă la adâncimea h = ${h} m.`,
+        answer: p,
+        unit: "Pa",
+        instruction: "Aplică formula p = ρ · g · h. Introdu doar rezultatul numeric."
+      });
+    }
+
+    function genTotalPressure(rng) {
+      const h = randInt(rng, 1, 12);
+      const p = 100000 + 1000 * 10 * h;
+      return questionNumeric({
+        q: `La adâncimea h = ${h} m în apă, calculează presiunea totală, știind că p_atm = 100000 Pa.`,
+        answer: p,
+        unit: "Pa",
+        instruction: "Aplică formula p_total = p_atm + ρ · g · h. Introdu doar rezultatul numeric."
+      });
+    }
+
+    function genArch(rng) {
+      const volumeDm3 = randInt(rng, 2, 30);
+      const fa = 1000 * 10 * (volumeDm3 / 1000);
+      return questionNumeric({
+        q: `Un corp cu volumul de ${volumeDm3} dm³ este scufundat total în apă. Calculează forța arhimedică.`,
+        answer: truncateTo(fa, 2),
+        unit: "N",
+        instruction: "Aplică formula F_A = ρ · g · V. Introdu doar rezultatul numeric."
+      });
+    }
+
+    function genDensity(rng) {
+      const mass = randFrom(rng, [120, 180, 240, 300, 360, 420, 480, 540, 600, 720, 840]);
+      const volume = randFrom(rng, [100, 120, 150, 200, 240, 300, 400, 500, 600]);
+      const density = truncateTo(mass / volume, 2);
+      return questionNumeric({
+        q: `Un corp are masa m = ${mass} g și volumul V = ${volume} cm³. Calculează densitatea corpului în g/cm³.`,
+        answer: density,
+        unit: "g/cm³",
+        strictDecimals: true,
+        instruction: "Aplică formula ρ = m / V. Scrie cel mult 2 zecimale, fără rotunjire."
+      });
+    }
+
+    const generators = {
+      pressure: genPressure,
+      surface: genSurface,
+      force: genForce,
+      hydro: genHydro,
+      totalPressure: genTotalPressure,
+      arch: genArch,
+      density: genDensity
+    };
+
+    function generateSessionSalt() {
+      if (window.crypto && window.crypto.getRandomValues) {
+        const arr = new Uint32Array(1);
+        window.crypto.getRandomValues(arr);
+        return String(arr[0]);
+      }
+      return String(Math.floor(Math.random() * 1e9));
+    }
+
+    function getMinuteKey() {
+      const now = new Date();
+      const pad = (n) => String(n).padStart(2, "0");
+      return `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}`;
+    }
+
+    function buildTest() {
+      const baseKey = `${state.name}|${state.className}|${getMinuteKey()}|${state.sessionSalt}`;
+      state.seed = hashString(baseKey);
+      state.variant = (state.seed % 10) + 1;
+      state.testCode = `SF7-V${state.variant}-${shortCode(state.seed)}`;
+
+      const rng = mulberry32(state.seed);
+      const profile = variantProfiles[state.variant - 1];
+      const fillsNeeded = profile.filter((item) => item === "fill").length;
+      const selectedFills = pickUnique(rng, fillPool, fillsNeeded).map(questionFill);
+      const questions = [];
+      let fillIndex = 0;
+
+      for (const slot of profile) {
+        if (slot === "fill") {
+          questions.push(selectedFills[fillIndex++]);
+        } else {
+          questions.push(generators[slot](rng));
+        }
+      }
+
+      state.questions = questions.slice(0, TOTAL_QUESTIONS);
+      state.currentIdx = 0;
+      state.correctAnswers = 0;
     }
 
     function showQuestion() {
-        const q = state.questions[state.currentIdx];
-        document.getElementById('q-info').innerText = `CERINȚA ${state.currentIdx + 1} / 10`;
-        document.getElementById('question').innerText = q.q;
-        const area = document.getElementById('input-area');
-        area.innerHTML = `<input type="text" id="user-ans" placeholder="Răspuns...">
-                          <button class="check-btn" onclick="checkAns(document.getElementById('user-ans').value)">VERIFICĂ</button>`;
-        document.getElementById('feedback').style.display = 'none';
-        document.getElementById('next-btn').style.display = 'none';
+      const q = state.questions[state.currentIdx];
+      el.qInfo.textContent = `Cerința ${state.currentIdx + 1} / ${TOTAL_QUESTIONS}`;
+      el.variantInfo.textContent = `Varianta ${state.variant}`;
+      el.testCode.textContent = state.testCode;
+      el.liveInstruction.textContent = q.instruction;
+      el.question.textContent = q.q;
+      el.feedback.className = "feedback";
+      el.feedback.style.display = "none";
+      el.feedback.innerHTML = "";
+      el.nextBtn.classList.add("hidden");
+
+      el.inputArea.innerHTML = `
+        <input type="text" id="userAnswer" placeholder="Răspuns..." autocomplete="off" />
+        <button class="btn btn-primary" id="checkBtn">Verifică</button>
+      `;
+
+      const answerInput = document.getElementById("userAnswer");
+      const checkBtn = document.getElementById("checkBtn");
+      checkBtn.addEventListener("click", checkAnswer);
+      answerInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") checkAnswer();
+      });
+      answerInput.focus();
     }
 
-    function checkAns(user) {
-        const q = state.questions[state.currentIdx];
-        const clean = (s) => s.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().replace(",", ".");
-        let isCorrect = q.a.some(ans => clean(user) === clean(ans));
-        
-        if(q.type === "math") isCorrect = Math.abs(parseFloat(clean(user)) - parseFloat(clean(q.a[0]))) < 1;
+    function evaluateAnswer(userValue, q) {
+      if (q.type === "fill") {
+        const clean = normalizeText(userValue);
+        return q.answers.some((ans) => normalizeText(ans) === clean);
+      }
 
-        const f = document.getElementById('feedback');
-        f.style.display = 'block';
-        if(isCorrect) { state.correctAnswers++; f.innerText = "CORECT! 🌊"; f.style.color = "#4ade80"; }
-        else { f.innerText = `GREȘIT! Răspuns: ${q.a[0]} ❌`; f.style.color = "#f87171"; }
-        document.getElementById('next-btn').style.display = 'block';
+      if (q.type === "numeric") {
+        const value = parseLocaleNumber(userValue);
+        if (Number.isNaN(value)) return false;
+        if (q.strictDecimals && decimalCount(userValue) > q.maxDecimals) return false;
+        return Math.abs(value - q.answer) < 1e-9;
+      }
+
+      return false;
+    }
+
+    function checkAnswer() {
+      const q = state.questions[state.currentIdx];
+      const answerInput = document.getElementById("userAnswer");
+      const userValue = answerInput.value;
+      const correct = evaluateAnswer(userValue, q);
+
+      answerInput.disabled = true;
+      const checkBtn = document.getElementById("checkBtn");
+      checkBtn.disabled = true;
+      checkBtn.classList.add("btn-disabled");
+
+      el.feedback.style.display = "block";
+      if (correct) {
+        state.correctAnswers++;
+        el.feedback.className = "feedback ok";
+        el.feedback.innerHTML = "Corect ✅";
+      } else {
+        el.feedback.className = "feedback bad";
+        const rightAnswer = q.type === "fill" ? q.answers[0] : q.displayAnswer;
+        el.feedback.innerHTML = `Greșit ❌<br>Răspuns corect: <strong>${rightAnswer}</strong>`;
+      }
+      el.nextBtn.classList.remove("hidden");
     }
 
     function nextQuestion() {
-        state.currentIdx++;
-        if(state.currentIdx < 10) showQuestion(); else finishGame();
+      state.currentIdx++;
+      if (state.currentIdx < TOTAL_QUESTIONS) {
+        showQuestion();
+      } else {
+        finishGame();
+      }
     }
 
     function finishGame() {
-        document.getElementById('screen-game').classList.add('hidden');
-        document.getElementById('screen-end').classList.remove('hidden');
-        const nota = (1 + state.correctAnswers * 0.9).toFixed(2);
-        document.getElementById('final-score').innerText = nota;
-        document.getElementById('raw-points').innerText = `Scor: ${state.correctAnswers} / 10 corecte.`;
-        
-        const fd = new FormData();
-        fd.append("nume", state.name); fd.append("clasa", state.class + " - Statica Fluidelor 7"); fd.append("scor", nota);
-        fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+      el.screenGame.classList.add("hidden");
+      el.screenEnd.classList.remove("hidden");
+
+      const grade = (1 + (state.correctAnswers * 9) / TOTAL_QUESTIONS).toFixed(2);
+      el.finalScore.textContent = grade;
+      el.rawPoints.textContent = `Scor: ${state.correctAnswers} / ${TOTAL_QUESTIONS} răspunsuri corecte.`;
+      el.endVariant.textContent = `Varianta ${state.variant}`;
+      el.endCode.textContent = `Cod test: ${state.testCode}`;
+
+      const fd = new FormData();
+      fd.append("nume", state.name);
+      fd.append("clasa", `${state.className} - Statica fluidelor 7`);
+      fd.append("varianta", String(state.variant));
+      fd.append("cod_test", state.testCode);
+      fd.append("scor", grade);
+      fd.append("corecte", String(state.correctAnswers));
+
+      fetch(SCRIPT_URL, { method: "POST", body: fd, mode: "no-cors" }).catch(() => {});
     }
-</script>
+
+    function startGame() {
+      state.name = el.stdName.value.trim();
+      state.className = el.stdClass.value;
+      state.sessionSalt = generateSessionSalt();
+
+      if (!state.name || !state.className) {
+        alert("Completează numele și clasa!");
+        return;
+      }
+
+      buildTest();
+      el.screenLogin.classList.add("hidden");
+      el.screenEnd.classList.add("hidden");
+      el.screenGame.classList.remove("hidden");
+      showQuestion();
+    }
+
+    function restartApp() {
+      el.screenEnd.classList.add("hidden");
+      el.screenLogin.classList.remove("hidden");
+      el.stdName.focus();
+    }
+
+    el.startBtn.addEventListener("click", startGame);
+    el.nextBtn.addEventListener("click", nextQuestion);
+    el.restartBtn.addEventListener("click", restartApp);
+  </script>
 </body>
 </html>

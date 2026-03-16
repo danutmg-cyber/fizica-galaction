@@ -447,4 +447,387 @@
 
     function mulberry32(a) {
       return function () {
-        let t = a
+        let t = a += 0x6D2B79F5;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function randInt(rng, min, max) {
+      return Math.floor(rng() * (max - min + 1)) + min;
+    }
+
+    function randFrom(rng, arr) {
+      return arr[Math.floor(rng() * arr.length)];
+    }
+
+    function pickUnique(rng, pool, count) {
+      const copy = [...pool];
+      const result = [];
+      while (result.length < count && copy.length) {
+        const idx = Math.floor(rng() * copy.length);
+        result.push(copy.splice(idx, 1)[0]);
+      }
+      return result;
+    }
+
+    function shuffleArray(rng, arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function questionFill(item) {
+      return { type: "fill", q: item.q, answers: item.a, points: POINTS_PER_ITEM };
+    }
+
+    function questionTrueFalse(item) {
+      return { type: "tf", q: item.q, answers: item.a, points: POINTS_PER_ITEM };
+    }
+
+    function questionNumeric({ q, exactAnswer, unit = "", formula = "" }) {
+      return {
+        type: "numeric",
+        q,
+        exactAnswer,
+        unit,
+        formula,
+        points: POINTS_PER_ITEM,
+        displayAnswer: `${formatPrecise(exactAnswer)}${unit ? " " + unit : ""}`
+      };
+    }
+
+    function genPowerFromFocalMeters(rng) {
+      const f = randFrom(rng, [0.1, 0.2, 0.25, 0.4, 0.5, 1, 2]);
+      return questionNumeric({
+        q: `O lentilă are distanța focală f = ${formatNumber(f)} m. Calculează puterea optică.`,
+        exactAnswer: 1 / f,
+        unit: "D",
+        formula: "P = 1 / f"
+      });
+    }
+
+    function genPowerFromFocalCm(rng) {
+      const fcm = randFrom(rng, [10, 20, 25, 40, 50, 100, 200]);
+      return questionNumeric({
+        q: `O lentilă are distanța focală f = ${fcm} cm. Calculează puterea optică.`,
+        exactAnswer: 1 / (fcm / 100),
+        unit: "D",
+        formula: "P = 1 / f, cu f exprimată în metri"
+      });
+    }
+
+    function genFocalFromPower(rng) {
+      const p = randFrom(rng, [0.5, 1, 2, 2.5, 4, 5, 10]);
+      return questionNumeric({
+        q: `O lentilă are puterea optică P = ${formatNumber(p)} D. Calculează distanța focală în metri.`,
+        exactAnswer: 1 / p,
+        unit: "m",
+        formula: "f = 1 / P"
+      });
+    }
+
+    function genImageDistance(rng) {
+      const f = randFrom(rng, [10, 12, 15, 20, 25, 30]);
+      const a = randFrom(rng, [20, 24, 30, 40, 45, 50, 60]);
+      const b = 1 / ((1 / f) - (1 / a));
+      return questionNumeric({
+        q: `O lentilă convergentă are distanța focală f = ${f} cm. Un obiect se află la distanța a = ${a} cm de lentilă. Calculează distanța imaginii b.`,
+        exactAnswer: b,
+        unit: "cm",
+        formula: "1/f = 1/a + 1/b, deci 1/b = 1/f - 1/a"
+      });
+    }
+
+    function genObjectDistance(rng) {
+      const f = randFrom(rng, [10, 12, 15, 20, 25]);
+      const b = randFrom(rng, [20, 24, 30, 40, 45, 60]);
+      const a = 1 / ((1 / f) - (1 / b));
+      return questionNumeric({
+        q: `O lentilă convergentă are distanța focală f = ${f} cm și formează o imagine la distanța b = ${b} cm. Calculează distanța obiectului a.`,
+        exactAnswer: a,
+        unit: "cm",
+        formula: "1/f = 1/a + 1/b, deci 1/a = 1/f - 1/b"
+      });
+    }
+
+    function genMagnification(rng) {
+      const a = randFrom(rng, [15, 20, 24, 30, 40, 50]);
+      const b = randFrom(rng, [30, 36, 40, 45, 60, 80]);
+      return questionNumeric({
+        q: `Pentru o lentilă, distanța obiectului este a = ${a} cm, iar distanța imaginii este b = ${b} cm. Calculează mărirea liniară m = b / a.`,
+        exactAnswer: b / a,
+        formula: "m = b / a"
+      });
+    }
+
+    function genImageHeight(rng) {
+      const h = randFrom(rng, [1, 2, 3, 4, 5, 6, 8]);
+      const a = randFrom(rng, [10, 15, 20, 24, 30]);
+      const b = randFrom(rng, [20, 30, 36, 40, 45, 60]);
+      return questionNumeric({
+        q: `Un obiect are înălțimea h = ${h} cm. Pentru a = ${a} cm și b = ${b} cm, calculează înălțimea imaginii folosind relația h' = h · b / a.`,
+        exactAnswer: h * b / a,
+        unit: "cm",
+        formula: "h' = h · b / a"
+      });
+    }
+
+    function genPowerDifference(rng) {
+      const f1 = randFrom(rng, [0.2, 0.25, 0.4, 0.5, 1]);
+      const f2 = randFrom(rng, [0.1, 0.2, 0.25, 0.5, 1, 2]);
+      return questionNumeric({
+        q: `Două lentile au distanțele focale f₁ = ${formatNumber(f1)} m și f₂ = ${formatNumber(f2)} m. Calculează diferența dintre puterile lor optice |P₁ - P₂|.`,
+        exactAnswer: Math.abs((1 / f1) - (1 / f2)),
+        unit: "D",
+        formula: "P = 1 / f, apoi |P₁ - P₂|"
+      });
+    }
+
+    function genFocalFromPowerCm(rng) {
+      const p = randFrom(rng, [1, 2, 2.5, 4, 5, 10]);
+      return questionNumeric({
+        q: `O lentilă are puterea optică P = ${formatNumber(p)} D. Calculează distanța focală în centimetri.`,
+        exactAnswer: (1 / p) * 100,
+        unit: "cm",
+        formula: "f = 1 / P, apoi transformi în cm"
+      });
+    }
+
+    function genCombinedRelation(rng) {
+      const a = randFrom(rng, [15, 20, 24, 30, 40, 50]);
+      const m = randFrom(rng, [1.5, 2, 2.5, 3, 4]);
+      return questionNumeric({
+        q: `Un obiect este la distanța a = ${a} cm de lentilă și imaginea are mărirea liniară m = ${formatNumber(m)}. Calculează distanța imaginii b.`,
+        exactAnswer: a * m,
+        unit: "cm",
+        formula: "m = b / a, deci b = m · a"
+      });
+    }
+
+    const numericGenerators = [
+      genPowerFromFocalMeters,
+      genPowerFromFocalCm,
+      genFocalFromPower,
+      genImageDistance,
+      genObjectDistance,
+      genMagnification,
+      genImageHeight,
+      genPowerDifference,
+      genFocalFromPowerCm,
+      genCombinedRelation
+    ];
+
+    function generateSessionSalt() {
+      if (window.crypto && window.crypto.getRandomValues) {
+        const arr = new Uint32Array(1);
+        window.crypto.getRandomValues(arr);
+        return String(arr[0]);
+      }
+      return String(Math.floor(Math.random() * 1e9));
+    }
+
+    function getMinuteKey() {
+      const now = new Date();
+      const pad = (n) => String(n).padStart(2, "0");
+      return `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}`;
+    }
+
+    function buildTest() {
+      const baseKey = `${state.name}|${state.className}|${getMinuteKey()}|${state.sessionSalt}`;
+      state.seed = hashString(baseKey);
+      state.variant = (state.seed % VARIANT_COUNT) + 1;
+      state.testCode = `LS8-V${String(state.variant).padStart(3, "0")}-${shortCode(state.seed)}`;
+
+      const rng = mulberry32(state.seed);
+      const mixedPool = [
+        ...fillPool.map((item) => ({ ...item, itemType: "fill" })),
+        ...tfPool.map((item) => ({ ...item, itemType: "tf" }))
+      ];
+
+      const mixedQuestions = pickUnique(rng, mixedPool, MIXED_COUNT).map((item) =>
+        item.itemType === "fill" ? questionFill(item) : questionTrueFalse(item)
+      );
+
+      const numericQuestions = pickUnique(rng, numericGenerators, NUMERIC_COUNT).map((fn) => fn(rng));
+      state.questions = shuffleArray(rng, [...mixedQuestions, ...numericQuestions]);
+      state.currentIdx = 0;
+      state.correctAnswers = 0;
+    }
+
+    function showScreen(screen) {
+      [el.login, el.game, el.end].forEach((node) => node.classList.remove("active"));
+      screen.classList.add("active");
+    }
+
+    function showQuestion() {
+      const q = state.questions[state.currentIdx];
+      el.qInfo.textContent = `Cerința ${state.currentIdx + 1} / ${TOTAL_QUESTIONS}`;
+      el.pointsInfo.textContent = `${q.points} puncte`;
+      el.variantInfo.textContent = `Varianta ${state.variant} / ${VARIANT_COUNT}`;
+      el.testCode.textContent = state.testCode;
+      el.question.textContent = q.q;
+      el.feedback.className = "feedback";
+      el.feedback.style.display = "none";
+      el.feedback.innerHTML = "";
+      el.nextBtn.classList.add("hidden");
+
+      el.inputArea.innerHTML = `
+        <input type="text" id="userAnswer" placeholder="Răspuns..." autocomplete="off" />
+        <button class="btn btn-primary" id="checkBtn">Verifică</button>
+      `;
+
+      const answerInput = document.getElementById("userAnswer");
+      const checkBtn = document.getElementById("checkBtn");
+      checkBtn.addEventListener("click", checkAnswer);
+      answerInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") checkAnswer();
+      });
+      answerInput.focus();
+    }
+
+    function numericAccepted(userValue, exactAnswer) {
+      if (decimalCount(userValue) > 2) return false;
+      const userNum = parseLocaleNumber(userValue);
+      if (Number.isNaN(userNum)) return false;
+
+      const accepted = new Set([
+        exactAnswer,
+        truncateTo(exactAnswer, 2),
+        roundTo(exactAnswer, 2)
+      ].map((n) => Number(n.toFixed(6))));
+
+      return accepted.has(Number(userNum.toFixed(6)));
+    }
+
+    function evaluateAnswer(userValue, q) {
+      if (q.type === "fill" || q.type === "tf") {
+        const clean = normalizeText(userValue);
+        return q.answers.some((ans) => normalizeText(ans) === clean);
+      }
+      if (q.type === "numeric") {
+        return numericAccepted(userValue, q.exactAnswer);
+      }
+      return false;
+    }
+
+    function checkAnswer() {
+      const q = state.questions[state.currentIdx];
+      const answerInput = document.getElementById("userAnswer");
+      const userValue = answerInput.value;
+      const correct = evaluateAnswer(userValue, q);
+
+      answerInput.disabled = true;
+      const checkBtn = document.getElementById("checkBtn");
+      checkBtn.disabled = true;
+      checkBtn.classList.add("btn-disabled");
+
+      el.feedback.style.display = "block";
+      if (correct) {
+        state.correctAnswers++;
+        el.feedback.className = "feedback ok";
+        el.feedback.innerHTML = `Corect ✅<br>+${q.points} puncte`;
+      } else {
+        el.feedback.className = "feedback bad";
+        if (q.type === "numeric") {
+          el.feedback.innerHTML = `Greșit ❌<br>Formula: <strong>${q.formula}</strong><br>Rezultat corect: <strong>${q.displayAnswer}</strong>`;
+        } else {
+          el.feedback.innerHTML = `Greșit ❌<br>Răspuns corect: <strong>${q.answers[0]}</strong>`;
+        }
+      }
+      el.nextBtn.classList.remove("hidden");
+    }
+
+    function nextQuestion() {
+      state.currentIdx++;
+      if (state.currentIdx < TOTAL_QUESTIONS) {
+        showQuestion();
+      } else {
+        finishGame();
+      }
+    }
+
+    function finishGame() {
+      const points = state.correctAnswers * POINTS_PER_ITEM;
+      const grade = (1 + (points * 9) / TOTAL_POINTS).toFixed(2);
+
+      showScreen(el.end);
+      el.finalScore.textContent = `${points}p`;
+      el.rawPoints.textContent = `Scor: ${state.correctAnswers} / ${TOTAL_QUESTIONS} răspunsuri corecte • ${points} / ${TOTAL_POINTS} puncte.`;
+      el.finalGrade.textContent = `Notă orientativă: ${grade}`;
+      el.endVariant.textContent = `Varianta ${state.variant} din ${VARIANT_COUNT}`;
+      el.endCode.textContent = `Cod test: ${state.testCode}`;
+
+      const fd = new FormData();
+      fd.append("nume", state.name);
+      fd.append("clasa", `${state.className} - Lentile subțiri 8`);
+      fd.append("varianta", String(state.variant));
+      fd.append("cod_test", state.testCode);
+      fd.append("scor", String(points));
+      fd.append("corecte", String(state.correctAnswers));
+      fd.append("total_itemi", String(TOTAL_QUESTIONS));
+      fd.append("punctaj_total", String(TOTAL_POINTS));
+
+      fetch(SCRIPT_URL, { method: "POST", body: fd, mode: "no-cors" }).catch(() => {});
+    }
+
+    async function enterFullscreen() {
+      const elem = document.documentElement;
+      try {
+        if (elem.requestFullscreen && !document.fullscreenElement) {
+          await elem.requestFullscreen();
+          return;
+        }
+        if (elem.webkitRequestFullscreen && !document.webkitFullscreenElement) {
+          elem.webkitRequestFullscreen();
+          return;
+        }
+        if (elem.msRequestFullscreen && !document.msFullscreenElement) {
+          elem.msRequestFullscreen();
+          return;
+        }
+      } catch (_) {}
+    }
+
+    async function startGame() {
+      state.name = el.stdName.value.trim();
+      state.className = el.stdClass.value;
+      state.sessionSalt = generateSessionSalt();
+
+      if (!state.name || !state.className) {
+        alert("Completează numele și clasa!");
+        return;
+      }
+
+      try {
+        await enterFullscreen();
+      } catch (_) {}
+
+      buildTest();
+      showScreen(el.game);
+      showQuestion();
+    }
+
+    function restartApp() {
+      showScreen(el.login);
+      el.stdName.focus();
+    }
+
+    function bindEvents() {
+      el.startBtn.addEventListener("click", startGame);
+      el.nextBtn.addEventListener("click", nextQuestion);
+      el.restartBtn.addEventListener("click", restartApp);
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bindEvents);
+    } else {
+      bindEvents();
+    }
+  </script>
+</body>
+</html>

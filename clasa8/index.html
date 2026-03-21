@@ -3,10 +3,644 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Clasa a VIII-a</title>
+  <title>Fizica Galaction - Clasa a VIII-a</title>
+  <style>
+    :root {
+      --bg-1: #0f172a;
+      --bg-2: #111827;
+      --panel: rgba(15, 23, 42, 0.9);
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --accent: #38bdf8;
+      --accent-2: #2563eb;
+      --border: rgba(148, 163, 184, 0.18);
+      --shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      --radius: 24px;
+      --radius-sm: 16px;
+      --maxw: 1220px;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(37, 99, 235, 0.10), transparent 24%),
+        linear-gradient(180deg, var(--bg-1), var(--bg-2));
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .container {
+      width: min(var(--maxw), calc(100% - 32px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+      background: rgba(15, 23, 42, 0.65);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+    }
+
+    .topbar-inner {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+
+    .brand-badge {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #0ea5e9, #2563eb);
+      box-shadow: 0 10px 25px rgba(14, 165, 233, 0.3);
+      font-size: 1.1rem;
+    }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(148, 163, 184, 0.08);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .back-link:hover {
+      color: var(--text);
+      background: rgba(148, 163, 184, 0.14);
+    }
+
+    .hero {
+      padding: 36px 0 22px;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.95fr;
+      gap: 24px;
+      align-items: stretch;
+    }
+
+    .hero-card,
+    .info-card,
+    .chapter-card,
+    .lab-card,
+    .footer-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card,
+    .info-card,
+    .lab-card,
+    .chapter-card,
+    .footer-card {
+      padding: 24px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      background: rgba(56, 189, 248, 0.1);
+      color: #bae6fd;
+      border: 1px solid rgba(56, 189, 248, 0.18);
+      border-radius: 999px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      line-height: 1.08;
+      margin: 0 0 14px;
+    }
+
+    .lead {
+      font-size: 1.06rem;
+      line-height: 1.7;
+      color: var(--muted);
+      margin: 0 0 18px;
+      max-width: 64ch;
+    }
+
+    .quote {
+      margin: 0;
+      padding: 14px 16px;
+      border-left: 4px solid var(--accent);
+      background: rgba(56, 189, 248, 0.08);
+      color: #e0f2fe;
+      border-radius: 0 14px 14px 0;
+      font-style: italic;
+      font-weight: 600;
+    }
+
+    .status {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 14px;
+      border-radius: var(--radius-sm);
+      background: rgba(56, 189, 248, 0.07);
+      border: 1px solid rgba(56, 189, 248, 0.16);
+    }
+
+    .status + .status { margin-top: 14px; }
+
+    .status .icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      background: rgba(56, 189, 248, 0.14);
+      flex: 0 0 auto;
+      font-size: 1.15rem;
+    }
+
+    .status strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .status p,
+    .mini-list {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .mini-list {
+      padding-left: 18px;
+      margin-top: 14px;
+    }
+
+    .mini-list li + li { margin-top: 8px; }
+
+    section {
+      padding: 8px 0 26px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      margin: 0 0 6px;
+      font-size: clamp(1.5rem, 2.4vw, 2.1rem);
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 70ch;
+    }
+
+    .lab-card {
+      display: grid;
+      grid-template-columns: 1.2fr auto;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .lab-card h3,
+    .chapter-card h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+    }
+
+    .lab-card p,
+    .chapter-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 12px 18px;
+      border-radius: 14px;
+      font-weight: 800;
+      transition: 0.2s ease;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0ea5e9, #2563eb);
+      color: white;
+      box-shadow: 0 14px 26px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-primary:hover { transform: translateY(-1px); }
+
+    .btn-secondary {
+      background: rgba(148, 163, 184, 0.09);
+      border-color: rgba(148, 163, 184, 0.2);
+      color: var(--text);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(148, 163, 184, 0.16);
+    }
+
+    .chapters-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .chapter-card {
+      display: grid;
+      gap: 14px;
+      transition: 0.2s ease;
+    }
+
+    .chapter-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(56, 189, 248, 0.28);
+    }
+
+    .chapter-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .chapter-badge {
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      border-radius: 18px;
+      font-size: 1.2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.18), rgba(59, 130, 246, 0.18));
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      color: #e0f2fe;
+      flex: 0 0 auto;
+    }
+
+    .chapter-links {
+      display: grid;
+      gap: 10px;
+    }
+
+    .chapter-links a {
+      display: block;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(148, 163, 184, 0.08);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      color: #e2e8f0;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+
+    .chapter-links a:hover {
+      background: rgba(56, 189, 248, 0.10);
+      border-color: rgba(56, 189, 248, 0.2);
+      color: white;
+    }
+
+    .footer-wrap {
+      padding: 8px 0 34px;
+    }
+
+    .footer-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .footer-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 70ch;
+    }
+
+    @media (max-width: 1100px) {
+      .hero-grid,
+      .chapters-grid,
+      .lab-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .container {
+        width: min(var(--maxw), calc(100% - 20px));
+      }
+
+      .hero-card,
+      .info-card,
+      .chapter-card,
+      .lab-card,
+      .footer-card {
+        padding: 18px;
+      }
+
+      .btn {
+        width: 100%;
+      }
+
+      .topbar-inner {
+        align-items: flex-start;
+      }
+
+      .hero {
+        padding-top: 24px;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Clasa a VIII-a</h1>
-  <p>Pagina este în lucru.</p>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div class="brand">
+        <div class="brand-badge">VIII</div>
+        <div>
+          <div>Fizica Galaction — Clasa a VIII-a</div>
+          <small style="color:#94a3b8; font-weight:600; display:block;">Prof. DĂNUȚ ANDRONIE</small>
+        </div>
+      </div>
+
+      <a class="back-link" href="../index.html">← Înapoi la pagina principală</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <article class="hero-card">
+          <div class="eyebrow">📘 Clasa a VIII-a</div>
+          <h1>Capitole, lecții și resurse pentru pregătire și consolidare</h1>
+          <p class="lead">
+            În această secțiune găsești resursele pentru clasa a VIII-a: capitolele de studiu,
+            lecțiile, fișele de lucru, recapitulările și testele finale. Conținutul este organizat clar,
+            pentru a sprijini pregătirea elevilor și înțelegerea noțiunilor de bază din fizică.
+          </p>
+          <p class="quote">„Fizica nu este o materie dominată de formule ci de logică”</p>
+        </article>
+
+        <aside class="info-card">
+          <div class="status">
+            <div class="icon">🧭</div>
+            <div>
+              <strong>Cum folosim pagina</strong>
+              <p>Alege un capitol și intră apoi la lecții, fișe de lucru, recapitulare sau test final.</p>
+            </div>
+          </div>
+
+          <div class="status">
+            <div class="icon">⚡</div>
+            <div>
+              <strong>Ce urmărim</strong>
+              <p>Înțelegerea fenomenelor termice, electrice și optice prin explicații clare, exerciții și aplicații potrivite clasei a VIII-a.</p>
+            </div>
+          </div>
+
+          <ul class="mini-list">
+            <li>lecții structurate și ușor de urmărit;</li>
+            <li>fișe de lucru pentru exersare;</li>
+            <li>recapitulări pentru consolidare;</li>
+            <li>teste finale pe capitole.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Laborator fizică</h2>
+            <p>
+              Acces rapid la laboratorul clasei a VIII-a, unde pot fi adăugate experimente, imagini și simulări.
+            </p>
+          </div>
+        </div>
+
+        <article class="lab-card">
+          <div>
+            <h3>Laborator fizică — clasa a VIII-a</h3>
+            <p>
+              Spațiu dedicat activităților practice, observațiilor și simulărilor, adaptate nivelului de înțelegere al elevilor din clasa a VIII-a.
+            </p>
+          </div>
+          <div>
+            <a class="btn btn-primary" href="laborator-fizica/index.html">Deschide laboratorul</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <h2>Capitolele clasei a VIII-a</h2>
+            <p>
+              Selectează capitolul dorit și accesează resursele disponibile pentru fiecare parte a conținutului.
+            </p>
+          </div>
+        </div>
+
+        <div class="chapters-grid">
+          <article class="chapter-card">
+            <div class="chapter-top">
+              <div class="chapter-badge">1</div>
+              <div><h3>Fenomene termice</h3></div>
+            </div>
+            <p>Studiul căldurii, temperaturii și al transformărilor termice prin exemple și aplicații accesibile elevilor.</p>
+            <div class="chapter-links">
+              <a href="1-fenomene-termice/index.html">Pagina capitolului</a>
+              <a href="1-fenomene-termice/lectii/index.html">Lecții</a>
+              <a href="1-fenomene-termice/fise-de-lucru/index.html">Fișe de lucru</a>
+              <a href="1-fenomene-termice/recapitulare/index.html">Recapitulare</a>
+              <a href="1-fenomene-termice/test-final/index.html">Test final</a>
+            </div>
+          </article>
+
+          <article class="chapter-card">
+            <div class="chapter-top">
+              <div class="chapter-badge">2</div>
+              <div><h3>Electrostatică</h3></div>
+            </div>
+            <p>Noțiuni despre sarcina electrică, interacțiunea dintre corpuri electrizate și câmpul electric.</p>
+            <div class="chapter-links">
+              <a href="2-electrostatica/index.html">Pagina capitolului</a>
+              <a href="2-electrostatica/lectii/index.html">Lecții</a>
+              <a href="2-electrostatica/fise-de-lucru/index.html">Fișe de lucru</a>
+              <a href="2-electrostatica/recapitulare/index.html">Recapitulare</a>
+              <a href="2-electrostatica/test-final/index.html">Test final</a>
+            </div>
+          </article>
+
+          <article class="chapter-card">
+            <div class="chapter-top">
+              <div class="chapter-badge">3</div>
+              <div><h3>Electrocinetică</h3></div>
+            </div>
+            <p>Curent electric, intensitate, tensiune și rezistență, cu exerciții și situații aplicative simple.</p>
+            <div class="chapter-links">
+              <a href="3-electrocinetica/index.html">Pagina capitolului</a>
+              <a href="3-electrocinetica/lectii/index.html">Lecții</a>
+              <a href="3-electrocinetica/fise-de-lucru/index.html">Fișe de lucru</a>
+              <a href="3-electrocinetica/recapitulare/index.html">Recapitulare</a>
+              <a href="3-electrocinetica/test-final/index.html">Test final</a>
+            </div>
+          </article>
+
+          <article class="chapter-card">
+            <div class="chapter-top">
+              <div class="chapter-badge">4</div>
+              <div><h3>Energia și puterea electrică</h3></div>
+            </div>
+            <p>Relația dintre putere, energie și timp, cu exemple de consum și aplicații din viața de zi cu zi.</p>
+            <div class="chapter-links">
+              <a href="4-energia-si-puterea-electrica/index.html">Pagina capitolului</a>
+              <a href="4-energia-si-puterea-electrica/lectii/index.html">Lecții</a>
+              <a href="4-energia-si-puterea-electrica/fise-de-lucru/index.html">Fișe de lucru</a>
+              <a href="4-energia-si-puterea-electrica/recapitulare/index.html">Recapitulare</a>
+              <a href="4-energia-si-puterea-electrica/test-final/index.html">Test final</a>
+            </div>
+          </article>
+
+          <article class="chapter-card">
+            <div class="chapter-top">
+              <div class="chapter-badge">5</div>
+              <div><h3>Efectul magnetic al curentului electric</h3></div>
+            </div>
+            <p>Noțiuni despre câmp magnetic, electromagneți și efectele curentului electric în fenomene magnetice.</p>
+            <div class="chapter-links">
+              <a href="5-efectul-magnetic-al-curentului-electric/index.html">Pagina capitolului</a>
+              <a href="5-efectul-magnetic-al-curentului-electric/lectii/index.html">Lecții</a>
+              <a href="5-efectul-magnetic-al-curentului-electric/fise-de-lucru/index.html">Fișe de lucru</a>
+              <a href="5-efectul-magnetic-al-curentului-electric/recapitulare/index.html">Recapitulare</a>
+              <a href="5-efectul-magnetic-al-curentului-electric/test-final/index.html">Test final</a>
+            </div>
+          </article>
+
+          <article class="chapter-card">
+            <div class="chapter-top">
+              <div class="chapter-badge">6</div>
+              <div><h3>Reflexia și refracția</h3></div>
+            </div>
+            <p>Fenomene optice de bază explicate prin exemple clare și aplicații simple pentru elevi.</p>
+            <div class="chapter-links">
+              <a href="6-reflexia-si-refractia/index.html">Pagina capitolului</a>
+              <a href="6-reflexia-si-refractia/lectii/index.html">Lecții</a>
+              <a href="6-reflexia-si-refractia/fise-de-lucru/index.html">Fișe de lucru</a>
+              <a href="6-reflexia-si-refractia/recapitulare/index.html">Recapitulare</a>
+              <a href="6-reflexia-si-refractia/test-final/index.html">Test final</a>
+            </div>
+          </article>
+
+          <article class="chapter-card">
+            <div class="chapter-top">
+              <div class="chapter-badge">7</div>
+              <div><h3>Lentile subțiri</h3></div>
+            </div>
+            <p>Formarea imaginilor și utilizarea lentilelor, cu explicații și exerciții potrivite clasei a VIII-a.</p>
+            <div class="chapter-links">
+              <a href="7-lentile-subtiri/index.html">Pagina capitolului</a>
+              <a href="7-lentile-subtiri/lectii/index.html">Lecții</a>
+              <a href="7-lentile-subtiri/fise-de-lucru/index.html">Fișe de lucru</a>
+              <a href="7-lentile-subtiri/recapitulare/index.html">Recapitulare</a>
+              <a href="7-lentile-subtiri/test-final/index.html">Test final</a>
+            </div>
+          </article>
+
+          <article class="chapter-card">
+            <div class="chapter-top">
+              <div class="chapter-badge">8</div>
+              <div><h3>Energia și viața</h3></div>
+            </div>
+            <p>Legătura dintre energie, viața de zi cu zi, tehnologie și utilizarea responsabilă a resurselor.</p>
+            <div class="chapter-links">
+              <a href="8-energia-si-viata/index.html">Pagina capitolului</a>
+              <a href="8-energia-si-viata/lectii/index.html">Lecții</a>
+              <a href="8-energia-si-viata/fise-de-lucru/index.html">Fișe de lucru</a>
+              <a href="8-energia-si-viata/recapitulare/index.html">Recapitulare</a>
+              <a href="8-energia-si-viata/test-final/index.html">Test final</a>
+            </div>
+          </article>
+
+          <article class="chapter-card">
+            <div class="chapter-top">
+              <div class="chapter-badge">9</div>
+              <div><h3>Test de evaluare finală</h3></div>
+            </div>
+            <p>Secțiune pentru recapitularea generală și evaluarea finală a conținuturilor studiate în clasa a VIII-a.</p>
+            <div class="chapter-links">
+              <a href="9-test-de-evaluare-finala/index.html">Pagina secțiunii</a>
+              <a href="9-test-de-evaluare-finala/recapitulare/index.html">Recapitulare</a>
+              <a href="9-test-de-evaluare-finala/test-final/index.html">Test final</a>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="footer-wrap">
+      <div class="container">
+        <div class="footer-card">
+          <div>
+            <strong style="display:block; margin-bottom:8px;">Clasa a VIII-a</strong>
+            <p>
+              Pagină de navigare pentru conținuturile clasei a VIII-a: capitole, lecții, fișe de lucru, recapitulări, teste și laborator.
+            </p>
+          </div>
+          <div>
+            <a class="btn btn-secondary" href="../index.html">Înapoi la pagina principală</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 </body>
 </html>

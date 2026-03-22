@@ -1,209 +1,185 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Test Fizica Galaction</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recapitulare interactivă – Concepte de bază</title>
 
-<style>
-body {
-  margin: 0;
-  font-family: Arial;
-  background: #0f172a;
-  color: white;
-}
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+    }
 
-.container {
-  padding: 20px;
-  max-width: 900px;
-  margin: auto;
-}
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
 
-h1, h2 {
-  text-align: center;
-}
+    h1, h2 {
+      text-align: center;
+    }
 
-.question {
-  background: #1e293b;
-  padding: 15px;
-  margin: 12px 0;
-  border-radius: 12px;
-}
+    .card {
+      background: #1e293b;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 12px;
+    }
 
-input, select {
-  width: 100%;
-  padding: 14px;
-  font-size: 18px;
-  border-radius: 10px;
-  border: none;
-  margin-top: 8px;
-}
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      background: #22c55e;
+    }
 
-button {
-  width: 100%;
-  padding: 18px;
-  font-size: 20px;
-  background: #22c55e;
-  border: none;
-  border-radius: 12px;
-  margin-top: 20px;
-}
+    .quiz {
+      margin-top: 10px;
+    }
 
-#rezultat {
-  margin-top: 20px;
-  font-size: 22px;
-  text-align: center;
-}
+    .corect { color: #22c55e; }
+    .gresit { color: #ef4444; }
 
-.gresit {
-  color: #ef4444;
-}
-</style>
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin-top: 8px;
+    }
+  </style>
 </head>
 
 <body>
 
 <div class="container">
 
-<h1>ȘCOALA GIMNAZIALĂ „GALA GALACTION”</h1>
-<h2>Test – Concepte de bază în fizică</h2>
+  <h1>📘 Recapitulare interactivă</h1>
+  <h2>Concepte de bază – Clasa a VI-a</h2>
 
-<p style="text-align:center;">
-FIZICA NU ESTE O MATERIE DOMINATĂ DE FORMULE CI DE LOGICĂ
-</p>
+  <p style="text-align:center;">
+    FIZICA NU ESTE O MATERIE DOMINATĂ DE FORMULE CI DE LOGICĂ
+  </p>
 
-<p style="text-align:center;">
-Scrie doar valoarea numerică. Max 2 zecimale.
-</p>
+  <!-- NOȚIUNI -->
+  <div class="card">
+    <h3>🧠 Noțiuni esențiale</h3>
+    <ul>
+      <li>Corp fizic</li>
+      <li>Fenomen fizic</li>
+      <li>Mărime fizică</li>
+      <li>Unitate de măsură</li>
+    </ul>
 
-<div id="test"></div>
+    <div class="quiz">
+      <b>Mini-quiz:</b><br>
+      Fenomen fizic înseamnă:
+      <select id="q1">
+        <option value="">Alege...</option>
+        <option value="0">unitate</option>
+        <option value="1">transformare</option>
+        <option value="0">instrument</option>
+      </select>
+      <button onclick="verifica1()">Verifică</button>
+      <div id="r1"></div>
+    </div>
+  </div>
 
-<button onclick="verifica()">Finalizează testul</button>
+  <!-- SI -->
+  <div class="card">
+    <h3>📏 Mărimi și unități</h3>
 
-<div id="rezultat"></div>
+    <ul>
+      <li>Lungime – m</li>
+      <li>Masă – kg</li>
+      <li>Timp – s</li>
+      <li>Temperatură – K</li>
+    </ul>
+
+    <div class="quiz">
+      <b>Mini-quiz:</b><br>
+      Unitatea pentru masă:
+      <input type="text" id="q2">
+      <button onclick="verifica2()">Verifică</button>
+      <div id="r2"></div>
+    </div>
+  </div>
+
+  <!-- CONVERSII -->
+  <div class="card">
+    <h3>🔢 Conversii</h3>
+    <ul>
+      <li>1 m = 100 cm</li>
+      <li>1 kg = 1000 g</li>
+    </ul>
+
+    <div class="quiz">
+      <b>Mini-quiz:</b><br>
+      2 m = ? cm
+      <input type="number" id="q3">
+      <button onclick="verifica3()">Verifică</button>
+      <div id="r3"></div>
+    </div>
+  </div>
+
+  <!-- FINAL -->
+  <button onclick="rezultatFinal()">Vezi scor final</button>
+  <div id="final"></div>
 
 </div>
 
 <script>
 
-const pool = [
+let scor = 0;
 
-{tip:"mc", q:"Fenomen fizic înseamnă:", opt:["unitate","transformare","instrument"], a:1},
-
-{tip:"mc", q:"Unitatea pentru lungime:", opt:["kg","m","s"], a:1},
-
-{tip:"mc", q:"Timpul se măsoară în:", opt:["m","s","kg"], a:1},
-
-{tip:"text", q:"Unitatea pentru masă este:" , a:["kg","kilogram"]},
-
-{tip:"text", q:"Unitatea pentru temperatură este:", a:["k","kelvin"]},
-
-{tip:"num", q:"2 m = ? cm", a:200},
-
-{tip:"num", q:"5 m = ? cm", a:500},
-
-{tip:"num", q:"500 cm = ? m", a:5},
-
-{tip:"num", q:"100 cm = ? m", a:1},
-
-{tip:"num", q:"1 kg = ? g", a:1000},
-
-{tip:"num", q:"2 kg = ? g", a:2000},
-
-{tip:"num", q:"250 cm = ? m", a:2.5},
-
-{tip:"num", q:"300 cm = ? m", a:3},
-
-{tip:"num", q:"0.5 m = ? cm", a:50},
-
-{tip:"num", q:"3 m = ? cm", a:300},
-
-{tip:"num", q:"150 cm = ? m", a:1.5},
-
-{tip:"mc", q:"Masa este:", opt:["fenomen","mărime","instrument"], a:1},
-
-{tip:"mc", q:"Temperatura este:", opt:["mărime","unitate","forță"], a:0},
-
-{tip:"text", q:"Exemplu de fenomen fizic:", a:["topire","încălzire","răcire"]},
-
-{tip:"text", q:"Exemplu de mărime fizică:", a:["masă","lungime","timp","temperatura"]}
-
-];
-
-// random 20
-let test = [];
-while(test.length < 20){
-  let x = pool[Math.floor(Math.random()*pool.length)];
-  test.push(x);
+function verifica1(){
+  let v = document.getElementById("q1").value;
+  if(v=="1"){
+    document.getElementById("r1").innerHTML="<span class='corect'>Corect</span>";
+    scor++;
+  } else {
+    document.getElementById("r1").innerHTML="<span class='gresit'>Greșit</span>";
+  }
 }
 
-const div = document.getElementById("test");
-
-test.forEach((item,i)=>{
-
-  let html = `<div class="question"><b>${i+1}. ${item.q}</b>`;
-
-  if(item.tip=="mc"){
-    item.opt.forEach((o,j)=>{
-      html += `<label><input type="radio" name="q${i}" value="${j}"> ${o}</label><br>`;
-    });
+function verifica2(){
+  let v = document.getElementById("q2").value.toLowerCase();
+  if(v=="kg" || v=="kilogram"){
+    document.getElementById("r2").innerHTML="<span class='corect'>Corect</span>";
+    scor++;
+  } else {
+    document.getElementById("r2").innerHTML="<span class='gresit'>Greșit</span>";
   }
+}
 
-  if(item.tip=="text"){
-    html += `<input type="text" id="q${i}">`;
+function verifica3(){
+  let v = parseFloat(document.getElementById("q3").value);
+  if(Math.abs(v - 200) < 0.15){
+    document.getElementById("r3").innerHTML="<span class='corect'>Corect</span>";
+    scor++;
+  } else {
+    document.getElementById("r3").innerHTML="<span class='gresit'>Greșit</span>";
   }
+}
 
-  if(item.tip=="num"){
-    html += `<input type="number" id="q${i}">`;
-  }
-
-  html += `<div id="f${i}"></div></div>`;
-
-  div.innerHTML += html;
-});
-
-function verifica(){
-
-  let scor = 0;
-
-  test.forEach((item,i)=>{
-
-    let ok = false;
-
-    if(item.tip=="mc"){
-      let v = document.querySelector(`input[name=q${i}]:checked`);
-      if(v && parseInt(v.value)==item.a) ok=true;
-    }
-
-    if(item.tip=="text"){
-      let v = document.getElementById("q"+i).value.toLowerCase();
-      if(item.a.includes(v)) ok=true;
-    }
-
-    if(item.tip=="num"){
-      let v = parseFloat(document.getElementById("q"+i).value);
-      if(Math.abs(v - item.a) < 0.15) ok=true;
-    }
-
-    if(ok) scor++;
-    else{
-      document.getElementById("f"+i).innerHTML =
-      "<span class='gresit'>Răspuns greșit</span>";
-    }
-
-  });
-
-  let nota = (scor/20)*10;
+function rezultatFinal(){
+  let nota = (scor/3)*10;
 
   let msg="";
-
   if(nota<5) msg="Revezi lecția.";
   else if(nota<8) msg="Mai exersează.";
   else msg="Foarte bine!";
 
-  document.getElementById("rezultat").innerHTML =
-    `Scor: ${scor}/20 <br> Nota: ${nota.toFixed(2)} <br>${msg}`;
-
+  document.getElementById("final").innerHTML =
+    `Scor: ${scor}/3 <br> Nota: ${nota.toFixed(2)} <br>${msg}`;
 }
 
 </script>

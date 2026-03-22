@@ -1,12 +1,212 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Concepte de bază în fizică - Recapitulare</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Test Fizica Galaction</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+}
+
+.container {
+  padding: 20px;
+  max-width: 900px;
+  margin: auto;
+}
+
+h1, h2 {
+  text-align: center;
+}
+
+.question {
+  background: #1e293b;
+  padding: 15px;
+  margin: 12px 0;
+  border-radius: 12px;
+}
+
+input, select {
+  width: 100%;
+  padding: 14px;
+  font-size: 18px;
+  border-radius: 10px;
+  border: none;
+  margin-top: 8px;
+}
+
+button {
+  width: 100%;
+  padding: 18px;
+  font-size: 20px;
+  background: #22c55e;
+  border: none;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+#rezultat {
+  margin-top: 20px;
+  font-size: 22px;
+  text-align: center;
+}
+
+.gresit {
+  color: #ef4444;
+}
+</style>
 </head>
+
 <body>
-  <h1>Concepte de bază în fizică - Recapitulare</h1>
-  <p>Pagina este în lucru.</p>
+
+<div class="container">
+
+<h1>ȘCOALA GIMNAZIALĂ „GALA GALACTION”</h1>
+<h2>Test – Concepte de bază în fizică</h2>
+
+<p style="text-align:center;">
+FIZICA NU ESTE O MATERIE DOMINATĂ DE FORMULE CI DE LOGICĂ
+</p>
+
+<p style="text-align:center;">
+Scrie doar valoarea numerică. Max 2 zecimale.
+</p>
+
+<div id="test"></div>
+
+<button onclick="verifica()">Finalizează testul</button>
+
+<div id="rezultat"></div>
+
+</div>
+
+<script>
+
+const pool = [
+
+{tip:"mc", q:"Fenomen fizic înseamnă:", opt:["unitate","transformare","instrument"], a:1},
+
+{tip:"mc", q:"Unitatea pentru lungime:", opt:["kg","m","s"], a:1},
+
+{tip:"mc", q:"Timpul se măsoară în:", opt:["m","s","kg"], a:1},
+
+{tip:"text", q:"Unitatea pentru masă este:" , a:["kg","kilogram"]},
+
+{tip:"text", q:"Unitatea pentru temperatură este:", a:["k","kelvin"]},
+
+{tip:"num", q:"2 m = ? cm", a:200},
+
+{tip:"num", q:"5 m = ? cm", a:500},
+
+{tip:"num", q:"500 cm = ? m", a:5},
+
+{tip:"num", q:"100 cm = ? m", a:1},
+
+{tip:"num", q:"1 kg = ? g", a:1000},
+
+{tip:"num", q:"2 kg = ? g", a:2000},
+
+{tip:"num", q:"250 cm = ? m", a:2.5},
+
+{tip:"num", q:"300 cm = ? m", a:3},
+
+{tip:"num", q:"0.5 m = ? cm", a:50},
+
+{tip:"num", q:"3 m = ? cm", a:300},
+
+{tip:"num", q:"150 cm = ? m", a:1.5},
+
+{tip:"mc", q:"Masa este:", opt:["fenomen","mărime","instrument"], a:1},
+
+{tip:"mc", q:"Temperatura este:", opt:["mărime","unitate","forță"], a:0},
+
+{tip:"text", q:"Exemplu de fenomen fizic:", a:["topire","încălzire","răcire"]},
+
+{tip:"text", q:"Exemplu de mărime fizică:", a:["masă","lungime","timp","temperatura"]}
+
+];
+
+// random 20
+let test = [];
+while(test.length < 20){
+  let x = pool[Math.floor(Math.random()*pool.length)];
+  test.push(x);
+}
+
+const div = document.getElementById("test");
+
+test.forEach((item,i)=>{
+
+  let html = `<div class="question"><b>${i+1}. ${item.q}</b>`;
+
+  if(item.tip=="mc"){
+    item.opt.forEach((o,j)=>{
+      html += `<label><input type="radio" name="q${i}" value="${j}"> ${o}</label><br>`;
+    });
+  }
+
+  if(item.tip=="text"){
+    html += `<input type="text" id="q${i}">`;
+  }
+
+  if(item.tip=="num"){
+    html += `<input type="number" id="q${i}">`;
+  }
+
+  html += `<div id="f${i}"></div></div>`;
+
+  div.innerHTML += html;
+});
+
+function verifica(){
+
+  let scor = 0;
+
+  test.forEach((item,i)=>{
+
+    let ok = false;
+
+    if(item.tip=="mc"){
+      let v = document.querySelector(`input[name=q${i}]:checked`);
+      if(v && parseInt(v.value)==item.a) ok=true;
+    }
+
+    if(item.tip=="text"){
+      let v = document.getElementById("q"+i).value.toLowerCase();
+      if(item.a.includes(v)) ok=true;
+    }
+
+    if(item.tip=="num"){
+      let v = parseFloat(document.getElementById("q"+i).value);
+      if(Math.abs(v - item.a) < 0.15) ok=true;
+    }
+
+    if(ok) scor++;
+    else{
+      document.getElementById("f"+i).innerHTML =
+      "<span class='gresit'>Răspuns greșit</span>";
+    }
+
+  });
+
+  let nota = (scor/20)*10;
+
+  let msg="";
+
+  if(nota<5) msg="Revezi lecția.";
+  else if(nota<8) msg="Mai exersează.";
+  else msg="Foarte bine!";
+
+  document.getElementById("rezultat").innerHTML =
+    `Scor: ${scor}/20 <br> Nota: ${nota.toFixed(2)} <br>${msg}`;
+
+}
+
+</script>
+
 </body>
 </html>

@@ -1,12 +1,162 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Test de evaluare finală - Clasa a VII-a - Test final</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluare Finală Fizică VII - Gala Galaction</title>
+    <style>
+        :root { --primary: #1e40af; --accent: #f59e0b; --bg: #f1f5f9; --card: #ffffff; }
+        body { font-family: 'Segoe UI', serif; background: var(--bg); color: #1e293b; line-height: 1.5; padding: 20px; }
+        .paper { max-width: 900px; background: var(--card); margin: 0 auto; padding: 50px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #d1d5db; position: relative; }
+        
+        /* ANTET PERSONALIZAT */
+        .school-header { text-align: center; border-bottom: 2px solid var(--accent); margin-bottom: 30px; padding-bottom: 10px; }
+        .motto { font-style: italic; color: #92400e; background: #fef3c7; padding: 10px; border-radius: 4px; margin: 10px 0; font-size: 0.9rem; border-left: 5px solid var(--accent); }
+        
+        .section-title { background: #e2e8f0; padding: 5px 15px; font-weight: bold; margin: 20px 0 10px 0; border-radius: 4px; display: inline-block; }
+        .item { margin-bottom: 20px; }
+        .math-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; margin: 10px 0; }
+        
+        input[type="text"], input[type="number"] { border: 1px solid #cbd5e1; padding: 8px; border-radius: 4px; width: 100px; }
+        .full-input { width: 100%; max-width: 400px; margin-bottom: 10px; }
+        
+        .btn-submit { background: var(--primary); color: white; border: none; padding: 15px 40px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 30px; font-size: 1.1rem; }
+        .score-zone { display: none; text-align: center; padding: 20px; background: #dcfce7; color: #166534; font-size: 1.5rem; font-weight: bold; border-radius: 8px; margin-top: 20px; }
+        
+        @media print { .btn-submit { display: none; } }
+    </style>
 </head>
 <body>
-  <h1>Test de evaluare finală - Clasa a VII-a - Test final</h1>
-  <p>Pagina este în lucru.</p>
+
+<div class="paper">
+    <div class="school-header">
+        <div style="font-size: 1.5rem; font-weight: bold;">ȘCOALA GIMNAZIALĂ "GALA GALACTION"</div>
+        <div style="font-size: 1.1rem; color: #475569;">Prof. DĂNUȚ ANDRONIE</div>
+        <div class="motto">"FIZICA NU ESTE DOMINATĂ DE FORMULE CI DE LOGICĂ"</div>
+        <h2 style="margin-top: 15px; color: var(--primary);">TEST DE EVALUARE FINALĂ - CLASA A VII-A</h2>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+    <input type="text" id="stdName" class="full-input" placeholder="Nume Prenume Elev">
+    <select id="stdClass" style="width: 120px; padding: 8px; border-radius: 4px; border: 1px solid #cbd5e1;">
+        <option value="">Clasa...</option>
+        <option value="VII A">VII A</option>
+        <option value="VII B">VII B</option>
+        <option value="VII C">VII C</option>
+        <option value="VII D">VII D</option> </select>
+</div>
+
+    <div class="section-title">I. Completează spațiile libere (2p)</div>
+    <div class="item">
+        1. Forța este o mărime fizică <input type="text" id="i1"> care caracterizează orice acțiune ce poate modifica starea de mișcare sau poate produce <input type="text" id="i2">. <br>
+        2. Energia potențială <input type="text" id="i3"> a unui corp de masă <i>m</i> este egală cu $E_p = mgh$. <br>
+        3. Pârghia de ordinul I are <input type="text" id="i4"> între punctul de aplicație al forței active și cel al forței rezistente.
+    </div>
+
+    <div class="section-title">III. Alege răspunsul corect (3p)</div>
+    <div id="grila-dinamica"></div>
+
+    <div class="section-title">IV. Rezolvă următoarele probleme (4p)</div>
+    <div id="probleme-dinamice"></div>
+
+    <div id="finalScore" class="score-zone"></div>
+    <button class="btn-submit" onclick="evaluateTest()">FINALIZEAZĂ ȘI CALCULEAZĂ NOTA</button>
+
+    <div style="margin-top: 30px; font-size: 0.8rem; color: #64748b;">
+        * Timp de lucru: 50 minute. Se acordă 1 punct din oficiu.
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec";
+    let answers = { grile: [], probleme: [] };
+
+    function initTest() {
+        const grilaCont = document.getElementById('grila-dinamica');
+        const probCont = document.getElementById('probleme-dinamice');
+
+        // Grile Dinamice (Exemple bazate pe model)
+        // 1. Putere
+        let Fp = Math.floor(Math.random() * 50 + 10);
+        let vp = Math.floor(Math.random() * 5 + 2);
+        let Pp = Fp * vp;
+        addGrila(grilaCont, 0, `Puterea dezvoltată de o forță de ${Fp} N care deplasează un corp cu viteza constantă de ${vp} m/s este:`, 
+                [`${Pp} W`, `${(Fp/vp).toFixed(1)} W`, `${Pp*10} W`, `${Pp-10} W`], 0);
+
+        // 2. Presiune
+        let For = Math.floor(Math.random() * 100 + 50);
+        let Sup = (Math.random() * 0.5 + 0.1).toFixed(2);
+        let Pres = (For / Sup).toFixed(0);
+        addGrila(grilaCont, 1, `Presiunea exercitată de o forță de ${For} N pe o suprafață de ${Sup} m² este:`, 
+                [`${Pres/10} Pa`, `${Pres} Pa`, `${Pres*2} Pa`, `${(For*Sup).toFixed(0)} Pa`], 1);
+
+        // PROBLEME REZOLVARE (Sectiunea IV)
+        // Problema 1: Resort si masa
+        let l0 = 10;
+        let k = [100, 200, 500, 1000][Math.floor(Math.random()*4)];
+        let dl = Math.floor(Math.random() * 5 + 2);
+        let m_res = (k * (dl/100) / 10).toFixed(2);
+        addProblema(probCont, 0, `Un coș este suspendat de un resort cu l₀ = ${l0} cm și k = ${k} N/m. După suspendare, lungimea devine l = ${l0 + dl} cm. Determină masa coșului (g=10N/kg).`, m_res, "kg");
+
+        // Problema 2: Energie Potentiala
+        let h_cadere = Math.floor(Math.random() * 15 + 5);
+        let m_corp = (Math.random() * 2 + 0.5).toFixed(1);
+        let Ep = (m_corp * 10 * h_cadere).toFixed(1);
+        addProblema(probCont, 1, `O minge cu masa de ${m_corp} kg se află la înălțimea h = ${h_cadere} m. Calculează energia potențială gravitațională față de sol.`, Ep, "J");
+    }
+
+    function addGrila(cont, id, text, opts, correctIdx) {
+        answers.grile[id] = correctIdx;
+        let html = `<div class="item"><b>${id + 1}.</b> ${text}<br><div style="margin: 5px 0 0 20px;">`;
+        opts.forEach((o, i) => {
+            html += `<label style="margin-right:15px;"><input type="radio" name="g${id}" value="${i}"> ${o}</label>`;
+        });
+        html += `</div></div>`;
+        cont.innerHTML += html;
+    }
+
+    function addProblema(cont, id, text, sol, unit) {
+        answers.probleme[id] = sol;
+        cont.innerHTML += `<div class="math-box"><b>Prob. ${id + 1}:</b> ${text}<br>
+        <div style="margin-top:10px;">Rezultat: <input type="number" step="0.01" id="p${id}"> ${unit}</div></div>`;
+    }
+
+    function evaluateTest() {
+        let name = document.getElementById('stdName').value;
+        if(!name) return alert("Introdu numele!");
+
+        let pct = 10; // Oficiu
+        
+        // Corectare I (Simpla verificare text - orientativ)
+        if(document.getElementById('i1').value.toLowerCase().includes("vectoriala")) pct += 5;
+        if(document.getElementById('i2').value.toLowerCase().includes("deformare")) pct += 5;
+
+        // Corectare III
+        answers.grile.forEach((cor, i) => {
+            let sel = document.querySelector(`input[name="g${i}"]:checked`);
+            if(sel && parseInt(sel.value) === cor) pct += 15;
+        });
+
+        // Corectare IV
+        answers.probleme.forEach((sol, i) => {
+            let val = document.getElementById(`p${i}`).value;
+            if(val && Math.abs(parseFloat(val) - parseFloat(sol)) < 0.1) pct += 20;
+        });
+
+        let nota = (pct / 10).toFixed(2);
+        if(nota > 10) nota = "10.00";
+
+        document.getElementById('finalScore').style.display = "block";
+        document.getElementById('finalScore').innerText = `NOTA FINALĂ: ${nota}`;
+
+        // Trimitere la profesor
+        const fd = new FormData();
+        fd.append("nume", name); fd.append("clasa", document.getElementById('stdClass').value + " - Final 7"); fd.append("scor", nota);
+        fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+    }
+
+    window.onload = initTest;
+</script>
+
 </body>
 </html>

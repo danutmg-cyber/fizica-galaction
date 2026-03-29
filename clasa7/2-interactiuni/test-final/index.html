@@ -1,12 +1,196 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interacțiuni - Test final</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FIZICĂ VII - INTERACȚIUNI ȘI FORȚĂ</title>
+    <style>
+        :root { --primary: #f59e0b; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #fbbf24; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; }
+        .header { text-align: center; width: 100%; max-width: 700px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
+        .container { width: 100%; max-width: 650px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
+        .question-box { font-size: 1.15rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; line-height: 1.4; }
+        input[type="text"], select { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.2rem; text-align: center; margin-bottom: 15px; }
+        .check-btn { width: 100%; background: var(--primary); color: #0f172a; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .next-btn { width: 100%; background: #059669; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
+        #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; }
+        .hidden { display: none; }
+    </style>
 </head>
 <body>
-  <h1>Interacțiuni - Test final</h1>
-  <p>Pagina este în lucru.</p>
+
+    <div class="header">
+        <div style="font-size: 1.1rem; font-weight: bold; color: var(--accent); margin-bottom: 2px;">
+            ȘCOALA GIMNAZIALĂ "GALA GALACTION" MANGALIA
+        </div>
+        <div style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 12px; letter-spacing: 1px;">
+            Prof. DĂNUȚ ANDRONIE
+        </div>
+        <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--accent); padding: 8px; margin-bottom: 15px; font-style: italic; color: #fef08a; font-size: 0.95rem;">
+            "FIZICA NU ESTE DOMINATĂ DE FORMULE CI DE LOGICĂ"
+        </div>
+    </div>
+
+    <div class="container" id="screen-login">
+        <h2 style="text-align:center;">🎯 Forța și Interacțiunea</h2>
+        <input type="text" id="p-name" placeholder="Numele elevului">
+        <select id="p-class">
+            <option value="">Alege clasa...</option>
+            <option value="7A">7A</option>
+            <option value="7B">7B</option>
+            <option value="7C">7C</option>
+            <option value="7D">7D</option>
+        </select>
+        <button class="check-btn" onclick="startGame()">START TEST FINAL (30 ITEMI)</button>
+    </div>
+
+    <div class="container hidden" id="screen-game">
+        <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
+        <div class="question-box" id="question"></div>
+        <div id="input-area"></div>
+        <div id="feedback"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">URMĂTORUL SUBIECT ➡️</button>
+    </div>
+
+    <div class="container hidden" id="screen-end">
+        <h2 style="text-align:center;">REZULTAT TEST</h2>
+        <div style="font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center;" id="final-score"></div>
+        <p style="text-align:center; color: #94a3b8;" id="raw-points"></p>
+        <button class="check-btn" onclick="location.reload()">REIA ANTRENAMENTUL</button>
+    </div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec"; 
+    let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [] };
+
+    const theoryPool = [
+        { q: "Mărimea fizică vectorială care măsoară tăria interacțiunii se numește ...........", a: ["forta"] },
+        { q: "Unitatea de măsură pentru forță în S.I. este ...........", a: ["newton", "n"] },
+        { q: "Instrumentul folosit pentru măsurarea forței se numește ...........", a: ["dinamometrul"] },
+        { q: "Efectul care constă în schimbarea stării de mișcare a unui corp este efect ...........", a: ["dinamic"] },
+        { q: "Efectul care constă în deformarea unui corp se numește efect ...........", a: ["static"] },
+        { q: "Proprietatea corpurilor de a se opune schimbării stării de repaus sau de mișcare se numește ...........", a: ["inertie"] },
+        { q: "Măsura inerției unui corp este mărimea fizică scalară numită ...........", a: ["masa"] },
+        { q: "Forța cu care Pământul atrage un corp se numește ...........", a: ["greutate"] },
+        { q: "Forța care apare la suprafața de contact dintre două corpuri și se opune mișcării este forța de ...........", a: ["frecare"] },
+        { q: "Raportul dintre forța elastică și alungirea resortului reprezintă ........... elastică.", a: ["constanta"] }
+    ];
+
+    function generateMathPool() {
+        let mathQ = [];
+        // Greutate (G = m * g, g=10)
+        mathQ.push({ q: "Un corp are masa m = 500 g. Greutatea sa este ? N.", a: ["5"] });
+        mathQ.push({ q: "Greutatea unui corp este G = 200 N. Masa sa este ? kg.", a: ["20"] });
+        
+        // Rezultanta (Coliniară)
+        mathQ.push({ q: "F1 = 12 N și F2 = 8 N acționează în același sens. Rezultanta este ? N.", a: ["20"] });
+        mathQ.push({ q: "F1 = 25 N și F2 = 10 N acționează în sensuri opuse. Rezultanta este ? N.", a: ["15"] });
+        
+        // Rezultanta (Perpendiculară - Pitagora)
+        mathQ.push({ q: "F1 = 3 N și F2 = 4 N sunt perpendiculare. Rezultanta este ? N.", a: ["5"] });
+        mathQ.push({ q: "F1 = 6 N și F2 = 8 N sunt perpendiculare. Rezultanta este ? N.", a: ["10"] });
+
+        // Forța Elastică (Fe = k * x) - transformări cm în m
+        mathQ.push({ q: "Un resort cu k = 100 N/m este alungit cu 5 cm. Fe = ? N.", a: ["5"] });
+        mathQ.push({ q: "Fe = 20 N și x = 10 cm. Constanta elastică k = ? N/m.", a: ["200"] });
+        mathQ.push({ q: "k = 400 N/m și Fe = 4 N. Alungirea este ? cm.", a: ["1"] });
+
+        // Forța de Frecare (Ff = mu * G)
+        mathQ.push({ q: "G = 50 N și coeficientul de frecare este 0,2. Ff = ? N.", a: ["10"] });
+        mathQ.push({ q: "m = 2 kg și coeficientul de frecare este 0,1. Ff = ? N.", a: ["2"] });
+
+        // Principii
+        mathQ.push({ q: "Dacă rezultanta forțelor este zero, corpul își păstrează starea de repaus sau ...........", a: ["miscare rectilinie uniforma", "mru"] });
+        mathQ.push({ q: "Un corp de 10 kg este tras cu 30 N și frecarea este 10 N. Forța rezultantă este ? N.", a: ["20"] });
+        
+        // Transformări mase
+        mathQ.push({ q: "Un corp are G = 0,1 kN. Masa sa este ? kg.", a: ["10"] });
+        mathQ.push({ q: "O forță de 0,05 kN este egală cu ? N.", a: ["50"] });
+
+        // Diverse
+        mathQ.push({ q: "Două forțe egale de câte 10 N acționează în sensuri opuse. Rezultanta este ? N.", a: ["0"] });
+        mathQ.push({ q: "Dinamometrul indică 2,5 N. Aceasta reprezintă ........... forței măsurate.", a: ["valoarea", "modulul"] });
+        mathQ.push({ q: "Direcția pe care se deplasează un corp lăsat liber este ...........", a: ["verticala"] });
+        mathQ.push({ q: "Unitatea de măsură pentru constanta elastică este N supra ...........", a: ["metru", "m"] });
+        mathQ.push({ q: "Alungirea unui resort este diferența dintre lungimea finală și lungimea ...........", a: ["initiala"] });
+        mathQ.push({ q: "Raportul G / m este egal cu aproximativ ? N/kg pe Pământ.", a: ["10"] });
+
+        return mathQ;
+    }
+
+    function startGame() {
+        state.name = document.getElementById('p-name').value.trim();
+        state.class = document.getElementById('p-class').value;
+        if(!state.name || !state.class) return alert("Introdu datele de identificare!");
+        
+        state.questions = [...theoryPool, ...generateMathPool()].sort(() => 0.5 - Math.random());
+        document.getElementById('screen-login').classList.add('hidden');
+        document.getElementById('screen-game').classList.remove('hidden');
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const q = state.questions[state.currentIdx];
+        document.getElementById('q-info').innerText = `ÎNTREBAREA ${state.currentIdx + 1} / 30`;
+        document.getElementById('question').innerText = q.q;
+        const area = document.getElementById('input-area');
+        area.innerHTML = `
+            <input type="text" id="user-ans" placeholder="Răspuns..." autocomplete="off">
+            <button class="check-btn" id="btn-submit" onclick="handleSubmit()">VERIFICĂ</button>
+        `;
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('user-ans').focus();
+    }
+
+    function handleSubmit() {
+        const val = document.getElementById('user-ans').value;
+        if(val.trim() === "") return;
+        checkAns(val);
+    }
+
+    function checkAns(user) {
+        const q = state.questions[state.currentIdx];
+        const clean = (s) => s.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().replace(",", ".");
+        let isCorrect = q.a.some(ans => clean(user) === clean(ans));
+        
+        const f = document.getElementById('feedback');
+        f.style.display = 'block';
+        if(isCorrect) { 
+            state.correctAnswers++; 
+            f.innerText = "CORECT! ✅"; f.style.color = "#4ade80"; 
+        } else { 
+            f.innerText = `GREȘIT! Răspuns corect: ${q.a[0]} ❌`; f.style.color = "#f87171"; 
+        }
+        document.getElementById('btn-submit').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        state.currentIdx++;
+        if(state.currentIdx < 30) showQuestion(); else finishGame();
+    }
+
+    function finishGame() {
+        document.getElementById('screen-game').classList.add('hidden');
+        document.getElementById('screen-end').classList.remove('hidden');
+        const nota = (1 + (state.correctAnswers * 0.3)).toFixed(2);
+        document.getElementById('final-score').innerText = nota;
+        document.getElementById('raw-points').innerText = `Scor: ${state.correctAnswers} corecte din 30`;
+        
+        const fd = new FormData();
+        fd.append("nume", state.name); fd.append("clasa", state.class + " - Forta 7"); fd.append("scor", nota);
+        fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+    }
+
+    document.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') {
+            const next = document.getElementById('next-btn');
+            if(next && next.style.display === 'block') nextQuestion();
+            else handleSubmit();
+        }
+    });
+</script>
 </body>
 </html>

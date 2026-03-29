@@ -2,11 +2,545 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Energia și viața - Test final</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>FIZICĂ VIII - Energia și viața</title>
+  <style>
+    :root {
+      --primary: #0ea5e9;
+      --primary-dark: #0284c7;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --ok: #4ade80;
+      --bad: #f87171;
+      --border: #334155;
+      --panel: rgba(15, 23, 42, 0.92);
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+      color: var(--text);
+      overflow: hidden;
+    }
+    .app { width: 100vw; height: 100vh; padding: 12px; }
+    .screen { width: 100%; height: 100%; display: none; }
+    .screen.active { display: block; }
+    .card {
+      width: 100%; height: 100%; background: var(--panel); border: 1px solid var(--border);
+      border-radius: 24px; box-shadow: 0 24px 60px rgba(0,0,0,0.35); padding: 24px; overflow: auto;
+    }
+    .start-wrap { max-width: 920px; margin: 0 auto; }
+    .header { text-align: center; border-bottom: 2px solid var(--primary); padding-bottom: 12px; margin-bottom: 20px; }
+    .school { font-size: 1.1rem; font-weight: 800; color: var(--accent); margin-bottom: 4px; text-transform: uppercase; }
+    .teacher { font-size: 0.95rem; color: var(--muted); margin-bottom: 10px; letter-spacing: 0.6px; }
+    .quote {
+      color: #fef08a; font-style: italic; background: rgba(251,191,36,0.10); border-left: 4px solid var(--accent);
+      border-radius: 12px; padding: 10px 12px; display: inline-block; max-width: 100%;
+    }
+    .title { text-align: center; font-size: 1.8rem; margin: 0 0 8px; }
+    .subtle { text-align: center; color: var(--muted); margin: 0 0 18px; }
+    .grid { display: grid; grid-template-columns: minmax(0,1fr) minmax(280px,340px); gap: 12px; margin-bottom: 14px; }
+    input[type="text"], select {
+      width: 100%; min-height: 56px; padding: 14px 16px; border-radius: 14px; border: 2px solid #475569;
+      background: #0b1220; color: white; font-size: 1rem; outline: none;
+    }
+    select {
+      appearance: none; -webkit-appearance: none; -moz-appearance: none; padding-right: 44px;
+      background-image: linear-gradient(45deg, transparent 50%, #38bdf8 50%), linear-gradient(135deg, #38bdf8 50%, transparent 50%);
+      background-position: calc(100% - 22px) calc(50% - 3px), calc(100% - 16px) calc(50% - 3px);
+      background-size: 6px 6px, 6px 6px; background-repeat: no-repeat; font-weight: 700;
+    }
+    select option { font-size: 1rem; white-space: normal; }
+    input[type="text"]:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(56,189,248,0.12); }
+    .info-box {
+      text-align: center; color: #fde68a; background: rgba(251,191,36,0.10); border-radius: 12px;
+      padding: 12px; margin-bottom: 16px; font-weight: 700; line-height: 1.45;
+    }
+    .btn {
+      width: 100%; border: none; border-radius: 14px; padding: 15px; font-weight: 800; cursor: pointer;
+      text-transform: uppercase; letter-spacing: 0.4px; transition: transform 0.08s ease, opacity 0.2s ease;
+    }
+    .btn:hover { opacity: 0.96; }
+    .btn:active { transform: scale(0.99); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: var(--primary-dark); color: white; }
+    .btn-disabled { opacity: 0.55; cursor: not-allowed; }
+    .game-card { display: flex; flex-direction: column; justify-content: space-between; }
+    .meta-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .pill {
+      background: rgba(14,165,233,0.12); color: var(--accent); border: 1px solid rgba(56,189,248,0.25);
+      border-radius: 999px; padding: 8px 12px; font-weight: 800; font-size: 0.92rem;
+    }
+    .question-box {
+      font-size: 1.32rem; font-weight: 700; line-height: 1.5; text-align: center; margin: 8px auto 18px;
+      max-width: 1080px; min-height: 120px; display: flex; align-items: center; justify-content: center;
+    }
+    .answer-box { max-width: 780px; width: 100%; margin: 0 auto; display: grid; gap: 12px; }
+    .feedback {
+      margin: 18px auto 0; padding: 14px; border-radius: 14px; display: none; text-align: center;
+      font-weight: 700; line-height: 1.55; border: 1px solid transparent; max-width: 940px;
+    }
+    .feedback.ok { color: var(--ok); background: rgba(74,222,128,0.08); border-color: rgba(74,222,128,0.22); }
+    .feedback.bad { color: #fecaca; background: rgba(248,113,113,0.10); border-color: rgba(248,113,113,0.22); }
+    .result-score { font-size: 4.8rem; color: var(--accent); font-weight: 900; text-align: center; line-height: 1; margin: 24px 0 10px; }
+    .center { text-align: center; }
+    .muted { color: var(--muted); }
+    .hidden { display: none; }
+    @media (max-width: 760px) {
+      .app { padding: 8px; }
+      .card { padding: 16px; border-radius: 18px; }
+      .grid { grid-template-columns: 1fr; }
+      .question-box { font-size: 1.08rem; min-height: 100px; }
+      .title { font-size: 1.45rem; }
+      input[type="text"], select { min-height: 60px; font-size: 1.05rem; }
+      select { padding-right: 48px; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Energia și viața - Test final</h1>
-  <p>Pagina este în lucru.</p>
+  <div class="app">
+    <section class="screen active" id="screen-login">
+      <div class="card">
+        <div class="start-wrap">
+          <div class="header">
+            <div class="school">ȘCOALA GIMNAZIALĂ ....</div>
+            <div class="teacher">Prof. DĂNUȚ ANDRONIE</div>
+            <div class="quote">FIZICA NU ESTE O MATERIE DOMINATĂ DE FORMULE CI DE LOGICĂ</div>
+          </div>
+          <h1 class="title">Energia și viața</h1>
+          <p class="subtle">Clasa a VIII-a • 20 itemi • 100 puncte • minimum 100 variante</p>
+          <div class="grid">
+            <input type="text" id="stdName" placeholder="Nume și prenume elev" autocomplete="name" />
+            <select id="stdClass" aria-label="Selectează clasa">
+              <option value="">Clasa...</option>
+              <option value="CLASA a VIII-a A">CLASA a VIII-a A</option>
+              <option value="CLASA a VIII-a B">CLASA a VIII-a B</option>
+              <option value="CLASA a VIII-a C">CLASA a VIII-a C</option>
+              <option value="CLASA a VIII-a D">CLASA a VIII-a D</option>
+            </select>
+          </div>
+          <div class="info-box">Scrie numai valoarea numerică, cu maximum 2 zecimale.</div>
+          <button class="btn btn-primary" id="startBtn">Începe testul</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-game">
+      <div class="card game-card">
+        <div>
+          <div class="meta-row">
+            <div class="pill" id="q-info">Cerința 1 / 20</div>
+            <div class="pill" id="points-info">5 puncte</div>
+            <div class="pill" id="variant-info">Varianta 1 / 100</div>
+            <div class="pill" id="test-code">Cod test</div>
+          </div>
+          <div class="question-box" id="question"></div>
+          <div class="answer-box" id="input-area"></div>
+          <div class="feedback" id="feedback"></div>
+        </div>
+        <button class="btn btn-secondary hidden" id="nextBtn">Următoarea</button>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-end">
+      <div class="card">
+        <h2 class="title">Rezultat</h2>
+        <div class="center muted" id="end-variant"></div>
+        <div class="result-score" id="final-score"></div>
+        <p class="center muted" id="raw-points"></p>
+        <p class="center muted" id="final-grade"></p>
+        <p class="center muted" id="end-code"></p>
+        <button class="btn btn-primary" id="restartBtn">Reia testul</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec";
+    const TOTAL_QUESTIONS = 20;
+    const MIXED_COUNT = 10;
+    const NUMERIC_COUNT = 10;
+    const POINTS_PER_ITEM = 5;
+    const TOTAL_POINTS = 100;
+    const VARIANT_COUNT = 100;
+
+    const state = {
+      name: "",
+      className: "",
+      correctAnswers: 0,
+      currentIdx: 0,
+      questions: [],
+      variant: 1,
+      testCode: "",
+      seed: 0,
+      sessionSalt: ""
+    };
+
+    const el = {
+      login: document.getElementById("screen-login"),
+      game: document.getElementById("screen-game"),
+      end: document.getElementById("screen-end"),
+      stdName: document.getElementById("stdName"),
+      stdClass: document.getElementById("stdClass"),
+      startBtn: document.getElementById("startBtn"),
+      qInfo: document.getElementById("q-info"),
+      pointsInfo: document.getElementById("points-info"),
+      variantInfo: document.getElementById("variant-info"),
+      testCode: document.getElementById("test-code"),
+      question: document.getElementById("question"),
+      inputArea: document.getElementById("input-area"),
+      feedback: document.getElementById("feedback"),
+      nextBtn: document.getElementById("nextBtn"),
+      finalScore: document.getElementById("final-score"),
+      rawPoints: document.getElementById("raw-points"),
+      finalGrade: document.getElementById("final-grade"),
+      endVariant: document.getElementById("end-variant"),
+      endCode: document.getElementById("end-code"),
+      restartBtn: document.getElementById("restartBtn")
+    };
+
+    const fillPool = [
+      { q: "Capacitatea unui sistem de a produce transformări se numește ..........", a: ["energie", "energia"] },
+      { q: "Ritmul de transformare a energiei se numește ..........", a: ["putere", "puterea"] },
+      { q: "O sursă de energie care se poate reface natural se numește sursă ..........", a: ["regenerabilă", "regenerabila"] },
+      { q: "Energia obținută din mișcarea apei este energie ..........", a: ["hidroelectrică", "hidroelectrica"] },
+      { q: "Energia obținută din vânt se numește energie ..........", a: ["eoliană", "eoliana"] },
+      { q: "Transformarea energiei luminoase a Soarelui în energie electrică se face cu ajutorul panourilor ..........", a: ["fotovoltaice", "fotovoltaic"] },
+      { q: "Raportul dintre energia utilă și energia consumată definește ..........", a: ["randamentul", "randament"] },
+      { q: "În relația η = Eu / Ec, simbolul η reprezintă ..........", a: ["randamentul", "randament"] },
+      { q: "Energia consumată în locuințe este înregistrată de .......... de energie electrică", a: ["contorul", "contor"] },
+      { q: "Consumul de energie electrică se exprimă frecvent în ..........", a: ["kwh", "kilowatt-oră", "kilowatt-ora"] },
+      { q: "Arderea combustibililor fosili poate duce la poluarea ..........", a: ["aerului", "aer"] },
+      { q: "Energia chimică a alimentelor este folosită de organism pentru întreținerea .......... și desfășurarea activităților", a: ["vieții", "vietii"] },
+      { q: "Un aparat cu randament mai mare folosește energia mai ..........", a: ["eficient", "eficientă", "eficienta"] },
+      { q: "Puterea se poate calcula cu relația P = E / ..........", a: ["t"] },
+      { q: "Energia electrică se poate calcula cu relația E = P · ..........", a: ["t"] },
+      { q: "Energia utilă este întotdeauna mai .......... sau cel mult egală cu energia consumată", a: ["mică", "mica"] }
+    ];
+
+    const tfPool = [
+      { q: "Energia nu se creează și nu dispare, ci se transformă.", a: ["adevărat", "adevarat"] },
+      { q: "Puterea și energia sunt aceeași mărime fizică.", a: ["fals"] },
+      { q: "Energia solară este o sursă regenerabilă de energie.", a: ["adevărat", "adevarat"] },
+      { q: "Cărbunele și petrolul sunt surse regenerabile de energie.", a: ["fals"] },
+      { q: "Randamentul unui sistem poate fi mai mare decât 100%.", a: ["fals"] },
+      { q: "Un aparat mai eficient poate realiza aceeași sarcină utilă cu consum mai mic de energie.", a: ["adevărat", "adevarat"] },
+      { q: "Poluarea poate fi redusă prin folosirea surselor regenerabile de energie.", a: ["adevărat", "adevarat"] },
+      { q: "Energia electrică utilizată într-o locuință nu poate fi măsurată.", a: ["fals"] },
+      { q: "1 kW = 1000 W.", a: ["adevărat", "adevarat"] },
+      { q: "Dacă timpul de funcționare se dublează, la aceeași putere, energia consumată se dublează.", a: ["adevărat", "adevarat"] },
+      { q: "Puterea arată energia consumată într-o unitate de timp.", a: ["adevărat", "adevarat"] },
+      { q: "Energia hidroelectrică este obținută din radiația solară directă.", a: ["fals"] }
+    ];
+
+    function normalizeText(value) {
+      return String(value).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s+/g, " ").trim();
+    }
+    function normalizeNumberString(value) {
+      return String(value).trim().replace(/,/g, ".").replace(/\s+/g, "");
+    }
+    function parseLocaleNumber(value) {
+      const cleaned = normalizeNumberString(value);
+      if (!/^[-+]?\d+(\.\d+)?$/.test(cleaned)) return NaN;
+      return Number(cleaned);
+    }
+    function decimalCount(value) {
+      const cleaned = normalizeNumberString(value);
+      return cleaned.includes(".") ? cleaned.split(".")[1].length : 0;
+    }
+    function truncateTo(num, decimals = 2) {
+      const factor = Math.pow(10, decimals);
+      return Math.trunc(num * factor) / factor;
+    }
+    function roundTo(num, decimals = 2) {
+      const factor = Math.pow(10, decimals);
+      return Math.round(num * factor) / factor;
+    }
+    function formatNumber(num, maxDecimals = 2) {
+      if (Number.isInteger(num)) return String(num);
+      return Number(num.toFixed(maxDecimals)).toString();
+    }
+    function formatPrecise(num) {
+      if (Number.isInteger(num)) return String(num);
+      return Number(num.toFixed(6)).toString();
+    }
+    function shortCode(seed) {
+      return (seed >>> 0).toString(36).toUpperCase().slice(0, 6);
+    }
+    function hashString(str) {
+      let h = 2166136261;
+      for (let i = 0; i < str.length; i++) {
+        h ^= str.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return h >>> 0;
+    }
+    function mulberry32(a) {
+      return function () {
+        let t = a += 0x6D2B79F5;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+    function randFrom(rng, arr) {
+      return arr[Math.floor(rng() * arr.length)];
+    }
+    function pickUnique(rng, pool, count) {
+      const copy = [...pool];
+      const result = [];
+      while (result.length < count && copy.length) {
+        const idx = Math.floor(rng() * copy.length);
+        result.push(copy.splice(idx, 1)[0]);
+      }
+      return result;
+    }
+    function shuffleArray(rng, arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+    function questionFill(item) {
+      return { type: "fill", q: item.q, answers: item.a, points: POINTS_PER_ITEM };
+    }
+    function questionTrueFalse(item) {
+      return { type: "tf", q: item.q, answers: item.a, points: POINTS_PER_ITEM };
+    }
+    function questionNumeric({ q, exactAnswer, unit = "", formula = "", constants = "" }) {
+      return { type: "numeric", q, exactAnswer, unit, formula, constants, points: POINTS_PER_ITEM, displayAnswer: `${formatPrecise(exactAnswer)}${unit ? " " + unit : ""}` };
+    }
+
+    function genPowerFromEnergyTime(rng) {
+      const E = randFrom(rng, [600, 900, 1200, 1500, 1800, 2400, 3000, 3600]);
+      const t = randFrom(rng, [10, 20, 30, 40, 60, 120]);
+      return questionNumeric({ q: `Calculează puterea dacă energia este E = ${E} J și timpul este t = ${t} s.`, exactAnswer: E / t, unit: "W", formula: "P = E / t" });
+    }
+    function genEnergyFromPowerTime(rng) {
+      const P = randFrom(rng, [10, 20, 40, 50, 60, 75, 100, 150, 200]);
+      const t = randFrom(rng, [10, 20, 30, 60, 120, 180, 300]);
+      return questionNumeric({ q: `Calculează energia consumată dacă puterea este P = ${P} W și timpul este t = ${t} s.`, exactAnswer: P * t, unit: "J", formula: "E = P · t" });
+    }
+    function genEfficiency(rng) {
+      const Ec = randFrom(rng, [100, 200, 250, 400, 500, 800, 1000]);
+      const eta = randFrom(rng, [0.25, 0.4, 0.5, 0.6, 0.75, 0.8, 0.9]);
+      const Eu = Ec * eta;
+      return questionNumeric({ q: `Un sistem consumă energia Ec = ${Ec} J și produce energia utilă Eu = ${formatNumber(Eu)} J. Calculează randamentul în procente.`, exactAnswer: (Eu / Ec) * 100, unit: "%", formula: "η = Eu / Ec · 100" });
+    }
+    function genUsefulEnergy(rng) {
+      const Ec = randFrom(rng, [100, 200, 300, 400, 500, 800, 1000]);
+      const eta = randFrom(rng, [40, 50, 60, 75, 80, 90]);
+      return questionNumeric({ q: `Un aparat are randamentul η = ${eta}% și consumă energia Ec = ${Ec} J. Calculează energia utilă.`, exactAnswer: Ec * eta / 100, unit: "J", formula: "Eu = η · Ec / 100" });
+    }
+    function genConsumedEnergy(rng) {
+      const Eu = randFrom(rng, [40, 80, 100, 120, 150, 200, 300, 400]);
+      const eta = randFrom(rng, [40, 50, 60, 75, 80]);
+      return questionNumeric({ q: `Un aparat are energia utilă Eu = ${Eu} J și randamentul η = ${eta}%. Calculează energia consumată.`, exactAnswer: Eu * 100 / eta, unit: "J", formula: "Ec = Eu · 100 / η" });
+    }
+    function genKwhFromKwAndHours(rng) {
+      const P = randFrom(rng, [0.06, 0.08, 0.1, 0.12, 0.2, 0.5, 1, 1.5, 2]);
+      const t = randFrom(rng, [1, 2, 3, 4, 5, 6, 8, 10]);
+      return questionNumeric({ q: `Un aparat are puterea P = ${formatNumber(P)} kW și funcționează timp de ${t} h. Calculează energia consumată în kWh.`, exactAnswer: P * t, unit: "kWh", formula: "E = P · t" });
+    }
+    function genCostFromKwh(rng) {
+      const E = randFrom(rng, [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8]);
+      const price = randFrom(rng, [0.7, 0.8, 0.9, 1, 1.2, 1.5]);
+      return questionNumeric({ q: `Consumul de energie este ${formatNumber(E)} kWh, iar prețul este ${formatNumber(price)} lei/kWh. Calculează costul.`, exactAnswer: E * price, unit: "lei", formula: "Cost = E · preț" });
+    }
+    function genEnergyForDays(rng) {
+      const P = randFrom(rng, [0.06, 0.08, 0.1, 0.12, 0.2, 0.5, 1]);
+      const hours = randFrom(rng, [1, 2, 3, 4, 5, 6, 8]);
+      const days = randFrom(rng, [5, 10, 15, 20, 25, 30]);
+      return questionNumeric({ q: `Un aparat de putere ${formatNumber(P)} kW funcționează ${hours} h/zi timp de ${days} zile. Calculează energia consumată în kWh.`, exactAnswer: P * hours * days, unit: "kWh", formula: "E = P · t_total" });
+    }
+    function genJoulesToKwh(rng) {
+      const kwh = randFrom(rng, [0.5, 1, 1.5, 2, 2.5, 3, 4]);
+      const J = kwh * 3600000;
+      return questionNumeric({ q: `Transformă energia ${J} J în kWh.`, exactAnswer: J / 3600000, unit: "kWh", formula: "1 kWh = 3 600 000 J" });
+    }
+    function genPercentageSaving(rng) {
+      const E1 = randFrom(rng, [100, 120, 150, 180, 200, 240, 300]);
+      const E2 = randFrom(rng, [60, 80, 90, 100, 120, 150, 180]);
+      return questionNumeric({ q: `Un aparat vechi consumă ${E1} kWh, iar unul nou consumă ${E2} kWh pentru aceeași sarcină. Calculează economia procentuală raportată la aparatul vechi.`, exactAnswer: ((E1 - E2) / E1) * 100, unit: "%", formula: "economie% = (E1 - E2) / E1 · 100" });
+    }
+    function genPowerComparison(rng) {
+      const P1 = randFrom(rng, [40, 60, 75, 100, 120, 150, 200]);
+      const P2 = randFrom(rng, [20, 40, 50, 60, 80, 100]);
+      return questionNumeric({ q: `Calculează raportul P₁ / P₂ dacă P₁ = ${P1} W și P₂ = ${P2} W.`, exactAnswer: P1 / P2, formula: "Raport = P₁ / P₂" });
+    }
+
+    const numericGenerators = [
+      genPowerFromEnergyTime,
+      genEnergyFromPowerTime,
+      genEfficiency,
+      genUsefulEnergy,
+      genConsumedEnergy,
+      genKwhFromKwAndHours,
+      genCostFromKwh,
+      genEnergyForDays,
+      genJoulesToKwh,
+      genPercentageSaving,
+      genPowerComparison
+    ];
+
+    function generateSessionSalt() {
+      if (window.crypto && window.crypto.getRandomValues) {
+        const arr = new Uint32Array(1);
+        window.crypto.getRandomValues(arr);
+        return String(arr[0]);
+      }
+      return String(Math.floor(Math.random() * 1e9));
+    }
+    function getMinuteKey() {
+      const now = new Date();
+      const pad = (n) => String(n).padStart(2, "0");
+      return `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}`;
+    }
+    function buildTest() {
+      const baseKey = `${state.name}|${state.className}|${getMinuteKey()}|${state.sessionSalt}`;
+      state.seed = hashString(baseKey);
+      state.variant = (state.seed % VARIANT_COUNT) + 1;
+      state.testCode = `EV8-V${String(state.variant).padStart(3, "0")}-${shortCode(state.seed)}`;
+      const rng = mulberry32(state.seed);
+      const mixedPool = [
+        ...fillPool.map((item) => ({ ...item, itemType: "fill" })),
+        ...tfPool.map((item) => ({ ...item, itemType: "tf" }))
+      ];
+      const mixedQuestions = pickUnique(rng, mixedPool, MIXED_COUNT).map((item) => item.itemType === "fill" ? questionFill(item) : questionTrueFalse(item));
+      const numericQuestions = pickUnique(rng, numericGenerators, NUMERIC_COUNT).map((fn) => fn(rng));
+      state.questions = shuffleArray(rng, [...mixedQuestions, ...numericQuestions]);
+      state.currentIdx = 0;
+      state.correctAnswers = 0;
+    }
+    function showScreen(screen) {
+      [el.login, el.game, el.end].forEach((node) => node.classList.remove("active"));
+      screen.classList.add("active");
+    }
+    function showQuestion() {
+      const q = state.questions[state.currentIdx];
+      el.qInfo.textContent = `Cerința ${state.currentIdx + 1} / ${TOTAL_QUESTIONS}`;
+      el.pointsInfo.textContent = `${q.points} puncte`;
+      el.variantInfo.textContent = `Varianta ${state.variant} / ${VARIANT_COUNT}`;
+      el.testCode.textContent = state.testCode;
+      if (q.type === "numeric" && q.constants) {
+        el.question.innerHTML = `${q.q}<br><br><span style="font-size:0.82em;color:#fde68a;font-weight:600;line-height:1.5;display:inline-block;">${q.constants}</span>`;
+      } else {
+        el.question.textContent = q.q;
+      }
+      el.feedback.className = "feedback";
+      el.feedback.style.display = "none";
+      el.feedback.innerHTML = "";
+      el.nextBtn.classList.add("hidden");
+      el.inputArea.innerHTML = `
+        <input type="text" id="userAnswer" placeholder="Răspuns..." autocomplete="off" />
+        <button class="btn btn-primary" id="checkBtn">Verifică</button>
+      `;
+      const answerInput = document.getElementById("userAnswer");
+      const checkBtn = document.getElementById("checkBtn");
+      checkBtn.addEventListener("click", checkAnswer);
+      answerInput.addEventListener("keydown", (event) => { if (event.key === "Enter") checkAnswer(); });
+      answerInput.focus();
+    }
+    function numericAccepted(userValue, exactAnswer) {
+      if (decimalCount(userValue) > 2) return false;
+      const userNum = parseLocaleNumber(userValue);
+      if (Number.isNaN(userNum)) return false;
+      const accepted = new Set([exactAnswer, truncateTo(exactAnswer, 2), roundTo(exactAnswer, 2)].map((n) => Number(n.toFixed(6))));
+      return accepted.has(Number(userNum.toFixed(6)));
+    }
+    function evaluateAnswer(userValue, q) {
+      if (q.type === "fill" || q.type === "tf") {
+        const clean = normalizeText(userValue);
+        return q.answers.some((ans) => normalizeText(ans) === clean);
+      }
+      if (q.type === "numeric") return numericAccepted(userValue, q.exactAnswer);
+      return false;
+    }
+    function checkAnswer() {
+      const q = state.questions[state.currentIdx];
+      const answerInput = document.getElementById("userAnswer");
+      const userValue = answerInput.value;
+      const correct = evaluateAnswer(userValue, q);
+      answerInput.disabled = true;
+      const checkBtn = document.getElementById("checkBtn");
+      checkBtn.disabled = true;
+      checkBtn.classList.add("btn-disabled");
+      el.feedback.style.display = "block";
+      if (correct) {
+        state.correctAnswers++;
+        el.feedback.className = "feedback ok";
+        el.feedback.innerHTML = `Corect ✅<br>+${q.points} puncte`;
+      } else {
+        el.feedback.className = "feedback bad";
+        if (q.type === "numeric") {
+          el.feedback.innerHTML = `Greșit ❌<br>Formula: <strong>${q.formula}</strong><br>Rezultat corect: <strong>${q.displayAnswer}</strong>`;
+        } else {
+          el.feedback.innerHTML = `Greșit ❌<br>Răspuns corect: <strong>${q.answers[0]}</strong>`;
+        }
+      }
+      el.nextBtn.classList.remove("hidden");
+    }
+    function nextQuestion() {
+      state.currentIdx++;
+      if (state.currentIdx < TOTAL_QUESTIONS) showQuestion();
+      else finishGame();
+    }
+    function finishGame() {
+      const points = state.correctAnswers * POINTS_PER_ITEM;
+      const grade = (1 + (points * 9) / TOTAL_POINTS).toFixed(2);
+      showScreen(el.end);
+      el.finalScore.textContent = `${points}p`;
+      el.rawPoints.textContent = `Scor: ${state.correctAnswers} / ${TOTAL_QUESTIONS} răspunsuri corecte • ${points} / ${TOTAL_POINTS} puncte.`;
+      el.finalGrade.textContent = `Notă orientativă: ${grade}`;
+      el.endVariant.textContent = `Varianta ${state.variant} din ${VARIANT_COUNT}`;
+      el.endCode.textContent = `Cod test: ${state.testCode}`;
+      const fd = new FormData();
+      fd.append("nume", state.name);
+      fd.append("clasa", `${state.className} - Energia și viața 8`);
+      fd.append("varianta", String(state.variant));
+      fd.append("cod_test", state.testCode);
+      fd.append("scor", String(points));
+      fd.append("corecte", String(state.correctAnswers));
+      fd.append("total_itemi", String(TOTAL_QUESTIONS));
+      fd.append("punctaj_total", String(TOTAL_POINTS));
+      fetch(SCRIPT_URL, { method: "POST", body: fd, mode: "no-cors" }).catch(() => {});
+    }
+    async function enterFullscreen() {
+      const elem = document.documentElement;
+      try {
+        if (elem.requestFullscreen && !document.fullscreenElement) { await elem.requestFullscreen(); return; }
+        if (elem.webkitRequestFullscreen && !document.webkitFullscreenElement) { elem.webkitRequestFullscreen(); return; }
+        if (elem.msRequestFullscreen && !document.msFullscreenElement) { elem.msRequestFullscreen(); return; }
+      } catch (_) {}
+    }
+    async function startGame() {
+      state.name = el.stdName.value.trim();
+      state.className = el.stdClass.value;
+      state.sessionSalt = generateSessionSalt();
+      if (!state.name || !state.className) {
+        alert("Completează numele și clasa!");
+        return;
+      }
+      try { await enterFullscreen(); } catch (_) {}
+      buildTest();
+      showScreen(el.game);
+      showQuestion();
+    }
+    function restartApp() {
+      showScreen(el.login);
+      el.stdName.focus();
+    }
+    function bindEvents() {
+      el.startBtn.addEventListener("click", startGame);
+      el.nextBtn.addEventListener("click", nextQuestion);
+      el.restartBtn.addEventListener("click", restartApp);
+    }
+    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", bindEvents);
+    else bindEvents();
+  </script>
 </body>
 </html>

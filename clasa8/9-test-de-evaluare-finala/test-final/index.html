@@ -1,12 +1,171 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Test de evaluare finală - Clasa a VIII-a - Test final</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluare Finală Fizică VIII - Gala Galaction</title>
+    <style>
+        :root { --primary: #1e3a8a; --accent: #f59e0b; --bg: #f8fafc; --card: #ffffff; --text: #1e293b; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); padding: 20px; line-height: 1.6; }
+        .paper { max-width: 900px; background: var(--card); margin: 0 auto; padding: 40px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-radius: 4px; border-top: 12px solid var(--primary); }
+        
+        /* HEADER */
+        .school-header { text-align: center; border-bottom: 2px solid var(--accent); margin-bottom: 25px; padding-bottom: 10px; }
+        .motto { font-style: italic; color: #92400e; background: #fffbeb; padding: 10px; border-radius: 4px; margin: 10px 0; font-size: 0.95rem; border: 1px dashed var(--accent); }
+        
+        .section-box { margin-bottom: 30px; border-left: 4px solid var(--primary); padding-left: 15px; }
+        .section-title { font-weight: bold; font-size: 1.1rem; color: var(--primary); text-transform: uppercase; margin-bottom: 15px; display: block; }
+        
+        .math-problem { background: #f1f5f9; padding: 15px; border-radius: 8px; margin: 15px 0; }
+        input[type="text"], input[type="number"] { border: 1px solid #cbd5e1; padding: 6px; border-radius: 4px; }
+        .q-input { width: 150px; }
+        .full-input { width: 100%; max-width: 400px; margin-bottom: 15px; font-size: 1rem; }
+
+        .grid-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0 20px 20px; }
+        .btn-evaluate { background: var(--primary); color: white; border: none; padding: 15px 40px; border-radius: 8px; font-weight: bold; cursor: pointer; width: 100%; font-size: 1.2rem; transition: 0.3s; }
+        .btn-evaluate:hover { background: #1e40af; }
+        
+        #result { display: none; text-align: center; padding: 25px; background: #dcfce7; color: #166534; border-radius: 8px; margin-top: 25px; font-size: 1.8rem; }
+        @media print { .btn-evaluate, .std-info { display: none; } }
+    </style>
 </head>
 <body>
-  <h1>Test de evaluare finală - Clasa a VIII-a - Test final</h1>
-  <p>Pagina este în lucru.</p>
+
+<div class="paper">
+    <div class="school-header">
+        <div style="font-size: 1.6rem; font-weight: bold;">ȘCOALA GIMNAZIALĂ "GALA GALACTION"</div>
+        <div style="font-size: 1.1rem; color: #64748b;">Prof. DĂNUȚ ANDRONIE</div>
+        <div class="motto">"FIZICA NU ESTE DOMINATĂ DE FORMULE CI DE LOGICĂ"</div>
+        <h2 style="color: var(--primary); margin-top: 15px;">EVALUARE FINALĂ - CLASA A VIII-A</h2>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+    <input type="text" id="stdName" class="full-input" placeholder="Nume Prenume Elev">
+    <select id="stdClass" style="width: 120px; padding: 8px; border-radius: 4px; border: 1px solid #cbd5e1;">
+        <option value="">Clasa...</option>
+        <option value="VII A">VII A</option>
+        <option value="VII B">VII B</option>
+        <option value="VII C">VII C</option>
+        <option value="VII D">VII D</option> </select>
+</div>
+
+    <div class="section-box">
+        <span class="section-title">I. Completează spațiile libere (2p)</span>
+        1. Conductia termică reprezintă <input type="text" id="i1" placeholder="..."> sub formă de căldură.<br>
+        2. Miopia este defectul de vedere al unei persoane care poate vedea clar obiectele <input type="text" id="i2" placeholder="...">.<br>
+        3. Intensitatea curentului electric ce străbate o porțiune de circuit este <input type="text" id="i3" placeholder="..."> proporțională cu tensiunea aplicată.
+    </div>
+
+    <div class="section-box">
+        <span class="section-title">III. Alege răspunsul corect (3p)</span>
+        <div id="dynamic-grid"></div>
+    </div>
+
+    <div class="section-box">
+        <span class="section-title">IV. Rezolvă următoarele probleme (4p)</span>
+        <div id="dynamic-problems"></div>
+    </div>
+
+    <div id="result"></div>
+    <button class="btn-evaluate" onclick="calculateScore()">FINALIZEAZĂ ȘI TRIMITE TESTUL</button>
+
+    <div style="margin-top: 30px; font-size: 0.85rem; color: #64748b; border-top: 1px solid #e2e8f0; padding-top: 10px;">
+        Notă: 10 puncte din oficiu. Timp de lucru: 50 minute.
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec";
+    let state = { grid: [], probs: [] };
+
+    function generateTest() {
+        const gridCont = document.getElementById('dynamic-grid');
+        const probCont = document.getElementById('dynamic-problems');
+
+        // 1. Grila: Rezistenta electrica (Dinamica)
+        let U = Math.floor(Math.random() * 20 + 10);
+        let I = (Math.random() * 1.5 + 0.5).toFixed(1);
+        let R = (U / I).toFixed(1);
+        addGrid(gridCont, 0, `Dacă la bornele unui rezistor se aplică o tensiune U = ${U}V și acesta este străbătut de un curent I = ${I}A, rezistența sa este:`,
+            [`${R} Ω`, `${(U*I).toFixed(1)} Ω`, `${(I/U).toFixed(2)} Ω`, `${(R*2).toFixed(1)} Ω`], 0);
+
+        // 2. Grila: Randament (Dinamica)
+        let rand = [0.5, 0.75, 0.8, 0.9][Math.floor(Math.random()*4)];
+        addGrid(gridCont, 1, `Dacă puterea maximă debitată de un generator pe circuitul exterior este maximă, valoarea randamentului este:`,
+            [`η = 1`, `η = 0.5`, `η = 0.25`, `η = ${rand}`], 1);
+
+        // 3. Grila: Optica (Imaginea în lentile)
+        addGrid(gridCont, 2, `Imaginea unui obiect așezat între focar și centrul optic al unei lentile convergente este:`,
+            [`reală, răsturnată`, `virtuală, dreaptă, mai mare`, `reală, dreaptă`, `virtuală, răsturnată`], 1);
+
+        // PROB 1: Calorimetrie (Amestec apă și gheață)
+        let m_apa = Math.floor(Math.random() * 300 + 100); // g
+        let t_apa = Math.floor(Math.random() * 20 + 40); // C
+        let c_apa = 4180;
+        let lambda = 334000;
+        let m_gheata = Math.floor(m_apa * 0.1); 
+        // Rezultat simplificat pentru verificare: căldura cedată de apă
+        let Q_ced = (m_apa/1000 * c_apa * t_apa).toFixed(0);
+        addProb(probCont, 0, `Într-un vas se află ${m_apa} g apă la t = ${t_apa}°C. Se introduce gheață la 0°C. Calculează căldura cedată de apă pentru a se răci până la 0°C.`, Q_ced, "Joule");
+
+        // PROB 2: Circuit Electric (Grupare generatoare)
+        let n = Math.floor(Math.random() * 3 + 2); // 2-4 generatoare
+        let E = Math.floor(Math.random() * 6 + 1.5); // V
+        let Etot = (n * E).toFixed(1);
+        addProb(probCont, 1, `Se conectează în serie ${n} generatoare identice, fiecare având tensiunea electromotoare E = ${E}V. Care este tensiunea electromotoare totală a grupării?`, Etot, "Volți");
+    }
+
+    function addGrid(cont, id, text, opts, correct) {
+        state.grid[id] = correct;
+        let html = `<div style="margin-bottom:15px;"><b>${id+1}.</b> ${text}<div class="grid-options">`;
+        opts.forEach((o, i) => { html += `<label><input type="radio" name="g${id}" value="${i}"> ${o}</label>`; });
+        html += `</div></div>`;
+        cont.innerHTML += html;
+    }
+
+    function addProb(cont, id, text, sol, unit) {
+        state.probs[id] = sol;
+        cont.innerHTML += `<div class="math-problem"><b>Problema ${id+1}:</b> ${text}<br>
+            <div style="margin-top:10px;">Rezultat: <input type="number" step="0.01" id="p${id}" class="q-input"> ${unit}</div></div>`;
+    }
+
+    function calculateScore() {
+        let name = document.getElementById('stdName').value;
+        if(!name) return alert("Introdu numele!");
+
+        let score = 10; // Oficiu
+
+        // I. Verificare text (simplistă pentru demo)
+        if(document.getElementById('i1').value.toLowerCase().includes("transfer")) score += 7;
+        if(document.getElementById('i2').value.toLowerCase().includes("apropiate")) score += 7;
+        if(document.getElementById('i3').value.toLowerCase().includes("direct")) score += 6;
+
+        // III. Grile
+        state.grid.forEach((cor, i) => {
+            let sel = document.querySelector(`input[name="g${i}"]:checked`);
+            if(sel && parseInt(sel.value) === cor) score += 10;
+        });
+
+        // IV. Probleme
+        state.probs.forEach((sol, i) => {
+            let val = document.getElementById(`p${i}`).value;
+            if(val && Math.abs(parseFloat(val) - parseFloat(sol)) < 1) score += 20;
+        });
+
+        let nota = (score / 10).toFixed(2);
+        if(nota > 10) nota = "10.00";
+
+        const resDiv = document.getElementById('result');
+        resDiv.style.display = "block";
+        resDiv.innerText = `Rezultat Final: Nota ${nota}`;
+
+        // Trimitere date
+        const fd = new FormData();
+        fd.append("nume", name); fd.append("clasa", document.getElementById('stdClass').value + " - Final 8"); fd.append("scor", nota);
+        fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+    }
+
+    window.onload = generateTest;
+</script>
 </body>
 </html>

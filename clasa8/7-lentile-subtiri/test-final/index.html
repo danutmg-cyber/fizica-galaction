@@ -2,11 +2,832 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lentile subțiri - Test final</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>FIZICĂ VIII - Lentile subțiri</title>
+  <style>
+    :root {
+      --primary: #0ea5e9;
+      --primary-dark: #0284c7;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --accent: #38bdf8;
+      --ok: #4ade80;
+      --bad: #f87171;
+      --border: #334155;
+      --panel: rgba(15, 23, 42, 0.92);
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    .app {
+      width: 100vw;
+      height: 100vh;
+      padding: 12px;
+    }
+
+    .screen {
+      width: 100%;
+      height: 100%;
+      display: none;
+    }
+
+    .screen.active { display: block; }
+
+    .card {
+      width: 100%;
+      height: 100%;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+      padding: 24px;
+      overflow: auto;
+    }
+
+    .start-wrap {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    .header {
+      text-align: center;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+
+    .school {
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+
+    .teacher {
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 10px;
+      letter-spacing: 0.6px;
+    }
+
+    .quote {
+      color: #fef08a;
+      font-style: italic;
+      background: rgba(251, 191, 36, 0.10);
+      border-left: 4px solid var(--accent);
+      border-radius: 12px;
+      padding: 10px 12px;
+      display: inline-block;
+      max-width: 100%;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 1.8rem;
+      margin: 0 0 8px;
+    }
+
+    .subtle {
+      text-align: center;
+      color: var(--muted);
+      margin: 0 0 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    input[type="text"], select {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 2px solid #475569;
+      background: #0b1220;
+      color: white;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    input[type="text"]:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
+    }
+
+    .info-box {
+      text-align: center;
+      color: #fde68a;
+      background: rgba(251, 191, 36, 0.10);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 16px;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .btn {
+      width: 100%;
+      border: none;
+      border-radius: 14px;
+      padding: 15px;
+      font-weight: 800;
+      cursor: pointer;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      transition: transform 0.08s ease, opacity 0.2s ease;
+    }
+
+    .btn:hover { opacity: 0.96; }
+    .btn:active { transform: scale(0.99); }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: var(--primary-dark); color: white; }
+    .btn-disabled { opacity: 0.55; cursor: not-allowed; }
+
+    .game-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .meta-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .pill {
+      background: rgba(14, 165, 233, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(56, 189, 248, 0.25);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 800;
+      font-size: 0.92rem;
+    }
+
+    .question-box {
+      font-size: 1.38rem;
+      font-weight: 700;
+      line-height: 1.5;
+      text-align: center;
+      margin: 8px auto 18px;
+      max-width: 1050px;
+      min-height: 120px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .answer-box {
+      max-width: 760px;
+      width: 100%;
+      margin: 0 auto;
+      display: grid;
+      gap: 12px;
+    }
+
+    .feedback {
+      margin: 18px auto 0;
+      padding: 14px;
+      border-radius: 14px;
+      display: none;
+      text-align: center;
+      font-weight: 700;
+      line-height: 1.55;
+      border: 1px solid transparent;
+      max-width: 900px;
+    }
+
+    .feedback.ok {
+      color: var(--ok);
+      background: rgba(74, 222, 128, 0.08);
+      border-color: rgba(74, 222, 128, 0.22);
+    }
+
+    .feedback.bad {
+      color: #fecaca;
+      background: rgba(248, 113, 113, 0.10);
+      border-color: rgba(248, 113, 113, 0.22);
+    }
+
+    .result-score {
+      font-size: 4.8rem;
+      color: var(--accent);
+      font-weight: 900;
+      text-align: center;
+      line-height: 1;
+      margin: 24px 0 10px;
+    }
+
+    .center { text-align: center; }
+    .muted { color: var(--muted); }
+    .hidden { display: none; }
+
+    @media (max-width: 760px) {
+      .app { padding: 8px; }
+      .card { padding: 16px; border-radius: 18px; }
+      .grid { grid-template-columns: 1fr; }
+      .question-box { font-size: 1.1rem; min-height: 100px; }
+      .title { font-size: 1.45rem; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Lentile subțiri - Test final</h1>
-  <p>Pagina este în lucru.</p>
+  <div class="app">
+    <section class="screen active" id="screen-login">
+      <div class="card">
+        <div class="start-wrap">
+          <div class="header">
+            <div class="school">ȘCOALA GIMNAZIALĂ ....</div>
+            <div class="teacher">Prof. DĂNUȚ ANDRONIE</div>
+            <div class="quote">FIZICA NU ESTE O MATERIE DOMINATĂ DE FORMULE CI DE LOGICĂ</div>
+          </div>
+
+          <h1 class="title">Lentile subțiri</h1>
+          <p class="subtle">Clasa a VIII-a • 20 itemi • 100 puncte • minimum 100 variante</p>
+
+          <div class="grid">
+            <input type="text" id="stdName" placeholder="Nume și prenume elev" autocomplete="name" />
+            <select id="stdClass">
+              <option value="">Clasa...</option>
+              <option value="CLASA a VIII-a A">CLASA a VIII-a A</option>
+              <option value="CLASA a VIII-a B">CLASA a VIII-a B</option>
+              <option value="CLASA a VIII-a C">CLASA a VIII-a C</option>
+              <option value="CLASA a VIII-a D">CLASA a VIII-a D</option>
+            </select>
+          </div>
+
+          <div class="info-box">Scrie numai valoarea numerică, cu maximum 2 zecimale.</div>
+
+          <button class="btn btn-primary" id="startBtn">Începe testul</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-game">
+      <div class="card game-card">
+        <div>
+          <div class="meta-row">
+            <div class="pill" id="q-info">Cerința 1 / 20</div>
+            <div class="pill" id="points-info">5 puncte</div>
+            <div class="pill" id="variant-info">Varianta 1 / 100</div>
+            <div class="pill" id="test-code">Cod test</div>
+          </div>
+
+          <div class="question-box" id="question"></div>
+          <div class="answer-box" id="input-area"></div>
+          <div class="feedback" id="feedback"></div>
+        </div>
+
+        <button class="btn btn-secondary hidden" id="nextBtn">Următoarea</button>
+      </div>
+    </section>
+
+    <section class="screen" id="screen-end">
+      <div class="card">
+        <h2 class="title">Rezultat</h2>
+        <div class="center muted" id="end-variant"></div>
+        <div class="result-score" id="final-score"></div>
+        <p class="center muted" id="raw-points"></p>
+        <p class="center muted" id="final-grade"></p>
+        <p class="center muted" id="end-code"></p>
+        <button class="btn btn-primary" id="restartBtn">Reia testul</button>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec";
+    const TOTAL_QUESTIONS = 20;
+    const MIXED_COUNT = 10;
+    const NUMERIC_COUNT = 10;
+    const POINTS_PER_ITEM = 5;
+    const TOTAL_POINTS = 100;
+    const VARIANT_COUNT = 100;
+
+    const state = {
+      name: "",
+      className: "",
+      correctAnswers: 0,
+      currentIdx: 0,
+      questions: [],
+      variant: 1,
+      testCode: "",
+      seed: 0,
+      sessionSalt: ""
+    };
+
+    const el = {
+      login: document.getElementById("screen-login"),
+      game: document.getElementById("screen-game"),
+      end: document.getElementById("screen-end"),
+      stdName: document.getElementById("stdName"),
+      stdClass: document.getElementById("stdClass"),
+      startBtn: document.getElementById("startBtn"),
+      qInfo: document.getElementById("q-info"),
+      pointsInfo: document.getElementById("points-info"),
+      variantInfo: document.getElementById("variant-info"),
+      testCode: document.getElementById("test-code"),
+      question: document.getElementById("question"),
+      inputArea: document.getElementById("input-area"),
+      feedback: document.getElementById("feedback"),
+      nextBtn: document.getElementById("nextBtn"),
+      finalScore: document.getElementById("final-score"),
+      rawPoints: document.getElementById("raw-points"),
+      finalGrade: document.getElementById("final-grade"),
+      endVariant: document.getElementById("end-variant"),
+      endCode: document.getElementById("end-code"),
+      restartBtn: document.getElementById("restartBtn")
+    };
+
+    const fillPool = [
+      { q: "Lentila care este mai groasă la mijloc decât la margini se numește lentilă ..........", a: ["convergentă", "convergenta"] },
+      { q: "Lentila care este mai subțire la mijloc decât la margini se numește lentilă ..........", a: ["divergentă", "divergenta"] },
+      { q: "Distanța de la centrul optic la focar se numește distanță ..........", a: ["focală", "focala"] },
+      { q: "Puterea optică a unei lentile se măsoară în ..........", a: ["dioptrii", "dioptrie"] },
+      { q: "Puterea optică se calculează cu formula P = 1 / ..........", a: ["f", "distanța focală", "distanta focala"] },
+      { q: "Imaginea reală obținută cu o lentilă convergentă poate fi proiectată pe un ..........", a: ["ecran"] },
+      { q: "O lentilă divergentă formează, de obicei, imagini virtuale, drepte și mai ..........", a: ["mici"] },
+      { q: "Punctul prin care o rază de lumină trece nedeviată la traversarea lentilei se numește centru ..........", a: ["optic"] },
+      { q: "O lupă este, de obicei, o lentilă ..........", a: ["convergentă", "convergenta"] },
+      { q: "În relația 1/f = 1/a + 1/b, simbolul a reprezintă distanța de la obiect la ..........", a: ["lentilă", "lentila"] },
+      { q: "În relația 1/f = 1/a + 1/b, simbolul b reprezintă distanța de la imagine la ..........", a: ["lentilă", "lentila"] },
+      { q: "Dacă distanța focală este exprimată în metri, puterea optică rezultă în ..........", a: ["dioptrii", "dioptrie"] },
+      { q: "O imagine virtuală nu poate fi proiectată pe un ..........", a: ["ecran"] },
+      { q: "Pentru o lentilă convergentă, focarul este ..........", a: ["real"] },
+      { q: "Pentru o lentilă divergentă, fasciculul paralel iese din lentilă sub formă de fascicul ..........", a: ["divergent"] },
+      { q: "Mărirea liniară se poate calcula cu relația m = b / ..........", a: ["a"] }
+    ];
+
+    const tfPool = [
+      { q: "O lentilă convergentă poate forma imagini reale și imagini virtuale.", a: ["adevărat", "adevarat"] },
+      { q: "O lentilă divergentă este mai groasă la mijloc decât la margini.", a: ["fals"] },
+      { q: "Puterea optică a unei lentile cu distanța focală mică este mai mare.", a: ["adevărat", "adevarat"] },
+      { q: "Distanța focală se măsoară în metri în formula pentru dioptrii.", a: ["adevărat", "adevarat"] },
+      { q: "O lentilă divergentă formează în mod obișnuit imagini reale pe ecran.", a: ["fals"] },
+      { q: "O lupă folosește o lentilă convergentă.", a: ["adevărat", "adevarat"] },
+      { q: "Dacă puterea optică a lentilei este 2 D, distanța focală este 0,5 m.", a: ["adevărat", "adevarat"] },
+      { q: "O imagine virtuală este întotdeauna răsturnată.", a: ["fals"] },
+      { q: "Raza care trece prin centrul optic al unei lentile subțiri nu se abate apreciabil.", a: ["adevărat", "adevarat"] },
+      { q: "O lentilă convergentă are putere optică pozitivă.", a: ["adevărat", "adevarat"] },
+      { q: "Formula lentilei subțiri se poate scrie 1/f = 1/a + 1/b.", a: ["adevărat", "adevarat"] },
+      { q: "Dacă distanța focală crește, puterea optică crește și ea.", a: ["fals"] }
+    ];
+
+    function normalizeText(value) {
+      return String(value)
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function normalizeNumberString(value) {
+      return String(value).trim().replace(/,/g, ".").replace(/\s+/g, "");
+    }
+
+    function parseLocaleNumber(value) {
+      const cleaned = normalizeNumberString(value);
+      if (!/^[-+]?\d+(\.\d+)?$/.test(cleaned)) return NaN;
+      return Number(cleaned);
+    }
+
+    function decimalCount(value) {
+      const cleaned = normalizeNumberString(value);
+      return cleaned.includes(".") ? cleaned.split(".")[1].length : 0;
+    }
+
+    function truncateTo(num, decimals = 2) {
+      const factor = Math.pow(10, decimals);
+      return Math.trunc(num * factor) / factor;
+    }
+
+    function roundTo(num, decimals = 2) {
+      const factor = Math.pow(10, decimals);
+      return Math.round(num * factor) / factor;
+    }
+
+    function formatNumber(num, maxDecimals = 2) {
+      if (Number.isInteger(num)) return String(num);
+      return Number(num.toFixed(maxDecimals)).toString();
+    }
+
+    function formatPrecise(num) {
+      if (Number.isInteger(num)) return String(num);
+      return Number(num.toFixed(4)).toString();
+    }
+
+    function shortCode(seed) {
+      return (seed >>> 0).toString(36).toUpperCase().slice(0, 6);
+    }
+
+    function hashString(str) {
+      let h = 2166136261;
+      for (let i = 0; i < str.length; i++) {
+        h ^= str.charCodeAt(i);
+        h = Math.imul(h, 16777619);
+      }
+      return h >>> 0;
+    }
+
+    function mulberry32(a) {
+      return function () {
+        let t = a += 0x6D2B79F5;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function randInt(rng, min, max) {
+      return Math.floor(rng() * (max - min + 1)) + min;
+    }
+
+    function randFrom(rng, arr) {
+      return arr[Math.floor(rng() * arr.length)];
+    }
+
+    function pickUnique(rng, pool, count) {
+      const copy = [...pool];
+      const result = [];
+      while (result.length < count && copy.length) {
+        const idx = Math.floor(rng() * copy.length);
+        result.push(copy.splice(idx, 1)[0]);
+      }
+      return result;
+    }
+
+    function shuffleArray(rng, arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function questionFill(item) {
+      return { type: "fill", q: item.q, answers: item.a, points: POINTS_PER_ITEM };
+    }
+
+    function questionTrueFalse(item) {
+      return { type: "tf", q: item.q, answers: item.a, points: POINTS_PER_ITEM };
+    }
+
+    function questionNumeric({ q, exactAnswer, unit = "", formula = "" }) {
+      return {
+        type: "numeric",
+        q,
+        exactAnswer,
+        unit,
+        formula,
+        points: POINTS_PER_ITEM,
+        displayAnswer: `${formatPrecise(exactAnswer)}${unit ? " " + unit : ""}`
+      };
+    }
+
+    function genPowerFromFocalMeters(rng) {
+      const f = randFrom(rng, [0.1, 0.2, 0.25, 0.4, 0.5, 1, 2]);
+      return questionNumeric({
+        q: `O lentilă are distanța focală f = ${formatNumber(f)} m. Calculează puterea optică.`,
+        exactAnswer: 1 / f,
+        unit: "D",
+        formula: "P = 1 / f"
+      });
+    }
+
+    function genPowerFromFocalCm(rng) {
+      const fcm = randFrom(rng, [10, 20, 25, 40, 50, 100, 200]);
+      return questionNumeric({
+        q: `O lentilă are distanța focală f = ${fcm} cm. Calculează puterea optică.`,
+        exactAnswer: 1 / (fcm / 100),
+        unit: "D",
+        formula: "P = 1 / f, cu f exprimată în metri"
+      });
+    }
+
+    function genFocalFromPower(rng) {
+      const p = randFrom(rng, [0.5, 1, 2, 2.5, 4, 5, 10]);
+      return questionNumeric({
+        q: `O lentilă are puterea optică P = ${formatNumber(p)} D. Calculează distanța focală în metri.`,
+        exactAnswer: 1 / p,
+        unit: "m",
+        formula: "f = 1 / P"
+      });
+    }
+
+    function genImageDistance(rng) {
+      const f = randFrom(rng, [10, 12, 15, 20, 25, 30]);
+      const a = randFrom(rng, [20, 24, 30, 40, 45, 50, 60]);
+      const b = 1 / ((1 / f) - (1 / a));
+      return questionNumeric({
+        q: `O lentilă convergentă are distanța focală f = ${f} cm. Un obiect se află la distanța a = ${a} cm de lentilă. Calculează distanța imaginii b.`,
+        exactAnswer: b,
+        unit: "cm",
+        formula: "1/f = 1/a + 1/b, deci 1/b = 1/f - 1/a"
+      });
+    }
+
+    function genObjectDistance(rng) {
+      const f = randFrom(rng, [10, 12, 15, 20, 25]);
+      const b = randFrom(rng, [20, 24, 30, 40, 45, 60]);
+      const a = 1 / ((1 / f) - (1 / b));
+      return questionNumeric({
+        q: `O lentilă convergentă are distanța focală f = ${f} cm și formează o imagine la distanța b = ${b} cm. Calculează distanța obiectului a.`,
+        exactAnswer: a,
+        unit: "cm",
+        formula: "1/f = 1/a + 1/b, deci 1/a = 1/f - 1/b"
+      });
+    }
+
+    function genMagnification(rng) {
+      const a = randFrom(rng, [15, 20, 24, 30, 40, 50]);
+      const b = randFrom(rng, [30, 36, 40, 45, 60, 80]);
+      return questionNumeric({
+        q: `Pentru o lentilă, distanța obiectului este a = ${a} cm, iar distanța imaginii este b = ${b} cm. Calculează mărirea liniară m = b / a.`,
+        exactAnswer: b / a,
+        formula: "m = b / a"
+      });
+    }
+
+    function genImageHeight(rng) {
+      const h = randFrom(rng, [1, 2, 3, 4, 5, 6, 8]);
+      const a = randFrom(rng, [10, 15, 20, 24, 30]);
+      const b = randFrom(rng, [20, 30, 36, 40, 45, 60]);
+      return questionNumeric({
+        q: `Un obiect are înălțimea h = ${h} cm. Pentru a = ${a} cm și b = ${b} cm, calculează înălțimea imaginii folosind relația h' = h · b / a.`,
+        exactAnswer: h * b / a,
+        unit: "cm",
+        formula: "h' = h · b / a"
+      });
+    }
+
+    function genPowerDifference(rng) {
+      const f1 = randFrom(rng, [0.2, 0.25, 0.4, 0.5, 1]);
+      const f2 = randFrom(rng, [0.1, 0.2, 0.25, 0.5, 1, 2]);
+      return questionNumeric({
+        q: `Două lentile au distanțele focale f₁ = ${formatNumber(f1)} m și f₂ = ${formatNumber(f2)} m. Calculează diferența dintre puterile lor optice |P₁ - P₂|.`,
+        exactAnswer: Math.abs((1 / f1) - (1 / f2)),
+        unit: "D",
+        formula: "P = 1 / f, apoi |P₁ - P₂|"
+      });
+    }
+
+    function genFocalFromPowerCm(rng) {
+      const p = randFrom(rng, [1, 2, 2.5, 4, 5, 10]);
+      return questionNumeric({
+        q: `O lentilă are puterea optică P = ${formatNumber(p)} D. Calculează distanța focală în centimetri.`,
+        exactAnswer: (1 / p) * 100,
+        unit: "cm",
+        formula: "f = 1 / P, apoi transformi în cm"
+      });
+    }
+
+    function genCombinedRelation(rng) {
+      const a = randFrom(rng, [15, 20, 24, 30, 40, 50]);
+      const m = randFrom(rng, [1.5, 2, 2.5, 3, 4]);
+      return questionNumeric({
+        q: `Un obiect este la distanța a = ${a} cm de lentilă și imaginea are mărirea liniară m = ${formatNumber(m)}. Calculează distanța imaginii b.`,
+        exactAnswer: a * m,
+        unit: "cm",
+        formula: "m = b / a, deci b = m · a"
+      });
+    }
+
+    const numericGenerators = [
+      genPowerFromFocalMeters,
+      genPowerFromFocalCm,
+      genFocalFromPower,
+      genImageDistance,
+      genObjectDistance,
+      genMagnification,
+      genImageHeight,
+      genPowerDifference,
+      genFocalFromPowerCm,
+      genCombinedRelation
+    ];
+
+    function generateSessionSalt() {
+      if (window.crypto && window.crypto.getRandomValues) {
+        const arr = new Uint32Array(1);
+        window.crypto.getRandomValues(arr);
+        return String(arr[0]);
+      }
+      return String(Math.floor(Math.random() * 1e9));
+    }
+
+    function getMinuteKey() {
+      const now = new Date();
+      const pad = (n) => String(n).padStart(2, "0");
+      return `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}`;
+    }
+
+    function buildTest() {
+      const baseKey = `${state.name}|${state.className}|${getMinuteKey()}|${state.sessionSalt}`;
+      state.seed = hashString(baseKey);
+      state.variant = (state.seed % VARIANT_COUNT) + 1;
+      state.testCode = `LS8-V${String(state.variant).padStart(3, "0")}-${shortCode(state.seed)}`;
+
+      const rng = mulberry32(state.seed);
+      const mixedPool = [
+        ...fillPool.map((item) => ({ ...item, itemType: "fill" })),
+        ...tfPool.map((item) => ({ ...item, itemType: "tf" }))
+      ];
+
+      const mixedQuestions = pickUnique(rng, mixedPool, MIXED_COUNT).map((item) =>
+        item.itemType === "fill" ? questionFill(item) : questionTrueFalse(item)
+      );
+
+      const numericQuestions = pickUnique(rng, numericGenerators, NUMERIC_COUNT).map((fn) => fn(rng));
+      state.questions = shuffleArray(rng, [...mixedQuestions, ...numericQuestions]);
+      state.currentIdx = 0;
+      state.correctAnswers = 0;
+    }
+
+    function showScreen(screen) {
+      [el.login, el.game, el.end].forEach((node) => node.classList.remove("active"));
+      screen.classList.add("active");
+    }
+
+    function showQuestion() {
+      const q = state.questions[state.currentIdx];
+      el.qInfo.textContent = `Cerința ${state.currentIdx + 1} / ${TOTAL_QUESTIONS}`;
+      el.pointsInfo.textContent = `${q.points} puncte`;
+      el.variantInfo.textContent = `Varianta ${state.variant} / ${VARIANT_COUNT}`;
+      el.testCode.textContent = state.testCode;
+      el.question.textContent = q.q;
+      el.feedback.className = "feedback";
+      el.feedback.style.display = "none";
+      el.feedback.innerHTML = "";
+      el.nextBtn.classList.add("hidden");
+
+      el.inputArea.innerHTML = `
+        <input type="text" id="userAnswer" placeholder="Răspuns..." autocomplete="off" />
+        <button class="btn btn-primary" id="checkBtn">Verifică</button>
+      `;
+
+      const answerInput = document.getElementById("userAnswer");
+      const checkBtn = document.getElementById("checkBtn");
+      checkBtn.addEventListener("click", checkAnswer);
+      answerInput.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") checkAnswer();
+      });
+      answerInput.focus();
+    }
+
+    function numericAccepted(userValue, exactAnswer) {
+      if (decimalCount(userValue) > 2) return false;
+      const userNum = parseLocaleNumber(userValue);
+      if (Number.isNaN(userNum)) return false;
+
+      const accepted = new Set([
+        exactAnswer,
+        truncateTo(exactAnswer, 2),
+        roundTo(exactAnswer, 2)
+      ].map((n) => Number(n.toFixed(6))));
+
+      return accepted.has(Number(userNum.toFixed(6)));
+    }
+
+    function evaluateAnswer(userValue, q) {
+      if (q.type === "fill" || q.type === "tf") {
+        const clean = normalizeText(userValue);
+        return q.answers.some((ans) => normalizeText(ans) === clean);
+      }
+      if (q.type === "numeric") {
+        return numericAccepted(userValue, q.exactAnswer);
+      }
+      return false;
+    }
+
+    function checkAnswer() {
+      const q = state.questions[state.currentIdx];
+      const answerInput = document.getElementById("userAnswer");
+      const userValue = answerInput.value;
+      const correct = evaluateAnswer(userValue, q);
+
+      answerInput.disabled = true;
+      const checkBtn = document.getElementById("checkBtn");
+      checkBtn.disabled = true;
+      checkBtn.classList.add("btn-disabled");
+
+      el.feedback.style.display = "block";
+      if (correct) {
+        state.correctAnswers++;
+        el.feedback.className = "feedback ok";
+        el.feedback.innerHTML = `Corect ✅<br>+${q.points} puncte`;
+      } else {
+        el.feedback.className = "feedback bad";
+        if (q.type === "numeric") {
+          el.feedback.innerHTML = `Greșit ❌<br>Formula: <strong>${q.formula}</strong><br>Rezultat corect: <strong>${q.displayAnswer}</strong>`;
+        } else {
+          el.feedback.innerHTML = `Greșit ❌<br>Răspuns corect: <strong>${q.answers[0]}</strong>`;
+        }
+      }
+      el.nextBtn.classList.remove("hidden");
+    }
+
+    function nextQuestion() {
+      state.currentIdx++;
+      if (state.currentIdx < TOTAL_QUESTIONS) {
+        showQuestion();
+      } else {
+        finishGame();
+      }
+    }
+
+    function finishGame() {
+      const points = state.correctAnswers * POINTS_PER_ITEM;
+      const grade = (1 + (points * 9) / TOTAL_POINTS).toFixed(2);
+
+      showScreen(el.end);
+      el.finalScore.textContent = `${points}p`;
+      el.rawPoints.textContent = `Scor: ${state.correctAnswers} / ${TOTAL_QUESTIONS} răspunsuri corecte • ${points} / ${TOTAL_POINTS} puncte.`;
+      el.finalGrade.textContent = `Notă orientativă: ${grade}`;
+      el.endVariant.textContent = `Varianta ${state.variant} din ${VARIANT_COUNT}`;
+      el.endCode.textContent = `Cod test: ${state.testCode}`;
+
+      const fd = new FormData();
+      fd.append("nume", state.name);
+      fd.append("clasa", `${state.className} - Lentile subțiri 8`);
+      fd.append("varianta", String(state.variant));
+      fd.append("cod_test", state.testCode);
+      fd.append("scor", String(points));
+      fd.append("corecte", String(state.correctAnswers));
+      fd.append("total_itemi", String(TOTAL_QUESTIONS));
+      fd.append("punctaj_total", String(TOTAL_POINTS));
+
+      fetch(SCRIPT_URL, { method: "POST", body: fd, mode: "no-cors" }).catch(() => {});
+    }
+
+    async function enterFullscreen() {
+      const elem = document.documentElement;
+      try {
+        if (elem.requestFullscreen && !document.fullscreenElement) {
+          await elem.requestFullscreen();
+          return;
+        }
+        if (elem.webkitRequestFullscreen && !document.webkitFullscreenElement) {
+          elem.webkitRequestFullscreen();
+          return;
+        }
+        if (elem.msRequestFullscreen && !document.msFullscreenElement) {
+          elem.msRequestFullscreen();
+          return;
+        }
+      } catch (_) {}
+    }
+
+    async function startGame() {
+      state.name = el.stdName.value.trim();
+      state.className = el.stdClass.value;
+      state.sessionSalt = generateSessionSalt();
+
+      if (!state.name || !state.className) {
+        alert("Completează numele și clasa!");
+        return;
+      }
+
+      try {
+        await enterFullscreen();
+      } catch (_) {}
+
+      buildTest();
+      showScreen(el.game);
+      showQuestion();
+    }
+
+    function restartApp() {
+      showScreen(el.login);
+      el.stdName.focus();
+    }
+
+    function bindEvents() {
+      el.startBtn.addEventListener("click", startGame);
+      el.nextBtn.addEventListener("click", nextQuestion);
+      el.restartBtn.addEventListener("click", restartApp);
+    }
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", bindEvents);
+    } else {
+      bindEvents();
+    }
+  </script>
 </body>
 </html>

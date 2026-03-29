@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>FIZICĂ - 30 TRANSFORMĂRI S.I.</title>
+    <style>
+        :root { --primary: #0ea5e9; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #38bdf8; --success: #22c55e; --error: #ef4444; }
+        * { box-sizing: border-box; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .header { text-align: center; width: 100%; max-width: 800px; border-bottom: 2px solid var(--accent); margin-bottom: 30px; padding-bottom: 15px; }
+        .container { width: 100%; max-width: 700px; background: var(--card); border-radius: 20px; padding: 30px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
+        .question-box { font-size: 1.6rem; font-weight: bold; margin-bottom: 20px; text-align: center; color: var(--accent); }
+        .instruction-box { font-size: 1rem; color: #fbbf24; text-align: center; margin-bottom: 20px; padding: 12px; border: 1px dashed #fbbf24; border-radius: 8px; background: rgba(251, 191, 36, 0.05); font-weight: bold; }
+        input[type="text"], select { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.2rem; text-align: center; margin-bottom: 20px; outline: none; }
+        input[type="text"]:focus { border-color: var(--accent); }
+        .check-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; cursor: pointer; font-size: 1.1rem; text-transform: uppercase; }
+        #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; font-size: 1.2rem; }
+        .next-btn { width: 100%; background: #059669; color: white; border: none; padding: 18px; border-radius: 12px; font-weight: bold; cursor: pointer; display: none; font-size: 1.1rem; text-transform: uppercase; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div style="font-size: 1.3rem; font-weight: bold; color: white; margin-bottom: 5px;">ȘCOALA GIMNAZIALĂ "GALA GALACTION" MANGALIA</div>
+        <div style="font-size: 1.1rem; color: #94a3b8; margin-bottom: 15px;">Prof. DĂNUȚ ANDRONIE
+        <div style="font-size: 0.9rem; color: #cbd5e1; margin-bottom: 12px;">
+            E-mail: <a href="mailto:danutmg@gmail.com" style="color: #22d3ee; text-decoration: none;">danutmg@gmail.com</a><br>
+            <span style="font-size: 0.85rem; color: #94a3b8;">
+                Pentru observații, propuneri și sugestii privind platforma educațională.
+            </span>
+        </div></div>
+        <div style="background: rgba(56, 189, 248, 0.1); border-left: 4px solid var(--accent); padding: 10px; font-style: italic; color: var(--accent);">"FIZICA NU ESTE DOMINATĂ DE FORMULE CI ESTE LOGICĂ"</div>
+    </div>
+
+    <div class="container" id="screen-login">
+        <h2 style="text-align:center;">📏 Test: 30 Transformări S.I.</h2>
+        <input type="text" id="p-name" placeholder="Nume și Prenume Elev">
+        <select id="p-class">
+            <option value="">Alege clasa...</option>
+            <option value="6A">Clasa a 6-a A</option>
+            <option value="6B">Clasa a 6-a B</option>
+            <option value="6C">Clasa a 6-a C</option>
+            <option value="6D">Clasa a 6-a D</option>
+        </select>
+        <button class="check-btn" onclick="startGame()">ÎNCEPE TESTUL</button>
+    </div>
+
+    <div class="container hidden" id="screen-game">
+        <div id="q-info" style="color: var(--accent); text-align: center; margin-bottom: 10px; font-weight: bold;"></div>
+        <div class="instruction-box" id="instruction-text">TRANSFORMĂ ÎN SISTEMUL INTERNAȚIONAL</div>
+        <div class="question-box" id="question"></div>
+        <div id="input-area">
+            <input type="text" id="user-ans" placeholder="Rezultat..." autocomplete="off">
+            <button class="check-btn" id="verify-btn" onclick="checkAns()">VERIFICĂ</button>
+        </div>
+        <div id="feedback"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">URMĂTOAREA ÎNTREBARE ➔</button>
+    </div>
+
+    <div class="container hidden" id="screen-end">
+        <h2 style="text-align:center;">REZULTAT FINAL</h2>
+        <div style="font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center;" id="final-score"></div>
+        <p style="text-align:center; color: #94a3b8; font-size: 1.2rem;" id="raw-points"></p>
+        <button class="check-btn" onclick="location.reload()">REIA TESTUL</button>
+    </div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec";
+    let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [] };
+
+    function generateSIQuestions() {
+        const qList = [];
+        const configs = [
+            { n: "Lungime", target: "m", units: [{u:"km", f:1000}, {u:"cm", f:0.01}, {u:"mm", f:0.001}, {u:"dm", f:0.1}] },
+            { n: "Timp", target: "s", units: [{u:"min", f:60}, {u:"h", f:3600}] },
+            { n: "Masă", target: "kg", units: [{u:"g", f:0.001}, {u:"mg", f:0.000001}, {u:"t", f:1000}] },
+            { n: "Arie", target: "m²", units: [{u:"cm²", f:0.0001}, {u:"dm²", f:0.01}, {u:"mm²", f:0.000001}] },
+            { n: "Volum", target: "m³", units: [{u:"dm³", f:0.001}, {u:"cm³", f:0.000001}, {u:"L", f:0.001}] },
+            { n: "Viteză", target: "m/s", units: [{u:"km/h", f: (1000/3600)}] },
+            { n: "Densitate", target: "kg/m³", units: [{u:"g/cm³", f:1000}] }
+        ];
+
+        // Generăm 30 de întrebări distribuite
+        for(let i=0; i<30; i++) {
+            let config = configs[i % configs.length];
+            let unitObj = config.units[Math.floor(Math.random() * config.units.length)];
+            
+            let val;
+            if(unitObj.u === "km/h") val = (Math.floor(Math.random() * 20) + 1) * 18; // Valori care dau m/s frumos (multipli de 18)
+            else val = parseFloat((Math.random() * 150 + 1).toFixed(1));
+
+            // Calculăm rezultatul fără rotunjire excesivă pentru a păstra "mutarea virgulei"
+            let rawRes = val * unitObj.f;
+            // Curățăm erorile de floating point: ex 0.00000010000000002 -> 0.0000001
+            let resultStr = parseFloat(rawRes.toPrecision(12)).toString().replace(".", ",");
+
+            qList.push({
+                text: `${val} ${unitObj.u} = ? ${config.target}`,
+                ans: resultStr,
+                type: unitObj.u === "km/h" ? "div" : "conv"
+            });
+        }
+        return qList.sort(() => 0.5 - Math.random());
+    }
+
+    function startGame() {
+        state.name = document.getElementById('p-name').value.trim();
+        state.class = document.getElementById('p-class').value;
+        if(!state.name || !state.class) return alert("Introdu numele și clasa!");
+        
+        state.questions = generateSIQuestions();
+        document.getElementById('screen-login').classList.add('hidden');
+        document.getElementById('screen-game').classList.remove('hidden');
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const q = state.questions[state.currentIdx];
+        document.getElementById('q-info').innerText = `ÎNTREBAREA ${state.currentIdx + 1} / 30`;
+        document.getElementById('question').innerText = q.text;
+        
+        // Ajustăm instrucțiunea
+        const instr = document.getElementById('instruction-text');
+        if(q.type === "div") instr.innerText = "CALCULEAZĂ (2 ZECIMALE DACĂ E CAZUL)";
+        else instr.innerText = "TRANSFORMĂ ÎN SISTEMUL INTERNAȚIONAL (MUTĂ VIRGULA)";
+
+        document.getElementById('user-ans').value = '';
+        document.getElementById('user-ans').disabled = false;
+        document.getElementById('feedback').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'none';
+        document.getElementById('verify-btn').style.display = 'block';
+        document.getElementById('user-ans').focus();
+    }
+
+    function checkAns() {
+        const q = state.questions[state.currentIdx];
+        const userVal = document.getElementById('user-ans').value.trim().replace(".", ",");
+        
+        if(!userVal) return;
+
+        const isCorrect = (userVal === q.ans);
+        const f = document.getElementById('feedback');
+        f.style.display = 'block';
+
+        if(isCorrect) {
+            state.correctAnswers++;
+            f.innerText = "CORECT! ✅";
+            f.style.color = "var(--success)";
+        } else {
+            f.innerText = `GREȘIT! Răspuns corect: ${q.ans} ❌`;
+            f.style.color = "var(--error)";
+        }
+
+        document.getElementById('user-ans').disabled = true;
+        document.getElementById('verify-btn').style.display = 'none';
+        document.getElementById('next-btn').style.display = 'block';
+    }
+
+    function nextQuestion() {
+        state.currentIdx++;
+        if(state.currentIdx < 30) showQuestion(); else finishGame();
+    }
+
+    function finishGame() {
+        document.getElementById('screen-game').classList.add('hidden');
+        document.getElementById('screen-end').classList.remove('hidden');
+        
+        // Nota: 1 punct din oficiu + 9 puncte proporțional
+        const nota = (1 + (state.correctAnswers * (9 / 30))).toFixed(2);
+        document.getElementById('final-score').innerText = nota;
+        document.getElementById('raw-points').innerText = `Ai rezolvat corect ${state.correctAnswers} din 30 întrebări.`;
+        
+        // Trimitere date Google Sheets
+        const fd = new FormData();
+        fd.append("nume", state.name);
+        fd.append("clasa", state.class + " - 30 Transformari");
+        fd.append("scor", nota);
+        fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+    }
+
+    // Enter pentru rapiditate
+    document.addEventListener('keypress', (e) => {
+        if(e.key === 'Enter') {
+            if(document.getElementById('verify-btn').style.display !== 'none') checkAns();
+            else if(document.getElementById('next-btn').style.display !== 'none') nextQuestion();
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recapitulare interactivă – Concepte de bază</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0f172a;
+      color: white;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    h1, h2 {
+      text-align: center;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 12px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 10px;
+      border: none;
+      font-size: 16px;
+      cursor: pointer;
+      background: #22c55e;
+    }
+
+    .quiz {
+      margin-top: 10px;
+    }
+
+    .corect { color: #22c55e; }
+    .gresit { color: #ef4444; }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h1>📘 Recapitulare interactivă</h1>
+  <h2>Concepte de bază – Clasa a VI-a</h2>
+
+  <p style="text-align:center;">
+    FIZICA NU ESTE O MATERIE DOMINATĂ DE FORMULE CI DE LOGICĂ
+  </p>
+
+  <!-- NOȚIUNI -->
+  <div class="card">
+    <h3>🧠 Noțiuni esențiale</h3>
+    <ul>
+      <li>Corp fizic</li>
+      <li>Fenomen fizic</li>
+      <li>Mărime fizică</li>
+      <li>Unitate de măsură</li>
+    </ul>
+
+    <div class="quiz">
+      <b>Mini-quiz:</b><br>
+      Fenomen fizic înseamnă:
+      <select id="q1">
+        <option value="">Alege...</option>
+        <option value="0">unitate</option>
+        <option value="1">transformare</option>
+        <option value="0">instrument</option>
+      </select>
+      <button onclick="verifica1()">Verifică</button>
+      <div id="r1"></div>
+    </div>
+  </div>
+
+  <!-- SI -->
+  <div class="card">
+    <h3>📏 Mărimi și unități</h3>
+
+    <ul>
+      <li>Lungime – m</li>
+      <li>Masă – kg</li>
+      <li>Timp – s</li>
+      <li>Temperatură – K</li>
+    </ul>
+
+    <div class="quiz">
+      <b>Mini-quiz:</b><br>
+      Unitatea pentru masă:
+      <input type="text" id="q2">
+      <button onclick="verifica2()">Verifică</button>
+      <div id="r2"></div>
+    </div>
+  </div>
+
+  <!-- CONVERSII -->
+  <div class="card">
+    <h3>🔢 Conversii</h3>
+    <ul>
+      <li>1 m = 100 cm</li>
+      <li>1 kg = 1000 g</li>
+    </ul>
+
+    <div class="quiz">
+      <b>Mini-quiz:</b><br>
+      2 m = ? cm
+      <input type="number" id="q3">
+      <button onclick="verifica3()">Verifică</button>
+      <div id="r3"></div>
+    </div>
+  </div>
+
+  <!-- FINAL -->
+  <button onclick="rezultatFinal()">Vezi scor final</button>
+  <div id="final"></div>
+
+</div>
+
+<script>
+
+let scor = 0;
+
+function verifica1(){
+  let v = document.getElementById("q1").value;
+  if(v=="1"){
+    document.getElementById("r1").innerHTML="<span class='corect'>Corect</span>";
+    scor++;
+  } else {
+    document.getElementById("r1").innerHTML="<span class='gresit'>Greșit</span>";
+  }
+}
+
+function verifica2(){
+  let v = document.getElementById("q2").value.toLowerCase();
+  if(v=="kg" || v=="kilogram"){
+    document.getElementById("r2").innerHTML="<span class='corect'>Corect</span>";
+    scor++;
+  } else {
+    document.getElementById("r2").innerHTML="<span class='gresit'>Greșit</span>";
+  }
+}
+
+function verifica3(){
+  let v = parseFloat(document.getElementById("q3").value);
+  if(Math.abs(v - 200) < 0.15){
+    document.getElementById("r3").innerHTML="<span class='corect'>Corect</span>";
+    scor++;
+  } else {
+    document.getElementById("r3").innerHTML="<span class='gresit'>Greșit</span>";
+  }
+}
+
+function rezultatFinal(){
+  let nota = (scor/3)*10;
+
+  let msg="";
+  if(nota<5) msg="Revezi lecția.";
+  else if(nota<8) msg="Mai exersează.";
+  else msg="Foarte bine!";
+
+  document.getElementById("final").innerHTML =
+    `Scor: ${scor}/3 <br> Nota: ${nota.toFixed(2)} <br>${msg}`;
+}
+
+</script>
+
+</body>
+</html>

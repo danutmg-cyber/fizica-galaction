@@ -16,9 +16,7 @@
       --button-text: #082f49;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -96,13 +94,15 @@
       margin-top: 12px;
     }
 
-    button {
+    button, .next-lesson-btn {
       border: none;
       border-radius: 12px;
       padding: 14px 18px;
       font-size: 1rem;
       font-weight: bold;
       cursor: pointer;
+      text-decoration: none;
+      text-align: center;
     }
 
     .prev-btn {
@@ -110,20 +110,20 @@
       color: white;
     }
 
-    .next-btn {
+    .next-btn, .next-lesson-btn {
       background: var(--button);
       color: var(--button-text);
     }
 
-    @media (max-width: 600px) {
-      .topbar {
-        flex-direction: row;
-      }
+    .hidden {
+      display: none;
+    }
 
+    @media (max-width: 600px) {
       .back-btn,
-      button {
+      button,
+      .next-lesson-btn {
         width: 100%;
-        text-align: center;
       }
 
       .buttons {
@@ -161,21 +161,45 @@
     </div>
 
     <div class="buttons">
-      <button class="prev-btn" onclick="prevStep()">Înapoi</button>
-      <button class="next-btn" onclick="nextStep()">Mergi mai departe</button>
+      <button class="prev-btn" id="prevBtn" onclick="prevStep()">Înapoi</button>
+      <button class="next-btn" id="nextBtn" onclick="nextStep()">Mergi mai departe</button>
+      <a href="./2-curentul-electric.html" class="next-lesson-btn hidden" id="nextLessonBtn">Mergi la lecția următoare</a>
     </div>
   </div>
 
   <script>
     const steps = document.querySelectorAll('.lesson-step');
     const progress = document.getElementById('progress');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextLessonBtn = document.getElementById('nextLessonBtn');
+
     let currentStep = 0;
 
     function updateStep() {
       steps.forEach((step, index) => {
         step.classList.toggle('active', index === currentStep);
       });
+
       progress.textContent = `${currentStep + 1} / ${steps.length}`;
+
+      if (currentStep === 0) {
+        prevBtn.disabled = true;
+        prevBtn.style.opacity = "0.5";
+        prevBtn.style.cursor = "default";
+      } else {
+        prevBtn.disabled = false;
+        prevBtn.style.opacity = "1";
+        prevBtn.style.cursor = "pointer";
+      }
+
+      if (currentStep === steps.length - 1) {
+        nextBtn.classList.add('hidden');
+        nextLessonBtn.classList.remove('hidden');
+      } else {
+        nextBtn.classList.remove('hidden');
+        nextLessonBtn.classList.add('hidden');
+      }
     }
 
     function nextStep() {
@@ -193,6 +217,8 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
+
+    updateStep();
   </script>
 
 </body>

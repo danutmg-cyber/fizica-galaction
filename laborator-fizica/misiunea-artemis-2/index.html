@@ -3,131 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Misiunea Artemis II - Lecție Interactivă</title>
+    <title>Artemis II - Simulator și Lecție</title>
     <style>
         :root {
-            --bg: #0f172a;
-            --card: #1e293b;
-            --accent: #38bdf8;
-            --text: #f8fafc;
-            --success: #22c55e;
-            --error: #ef4444;
-            --border: rgba(148, 163, 184, 0.1);
+            --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f8fafc;
+            --success: #22c55e; --error: #ef4444; --muted: #94a3b8;
         }
-
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background-color: var(--bg); color: var(--text); margin: 0;
+            display: flex; flex-direction: column; min-height: 100vh;
         }
-
         .progress-bar {
-            width: 100%;
-            height: 6px;
-            background: #334155;
-            position: fixed;
-            top: 0;
-            z-index: 1000;
+            width: 100%; height: 6px; background: #334155;
+            position: fixed; top: 0; z-index: 1000;
         }
         .progress-fill { height: 100%; background: var(--accent); width: 10%; transition: 0.3s; }
-
         header {
-            padding: 20px 10px;
-            text-align: center;
+            padding: 15px; text-align: center;
             background: linear-gradient(135deg, #1e3a8a, #0f172a);
-            border-bottom: 2px solid var(--accent);
-            margin-top: 6px;
+            border-bottom: 2px solid var(--accent); margin-top: 6px;
         }
-
-        .container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            max-width: 600px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .page {
-            display: none;
-            background: var(--card);
-            border-radius: 20px;
-            padding: 25px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            animation: fadeIn 0.4s ease;
-        }
-
+        .container { flex: 1; display: flex; flex-direction: column; max-width: 600px; width: 100%; margin: 0 auto; padding: 20px; }
+        .page { display: none; background: var(--card); border-radius: 20px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); animation: fadeIn 0.4s ease; }
         .page.active { display: block; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
-
-        h1, h2 { color: var(--accent); margin-top: 0; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         
-        .img-container {
-            width: 100%;
-            border-radius: 12px;
-            overflow: hidden;
-            margin: 15px 0;
-            border: 2px solid var(--accent);
-            background: #000;
-        }
-        .img-container img { width: 100%; display: block; height: auto; }
+        /* Stiluri Simulator */
+        #sim-canvas { background: #000; width: 100%; height: 200px; border-radius: 10px; border: 1px solid var(--accent); margin: 10px 0; }
+        .stats { display: flex; justify-content: space-around; font-size: 0.8rem; margin-bottom: 10px; }
+        .stat-box { text-align: center; }
+        .bar-container { width: 100%; height: 10px; background: #334155; border-radius: 5px; margin-top: 5px; overflow: hidden; }
+        .bar-fill { height: 100%; transition: width 0.1s; }
 
-        .interactive-box {
-            background: rgba(56, 189, 248, 0.05);
-            border: 1px dashed var(--accent);
-            padding: 15px;
-            border-radius: 12px;
-            margin-top: 15px;
-        }
-
-        .btn-opt {
-            display: block;
-            width: 100%;
-            padding: 14px;
-            margin: 10px 0;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid var(--border);
-            color: white;
-            border-radius: 10px;
-            text-align: left;
-            font-size: 1rem;
-        }
-
+        .img-container img { width: 100%; border-radius: 12px; border: 1px solid var(--accent); }
+        .interactive-box { background: rgba(56, 189, 248, 0.05); border: 1px dashed var(--accent); padding: 15px; border-radius: 12px; margin-top: 15px; }
+        .btn-opt { display: block; width: 100%; padding: 12px; margin: 8px 0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 10px; text-align: left; cursor: pointer; }
         .correct { background: var(--success) !important; }
         .wrong { background: var(--error) !important; }
-
-        .controls { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
-
-        .btn-next {
-            background: var(--accent);
-            color: #0f172a;
-            border: none;
-            padding: 18px;
-            border-radius: 15px;
-            font-weight: 800;
-            font-size: 1.1rem;
-            text-transform: uppercase;
-        }
-
-        .btn-back {
-            background: transparent;
-            color: #94a3b8;
-            border: none;
-            padding: 10px;
-            font-size: 0.9rem;
-            text-decoration: underline;
-        }
-
-        .feedback { margin-top: 10px; font-weight: bold; font-size: 0.9rem; }
+        .controls { padding: 20px; display: flex; flex-direction: column; gap: 10px; max-width: 600px; margin: 0 auto; width: 100%; }
+        .btn-next { background: var(--accent); color: #0f172a; border: none; padding: 16px; border-radius: 15px; font-weight: 800; text-transform: uppercase; cursor: pointer; }
+        .btn-back { background: transparent; color: var(--muted); border: none; padding: 5px; font-size: 0.9rem; text-decoration: underline; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -135,7 +52,7 @@
 <div class="progress-bar"><div class="progress-fill" id="pFill"></div></div>
 
 <header>
-    <div style="font-size: 0.7rem; letter-spacing: 1px; opacity: 0.8;">ȘCOALA GALA GALACTION, MANGALIA</div>
+    <div style="font-size: 0.7rem; opacity: 0.8;">FIZICA GALACTION • MANGALIA</div>
     <div style="font-weight: bold;">Misiunea Artemis II</div>
 </header>
 
@@ -148,27 +65,61 @@
             <p>👉 Crezi că astronauții ajung direct la Lună în linie dreaptă?</p>
             <button class="btn-opt" onclick="checkQ(this, false, 'Nu – traiectoria este curbată datorită gravitației!')">Da</button>
             <button class="btn-opt" onclick="checkQ(this, true, 'Exact! Gravitația curbează orice drum în spațiu.')">Nu</button>
-            <div class="feedback"></div>
+            <div class="feedback" style="margin-top:10px; font-weight:bold;"></div>
         </div>
     </div>
 
     <div class="page" id="p2">
         <h2>🗺️ Harta Misiunii</h2>
-        <p>Iată traseul complet planificat de NASA pentru Artemis II:</p>
-        
         <div class="img-container">
-            <img src="https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/assets/img/artemis_path_detailed.jpg" alt="Artemis Path Detailed">
+            <img src="https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/assets/img/artemis_path_detailed.jpg" alt="Harta Artemis">
+        </div>
+        <p style="font-size: 0.9rem; color: var(--muted);">Analizează punctele 1-15. Observă cum racheta nu merge drept, ci înconjoară Pământul pentru a prinde viteză.</p>
+    </div>
+
+    <div class="page" id="p3">
+        <h2>🌍➡️🌕 Plecarea (TLI)</h2>
+        <p>După orbite, capsula accelerează puternic. Această manevră se numește <b>Injecție Trans-Lunară</b>.</p>
+        <div class="interactive-box">
+            <p>Viteza crește la 40.000 km/h. Ce energie crește odată cu viteza?</p>
+            <button class="btn-opt" onclick="checkQ(this, true, 'Corect! Ec = 1/2 * m * v²')">Energia Cinetică</button>
+            <button class="btn-opt" onclick="checkQ(this, false, 'Nu, energia de înălțime e cea potențială.')">Energia Potențială</button>
+            <div class="feedback"></div>
+        </div>
+    </div>
+
+    <div class="page" id="p4">
+        <h2>⚡ Simulator de Energie</h2>
+        <p style="font-size: 0.85rem;">Trage de <b>slider</b> pentru a muta nava și observă cum se transformă energiile.</p>
+        
+        <canvas id="sim-canvas"></canvas>
+        
+        <div class="stats">
+            <div class="stat-box" style="color: #ef4444;">Ec (Viteză)<div class="bar-container"><div id="ec-bar" class="bar-fill" style="background: #ef4444; width: 50%;"></div></div></div>
+            <div class="stat-box" style="color: #22c55e;">Ep (Înălțime)<div class="bar-container"><div id="ep-bar" class="bar-fill" style="background: #22c55e; width: 50%;"></div></div></div>
+            <div class="stat-box" style="color: #38bdf8;">Em (Totală)<div class="bar-container"><div id="em-bar" class="bar-fill" style="background: #38bdf8; width: 100%;"></div></div></div>
         </div>
 
-        <p style="font-size: 0.9rem; font-style: italic; color: #94a3b8;">
-            Analizează punctele 1-15. Observă cum capsula folosește orbite eliptice pentru a câștiga viteză.
-        </p>
+        <input type="range" id="dist-slider" min="10" max="90" value="20" style="width: 100%; cursor: pointer;">
+        
+        <p id="sim-info" style="font-size: 0.8rem; text-align: center; margin-top: 10px; color: var(--accent);">Nava se îndepărtează: Viteza scade, Înălțimea crește.</p>
+    </div>
+
+    <div class="page" id="p5">
+        <h2>🌕 Ocolirea Lunii</h2>
+        <p>La punctul maxim, Ep este maximă și Ec este minimă. Gravitația Lunii „agață” nava și o întoarce.</p>
+        <div class="interactive-box">
+            <p>Se pierde energie mecanică în vidul spațial (fără motoare)?</p>
+            <button class="btn-opt" onclick="checkQ(this, false, 'Nu, se conservă!')">Da</button>
+            <button class="btn-opt" onclick="checkQ(this, true, 'Exact! Em = Ec + Ep = Constant')">Nu</button>
+            <div class="feedback"></div>
+        </div>
     </div>
 
     <div class="page" id="p10">
         <h2>🎯 Felicitări!</h2>
-        <p>Ai finalizat pregătirea teoretică pentru misiunea Artemis II.</p>
-        <button class="btn-next" style="background:white; color:#0f172a; margin-top:20px;" onclick="window.location.href='../../index.html'">🏠 Întoarce-te la portal</button>
+        <p>Ai înțeles cum funcționează roller-coaster-ul cosmic Artemis II.</p>
+        <button class="btn-next" style="background:white; color:#0f172a; width:100%;" onclick="window.location.href='../../index.html'">🏠 Pagina Principală</button>
     </div>
 
 </div>
@@ -187,20 +138,52 @@
         document.getElementById(`p${currentPage}`).classList.remove('active');
         currentPage += step;
         document.getElementById(`p${currentPage}`).classList.add('active');
-
         document.getElementById('pFill').style.width = (currentPage * 10) + '%';
         document.getElementById('backBtn').style.display = currentPage > 1 ? 'block' : 'none';
-        document.getElementById('mainNextBtn').style.display = currentPage === totalPages ? 'none' : 'block';
+        document.getElementById('mainNextBtn').style.display = currentPage === 10 ? 'none' : 'block';
+        if(currentPage === 4) initSim();
         window.scrollTo(0,0);
     }
 
     function checkQ(btn, isCorrect, text) {
         const fb = btn.parentElement.querySelector('.feedback');
         btn.classList.add(isCorrect ? 'correct' : 'wrong');
-        fb.innerText = text;
-        fb.style.color = isCorrect ? 'var(--success)' : 'var(--error)';
+        fb.innerText = text; fb.style.color = isCorrect ? 'var(--success)' : 'var(--error)';
+    }
+
+    // LOGICA SIMULATORULUI
+    function initSim() {
+        const canvas = document.getElementById('sim-canvas');
+        const ctx = canvas.getContext('2d');
+        const slider = document.getElementById('dist-slider');
+        
+        function draw() {
+            const val = slider.value;
+            ctx.clearRect(0,0, canvas.width, canvas.height);
+            
+            // Pământ
+            ctx.fillStyle = '#2563eb';
+            ctx.beginPath(); ctx.arc(0, 100, 40, 0, Math.PI*2); ctx.fill();
+            
+            // Lună
+            ctx.fillStyle = '#94a3b8';
+            ctx.beginPath(); ctx.arc(canvas.width, 100, 20, 0, Math.PI*2); ctx.fill();
+
+            // Nava
+            const shipX = (val / 100) * canvas.width;
+            ctx.fillStyle = '#fff';
+            ctx.fillRect(shipX - 5, 95, 10, 10);
+            
+            // Update Bar Grafice
+            const ep = val; // Mai departe = Ep mai mare
+            const ec = 100 - val; // Mai departe = viteza mai mică
+            document.getElementById('ep-bar').style.width = ep + '%';
+            document.getElementById('ec-bar').style.width = ec + '%';
+            
+            requestAnimationFrame(draw);
+        }
+        draw();
     }
 </script>
-
 </body>
 </html>

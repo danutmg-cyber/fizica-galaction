@@ -28,7 +28,6 @@
             min-height: 100vh;
         }
 
-        /* Progres sus */
         .progress-bar {
             width: 100%;
             height: 6px;
@@ -77,9 +76,10 @@
             border-radius: 12px;
             overflow: hidden;
             margin: 15px 0;
-            border: 1px solid var(--border);
+            border: 2px solid var(--accent);
+            background: #000;
         }
-        .img-container img { width: 100%; display: block; }
+        .img-container img { width: 100%; display: block; height: auto; }
 
         .interactive-box {
             background: rgba(56, 189, 248, 0.05);
@@ -105,15 +105,7 @@
         .correct { background: var(--success) !important; }
         .wrong { background: var(--error) !important; }
 
-        .reveal-content { display: none; margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; font-size: 0.9rem; }
-
-        /* Navigare mobilă */
-        .controls {
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .controls { padding: 20px; display: flex; flex-direction: column; gap: 10px; }
 
         .btn-next {
             background: var(--accent);
@@ -123,27 +115,19 @@
             border-radius: 15px;
             font-weight: 800;
             font-size: 1.1rem;
-            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
         .btn-back {
             background: transparent;
-            color: var(--muted);
+            color: #94a3b8;
             border: none;
             padding: 10px;
             font-size: 0.9rem;
             text-decoration: underline;
         }
 
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            margin-bottom: 10px;
-            background: #0f172a;
-            color: white;
-        }
+        .feedback { margin-top: 10px; font-weight: bold; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -164,106 +148,27 @@
             <p>👉 Crezi că astronauții ajung direct la Lună în linie dreaptă?</p>
             <button class="btn-opt" onclick="checkQ(this, false, 'Nu – traiectoria este curbată datorită gravitației!')">Da</button>
             <button class="btn-opt" onclick="checkQ(this, true, 'Exact! Gravitația curbează orice drum în spațiu.')">Nu</button>
-            <div class="feedback" style="margin-top:10px; font-weight:bold;"></div>
+            <div class="feedback"></div>
         </div>
     </div>
 
     <div class="page" id="p2">
-        <h2>🚀 Lansarea</h2>
-        <p><b>Data:</b> 1 aprilie 2026</p>
-        <p>Capsula este lansată cu racheta SLS și ajunge pe orbită în jurul Pământului.</p>
+        <h2>🗺️ Harta Misiunii</h2>
+        <p>Iată traseul complet planificat de NASA pentru Artemis II:</p>
+        
         <div class="img-container">
-            <img src="../../assets/img/artemis_2_map_october_2021.webp" alt="Harta Misiunii">
+            <img src="https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/assets/img/artemis_path_detailed.jpg" alt="Artemis Path Detailed">
         </div>
-        <div class="interactive-box" onclick="toggleReveal(this)">
-            <p style="margin:0; text-align:center;">🔍 <b>Apasă aici pentru Energii</b></p>
-            <div class="reveal-content">
-                📈 Ec crește | 📈 Ep crește | 🔥 Em crește (motoare pornite)
-            </div>
-        </div>
-    </div>
 
-    <div class="page" id="p3">
-        <h2>🌍➡️🌕 Plecarea</h2>
-        <p>Capsula primește un impuls puternic și pleacă spre Lună cu ~40.000 km/h.</p>
-        <div class="interactive-box">
-            <p>👉 Manevra se numește (TLI):</p>
-            <input type="text" id="tliInput" placeholder="Injecție ...">
-            <button class="btn-next" style="padding:10px; font-size:0.9rem;" onclick="checkInput()">Verifică</button>
-            <p id="tliFeedback" style="margin-top:10px; font-weight:bold;"></p>
-        </div>
-    </div>
-
-    <div class="page" id="p4">
-        <h2>⚡ Energia în spațiu</h2>
-        <p>Odată motoarele oprite, <b>Energia Mecanică rămâne constantă</b>, dar se transformă:</p>
-        <ul>
-            <li><b>Spre Lună:</b> Viteză scade ➔ Ep crește</li>
-            <li><b>Spre Pământ:</b> Viteză crește ➔ Ec crește</li>
-        </ul>
-        <div class="interactive-box">
-            <p>💡 Ce se întâmplă când viteza crește la întoarcere?</p>
-            <button class="btn-opt" onclick="checkQ(this, true, 'Corect! Viteza mare = Energie Cinetică mare.')">Energia cinetică crește</button>
-            <button class="btn-opt" onclick="checkQ(this, false, 'Nu, Ep crește doar când capsula urcă/se îndepărtează.')">Energia potențială crește</button>
-            <div class="feedback"></div>
-        </div>
-    </div>
-
-    <div class="page" id="p5">
-        <h2>🌕 Ocolirea Lunii</h2>
-        <p>Capsula doar trece pe lângă Lună. Gravitația Lunii o „agață” și o trimite înapoi spre Pământ ca o praștie.</p>
-        <div class="interactive-box">
-            <p>👉 Cine aduce capsula înapoi?</p>
-            <button class="btn-opt" onclick="checkQ(this, false)">Motoarele</button>
-            <button class="btn-opt" onclick="checkQ(this, true, 'Exact! Se folosește gravitația pentru a economisi combustibil.')">Gravitația</button>
-            <div class="feedback"></div>
-        </div>
-    </div>
-
-    <div class="page" id="p6">
-        <h2>📏 Distanțe</h2>
-        <p>Drumul total (dus-întors) este de aproximativ <b>800.000 km</b>.</p>
-        <div class="interactive-box">
-            <p>De câte ori înconjoară Pământul această distanță?</p>
-            <button class="btn-opt" onclick="checkQ(this, true, 'Corect! Ecuația: 800.000 / 40.000 = 20.')">De 20 de ori</button>
-            <button class="btn-opt" onclick="checkQ(this, false)">De 5 ori</button>
-            <div class="feedback"></div>
-        </div>
-    </div>
-
-    <div class="page" id="p7">
-        <h2>🌍 Revenirea</h2>
-        <p>Capsula intră în atmosferă la 40.000 km/h. Frecarea cu aerul generează temperaturi enorme.</p>
-        <div class="interactive-box" onclick="toggleReveal(this)">
-            <p style="margin:0; text-align:center;">🛡️ <b>Cum supraviețuiesc astronauții?</b></p>
-            <div class="reveal-content">
-                Scutul termic preia toată căldura și se topește controlat pentru a proteja interiorul.
-            </div>
-        </div>
-    </div>
-
-    <div class="page" id="p8">
-        <h2>🧠 Quiz Final</h2>
-        <div class="interactive-box">
-            <p>Ce se conservă în spațiu (fără motoare)?</p>
-            <button class="btn-opt" onclick="checkQ(this, true)">Energia Mecanică</button>
-            <button class="btn-opt" onclick="checkQ(this, false)">Energia Cinetică</button>
-            <div class="feedback"></div>
-        </div>
-    </div>
-
-    <div class="page" id="p9">
-        <h2>🚀 Ideea Principală</h2>
-        <p style="font-size: 1.2rem; text-align:center; color: var(--accent); font-weight:bold;">
-            „În spațiu, energia se transformă continuu, dar se conservă.”
+        <p style="font-size: 0.9rem; font-style: italic; color: #94a3b8;">
+            Analizează punctele 1-15. Observă cum capsula folosește orbite eliptice pentru a câștiga viteză.
         </p>
-        <p style="text-align:center;">Capsula este un roller-coaster cosmic!</p>
     </div>
 
     <div class="page" id="p10">
-        <h2>😄 Final!</h2>
-        <p>Astronauții nu folosesc GPS pentru că încă nu există „traseu până la Lună” pe Waze.</p>
-        <button class="btn-next" style="background:white; color:#0f172a; margin-top:20px;" onclick="window.location.href='../../index.html'">🏠 Întoarce-te la pagina principală</button>
+        <h2>🎯 Felicitări!</h2>
+        <p>Ai finalizat pregătirea teoretică pentru misiunea Artemis II.</p>
+        <button class="btn-next" style="background:white; color:#0f172a; margin-top:20px;" onclick="window.location.href='../../index.html'">🏠 Întoarce-te la portal</button>
     </div>
 
 </div>
@@ -279,43 +184,21 @@
 
     function changePage(step) {
         if (currentPage + step > totalPages || currentPage + step < 1) return;
-
         document.getElementById(`p${currentPage}`).classList.remove('active');
         currentPage += step;
         document.getElementById(`p${currentPage}`).classList.add('active');
 
-        // Update UI
         document.getElementById('pFill').style.width = (currentPage * 10) + '%';
         document.getElementById('backBtn').style.display = currentPage > 1 ? 'block' : 'none';
-        
-        // Ascunde butonul next pe ultima pagina
         document.getElementById('mainNextBtn').style.display = currentPage === totalPages ? 'none' : 'block';
-        
         window.scrollTo(0,0);
     }
 
     function checkQ(btn, isCorrect, text) {
         const fb = btn.parentElement.querySelector('.feedback');
         btn.classList.add(isCorrect ? 'correct' : 'wrong');
-        if(text) fb.innerText = text;
+        fb.innerText = text;
         fb.style.color = isCorrect ? 'var(--success)' : 'var(--error)';
-    }
-
-    function toggleReveal(el) {
-        const content = el.querySelector('.reveal-content');
-        content.style.display = content.style.display === 'block' ? 'none' : 'block';
-    }
-
-    function checkInput() {
-        const val = document.getElementById('tliInput').value.toLowerCase();
-        const fb = document.getElementById('tliFeedback');
-        if(val.includes('injectie') || val.includes('injecție')) {
-            fb.innerText = "✅ Corect! (TLI)";
-            fb.style.color = "var(--success)";
-        } else {
-            fb.innerText = "❌ Mai încearcă! (Hint: Injecție...)";
-            fb.style.color = "var(--error)";
-        }
     }
 </script>
 

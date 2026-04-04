@@ -1,189 +1,1118 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Artemis II - Simulator și Lecție</title>
-    <style>
-        :root {
-            --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; --text: #f8fafc;
-            --success: #22c55e; --error: #ef4444; --muted: #94a3b8;
-        }
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background-color: var(--bg); color: var(--text); margin: 0;
-            display: flex; flex-direction: column; min-height: 100vh;
-        }
-        .progress-bar {
-            width: 100%; height: 6px; background: #334155;
-            position: fixed; top: 0; z-index: 1000;
-        }
-        .progress-fill { height: 100%; background: var(--accent); width: 10%; transition: 0.3s; }
-        header {
-            padding: 15px; text-align: center;
-            background: linear-gradient(135deg, #1e3a8a, #0f172a);
-            border-bottom: 2px solid var(--accent); margin-top: 6px;
-        }
-        .container { flex: 1; display: flex; flex-direction: column; max-width: 600px; width: 100%; margin: 0 auto; padding: 20px; }
-        .page { display: none; background: var(--card); border-radius: 20px; padding: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); animation: fadeIn 0.4s ease; }
-        .page.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* Stiluri Simulator */
-        #sim-canvas { background: #000; width: 100%; height: 200px; border-radius: 10px; border: 1px solid var(--accent); margin: 10px 0; }
-        .stats { display: flex; justify-content: space-around; font-size: 0.8rem; margin-bottom: 10px; }
-        .stat-box { text-align: center; }
-        .bar-container { width: 100%; height: 10px; background: #334155; border-radius: 5px; margin-top: 5px; overflow: hidden; }
-        .bar-fill { height: 100%; transition: width 0.1s; }
-
-        .img-container img { width: 100%; border-radius: 12px; border: 1px solid var(--accent); }
-        .interactive-box { background: rgba(56, 189, 248, 0.05); border: 1px dashed var(--accent); padding: 15px; border-radius: 12px; margin-top: 15px; }
-        .btn-opt { display: block; width: 100%; padding: 12px; margin: 8px 0; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: white; border-radius: 10px; text-align: left; cursor: pointer; }
-        .correct { background: var(--success) !important; }
-        .wrong { background: var(--error) !important; }
-        .controls { padding: 20px; display: flex; flex-direction: column; gap: 10px; max-width: 600px; margin: 0 auto; width: 100%; }
-        .btn-next { background: var(--accent); color: #0f172a; border: none; padding: 16px; border-radius: 15px; font-weight: 800; text-transform: uppercase; cursor: pointer; }
-        .btn-back { background: transparent; color: var(--muted); border: none; padding: 5px; font-size: 0.9rem; text-decoration: underline; cursor: pointer; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Misiunea Artemis II – Energia rachetei și a capsulei</title>
+  <meta name="description" content="Laborator de fizică pentru gimnaziu: cum se deplasează racheta și capsula, cum evoluează energia mecanică, energia cinetică și energia potențială gravitațională.">
+  <style>
+    :root{
+      --bg:#0b1120;
+      --card:#111a2f;
+      --card-2:#17233d;
+      --line:#294067;
+      --text:#ecf5ff;
+      --muted:#9bb1cc;
+      --accent:#67e8f9;
+      --accent-2:#22c55e;
+      --danger:#fb7185;
+      --warning:#fbbf24;
+      --orange:#f97316;
+      --shadow:0 18px 40px rgba(0,0,0,.28);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      font-family:Segoe UI, Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(34,211,238,.14), transparent 22%),
+        radial-gradient(circle at top left, rgba(99,102,241,.16), transparent 24%),
+        linear-gradient(180deg, #07101f 0%, #0b1120 100%);
+      color:var(--text);
+      line-height:1.5;
+    }
+    .wrap{
+      width:min(1120px, calc(100% - 28px));
+      margin:0 auto;
+    }
+    .hero{
+      padding:28px 0 18px;
+    }
+    .hero-card{
+      background:linear-gradient(135deg, rgba(17,26,47,.95), rgba(23,35,61,.92));
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      border-radius:28px;
+      padding:28px;
+      overflow:hidden;
+      position:relative;
+    }
+    .hero-card:before{
+      content:"";
+      position:absolute;
+      inset:auto -60px -60px auto;
+      width:240px;height:240px;border-radius:50%;
+      background:radial-gradient(circle, rgba(103,232,249,.18), transparent 65%);
+      pointer-events:none;
+    }
+    .eyebrow{
+      color:var(--accent);
+      font-weight:700;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-size:.78rem;
+      margin-bottom:8px;
+    }
+    h1,h2,h3{margin:0 0 12px}
+    h1{font-size:clamp(1.8rem, 4vw, 3rem); line-height:1.08}
+    h2{font-size:clamp(1.35rem, 2.4vw, 2rem)}
+    h3{font-size:1.05rem}
+    p{margin:0 0 12px}
+    .lead{
+      color:#d6e6fb;
+      max-width:76ch;
+      font-size:1.03rem;
+    }
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+    .chip{
+      background:rgba(103,232,249,.08);
+      color:#dffcff;
+      border:1px solid rgba(103,232,249,.22);
+      padding:10px 14px;
+      border-radius:999px;
+      font-size:.95rem;
+    }
+    .grid{
+      display:grid;
+      gap:18px;
+    }
+    .grid-3{grid-template-columns:repeat(3, minmax(0,1fr))}
+    .grid-4{grid-template-columns:repeat(4, minmax(0,1fr))}
+    .grid-2{grid-template-columns:1.1fr .9fr}
+    .section{
+      margin:18px 0;
+    }
+    .card{
+      background:linear-gradient(180deg, rgba(17,26,47,.96), rgba(17,26,47,.88));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      padding:20px;
+      box-shadow:var(--shadow);
+    }
+    .formula{
+      background:rgba(103,232,249,.05);
+      border:1px dashed rgba(103,232,249,.28);
+      border-radius:18px;
+      padding:16px;
+      min-height:100%;
+    }
+    .formula .big{
+      font-size:1.38rem;
+      font-weight:800;
+      color:var(--accent);
+      margin:4px 0 8px;
+    }
+    .muted{color:var(--muted)}
+    .small{font-size:.92rem}
+    .sim-grid{
+      display:grid;
+      grid-template-columns:1.2fr .8fr;
+      gap:18px;
+      align-items:start;
+    }
+    .phase-buttons{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin:6px 0 14px;
+    }
+    .phase-btn, .action-btn, .quiz-btn{
+      border:none;
+      border-radius:14px;
+      padding:12px 14px;
+      font-weight:700;
+      cursor:pointer;
+      transition:transform .15s ease, opacity .15s ease, background .15s ease;
+    }
+    .phase-btn:hover, .action-btn:hover, .quiz-btn:hover{transform:translateY(-1px)}
+    .phase-btn{
+      background:#12203a;
+      color:#dbeafe;
+      border:1px solid #294067;
+      min-width:180px;
+    }
+    .phase-btn.active{
+      background:linear-gradient(135deg, #0ea5e9, #22d3ee);
+      color:#082032;
+      border-color:transparent;
+    }
+    .action-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:12px;
+      align-items:center;
+    }
+    .action-btn{
+      background:#183153;
+      color:white;
+      border:1px solid #2e4b76;
+    }
+    .action-btn.primary{
+      background:linear-gradient(135deg, #06b6d4, #67e8f9);
+      color:#062030;
+      border:none;
+    }
+    .action-btn.ghost{
+      background:transparent;
+      border:1px solid #35527e;
+      color:#d7e8fb;
+    }
+    .slider-box{
+      margin:14px 0 6px;
+      padding:14px;
+      border-radius:18px;
+      background:#0d162b;
+      border:1px solid #223557;
+    }
+    input[type="range"]{
+      width:100%;
+      accent-color:#67e8f9;
+      cursor:pointer;
+    }
+    .label-row{
+      display:flex;
+      justify-content:space-between;
+      color:var(--muted);
+      font-size:.88rem;
+      gap:10px;
+    }
+    canvas{
+      width:100%;
+      display:block;
+      border-radius:18px;
+      border:1px solid #254268;
+      background:#030712;
+    }
+    #sceneCanvas{height:360px}
+    #chartCanvas{height:240px; margin-top:12px}
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:12px;
+    }
+    .stat{
+      background:#0d162b;
+      border:1px solid #223557;
+      border-radius:18px;
+      padding:14px;
+      min-height:96px;
+    }
+    .stat .label{
+      color:var(--muted);
+      font-size:.84rem;
+      margin-bottom:6px;
+    }
+    .stat .value{
+      font-size:1.18rem;
+      font-weight:800;
+      letter-spacing:-.02em;
+    }
+    .bar-group{display:grid; gap:10px; margin-top:14px}
+    .bar-line{
+      display:grid;
+      grid-template-columns:110px 1fr auto;
+      gap:10px;
+      align-items:center;
+      font-size:.92rem;
+    }
+    .bar-track{
+      height:12px;
+      background:#172640;
+      border-radius:999px;
+      overflow:hidden;
+      border:1px solid #27436a;
+    }
+    .bar-fill{height:100%; width:0; border-radius:999px}
+    .explain{
+      margin-top:14px;
+      padding:14px;
+      border-radius:18px;
+      background:rgba(34,197,94,.08);
+      border:1px solid rgba(34,197,94,.22);
+    }
+    .notice{
+      margin-top:12px;
+      padding:14px;
+      border-radius:18px;
+      background:rgba(251,191,36,.08);
+      border:1px solid rgba(251,191,36,.22);
+      color:#fff7d1;
+    }
+    .quiz{
+      display:grid;
+      gap:14px;
+    }
+    .quiz-item{
+      background:#0d162b;
+      border:1px solid #233758;
+      border-radius:20px;
+      padding:16px;
+    }
+    .quiz-options{
+      display:grid;
+      gap:8px;
+      margin-top:10px;
+    }
+    .quiz-btn{
+      text-align:left;
+      background:#162845;
+      color:#eef6ff;
+      border:1px solid #29456c;
+    }
+    .quiz-btn.correct{background:rgba(34,197,94,.22); border-color:rgba(34,197,94,.55)}
+    .quiz-btn.wrong{background:rgba(251,113,133,.22); border-color:rgba(251,113,133,.5)}
+    .feedback{
+      margin-top:10px;
+      font-size:.92rem;
+      color:#d9e7f6;
+      min-height:22px;
+    }
+    .final-question{
+      background:
+        linear-gradient(180deg, rgba(17,26,47,.98), rgba(17,26,47,.92)),
+        radial-gradient(circle at top right, rgba(249,115,22,.12), transparent 25%);
+      border:1px solid #314f7b;
+      border-radius:24px;
+      padding:22px;
+    }
+    .idea-cards{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:12px;
+      margin-top:14px;
+    }
+    .idea{
+      background:#0d162b;
+      border:1px solid #223557;
+      border-radius:18px;
+      padding:14px;
+    }
+    .badge{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:.8rem;
+      font-weight:700;
+      margin-bottom:8px;
+    }
+    .ok{background:rgba(34,197,94,.16); color:#bbf7d0}
+    .hard{background:rgba(249,115,22,.16); color:#fed7aa}
+    .nope{background:rgba(251,113,133,.16); color:#fecdd3}
+    .footer{
+      color:var(--muted);
+      text-align:center;
+      padding:24px 0 34px;
+      font-size:.92rem;
+    }
+    a.back-link{
+      color:var(--accent);
+      text-decoration:none;
+      font-weight:700;
+    }
+    @media (max-width: 920px){
+      .grid-3,.grid-4,.grid-2,.sim-grid,.idea-cards{grid-template-columns:1fr}
+      #sceneCanvas{height:300px}
+    }
+    @media (max-width: 620px){
+      .hero-card, .card, .final-question{padding:18px}
+      .stats{grid-template-columns:1fr}
+      .bar-line{grid-template-columns:86px 1fr}
+      .bar-line .bar-value{grid-column:1 / -1; justify-self:end}
+      .phase-btn{min-width:unset; width:100%}
+      #sceneCanvas{height:270px}
+      #chartCanvas{height:220px}
+    }
+  </style>
 </head>
 <body>
+  <div class="wrap hero">
+    <div class="hero-card">
+      <div class="eyebrow">Laborator de fizică • clasa a VII-a</div>
+      <h1>Misiunea Artemis II – cum se transformă energia?</h1>
+      <p class="lead">
+        În această activitate urmărești două momente importante: <b>lansarea rachetei</b> și <b>revenirea capsulei spre Pământ</b>.
+        Vei observa cum se schimbă <b>energia cinetică</b>, <b>energia potențială gravitațională</b> și <b>energia mecanică</b>,
+        iar la final vei discuta o întrebare reală de fizică: <b>se poate recupera energia capsulei la reintrarea în atmosferă?</b>
+      </p>
+      <div class="chips">
+        <div class="chip">Model simplificat pentru gimnaziu</div>
+        <div class="chip">g = 10 N/kg</div>
+        <div class="chip">m = 1000 kg</div>
+        <div class="chip">Scop: să vezi legătura dintre mișcare și energie</div>
+      </div>
+    </div>
+  </div>
 
-<div class="progress-bar"><div class="progress-fill" id="pFill"></div></div>
+  <div class="wrap section">
+    <div class="grid grid-3">
+      <div class="formula">
+        <h3>1. Energia cinetică</h3>
+        <div class="big">Ec = m · v² / 2</div>
+        <p class="small muted">Crește când crește viteza. Dacă viteza scade, și energia cinetică scade.</p>
+      </div>
+      <div class="formula">
+        <h3>2. Energia potențială gravitațională</h3>
+        <div class="big">Ep = m · g · h</div>
+        <p class="small muted">Crește când corpul urcă la înălțime mai mare față de Pământ.</p>
+      </div>
+      <div class="formula">
+        <h3>3. Energia mecanică</h3>
+        <div class="big">Em = Ec + Ep</div>
+        <p class="small muted">În lipsa frecărilor și a motoarelor, energia mecanică se conservă.</p>
+      </div>
+    </div>
+  </div>
 
-<header>
-    <div style="font-size: 0.7rem; opacity: 0.8;">FIZICA GALACTION • MANGALIA</div>
-    <div style="font-weight: bold;">Misiunea Artemis II</div>
-</header>
+  <div class="wrap section">
+    <div class="card">
+      <h2>Simulator: rachetă și capsulă</h2>
+      <p class="muted">
+        Alege faza misiunii, apoi mută glisorul. Valorile sunt <b>aproximate</b>, dar respectă ideile de fizică pe care elevii trebuie să le observe.
+      </p>
 
-<div class="container">
-    
-    <div class="page active" id="p1">
-        <h1>🚀 Drumul spre Lună</h1>
-        <p>Prima misiune cu echipaj uman care pleacă spre Lună după mai bine de 50 de ani!</p>
-        <div class="interactive-box">
-            <p>👉 Crezi că astronauții ajung direct la Lună în linie dreaptă?</p>
-            <button class="btn-opt" onclick="checkQ(this, false, 'Nu – traiectoria este curbată datorită gravitației!')">Da</button>
-            <button class="btn-opt" onclick="checkQ(this, true, 'Exact! Gravitația curbează orice drum în spațiu.')">Nu</button>
-            <div class="feedback" style="margin-top:10px; font-weight:bold;"></div>
+      <div class="phase-buttons">
+        <button class="phase-btn active" id="btnLaunch" type="button">1. Lansarea rachetei</button>
+        <button class="phase-btn" id="btnReturn" type="button">2. Revenirea capsulei</button>
+      </div>
+
+      <div class="sim-grid">
+        <div>
+          <div class="slider-box">
+            <div class="label-row">
+              <span id="phaseLabel">Faza: lansare</span>
+              <span id="progressLabel">Pasul: 0%</span>
+            </div>
+            <input id="progress" type="range" min="0" max="100" step="1" value="0" aria-label="Poziția pe traseu">
+            <div class="label-row">
+              <span id="leftLabel">sol</span>
+              <span id="rightLabel">urcare</span>
+            </div>
+
+            <div class="action-row">
+              <button class="action-btn primary" id="playBtn" type="button">▶ Redă</button>
+              <button class="action-btn ghost" id="resetBtn" type="button">↺ Reia</button>
+              <button class="action-btn" id="stepBackBtn" type="button">− 10%</button>
+              <button class="action-btn" id="stepFwdBtn" type="button">+ 10%</button>
+            </div>
+          </div>
+
+          <canvas id="sceneCanvas" aria-label="Scenă cu Pământul, racheta și capsula"></canvas>
+          <canvas id="chartCanvas" aria-label="Graficul energiilor"></canvas>
+
+          <div class="explain" id="observationBox">
+            <b>Observație:</b> La lansare, motoarele transformă energia chimică a combustibilului în energie mecanică.
+          </div>
+          <div class="notice" id="teacherNote">
+            <b>Ideea-cheie pentru elevi:</b> la lansare, <b>energia mecanică nu se conservă</b>, deoarece motoarele adaugă energie.
+            La revenire, în spațiu aproape se conservă; în atmosferă, o mare parte se transformă în <b>căldură</b>.
+          </div>
         </div>
-    </div>
 
-    <div class="page" id="p2">
-        <h2>🗺️ Harta Misiunii</h2>
-        <div class="img-container">
-            <img src="https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/assets/img/artemis_path_detailed.jpg" alt="Harta Artemis">
+        <div>
+          <div class="stats">
+            <div class="stat">
+              <div class="label">Altitudine</div>
+              <div class="value" id="altValue">0 km</div>
+            </div>
+            <div class="stat">
+              <div class="label">Viteză</div>
+              <div class="value" id="speedValue">0 m/s</div>
+            </div>
+            <div class="stat">
+              <div class="label">Ec</div>
+              <div class="value" id="ecValue">0 J</div>
+            </div>
+            <div class="stat">
+              <div class="label">Ep</div>
+              <div class="value" id="epValue">0 J</div>
+            </div>
+            <div class="stat">
+              <div class="label">Em</div>
+              <div class="value" id="emValue">0 J</div>
+            </div>
+            <div class="stat">
+              <div class="label">Energie transformată în căldură</div>
+              <div class="value" id="lossValue">0 J</div>
+            </div>
+          </div>
+
+          <div class="bar-group">
+            <div class="bar-line">
+              <span>Ec</span>
+              <div class="bar-track"><div class="bar-fill" id="ecBar" style="background:#fb7185;"></div></div>
+              <span class="bar-value" id="ecPct">0%</span>
+            </div>
+            <div class="bar-line">
+              <span>Ep</span>
+              <div class="bar-track"><div class="bar-fill" id="epBar" style="background:#22c55e;"></div></div>
+              <span class="bar-value" id="epPct">0%</span>
+            </div>
+            <div class="bar-line">
+              <span>Em</span>
+              <div class="bar-track"><div class="bar-fill" id="emBar" style="background:#67e8f9;"></div></div>
+              <span class="bar-value" id="emPct">0%</span>
+            </div>
+            <div class="bar-line">
+              <span>Căldură</span>
+              <div class="bar-track"><div class="bar-fill" id="lossBar" style="background:#f97316;"></div></div>
+              <span class="bar-value" id="lossPct">0%</span>
+            </div>
+          </div>
         </div>
-        <p style="font-size: 0.9rem; color: var(--muted);">Analizează punctele 1-15. Observă cum racheta nu merge drept, ci înconjoară Pământul pentru a prinde viteză.</p>
+      </div>
     </div>
+  </div>
 
-    <div class="page" id="p3">
-        <h2>🌍➡️🌕 Plecarea (TLI)</h2>
-        <p>După orbite, capsula accelerează puternic. Această manevră se numește <b>Injecție Trans-Lunară</b>.</p>
-        <div class="interactive-box">
-            <p>Viteza crește la 40.000 km/h. Ce energie crește odată cu viteza?</p>
-            <button class="btn-opt" onclick="checkQ(this, true, 'Corect! Ec = 1/2 * m * v²')">Energia Cinetică</button>
-            <button class="btn-opt" onclick="checkQ(this, false, 'Nu, energia de înălțime e cea potențială.')">Energia Potențială</button>
-            <div class="feedback"></div>
-        </div>
-    </div>
-
-    <div class="page" id="p4">
-        <h2>⚡ Simulator de Energie</h2>
-        <p style="font-size: 0.85rem;">Trage de <b>slider</b> pentru a muta nava și observă cum se transformă energiile.</p>
-        
-        <canvas id="sim-canvas"></canvas>
-        
-        <div class="stats">
-            <div class="stat-box" style="color: #ef4444;">Ec (Viteză)<div class="bar-container"><div id="ec-bar" class="bar-fill" style="background: #ef4444; width: 50%;"></div></div></div>
-            <div class="stat-box" style="color: #22c55e;">Ep (Înălțime)<div class="bar-container"><div id="ep-bar" class="bar-fill" style="background: #22c55e; width: 50%;"></div></div></div>
-            <div class="stat-box" style="color: #38bdf8;">Em (Totală)<div class="bar-container"><div id="em-bar" class="bar-fill" style="background: #38bdf8; width: 100%;"></div></div></div>
+  <div class="wrap section">
+    <div class="card">
+      <h2>Leagă simularea de lecția de fizică</h2>
+      <div class="quiz">
+        <div class="quiz-item">
+          <h3>Întrebarea 1</h3>
+          <p>La lansare, de ce crește energia mecanică a rachetei?</p>
+          <div class="quiz-options">
+            <button class="quiz-btn" data-q="q1" data-correct="true">Pentru că motoarele adaugă energie sistemului.</button>
+            <button class="quiz-btn" data-q="q1" data-correct="false">Pentru că gravitația produce singură energie nouă.</button>
+          </div>
+          <div class="feedback" id="q1Feedback"></div>
         </div>
 
-        <input type="range" id="dist-slider" min="10" max="90" value="20" style="width: 100%; cursor: pointer;">
-        
-        <p id="sim-info" style="font-size: 0.8rem; text-align: center; margin-top: 10px; color: var(--accent);">Nava se îndepărtează: Viteza scade, Înălțimea crește.</p>
-    </div>
-
-    <div class="page" id="p5">
-        <h2>🌕 Ocolirea Lunii</h2>
-        <p>La punctul maxim, Ep este maximă și Ec este minimă. Gravitația Lunii „agață” nava și o întoarce.</p>
-        <div class="interactive-box">
-            <p>Se pierde energie mecanică în vidul spațial (fără motoare)?</p>
-            <button class="btn-opt" onclick="checkQ(this, false, 'Nu, se conservă!')">Da</button>
-            <button class="btn-opt" onclick="checkQ(this, true, 'Exact! Em = Ec + Ep = Constant')">Nu</button>
-            <div class="feedback"></div>
+        <div class="quiz-item">
+          <h3>Întrebarea 2</h3>
+          <p>La reintrarea în atmosferă, de ce scade foarte mult energia mecanică a capsulei?</p>
+          <div class="quiz-options">
+            <button class="quiz-btn" data-q="q2" data-correct="false">Pentru că energia dispare pur și simplu.</button>
+            <button class="quiz-btn" data-q="q2" data-correct="true">Pentru că frecarea cu aerul transformă energia mecanică în căldură.</button>
+          </div>
+          <div class="feedback" id="q2Feedback"></div>
         </div>
+
+        <div class="quiz-item">
+          <h3>Întrebarea 3</h3>
+          <p>Care este concluzia cea mai realistă pentru o capsulă cu echipaj uman?</p>
+          <div class="quiz-options">
+            <button class="quiz-btn" data-q="q3" data-correct="true">Scopul principal este disiparea sigură a energiei, nu recuperarea integrală.</button>
+            <button class="quiz-btn" data-q="q3" data-correct="false">Capsula ar trebui să transforme aproape toată energia de reintrare în electricitate.</button>
+          </div>
+          <div class="feedback" id="q3Feedback"></div>
+        </div>
+      </div>
     </div>
+  </div>
 
-    <div class="page" id="p10">
-        <h2>🎯 Felicitări!</h2>
-        <p>Ai înțeles cum funcționează roller-coaster-ul cosmic Artemis II.</p>
-        <button class="btn-next" style="background:white; color:#0f172a; width:100%;" onclick="window.location.href='../../index.html'">🏠 Pagina Principală</button>
+  <div class="wrap section">
+    <div class="final-question">
+      <h2>Întrebarea finală: putem recupera energia la intrarea în atmosferă?</h2>
+      <p>
+        În modelul acesta, capsula intră în atmosferă cu o energie mecanică foarte mare. <b>Teoretic</b>, orice energie transformată în căldură
+        ar putea fi folosită într-un fel. <b>Practic</b>, la o capsulă cu echipaj, prioritatea este alta: <b>să frâneze și să protejeze oamenii</b>.
+      </p>
+
+      <div class="idea-cards">
+        <div class="idea">
+          <span class="badge ok">Discuție bună</span>
+          <h3>Căldură utilă?</h3>
+          <p class="small muted">
+            O parte mică din energia termică ar putea fi, în principiu, măsurată sau valorificată în sisteme experimentale.
+          </p>
+        </div>
+        <div class="idea">
+          <span class="badge hard">Foarte dificil</span>
+          <h3>Electricitate în timpul reintrării</h3>
+          <p class="small muted">
+            Ar cere materiale și dispozitive foarte rezistente la temperaturi extreme, șocuri și plasmă în jurul capsulei.
+          </p>
+        </div>
+        <div class="idea">
+          <span class="badge nope">Ideea de reținut</span>
+          <h3>Realist pentru oameni</h3>
+          <p class="small muted">
+            Nu încercăm să „salvăm” toată energia. Cel mai important este ca energia să fie <b>disipată în siguranță</b>, fără să distrugă capsula.
+          </p>
+        </div>
+      </div>
+
+      <div class="notice" style="margin-top:16px">
+        <b>Pentru discuția de la clasă:</b> „Dacă ai fi inginer, ce formă de energie ai încerca să recuperezi: căldura, mișcarea sau presiunea aerului?
+        Ce problemă tehnică ar apărea prima?”
+      </div>
     </div>
+  </div>
 
-</div>
+  <div class="wrap footer">
+    Pagina este gândită ca activitate de laborator pentru gimnaziu. Valorile sunt simplificate intenționat, ca elevii să poată observa
+    <b>legătura dintre mișcare și energie</b>. • <a class="back-link" href="../../index.html">Înapoi la pagina principală</a>
+  </div>
 
-<div class="controls">
-    <button class="btn-next" id="mainNextBtn" onclick="changePage(1)">MERGI MAI DEPARTE</button>
-    <button class="btn-back" id="backBtn" onclick="changePage(-1)" style="display:none;">Pagina anterioară</button>
-</div>
+  <script>
+    const g = 10;
+    const m = 1000;
+    const EM0_RETURN = 25e9;
 
-<script>
-    let currentPage = 1;
-    const totalPages = 10;
+    const state = {
+      phase: 'launch',
+      progress: 0,
+      playing: false,
+      timer: null
+    };
 
-    function changePage(step) {
-        if (currentPage + step > totalPages || currentPage + step < 1) return;
-        document.getElementById(`p${currentPage}`).classList.remove('active');
-        currentPage += step;
-        document.getElementById(`p${currentPage}`).classList.add('active');
-        document.getElementById('pFill').style.width = (currentPage * 10) + '%';
-        document.getElementById('backBtn').style.display = currentPage > 1 ? 'block' : 'none';
-        document.getElementById('mainNextBtn').style.display = currentPage === 10 ? 'none' : 'block';
-        if(currentPage === 4) initSim();
-        window.scrollTo(0,0);
+    const els = {
+      progress: document.getElementById('progress'),
+      phaseLabel: document.getElementById('phaseLabel'),
+      progressLabel: document.getElementById('progressLabel'),
+      leftLabel: document.getElementById('leftLabel'),
+      rightLabel: document.getElementById('rightLabel'),
+      playBtn: document.getElementById('playBtn'),
+      btnLaunch: document.getElementById('btnLaunch'),
+      btnReturn: document.getElementById('btnReturn'),
+      altValue: document.getElementById('altValue'),
+      speedValue: document.getElementById('speedValue'),
+      ecValue: document.getElementById('ecValue'),
+      epValue: document.getElementById('epValue'),
+      emValue: document.getElementById('emValue'),
+      lossValue: document.getElementById('lossValue'),
+      ecBar: document.getElementById('ecBar'),
+      epBar: document.getElementById('epBar'),
+      emBar: document.getElementById('emBar'),
+      lossBar: document.getElementById('lossBar'),
+      ecPct: document.getElementById('ecPct'),
+      epPct: document.getElementById('epPct'),
+      emPct: document.getElementById('emPct'),
+      lossPct: document.getElementById('lossPct'),
+      observationBox: document.getElementById('observationBox'),
+      teacherNote: document.getElementById('teacherNote'),
+      sceneCanvas: document.getElementById('sceneCanvas'),
+      chartCanvas: document.getElementById('chartCanvas')
+    };
+
+    const quizExplanations = {
+      q1: {
+        true: 'Corect. Motoarele transformă energia chimică a combustibilului în energie mecanică.',
+        false: 'Nu. Gravitația nu „creează” energie nouă pentru rachetă. Motoarele sunt sursa de energie.'
+      },
+      q2: {
+        true: 'Corect. Energia mecanică nu dispare, ci se transformă în principal în căldură în aer și în scutul termic.',
+        false: 'Energia nu dispare. Ea se transformă în alte forme, mai ales în căldură.'
+      },
+      q3: {
+        true: 'Corect. Pentru o capsulă cu echipaj, siguranța este mai importantă decât recuperarea energiei.',
+        false: 'Nu este realist pentru o capsulă cu echipaj. Temperatura și solicitările ar fi uriașe.'
+      }
+    };
+
+    function clamp(v, min, max){ return Math.max(min, Math.min(max, v)); }
+
+    function formatDistance(meters){
+      if (meters >= 1000) return (meters / 1000).toFixed(1).replace('.', ',') + ' km';
+      return meters.toFixed(0) + ' m';
     }
 
-    function checkQ(btn, isCorrect, text) {
-        const fb = btn.parentElement.querySelector('.feedback');
-        btn.classList.add(isCorrect ? 'correct' : 'wrong');
-        fb.innerText = text; fb.style.color = isCorrect ? 'var(--success)' : 'var(--error)';
+    function formatSpeed(v){
+      if (v >= 1000) return v.toFixed(0) + ' m/s';
+      return v.toFixed(0) + ' m/s';
     }
 
-    // LOGICA SIMULATORULUI
-    function initSim() {
-        const canvas = document.getElementById('sim-canvas');
-        const ctx = canvas.getContext('2d');
-        const slider = document.getElementById('dist-slider');
-        
-        function draw() {
-            const val = slider.value;
-            ctx.clearRect(0,0, canvas.width, canvas.height);
-            
-            // Pământ
-            ctx.fillStyle = '#2563eb';
-            ctx.beginPath(); ctx.arc(0, 100, 40, 0, Math.PI*2); ctx.fill();
-            
-            // Lună
-            ctx.fillStyle = '#94a3b8';
-            ctx.beginPath(); ctx.arc(canvas.width, 100, 20, 0, Math.PI*2); ctx.fill();
+    function formatEnergy(E){
+      const abs = Math.abs(E);
+      if (abs >= 1e12) return (E / 1e12).toFixed(2).replace('.', ',') + ' TJ';
+      if (abs >= 1e9) return (E / 1e9).toFixed(2).replace('.', ',') + ' GJ';
+      if (abs >= 1e6) return (E / 1e6).toFixed(2).replace('.', ',') + ' MJ';
+      if (abs >= 1e3) return (E / 1e3).toFixed(2).replace('.', ',') + ' kJ';
+      return E.toFixed(0) + ' J';
+    }
 
-            // Nava
-            const shipX = (val / 100) * canvas.width;
-            ctx.fillStyle = '#fff';
-            ctx.fillRect(shipX - 5, 95, 10, 10);
-            
-            // Update Bar Grafice
-            const ep = val; // Mai departe = Ep mai mare
-            const ec = 100 - val; // Mai departe = viteza mai mică
-            document.getElementById('ep-bar').style.width = ep + '%';
-            document.getElementById('ec-bar').style.width = ec + '%';
-            
-            requestAnimationFrame(draw);
+    function lerp(a,b,t){ return a + (b-a)*t; }
+
+    function computeState(phase, progressPercent){
+      const p = clamp(progressPercent / 100, 0, 1);
+
+      if (phase === 'launch') {
+        const h = 180000 * Math.pow(p, 1.15);
+        const v = 80 + 3200 * Math.pow(p, 0.9);
+        const ep = m * g * h;
+        const ec = 0.5 * m * v * v;
+        const em = ec + ep;
+        let observation = '';
+        if (p < 0.2) {
+          observation = 'Motoarele pornesc. Racheta încă este aproape de sol, dar viteza începe să crească, deci crește și Ec.';
+        } else if (p < 0.65) {
+          observation = 'Racheta urcă și accelerează. Cresc și înălțimea, și viteza, deci cresc atât Ep, cât și Ec.';
+        } else {
+          observation = 'Spre finalul urcării, Em este mult mai mare decât la început, pentru că motoarele au transferat energie din combustibil către rachetă.';
         }
-        draw();
+        return {
+          h, v, ep, ec, em, loss: 0,
+          title: 'Lansarea rachetei',
+          leftLabel: 'sol',
+          rightLabel: 'urcare',
+          note: 'La lansare, energia mecanică crește deoarece motoarele adaugă energie sistemului.',
+          observation
+        };
+      }
+
+      let h, em;
+      if (p < 0.35) {
+        const q = p / 0.35;
+        h = lerp(120000, 70000, q);
+        em = EM0_RETURN;
+      } else {
+        const q = (p - 0.35) / 0.65;
+        h = lerp(70000, 0, q);
+        em = EM0_RETURN * (1 - 0.9992 * Math.pow(q, 1.18));
+      }
+      const ep = m * g * h;
+      const ec = Math.max(em - ep, 0);
+      const v = Math.sqrt(2 * ec / m);
+      const loss = EM0_RETURN - em;
+
+      let observation = '';
+      if (h > 70000) {
+        observation = 'Capsula se apropie de Pământ aproape fără atmosferă. Em rămâne aproximativ constantă: Ep scade, iar Ec crește.';
+      } else if (h > 30000) {
+        observation = 'Capsula a intrat în straturile mai dense ale atmosferei. Frecarea cu aerul transformă rapid energia mecanică în căldură.';
+      } else {
+        observation = 'Spre final, capsula este mult încetinită. O mare parte din energia inițială a ajuns în aer și în scutul termic sub formă de căldură.';
+      }
+
+      return {
+        h, v, ep, ec, em, loss,
+        title: 'Revenirea capsulei',
+        leftLabel: 'spațiu',
+        rightLabel: 'Pământ',
+        note: 'La revenire, în spațiu Em se conservă aproape; în atmosferă, scade deoarece se transformă în căldură.',
+        observation
+      };
     }
-</script>
+
+    function sampleSeries(phase){
+      const points = [];
+      let maxE = 1;
+      for(let i = 0; i <= 100; i++){
+        const s = computeState(phase, i);
+        maxE = Math.max(maxE, s.ec, s.ep, s.em, s.loss);
+        points.push(s);
+      }
+      return { points, maxE };
+    }
+
+    function resizeCanvas(canvas){
+      const ratio = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = Math.round(rect.width * ratio);
+      canvas.height = Math.round(rect.height * ratio);
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+      return ctx;
+    }
+
+    function drawRoundedRect(ctx, x, y, w, h, r){
+      ctx.beginPath();
+      ctx.moveTo(x+r, y);
+      ctx.arcTo(x+w, y, x+w, y+h, r);
+      ctx.arcTo(x+w, y+h, x, y+h, r);
+      ctx.arcTo(x, y+h, x, y, r);
+      ctx.arcTo(x, y, x+w, y, r);
+      ctx.closePath();
+    }
+
+    function drawScene(){
+      const canvas = els.sceneCanvas;
+      const ctx = resizeCanvas(canvas);
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      const s = computeState(state.phase, state.progress);
+
+      ctx.clearRect(0,0,w,h);
+
+      // sky / space background
+      const grad = ctx.createLinearGradient(0,0,0,h);
+      grad.addColorStop(0, '#020617');
+      grad.addColorStop(0.48, state.phase === 'launch' ? '#082f49' : '#0b1020');
+      grad.addColorStop(1, '#0b1b34');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0,0,w,h);
+
+      // stars
+      for(let i=0;i<24;i++){
+        const x = (i*127 % w) + (i%3)*7;
+        const y = (i*71 % (h*0.6));
+        ctx.fillStyle = 'rgba(255,255,255,.65)';
+        ctx.fillRect(x, y, 2, 2);
+      }
+
+      // atmosphere layers
+      for(let i=0;i<4;i++){
+        ctx.fillStyle = `rgba(103,232,249,${0.04 + i*0.03})`;
+        ctx.fillRect(0, h - 110 - i*18, w, 18);
+      }
+
+      // Earth curve / ground
+      ctx.fillStyle = '#163457';
+      ctx.beginPath();
+      ctx.moveTo(0, h-66);
+      ctx.quadraticCurveTo(w*0.5, h-110, w, h-66);
+      ctx.lineTo(w, h);
+      ctx.lineTo(0, h);
+      ctx.closePath();
+      ctx.fill();
+
+      // horizon glow
+      const glow = ctx.createLinearGradient(0,h-120,0,h);
+      glow.addColorStop(0,'rgba(34,211,238,0)');
+      glow.addColorStop(1,'rgba(34,211,238,.16)');
+      ctx.fillStyle = glow;
+      ctx.fillRect(0,h-130,w,130);
+
+      // altitude scale
+      ctx.strokeStyle = 'rgba(255,255,255,.18)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(42, 22);
+      ctx.lineTo(42, h - 82);
+      ctx.stroke();
+      for(let i=0;i<=4;i++){
+        const yy = 22 + i*(h - 104)/4;
+        ctx.beginPath();
+        ctx.moveTo(36, yy);
+        ctx.lineTo(48, yy);
+        ctx.stroke();
+      }
+      ctx.fillStyle = 'rgba(255,255,255,.78)';
+      ctx.font = '12px Segoe UI';
+      ctx.fillText(state.phase === 'launch' ? '180 km' : '120 km', 8, 24);
+      ctx.fillText('0 km', 14, h - 84);
+
+      let yObj;
+      if (state.phase === 'launch'){
+        const p = state.progress / 100;
+        yObj = (h - 92) - p*(h - 140);
+        const xObj = w*0.28 + Math.sin(p*2.8)*12;
+
+        // trail
+        ctx.strokeStyle = 'rgba(103,232,249,.55)';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(xObj, h - 78);
+        ctx.lineTo(xObj, yObj + 18);
+        ctx.stroke();
+
+        // rocket
+        ctx.save();
+        ctx.translate(xObj, yObj);
+        ctx.fillStyle = '#dbeafe';
+        ctx.fillRect(-7, -20, 14, 32);
+        ctx.beginPath();
+        ctx.moveTo(-7,-20); ctx.lineTo(0,-34); ctx.lineTo(7,-20); ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = '#60a5fa';
+        ctx.fillRect(-3, -8, 6, 10);
+        ctx.fillStyle = '#fb7185';
+        ctx.fillRect(-12, 0, 5, 10);
+        ctx.fillRect(7, 0, 5, 10);
+
+        const flameH = 16 + 10*Math.abs(Math.sin(Date.now()/110));
+        const flame = ctx.createLinearGradient(0, 12, 0, 12+flameH);
+        flame.addColorStop(0, '#fde68a');
+        flame.addColorStop(1, '#f97316');
+        ctx.fillStyle = flame;
+        ctx.beginPath();
+        ctx.moveTo(-5, 12);
+        ctx.lineTo(0, 12 + flameH);
+        ctx.lineTo(5, 12);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+
+        ctx.fillStyle = '#d9f99d';
+        ctx.font = 'bold 13px Segoe UI';
+        ctx.fillText('Rachetă', xObj + 16, yObj - 6);
+      } else {
+        const p = state.progress / 100;
+        yObj = 28 + p*(h - 118);
+        const xObj = w*0.72 - Math.sin(p*3.1)*10;
+
+        // return path
+        ctx.strokeStyle = 'rgba(255,255,255,.34)';
+        ctx.setLineDash([6,6]);
+        ctx.beginPath();
+        ctx.moveTo(w*0.82, 24);
+        ctx.quadraticCurveTo(w*0.75, h*0.32, xObj, yObj);
+        ctx.stroke();
+        ctx.setLineDash([]);
+
+        // plasma
+        const current = computeState('return', state.progress);
+        if(current.h < 70000 && current.h > 15000){
+          const glowR = 24 + 8*Math.sin(Date.now()/130);
+          const radial = ctx.createRadialGradient(xObj, yObj, 3, xObj, yObj, glowR);
+          radial.addColorStop(0, 'rgba(255,255,255,.92)');
+          radial.addColorStop(.3, 'rgba(253,230,138,.8)');
+          radial.addColorStop(1, 'rgba(249,115,22,0)');
+          ctx.fillStyle = radial;
+          ctx.beginPath();
+          ctx.arc(xObj, yObj, glowR, 0, Math.PI*2);
+          ctx.fill();
+        }
+
+        // capsule
+        ctx.save();
+        ctx.translate(xObj, yObj);
+        ctx.fillStyle = '#e2e8f0';
+        ctx.beginPath();
+        ctx.moveTo(0, -14);
+        ctx.lineTo(12, 6);
+        ctx.lineTo(-12, 6);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = '#94a3b8';
+        ctx.fillRect(-7, 6, 14, 6);
+        ctx.restore();
+
+        if(current.h < 7000){
+          ctx.strokeStyle = '#f8fafc';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(xObj, yObj - 16, 18, Math.PI, 2*Math.PI);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.moveTo(xObj - 12, yObj - 16);
+          ctx.lineTo(xObj - 8, yObj - 2);
+          ctx.moveTo(xObj + 12, yObj - 16);
+          ctx.lineTo(xObj + 8, yObj - 2);
+          ctx.stroke();
+        }
+
+        ctx.fillStyle = '#fcd34d';
+        ctx.font = 'bold 13px Segoe UI';
+        ctx.fillText('Capsulă', xObj - 54, yObj - 18);
+      }
+
+      // labels
+      ctx.fillStyle = 'rgba(255,255,255,.92)';
+      ctx.font = 'bold 14px Segoe UI';
+      ctx.fillText(state.phase === 'launch' ? 'Lansare' : 'Reintrare', 56, 24);
+      ctx.font = '12px Segoe UI';
+      ctx.fillStyle = 'rgba(255,255,255,.72)';
+      ctx.fillText(state.phase === 'launch' ? 'Motoarele adaugă energie' : 'Atmosfera frânează capsula', 56, 42);
+    }
+
+    function drawLine(ctx, pts, color, maxE, key, w, h, pad){
+      ctx.beginPath();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2.5;
+      pts.forEach((p, i) => {
+        const x = pad + (i/(pts.length-1))*(w - 2*pad);
+        const y = h - pad - (p[key]/maxE)*(h - 2*pad);
+        if(i===0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      });
+      ctx.stroke();
+    }
+
+    function drawChart(){
+      const canvas = els.chartCanvas;
+      const ctx = resizeCanvas(canvas);
+      const w = canvas.clientWidth;
+      const h = canvas.clientHeight;
+      const pad = 34;
+      const series = sampleSeries(state.phase);
+      ctx.clearRect(0,0,w,h);
+
+      const bg = ctx.createLinearGradient(0,0,0,h);
+      bg.addColorStop(0, '#081120');
+      bg.addColorStop(1, '#0c1628');
+      ctx.fillStyle = bg;
+      drawRoundedRect(ctx, 0, 0, w, h, 18);
+      ctx.fill();
+
+      // axes
+      ctx.strokeStyle = 'rgba(255,255,255,.18)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(pad, pad-6);
+      ctx.lineTo(pad, h-pad);
+      ctx.lineTo(w-pad+8, h-pad);
+      ctx.stroke();
+
+      for(let i=0;i<4;i++){
+        const y = pad + i*(h - 2*pad)/3;
+        ctx.strokeStyle = 'rgba(255,255,255,.08)';
+        ctx.beginPath();
+        ctx.moveTo(pad, y);
+        ctx.lineTo(w-pad, y);
+        ctx.stroke();
+      }
+
+      drawLine(ctx, series.points, '#fb7185', series.maxE, 'ec', w, h, pad);
+      drawLine(ctx, series.points, '#22c55e', series.maxE, 'ep', w, h, pad);
+      drawLine(ctx, series.points, '#67e8f9', series.maxE, 'em', w, h, pad);
+      drawLine(ctx, series.points, '#f97316', series.maxE, 'loss', w, h, pad);
+
+      // current point
+      const idx = Math.round(state.progress);
+      const current = series.points[idx];
+      const x = pad + (idx/100)*(w - 2*pad);
+      ['ec','ep','em','loss'].forEach((key, j) => {
+        const colors = {ec:'#fb7185', ep:'#22c55e', em:'#67e8f9', loss:'#f97316'};
+        const y = h - pad - (current[key]/series.maxE)*(h - 2*pad);
+        ctx.fillStyle = colors[key];
+        ctx.beginPath();
+        ctx.arc(x, y, 4, 0, Math.PI*2);
+        ctx.fill();
+      });
+
+      // legend
+      const legend = [
+        ['Ec', '#fb7185'],
+        ['Ep', '#22c55e'],
+        ['Em', '#67e8f9'],
+        ['căldură', '#f97316']
+      ];
+      let lx = pad;
+      ctx.font = '12px Segoe UI';
+      legend.forEach(([label, color]) => {
+        ctx.fillStyle = color;
+        ctx.fillRect(lx, 10, 12, 12);
+        ctx.fillStyle = 'rgba(255,255,255,.86)';
+        ctx.fillText(label, lx + 18, 20);
+        lx += 66;
+      });
+
+      ctx.fillStyle = 'rgba(255,255,255,.64)';
+      ctx.fillText('0%', pad-6, h-12);
+      ctx.fillText('100%', w-pad-22, h-12);
+      ctx.save();
+      ctx.translate(14, h/2 + 10);
+      ctx.rotate(-Math.PI/2);
+      ctx.fillText('energie', 0, 0);
+      ctx.restore();
+    }
+
+    function updateBars(current){
+      const phaseMax = Math.max(current.ec, current.ep, current.em, current.loss, 1);
+      const setBar = (val, bar, pct) => {
+        const p = Math.round((val / phaseMax) * 100);
+        bar.style.width = p + '%';
+        pct.textContent = p + '%';
+      };
+      setBar(current.ec, els.ecBar, els.ecPct);
+      setBar(current.ep, els.epBar, els.epPct);
+      setBar(current.em, els.emBar, els.emPct);
+      setBar(current.loss, els.lossBar, els.lossPct);
+    }
+
+    function updateUI(){
+      const current = computeState(state.phase, state.progress);
+      els.progress.value = state.progress;
+      els.phaseLabel.textContent = 'Faza: ' + current.title.toLowerCase();
+      els.progressLabel.textContent = 'Pasul: ' + state.progress + '%';
+      els.leftLabel.textContent = current.leftLabel;
+      els.rightLabel.textContent = current.rightLabel;
+
+      els.altValue.textContent = formatDistance(current.h);
+      els.speedValue.textContent = formatSpeed(current.v);
+      els.ecValue.textContent = formatEnergy(current.ec);
+      els.epValue.textContent = formatEnergy(current.ep);
+      els.emValue.textContent = formatEnergy(current.em);
+      els.lossValue.textContent = formatEnergy(current.loss);
+
+      els.observationBox.innerHTML = '<b>Observație:</b> ' + current.observation;
+      els.teacherNote.innerHTML = '<b>Ideea-cheie pentru elevi:</b> ' + current.note;
+
+      updateBars(current);
+      drawScene();
+      drawChart();
+    }
+
+    function setPhase(phase){
+      state.phase = phase;
+      state.progress = 0;
+      stopPlaying();
+      els.btnLaunch.classList.toggle('active', phase === 'launch');
+      els.btnReturn.classList.toggle('active', phase === 'return');
+      updateUI();
+    }
+
+    function startPlaying(){
+      if(state.playing) return;
+      state.playing = true;
+      els.playBtn.textContent = '❚❚ Pauză';
+      state.timer = setInterval(() => {
+        state.progress += 1;
+        if(state.progress > 100){
+          state.progress = 100;
+          stopPlaying();
+        }
+        updateUI();
+      }, 90);
+    }
+
+    function stopPlaying(){
+      state.playing = false;
+      els.playBtn.textContent = '▶ Redă';
+      if(state.timer){
+        clearInterval(state.timer);
+        state.timer = null;
+      }
+    }
+
+    function togglePlay(){
+      if(state.playing) stopPlaying();
+      else startPlaying();
+    }
+
+    function step(delta){
+      stopPlaying();
+      state.progress = clamp(state.progress + delta, 0, 100);
+      updateUI();
+    }
+
+    // events
+    els.progress.addEventListener('input', e => {
+      stopPlaying();
+      state.progress = Number(e.target.value);
+      updateUI();
+    });
+    els.playBtn.addEventListener('click', togglePlay);
+    document.getElementById('resetBtn').addEventListener('click', () => { state.progress = 0; stopPlaying(); updateUI(); });
+    document.getElementById('stepBackBtn').addEventListener('click', () => step(-10));
+    document.getElementById('stepFwdBtn').addEventListener('click', () => step(10));
+    els.btnLaunch.addEventListener('click', () => setPhase('launch'));
+    els.btnReturn.addEventListener('click', () => setPhase('return'));
+    window.addEventListener('resize', updateUI);
+
+    document.querySelectorAll('.quiz-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const q = btn.dataset.q;
+        const correct = btn.dataset.correct === 'true';
+        const box = btn.closest('.quiz-item');
+        box.querySelectorAll('.quiz-btn').forEach(b => b.disabled = true);
+        btn.classList.add(correct ? 'correct' : 'wrong');
+        box.querySelectorAll('.quiz-btn').forEach(b => {
+          if(b.dataset.correct === 'true') b.classList.add('correct');
+        });
+        document.getElementById(q + 'Feedback').textContent = quizExplanations[q][correct ? 'true' : 'false'];
+      });
+    });
+
+    updateUI();
+  </script>
 </body>
 </html>

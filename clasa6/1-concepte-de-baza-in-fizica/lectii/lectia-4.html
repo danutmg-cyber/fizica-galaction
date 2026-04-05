@@ -1,4 +1,6 @@
-<!DOCTYPE html>
+from pathlib import Path
+
+html = """<!DOCTYPE html>
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
@@ -68,9 +70,7 @@
       border-radius:999px;
       font-size:.9rem;
     }
-    .page{
-      display:none;
-    }
+    .page{display:none}
     .page.active{
       display:block;
       animation:fade .25s ease;
@@ -143,12 +143,14 @@
       padding:16px;
       margin-top:14px;
     }
-    .question label{
-      display:block;
-      margin:8px 0;
+    .question h3{
+      margin-bottom:8px;
+    }
+    .question p{
+      margin:0 0 12px;
     }
     .question button{
-      margin-top:10px;
+      margin-top:12px;
       border:none;
       background:var(--accent);
       color:#082f49;
@@ -157,10 +159,63 @@
       font-weight:700;
       cursor:pointer;
     }
-    .feedback{
-      margin-top:10px;
-      font-weight:700;
+    .feedback{margin-top:10px;font-weight:700}
+
+    .option-table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0 10px;
+      margin-top:8px;
     }
+    .option-table td{
+      vertical-align:middle;
+      padding:0;
+      border:none;
+    }
+    .option-table .cell-radio{
+      width:52px;
+      text-align:center;
+    }
+    .option-row{
+      background:#111827;
+      border:1px solid #334155;
+      border-radius:14px;
+      padding:14px 16px;
+      display:flex;
+      align-items:center;
+      gap:12px;
+      color:var(--text);
+      width:100%;
+      transition:border-color .2s ease, background .2s ease, transform .2s ease;
+      cursor:pointer;
+    }
+    .option-row:hover{
+      border-color:var(--accent);
+      background:#172033;
+      transform:translateY(-1px);
+    }
+    .option-row input[type="radio"]{
+      width:22px;
+      height:22px;
+      margin:0;
+      flex:0 0 auto;
+      accent-color:#22d3ee;
+    }
+    .option-text{
+      line-height:1.45;
+    }
+    .instruction{
+      display:inline-block;
+      background:rgba(56,189,248,.12);
+      border:1px solid rgba(56,189,248,.28);
+      color:#dbeafe;
+      padding:8px 12px;
+      border-radius:999px;
+      font-weight:700;
+      font-size:.92rem;
+      margin-bottom:12px;
+    }
+
     ul,ol{padding-left:22px}
     table{
       width:100%;
@@ -200,12 +255,17 @@
     .btn-primary{background:var(--accent);color:#082f49}
     .btn-secondary{background:#1d4ed8;color:#eff6ff}
     .btn-ghost{background:#0f172a;color:#e2e8f0;border:1px solid #475569}
-    .center{text-align:center}
     @media (max-width:760px){
       .grid{grid-template-columns:1fr}
       .nav .btn{width:100%}
       .site-title{font-size:1.55rem}
       .status{align-items:flex-start}
+      .option-row{
+        align-items:flex-start;
+      }
+      .option-row input[type="radio"]{
+        margin-top:2px;
+      }
     }
   </style>
 </head>
@@ -236,11 +296,15 @@
     <section class="card">
       <div class="status">
         <div class="counter" id="counter">Pagina 1 din 8</div>
-       
+        <div class="pillbar">
+          <span class="pill">telefon</span>
+          <span class="pill">tabletă</span>
+          <span class="pill">PC</span>
+        </div>
       </div>
       <div class="progress"><div id="progressBar"></div></div>
 
-      <article class="page active" data-title="Stările de agregare">
+      <article class="page active">
         <h2>1. Stările de agregare ale corpurilor</h2>
         <p>Corpurile din jurul nostru pot exista în mai multe stări de agregare.</p>
         <div class="grid">
@@ -266,7 +330,7 @@
         </div>
       </article>
 
-      <article class="page" data-title="Exemple">
+      <article class="page">
         <h2>2. Exemple din viața de zi cu zi</h2>
         <p>Privește corpurile de mai jos și spune în ce stare de agregare se află:</p>
         <ol>
@@ -279,7 +343,7 @@
           <li>gheață într-un vas.</li>
         </ol>
         <div class="question">
-          <strong>Gândește-te:</strong>
+          <h3>Gândește-te</h3>
           <p>Ce stare are aerul din balon? Dar gheața? Dar parfumul?</p>
           <button onclick="toggleAnswer('ans1')">Arată răspuns orientativ</button>
           <div id="ans1" class="feedback" style="display:none;">
@@ -288,7 +352,7 @@
         </div>
       </article>
 
-      <article class="page" data-title="Ce reținem">
+      <article class="page">
         <h2>3. Ce reținem despre solide, lichide și gaze</h2>
         <table>
           <thead>
@@ -321,7 +385,7 @@
         </div>
       </article>
 
-      <article class="page" data-title="Starea fizică">
+      <article class="page">
         <h2>4. Starea fizică a unui corp</h2>
         <p>
           <strong>Starea fizică</strong> a unui corp reprezintă totalitatea proprietăților sale
@@ -348,7 +412,7 @@
         </div>
       </article>
 
-      <article class="page" data-title="Starea mecanică și termică">
+      <article class="page">
         <h2>5. Starea mecanică și starea termică</h2>
         <div class="grid">
           <div class="mini">
@@ -366,7 +430,7 @@
           </div>
         </div>
         <div class="question">
-          <strong>Exersează:</strong>
+          <h3>Exersează</h3>
           <p>Bec aprins, zăpadă, sobă, Soare, înghețată. Care sunt corpuri calde și care sunt corpuri reci?</p>
           <button onclick="toggleAnswer('ans2')">Arată un posibil răspuns</button>
           <div id="ans2" class="feedback" style="display:none;">
@@ -375,7 +439,7 @@
         </div>
       </article>
 
-      <article class="page" data-title="Electrizare, magnetizare, optică">
+      <article class="page">
         <h2>6. Alte tipuri de stări fizice</h2>
         <div class="grid">
           <div class="mini">
@@ -402,7 +466,7 @@
         </div>
       </article>
 
-      <article class="page" data-title="Fenomen fizic">
+      <article class="page">
         <h2>7. Ce este un fenomen fizic?</h2>
         <p>
           Un <strong>fenomen fizic</strong> este un proces, o transformare, o evoluție sau un efect
@@ -420,7 +484,7 @@
         </div>
       </article>
 
-      <article class="page" data-title="Clasificare și reținere">
+      <article class="page">
         <h2>8. Clasificarea fenomenelor fizice</h2>
         <ul>
           <li><strong>fenomene mecanice</strong> – mișcare, echilibru, deformare;</li>
@@ -437,10 +501,37 @@
         </div>
 
         <div class="question">
-          <strong>Verificare rapidă</strong>
-          <label><input type="radio" name="q1" value="0"> Gazele au formă proprie.</label>
-          <label><input type="radio" name="q1" value="1"> Lichidele au volum propriu, dar nu au formă proprie.</label>
-          <label><input type="radio" name="q1" value="0"> Starea mecanică arată numai culoarea corpului.</label>
+          <div class="instruction">Alege o singură variantă corectă.</div>
+          <h3>Verificare rapidă</h3>
+          <p>Bifează enunțul corect.</p>
+
+          <table class="option-table" role="presentation">
+            <tr>
+              <td>
+                <label class="option-row">
+                  <input type="radio" name="q1" value="0">
+                  <span class="option-text">Gazele au formă proprie.</span>
+                </label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label class="option-row" style="background:#132033;">
+                  <input type="radio" name="q1" value="1">
+                  <span class="option-text">Lichidele au volum propriu, dar nu au formă proprie.</span>
+                </label>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label class="option-row">
+                  <input type="radio" name="q1" value="0">
+                  <span class="option-text">Starea mecanică arată numai culoarea corpului.</span>
+                </label>
+              </td>
+            </tr>
+          </table>
+
           <button onclick="checkQuiz()">Verifică răspunsul</button>
           <div id="quizFeedback" class="feedback"></div>
         </div>
@@ -508,7 +599,7 @@
       const selected = document.querySelector('input[name="q1"]:checked');
       const feedback = document.getElementById('quizFeedback');
       if (!selected) {
-        feedback.textContent = 'Alege mai întâi un răspuns.';
+        feedback.textContent = 'Selectează o variantă, apoi apasă pe „Verifică răspunsul”.';
         feedback.style.color = '#fbbf24';
         return;
       }
@@ -516,7 +607,7 @@
         feedback.textContent = 'Corect! Lichidele au volum propriu, dar nu au formă proprie.';
         feedback.style.color = '#4ade80';
       } else {
-        feedback.textContent = 'Mai încearcă. Gândește-te cum se comportă lichidul într-un vas.';
+        feedback.textContent = 'Nu este corect. Recitește tabelul despre solide, lichide și gaze.';
         feedback.style.color = '#f87171';
       }
     }
@@ -525,3 +616,8 @@
   </script>
 </body>
 </html>
+"""
+
+out = Path("/mnt/data/lectia-4-verificare-rapida-refacuta.html")
+out.write_text(html, encoding="utf-8")
+print(out.as_posix())

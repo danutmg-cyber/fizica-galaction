@@ -1,0 +1,1186 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Lecția 3 | Legea lui Pascal. Aplicații | Fizica Galaction</title>
+  <meta name="description" content="Lecția 3 pentru clasa a VII-a: Legea lui Pascal. Aplicații. Lecție interactivă, pe pagini, adaptată pentru telefon, tabletă și PC." />
+  <style>
+    :root{
+      --bg:#0f172a;
+      --bg-soft:#111c34;
+      --card:#1e293b;
+      --card-2:#243249;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --accent:#22d3ee;
+      --accent-2:#38bdf8;
+      --success:#4ade80;
+      --warning:#fbbf24;
+      --danger:#f87171;
+      --border:#334155;
+      --shadow:0 18px 45px rgba(0,0,0,.32);
+    }
+
+    *{box-sizing:border-box;}
+    html{scroll-behavior:smooth;}
+    body{
+      margin:0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(180deg, #0b1220 0%, var(--bg) 100%);
+      color:var(--text);
+      min-height:100vh;
+      padding:16px 14px 108px;
+    }
+
+    .wrapper{
+      max-width:900px;
+      margin:0 auto;
+    }
+
+    .site-header{
+      margin-bottom:18px;
+      text-align:center;
+    }
+
+    .brand{
+      font-size:1rem;
+      color:var(--accent);
+      font-weight:800;
+      letter-spacing:.4px;
+      margin-bottom:6px;
+    }
+
+    .subbrand{
+      font-size:.95rem;
+      color:#94a3b8;
+      margin-bottom:12px;
+    }
+
+    .quote{
+      background:rgba(34,211,238,.09);
+      border:1px solid rgba(34,211,238,.18);
+      color:#dffafe;
+      padding:12px 14px;
+      border-radius:16px;
+      font-style:italic;
+      margin:0 auto;
+      max-width:760px;
+    }
+
+    .lesson-shell{
+      background:rgba(15,23,42,.55);
+      border:1px solid var(--border);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      backdrop-filter: blur(8px);
+    }
+
+    .topbar{
+      padding:14px 16px 10px;
+      border-bottom:1px solid rgba(148,163,184,.2);
+      background:rgba(255,255,255,.02);
+      position:sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter: blur(8px);
+    }
+
+    .progress-row{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+      margin-bottom:10px;
+      flex-wrap:wrap;
+    }
+
+    .page-indicator{
+      font-size:.95rem;
+      color:var(--muted);
+      font-weight:700;
+    }
+
+    .progress-track{
+      width:100%;
+      height:10px;
+      background:#162235;
+      border-radius:999px;
+      overflow:hidden;
+      border:1px solid rgba(148,163,184,.16);
+    }
+
+    .progress-bar{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg, var(--accent), var(--accent-2));
+      border-radius:999px;
+      transition:width .3s ease;
+    }
+
+    .page{
+      display:none;
+      padding:20px 16px 22px;
+      animation:fade .22s ease;
+    }
+
+    .page.active{display:block;}
+
+    @keyframes fade{
+      from{opacity:.2; transform:translateY(8px);}
+      to{opacity:1; transform:translateY(0);}
+    }
+
+    .hero{
+      background:linear-gradient(160deg, rgba(34,211,238,.14), rgba(56,189,248,.06));
+      border:1px solid rgba(34,211,238,.18);
+      border-radius:22px;
+      padding:18px;
+      margin-bottom:16px;
+    }
+
+    h1,h2,h3{margin:0 0 12px;}
+    h1{font-size:clamp(1.6rem, 4vw, 2.2rem); line-height:1.15;}
+    h2{font-size:clamp(1.25rem, 3vw, 1.6rem); color:#e0f2fe;}
+    h3{font-size:1.05rem; color:#dbeafe;}
+
+    p, li{
+      color:var(--text);
+      line-height:1.65;
+      font-size:1rem;
+      margin:0 0 12px;
+    }
+
+    .muted{color:var(--muted);}
+    .small{font-size:.95rem;}
+    .center{text-align:center;}
+
+    .grid{
+      display:grid;
+      gap:14px;
+    }
+
+    .grid-2{
+      grid-template-columns:repeat(2, minmax(0,1fr));
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(30,41,59,.95), rgba(20,30,48,.95));
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:16px;
+      box-shadow:0 10px 28px rgba(0,0,0,.18);
+    }
+
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 12px;
+      border-radius:999px;
+      background:rgba(56,189,248,.12);
+      color:#dffafe;
+      border:1px solid rgba(56,189,248,.2);
+      font-size:.9rem;
+      font-weight:700;
+      margin:0 8px 8px 0;
+    }
+
+    .bullet-list{
+      padding-left:18px;
+      margin:0;
+    }
+
+    .visual-row{
+      display:grid;
+      gap:12px;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      margin-top:6px;
+    }
+
+    .visual-card{
+      background:var(--bg-soft);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:14px;
+      min-height:130px;
+    }
+
+    .visual-icon{
+      font-size:2rem;
+      margin-bottom:8px;
+      display:block;
+    }
+
+    .formula-box{
+      background:rgba(15,23,42,.8);
+      border:1px solid rgba(56,189,248,.22);
+      border-left:5px solid var(--accent);
+      border-radius:18px;
+      padding:14px;
+      margin:14px 0;
+      overflow-x:auto;
+    }
+
+    .formula-box .mj{
+      font-size:1.08rem;
+    }
+
+    .highlight{
+      color:#67e8f9;
+      font-weight:800;
+    }
+
+    .example{
+      background:rgba(74,222,128,.08);
+      border:1px solid rgba(74,222,128,.2);
+      border-radius:18px;
+      padding:14px;
+      margin-top:12px;
+    }
+
+    .warning{
+      background:rgba(251,191,36,.08);
+      border:1px solid rgba(251,191,36,.22);
+      border-radius:18px;
+      padding:14px;
+      margin-top:12px;
+      color:#fef3c7;
+    }
+
+    .steps{
+      counter-reset:pas;
+      padding-left:0;
+      margin:0;
+      list-style:none;
+      display:grid;
+      gap:12px;
+    }
+
+    .steps li{
+      position:relative;
+      padding:12px 12px 12px 54px;
+      border-radius:18px;
+      background:rgba(15,23,42,.75);
+      border:1px solid rgba(148,163,184,.16);
+      margin:0;
+    }
+
+    .steps li::before{
+      counter-increment:pas;
+      content:counter(pas);
+      position:absolute;
+      left:14px;
+      top:12px;
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      background:var(--accent);
+      color:#082f49;
+      font-weight:800;
+      display:grid;
+      place-items:center;
+    }
+
+    .table-like{
+      display:grid;
+      gap:10px;
+      margin-top:8px;
+    }
+
+    .row{
+      display:grid;
+      grid-template-columns:1.1fr 1fr;
+      gap:10px;
+      align-items:stretch;
+    }
+
+    .cell{
+      background:rgba(15,23,42,.76);
+      border:1px solid rgba(148,163,184,.18);
+      border-radius:16px;
+      padding:12px;
+    }
+
+    .retain{
+      display:grid;
+      gap:10px;
+    }
+
+    .retain-item{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      background:rgba(15,23,42,.7);
+      border:1px solid rgba(148,163,184,.16);
+      border-radius:16px;
+      padding:12px;
+    }
+
+    .retain-item .dot{
+      min-width:28px;
+      height:28px;
+      border-radius:50%;
+      background:rgba(74,222,128,.18);
+      border:1px solid rgba(74,222,128,.35);
+      color:#bbf7d0;
+      display:grid;
+      place-items:center;
+      font-weight:900;
+    }
+
+    .quiz-card{
+      background:linear-gradient(180deg, rgba(30,41,59,.98), rgba(17,24,39,.98));
+      border:1px solid rgba(56,189,248,.18);
+      border-radius:20px;
+      padding:16px;
+      margin-bottom:14px;
+    }
+
+    .quiz-card h3{
+      margin-bottom:10px;
+    }
+
+    .options{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .option{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      padding:12px;
+      border-radius:14px;
+      background:rgba(15,23,42,.78);
+      border:1px solid rgba(148,163,184,.18);
+      cursor:pointer;
+      transition:transform .15s ease, border-color .15s ease, background .15s ease;
+    }
+
+    .option:hover{
+      transform:translateY(-1px);
+      border-color:rgba(34,211,238,.35);
+      background:rgba(34,211,238,.06);
+    }
+
+    .option input{
+      margin-top:2px;
+      transform:scale(1.15);
+      accent-color:#22d3ee;
+    }
+
+    .quiz-actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:8px;
+    }
+
+    .button, .link-button{
+      border:none;
+      border-radius:16px;
+      padding:14px 16px;
+      font-weight:800;
+      font-size:1rem;
+      cursor:pointer;
+      transition:transform .15s ease, opacity .15s ease, background .15s ease;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      min-height:50px;
+    }
+
+    .button:hover, .link-button:hover{transform:translateY(-1px);}
+    .button-primary{background:linear-gradient(90deg, var(--accent), var(--accent-2)); color:#082f49;}
+    .button-secondary{background:#1f2937; color:var(--text); border:1px solid rgba(148,163,184,.2);}
+    .button-success{background:#16a34a; color:white;}
+    .button-ghost{background:transparent; color:var(--muted); border:1px solid rgba(148,163,184,.2);}
+    .button:disabled{opacity:.45; cursor:not-allowed; transform:none;}
+
+    .result{
+      display:none;
+      margin-top:14px;
+      padding:14px;
+      border-radius:16px;
+      font-weight:700;
+      line-height:1.6;
+    }
+
+    .result.good{
+      display:block;
+      background:rgba(74,222,128,.08);
+      border:1px solid rgba(74,222,128,.22);
+      color:#dcfce7;
+    }
+
+    .result.warn{
+      display:block;
+      background:rgba(251,191,36,.09);
+      border:1px solid rgba(251,191,36,.22);
+      color:#fef3c7;
+    }
+
+    .sticky-nav{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:20;
+      padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+      background:linear-gradient(180deg, rgba(15,23,42,0), rgba(15,23,42,.95) 34%, rgba(15,23,42,1) 100%);
+      backdrop-filter:blur(10px);
+    }
+
+    .sticky-inner{
+      max-width:900px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:1fr 1.2fr;
+      gap:10px;
+    }
+
+    .sticky-inner .button{
+      width:100%;
+    }
+
+    .page-links{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+
+    .footer-note{
+      text-align:center;
+      color:#94a3b8;
+      font-size:.95rem;
+      margin-top:8px;
+    }
+
+    @media (max-width: 720px){
+      .grid-2, .visual-row, .row{
+        grid-template-columns:1fr;
+      }
+      .topbar{padding:12px;}
+      .page{padding:16px 12px 20px;}
+      .hero{padding:16px;}
+      .sticky-inner{
+        grid-template-columns:1fr 1.2fr;
+      }
+    }
+
+    @media (max-width: 420px){
+      body{padding-left:10px; padding-right:10px;}
+      .sticky-inner{
+        grid-template-columns:1fr 1.15fr;
+      }
+      .button, .link-button{
+        font-size:.96rem;
+        padding:13px 14px;
+      }
+    }
+
+    .mini-grid{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+      gap:14px;
+      margin-top:14px;
+    }
+
+    .stat-card{
+      background:linear-gradient(180deg, rgba(56,189,248,.10), rgba(30,41,59,.85));
+      border:1px solid rgba(56,189,248,.18);
+      border-radius:18px;
+      padding:14px;
+    }
+
+    .stat-card h3{
+      margin:0 0 8px;
+      font-size:1.02rem;
+    }
+
+    .pill{
+      display:inline-block;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(74,222,128,.12);
+      border:1px solid rgba(74,222,128,.22);
+      color:#dcfce7;
+      font-size:.9rem;
+      font-weight:700;
+      margin:4px 6px 0 0;
+    }
+
+    .warning-box{
+      background:rgba(251,191,36,.10);
+      border:1px solid rgba(251,191,36,.22);
+      color:#fef3c7;
+      padding:12px 14px;
+      border-radius:16px;
+      margin-top:14px;
+    }
+
+    .map-box{
+      background:linear-gradient(180deg, rgba(34,211,238,.08), rgba(15,23,42,.6));
+      border:1px solid rgba(148,163,184,.16);
+      border-radius:18px;
+      padding:14px;
+      margin-top:14px;
+    }
+
+    .map-row{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .map-item{
+      background:rgba(30,41,59,.85);
+      border:1px solid rgba(148,163,184,.16);
+      border-radius:16px;
+      padding:12px;
+      text-align:center;
+    }
+
+    .big-icon{
+      font-size:2rem;
+      display:block;
+      margin-bottom:6px;
+    }
+
+    .comparison{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .comparison .card h3{
+      margin-top:0;
+    }
+
+    .diagram {
+      background:linear-gradient(180deg, rgba(15,23,42,.95), rgba(13,20,35,.95));
+      border:1px solid var(--border);
+      border-radius:20px;
+      padding:18px;
+      overflow:auto;
+    }
+
+    .hydraulic-press {
+      min-height:240px;
+      display:grid;
+      grid-template-columns: 1fr 1.2fr 1fr;
+      align-items:end;
+      gap:12px;
+      margin-top:10px;
+    }
+
+    .piston-wrap {
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+      min-width:100px;
+    }
+
+    .force-tag {
+      background:rgba(34,211,238,.14);
+      border:1px solid rgba(34,211,238,.28);
+      color:#e0f2fe;
+      padding:6px 10px;
+      border-radius:999px;
+      font-weight:800;
+      font-size:.95rem;
+    }
+
+    .cylinder {
+      width:100%;
+      max-width:110px;
+      background:linear-gradient(180deg, rgba(56,189,248,.14), rgba(30,41,59,.95));
+      border:2px solid #5b6b86;
+      border-bottom-width:4px;
+      border-radius:18px 18px 8px 8px;
+      position:relative;
+      overflow:hidden;
+      box-shadow: inset 0 -18px 35px rgba(34,211,238,.07);
+    }
+
+    .cylinder.small { height:150px; }
+    .cylinder.large { height:190px; max-width:140px; }
+
+    .liquid {
+      position:absolute;
+      left:0; right:0; bottom:0;
+      height:62%;
+      background:linear-gradient(180deg, rgba(34,211,238,.9), rgba(2,132,199,.72));
+      border-top:2px solid rgba(255,255,255,.35);
+    }
+
+    .liquid.large { height:68%; }
+
+    .piston-head {
+      position:absolute;
+      left:8px; right:8px;
+      top:28px;
+      height:18px;
+      background:#dbeafe;
+      border-radius:12px;
+      box-shadow:0 3px 8px rgba(0,0,0,.35);
+    }
+
+    .rod {
+      position:absolute;
+      top:-34px;
+      left:50%;
+      width:10px;
+      height:68px;
+      transform:translateX(-50%);
+      background:#cbd5e1;
+      border-radius:8px;
+    }
+
+    .weight {
+      position:absolute;
+      left:50%;
+      transform:translateX(-50%);
+      top:-72px;
+      width:62px;
+      height:38px;
+      border-radius:10px 10px 4px 4px;
+      background:linear-gradient(180deg, #f8fafc, #94a3b8);
+      color:#0f172a;
+      font-weight:800;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      box-shadow:0 10px 20px rgba(0,0,0,.25);
+    }
+
+    .connector {
+      height:32px;
+      border-bottom:12px solid rgba(34,211,238,.88);
+      border-left:12px solid rgba(34,211,238,.88);
+      border-right:12px solid rgba(34,211,238,.88);
+      border-radius:0 0 18px 18px;
+      margin-bottom:4px;
+    }
+
+    .formula-box {
+      background:rgba(15,23,42,.72);
+      border:1px dashed rgba(56,189,248,.45);
+      border-radius:18px;
+      padding:14px;
+      text-align:center;
+      color:#e2e8f0;
+      margin:14px 0;
+    }
+
+    .step {
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      margin:10px 0;
+      padding:12px;
+      border-radius:16px;
+      background:rgba(255,255,255,.03);
+      border:1px solid rgba(148,163,184,.14);
+    }
+
+    .step-number {
+      width:34px;
+      height:34px;
+      min-width:34px;
+      border-radius:50%;
+      background:linear-gradient(135deg, var(--accent), var(--accent-2));
+      color:#082032;
+      font-weight:900;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+
+    .app-grid {
+      display:grid;
+      gap:12px;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+    }
+
+    .app-card {
+      background:linear-gradient(180deg, rgba(36,50,73,.96), rgba(20,30,48,.96));
+      border:1px solid rgba(56,189,248,.18);
+      border-radius:18px;
+      padding:14px;
+    }
+
+    .note-strong {
+      color:#bae6fd;
+      font-weight:800;
+    }
+
+    @media (max-width:760px) {
+      .grid-2, .app-grid {
+        grid-template-columns:1fr;
+      }
+      .hydraulic-press {
+        grid-template-columns:1fr;
+        justify-items:center;
+      }
+      .connector {
+        width:70%;
+        height:34px;
+        border-top:12px solid rgba(34,211,238,.88);
+        border-left:12px solid rgba(34,211,238,.88);
+        border-right:12px solid rgba(34,211,238,.88);
+        border-bottom:none;
+        border-radius:18px 18px 0 0;
+        margin:8px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <header class="site-header">
+      <div class="brand">ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</div>
+      <div class="subbrand">Prof. DĂNUȚ ANDRONIE · Fizică clasa a VII-a</div>
+      <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică.”</p>
+    </header>
+
+    <div class="lesson-shell">
+      <div class="topbar">
+        <div class="progress-row">
+          <div class="page-indicator" id="pageIndicator">Pagina 1 / 9</div>
+          <div class="page-indicator" id="pageTitleIndicator">Introducere</div>
+        </div>
+        <div class="progress-track" aria-hidden="true">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+      </div>
+
+      <main>
+        <section class="page active" data-title="Introducere">
+          <div class="hero">
+            <p class="tag">Unitatea 5 · Statica fluidelor</p>
+            <h1>Lecția 3 – Legea lui Pascal. Aplicații</h1>
+            <p class="muted">În această lecție înveți cum se transmite presiunea într-un lichid aflat în repaus și de ce o forță mică poate produce o forță mare într-un dispozitiv hidraulic.</p>
+          </div>
+
+          <div class="grid grid-2">
+            <div class="card">
+              <h2>Ce vei afla</h2>
+              <ul>
+                <li>enunțul <strong>legii lui Pascal</strong>;</li>
+                <li>de ce lichidele sunt utile în mecanisme hidraulice;</li>
+                <li>cum funcționează <strong>presa hidraulică</strong>, cricul și frâna hidraulică;</li>
+                <li>cum aplici relația dintre <strong>forță</strong>, <strong>arie</strong> și <strong>presiune</strong>.</li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <h2>Cuprins rapid</h2>
+              <div class="list-tight">
+                <div class="badge-row"><span class="badge">1</span><span>Știu deja</span></div>
+                <div class="badge-row"><span class="badge">2</span><span>Experiment cu seringi</span></div>
+                <div class="badge-row"><span class="badge">3</span><span>Legea lui Pascal</span></div>
+                <div class="badge-row"><span class="badge">4</span><span>Presa hidraulică</span></div>
+                <div class="badge-row"><span class="badge">5</span><span>Aplicații în viața reală</span></div>
+                <div class="badge-row"><span class="badge">6</span><span>Verificare rapidă</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Observă</h2>
+            <p>Ai văzut probabil un service auto în care o mașină este ridicată ușor, deși are o masă foarte mare. Sau ai observat că, la frânare, apăsarea pedalei se transmite până la roți. În ambele situații apar <span class="note-strong">lichide aflate în sisteme hidraulice</span>.</p>
+            <p class="footer-note">Ideea-cheie: într-un lichid, presiunea se transmite în toate direcțiile.</p>
+          </div>
+        </section>
+
+        <section class="page" data-title="Știu deja">
+          <div class="card">
+            <h2>Știu deja</h2>
+            <p>Din lecțiile anterioare știi că presiunea se exprimă prin raportul dintre forța de apăsare și aria suprafeței pe care acționează:</p>
+            <div class="formula-box">
+              \[
+              p = \frac{F}{S}
+              \]
+            </div>
+            <p>Unitatea de măsură în SI este <strong>pascalul</strong>:</p>
+            <div class="formula-box">
+              \[
+              1\ \text{Pa} = 1\ \frac{\text{N}}{\text{m}^2}
+              \]
+            </div>
+            <div class="info">
+              <strong>Important:</strong> lichidele sunt considerate <strong>aproape incompresibile</strong>. De aceea ele pot transmite eficient presiunea în interiorul unui vas sau al unui sistem de conducte.
+            </div>
+          </div>
+
+          <div class="grid grid-2">
+            <div class="card">
+              <h3>Reamintește-ți</h3>
+              <ul>
+                <li>dacă forța crește, presiunea crește;</li>
+                <li>dacă aria crește, presiunea scade;</li>
+                <li>în lichide, presiunea se exercită perpendicular pe suprafețe.</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Exemplu scurt</h3>
+              <p>Dacă un piston apasă cu <strong>40 N</strong> pe o suprafață de <strong>0,002 m²</strong>, atunci:</p>
+              <div class="formula-box">
+                \[
+                p = \frac{40}{0{,}002} = 20\,000\ \text{Pa}
+                \]
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" data-title="Experiment">
+          <div class="card">
+            <h2>Experimentez – două seringi legate printr-un tub</h2>
+            <p><strong>Materiale:</strong> două seringi, un tub flexibil, apă.</p>
+            <p><strong>Condiție importantă:</strong> sistemul trebuie să conțină apă, fără bule mari de aer.</p>
+
+            <div class="step"><div class="step-number">1</div><div><p>Umple sistemul cu apă și conectează seringile.</p></div></div>
+            <div class="step"><div class="step-number">2</div><div><p>Apasă ușor pe pistonul primei seringi.</p></div></div>
+            <div class="step"><div class="step-number">3</div><div><p>Observă că pistonul celeilalte seringi se deplasează.</p></div></div>
+            <div class="step"><div class="step-number">4</div><div><p>Trage acum de piston înapoi și observă răspunsul celeilalte seringi.</p></div></div>
+          </div>
+
+          <div class="card">
+            <h2>Concluzie</h2>
+            <p>Presiunea exercitată asupra unui piston <strong>se transmite prin intermediul lichidului</strong> la celelalte părți ale sistemului.</p>
+            <div class="success">
+              Această observație stă la baza <strong>legii lui Pascal</strong> și a funcționării dispozitivelor hidraulice.
+            </div>
+          </div>
+        </section>
+
+        <section class="page" data-title="Legea lui Pascal">
+          <div class="card">
+            <h2>Rețin – Legea lui Pascal</h2>
+            <p><strong>Enunț:</strong> <span class="note-strong">Presiunea exercitată din exterior asupra unui lichid aflat în repaus se transmite cu aceeași valoare în toate direcțiile și în toată masa lichidului.</span></p>
+
+            <div class="formula-box">
+              \[
+              p_1 = p_2
+              \]
+            </div>
+
+            <p>Dacă avem doi cilindri cu pistoane și același lichid între ei, atunci:</p>
+            <div class="formula-box">
+              \[
+              \frac{f}{S_1} = \frac{F}{S_2}
+              \]
+            </div>
+
+            <p>De aici rezultă relația de calcul pentru forța mare:</p>
+            <div class="formula-box">
+              \[
+              F = f \cdot \frac{S_2}{S_1}
+              \]
+            </div>
+          </div>
+
+          <div class="info">
+            <strong>Interpretare:</strong> dacă pistonul mare are aria de 10 ori mai mare decât pistonul mic, atunci forța obținută pe pistonul mare poate fi de 10 ori mai mare.
+          </div>
+        </section>
+
+        <section class="page" data-title="Presa hidraulică">
+          <div class="card">
+            <h2>Presa hidraulică – schemă simplificată</h2>
+            <div class="diagram">
+              <div class="hydraulic-press">
+                <div class="piston-wrap">
+                  <div class="force-tag">forță mică \(f\)</div>
+                  <div class="cylinder small">
+                    <div class="rod"></div>
+                    <div class="piston-head"></div>
+                    <div class="liquid"></div>
+                  </div>
+                  <div class="muted small">piston mic · aria \(S_1\)</div>
+                </div>
+
+                <div class="connector" aria-hidden="true"></div>
+
+                <div class="piston-wrap">
+                  <div class="force-tag">forță mare \(F\)</div>
+                  <div class="cylinder large">
+                    <div class="rod"></div>
+                    <div class="weight">SARCINĂ</div>
+                    <div class="piston-head"></div>
+                    <div class="liquid large"></div>
+                  </div>
+                  <div class="muted small">piston mare · aria \(S_2\)</div>
+                </div>
+              </div>
+            </div>
+            <p class="footer-note">Lichidul transmite presiunea; pistonul mare dezvoltă o forță mai mare.</p>
+          </div>
+
+          <div class="grid grid-2">
+            <div class="card">
+              <h3>Cum funcționează</h3>
+              <ul>
+                <li>apeși pe pistonul mic cu o forță relativ mică;</li>
+                <li>în lichid apare o presiune;</li>
+                <li>aceeași presiune ajunge la pistonul mare;</li>
+                <li>deoarece aria pistonului mare este mai mare, rezultă o forță mai mare.</li>
+              </ul>
+            </div>
+
+            <div class="card">
+              <h3>Observație</h3>
+              <p>Amplificarea forței nu înseamnă „energie gratuită”. Pentru a obține o forță mai mare, pistonul mic trebuie să se deplaseze pe o distanță mai mare.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" data-title="Exemplu numeric">
+          <div class="card">
+            <h2>Aplic – exemplu numeric</h2>
+            <p>Pe pistonul mic al unei prese hidraulice se exercită forța <strong>\(f = 30\,\text{N}\)</strong>. Aria pistonului mic este <strong>\(S_1 = 2\,\text{cm}^2\)</strong>, iar aria pistonului mare este <strong>\(S_2 = 20\,\text{cm}^2\)</strong>. Să se determine forța <strong>\(F\)</strong> exercitată de pistonul mare.</p>
+
+            <div class="step"><div class="step-number">1</div><div><p>Scriem relația lui Pascal:</p><div class="formula-box">\[
+            \frac{f}{S_1} = \frac{F}{S_2}
+            \]</div></div></div>
+
+            <div class="step"><div class="step-number">2</div><div><p>Izolăm forța necunoscută:</p><div class="formula-box">\[
+            F = f \cdot \frac{S_2}{S_1}
+            \]</div></div></div>
+
+            <div class="step"><div class="step-number">3</div><div><p>Înlocuim numeric:</p><div class="formula-box">\[
+            F = 30 \cdot \frac{20}{2} = 30 \cdot 10 = 300\,\text{N}
+            \]</div></div></div>
+
+            <div class="success">
+              <strong>Răspuns:</strong> pistonul mare exercită o forță de <strong>\(300\,\text{N}\)</strong>.
+            </div>
+          </div>
+        </section>
+
+        <section class="page" data-title="Aplicații practice">
+          <div class="card">
+            <h2>Aplicații în viața reală</h2>
+            <div class="app-grid">
+              <div class="app-card">
+                <h3>1. Cricul hidraulic</h3>
+                <p>Ridică automobile folosind un lichid și două pistoane cu arii diferite.</p>
+              </div>
+              <div class="app-card">
+                <h3>2. Frâna hidraulică</h3>
+                <p>Forța de la pedală se transmite prin lichid până la sistemul de frânare al roților.</p>
+              </div>
+              <div class="app-card">
+                <h3>3. Elevatorul hidraulic</h3>
+                <p>Poate ridica mașini sau platforme în service-uri și ateliere.</p>
+              </div>
+              <div class="app-card">
+                <h3>4. Utilaje agricole și industriale</h3>
+                <p>Brațele mobile, cupele și mecanismele de apăsare folosesc sisteme hidraulice.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-2">
+            <div class="card">
+              <h3>Știai că?</h3>
+              <p><strong>Blaise Pascal</strong> a trăit între <strong>1632</strong> și <strong>1662</strong> și a avut contribuții importante în matematică și fizică. Interesul lui pentru hidrostatică a condus la formularea legii care îi poartă numele.</p>
+            </div>
+            <div class="card">
+              <h3>Unde se folosește presa hidraulică?</h3>
+              <ul>
+                <li>în agricultură, la formarea baloților;</li>
+                <li>în industria auto;</li>
+                <li>la presarea și reciclarea materialelor;</li>
+                <li>în ateliere și linii industriale.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section class="page" data-title="Verificare rapidă">
+          <div class="card">
+            <h2>Verificare rapidă</h2>
+            <p class="muted">Alege câte o variantă pentru fiecare item, apoi apasă pe <strong>Verifică răspunsurile</strong>.</p>
+
+            <form id="quizForm">
+              <div class="quiz-card">
+                <h3>1. Legea lui Pascal se referă la:</h3>
+                <div class="options">
+                  <label class="option"><input type="radio" name="q1" value="a"> <span>A. propagarea luminii</span></label>
+                  <label class="option"><input type="radio" name="q1" value="b"> <span>B. transmiterea presiunii în lichide</span></label>
+                  <label class="option"><input type="radio" name="q1" value="c"> <span>C. plutirea corpurilor</span></label>
+                </div>
+              </div>
+
+              <div class="quiz-card">
+                <h3>2. Într-un sistem hidraulic, lichidul este folosit deoarece este:</h3>
+                <div class="options">
+                  <label class="option"><input type="radio" name="q2" value="a"> <span>A. compresibil</span></label>
+                  <label class="option"><input type="radio" name="q2" value="b"> <span>B. colorat</span></label>
+                  <label class="option"><input type="radio" name="q2" value="c"> <span>C. aproape incompresibil</span></label>
+                </div>
+              </div>
+
+              <div class="quiz-card">
+                <h3>3. Relația corectă pentru doi cilindri hidraulici este:</h3>
+                <div class="options">
+                  <label class="option"><input type="radio" name="q3" value="a"> <span>A. \(f\cdot S_1 = F\cdot S_2\)</span></label>
+                  <label class="option"><input type="radio" name="q3" value="b"> <span>B. \(\frac{f}{S_1} = \frac{F}{S_2}\)</span></label>
+                  <label class="option"><input type="radio" name="q3" value="c"> <span>C. \(f+S_1=F+S_2\)</span></label>
+                </div>
+              </div>
+
+              <div class="quiz-card">
+                <h3>4. Dacă aria pistonului mare este de 5 ori mai mare, atunci forța obținută poate fi:</h3>
+                <div class="options">
+                  <label class="option"><input type="radio" name="q4" value="a"> <span>A. de 5 ori mai mare</span></label>
+                  <label class="option"><input type="radio" name="q4" value="b"> <span>B. de 5 ori mai mică</span></label>
+                  <label class="option"><input type="radio" name="q4" value="c"> <span>C. mereu egală</span></label>
+                </div>
+              </div>
+
+              <div class="quiz-card">
+                <h3>5. Un exemplu de dispozitiv bazat pe legea lui Pascal este:</h3>
+                <div class="options">
+                  <label class="option"><input type="radio" name="q5" value="a"> <span>A. presa hidraulică</span></label>
+                  <label class="option"><input type="radio" name="q5" value="b"> <span>B. busola</span></label>
+                  <label class="option"><input type="radio" name="q5" value="c"> <span>C. termometrul</span></label>
+                </div>
+              </div>
+
+              <div class="quiz-actions">
+                <button type="button" class="button button-primary" onclick="checkQuiz()">Verifică răspunsurile</button>
+                <button type="reset" class="button button-secondary" onclick="resetQuiz()">Resetează</button>
+              </div>
+            </form>
+
+            <div id="quizResult" class="result" role="status"></div>
+
+            <div class="page-links">
+              <a class="link-button button-secondary" href="./index.html">Înapoi la lecții</a>
+              <a class="link-button button-secondary" href="./lectia-2.html">Lecția anterioară</a>
+              <a class="link-button button-success" href="./lectia-4.html">Lecția următoare</a>
+            </div>
+            <p class="footer-note">După această lecție, poți continua cu <strong>Legea lui Arhimede. Aplicații</strong>.</p>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <nav class="sticky-nav" aria-label="Navigare între paginile lecției">
+    <div class="sticky-inner">
+      <button class="button button-secondary" id="prevBtn" onclick="changePage(-1)">◀ Înapoi</button>
+      <button class="button button-primary" id="nextBtn" onclick="changePage(1)">Mergi mai departe ▶</button>
+    </div>
+  </nav>
+
+<script>
+
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const pageIndicator = document.getElementById('pageIndicator');
+    const pageTitleIndicator = document.getElementById('pageTitleIndicator');
+    const progressBar = document.getElementById('progressBar');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    let currentPage = 0;
+
+    function updatePage() {
+      pages.forEach((page, index) => page.classList.toggle('active', index === currentPage));
+      const total = pages.length;
+      const title = pages[currentPage].dataset.title || `Pagina ${currentPage + 1}`;
+
+      pageIndicator.textContent = `Pagina ${currentPage + 1} / ${total}`;
+      pageTitleIndicator.textContent = title;
+      progressBar.style.width = `${((currentPage + 1) / total) * 100}%`;
+
+      prevBtn.disabled = currentPage === 0;
+      nextBtn.textContent = currentPage === total - 1 ? 'Reia lecția ↺' : 'Mergi mai departe ▶';
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function changePage(step) {
+      if (currentPage === pages.length - 1 && step === 1) {
+        currentPage = 0;
+      } else {
+        currentPage = Math.min(Math.max(currentPage + step, 0), pages.length - 1);
+      }
+      updatePage();
+    }
+
+    function checkQuiz() {
+      const answers = { q1: 'b', q2: 'c', q3: 'b', q4: 'a', q5: 'a' };
+      let score = 0;
+      let answered = 0;
+
+      for (const key in answers) {
+        const selected = document.querySelector(`input[name="${key}"]:checked`);
+        if (selected) {
+          answered++;
+          if (selected.value === answers[key]) score++;
+        }
+      }
+
+      const result = document.getElementById('quizResult');
+
+      if (answered < 5) {
+        result.className = 'result warn';
+        result.innerHTML = `Ai răspuns la <strong>${answered}</strong> din 5 itemi. Completează toate variantele.`;
+        return;
+      }
+
+      let message = '';
+      if (score === 5) {
+        result.className = 'result good';
+        message = 'Excelent! Stăpânești foarte bine noțiunile despre legea lui Pascal și aplicațiile ei.';
+      } else if (score >= 3) {
+        result.className = 'result warn';
+        message = 'Bine! Mai recitește relația dintre forță, arie și presiune în sistemele hidraulice.';
+      } else {
+        result.className = 'result warn';
+        message = 'Mai exersează. Reia lecția și urmărește mai ales paginile despre enunț, formulă și presa hidraulică.';
+      }
+
+      result.innerHTML =
+        `Scor: <strong>${score} / 5</strong><br>` +
+        `${message}<br><br>` +
+        `Răspunsuri corecte: 1-B, 2-C, 3-B, 4-A, 5-A.`;
+    }
+
+    function resetQuiz() {
+      const result = document.getElementById('quizResult');
+      result.className = 'result';
+      result.innerHTML = '';
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') changePage(1);
+      if (event.key === 'ArrowLeft') changePage(-1);
+    });
+
+    updatePage();
+
+  </script>
+
+<script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</body>
+</html>

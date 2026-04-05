@@ -1,328 +1,70 @@
-from pathlib import Path
-import shutil, zipfile
-
-base = Path("/mnt/data/demo-lectii-pdf-index")
-base.mkdir(parents=True, exist_ok=True)
-
-src_pdf = Path("/mnt/data/03. Proprietăți fizice.pdf")
-pdf_name = "proprietati-fizice.pdf"
-dst_pdf = base / pdf_name
-shutil.copyfile(src_pdf, dst_pdf)
-
-html = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lecții | Concepte de bază în fizică | Fizica Galaction</title>
-  <meta name="description" content="Index refăcut pentru lecțiile din capitolul Concepte de bază în fizică, inclusiv previzualizare pentru lecții PDF.">
+  <meta name="description" content="Lecțiile capitolului Concepte de bază în fizică pentru clasa a VI-a.">
   <link rel="stylesheet" href="../../../assets/css/style.css">
-  <style>
-    :root{
-      --bg:#0f172a;
-      --panel:#1e293b;
-      --panel-2:#334155;
-      --text:#f8fafc;
-      --muted:#cbd5e1;
-      --accent:#22d3ee;
-      --accent-2:#38bdf8;
-      --ok:#22c55e;
-      --warning:#f59e0b;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Arial, Helvetica, sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      line-height:1.6;
-    }
-    .wrapper{
-      max-width:1100px;
-      margin:0 auto;
-      padding:20px;
-    }
-    .site-header,.site-footer{
-      background:#020617;
-      border-bottom:1px solid #1e293b;
-    }
-    .site-footer{border-top:1px solid #1e293b;border-bottom:none;margin-top:32px}
-    .site-title{
-      margin:0;
-      font-size:1.9rem;
-      color:var(--accent);
-    }
-    .site-subtitle{
-      margin:6px 0 0;
-      color:var(--muted);
-    }
-    .card{
-      background:var(--panel);
-      border:1px solid var(--panel-2);
-      border-radius:20px;
-      padding:22px;
-      margin:18px 0;
-      box-shadow:0 12px 32px rgba(0,0,0,.25);
-    }
-    .page-hero h2,.card h2{
-      margin-top:0;
-    }
-    .quote{
-      margin-top:14px;
-      padding:12px 14px;
-      border-left:4px solid var(--accent);
-      background:rgba(34,211,238,.08);
-      border-radius:10px;
-      color:#e0f2fe;
-      font-style:italic;
-    }
-    .grid{
-      display:grid;
-      gap:16px;
-    }
-    .grid-2{
-      grid-template-columns:repeat(2,minmax(0,1fr));
-    }
-    .lesson-card{
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      text-decoration:none;
-      color:var(--text);
-      background:linear-gradient(180deg, rgba(56,189,248,.08), rgba(15,23,42,.15));
-      border:1px solid #475569;
-      border-radius:18px;
-      padding:18px;
-      min-height:170px;
-      transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease;
-    }
-    .lesson-card:hover{
-      transform:translateY(-2px);
-      border-color:var(--accent);
-      box-shadow:0 10px 24px rgba(34,211,238,.12);
-    }
-    .badge-row{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
-    .badge{
-      display:inline-block;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:.86rem;
-      font-weight:bold;
-    }
-    .badge-html{background:rgba(56,189,248,.16); color:#bae6fd;}
-    .badge-pdf{background:rgba(245,158,11,.18); color:#fde68a;}
-    .badge-demo{background:rgba(34,197,94,.18); color:#bbf7d0;}
-    .lesson-card h3{
-      margin:0;
-      font-size:1.15rem;
-    }
-    .lesson-card p{
-      margin:0;
-      color:var(--muted);
-    }
-    .actions{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:16px;
-    }
-    .button{
-      display:inline-block;
-      text-decoration:none;
-      text-align:center;
-      padding:12px 16px;
-      border-radius:12px;
-      background:var(--accent);
-      color:#082f49;
-      font-weight:700;
-      min-width:180px;
-    }
-    .button.secondary{
-      background:#1d4ed8;
-      color:#eff6ff;
-    }
-    .button.ghost{
-      background:#0f172a;
-      color:#e2e8f0;
-      border:1px solid #475569;
-    }
-    .notice{
-      padding:14px 16px;
-      border-radius:14px;
-      background:rgba(34,197,94,.12);
-      border:1px solid rgba(34,197,94,.28);
-      color:#dcfce7;
-    }
-    .pdf-preview{
-      width:100%;
-      height:78vh;
-      min-height:520px;
-      border:none;
-      border-radius:16px;
-      background:white;
-    }
-    .hint{
-      color:var(--muted);
-      font-size:.95rem;
-      margin-top:10px;
-    }
-    ul.clean{
-      margin:0;
-      padding-left:18px;
-    }
-    @media (max-width: 760px){
-      .grid-2{grid-template-columns:1fr;}
-      .pdf-preview{height:68vh; min-height:420px;}
-      .site-title{font-size:1.55rem;}
-    }
-  </style>
 </head>
 <body>
   <header class="site-header">
     <div class="wrapper">
       <h1 class="site-title">Fizica Galaction</h1>
-      <p class="site-subtitle">Clasa a VI-a • 1. Concepte de bază în fizică • Lecții</p>
     </div>
   </header>
 
-  <main class="wrapper">
-    <section class="card page-hero">
-      <h2>Lecțiile capitolului</h2>
+  <main class="page-content wrapper">
+    <section class="page-hero">
+      <h2>Lecții – Concepte de bază în fizică</h2>
       <p>
-        Mai jos ai un model de <strong>index.html</strong> în care pot apărea împreună lecțiile HTML
-        și lecțiile PDF. Lecția PDF este marcată clar și poate fi deschisă direct sau previzualizată
-        în aceeași pagină.
+        Alege lecția pe care vrei să o parcurgi. Fiecare lecție este scurtă, clară și
+        organizată astfel încât să poți învăța mai ușor, pas cu pas.
       </p>
-      <div class="quote">
-        „Fizica nu este o materie dominată de formule, ci de logică.”
-      </div>
-      <div class="actions">
-        <a class="button ghost" href="../index.html">Înapoi la capitol</a>
-        <a class="button secondary" href="./proprietati-fizice.pdf" target="_blank">Deschide PDF-ul demo</a>
-      </div>
     </section>
 
     <section class="card">
-      <h2>Listă lecții</h2>
+      <h3>Lecțiile capitolului</h3>
       <div class="grid grid-2">
-        <a class="lesson-card" href="./lectia-1.html">
-          <div class="badge-row">
-            <span class="badge badge-html">HTML</span>
-          </div>
-          <h3>Lecția 1 – Ce este fizica? Corpuri fizice și starea fizică</h3>
-          <p>Lecție în format HTML, cu conținut structurat pentru telefon, tabletă și PC.</p>
+        <a class="link-card unit unit-1" href="./lectia-1.html">
+          <h4>Lecția 1</h4>
+          <p>Ce este fizica? Corpuri fizice și starea fizică</p>
         </a>
 
-        <a class="lesson-card" href="./lectia-2.html">
-          <div class="badge-row">
-            <span class="badge badge-html">HTML</span>
-          </div>
-          <h3>Lecția 2 – Fenomene fizice</h3>
-          <p>Lecție în format HTML, integrată în structura standard a proiectului.</p>
+        <a class="link-card unit unit-2" href="./lectia-2.html">
+          <h4>Lecția 2</h4>
+          <p>Fenomene fizice</p>
         </a>
 
-        <a class="lesson-card" href="./lectia-3.html">
-          <div class="badge-row">
-            <span class="badge badge-html">HTML</span>
-          </div>
-          <h3>Lecția 3 – Mărimi fizice și unități de măsură</h3>
-          <p>Lecție în format HTML, cu navigare simplă și prezentare clară.</p>
-        </a>
-
-        <a class="lesson-card" href="./proprietati-fizice.pdf" target="_blank">
-          <div class="badge-row">
-            <span class="badge badge-pdf">PDF</span>
-            <span class="badge badge-demo">DEMO</span>
-          </div>
-          <h3>Lecția 4 – Proprietăți fizice</h3>
-          <p>
-            Exemplu de lecție PDF. Elevul poate deschide PDF-ul direct sau îl poate vedea
-            în previzualizarea de mai jos.
-          </p>
+        <a class="link-card unit unit-3" href="./lectia-3.html">
+          <h4>Lecția 3</h4>
+          <p>Mărimi fizice și unități de măsură</p>
         </a>
       </div>
     </section>
 
     <section class="card">
-      <h2>Cum se vede o lecție PDF în site</h2>
-      <div class="notice">
-        Aceasta este previzualizarea directă a lecției PDF. Dacă vrei, poți păstra acest model
-        în index sau poți face pentru fiecare PDF câte o pagină separată de tip <strong>lectia-4.html</strong>.
-      </div>
-
-      <div class="actions">
-        <a class="button" href="./proprietati-fizice.pdf" target="_blank">Deschide PDF în pagină nouă</a>
-        <a class="button secondary" href="./lectia-4.html">Model recomandat: pagină separată</a>
-      </div>
-
-      <p class="hint">
-        În proiectul real, butonul „Model recomandat: pagină separată” poate duce către o pagină
-        HTML care încorporează PDF-ul. Dacă nu creezi încă acea pagină, poți scoate acest buton.
-      </p>
-
-      <iframe class="pdf-preview" src="./proprietati-fizice.pdf" title="Previzualizare lecție PDF"></iframe>
-    </section>
-
-    <section class="card">
-      <h2>Recomandare</h2>
-      <ul class="clean">
-        <li>pentru test rapid, poți pune PDF-ul direct în folderul <strong>lectii</strong>;</li>
-        <li>pentru organizare mai bună, creezi apoi și <strong>lectia-4.html</strong> care afișează PDF-ul;</li>
-        <li>în index, marchezi clar formatul fiecărei lecții: <strong>HTML</strong> sau <strong>PDF</strong>.</li>
-      </ul>
+      <h3>Ordine recomandată</h3>
+      <ol>
+        <li>Parcurge lecția 1.</li>
+        <li>Continuă cu lecția 2.</li>
+        <li>Încheie cu lecția 3.</li>
+      </ol>
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="wrapper">
-      Fizica Galaction • Demo index pentru lecții PDF
+      <p>© Fizica Galaction · Prof. DĂNUȚ ANDRONIE
+        <div style="font-size: 0.9rem; color: #cbd5e1; margin-bottom: 12px;">
+            E-mail: <a href="mailto:danutmg@gmail.com" style="color: #22d3ee; text-decoration: none;">danutmg@gmail.com</a><br>
+            <span style="font-size: 0.85rem; color: #94a3b8;">
+                Pentru observații, propuneri și sugestii privind platforma educațională.
+            </span>
+        </div></p>
     </div>
   </footer>
+
+  <script src="../../../assets/js/main.js"></script>
 </body>
 </html>
-"""
-
-(base / "index.html").write_text(html, encoding="utf-8")
-
-# also create optional lectia-4 demo page to avoid dead link in demo package
-lectia4 = """<!DOCTYPE html>
-<html lang="ro">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lecția 4 | Proprietăți fizice</title>
-  <style>
-    body{margin:0;font-family:Arial;background:#0f172a;color:#f8fafc}
-    .wrap{max-width:1000px;margin:0 auto;padding:20px}
-    .card{background:#1e293b;border:1px solid #334155;border-radius:18px;padding:20px}
-    .pdf{width:100%;height:80vh;border:none;border-radius:14px;background:#fff}
-    a{color:#67e8f9}
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <div class="card">
-      <h1>Lecția 4 – Proprietăți fizice</h1>
-      <p><a href="./index.html">Înapoi la index</a></p>
-      <iframe class="pdf" src="./proprietati-fizice.pdf" title="Lecție PDF"></iframe>
-    </div>
-  </div>
-</body>
-</html>
-"""
-(base / "lectia-4.html").write_text(lectia4, encoding="utf-8")
-
-zip_path = Path("/mnt/data/demo-lectii-pdf-index.zip")
-with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zf:
-    for p in base.rglob("*"):
-        if p.is_file():
-            zf.write(p, p.relative_to(base))
-
-print((base / "index.html").as_posix())
-print((base / "lectia-4.html").as_posix())
-print(dst_pdf.as_posix())
-print(zip_path.as_posix())

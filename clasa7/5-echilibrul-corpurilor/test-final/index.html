@@ -243,6 +243,7 @@
       <div>• La itemii numerici, rezultatul se scrie cu <strong>maximum 3 zecimale</strong>, rotunjite sau nerotunjite.</div>
       <div>• Unitatea de măsură se poate scrie <strong>lipită</strong> de rezultat, cu <strong>spațiu</strong> sau cu <strong>tab</strong>.</div>
       <div>• Sunt acceptate exemple precum: <strong>12</strong>, <strong>12 N</strong>, <strong>12N</strong>, <strong>12&nbsp;&nbsp;N</strong>.</div>
+      <div>• După verificare, se afișează și <strong>răspunsul corect</strong>.</div>
     </div>
 
     <button class="btn btn-primary" id="startBtn">Începe testul</button>
@@ -791,11 +792,15 @@ function checkAnswer(){
   if(correct){
     state.correctAnswers++;
     el.feedback.className = "feedback ok";
-    el.feedback.innerHTML = `Corect ✅<br>+${q.points} puncte`;
+    if(q.type === "numeric"){
+      el.feedback.innerHTML = `Corect ✅<br>+${q.points} puncte<br>Răspuns corect: <strong>${q.displayAnswer}</strong>`;
+    } else {
+      el.feedback.innerHTML = `Corect ✅<br>+${q.points} puncte<br>Răspuns corect: <strong>${q.answers[0]}</strong>`;
+    }
   } else {
     el.feedback.className = "feedback bad";
     if(q.type === "numeric"){
-      el.feedback.innerHTML = `Greșit ❌<br>Formula: <strong>${q.formula}</strong><br>Rezultat corect: <strong>${q.displayAnswer}</strong>`;
+      el.feedback.innerHTML = `Greșit ❌<br>Formula: <strong>${q.formula}</strong><br>Răspuns corect: <strong>${q.displayAnswer}</strong>`;
     } else {
       el.feedback.innerHTML = `Greșit ❌<br>Răspuns corect: <strong>${q.answers[0]}</strong>`;
     }

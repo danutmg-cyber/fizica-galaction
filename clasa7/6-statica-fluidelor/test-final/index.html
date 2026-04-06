@@ -151,6 +151,16 @@
     .feedback.ok{display:block; background:rgba(74,222,128,.10); color:#dcfce7; border:1px solid rgba(74,222,128,.22)}
     .feedback.bad{display:block; background:rgba(248,113,113,.10); color:#fecaca; border:1px solid rgba(248,113,113,.20)}
     .feedback.warn{display:block; background:rgba(251,191,36,.10); color:#fde68a; border:1px solid rgba(251,191,36,.20)}
+    #correctAnswerBox{
+      display:none;
+      margin-top:10px;
+      background:rgba(59,130,246,.10);
+      color:#dbeafe;
+      border:1px solid rgba(96,165,250,.20);
+    }
+    #correctAnswerBox.show{
+      display:block;
+    }
     .result-score{
       font-size:4.3rem;
       color:var(--accent);
@@ -255,6 +265,7 @@
     <div class="question-box" id="question"></div>
     <div id="inputArea"></div>
     <div class="feedback" id="feedback"></div>
+    <div class="feedback hidden" id="correctAnswerBox"></div>
     <button class="btn btn-secondary hidden" id="nextBtn">Următoarea</button>
   </section>
 
@@ -303,6 +314,7 @@ const el = {
   question: document.getElementById("question"),
   inputArea: document.getElementById("inputArea"),
   feedback: document.getElementById("feedback"),
+  correctAnswerBox: document.getElementById("correctAnswerBox"),
   nextBtn: document.getElementById("nextBtn"),
   endVariant: document.getElementById("endVariant"),
   finalScore: document.getElementById("finalScore"),
@@ -726,6 +738,8 @@ function showQuestion(){
   el.feedback.className = "feedback";
   el.feedback.style.display = "none";
   el.feedback.innerHTML = "";
+  el.correctAnswerBox.className = "feedback hidden";
+  el.correctAnswerBox.innerHTML = "";
   el.nextBtn.classList.add("hidden");
 
   el.inputArea.innerHTML = `
@@ -796,22 +810,28 @@ function checkAnswer(){
   checkBtn.disabled = true;
   checkBtn.classList.add("btn-disabled");
 
+  let answerText = "";
+  if(q.type === "numeric"){
+    answerText = q.displayAnswer;
+  } else {
+    answerText = q.answers[0];
+  }
+
   if(correct){
     state.correctAnswers++;
     el.feedback.className = "feedback ok";
-    if(q.type === "numeric"){
-      el.feedback.innerHTML = `Corect ✅<br>+${q.points} puncte<br>Răspuns corect: <strong>${q.displayAnswer}</strong>`;
-    } else {
-      el.feedback.innerHTML = `Corect ✅<br>+${q.points} puncte<br>Răspuns corect: <strong>${q.answers[0]}</strong>`;
-    }
+    el.feedback.innerHTML = `Corect ✅<br>+${q.points} puncte`;
   } else {
     el.feedback.className = "feedback bad";
     if(q.type === "numeric"){
-      el.feedback.innerHTML = `Greșit ❌<br>Formula: <strong>${q.formula}</strong><br>Răspuns corect: <strong>${q.displayAnswer}</strong>`;
+      el.feedback.innerHTML = `Greșit ❌<br>Formula: <strong>${q.formula}</strong>`;
     } else {
-      el.feedback.innerHTML = `Greșit ❌<br>Răspuns corect: <strong>${q.answers[0]}</strong>`;
+      el.feedback.innerHTML = `Greșit ❌`;
     }
   }
+
+  el.correctAnswerBox.className = "feedback show";
+  el.correctAnswerBox.innerHTML = `Răspuns corect: <strong>${answerText}</strong>`;
 
   el.nextBtn.classList.remove("hidden");
   requestAnimationFrame(fitQuestionToViewport);

@@ -37,10 +37,21 @@
       border-bottom:2px solid var(--primary);
       margin-bottom:20px;
       padding-bottom:10px;
+      transition:all .25s ease;
+      overflow:hidden;
+    }
+    body.testing-mode .header{
+      max-width:960px;
+      margin-bottom:8px;
+      padding-bottom:4px;
+      border-bottom-width:1px;
+    }
+    body.testing-mode .header .quote{
+      display:none;
     }
     .container{
       width:100%;
-      max-width:720px;
+      max-width:960px;
       background:var(--card);
       border-radius:22px;
       padding:24px;
@@ -113,12 +124,16 @@
       line-height:1.5;
     }
     .question-box{
-      font-size:1.14rem;
+      font-size:clamp(0.95rem, 2vw, 1.18rem);
       font-weight:600;
       margin-bottom:14px;
       text-align:center;
-      min-height:82px;
-      line-height:1.45;
+      line-height:1.5;
+      min-height:auto;
+      overflow-wrap:anywhere;
+      word-break:break-word;
+      hyphens:auto;
+      padding:6px 4px;
     }
     .feedback{
       margin-top:14px;
@@ -149,11 +164,51 @@
       color:#fef08a;
       font-size:.95rem;
     }
+    body.testing-mode .header > div:first-child{
+      font-size:1rem !important;
+      margin-bottom:1px !important;
+    }
+    body.testing-mode .header > div:nth-child(2){
+      font-size:.78rem !important;
+      margin-bottom:6px !important;
+      letter-spacing:.5px !important;
+    }
+    @media (max-width:900px){
+      .container{max-width:100%}
+    }
+    @media (max-width:700px){
+      .meta-row{justify-content:center}
+      .pill{font-size:.84rem; padding:7px 9px}
+    }
     @media (max-width:560px){
-      .container{padding:18px}
-      .question-box{font-size:1.05rem}
+      body{padding:10px}
+      .container{padding:16px}
+      .question-box{
+        font-size:clamp(0.9rem, 3vw, 1.04rem);
+        line-height:1.45;
+      }
       .result-score{font-size:3.2rem}
       input[type="text"],select{font-size:1rem}
+    }
+    @media (max-width:560px) and (orientation:landscape){
+      body{padding:8px}
+      .header{margin-bottom:10px; padding-bottom:8px}
+      .quote{font-size:.86rem; margin-bottom:10px}
+      body.testing-mode .header{
+        margin-bottom:4px;
+        padding-bottom:2px;
+      }
+      .container{padding:12px}
+      .question-box{
+        font-size:clamp(0.84rem, 2.2vw, 0.98rem);
+        line-height:1.38;
+        margin-bottom:10px;
+      }
+      .instruction-box{font-size:.86rem; padding:10px}
+      .meta-row{gap:6px; margin-bottom:10px}
+      .pill{font-size:.78rem; padding:6px 8px}
+      .btn{padding:12px 14px; font-size:.94rem}
+      input[type="text"],select{padding:11px 12px; margin-bottom:10px}
     }
   </style>
 </head>
@@ -616,6 +671,41 @@ function buildTest(){
 function showScreen(screen){
   [el.login, el.game, el.end].forEach(node => node.classList.add("hidden"));
   screen.classList.remove("hidden");
+
+  document.body.classList.remove("testing-mode");
+  if(screen === el.game){
+    document.body.classList.add("testing-mode");
+  }
+}
+
+function fitQuestionToViewport(){
+  const qBox = el.question;
+  if(!qBox) return;
+
+  qBox.style.fontSize = "";
+  qBox.style.lineHeight = "";
+
+  const isLandscapePhone = window.innerWidth <= 560 && window.innerWidth > window.innerHeight;
+  const startPx = isLandscapePhone ? 17 : (window.innerWidth <= 560 ? 18 : 20);
+  const minPx = isLandscapePhone ? 12.5 : 14;
+  let size = startPx;
+
+  qBox.style.fontSize = size + "px";
+  qBox.style.lineHeight = isLandscapePhone ? "1.35" : "1.45";
+
+  const inputBlock = el.inputArea ? el.inputArea.offsetHeight : 0;
+  const metaBlock = document.querySelector(".meta-row") ? document.querySelector(".meta-row").offsetHeight : 0;
+  const feedbackBlock = el.feedback && el.feedback.style.display !== "none" ? el.feedback.offsetHeight : 0;
+
+  let reserved = 250 + inputBlock + metaBlock + feedbackBlock;
+  if (isLandscapePhone) reserved = 180 + inputBlock + metaBlock + feedbackBlock;
+
+  const availableHeight = Math.max(90, window.innerHeight - reserved);
+
+  while(qBox.scrollHeight > availableHeight && size > minPx){
+    size -= 0.5;
+    qBox.style.fontSize = size + "px";
+  }
 }
 
 function showQuestion(){
@@ -643,6 +733,7 @@ function showQuestion(){
     if(event.key === "Enter") checkAnswer();
   });
   answerInput.focus();
+  requestAnimationFrame(fitQuestionToViewport);
 }
 
 function numericAccepted(userValue, exactAnswer, unit = ""){
@@ -711,6 +802,7 @@ function checkAnswer(){
   }
 
   el.nextBtn.classList.remove("hidden");
+  requestAnimationFrame(fitQuestionToViewport);
 }
 
 function nextQuestion(){
@@ -753,6 +845,9 @@ function restartApp(){
   showScreen(el.login);
   el.stdName.focus();
 }
+
+window.addEventListener("resize", fitQuestionToViewport);
+window.addEventListener("orientationchange", () => setTimeout(fitQuestionToViewport, 100));
 
 el.startBtn.addEventListener("click", startGame);
 el.nextBtn.addEventListener("click", nextQuestion);

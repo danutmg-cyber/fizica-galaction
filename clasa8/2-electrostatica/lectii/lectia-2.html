@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Lecția 2 | Interacțiunea dintre corpurile electrizate | Fizica Galaction</title>
+  <meta name="description" content="Lecția 2 pentru clasa a VIII-a: Interacțiunea dintre corpurile electrizate. Lecție interactivă pe pagini, cu buton Mergi mai departe, MathJax și verificare rapidă.">
+  <style>
+    *{box-sizing:border-box}
+    :root{
+      --bg:#0f172a;
+      --surface:#1e293b;
+      --surface-2:#162033;
+      --surface-3:#0b1220;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --accent:#22c55e;
+      --accent-2:#38bdf8;
+      --accent-3:#f59e0b;
+      --danger:#ef4444;
+      --border:rgba(255,255,255,.12);
+      --shadow:0 10px 26px rgba(0,0,0,.24);
+      --radius:18px;
+    }
+    html{scroll-behavior:smooth;font-size:clamp(16px,0.35vw + 15px,19px)}
+    body{
+      margin:0;
+      font-family:Arial, sans-serif;
+      background:linear-gradient(180deg,#0f172a 0%, #111827 100%);
+      color:var(--text);
+      line-height:1.65;
+    }
+    .wrapper{width:min(100%,980px);margin:0 auto;padding-inline:clamp(12px,2vw,24px)}
+    .site-header{
+      background:rgba(30,41,59,.92);
+      border-bottom:3px solid var(--accent);
+      position:sticky;top:0;z-index:30;
+      backdrop-filter:blur(8px)
+    }
+    .site-header .wrapper{padding-block:14px}
+    .site-title{margin:0;font-size:clamp(1.4rem,2vw,2rem);line-height:1.2}
+    .site-subtitle{margin:.35rem 0 0;color:var(--muted);font-size:1rem}
+    .page-content{padding:18px 0 124px}
+    .page-hero,.card,.lesson-shell{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .page-hero,.card{padding:18px;margin-bottom:16px}
+    .page-hero h2,.card h2,.card h3,.card h4{margin-top:0;line-height:1.25}
+    .page-hero h2{font-size:clamp(1.35rem,1.5vw,1.9rem);margin-bottom:10px}
+    .quote{
+      margin-top:14px;padding:12px 14px;background:#10243f;border-left:4px solid var(--accent-2);
+      border-radius:12px;color:#e2e8f0;font-style:italic
+    }
+    .notice,.hint,.warn{
+      padding:12px 14px;border-radius:12px;margin:12px 0
+    }
+    .notice{background:#122033;border-left:4px solid var(--accent);color:var(--muted)}
+    .hint{background:rgba(56,189,248,.12);color:#dbeafe;border:1px solid rgba(56,189,248,.25)}
+    .warn{background:rgba(245,158,11,.14);color:#fde68a;border-left:4px solid var(--accent-3)}
+    .lesson-shell{overflow:hidden}
+    .lesson-top{padding:16px 16px 10px;border-bottom:1px solid var(--border)}
+    .lesson-meta{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+      background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);color:#dcfce7;font-weight:700;font-size:.95rem
+    }
+    .page-counter{color:var(--muted);font-weight:700}
+    .progress{height:10px;background:#0b1220;border-radius:999px;overflow:hidden;margin-top:12px;border:1px solid var(--border)}
+    .progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+    .tab-strip{
+      display:flex;gap:8px;overflow:auto;padding:6px 2px 2px;margin-top:14px;scrollbar-width:thin
+    }
+    .tab-btn{
+      appearance:none;border:1px solid var(--border);background:#111827;color:#e5e7eb;
+      padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:700;white-space:nowrap;min-height:44px
+    }
+    .tab-btn.active{background:linear-gradient(135deg,var(--accent-2),#2563eb);color:white;border-color:transparent}
+    .page-stage{padding:16px}
+    .lesson-page{display:none;animation:fade .22s ease}
+    .lesson-page.active{display:block}
+    @keyframes fade{from{opacity:.25;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .section-title{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-size:1.1rem}
+    .dot{width:14px;height:14px;border-radius:50%;background:var(--accent)}
+    .grid{display:grid;gap:14px}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .split{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}
+    .mini-card,.figure-panel,.formula-box{
+      background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:14px
+    }
+    .mini-card h4,.figure-title{margin-top:0;margin-bottom:8px}
+    .tag{
+      display:inline-block;margin-top:10px;padding:6px 10px;border-radius:999px;
+      background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.24);color:#dcfce7;font-size:.86rem;font-weight:700
+    }
+    .figure-title{font-size:1rem}
+    .svg-wrap{overflow:auto;border-radius:14px}
+    .check-list{padding-left:1.1rem;margin:.35rem 0 0}
+    .check-list li{margin:.25rem 0}
+    .compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .box{
+      background:var(--surface-3);border:1px solid var(--border);border-radius:14px;padding:12px
+    }
+    .box h4{margin:0 0 8px}
+    .formula-box{background:#0d1729}
+    .formula-box p:last-child{margin-bottom:0}
+    .table-wrap{overflow:auto}
+    table{
+      width:100%;border-collapse:collapse;border-radius:14px;overflow:hidden;background:#0b1220;border:1px solid var(--border)
+    }
+    th,td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.08);text-align:left;vertical-align:top}
+    th{background:#111827;color:#e2e8f0}
+    tr:last-child td{border-bottom:none}
+    .quiz-wrap{display:grid;gap:14px}
+    .question{
+      background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:14px
+    }
+    .question h4{margin:0 0 10px}
+    .options{display:grid;gap:8px}
+    .quiz-option{
+      display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:12px;
+      background:#0f172a;border:1px solid rgba(255,255,255,.08);cursor:pointer
+    }
+    .quiz-option input{margin-top:3px;flex:0 0 auto}
+    .feedback{
+      margin-top:10px;padding:10px 12px;border-radius:12px;display:none;font-weight:700
+    }
+    .feedback.ok{display:block;background:rgba(34,197,94,.12);color:#bbf7d0;border:1px solid rgba(34,197,94,.25)}
+    .feedback.no{display:block;background:rgba(239,68,68,.12);color:#fecaca;border:1px solid rgba(239,68,68,.25)}
+    .result-box{
+      margin-top:14px;padding:14px;border-radius:14px;background:#0b1220;border:1px solid var(--border);font-weight:700
+    }
+    .accent{color:#86efac;font-weight:700}
+    .bottom-nav{
+      position:fixed;left:0;right:0;bottom:0;z-index:40;
+      background:rgba(15,23,42,.96);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.08)
+    }
+    .bottom-nav .inner{
+      width:min(100%,980px);margin:0 auto;padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+      display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:center
+    }
+    .nav-btn,.home-link{
+      appearance:none;border:none;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;
+      min-height:48px;border-radius:14px;font-weight:800;cursor:pointer;padding:12px 14px
+    }
+    .nav-btn.prev{background:#334155;color:#f8fafc}
+    .nav-btn.next{background:linear-gradient(135deg,var(--accent),#16a34a);color:#052e16}
+    .home-link{background:#0b1220;color:#e5e7eb;border:1px solid var(--border)}
+    .nav-btn:disabled{opacity:.45;cursor:not-allowed}
+    @media (max-width:900px){.grid-3{grid-template-columns:1fr 1fr}}
+    @media (max-width:760px){
+      .grid-2,.grid-3,.split,.compare{grid-template-columns:1fr}
+      .bottom-nav .inner{grid-template-columns:1fr 1fr}
+      .home-link{grid-column:1 / -1}
+    }
+</style>
+  
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrapper">
+      <h1 class="site-title">Fizica Galaction</h1>
+      <p class="site-subtitle">Clasa a VIII-a · Capitolul 2 · Lecția 2 · Interacțiunea dintre corpurile electrizate</p>
+    </div>
+  </header>
+
+  <main class="page-content wrapper">
+    <section class="page-hero">
+      <h2>Lecția 2 – Interacțiunea dintre corpurile electrizate</h2>
+      <p class="quote">„Fizica nu este dominată de formule, ci de logică.”</p>
+      <p>În această lecție vezi cum interacționează corpurile electrizate și de ce un corp aparent neutru poate fi totuși atras de un corp electrizat.</p>
+      <div class="hint">Vei folosi noțiunile de conductor, izolator, electroscop și electrizare prin influență.</div>
+    </section>
+
+    <section class="lesson-shell" aria-label="Lecție interactivă">
+      <div class="lesson-top">
+        <div class="lesson-meta">
+          <div class="badge">📘 Lecție interactivă</div>
+          <div class="page-counter" id="pageCounter">Pagina 1 / 8</div>
+        </div>
+        <div class="progress" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="tab-strip" aria-label="Paginile lecției"><button class="tab-btn active" data-go="0">1. Observ</button><button class="tab-btn" data-go="1">2. Conductoare</button><button class="tab-btn" data-go="2">3. Interacțiuni</button><button class="tab-btn" data-go="3">4. Electroscopul</button><button class="tab-btn" data-go="4">5. Influența</button><button class="tab-btn" data-go="5">6. Aplic</button><button class="tab-btn" data-go="6">7. Rețin</button><button class="tab-btn" data-go="7">8. Verificare</button></div>
+      </div>
+      <div class="page-stage">
+        
+        <section class="lesson-page">
+          <div class="section-title"><span class="dot"></span><strong>Observ</strong></div>
+          
+<p>După ce un corp este electrizat, el poate atrage sau respinge alte corpuri. Aceste interacțiuni depind de semnul sarcinii, de material și de felul în care sarcina se distribuie pe corp.</p>
+<div class="grid grid-2">
+  <article class="mini-card"><h4>🎈 Două baloane</h4><p>Uneori se atrag, alteori se resping. Nu orice electrizare duce la același efect.</p></article>
+  <article class="mini-card"><h4>⚪ Bilă de polistiren</h4><p>Poate fi atrasă de o baghetă electrizată, apoi poate ajunge să fie respinsă.</p></article>
+  <article class="mini-card"><h4>⚙️ Corp metalic</h4><p>Sarcina electrică se poate redistribui rapid pe întreaga suprafață.</p></article>
+  <article class="mini-card"><h4>🍃 Corp ușor</h4><p>Un corp inițial neutru poate fi atras de un corp electrizat.</p></article>
+</div>
+<div class="notice">Această lecție explică <strong>interacțiunea dintre corpurile electrizate</strong>, dar și de ce un corp neelectrizat poate fi totuși atras.</div>
+
+        </section>
+    
+        <section class="lesson-page">
+          <div class="section-title"><span class="dot"></span><strong>Conductoare și izolatoare</strong></div>
+          
+<div class="split">
+  <div class="mini-card"><h4>Corpurile conductoare</h4><p>În conductoare, o parte dintre electronii periferici se pot deplasa prin corp.</p><ul class="check-list"><li>sarcina se răspândește rapid;</li><li>metalele sunt exemple obișnuite;</li><li>uniformizarea sarcinii se produce ușor.</li></ul></div>
+  <div class="mini-card"><h4>Corpurile izolatoare</h4><p>În izolatoare, sarcina nu se deplasează la fel de ușor prin corp.</p><ul class="check-list"><li>plasticul, sticla, ebonita sunt exemple;</li><li>sarcina poate rămâne mai localizată;</li><li>electrizarea prin frecare se observă ușor.</li></ul></div>
+</div>
+<div class="figure-panel"><h3 class="figure-title">Idee importantă</h3><p>Materialul influențează modul în care sarcina electrică se distribuie și modul în care corpul interacționează cu alte corpuri.</p></div>
+
+        </section>
+    
+        <section class="lesson-page">
+          <div class="section-title"><span class="dot"></span><strong>Atracție și respingere</strong></div>
+          
+<p>Regula de bază rămâne aceeași:</p>
+<div class="grid grid-2">
+  <article class="mini-card"><h4>Semne contrare</h4><p>Corpurile electrizate cu sarcini de semne contrare se <strong>atrag</strong>.</p></article>
+  <article class="mini-card"><h4>Același semn</h4><p>Corpurile electrizate cu sarcini de același semn se <strong>resping</strong>.</p></article>
+</div>
+<div class="figure-panel"><h3 class="figure-title">Situație experimentală</h3><p>O bilă ușoară este atrasă la început de bagheta electrizată. După atingere, bila poate primi sarcină de același semn și începe să fie <strong>respinsă</strong>.</p></div>
+<div class="notice">Un corp neelectrizat poate fi atras de un corp electrizat, dar după contact situația se poate schimba.</div>
+
+        </section>
+    
+        <section class="lesson-page">
+          <div class="section-title"><span class="dot"></span><strong>Electroscopul</strong></div>
+          
+<div class="split">
+  <div class="mini-card"><h4>Ce este electroscopul?</h4><p>Electroscopul este un dispozitiv folosit pentru a pune în evidență existența sarcinii electrice.</p><ul class="check-list"><li>are elemente metalice și un suport izolator;</li><li>lamelele se depărtează când se electrizează la fel;</li><li>poate arăta dacă un corp este electrizat.</li></ul></div>
+  <div class="figure-panel">
+    <h3 class="figure-title">Reprezentare schematică</h3>
+    <div class="svg-wrap">
+      <svg viewBox="0 0 420 260" role="img" aria-label="Electroscop schematic">
+        <rect x="110" y="30" width="200" height="180" rx="18" fill="#08101e" stroke="#334155" stroke-width="2"></rect>
+        <line x1="210" y1="36" x2="210" y2="140" stroke="#e2e8f0" stroke-width="6"></line>
+        <circle cx="210" cy="28" r="18" fill="#38bdf8"></circle>
+        <line x1="210" y1="140" x2="182" y2="188" stroke="#f8fafc" stroke-width="4"></line>
+        <line x1="210" y1="140" x2="238" y2="188" stroke="#f8fafc" stroke-width="4"></line>
+        <text x="40" y="32" fill="#e2e8f0" font-size="18">bilă</text>
+        <text x="258" y="92" fill="#e2e8f0" font-size="18">tijă</text>
+        <text x="252" y="184" fill="#e2e8f0" font-size="18">lamele</text>
+      </svg>
+    </div>
+  </div>
+</div>
+<div class="notice">Dacă lamelele au sarcini de același semn, ele se resping și se depărtează.</div>
+
+        </section>
+    
+        <section class="lesson-page">
+          <div class="section-title"><span class="dot"></span><strong>Influența electrică</strong></div>
+          
+<p><strong>Electrizarea prin influență</strong> se produce atunci când un corp se electrizează fără atingere directă, prin apropierea unui corp deja electrizat.</p>
+<div class="compare">
+  <div class="box"><h4>Pasul 1</h4><p>Bagheta electrizată se apropie de un conductor neutru.</p></div>
+  <div class="box"><h4>Pasul 2</h4><p>Electronii se redistribuie în conductor.</p></div>
+  <div class="box"><h4>Pasul 3</h4><p>Prin atingere și apoi îndepărtare, conductorul poate rămâne încărcat.</p></div>
+  <div class="box"><h4>Concluzie</h4><p>Corpul se electrizează fără frecare și fără contact direct cu bagheta.</p></div>
+</div>
+<div class="formula-box"><h3 style="margin-top:0;">Exemplu de interpretare</h3><p>La apropierea unei baghete negative, electronii din conductor sunt respinși spre partea opusă. De aceea apare o zonă mai săracă în electroni în apropierea baghetei.</p></div>
+
+        </section>
+    
+        <section class="lesson-page">
+          <div class="section-title"><span class="dot"></span><strong>Aplic</strong></div>
+          
+<div class="table-wrap"><table><thead><tr><th>Corp</th><th>Tip</th><th>Ce observăm?</th></tr></thead><tbody>
+<tr><td>Tijă metalică</td><td>conductor</td><td>Sarcina se redistribuie ușor</td></tr>
+<tr><td>Ebonită</td><td>izolator</td><td>Se electrizează ușor prin frecare</td></tr>
+<tr><td>Electroscop</td><td>dispozitiv</td><td>Pune în evidență electrizarea</td></tr>
+<tr><td>Bilă neutră</td><td>corp ușor</td><td>Poate fi atrasă de un corp electrizat</td></tr>
+</tbody></table></div>
+<div class="warn"><strong>Siguranță:</strong> nu atingem prize, cabluri sau instalații electrice. În timpul furtunilor ne adăpostim și evităm spațiile deschise.</div>
+
+        </section>
+    
+        <section class="lesson-page">
+          <div class="section-title"><span class="dot"></span><strong>Rețin</strong></div>
+          
+<div class="grid grid-2">
+  <article class="mini-card"><h4>Rezumat</h4><ul class="check-list"><li>conductoarele permit mișcarea mai ușoară a electronilor;</li><li>izolatoarele păstrează mai local sarcina;</li><li>un corp neutru poate fi atras de unul electrizat;</li><li>după contact, corpurile pot ajunge să se respingă.</li></ul></article>
+  <article class="mini-card"><h4>Dispozitiv util</h4><ul class="check-list"><li>electroscopul arată existența sarcinii electrice;</li><li>lamelele se depărtează când au sarcini de același semn;</li><li>electrizarea prin influență se produce fără atingere directă.</li></ul></article>
+</div>
+
+        </section>
+    
+        
+        <section class="lesson-page">
+          <div class="section-title"><span class="dot"></span><strong>Verificare rapidă</strong></div>
+          
+<div id="quiz2" class="quiz-wrap">
+  
+      <article class="question" data-answer="a">
+        <h4>Într-un conductor, sarcina electrică:</h4>
+        <div class="options"><label class="quiz-option"><input type="radio" name="l2q1" value="a" data-label="se poate redistribui ușor"><span>se poate redistribui ușor</span></label><label class="quiz-option"><input type="radio" name="l2q1" value="b" data-label="nu există"><span>nu există</span></label><label class="quiz-option"><input type="radio" name="l2q1" value="c" data-label="devine masă"><span>devine masă</span></label></div>
+        <div class="feedback"></div>
+      </article>
+    
+  
+      <article class="question" data-answer="b">
+        <h4>Electroscopul este folosit pentru:</h4>
+        <div class="options"><label class="quiz-option"><input type="radio" name="l2q2" value="a" data-label="a măsura temperatura"><span>a măsura temperatura</span></label><label class="quiz-option"><input type="radio" name="l2q2" value="b" data-label="a pune în evidență electrizarea"><span>a pune în evidență electrizarea</span></label><label class="quiz-option"><input type="radio" name="l2q2" value="c" data-label="a produce lumină"><span>a produce lumină</span></label></div>
+        <div class="feedback"></div>
+      </article>
+    
+  
+      <article class="question" data-answer="b">
+        <h4>Electrizarea prin influență se produce:</h4>
+        <div class="options"><label class="quiz-option"><input type="radio" name="l2q3" value="a" data-label="numai prin încălzire"><span>numai prin încălzire</span></label><label class="quiz-option"><input type="radio" name="l2q3" value="b" data-label="fără atingere directă"><span>fără atingere directă</span></label><label class="quiz-option"><input type="radio" name="l2q3" value="c" data-label="numai sub apă"><span>numai sub apă</span></label></div>
+        <div class="feedback"></div>
+      </article>
+    
+  
+      <article class="question" data-answer="a">
+        <h4>Un corp neutru aflat lângă un corp electrizat poate fi:</h4>
+        <div class="options"><label class="quiz-option"><input type="radio" name="l2q4" value="a" data-label="atras"><span>atras</span></label><label class="quiz-option"><input type="radio" name="l2q4" value="b" data-label="fără nicio interacțiune"><span>fără nicio interacțiune</span></label><label class="quiz-option"><input type="radio" name="l2q4" value="c" data-label="dizolvat"><span>dizolvat</span></label></div>
+        <div class="feedback"></div>
+      </article>
+    
+  <button class="nav-btn next check-quiz-btn" type="button" data-quiz="quiz2" style="width:100%;">Verifică răspunsurile</button>
+  <div class="result-box">Scor: <span class="accent">0 / 4</span></div>
+</div>
+
+        </section>
+    
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navigare lecție">
+    <div class="inner">
+      <button id="prevBtn" class="nav-btn prev" type="button">Pagina anterioară</button>
+      <button id="nextBtn" class="nav-btn next" type="button">Mergi mai departe</button>
+      <a class="home-link" href="index.html">Înapoi la lecții</a>
+    </div>
+  </nav>
+
+  
+  <script>
+    (function(){
+      const pages = Array.from(document.querySelectorAll('.lesson-page'));
+      const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const counter = document.getElementById('pageCounter');
+      const progress = document.getElementById('progressBar');
+      let current = 0;
+
+      function showPage(index){
+        current = Math.max(0, Math.min(index, pages.length - 1));
+        pages.forEach((page, i) => page.classList.toggle('active', i === current));
+        tabs.forEach((tab, i) => tab.classList.toggle('active', i === current));
+        counter.textContent = `Pagina ${current + 1} / ${pages.length}`;
+        progress.style.width = `${((current + 1) / pages.length) * 100}%`;
+        prevBtn.disabled = current === 0;
+        nextBtn.textContent = current === pages.length - 1 ? 'Reia lecția' : 'Mergi mai departe';
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      }
+
+      tabs.forEach((tab, i) => tab.addEventListener('click', () => showPage(i)));
+      prevBtn.addEventListener('click', () => showPage(current - 1));
+      nextBtn.addEventListener('click', () => showPage(current === pages.length - 1 ? 0 : current + 1));
+
+      document.querySelectorAll('.check-quiz-btn').forEach(button => {
+        button.addEventListener('click', function(){
+          const target = document.getElementById(this.dataset.quiz);
+          const questions = Array.from(target.querySelectorAll('.question'));
+          let score = 0;
+          questions.forEach((q) => {
+            const good = q.dataset.answer;
+            const selected = q.querySelector('input[type="radio"]:checked');
+            const feedback = q.querySelector('.feedback');
+            if(!selected){
+              feedback.className = 'feedback no';
+              feedback.textContent = 'Alege o variantă.';
+              return;
+            }
+            if(selected.value === good){
+              score++;
+              feedback.className = 'feedback ok';
+              feedback.textContent = 'Corect.';
+            }else{
+              const goodText = q.querySelector(`input[value="${good}"]`).dataset.label;
+              feedback.className = 'feedback no';
+              feedback.textContent = `Răspuns corect: ${goodText}.`;
+            }
+          });
+          const result = target.querySelector('.result-box');
+          result.innerHTML = `Scor: <span class="accent">${score} / ${questions.length}</span>`;
+        });
+      });
+
+      showPage(0);
+    })();
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Lecția 3 | Legea lui Coulomb (identificarea experimentală a mărimilor care influențează forța electrică) | Fizica Galaction</title>
+  <meta name="description" content="Lecția 3 pentru clasa a VIII-a: Legea lui Coulomb (identificarea experimentală a mărimilor care influențează forța electrică). Lecție interactivă pe pagini, cu buton Mergi mai departe, MathJax și verificare rapidă.">
+  <style>
+    *{box-sizing:border-box}
+    :root{
+      --bg:#0f172a;
+      --surface:#1e293b;
+      --surface-2:#162033;
+      --surface-3:#0b1220;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --accent:#22c55e;
+      --accent-2:#38bdf8;
+      --accent-3:#f59e0b;
+      --danger:#ef4444;
+      --border:rgba(255,255,255,.12);
+      --shadow:0 10px 26px rgba(0,0,0,.24);
+      --radius:18px;
+    }
+    html{scroll-behavior:smooth;font-size:clamp(16px,0.35vw + 15px,19px)}
+    body{
+      margin:0;
+      font-family:Arial, sans-serif;
+      background:linear-gradient(180deg,#0f172a 0%, #111827 100%);
+      color:var(--text);
+      line-height:1.65;
+    }
+    .wrapper{width:min(100%,980px);margin:0 auto;padding-inline:clamp(12px,2vw,24px)}
+    .site-header{
+      background:rgba(30,41,59,.92);
+      border-bottom:3px solid var(--accent);
+      position:sticky;top:0;z-index:30;
+      backdrop-filter:blur(8px)
+    }
+    .site-header .wrapper{padding-block:14px}
+    .site-title{margin:0;font-size:clamp(1.4rem,2vw,2rem);line-height:1.2}
+    .site-subtitle{margin:.35rem 0 0;color:var(--muted);font-size:1rem}
+    .page-content{padding:18px 0 124px}
+    .page-hero,.card,.lesson-shell{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+    .page-hero,.card{padding:18px;margin-bottom:16px}
+    .page-hero h2,.card h2,.card h3,.card h4{margin-top:0;line-height:1.25}
+    .page-hero h2{font-size:clamp(1.35rem,1.5vw,1.9rem);margin-bottom:10px}
+    .quote{
+      margin-top:14px;padding:12px 14px;background:#10243f;border-left:4px solid var(--accent-2);
+      border-radius:12px;color:#e2e8f0;font-style:italic
+    }
+    .notice,.hint,.warn{
+      padding:12px 14px;border-radius:12px;margin:12px 0
+    }
+    .notice{background:#122033;border-left:4px solid var(--accent);color:var(--muted)}
+    .hint{background:rgba(56,189,248,.12);color:#dbeafe;border:1px solid rgba(56,189,248,.25)}
+    .warn{background:rgba(245,158,11,.14);color:#fde68a;border-left:4px solid var(--accent-3)}
+    .lesson-shell{overflow:hidden}
+    .lesson-top{padding:16px 16px 10px;border-bottom:1px solid var(--border)}
+    .lesson-meta{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+    .badge{
+      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+      background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.25);color:#dcfce7;font-weight:700;font-size:.95rem
+    }
+    .page-counter{color:var(--muted);font-weight:700}
+    .progress{height:10px;background:#0b1220;border-radius:999px;overflow:hidden;margin-top:12px;border:1px solid var(--border)}
+    .progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+    .tab-strip{
+      display:flex;gap:8px;overflow:auto;padding:6px 2px 2px;margin-top:14px;scrollbar-width:thin
+    }
+    .tab-btn{
+      appearance:none;border:1px solid var(--border);background:#111827;color:#e5e7eb;
+      padding:10px 12px;border-radius:12px;cursor:pointer;font-weight:700;white-space:nowrap;min-height:44px
+    }
+    .tab-btn.active{background:linear-gradient(135deg,var(--accent-2),#2563eb);color:white;border-color:transparent}
+    .page-stage{padding:16px}
+    .lesson-page{display:none;animation:fade .22s ease}
+    .lesson-page.active{display:block}
+    @keyframes fade{from{opacity:.25;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .section-title{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-size:1.1rem}
+    .dot{width:14px;height:14px;border-radius:50%;background:var(--accent)}
+    .grid{display:grid;gap:14px}
+    .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .split{display:grid;grid-template-columns:1.05fr .95fr;gap:14px}
+    .mini-card,.figure-panel,.formula-box{
+      background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:14px
+    }
+    .mini-card h4,.figure-title{margin-top:0;margin-bottom:8px}
+    .tag{
+      display:inline-block;margin-top:10px;padding:6px 10px;border-radius:999px;
+      background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.24);color:#dcfce7;font-size:.86rem;font-weight:700
+    }
+    .figure-title{font-size:1rem}
+    .svg-wrap{overflow:auto;border-radius:14px}
+    .check-list{padding-left:1.1rem;margin:.35rem 0 0}
+    .check-list li{margin:.25rem 0}
+    .compare{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+    .box{
+      background:var(--surface-3);border:1px solid var(--border);border-radius:14px;padding:12px
+    }
+    .box h4{margin:0 0 8px}
+    .formula-box{background:#0d1729}
+    .formula-box p:last-child{margin-bottom:0}
+    .table-wrap{overflow:auto}
+    table{
+      width:100%;border-collapse:collapse;border-radius:14px;overflow:hidden;background:#0b1220;border:1px solid var(--border)
+    }
+    th,td{padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.08);text-align:left;vertical-align:top}
+    th{background:#111827;color:#e2e8f0}
+    tr:last-child td{border-bottom:none}
+    .quiz-wrap{display:grid;gap:14px}
+    .question{
+      background:var(--surface-2);border:1px solid var(--border);border-radius:16px;padding:14px
+    }
+    .question h4{margin:0 0 10px}
+    .options{display:grid;gap:8px}
+    .quiz-option{
+      display:flex;align-items:flex-start;gap:10px;padding:10px 12px;border-radius:12px;
+      background:#0f172a;border:1px solid rgba(255,255,255,.08);cursor:pointer
+    }
+    .quiz-option input{margin-top:3px;flex:0 0 auto}
+    .feedback{
+      margin-top:10px;padding:10px 12px;border-radius:12px;display:none;font-weight:700
+    }
+    .feedback.ok{display:block;background:rgba(34,197,94,.12);color:#bbf7d0;border:1px solid rgba(34,197,94,.25)}
+    .feedback.no{display:block;background:rgba(239,68,68,.12);color:#fecaca;border:1px solid rgba(239,68,68,.25)}
+    .result-box{
+      margin-top:14px;padding:14px;border-radius:14px;background:#0b1220;border:1px solid var(--border);font-weight:700
+    }
+    .accent{color:#86efac;font-weight:700}
+    .bottom-nav{
+      position:fixed;left:0;right:0;bottom:0;z-index:40;
+      background:rgba(15,23,42,.96);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.08)
+    }
+    .bottom-nav .inner{
+      width:min(100%,980px);margin:0 auto;padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+      display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:center
+    }
+    .nav-btn,.home-link{
+      appearance:none;border:none;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;
+      min-height:48px;border-radius:14px;font-weight:800;cursor:pointer;padding:12px 14px
+    }
+    .nav-btn.prev{background:#334155;color:#f8fafc}
+    .nav-btn.next{background:linear-gradient(135deg,var(--accent),#16a34a);color:#052e16}
+    .home-link{background:#0b1220;color:#e5e7eb;border:1px solid var(--border)}
+    .nav-btn:disabled{opacity:.45;cursor:not-allowed}
+    @media (max-width:900px){.grid-3{grid-template-columns:1fr 1fr}}
+    @media (max-width:760px){
+      .grid-2,.grid-3,.split,.compare{grid-template-columns:1fr}
+      .bottom-nav .inner{grid-template-columns:1fr 1fr}
+      .home-link{grid-column:1 / -1}
+    }
+</style>
+  
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrapper">
+      <h1 class="site-title">Fizica Galaction</h1>
+      <p class="site-subtitle">Clasa a VIII-a · Capitolul 2 · Lecția 3 · Legea lui Coulomb (identificarea experimentală a mărimilor care influențează forța electrică)</p>
+    </div>
+  </header>
+
+  <main class="page-content wrapper">
+    <section class="page-hero">
+      <h2>Lecția 3 – Legea lui Coulomb (identificarea experimentală a mărimilor care influențează forța electrică)</h2>
+      <p class="quote">„Fizica nu este dominată de formule, ci de logică.”</p>
+      <p>În această lecție afli de ce forța electrică depinde de sarcini și de distanță, apoi vezi cum apare noțiunea de câmp electric.</p>
+      <div class="hint">Vei întâlni formula lui Coulomb, un exemplu numeric cu fracție și reprezentarea câmpului electric prin linii de câmp.</div>
+    </section>
+
+    <section class="lesson-shell" aria-label="Lecție interactivă">
+      <div class="lesson-top">
+        <div class="lesson-meta">
+          <div class="badge">📘 Lecție interactivă</div>
+          <div class="page-counter" id="pageCounter">Pagina 1 / 8</div>
+        </div>
+        <div class="progress" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="tab-strip" aria-label="Paginile lecției"><button class="tab-btn active" data-go="0">1. Observ</button><button class="tab-btn" data-go="1">2. Experiment</button><button class="tab-btn" data-go="2">3. Legea</button><button class="tab-btn" data-go="3">4. Exemplu</button><button class="tab-btn" data-go="4">5. Câmpul electric</button><button class="tab-btn" data-go="5">6. Linii de câmp</button><button class="tab-btn" data-go="6">7. Rețin</button><button class="tab-btn" data-go="7">8. Verificare</button></div>
+      </div>
+      <div class="page-stage">
+        
+        <section class="lesson-page">
+          <div class="section-title"><span class="dot"></span><strong>Observ</strong></div>
+          
+<p>Forța dintre două corpuri electrizate nu este mereu aceeași. Ea depinde de <strong>mărimea sarcinilor</strong> și de <strong>distanța</strong> dintre corpuri.</p>
+<div class="grid grid-2">
+  <article class="mini-card"><h4>⚪⚪ Două sfere apropiate</h4><p>Când distanța scade, interacțiunea devine mai puternică.</p></article>
+  <article class="mini-card"><h4>⚪⚪ Sarcini mai mari</h4><p>Dacă electrizarea este mai intensă, și forța crește.</p></article>
+  <article class="mini-card"><h4>🧪 Pendul electrostatic</h4><p>Deviația unei bile ușoare arată existența forței electrice.</p></article>
+  <article class="mini-card"><h4>🛰️ Corp de probă</h4><p>Un corp mic ne ajută să punem în evidență câmpul electric.</p></article>
+</div>
+
+        </section>
+    
+        <section class="lesson-page">
+          <div class="section-title"><span class="dot"></span><strong>Experiment</strong></div>
+          
+<div class="split">
+  <div class="mini-card"><h4>Pendulul electrostatic</h4><ul class="check-list"><li>o bilă ușoară este suspendată de un fir;</li><li>apropiem un corp electrizat;</li><li>bila se abate, deci asupra ei acționează o forță electrică.</li></ul></div>
+  <div class="mini-card"><h4>Ce se schimbă?</h4><ul class="check-list"><li>cu sarcini mai mari, deviația este mai mare;</li><li>cu distanță mai mică, deviația crește;</li><li>sensul depinde de semnele sarcinilor.</li></ul></div>
+</div>
+<div class="notice">Din astfel de experimente s-a ajuns la <strong>legea lui Coulomb</strong>.</div>
+
+        </section>
+    
+        <section class="lesson-page">
+          <div class="section-title"><span class="dot"></span><strong>Legea lui Coulomb</strong></div>
+          
+<p>Două corpuri electrizate, considerate punctiforme față de distanța dintre ele, interacționează cu o forță electrică al cărei modul este:</p>
+<div class="formula-box">
+  <p>\[
+    F = k \cdot \frac{|q_1 q_2|}{r^2}
+  \]</p>
+  <p>unde:</p>
+  <ul class="check-list">
+    <li>\(F\) = forța electrică;</li>
+    <li>\(q_1\) și \(q_2\) = sarcinile electrice;</li>
+    <li>\(r\) = distanța dintre corpuri;</li>
+    <li>\(k\) = constantă.</li>
+  </ul>
+</div>
+<div class="grid grid-2">
+  <article class="mini-card"><h4>Direct proporțional</h4><p>Dacă sarcinile cresc, crește și forța.</p></article>
+  <article class="mini-card"><h4>Invers proporțional cu pătratul distanței</h4><p>Dacă distanța se dublează, forța devine de patru ori mai mică.</p></article>
+</div>
+
+        </section>
+    
+        <section class="lesson-page">
+          <div class="section-title"><span class="dot"></span><strong>Exemplu numeric</strong></div>
+          
+<div class="formula-box">
+  <h3 style="margin-top:0;">Exemplu</h3>
+  <p>Pentru aceleași sarcini, presupunem că la distanța \(r\) forța este \(F\).</p>
+  <p>Dacă distanța devine \(2r\), atunci:</p>
+  <p>\[
+    F' = k \cdot \frac{|q_1 q_2|}{(2r)^2}
+      = k \cdot \frac{|q_1 q_2|}{4r^2}
+      = \frac{F}{4}
+  \]</p>
+  <p>Forța se micșorează de <strong>4 ori</strong>.</p>
+</div>
+<div class="figure-panel"><h3 class="figure-title">Exemplu rapid</h3><p>Dacă la \(r=10\,cm\) ai \(F=8\,N\), atunci la \(20\,cm\) vei avea:</p><p>\[
+    F' = \frac{8}{4} = 2\,N
+  \]</p></div>
+
+        </section>
+    
+        <section class="lesson-page">
+          <div class="section-title"><span class="dot"></span><strong>Câmpul electric</strong></div>
+          
+<p>În jurul unui corp electrizat există o formă de existență a materiei numită <strong>câmp electric</strong>.</p>
+<div class="notice">Câmpul electric este produs de sarcinile electrice și se manifestă prin forțe electrice care acționează asupra altor corpuri electrizate.</div>
+<div class="split">
+  <div class="mini-card"><h4>Corp de probă</h4><p>Pentru a evidenția câmpul electric, folosim un corp foarte mic, încărcat pozitiv prin convenție.</p></div>
+  <div class="mini-card"><h4>Ce observăm?</h4><p>Dacă îl eliberăm în apropierea unei sarcini, corpul de probă se deplasează sub acțiunea forței electrice.</p></div>
+</div>
+
+        </section>
+    
+        <section class="lesson-page">
+          <div class="section-title"><span class="dot"></span><strong>Linii de câmp</strong></div>
+          
+<p>Câmpul electric se reprezintă cu ajutorul <strong>liniilor de câmp</strong>.</p>
+<div class="figure-panel">
+  <h3 class="figure-title">Reprezentare schematică</h3>
+  <div class="svg-wrap">
+    <svg viewBox="0 0 620 260" role="img" aria-label="Linii de câmp electric">
+      <rect x="0" y="0" width="620" height="260" rx="18" fill="#07111d"></rect>
+      <circle cx="185" cy="130" r="28" fill="#22c55e"></circle>
+      <text x="177" y="138" fill="#052e16" font-size="24" font-weight="700">+</text>
+      <circle cx="435" cy="130" r="28" fill="#ef4444"></circle>
+      <text x="427" y="138" fill="#fff" font-size="24" font-weight="700">−</text>
+      <line x1="214" y1="130" x2="406" y2="130" stroke="#38bdf8" stroke-width="4"></line>
+      <polygon points="406,130 388,120 388,140" fill="#38bdf8"></polygon>
+      <path d="M208 104 C270 62, 350 62, 412 104" fill="none" stroke="#38bdf8" stroke-width="3"></path>
+      <polygon points="412,104 394,96 400,114" fill="#38bdf8"></polygon>
+      <path d="M208 156 C270 198, 350 198, 412 156" fill="none" stroke="#38bdf8" stroke-width="3"></path>
+      <polygon points="412,156 394,148 400,166" fill="#38bdf8"></polygon>
+      <text x="128" y="220" fill="#e2e8f0" font-size="18">liniile ies din sarcina pozitivă</text>
+      <text x="334" y="240" fill="#e2e8f0" font-size="18">și intră în sarcina negativă</text>
+    </svg>
+  </div>
+</div>
+<div class="grid grid-2">
+  <article class="mini-card"><h4>Sarcină pozitivă</h4><p>Liniile de câmp ies din sarcina pozitivă.</p></article>
+  <article class="mini-card"><h4>Sarcină negativă</h4><p>Liniile de câmp intră în sarcina negativă.</p></article>
+</div>
+
+        </section>
+    
+        <section class="lesson-page">
+          <div class="section-title"><span class="dot"></span><strong>Rețin</strong></div>
+          
+<div class="grid grid-2">
+  <article class="mini-card"><h4>Legea lui Coulomb</h4><ul class="check-list"><li>forța crește cu sarcinile electrice;</li><li>forța scade cu pătratul distanței;</li><li>în aer, valoarea constantei este practic aceeași ca în vid;</li><li>în alte medii, forța este mai mică decât în vid.</li></ul></article>
+  <article class="mini-card"><h4>Câmpul electric</h4><ul class="check-list"><li>este produs de sarcini electrice;</li><li>se pune în evidență cu un corp de probă;</li><li>se reprezintă cu linii de câmp;</li><li>explică interacțiunea la distanță dintre corpurile electrizate.</li></ul></article>
+</div>
+
+        </section>
+    
+        
+        <section class="lesson-page">
+          <div class="section-title"><span class="dot"></span><strong>Verificare rapidă</strong></div>
+          
+<div id="quiz3" class="quiz-wrap">
+  
+      <article class="question" data-answer="b">
+        <h4>După legea lui Coulomb, dacă distanța se dublează, forța electrică devine:</h4>
+        <div class="options"><label class="quiz-option"><input type="radio" name="l3q1" value="a" data-label="de 2 ori mai mare"><span>de 2 ori mai mare</span></label><label class="quiz-option"><input type="radio" name="l3q1" value="b" data-label="de 4 ori mai mică"><span>de 4 ori mai mică</span></label><label class="quiz-option"><input type="radio" name="l3q1" value="c" data-label="aceeași"><span>aceeași</span></label></div>
+        <div class="feedback"></div>
+      </article>
+    
+  
+      <article class="question" data-answer="b">
+        <h4>Mărimile care apar în formula lui Coulomb sunt:</h4>
+        <div class="options"><label class="quiz-option"><input type="radio" name="l3q2" value="a" data-label="masa și volumul"><span>masa și volumul</span></label><label class="quiz-option"><input type="radio" name="l3q2" value="b" data-label="sarcinile și distanța"><span>sarcinile și distanța</span></label><label class="quiz-option"><input type="radio" name="l3q2" value="c" data-label="temperatura și timpul"><span>temperatura și timpul</span></label></div>
+        <div class="feedback"></div>
+      </article>
+    
+  
+      <article class="question" data-answer="a">
+        <h4>Câmpul electric este produs de:</h4>
+        <div class="options"><label class="quiz-option"><input type="radio" name="l3q3" value="a" data-label="sarcini electrice"><span>sarcini electrice</span></label><label class="quiz-option"><input type="radio" name="l3q3" value="b" data-label="numai magneți"><span>numai magneți</span></label><label class="quiz-option"><input type="radio" name="l3q3" value="c" data-label="numai lichide"><span>numai lichide</span></label></div>
+        <div class="feedback"></div>
+      </article>
+    
+  
+      <article class="question" data-answer="b">
+        <h4>Liniile de câmp electric ale unei sarcini pozitive:</h4>
+        <div class="options"><label class="quiz-option"><input type="radio" name="l3q4" value="a" data-label="intră în sarcină"><span>intră în sarcină</span></label><label class="quiz-option"><input type="radio" name="l3q4" value="b" data-label="ies din sarcină"><span>ies din sarcină</span></label><label class="quiz-option"><input type="radio" name="l3q4" value="c" data-label="nu pot fi reprezentate"><span>nu pot fi reprezentate</span></label></div>
+        <div class="feedback"></div>
+      </article>
+    
+  <button class="nav-btn next check-quiz-btn" type="button" data-quiz="quiz3" style="width:100%;">Verifică răspunsurile</button>
+  <div class="result-box">Scor: <span class="accent">0 / 4</span></div>
+</div>
+
+        </section>
+    
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navigare lecție">
+    <div class="inner">
+      <button id="prevBtn" class="nav-btn prev" type="button">Pagina anterioară</button>
+      <button id="nextBtn" class="nav-btn next" type="button">Mergi mai departe</button>
+      <a class="home-link" href="index.html">Înapoi la lecții</a>
+    </div>
+  </nav>
+
+  
+  <script>
+    (function(){
+      const pages = Array.from(document.querySelectorAll('.lesson-page'));
+      const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const counter = document.getElementById('pageCounter');
+      const progress = document.getElementById('progressBar');
+      let current = 0;
+
+      function showPage(index){
+        current = Math.max(0, Math.min(index, pages.length - 1));
+        pages.forEach((page, i) => page.classList.toggle('active', i === current));
+        tabs.forEach((tab, i) => tab.classList.toggle('active', i === current));
+        counter.textContent = `Pagina ${current + 1} / ${pages.length}`;
+        progress.style.width = `${((current + 1) / pages.length) * 100}%`;
+        prevBtn.disabled = current === 0;
+        nextBtn.textContent = current === pages.length - 1 ? 'Reia lecția' : 'Mergi mai departe';
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      }
+
+      tabs.forEach((tab, i) => tab.addEventListener('click', () => showPage(i)));
+      prevBtn.addEventListener('click', () => showPage(current - 1));
+      nextBtn.addEventListener('click', () => showPage(current === pages.length - 1 ? 0 : current + 1));
+
+      document.querySelectorAll('.check-quiz-btn').forEach(button => {
+        button.addEventListener('click', function(){
+          const target = document.getElementById(this.dataset.quiz);
+          const questions = Array.from(target.querySelectorAll('.question'));
+          let score = 0;
+          questions.forEach((q) => {
+            const good = q.dataset.answer;
+            const selected = q.querySelector('input[type="radio"]:checked');
+            const feedback = q.querySelector('.feedback');
+            if(!selected){
+              feedback.className = 'feedback no';
+              feedback.textContent = 'Alege o variantă.';
+              return;
+            }
+            if(selected.value === good){
+              score++;
+              feedback.className = 'feedback ok';
+              feedback.textContent = 'Corect.';
+            }else{
+              const goodText = q.querySelector(`input[value="${good}"]`).dataset.label;
+              feedback.className = 'feedback no';
+              feedback.textContent = `Răspuns corect: ${goodText}.`;
+            }
+          });
+          const result = target.querySelector('.result-box');
+          result.innerHTML = `Scor: <span class="accent">${score} / ${questions.length}</span>`;
+        });
+      });
+
+      showPage(0);
+    })();
+  </script>
+
+</body>
+</html>

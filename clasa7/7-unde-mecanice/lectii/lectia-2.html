@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Lecția 2 | Producerea și percepția sunetelor | Fizica Galaction</title>
+  <meta name="description" content="Lecția 2 pentru clasa a VII-a: Producerea și percepția sunetelor. Lecție interactivă pe pagini, cu buton Mergi mai departe, MathJax și verificare rapidă.">
+  <style>
+    * { box-sizing: border-box; }
+
+    :root{
+      --bg:#0f172a;
+      --surface:#1e293b;
+      --surface-2:#162033;
+      --surface-3:#0b1220;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --accent:#22c55e;
+      --accent-2:#38bdf8;
+      --accent-3:#f59e0b;
+      --danger:#ef4444;
+      --border:rgba(255,255,255,.12);
+      --shadow:0 10px 26px rgba(0,0,0,.24);
+      --radius:18px;
+    }
+
+    html{
+      scroll-behavior:smooth;
+      font-size:clamp(16px, 0.35vw + 15px, 19px);
+    }
+
+    body{
+      margin:0;
+      font-family: Arial, sans-serif;
+      background:linear-gradient(180deg, #0f172a 0%, #111827 100%);
+      color:var(--text);
+      line-height:1.65;
+    }
+
+    .wrapper{
+      width:min(100%, 980px);
+      margin:0 auto;
+      padding-inline:clamp(12px, 2vw, 24px);
+    }
+
+    .site-header{
+      background:rgba(30, 41, 59, .92);
+      border-bottom:3px solid var(--accent);
+      position:sticky;
+      top:0;
+      z-index:20;
+      backdrop-filter: blur(8px);
+    }
+
+    .site-header .wrapper{
+      padding-block:14px;
+    }
+
+    .site-title{
+      margin:0;
+      font-size:clamp(1.4rem, 2vw, 2rem);
+      line-height:1.2;
+    }
+
+    .site-subtitle{
+      margin:.35rem 0 0;
+      color:var(--muted);
+      font-size:1rem;
+    }
+
+    .page-content{
+      padding:18px 0 118px;
+    }
+
+    .page-hero,
+    .card,
+    .lesson-shell{
+      background:var(--surface);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+
+    .page-hero,
+    .card{
+      padding:18px;
+      margin-bottom:16px;
+    }
+
+    .page-hero h2,
+    .card h2,
+    .card h3,
+    .card h4{
+      margin-top:0;
+      line-height:1.25;
+    }
+
+    .page-hero h2{
+      font-size:clamp(1.35rem, 1.5vw, 1.9rem);
+      margin-bottom:10px;
+    }
+
+    .quote{
+      margin-top:14px;
+      padding:12px 14px;
+      background:#10243f;
+      border-left:4px solid var(--accent-2);
+      border-radius:12px;
+      color:#e2e8f0;
+      font-style:italic;
+    }
+
+    .notice{
+      background:#122033;
+      border-left:4px solid var(--accent);
+      padding:12px 14px;
+      border-radius:12px;
+      color:var(--muted);
+      margin:12px 0;
+    }
+
+    .hint{
+      background:rgba(56,189,248,.12);
+      color:#dbeafe;
+      border:1px solid rgba(56,189,248,.25);
+      padding:10px 12px;
+      border-radius:12px;
+      margin:12px 0 0;
+    }
+
+    .lesson-shell{
+      overflow:hidden;
+      position:relative;
+    }
+
+    .lesson-top{
+      padding:16px 16px 10px;
+      border-bottom:1px solid var(--border);
+      background:linear-gradient(180deg, rgba(15,23,42,.8), rgba(30,41,59,.95));
+    }
+
+    .lesson-meta{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      align-items:center;
+      margin-bottom:10px;
+      flex-wrap:wrap;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:#0f2747;
+      color:#dbeafe;
+      border:1px solid rgba(147,197,253,.2);
+      padding:8px 12px;
+      border-radius:999px;
+      font-weight:700;
+      font-size:.95rem;
+    }
+
+    .page-counter{
+      color:var(--muted);
+      font-weight:700;
+      font-size:.96rem;
+    }
+
+    .progress{
+      width:100%;
+      height:10px;
+      background:#0b1220;
+      border-radius:999px;
+      overflow:hidden;
+      border:1px solid var(--border);
+    }
+
+    .progress-bar{
+      height:100%;
+      width:12.5%;
+      background:linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition:width .28s ease;
+    }
+
+    .tab-strip{
+      display:flex;
+      gap:8px;
+      overflow:auto;
+      padding-top:12px;
+      scrollbar-width:thin;
+    }
+
+    .tab-btn{
+      flex:0 0 auto;
+      background:#0b1220;
+      color:var(--muted);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px 12px;
+      font-weight:700;
+      cursor:pointer;
+      min-height:44px;
+    }
+
+    .tab-btn.active{
+      background:#12314b;
+      color:#f8fafc;
+      border-color:rgba(56,189,248,.4);
+    }
+
+    .page-stage{
+      padding:16px 16px 28px;
+      min-height:420px;
+    }
+
+    .lesson-page{
+      display:none;
+      animation:fade .25s ease;
+    }
+
+    .lesson-page.active{
+      display:block;
+    }
+
+    @keyframes fade{
+      from{opacity:.15; transform:translateY(6px);}
+      to{opacity:1; transform:translateY(0);}
+    }
+
+    .section-title{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:1.1rem;
+      margin-bottom:12px;
+    }
+
+    .section-title .dot{
+      width:12px;
+      height:12px;
+      border-radius:50%;
+      background:var(--accent);
+      flex:0 0 auto;
+      box-shadow:0 0 0 5px rgba(34,197,94,.12);
+    }
+
+    .grid{
+      display:grid;
+      gap:16px;
+    }
+
+    .grid-2{
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+    }
+
+    .grid-3{
+      grid-template-columns:repeat(3, minmax(0, 1fr));
+    }
+
+    .mini-card{
+      background:var(--surface-2);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
+      height:100%;
+    }
+
+    .mini-card h4{
+      margin:0 0 8px;
+      color:#dbeafe;
+    }
+
+    .tag{
+      display:inline-block;
+      margin-top:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(34,197,94,.15);
+      color:#dcfce7;
+      font-size:.92rem;
+      font-weight:700;
+    }
+
+    .formula-box{
+      background:linear-gradient(180deg, #0b1220, #0f172a);
+      border:1px solid rgba(56,189,248,.25);
+      border-radius:16px;
+      padding:14px;
+      margin:12px 0;
+      overflow:auto;
+    }
+
+    .diagram{
+      background:var(--surface-3);
+      border:1px dashed rgba(148,163,184,.35);
+      border-radius:18px;
+      padding:16px;
+      margin:14px 0;
+    }
+
+    .diagram-row{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      justify-content:center;
+      align-items:stretch;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 10px;
+      border-radius:999px;
+      background:rgba(245,158,11,.14);
+      color:#fde68a;
+      font-weight:700;
+      font-size:.92rem;
+      margin:.2rem .25rem .2rem 0;
+    }
+
+    .summary-list,
+    .check-list{
+      padding-left:20px;
+    }
+
+    .summary-list li,
+    .check-list li{
+      margin-bottom:10px;
+    }
+
+    .split{
+      display:grid;
+      grid-template-columns:1.08fr .92fr;
+      gap:16px;
+      align-items:start;
+    }
+
+    .steps{
+      counter-reset:pas;
+      list-style:none;
+      padding:0;
+      margin:0;
+    }
+
+    .steps li{
+      counter-increment:pas;
+      position:relative;
+      padding-left:44px;
+      margin:0 0 14px;
+    }
+
+    .steps li::before{
+      content:counter(pas);
+      position:absolute;
+      left:0;
+      top:0;
+      width:30px;
+      height:30px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:#13324d;
+      color:#dbeafe;
+      font-weight:700;
+      border:1px solid rgba(56,189,248,.25);
+    }
+
+    .table-like{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+
+    .table-like .cell{
+      background:var(--surface-2);
+      border:1px solid var(--border);
+      border-radius:14px;
+      padding:12px;
+    }
+
+    .audio-scale{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .scale-bar{
+      border-radius:999px;
+      overflow:hidden;
+      background:#0b1220;
+      border:1px solid var(--border);
+      height:16px;
+      position:relative;
+    }
+
+    .scale-fill{
+      height:100%;
+      background:linear-gradient(90deg, #38bdf8, #22c55e);
+    }
+
+    .ear-steps{
+      display:grid;
+      gap:12px;
+    }
+
+    .ear-step{
+      background:var(--surface-2);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:12px;
+    }
+
+    .quiz-item{
+      background:var(--surface-2);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:14px;
+      margin-bottom:14px;
+    }
+
+    .quiz-item h4{
+      margin:0 0 10px;
+    }
+
+    .options{
+      display:grid;
+      gap:10px;
+    }
+
+    .option{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.08);
+      background:#0f172a;
+      cursor:pointer;
+    }
+
+    .option input{
+      margin-top:4px;
+      transform:scale(1.1);
+      accent-color:var(--accent);
+    }
+
+    .feedback{
+      margin-top:10px;
+      font-weight:700;
+      min-height:24px;
+    }
+
+    .feedback.ok{
+      color:#86efac;
+    }
+
+    .feedback.bad{
+      color:#fca5a5;
+    }
+
+    .button,
+    .nav-btn{
+      border:none;
+      border-radius:14px;
+      padding:13px 16px;
+      font-size:1rem;
+      font-weight:700;
+      cursor:pointer;
+      transition:transform .18s ease, opacity .18s ease, box-shadow .18s ease;
+      min-height:48px;
+    }
+
+    .button:hover,
+    .nav-btn:hover{
+      transform:translateY(-1px);
+    }
+
+    .button{
+      background:linear-gradient(90deg, var(--accent-2), #60a5fa);
+      color:#081221;
+      box-shadow:0 10px 20px rgba(56,189,248,.18);
+    }
+
+    .button.secondary{
+      background:#1f2937;
+      color:#e5e7eb;
+      box-shadow:none;
+      border:1px solid rgba(255,255,255,.12);
+    }
+
+    .actions{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:18px;
+    }
+
+    .result-box{
+      margin-top:14px;
+      padding:14px;
+      border-radius:16px;
+      background:#10243f;
+      border:1px solid rgba(56,189,248,.2);
+    }
+
+    .lesson-nav{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:max(10px, env(safe-area-inset-bottom));
+      z-index:50;
+      display:flex;
+      gap:10px;
+      width:min(calc(100% - 20px), 940px);
+      padding:10px;
+      background:rgba(15,23,42,.96);
+      border:1px solid var(--border);
+      border-radius:18px;
+      backdrop-filter:blur(10px);
+      box-shadow:0 12px 30px rgba(0,0,0,.35);
+    }
+
+    .nav-btn{
+      flex:1 1 0;
+    }
+
+    .nav-btn.prev{
+      background:#1f2937;
+      color:#e5e7eb;
+      border:1px solid rgba(255,255,255,.12);
+    }
+
+    .nav-btn.next{
+      background:linear-gradient(90deg, var(--accent), #16a34a);
+      color:#05210c;
+      box-shadow:0 10px 20px rgba(34,197,94,.22);
+    }
+
+    .nav-btn[disabled]{
+      opacity:.45;
+      cursor:not-allowed;
+      transform:none;
+    }
+
+    .site-footer{
+      background:var(--surface);
+      padding:14px 0;
+      text-align:center;
+      color:var(--muted);
+      border-top:1px solid var(--border);
+      font-size:.95rem;
+      margin-top:20px;
+    }
+
+    .small{
+      color:var(--muted);
+      font-size:.95rem;
+    }
+
+    .mono{
+      font-family: "Courier New", monospace;
+    }
+
+    .highlight{
+      color:#bfdbfe;
+      font-weight:700;
+    }
+
+    @media (max-width: 860px){
+      .grid-2,
+      .grid-3,
+      .split,
+      .table-like{
+        grid-template-columns:1fr;
+      }
+
+      .page-stage{
+        padding:14px 14px 26px;
+      }
+
+      .page-hero,
+      .card{
+        padding:16px;
+      }
+    }
+
+    @media (max-width: 560px){
+      html{
+        font-size:16px;
+      }
+
+      .lesson-meta{
+        align-items:flex-start;
+      }
+
+      .lesson-nav{
+        gap:8px;
+        padding:8px;
+      }
+
+      .button,
+      .nav-btn,
+      .tab-btn{
+        font-size:.98rem;
+      }
+    }
+  </style>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrapper">
+      <h1 class="site-title">Fizica Galaction</h1>
+      <p class="site-subtitle">Clasa a VII-a · Unitatea 6 · Lecția 2 · Producerea și percepția sunetelor</p>
+    </div>
+  </header>
+
+  <main class="page-content wrapper">
+    <section class="page-hero">
+      <h2>Lecția 2 – Producerea și percepția sunetelor</h2>
+      <p class="quote">„Fizica nu este dominată de formule, ci de logică.”</p>
+      <p>
+        În această lecție vei vedea cum apare un <strong>sunet</strong>, de ce instrumentele muzicale
+        pot produce sunete diferite și cum ajunge informația sonoră de la sursă până la
+        <strong>creier</strong>.
+      </p>
+      <div class="hint">
+        Legăm această lecție de biologie: <strong>urechea</strong> este organul care transformă
+        vibrațiile sonore în senzație auditivă.
+      </div>
+    </section>
+
+    <section class="lesson-shell" aria-label="Lecție interactivă">
+      <div class="lesson-top">
+        <div class="lesson-meta">
+          <div class="badge">📘 Lecție interactivă</div>
+          <div class="page-counter" id="pageCounter">Pagina 1 / 8</div>
+        </div>
+        <div class="progress" aria-hidden="true">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <div class="tab-strip" aria-label="Paginile lecției">
+          <button class="tab-btn active" data-go="0">1. Observ</button>
+          <button class="tab-btn" data-go="1">2. Cum se produce</button>
+          <button class="tab-btn" data-go="2">3. Surse sonore</button>
+          <button class="tab-btn" data-go="3">4. Frecvență și tărie</button>
+          <button class="tab-btn" data-go="4">5. Urechea</button>
+          <button class="tab-btn" data-go="5">6. Cum auzim</button>
+          <button class="tab-btn" data-go="6">7. Reține</button>
+          <button class="tab-btn" data-go="7">8. Verificare</button>
+        </div>
+      </div>
+
+      <div class="page-stage">
+        <section class="lesson-page active" data-page="0">
+          <div class="section-title"><span class="dot"></span><strong>Observ</strong></div>
+          <p>
+            Când ciupești o coardă de chitară, lovești un diapazon sau sufli într-un tub,
+            se produce un sunet. Ce au în comun toate aceste situații?
+          </p>
+
+          <div class="grid grid-2">
+            <article class="mini-card">
+              <h4>🎸 Coardă întinsă</h4>
+              <p>După ciupire, coarda începe să vibreze și transmite vibrația aerului din jur.</p>
+              <span class="tag">Vibrație vizibilă</span>
+            </article>
+
+            <article class="mini-card">
+              <h4>📣 Difuzor</h4>
+              <p>Membrana difuzorului se mișcă înainte și înapoi foarte repede.</p>
+              <span class="tag">Mișcare repetată</span>
+            </article>
+
+            <article class="mini-card">
+              <h4>🪈 Tub sonor</h4>
+              <p>Coloana de aer din tub intră în oscilație și produce un sunet audibil.</p>
+              <span class="tag">Aer oscilant</span>
+            </article>
+
+            <article class="mini-card">
+              <h4>👂 Ce deduci?</h4>
+              <p>Sunetul apare când o sursă sonoră și mediul din jurul ei sunt puse în oscilație.</p>
+              <span class="tag">Ideea-cheie</span>
+            </article>
+          </div>
+
+          <div class="notice">
+            <strong>Pornim de la o concluzie simplă:</strong> sunetele sunt legate de
+            <strong>oscilații</strong> și de un <strong>mediu elastic</strong>, de obicei aerul.
+          </div>
+        </section>
+
+        <section class="lesson-page" data-page="1">
+          <div class="section-title"><span class="dot"></span><strong>Cum se produce un sunet?</strong></div>
+
+          <div class="split">
+            <div class="mini-card">
+              <h3>Definiție</h3>
+              <p>
+                Un <strong>sunet</strong> este efectul auditiv produs atunci când vibrațiile unei
+                surse sonore se propagă printr-un mediu elastic și ajung la ureche.
+              </p>
+              <div class="diagram">
+                <div class="diagram-row">
+                  <span class="pill">sursă sonoră</span>
+                  <span class="pill">oscilații</span>
+                  <span class="pill">aer</span>
+                  <span class="pill">ureche</span>
+                </div>
+              </div>
+              <p>
+                Fără <strong>oscilație</strong> nu apare sunet, iar fără <strong>mediu material</strong>
+                sunetul nu se poate propaga.
+              </p>
+            </div>
+
+            <div class="mini-card">
+              <h3>Lanțul producerii</h3>
+              <ol class="steps">
+                <li>o sursă sonoră este pusă în vibrație;</li>
+                <li>particulele aerului din jur încep să oscileze;</li>
+                <li>oscilația se transmite din aproape în aproape;</li>
+                <li>unda sonoră ajunge la ureche;</li>
+                <li>creierul interpretează semnalul ca sunet.</li>
+              </ol>
+            </div>
+          </div>
+
+          <div class="card" style="padding:14px; margin-top:16px;">
+            <h3>Exemplu foarte simplu</h3>
+            <p>
+              Lovești ușor masa cu un creion. Lemnul mesei și aerul din jur vibrează pentru scurt timp.
+              Urechea ta primește aceste vibrații și le percepe ca pe un <strong>sunet scurt</strong>.
+            </p>
+          </div>
+        </section>
+
+        <section class="lesson-page" data-page="2">
+          <div class="section-title"><span class="dot"></span><strong>Surse sonore și experimente</strong></div>
+
+          <div class="grid grid-2">
+            <article class="mini-card">
+              <h4>Corzi tensionate</h4>
+              <p>La chitară sau vioară, coarda produce sunet când este pusă în oscilație.</p>
+              <p class="small">Dacă schimbi lungimea sau întinderea corzii, obții alt sunet.</p>
+            </article>
+
+            <article class="mini-card">
+              <h4>Tuburi sonore</h4>
+              <p>În fluier sau orgă, aerul din tub oscilează și produce sunete de înălțimi diferite.</p>
+              <p class="small">Lungimea coloanei de aer contează mult.</p>
+            </article>
+
+            <article class="mini-card">
+              <h4>Difuzoare</h4>
+              <p>Membrana difuzorului vibrează sub acțiunea unui dispozitiv electromagnetic.</p>
+              <p class="small">Cu cât membrana vibrează mai energic, cu atât sunetul se aude mai tare.</p>
+            </article>
+
+            <article class="mini-card">
+              <h4>Vocea umană</h4>
+              <p>Corzile vocale vibrează atunci când aerul trece prin laringe.</p>
+              <p class="small">De aceea putem vorbi, cânta sau șopti.</p>
+            </article>
+          </div>
+
+          <div class="card" style="padding:14px; margin-top:16px;">
+            <h3>Ce poți observa acasă?</h3>
+            <ul class="check-list">
+              <li>atinge ușor carcasa unei boxe când muzica se aude mai tare;</li>
+              <li>ciupește un elastic întins și ascultă diferența când îl întinzi mai mult;</li>
+              <li>suflă peste gura unei sticle și remarcă schimbarea sunetului când nivelul apei se modifică.</li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="lesson-page" data-page="3">
+          <div class="section-title"><span class="dot"></span><strong>Frecvență \(\nu\) și tăria sunetului</strong></div>
+
+          <div class="table-like">
+            <div class="cell">
+              <h3>Înălțimea sunetului</h3>
+              <p>
+                Sunetele se deosebesc prin <strong>înălțime</strong>: unele sunt mai grave,
+                altele mai ascuțite.
+              </p>
+              <p>
+                Înălțimea depinde de <strong>frecvență</strong>, notată cu
+                <strong>\(\nu\)</strong>.
+              </p>
+              <div class="formula-box">
+                <p>\[
+                  \nu = \frac{N}{t}
+                \]</p>
+                <p>
+                  unde \(N\) este numărul de oscilații, iar \(t\) este timpul.
+                </p>
+                <p>\[
+                  \nu = \frac{200}{2\,s} = 100\,Hz
+                \]</p>
+              </div>
+              <p class="small">
+                Dacă frecvența \(\nu\) este mai mare, sunetul este, de obicei, mai <strong>ascuțit</strong>.
+              </p>
+            </div>
+
+            <div class="cell">
+              <h3>Tăria sunetului</h3>
+              <p>
+                Sunetul se poate auzi <strong>mai tare</strong> sau <strong>mai încet</strong>.
+              </p>
+              <p>
+                Tăria sunetului crește când crește <strong>amplitudinea oscilațiilor</strong>.
+              </p>
+              <div class="audio-scale">
+                <div>
+                  <div class="small">Amplitudine mică → sunet încet</div>
+                  <div class="scale-bar"><div class="scale-fill" style="width:32%;"></div></div>
+                </div>
+                <div>
+                  <div class="small">Amplitudine mare → sunet tare</div>
+                  <div class="scale-bar"><div class="scale-fill" style="width:82%;"></div></div>
+                </div>
+              </div>
+              <div class="notice">
+                <strong>Reține:</strong> frecvența \(\nu\) influențează <strong>înălțimea</strong>,
+                iar amplitudinea influențează <strong>tăria</strong>.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="lesson-page" data-page="4">
+          <div class="section-title"><span class="dot"></span><strong>Urechea – organul auzului</strong></div>
+
+          <div class="grid grid-3">
+            <article class="mini-card">
+              <h4>Urechea externă</h4>
+              <p>Pavilionul urechii și conductul auditiv colectează și conduc sunetul spre timpan.</p>
+            </article>
+
+            <article class="mini-card">
+              <h4>Urechea medie</h4>
+              <p>Timpanul și oscioarele transmit și amplifică vibrațiile.</p>
+            </article>
+
+            <article class="mini-card">
+              <h4>Urechea internă</h4>
+              <p>Cohleea transformă vibrațiile în impulsuri nervoase.</p>
+            </article>
+          </div>
+
+          <div class="diagram">
+            <h3 style="margin-top:0;">Drumul sunetului</h3>
+            <div class="diagram-row">
+              <span class="pill">pavilion</span>
+              <span class="pill">conduct auditiv</span>
+              <span class="pill">timpan</span>
+              <span class="pill">oscioare</span>
+              <span class="pill">cohlee</span>
+              <span class="pill">nerv auditiv</span>
+              <span class="pill">creier</span>
+            </div>
+          </div>
+
+          <p>
+            Urechea nu „vede” sunetul, ci îl <strong>transformă</strong> din vibrații mecanice în
+            semnale pe care sistemul nervos le poate interpreta.
+          </p>
+        </section>
+
+        <section class="lesson-page" data-page="5">
+          <div class="section-title"><span class="dot"></span><strong>Cum percepem sunetele?</strong></div>
+
+          <div class="ear-steps">
+            <div class="ear-step">
+              <h4>1. Colectarea vibrațiilor</h4>
+              <p>Pavilionul urechii adună undele sonore și le trimite prin conductul auditiv.</p>
+            </div>
+
+            <div class="ear-step">
+              <h4>2. Punerea în vibrație a timpanului</h4>
+              <p>Timpanul începe să vibreze exact după modelul vibrațiilor primite.</p>
+            </div>
+
+            <div class="ear-step">
+              <h4>3. Transmiterea în urechea internă</h4>
+              <p>Oscioarele transmit vibrațiile mai departe către cohlee.</p>
+            </div>
+
+            <div class="ear-step">
+              <h4>4. Transformarea în impuls nervos</h4>
+              <p>În cohlee, celulele senzoriale transformă vibrațiile în semnale nervoase.</p>
+            </div>
+
+            <div class="ear-step">
+              <h4>5. Interpretarea</h4>
+              <p>Creierul recunoaște semnalul și apare senzația auditivă.</p>
+            </div>
+          </div>
+
+          <div class="card" style="padding:14px; margin-top:16px;">
+            <h3>Domeniul audibil</h3>
+            <p>
+              În mod obișnuit, omul aude sunete cu frecvențe aproximativ între
+              <strong>\(20\,Hz\)</strong> și <strong>\(20\,000\,Hz\)</strong>.
+            </p>
+            <p>
+              Sub acest interval se află <strong>infrasunetele</strong>, iar peste el se află
+              <strong>ultrasunetele</strong>.
+            </p>
+            <p class="small">
+              Sensibilitatea auzului diferă de la o persoană la alta și se poate modifica în timp.
+            </p>
+          </div>
+        </section>
+
+        <section class="lesson-page" data-page="6">
+          <div class="section-title"><span class="dot"></span><strong>Reține</strong></div>
+
+          <div class="card" style="padding:14px; margin-bottom:16px;">
+            <ul class="summary-list">
+              <li><strong>Sunetul</strong> este legat de oscilația unei surse sonore și de propagarea vibrațiilor printr-un mediu elastic.</li>
+              <li>Surse sonore pot fi <strong>corzile</strong>, <strong>coloanele de aer</strong>, <strong>membranele difuzoarelor</strong> și <strong>corzile vocale</strong>.</li>
+              <li><strong>Frecvența</strong>, notată cu <strong>\(\nu\)</strong>, influențează înălțimea sunetului.</li>
+              <li><strong>Tăria sunetului</strong> depinde de amplitudinea oscilațiilor.</li>
+              <li>Urechea externă, medie și internă participă împreună la perceperea sunetului.</li>
+              <li>Impulsurile nervoase ajung la creier, iar acolo apare <strong>senzația auditivă</strong>.</li>
+            </ul>
+          </div>
+
+          <div class="formula-box">
+            <h3 style="margin-top:0;">Exemplu numeric scurt</h3>
+            <p>Un corp efectuează \(150\) oscilații în \(3\,s\).</p>
+            <p>\[
+              \nu = \frac{N}{t} = \frac{150}{3\,s} = 50\,Hz
+            \]</p>
+            <p>Rezultă că frecvența sunetului este <strong>\(50\,Hz\)</strong>.</p>
+          </div>
+
+          <div class="notice">
+            În această unitate folosim pentru frecvență notația din manual:
+            <strong>\(\nu\)</strong>.
+          </div>
+        </section>
+
+        <section class="lesson-page" data-page="7">
+          <div class="section-title"><span class="dot"></span><strong>Verificare rapidă</strong></div>
+
+          <div class="quiz-item">
+            <h4>1. Un sunet se produce când:</h4>
+            <div class="options">
+              <label class="option"><input type="radio" name="q1" value="a"><span>sursa sonoră rămâne în repaus</span></label>
+              <label class="option"><input type="radio" name="q1" value="b"><span>sursa sonoră și mediul din jur intră în oscilație</span></label>
+              <label class="option"><input type="radio" name="q1" value="c"><span>nu există aer sau alt mediu material</span></label>
+            </div>
+            <div class="feedback" id="fb1"></div>
+          </div>
+
+          <div class="quiz-item">
+            <h4>2. Înălțimea unui sunet depinde în principal de:</h4>
+            <div class="options">
+              <label class="option"><input type="radio" name="q2" value="a"><span>frecvența \(\nu\)</span></label>
+              <label class="option"><input type="radio" name="q2" value="b"><span>culoarea sursei sonore</span></label>
+              <label class="option"><input type="radio" name="q2" value="c"><span>masa caietului elevului</span></label>
+            </div>
+            <div class="feedback" id="fb2"></div>
+          </div>
+
+          <div class="quiz-item">
+            <h4>3. Dacă amplitudinea oscilației crește, atunci sunetul se aude:</h4>
+            <div class="options">
+              <label class="option"><input type="radio" name="q3" value="a"><span>mai tare</span></label>
+              <label class="option"><input type="radio" name="q3" value="b"><span>mai încet în toate cazurile</span></label>
+              <label class="option"><input type="radio" name="q3" value="c"><span>deloc</span></label>
+            </div>
+            <div class="feedback" id="fb3"></div>
+          </div>
+
+          <div class="quiz-item">
+            <h4>4. Partea urechii în care vibrațiile sunt transformate în impulsuri nervoase este:</h4>
+            <div class="options">
+              <label class="option"><input type="radio" name="q4" value="a"><span>cohleea</span></label>
+              <label class="option"><input type="radio" name="q4" value="b"><span>cotul</span></label>
+              <label class="option"><input type="radio" name="q4" value="c"><span>dinamometrul</span></label>
+            </div>
+            <div class="feedback" id="fb4"></div>
+          </div>
+
+          <div class="quiz-item">
+            <h4>5. Dacă în \(2\,s\) au loc \(120\) oscilații, frecvența este:</h4>
+            <div class="options">
+              <label class="option"><input type="radio" name="q5" value="a"><span>\(60\,Hz\)</span></label>
+              <label class="option"><input type="radio" name="q5" value="b"><span>\(240\,Hz\)</span></label>
+              <label class="option"><input type="radio" name="q5" value="c"><span>\(2\,Hz\)</span></label>
+            </div>
+            <div class="feedback" id="fb5"></div>
+          </div>
+
+          <button class="button" type="button" onclick="verificaTest()">Verifică răspunsurile</button>
+
+          <div class="result-box" id="rezultatBox" style="display:none;">
+            <strong id="rezultatText"></strong>
+            <p class="small" id="rezultatMesaj" style="margin-bottom:0;"></p>
+          </div>
+
+          <section class="actions">
+            <a class="button secondary" href="./index.html">Înapoi la lecții</a>
+            <a class="button secondary" href="./lectia-1.html">Lecția anterioară</a>
+            <a class="button secondary" href="./lectia-3.html">Lecția următoare</a>
+          </section>
+        </section>
+      </div>
+
+      <div class="lesson-nav">
+        <button class="nav-btn prev" id="prevBtn" type="button">⬅ Înapoi</button>
+        <button class="nav-btn next" id="nextBtn" type="button">Mergi mai departe ➜</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrapper">
+      © Fizica Galaction · Prof. DĂNUȚ ANDRONIE
+    </div>
+  </footer>
+
+  <script>
+    const pages = Array.from(document.querySelectorAll('.lesson-page'));
+    const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+    const pageCounter = document.getElementById('pageCounter');
+    const progressBar = document.getElementById('progressBar');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    let currentPage = 0;
+
+    function updateLessonPage(index){
+      currentPage = index;
+
+      pages.forEach((page, i) => {
+        page.classList.toggle('active', i === index);
+      });
+
+      tabs.forEach((tab, i) => {
+        tab.classList.toggle('active', i === index);
+      });
+
+      pageCounter.textContent = `Pagina ${index + 1} / ${pages.length}`;
+      progressBar.style.width = `${((index + 1) / pages.length) * 100}%`;
+
+      prevBtn.disabled = index === 0;
+
+      if(index === pages.length - 1){
+        nextBtn.textContent = 'Lecția următoare ➜';
+      } else {
+        nextBtn.textContent = 'Mergi mai departe ➜';
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if(currentPage > 0){
+        updateLessonPage(currentPage - 1);
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if(currentPage < pages.length - 1){
+        updateLessonPage(currentPage + 1);
+      } else {
+        window.location.href = './lectia-3.html';
+      }
+    });
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        updateLessonPage(Number(tab.dataset.go));
+      });
+    });
+
+    function verificaTest(){
+      const raspunsuriCorecte = {
+        q1: 'b',
+        q2: 'a',
+        q3: 'a',
+        q4: 'a',
+        q5: 'a'
+      };
+
+      let scor = 0;
+
+      Object.entries(raspunsuriCorecte).forEach(([nume, corect], index) => {
+        const ales = document.querySelector(`input[name="${nume}"]:checked`);
+        const feedback = document.getElementById(`fb${index + 1}`);
+
+        if(!ales){
+          feedback.textContent = 'Alege un răspuns.';
+          feedback.className = 'feedback bad';
+          return;
+        }
+
+        if(ales.value === corect){
+          scor++;
+          feedback.textContent = 'Corect.';
+          feedback.className = 'feedback ok';
+        } else {
+          feedback.textContent = 'Mai încearcă.';
+          feedback.className = 'feedback bad';
+        }
+      });
+
+      const rezultatBox = document.getElementById('rezultatBox');
+      const rezultatText = document.getElementById('rezultatText');
+      const rezultatMesaj = document.getElementById('rezultatMesaj');
+
+      rezultatBox.style.display = 'block';
+      rezultatText.textContent = `Scor: ${scor} / 5`;
+
+      if(scor === 5){
+        rezultatMesaj.textContent = 'Foarte bine! Ai înțeles cum se produc și cum se percep sunetele.';
+      } else if(scor >= 3){
+        rezultatMesaj.textContent = 'Bine. Recitește paginile despre frecvență, tărie și rolul urechii.';
+      } else {
+        rezultatMesaj.textContent = 'Reia lecția și urmărește cu atenție legătura dintre oscilații, frecvență și percepția auditivă.';
+      }
+
+      rezultatBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    updateLessonPage(0);
+  </script>
+</body>
+</html>

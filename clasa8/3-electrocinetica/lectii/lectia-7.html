@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Lecția 7 | Legea lui Ohm pentru întregul circuit | Fizica Galaction</title>
+  <meta name="description" content="Lecția 7 pentru clasa a VIII-a: Legea lui Ohm pentru întregul circuit. Lecție interactivă pe pagini, cu buton Mergi mai departe, MathJax și verificare rapidă.">
+  <style>
+    *{box-sizing:border-box}
+    :root{
+      --bg:#0f172a;--surface:#1e293b;--surface-2:#162033;--surface-3:#0b1220;--text:#f8fafc;--muted:#cbd5e1;
+      --accent:#22c55e;--accent-2:#38bdf8;--accent-3:#f59e0b;--accent-4:#a78bfa;--danger:#ef4444;--ok:#22c55e;
+      --border:rgba(255,255,255,.12);--shadow:0 10px 26px rgba(0,0,0,.24);--radius:18px;
+    }
+    html{scroll-behavior:smooth;font-size:clamp(16px,0.35vw + 15px,19px)}
+    body{margin:0;font-family:Arial,sans-serif;background:radial-gradient(circle at top right, rgba(56,189,248,.12), transparent 26%),radial-gradient(circle at top left, rgba(34,197,94,.10), transparent 22%),linear-gradient(180deg,#0f172a 0%, #111827 100%);color:var(--text);line-height:1.65;min-height:100vh}
+    .wrapper{width:min(100%,980px);margin:0 auto;padding-inline:clamp(12px,2vw,24px)}
+    .site-header{background:rgba(30,41,59,.92);border-bottom:3px solid var(--accent);position:sticky;top:0;z-index:30;backdrop-filter:blur(8px)}
+    .site-header .wrapper{padding-block:14px}
+    .site-title{margin:0;font-size:clamp(1.35rem,2vw,2rem);line-height:1.2}
+    .site-subtitle{margin:.35rem 0 0;color:var(--muted);font-size:1rem}
+    .page-content{padding:18px 0 124px}
+    .page-hero,.lesson-shell,.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+    .page-hero,.card{padding:18px;margin-bottom:16px}
+    .page-hero h2,.card h2,.card h3,.card h4{margin-top:0;line-height:1.25}
+    .page-hero h2{font-size:clamp(1.35rem,1.5vw,1.9rem);margin-bottom:10px}
+    .quote{margin:0 0 10px;padding:12px 14px;border-left:4px solid var(--accent-2);background:#10243f;color:#dbeafe;border-radius:12px;font-style:italic}
+    .hint,.notice,.info-box{border-radius:14px;padding:12px 14px;margin-top:12px}
+    .hint{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.28);color:#fde68a}
+    .notice{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.28);color:#dcfce7}
+    .info-box{background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.28);color:#dbeafe}
+    .lesson-shell{overflow:hidden}.lesson-top{padding:16px 16px 8px}
+    .lesson-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(56,189,248,.14);color:#dbeafe;border:1px solid rgba(56,189,248,.28);font-weight:700;font-size:.92rem}
+    .page-counter{color:#e2e8f0;font-weight:700}
+    .progress{width:100%;height:10px;border-radius:999px;background:#0b1220;overflow:hidden;margin:12px 0 14px}
+    .progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent-2),var(--accent))}
+    .tab-strip{display:flex;gap:8px;overflow:auto;padding-bottom:8px;scrollbar-width:thin}
+    .tab-btn{border:none;cursor:pointer;white-space:nowrap;padding:10px 14px;border-radius:12px;background:#0b1220;color:#e5e7eb;font-weight:700}
+    .tab-btn.active{background:linear-gradient(135deg,var(--accent),#16a34a);color:#052e16}
+    .page-stage{padding:0 16px 18px}
+    .lesson-page{display:none;animation:fade .25s ease}.lesson-page.active{display:block}
+    @keyframes fade{from{opacity:.4;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .section-title{display:flex;align-items:center;gap:10px;font-size:1.08rem;margin:6px 0 12px}
+    .dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--accent-2),var(--accent));box-shadow:0 0 0 4px rgba(56,189,248,.12)}
+    .grid{display:grid;gap:14px}.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+    .split,.compare{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .mini-card,.formula-card{background:linear-gradient(180deg,var(--surface-2),var(--surface-3));border:1px solid var(--border);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
+    .mini-card h4,.formula-card h3{margin:0 0 8px}.mini-card p,.formula-card p{margin:.35rem 0}
+    .tag{display:inline-block;margin-top:8px;font-size:.85rem;font-weight:700;background:rgba(167,139,250,.12);color:#ddd6fe;border:1px solid rgba(167,139,250,.28);padding:6px 10px;border-radius:999px}
+    .check-list,.ordered{padding-left:1.15rem;margin:0}.check-list li,.ordered li{margin:.45rem 0}
+    .quiz-block{background:linear-gradient(180deg,var(--surface-2),var(--surface-3));border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:14px}
+    .quiz-options{display:grid;gap:10px;margin-top:10px}
+    .quiz-option{display:flex;gap:10px;align-items:flex-start;background:#0b1220;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px}
+    .quiz-option input{margin-top:4px}
+    .quiz-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+    .action-btn{border:none;cursor:pointer;border-radius:12px;padding:11px 14px;font-weight:800}
+    .check-btn{background:linear-gradient(135deg,var(--accent),#16a34a);color:#052e16}.reset-btn{background:#334155;color:#f8fafc}
+    .feedback{margin-top:10px;padding:10px 12px;border-radius:12px;font-weight:700;display:none}
+    .feedback.ok{display:block;background:rgba(34,197,94,.12);color:#dcfce7;border:1px solid rgba(34,197,94,.28)}
+    .feedback.bad{display:block;background:rgba(239,68,68,.12);color:#fecaca;border:1px solid rgba(239,68,68,.28)}
+    .bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(15,23,42,.96);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.08)}
+    .bottom-nav .inner{width:min(100%,980px);margin:0 auto;padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:center}
+    .nav-btn,.home-link{appearance:none;border:none;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;min-height:48px;border-radius:14px;font-weight:800;cursor:pointer;padding:12px 14px}
+    .nav-btn.prev{background:#334155;color:#f8fafc}.nav-btn.next{background:linear-gradient(135deg,var(--accent),#16a34a);color:#052e16}
+    .home-link{background:#0b1220;color:#e5e7eb;border:1px solid var(--border)}.nav-btn:disabled{opacity:.45;cursor:not-allowed}
+    @media (max-width:900px){.grid-3{grid-template-columns:1fr 1fr}}
+    @media (max-width:760px){.grid-2,.grid-3,.split,.compare{grid-template-columns:1fr}.bottom-nav .inner{grid-template-columns:1fr 1fr}.home-link{grid-column:1 / -1}}
+</style>
+  <script>
+    window.MathJax = {
+      tex: {inlineMath: [['\\(','\\)'], ['$', '$']]},
+      svg: {fontCache: 'global'}
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrapper">
+      <h1 class="site-title">Fizica Galaction</h1>
+      <p class="site-subtitle">Clasa a VIII-a • Electrocinetică • Lecția 7</p>
+    </div>
+  </header>
+
+  <main class="page-content wrapper">
+    <section class="page-hero">
+      <h2>Lecția 7 – Legea lui Ohm pentru întregul circuit</h2>
+      <p class="quote">„Fizica nu este dominată de formule, ci de logică.”</p>
+      <p>Extinzi legea lui Ohm la circuitul complet, ținând cont și de rezistența internă a sursei.</p>
+    </section>
+
+    <section class="lesson-shell" aria-label="Lecție interactivă">
+      <div class="lesson-top">
+        <div class="lesson-meta">
+          <div class="badge">📘 Lecție interactivă</div>
+          <div class="page-counter" id="pageCounter">Pagina 1 / 6</div>
+        </div>
+        <div class="progress" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="tab-strip" aria-label="Paginile lecției"><button class="tab-btn active" data-go="0">1. Observ</button><button class="tab-btn" data-go="1">2. Relația</button><button class="tab-btn" data-go="2">3. Tensiunea la borne</button><button class="tab-btn" data-go="3">4. Exemplu</button><button class="tab-btn" data-go="4">5. Rețin</button><button class="tab-btn" data-go="5">6. Verificare</button></div>
+      </div>
+      <div class="page-stage">
+        <section class="lesson-page active">
+<div class="section-title"><span class="dot"></span><strong>Observ</strong></div>
+<p>Într-un circuit real nu contează doar rezistorul exterior. Sursa însăși are o rezistență internă, iar aceasta influențează intensitatea curentului.</p>
+</section>
+<section class="lesson-page">
+<div class="section-title"><span class="dot"></span><strong>Legea pentru întregul circuit</strong></div>
+<p>Pentru o sursă cu tensiunea electromotoare \(E\), rezistența internă \(r\) și rezistența exterioară \(R\), intensitatea curentului este:</p>
+<div class="formula-card">
+  <p>\[
+  I=\frac{E}{R+r}
+  \]</p>
+</div>
+<div class="info-box">Rezistența totală a circuitului este suma dintre rezistența exterioară și rezistența internă.</div>
+</section>
+<section class="lesson-page">
+<div class="section-title"><span class="dot"></span><strong>Tensiunea la borne</strong></div>
+<p>Pentru consumatorul exterior, tensiunea la bornele sursei este:</p>
+<div class="formula-card">
+  <p>\[
+  U=IR
+  \]</p>
+  <p>și, în același timp,</p>
+  <p>\[
+  U=E-Ir
+  \]</p>
+</div>
+<div class="notice">Cele două forme descriu aceeași tensiune electrică în două moduri complementare.</div>
+</section>
+<section class="lesson-page">
+<div class="section-title"><span class="dot"></span><strong>Exemplu</strong></div>
+<p>O sursă are \(E=9\,\text{V}\), \(r=1\,\Omega\), iar rezistența exterioară este \(R=8\,\Omega\). Intensitatea curentului este:</p>
+<div class="formula-card">
+  <p>\[
+  I=\frac{E}{R+r}=\frac{9}{8+1}=1\,\text{A}
+  \]</p>
+</div>
+<p>Tensiunea la borne este:</p>
+<div class="formula-card">
+  <p>\[
+  U=IR=1\cdot 8=8\,\text{V}
+  \]</p>
+</div>
+</section>
+<section class="lesson-page">
+<div class="section-title"><span class="dot"></span><strong>Rețin</strong></div>
+<ul class="check-list">
+  <li>Legea lui Ohm pentru întregul circuit: \(I=\frac{E}{R+r}\).</li>
+  <li>Tensiunea la borne poate fi scrisă \(U=IR\) sau \(U=E-Ir\).</li>
+  <li>Rezistența internă a sursei influențează curentul din circuit.</li>
+</ul>
+</section>
+<section class="lesson-page">
+    <div class="section-title"><span class="dot"></span><strong>Verificare rapidă</strong></div>
+    <p>Alege varianta corectă și verifică imediat răspunsul.</p>
+    
+        <div class="quiz-block" data-answer="În circuitul complet apare și rezistența internă r.">
+          <h3>Itemul 1</h3>
+          <p><strong>În legea lui Ohm pentru întregul circuit apare și:</strong></p>
+          <div class="quiz-options">
+            <label class="quiz-option">
+              <input type="radio" name="l7q1" value="1">
+              <span>rezistența internă</span>
+            </label>
+            
+            <label class="quiz-option">
+              <input type="radio" name="l7q1" value="0">
+              <span>numai masa conductorului</span>
+            </label>
+            
+            <label class="quiz-option">
+              <input type="radio" name="l7q1" value="0">
+              <span>culoarea firului</span>
+            </label>
+            </div>
+          <div class="quiz-actions">
+            <button class="action-btn check-btn" onclick="checkQuestion('l7q1', this)">Verifică</button>
+            <button class="action-btn reset-btn" onclick="resetQuestion('l7q1')">Resetează</button>
+          </div>
+          <div class="feedback" id="l7q1-feedback"></div>
+        </div>
+        
+        <div class="quiz-block" data-answer="Relația corectă este E împărțit la rezistența totală.">
+          <h3>Itemul 2</h3>
+          <p><strong>Formula corectă este:</strong></p>
+          <div class="quiz-options">
+            <label class="quiz-option">
+              <input type="radio" name="l7q2" value="1">
+              <span>\(I=\frac{E}{R+r}\)</span>
+            </label>
+            
+            <label class="quiz-option">
+              <input type="radio" name="l7q2" value="0">
+              <span>\(I=ER\)</span>
+            </label>
+            
+            <label class="quiz-option">
+              <input type="radio" name="l7q2" value="0">
+              <span>\(I=\frac{R+r}{E}\)</span>
+            </label>
+            </div>
+          <div class="quiz-actions">
+            <button class="action-btn check-btn" onclick="checkQuestion('l7q2', this)">Verifică</button>
+            <button class="action-btn reset-btn" onclick="resetQuestion('l7q2')">Resetează</button>
+          </div>
+          <div class="feedback" id="l7q2-feedback"></div>
+        </div>
+        
+        <div class="quiz-block" data-answer="În numitor apare R+r, deci intensitatea scade.">
+          <h3>Itemul 3</h3>
+          <p><strong>Dacă rezistența internă crește, curentul tinde să:</strong></p>
+          <div class="quiz-options">
+            <label class="quiz-option">
+              <input type="radio" name="l7q3" value="1">
+              <span>scadă</span>
+            </label>
+            
+            <label class="quiz-option">
+              <input type="radio" name="l7q3" value="0">
+              <span>crească</span>
+            </label>
+            
+            <label class="quiz-option">
+              <input type="radio" name="l7q3" value="0">
+              <span>devină infinit</span>
+            </label>
+            </div>
+          <div class="quiz-actions">
+            <button class="action-btn check-btn" onclick="checkQuestion('l7q3', this)">Verifică</button>
+            <button class="action-btn reset-btn" onclick="resetQuestion('l7q3')">Resetează</button>
+          </div>
+          <div class="feedback" id="l7q3-feedback"></div>
+        </div>
+        
+    </section>
+      </div>
+    </section>
+  </main>
+
+  <div class="bottom-nav" aria-label="Navigare lecție">
+    <div class="inner">
+      <button class="nav-btn prev" id="prevBtn">Înapoi</button>
+      <button class="nav-btn next" id="nextBtn">Mergi mai departe</button>
+      <a class="home-link" href="../index.html">Înapoi la capitol</a>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const pages = Array.from(document.querySelectorAll('.lesson-page'));
+      const tabs = Array.from(document.querySelectorAll('.tab-btn'));
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const counter = document.getElementById('pageCounter');
+      const progress = document.getElementById('progressBar');
+      let current = 0;
+      function showPage(index){
+        current = Math.max(0, Math.min(index, pages.length - 1));
+        pages.forEach((page, i) => page.classList.toggle('active', i === current));
+        tabs.forEach((tab, i) => tab.classList.toggle('active', i === current));
+        counter.textContent = `Pagina ${current + 1} / ${pages.length}`;
+        progress.style.width = `${((current + 1) / pages.length) * 100}%`;
+        prevBtn.disabled = current === 0;
+        nextBtn.textContent = current === pages.length - 1 ? 'Reia lecția' : 'Mergi mai departe';
+        window.scrollTo({top: 0, behavior: 'smooth'});
+        if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+      }
+      tabs.forEach((tab, i) => tab.addEventListener('click', () => showPage(i)));
+      prevBtn.addEventListener('click', () => showPage(current - 1));
+      nextBtn.addEventListener('click', () => current === pages.length - 1 ? showPage(0) : showPage(current + 1));
+      showPage(0);
+    })();
+    function checkQuestion(groupName, btn){
+      const selected = document.querySelector(`input[name="${groupName}"]:checked`);
+      const feedback = document.getElementById(`${groupName}-feedback`);
+      if(!selected){
+        feedback.className = 'feedback bad';
+        feedback.textContent = 'Alege mai întâi o variantă.';
+        return;
+      }
+      const block = btn.closest('.quiz-block');
+      const explain = block.dataset.answer || '';
+      if(selected.value === '1'){
+        feedback.className = 'feedback ok';
+        feedback.textContent = 'Corect! ' + explain;
+      } else {
+        feedback.className = 'feedback bad';
+        feedback.textContent = 'Răspuns greșit. ' + explain;
+      }
+    }
+    function resetQuestion(groupName){
+      document.querySelectorAll(`input[name="${groupName}"]`).forEach(input => input.checked = false);
+      const feedback = document.getElementById(`${groupName}-feedback`);
+      feedback.className = 'feedback';
+      feedback.textContent = '';
+    }
+  </script>
+</body>
+</html>

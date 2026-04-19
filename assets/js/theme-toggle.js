@@ -1,13 +1,13 @@
 /**
  * FIZICA GALACTION - Theme Toggle Script
- * Gestionează Light/Dark Mode și Teme pe Clase
+ * Gestionează Light/Dark Mode
+ * ⚠️ NU salvează rezultate de teste - doar preferințe de temă
  */
 
 class ThemeManager {
   constructor() {
     this.HTML = document.documentElement;
     this.STORAGE_KEY = 'fizica-galaction-theme';
-    this.CLASS_STORAGE_KEY = 'fizica-galaction-class';
     this.THEME_BUTTON = document.querySelector('.theme-toggle');
     
     this.THEMES = {
@@ -23,12 +23,6 @@ class ThemeManager {
       }
     };
 
-    this.CLASSES = {
-      6: { name: '6', color: 'class-6', label: 'Clasa VI - Albastru' },
-      7: { name: '7', color: 'class-7', label: 'Clasa VII - Verde' },
-      8: { name: '8', color: 'class-8', label: 'Clasa VIII - Portocaliu' }
-    };
-
     this.init();
   }
 
@@ -37,7 +31,6 @@ class ThemeManager {
    */
   init() {
     this.loadTheme();
-    this.loadClass();
     this.attachEventListeners();
     this.createThemeToggleButton();
   }
@@ -100,45 +93,6 @@ class ThemeManager {
   }
 
   /**
-   * Încarcă clasa selectată
-   */
-  loadClass() {
-    const saved = localStorage.getItem(this.CLASS_STORAGE_KEY);
-    
-    if (saved && this.CLASSES[saved]) {
-      this.setClass(saved);
-    }
-  }
-
-  /**
-   * Setează clasa curentă (VI, VII, VIII)
-   */
-  setClass(classNumber) {
-    const classConfig = this.CLASSES[classNumber];
-    
-    if (!classConfig) return;
-
-    // Îndepărtează clasa anterioară
-    Object.keys(this.CLASSES).forEach(c => {
-      this.HTML.classList.remove(this.CLASSES[c].color);
-    });
-
-    // Adaugă noua clasă
-    this.HTML.classList.add(classConfig.color);
-    localStorage.setItem(this.CLASS_STORAGE_KEY, classNumber);
-
-    // Emit custom event
-    this.emitEvent('classChanged', { class: classNumber });
-  }
-
-  /**
-   * Obține clasa curentă
-   */
-  getCurrentClass() {
-    return localStorage.getItem(this.CLASS_STORAGE_KEY) || '6';
-  }
-
-  /**
    * Atașează event listeners
    */
   attachEventListeners() {
@@ -153,11 +107,10 @@ class ThemeManager {
       this.setTheme(newTheme);
     });
 
-    // Detectează schimbarea tabnelui
+    // Detectează schimbarea tabnelului
     document.addEventListener('visibilitychange', () => {
       if (!document.hidden) {
         this.loadTheme();
-        this.loadClass();
       }
     });
   }
@@ -190,18 +143,10 @@ class ThemeManager {
   }
 
   /**
-   * API publică: Obține toate clasele disponibile
-   */
-  getAvailableClasses() {
-    return Object.values(this.CLASSES);
-  }
-
-  /**
    * API publică: Resetează la setările implicite
    */
   reset() {
     localStorage.removeItem(this.STORAGE_KEY);
-    localStorage.removeItem(this.CLASS_STORAGE_KEY);
     this.init();
   }
 }

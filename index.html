@@ -3,304 +3,521 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fizica Galaction | Platformă educațională pentru gimnaziu</title>
-  <meta name="description" content="Platformă educațională de fizică pentru clasele a VI-a, a VII-a și a VIII-a, cu un singur acces către Laborator-fizica.">
+  <title>Fizica Galaction | Platformă Educațională - Clase VI-VIII</title>
+  <meta name="description" content="Fizica Galaction - Platformă educațională pentru clasele VI-VIII. Acces la lecții, fișe de lucru, recapitulări și teste finale pentru fiecare clasă.">
   <link rel="stylesheet" href="./assets/css/style.css">
-
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
     :root {
-      --card-border: rgba(255, 255, 255, 0.14);
-      --soft-bg: rgba(255, 255, 255, 0.05);
-      --soft-2: rgba(255, 255, 255, 0.09);
-      --text-soft: rgba(255, 255, 255, 0.88);
-      --shadow: 0 14px 34px rgba(0, 0, 0, 0.18);
-      --radius: 22px;
+      --bg-gradient-1: #0f172a;
+      --bg-gradient-2: #111827;
+      --primary-accent: #3498db;
+      --secondary-accent: #2ecc71;
+      --tertiary-accent: #e67e22;
     }
 
     body {
-      margin: 0;
+      background: linear-gradient(180deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 100%);
     }
 
-    .page-content.wrapper {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 1rem;
+    .hero-main {
+      background: linear-gradient(135deg, 
+        rgba(52, 152, 219, 0.1) 0%, 
+        rgba(46, 204, 113, 0.05) 50%, 
+        rgba(230, 126, 34, 0.1) 100%);
+      border: 1px solid rgba(52, 152, 219, 0.2);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-xlarge);
+      margin-bottom: var(--spacing-xl);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.35);
+      animation: slideDown 0.6s ease-out;
     }
 
-    .hero,
-    .section-box,
-    .quick-box {
-      border-radius: var(--radius);
-      padding: 1.25rem;
-      margin-bottom: 1.2rem;
-      box-shadow: var(--shadow);
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    .hero-grid,
-    .classes-grid,
-    .quick-grid {
+    .hero-main h1 {
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      margin: 0 0 var(--spacing-md) 0;
+      background: linear-gradient(135deg, #3498db, #2ecc71, #e67e22);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.1;
+    }
+
+    .hero-main p {
+      font-size: var(--font-size-lg);
+      color: var(--text-secondary);
+      max-width: 70ch;
+      line-height: 1.8;
+    }
+
+    .quote-main {
+      margin: var(--spacing-lg) 0;
+      padding: var(--spacing-md) var(--spacing-lg);
+      border-left: 4px solid var(--primary-accent);
+      background: rgba(52, 152, 219, 0.1);
+      border-radius: 0 var(--radius-md) var(--radius-md) 0;
+      font-style: italic;
+      color: #93c5fd;
+      font-size: var(--font-size-lg);
+      font-weight: 600;
+    }
+
+    .classes-grid {
       display: grid;
-      gap: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--spacing-lg);
+      margin: var(--spacing-xl) 0;
     }
 
-    .hero-grid {
-      grid-template-columns: 1.25fr 0.75fr;
-    }
-
-    .classes-grid,
-    .quick-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .class-card,
-    .quick-card,
-    .hero-card {
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
-      padding: 1rem;
-      background: var(--soft-bg);
-    }
-
-    .hero p,
-    .section-box p,
-    li {
-      line-height: 1.7;
-      color: var(--text-soft);
-    }
-
-    .kicker {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.38rem 0.8rem;
-      border-radius: 999px;
-      font-size: 0.82rem;
-      font-weight: 700;
-      background: var(--soft-2);
-      margin-bottom: 0.8rem;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      margin-top: 1rem;
-    }
-
-    .button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 46px;
-      padding: 0.85rem 1.1rem;
-      border-radius: 14px;
+    .class-card {
+      display: grid;
+      gap: var(--spacing-md);
+      background: linear-gradient(180deg, var(--surface), var(--surface-2));
+      border: 2px solid;
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-lg);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.26);
+      transition: all 0.3s ease;
       text-decoration: none;
-      font-weight: 700;
-      text-align: center;
-      transition: transform 0.2s ease, opacity 0.2s ease;
+      color: inherit;
     }
 
-    .button:hover {
-      transform: translateY(-2px);
-      opacity: 0.96;
+    .class-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    .class-card.class-vi {
+      border-color: var(--primary-accent);
+      background: linear-gradient(135deg, rgba(52, 152, 219, 0.08), rgba(52, 152, 219, 0.02));
+    }
+
+    .class-card.class-vi:hover {
+      border-color: #5dade2;
+      box-shadow: 0 20px 40px rgba(52, 152, 219, 0.3);
+    }
+
+    .class-card.class-vii {
+      border-color: var(--secondary-accent);
+      background: linear-gradient(135deg, rgba(46, 204, 113, 0.08), rgba(46, 204, 113, 0.02));
+    }
+
+    .class-card.class-vii:hover {
+      border-color: #58d68d;
+      box-shadow: 0 20px 40px rgba(46, 204, 113, 0.3);
+    }
+
+    .class-card.class-viii {
+      border-color: var(--tertiary-accent);
+      background: linear-gradient(135deg, rgba(230, 126, 34, 0.08), rgba(230, 126, 34, 0.02));
+    }
+
+    .class-card.class-viii:hover {
+      border-color: #f39c12;
+      box-shadow: 0 20px 40px rgba(230, 126, 34, 0.3);
     }
 
     .class-badge {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
-      min-width: 60px;
-      min-height: 60px;
-      border-radius: 18px;
-      background: var(--soft-2);
-      font-weight: 800;
-      font-size: 1.2rem;
-      margin-bottom: 0.8rem;
+      gap: var(--spacing-sm);
+      font-size: var(--font-size-base);
+      font-weight: var(--font-weight-bold);
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: 999px;
+      width: fit-content;
     }
 
-    .class-card h3,
-    .quick-card h3,
-    .hero-card h3 {
-      margin-top: 0;
+    .class-badge.badge-vi {
+      background: rgba(52, 152, 219, 0.2);
+      color: #93c5fd;
+      border: 1px solid rgba(52, 152, 219, 0.4);
     }
 
-    .list {
+    .class-badge.badge-vii {
+      background: rgba(46, 204, 113, 0.2);
+      color: #86efac;
+      border: 1px solid rgba(46, 204, 113, 0.4);
+    }
+
+    .class-badge.badge-viii {
+      background: rgba(230, 126, 34, 0.2);
+      color: #fdba74;
+      border: 1px solid rgba(230, 126, 34, 0.4);
+    }
+
+    .class-title {
+      font-size: var(--font-size-xl);
+      font-weight: var(--font-weight-bold);
       margin: 0;
-      padding-left: 1.15rem;
     }
 
-    .list li {
-      margin-bottom: 0.45rem;
+    .class-description {
+      font-size: var(--font-size-base);
+      color: var(--text-secondary);
+      margin: 0;
+      line-height: 1.6;
     }
 
-    .single-lab {
-      display: flex;
+    .class-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--spacing-sm);
+      padding-top: var(--spacing-md);
+      border-top: 1px solid var(--border-color);
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-number {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+    }
+
+    .stat-label {
+      font-size: var(--font-size-sm);
+      color: var(--text-light);
+      margin-top: var(--spacing-xs);
+    }
+
+    .class-button {
+      display: inline-flex;
+      align-items: center;
       justify-content: center;
-      margin-top: 0.5rem;
+      gap: var(--spacing-sm);
+      padding: var(--spacing-sm) var(--spacing-md);
+      border-radius: var(--radius-md);
+      font-weight: var(--font-weight-bold);
+      text-decoration: none;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+      align-self: flex-start;
     }
 
-    .single-lab .button {
-      min-width: 280px;
+    .class-button.btn-vi {
+      background: linear-gradient(135deg, var(--primary-accent), #5dade2);
+      color: white;
     }
 
-    @media (max-width: 960px) {
-      .hero-grid,
-      .classes-grid,
-      .quick-grid {
+    .class-button.btn-vi:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(52, 152, 219, 0.3);
+    }
+
+    .class-button.btn-vii {
+      background: linear-gradient(135deg, var(--secondary-accent), #58d68d);
+      color: #052e16;
+    }
+
+    .class-button.btn-vii:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(46, 204, 113, 0.3);
+    }
+
+    .class-button.btn-viii {
+      background: linear-gradient(135deg, var(--tertiary-accent), #f39c12);
+      color: #451a03;
+    }
+
+    .class-button.btn-viii:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(230, 126, 34, 0.3);
+    }
+
+    .features-section {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: var(--spacing-lg);
+      margin: var(--spacing-xl) 0;
+    }
+
+    .feature-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--primary-accent);
+      box-shadow: 0 12px 24px rgba(52, 152, 219, 0.2);
+    }
+
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .feature-title {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .feature-description {
+      font-size: var(--font-size-sm);
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    .section-title {
+      font-size: var(--font-size-2xl);
+      font-weight: var(--font-weight-bold);
+      margin-bottom: var(--spacing-lg);
+      text-align: center;
+    }
+
+    .info-box {
+      background: rgba(52, 152, 219, 0.1);
+      border-left: 4px solid var(--primary-accent);
+      border-radius: var(--radius-md);
+      padding: var(--spacing-lg);
+      margin: var(--spacing-lg) 0;
+    }
+
+    .info-box strong {
+      display: block;
+      color: var(--primary-accent);
+      margin-bottom: var(--spacing-sm);
+    }
+
+    @media (max-width: 768px) {
+      .hero-main {
+        padding: var(--spacing-lg);
+      }
+
+      .hero-main h1 {
+        font-size: 2rem;
+      }
+
+      .classes-grid {
         grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 700px) {
-      .page-content.wrapper {
-        padding: 0.85rem;
-      }
-
-      .hero,
-      .section-box,
-      .quick-box,
-      .class-card,
-      .quick-card,
-      .hero-card {
-        padding: 1rem;
-      }
-
-      .actions {
-        flex-direction: column;
-      }
-
-      .actions .button,
-      .single-lab .button {
-        width: 100%;
-        min-width: unset;
       }
     }
   </style>
 </head>
-<body>
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction</h1>
-    </div>
-  </header>
+<body class="light">
+  <!-- ✅ HEADER DINAMIC -->
+  <div id="header-container"></div>
 
-  <main class="page-content wrapper">
-    <section class="hero">
-      <span class="kicker">⚛️ Fizică pentru gimnaziu</span>
+  <!-- MAIN CONTENT -->
+  <main class="container" style="padding: var(--spacing-xl) 0;">
+    <!-- HERO SECTION -->
+    <section class="hero-main card">
+      <h1>🚀 Fizica Galaction</h1>
+      <p>
+        Bine venit la <strong>Fizica Galaction</strong> - platforma educațională interactivă dedicată 
+        elevilor din clasele VI, VII și VIII. Aici vei găsi lectii structurate, fișe de lucru practice, 
+        recapitulări și teste finale pentru fiecare capitol studiat.
+      </p>
+      <div class="quote-main">
+        „Fizica nu este dominată de formule, ci de logică și observație. Să descoperim legile naturii împreună!"
+      </div>
+    </section>
 
-      <div class="hero-grid">
-        <div>
-          <h2>Platformă educațională pentru clasele a VI-a, a VII-a și a VIII-a</h2>
-          <p>
-            Aici găsești lecții, recapitulări, teste și activități de învățare pentru gimnaziu,
-            organizate clar pe clase. Laboratorul este unic pentru întreaga platformă.
-          </p>
-
-          <div class="actions">
-            <a class="button" href="./clasa6/index.html">Clasa a VI-a</a>
-            <a class="button" href="./clasa7/index.html">Clasa a VII-a</a>
-            <a class="button" href="./clasa8/index.html">Clasa a VIII-a</a>
+    <!-- FEATURES SECTION -->
+    <section style="margin-bottom: var(--spacing-xl);">
+      <h2 class="section-title">✨ Ce oferim</h2>
+      <div class="features-section">
+        <div class="feature-card">
+          <div class="feature-icon">📚</div>
+          <div class="feature-title">Lecții Structurate</div>
+          <div class="feature-description">
+            Conținut clar și organizat, cu explicații detaliate și exemple din viața reală.
           </div>
         </div>
-
-        <div class="hero-card">
-          <h3>Ce găsești aici</h3>
-          <ul class="list">
-            <li>lecții structurate pe capitole;</li>
-            <li>fișe de lucru și recapitulări;</li>
-            <li>teste finale pe unități;</li>
-            <li>un singur acces către Laborator-fizica.</li>
-          </ul>
+        <div class="feature-card">
+          <div class="feature-icon">✏️</div>
+          <div class="feature-title">Fișe de Lucru</div>
+          <div class="feature-description">
+            Exerciții practice pentru a-ți consolida cunoștințele și a progresa pas cu pas.
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">✅</div>
+          <div class="feature-title">Teste Interactive</div>
+          <div class="feature-description">
+            Verifică-ți cunoștințele cu teste finale și recapitulări pentru fiecare capitol.
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🌙</div>
+          <div class="feature-title">Dark/Light Mode</div>
+          <div class="feature-description">
+            Schimbă între moduri de afișare pentru o experiență confortabilă oricând.
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <div class="feature-title">Responsive Design</div>
+          <div class="feature-description">
+            Funcționează perfect pe telefon, tabletă și calculator de birou.
+          </div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🎯</div>
+          <div class="feature-title">Progres Salvat</div>
+          <div class="feature-description">
+            Preferințele și progresul tău sunt salvate automat pe dispozitiv.
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="section-box">
-      <h2>Alege clasa</h2>
-      <p>
-        Fiecare clasă are capitolele ei. Laboratorul rămâne comun pentru toți elevii.
+    <!-- CLASSES SECTION -->
+    <section style="margin-bottom: var(--spacing-xl);">
+      <h2 class="section-title">📚 Alege Clasa Ta</h2>
+      <p style="text-align: center; color: var(--text-secondary); margin-bottom: var(--spacing-lg); max-width: 70ch; margin-left: auto; margin-right: auto;">
+        Selectează clasa în care ești pentru a accesa lecții, fișe de lucru și teste specifice nivelului tău de studiu.
       </p>
 
       <div class="classes-grid">
-        <article class="class-card">
-          <div class="class-badge">VI</div>
-          <h3>Clasa a VI-a</h3>
-          <p>
-            Concepte introductive, unități de măsură, fenomene mecanice, termice,
-            electrice, magnetice și optice.
+        <!-- CLASA VI -->
+        <a href="./clasa6/index.html" class="class-card class-vi">
+          <div class="class-badge badge-vi">
+            <span style="font-size: 1.3rem;">📘</span>
+            <span>Clasa a VI-a</span>
+          </div>
+          <h3 class="class-title">Clasa a VI-a</h3>
+          <p class="class-description">
+            Introducere în fizică cu 6 unități de învățare: concepte de bază, măsurări, fenomene mecanice, termice, electrice și optice.
           </p>
-          <a class="button" href="./clasa6/index.html">Deschide clasa a VI-a</a>
-        </article>
+          <div class="class-stats">
+            <div class="stat">
+              <div class="stat-number">6</div>
+              <div class="stat-label">Capitole</div>
+            </div>
+            <div class="stat">
+              <div class="stat-number">60+</div>
+              <div class="stat-label">Lecții</div>
+            </div>
+          </div>
+          <button class="class-button btn-vi">
+            <span>→ Deschide</span>
+          </button>
+        </a>
 
-        <article class="class-card">
-          <div class="class-badge">VII</div>
-          <h3>Clasa a VII-a</h3>
-          <p>
-            Interacțiuni, lucrul mecanic, energia mecanică, echilibrul corpurilor,
-            statica fluidelor și unde mecanice.
+        <!-- CLASA VII -->
+        <a href="./clasa7/index.html" class="class-card class-vii">
+          <div class="class-badge badge-vii">
+            <span style="font-size: 1.3rem;">📗</span>
+            <span>Clasa a VII-a</span>
+          </div>
+          <h3 class="class-title">Clasa a VII-a</h3>
+          <p class="class-description">
+            Aprofundare cu 8 capitole: concepte, interacțiuni, lucru mecanic, energie, echilibru, fluide, unde mecanice și evaluare.
           </p>
-          <a class="button" href="./clasa7/index.html">Deschide clasa a VII-a</a>
-        </article>
+          <div class="class-stats">
+            <div class="stat">
+              <div class="stat-number">8</div>
+              <div class="stat-label">Capitole</div>
+            </div>
+            <div class="stat">
+              <div class="stat-number">80+</div>
+              <div class="stat-label">Lecții</div>
+            </div>
+          </div>
+          <button class="class-button btn-vii">
+            <span>→ Deschide</span>
+          </button>
+        </a>
 
-        <article class="class-card">
-          <div class="class-badge">VIII</div>
-          <h3>Clasa a VIII-a</h3>
-          <p>
-            Fenomene termice, electrostatică, electrocinetică, energie electrică,
-            efect magnetic, optică și energia în viață.
+        <!-- CLASA VIII -->
+        <a href="./clasa8/index.html" class="class-card class-viii">
+          <div class="class-badge badge-viii">
+            <span style="font-size: 1.3rem;">📙</span>
+            <span>Clasa a VIII-a</span>
+          </div>
+          <h3 class="class-title">Clasa a VIII-a</h3>
+          <p class="class-description">
+            Studiu avansat cu 7 capitole: fenomene termice, electrostatică, electrocinetică, optică, lentile și energie.
           </p>
-          <a class="button" href="./clasa8/index.html">Deschide clasa a VIII-a</a>
-        </article>
+          <div class="class-stats">
+            <div class="stat">
+              <div class="stat-number">7</div>
+              <div class="stat-label">Capitole</div>
+            </div>
+            <div class="stat">
+              <div class="stat-number">70+</div>
+              <div class="stat-label">Lecții</div>
+            </div>
+          </div>
+          <button class="class-button btn-viii">
+            <span>→ Deschide</span>
+          </button>
+        </a>
       </div>
     </section>
 
-    <section class="section-box">
-      <h2>Laborator-fizica</h2>
-      <p>
-        Un singur punct de intrare către experimente, observații și activități practice
-        pentru toate clasele.
+    <!-- INFO SECTION -->
+    <section style="margin-bottom: var(--spacing-xl);">
+      <div class="info-box">
+        <strong>💡 Sfat pentru Utilizatori:</strong>
+        <p style="margin: var(--spacing-sm) 0 0 0;">
+          Fiecare clasă are structura: <strong>Lecții → Fișe de Lucru → Recapitulare → Test Final</strong>. 
+          Urmează această progresie pentru o învățare eficientă. Folosește butonul de toggle temă (☀️) din header 
+          pentru a schimba între Light și Dark Mode în funcție de preferință.
+        </p>
+      </div>
+
+      <div class="info-box" style="background: rgba(46, 204, 113, 0.1); border-left-color: var(--secondary-accent);">
+        <strong>🎯 Cum să Profitezi Maxim:</strong>
+        <ul style="margin: var(--spacing-sm) 0 0 0; padding-left: var(--spacing-lg);">
+          <li>Citește cu atenție fiecare lecție înainte de a face exerciții</li>
+          <li>Completeaza toate fișele de lucru pentru fiecare capitol</li>
+          <li>Utilizează recapitulările pentru a consolida cunoștințele</li>
+          <li>Fă testele finale pentru a-ți verifica progresul</li>
+          <li>Nu uita - tema ta de Light/Dark Mode se salvează automat</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section style="background: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius-lg); padding: var(--spacing-lg); text-align: center;">
+      <h2 style="margin-top: 0;">📧 Contact și Suport</h2>
+      <p style="color: var(--text-secondary); margin-bottom: var(--spacing-md);">
+        Ai întrebări, sugestii sau observații despre platformă?
       </p>
-
-      <div class="single-lab">
-        <a class="button" href="./laborator-fizica/index.html">Deschide Laborator-fizica</a>
-      </div>
-    </section>
-
-    <section class="quick-box">
-      <h2>Resurse rapide</h2>
-
-      <div class="quick-grid">
-        <article class="quick-card">
-          <h3>Resurse profesor</h3>
-          <p>Planificări, planuri de lecție, evaluări, bareme și documente de lucru.</p>
-          <a class="button" href="./resurse-profesor/index.html">Deschide</a>
-        </article>
-
-        <article class="quick-card">
-          <h3>Progres elevi</h3>
-          <p>Rezultate, rapoarte și organizarea progresului pe capitole.</p>
-          <a class="button" href="./progres-elevi/index.html">Deschide</a>
-        </article>
-
-        <article class="quick-card">
-          <h3>Date proiect</h3>
-          <p>Structuri și organizarea internă a platformei.</p>
-          <a class="button" href="./templates/index.html">Deschide</a>
-        </article>
+      <div style="display: flex; flex-direction: column; align-items: center; gap: var(--spacing-md);">
+        <div>
+          <strong>Prof. DĂNUȚ ANDRONIE</strong><br>
+          <a href="mailto:danutmg@gmail.com" style="color: var(--primary-accent); text-decoration: none; font-weight: 600;">
+            📧 danutmg@gmail.com
+          </a>
+        </div>
+        <p style="font-size: var(--font-size-sm); color: var(--text-light); margin: 0;">
+          Pentru observații, propuneri și sugestii privind platforma educațională
+        </p>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
+  <!-- FOOTER -->
+  <footer class="site-footer" style="margin-top: var(--spacing-xlarge);">
     <div class="wrapper">
-      <p>© Fizica Galaction · Platformă educațională pentru gimnaziu</p>
+      <p>© 2024 Fizica Galaction • Prof. DĂNUȚ ANDRONIE • <a href="mailto:danutmg@gmail.com" style="color: var(--primary-accent); text-decoration: none;">danutmg@gmail.com</a></p>
+      <p style="font-size: 0.9rem; color: var(--text-light);">Platformă educațională pentru clasele VI-VIII • Lecții, fișe de lucru, recapitulări și teste finale</p>
     </div>
   </footer>
 
-  <script src="./assets/js/main.js"></script>
+  <!-- ✅ SCRIPTS - Theme Toggle și Header Dynamic -->
+  <script src="./assets/js/theme-toggle.js"></script>
+  <script src="./assets/js/load-header.js"></script>
 </body>
 </html>

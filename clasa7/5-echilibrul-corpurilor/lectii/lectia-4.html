@@ -4,347 +4,418 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Lecția 4 | Scripetele | Fizica Galaction</title>
-  <meta name="description" content="Clasa a VII-a, Echilibrul corpurilor, Lecția 4: Scripetele.">
+  <meta name="description" content="Clasa a VII-a, Lecția 4: Scripetele. Lecție pe pagini, adaptată pentru telefon, tabletă și PC.">
   <link rel="stylesheet" href="../../../assets/css/style.css">
+
+  <style>
+    :root {
+      --lesson-border: rgba(34, 211, 238, 0.18);
+      --lesson-accent: #22d3ee;
+      --lesson-accent-dark: #0891b2;
+      --lesson-text: #f8fafc;
+      --lesson-muted: #cbd5e1;
+      --lesson-soft: #94a3b8;
+      --lesson-warning: #fef08a;
+      --lesson-success: #22c55e;
+    }
+    .lesson-hero h1,.pagination-card h2,.pagination-card h3,.card h1,.card h2,.card h3 { color: var(--lesson-text) !important; text-shadow:none !important; }
+    .lesson-hero { border:1px solid var(--lesson-border); background:linear-gradient(180deg, rgba(30, 41, 59, 0.95), rgba(30, 41, 59, 0.9)); }
+    .lesson-hero h1 { font-size: clamp(1.85rem, 4vw, 2.45rem); line-height:1.2; margin-bottom:.65rem; }
+    .lesson-hero .quote { color: var(--lesson-warning) !important; font-style: italic; font-size:1.08rem; margin-top:8px; }
+    .lesson-hero .lead,.lesson-hero p,.pagination-card p,.pagination-card li,.mini-note,.caption,.page-status,.page-chip,.quick-feedback,.formula-note,.compare-table td,.compare-table th { color: var(--lesson-muted) !important; }
+    .lesson-hero .lead { font-size:1.08rem; line-height:1.75; margin-bottom:0; }
+    .pagination-card { border:1px solid var(--lesson-border); background:linear-gradient(180deg, rgba(30,41,59,.98), rgba(15,23,42,.96)); overflow:hidden; }
+    .page-status-wrap { display:flex; gap:16px; justify-content:space-between; align-items:center; flex-wrap:wrap; margin-bottom:10px; }
+    .page-status { font-size:1rem; font-weight:700; }
+    .page-topic { color: var(--lesson-text) !important; font-size:1rem; font-weight:700; text-align:right; }
+    .progress-track { width:100%; height:10px; border-radius:999px; background:rgba(15,23,42,.95); border:1px solid rgba(148,163,184,.15); overflow:hidden; margin-bottom:22px; }
+    .progress-bar { height:100%; width:12.5%; background:linear-gradient(90deg, var(--lesson-accent-dark), var(--lesson-accent)); transition:width .25s ease; }
+    .lesson-page { display:none; animation:fadeIn .24s ease; }
+    .lesson-page.active { display:block; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(8px);} to { opacity:1; transform:translateY(0);} }
+    .page-chip { display:inline-flex; align-items:center; gap:8px; padding:10px 16px; border-radius:999px; background:rgba(8,145,178,.22); border:1px solid rgba(34,211,238,.35); color:#67e8f9 !important; font-weight:700; margin-bottom:16px; }
+    .lesson-page h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin-bottom:16px; color: var(--lesson-text) !important; }
+    .lesson-page h3 { font-size: clamp(1.15rem, 2.4vw, 1.35rem); margin:22px 0 12px; color:#67e8f9 !important; }
+    .lesson-page p { font-size:1.04rem; line-height:1.75; margin:0 0 14px; }
+    .key-list,.question-list,.steps-list,.retain-list { padding-left:1.2rem; margin:0; }
+    .key-list li,.question-list li,.steps-list li,.retain-list li { margin-bottom:10px; line-height:1.65; }
+    .highlight-box,.quick-check,.note-box,.formula-box { background:rgba(15,23,42,.55); border:1px solid rgba(148,163,184,.18); border-left:4px solid var(--lesson-accent); border-radius:16px; padding:16px; margin:18px 0; color: var(--lesson-text) !important; }
+    .note-box strong,.highlight-box strong,.formula-box strong { color: var(--lesson-text) !important; }
+    .image-grid { display:grid; gap:18px; margin:18px 0 8px; }
+    .image-grid.two { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .image-grid.three { grid-template-columns:repeat(3,minmax(0,1fr)); }
+    .figure-card { background:rgba(2,6,23,.5); border:1px solid rgba(51,65,85,.9); border-radius:18px; padding:14px; box-shadow:0 10px 30px rgba(2,6,23,.24); }
+    .figure-card img { width:100%; height:auto; display:block; border-radius:12px; cursor:zoom-in; background:#eef2f7; transition:transform .2s ease, box-shadow .2s ease; object-fit:contain; }
+    .figure-card img:hover,.figure-card img:focus { transform:translateY(-2px); box-shadow:0 10px 24px rgba(8,145,178,.18); }
+    .caption { display:block; margin-top:10px; font-size:.95rem; line-height:1.45; }
+    .image-click-hint { color:var(--lesson-soft) !important; font-size:.9rem; font-style:italic; margin-top:6px; }
+    .formula-box .math-line { font-size:1.1rem; color:var(--lesson-text); margin:10px 0; overflow-x:auto; }
+    .formula-note { font-size:.95rem; margin-top:8px; }
+    .compare-table-wrap { overflow-x:auto; margin-top:12px; }
+    .compare-table { width:100%; border-collapse:collapse; min-width:640px; }
+    .compare-table th,.compare-table td { padding:12px 14px; border:1px solid rgba(148,163,184,.18); text-align:left; vertical-align:top; }
+    .compare-table th { color:var(--lesson-text) !important; background:rgba(8,145,178,.18); }
+    .compare-table td strong { color:var(--lesson-text) !important; }
+    .page-actions { display:flex; flex-wrap:wrap; gap:12px; justify-content:space-between; margin-top:26px; }
+    .pager-btn,.nav-button { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:12px 18px; border-radius:12px; text-decoration:none; border:2px solid transparent; font-weight:700; font-size:1rem; cursor:pointer; transition:transform .16s ease, filter .16s ease, opacity .16s ease; }
+    .pager-btn:hover,.pager-btn:focus,.nav-button:hover,.nav-button:focus { transform:translateY(-1px); filter:brightness(1.03); }
+    .pager-btn { background:#e2e8f0; color:#0f172a; border-color:#cbd5e1; flex:1 1 220px; }
+    .pager-btn.primary,.nav-button.success { background:var(--lesson-success); color:#052e16; border-color:#16a34a; }
+    .pager-btn.secondary,.nav-button.secondary { background:#22d3ee; color:#082f49; border-color:#0891b2; }
+    .pager-btn[disabled] { opacity:.45; cursor:not-allowed; transform:none; filter:none; }
+    .lesson-nav { display:flex; flex-wrap:wrap; gap:12px; margin-top:20px; justify-content:space-between; }
+    .quick-check h3 { margin-top:0; }
+    .quick-question { color:var(--lesson-text) !important; font-weight:700; margin-bottom:12px; }
+    .quick-options { display:grid; gap:10px; margin-bottom:12px; }
+    .quick-option { display:grid; grid-template-columns:24px 1fr; align-items:center; gap:12px; padding:12px 14px; border-radius:12px; background:rgba(15,23,42,.72); border:1px solid rgba(148,163,184,.18); cursor:pointer; }
+    .quick-option span { color:var(--lesson-text); line-height:1.5; }
+    .quick-option input { margin:0; width:18px; height:18px; accent-color:var(--lesson-accent); }
+    .quick-check button { width:100%; max-width:320px; border:none; border-radius:12px; padding:12px 16px; background:var(--lesson-accent); color:#082f49; font-weight:800; cursor:pointer; }
+    .quick-feedback { margin-top:12px; font-weight:700; min-height:24px; }
+    .quick-feedback.corect { color:#86efac !important; }
+    .quick-feedback.gresit { color:#fca5a5 !important; }
+    .mini-note { font-size:.95rem; margin-top:8px; }
+    .image-modal { display:none; position:fixed; inset:0; background:rgba(2,6,23,.92); z-index:2000; padding:22px; align-items:center; justify-content:center; }
+    .image-modal.active { display:flex; }
+    .image-modal-dialog { max-width:min(96vw,1180px); max-height:92vh; position:relative; text-align:center; }
+    .image-modal-dialog img { max-width:100%; max-height:84vh; border-radius:16px; box-shadow:0 18px 48px rgba(0,0,0,.45); background:white; }
+    .image-modal-close { position:absolute; top:-18px; right:-6px; width:42px; height:42px; border:none; border-radius:999px; background:rgba(15,23,42,.88); color:white; font-size:1.65rem; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,.35); }
+    .image-modal-caption { color:#e2e8f0; margin-top:10px; line-height:1.5; }
+    @media (max-width:960px) { .image-grid.three { grid-template-columns:1fr; } }
+    @media (max-width:760px) {
+      .image-grid.two { grid-template-columns:1fr; }
+      .page-status-wrap { align-items:flex-start; }
+      .page-topic { text-align:left; }
+      .page-actions .pager-btn,.lesson-nav .nav-button { width:100%; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .lesson-page,.pager-btn,.nav-button,.figure-card img { animation:none !important; transition:none !important; }
+    }
+  </style>
 
   <script>
     window.MathJax = {
       tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
       },
-      svg: { fontCache: 'global' }
+      options: { renderActions: { addMenu: [] } }
     };
   </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-svg.js"></script>
-
-  <style>
-    :root{
-      --bg:#0f172a; --panel:#1e293b; --panel-2:#334155; --text:#f8fafc; --muted:#cbd5e1;
-      --accent:#22d3ee; --accent-2:#38bdf8; --ok:#22c55e; --warn:#f59e0b; --danger:#ef4444;
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
-    .wrapper{max-width:1000px;margin:0 auto;padding:20px}
-    .site-header,.site-footer{background:#020617;border-bottom:1px solid #1e293b}
-    .site-footer{border-top:1px solid #1e293b;border-bottom:none;margin-top:32px}
-    .site-title{margin:0;color:var(--accent);font-size:1.9rem}
-    .site-subtitle{margin:6px 0 0;color:var(--muted)}
-    .card{background:var(--panel);border:1px solid var(--panel-2);border-radius:20px;padding:22px;margin:18px 0;box-shadow:0 12px 30px rgba(0,0,0,.25)}
-    h1,h2,h3{margin-top:0}
-    .quote{margin-top:14px;padding:12px 14px;border-left:4px solid var(--accent);background:rgba(34,211,238,.08);border-radius:10px;color:#e0f2fe;font-style:italic}
-    .pillbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-    .pill{background:#0f172a;border:1px solid #475569;color:#e2e8f0;padding:7px 12px;border-radius:999px;font-size:.9rem}
-    .page{display:none}
-    .page.active{display:block;animation:fade .25s ease}
-    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-    .status{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
-    .counter{display:inline-block;background:rgba(34,211,238,.12);color:#cffafe;border:1px solid rgba(34,211,238,.24);padding:8px 12px;border-radius:999px;font-weight:700;font-size:.92rem}
-    .progress{height:10px;background:#0f172a;border-radius:999px;overflow:hidden;border:1px solid #334155;margin:10px 0 18px}
-    .progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .25s ease}
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-    .mini{background:#0f172a;border:1px solid #334155;border-radius:16px;padding:16px}
-    .mini h3{font-size:1rem;margin-bottom:8px}
-    .notice{padding:14px 16px;border-radius:14px;border:1px solid rgba(34,197,94,.28);background:rgba(34,197,94,.12);color:#dcfce7;margin:14px 0}
-    .warn{border-color:rgba(245,158,11,.32);background:rgba(245,158,11,.12);color:#fef3c7}
-    .formula{display:block;padding:14px 16px;border-radius:14px;background:#0f172a;border:1px solid #334155;font-size:1.08rem;font-weight:700;margin:10px 0;color:#bae6fd;text-align:center;overflow-x:auto}
-    .example-box{background:#111827;border:1px dashed #475569;border-radius:14px;padding:16px;margin-top:12px}
-    .question{background:#0f172a;border:1px solid #334155;border-radius:16px;padding:16px;margin-top:14px}
-    .question h3{margin-bottom:8px}
-    .question p{margin:0 0 12px}
-    .question button{margin-top:12px;border:none;background:var(--accent);color:#082f49;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}
-    .feedback{margin-top:10px;font-weight:700}
-    .instruction{display:inline-block;background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.28);color:#dbeafe;padding:8px 12px;border-radius:999px;font-weight:700;font-size:.92rem;margin-bottom:12px}
-    .option-table{width:100%;border-collapse:separate;border-spacing:0 10px;margin-top:8px}
-    .option-table td{padding:0;border:none}
-    .option-row{background:#111827;border:1px solid #334155;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;color:var(--text);width:100%;transition:border-color .2s ease,background .2s ease,transform .2s ease;cursor:pointer}
-    .option-row:hover{border-color:var(--accent);background:#172033;transform:translateY(-1px)}
-    .option-row input[type="radio"]{width:22px;height:22px;margin:0;flex:0 0 auto;accent-color:#22d3ee}
-    table{width:100%;border-collapse:collapse;margin-top:12px;overflow:hidden;border-radius:14px}
-    th,td{padding:12px;border:1px solid #334155;text-align:left;vertical-align:top}
-    th{background:#0f172a;color:#bae6fd}
-    ul,ol{padding-left:22px}
-    .nav{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;margin-top:18px}
-    .btn{display:inline-block;text-decoration:none;border:none;cursor:pointer;text-align:center;padding:13px 16px;border-radius:12px;font-weight:700;min-width:180px}
-    .btn-primary{background:var(--accent);color:#082f49}
-    .btn-secondary{background:#1d4ed8;color:#eff6ff}
-    .btn-ghost{background:#0f172a;color:#e2e8f0;border:1px solid #475569}
-    @media (max-width:760px){
-      .grid{grid-template-columns:1fr}
-      .nav .btn{width:100%}
-      .site-title{font-size:1.55rem}
-      .status{align-items:flex-start}
-      .option-row{align-items:flex-start}
-      .option-row input[type="radio"]{margin-top:2px}
-    }
-  </style>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 </head>
 <body>
   <header class="site-header">
     <div class="wrapper">
       <h1 class="site-title">Fizica Galaction</h1>
-      <p class="site-subtitle">Clasa a VII-a • Echilibrul corpurilor • Lecția 4</p>
     </div>
   </header>
 
-  <main class="wrapper">
-    <section class="card">
+  <main class="page-content wrapper">
+    <section class="card lesson-hero">
       <h1>Lecția 4 – Scripetele</h1>
       <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică.”</p>
-     
+      <p class="lead">
+        În această lecție descoperi ce este scripetele, ce rol are într-un sistem mecanic și care
+        este diferența dintre scripetele fix, scripetele mobil și scripetele compus.
+      </p>
+    </section>
+
+    <section class="card pagination-card">
+      <div class="page-status-wrap">
+        <div id="pageCounter" class="page-status">Pagina 1 din 8</div>
+        <div id="pageTopic" class="page-topic">Ce este scripetele?</div>
+      </div>
+
+      <div class="progress-track" aria-hidden="true">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+
+      <article class="lesson-page active" data-title="Ce este scripetele?">
+        <div class="page-chip">Pagina 1</div>
+        <h2>1. Ce este scripetele?</h2>
+        <p>Scripetele este o mașină simplă formată, în esență, dintr-o roată prevăzută cu un șanț pe care se așază un fir, o frânghie sau un cablu.</p>
+        <p>El este folosit pentru ridicarea sau deplasarea sarcinilor și poate schimba direcția forței sau poate reduce forța necesară pentru ridicare.</p>
+        <div class="highlight-box"><strong>Ideea principală:</strong> avantajul scripetelui depinde de tipul de montaj.</div>
+        <div class="page-actions">
+          <button class="pager-btn" type="button" disabled>⟵ Pagina anterioară</button>
+          <button class="pager-btn primary next-page" type="button">Mergi mai departe ⟶</button>
+        </div>
+      </article>
+
+      <article class="lesson-page" data-title="Scripetele fix">
+        <div class="page-chip">Pagina 2</div>
+        <h2>2. Scripetele fix</h2>
+        <p>La scripetele fix, axul roții rămâne pe loc. El nu se deplasează odată cu sarcina.</p>
+        <div class="image-grid">
+          <figure class="figure-card">
+            <img src="../../../assets/img/clasa7/scripeti/scripete-fix.png" alt="Scripete fix" data-caption="Imaginea 1 – scripete fix">
+            <figcaption class="caption">Imaginea 1 – scripete fix</figcaption>
+            <div class="image-click-hint">Atinge sau dă click pe imagine pentru mărire.</div>
+          </figure>
+        </div>
+        <ul class="question-list">
+          <li>schimbă direcția forței;</li>
+          <li>în cazul ideal, nu micșorează valoarea forței;</li>
+          <li>este util când vrei să tragi în jos pentru a ridica o sarcină.</li>
+        </ul>
+        <div class="formula-box">
+          <strong>Relație ideală</strong>
+          <div class="math-line">$$F = G$$</div>
+          <p class="formula-note">În modelul ideal, forța activă este egală cu greutatea sarcinii.</p>
+        </div>
+        <div class="page-actions">
+          <button class="pager-btn prev-page" type="button">⟵ Pagina anterioară</button>
+          <button class="pager-btn primary next-page" type="button">Mergi mai departe ⟶</button>
+        </div>
+      </article>
+
+      <article class="lesson-page" data-title="Scripetele mobil">
+        <div class="page-chip">Pagina 3</div>
+        <h2>3. Scripetele mobil</h2>
+        <p>La scripetele mobil, roata se deplasează odată cu sarcina. El poate reduce forța necesară pentru ridicare.</p>
+        <div class="image-grid">
+          <figure class="figure-card">
+            <img src="../../../assets/img/clasa7/scripeti/scripete-mobil.png" alt="Scripete mobil" data-caption="Imaginea 2 – scripete mobil">
+            <figcaption class="caption">Imaginea 2 – scripete mobil</figcaption>
+          </figure>
+        </div>
+        <div class="formula-box">
+          <strong>Relație ideală</strong>
+          <div class="math-line">$$F = \frac{G}{2}$$</div>
+          <p class="formula-note">În modelul ideal, forța necesară este jumătate din greutatea sarcinii.</p>
+        </div>
+        <div class="note-box"><strong>Observă:</strong> avantajul mecanic se obține, de regulă, cu prețul unui drum mai mare parcurs de fir.</div>
+        <div class="page-actions">
+          <button class="pager-btn prev-page" type="button">⟵ Pagina anterioară</button>
+          <button class="pager-btn primary next-page" type="button">Mergi mai departe ⟶</button>
+        </div>
+      </article>
+
+      <article class="lesson-page" data-title="Scripetele compus">
+        <div class="page-chip">Pagina 4</div>
+        <h2>4. Scripetele compus</h2>
+        <p>Un scripete compus combină mai multe scripeți fixați și mobili într-un singur sistem. Acest tip de montaj este folosit când vrem să obținem un avantaj mecanic mai mare.</p>
+        <div class="image-grid">
+          <figure class="figure-card">
+            <img src="../../../assets/img/clasa7/scripeti/scripete-compus.png" alt="Scripete compus" data-caption="Imaginea 3 – scripete compus">
+            <figcaption class="caption">Imaginea 3 – scripete compus</figcaption>
+          </figure>
+        </div>
+        <div class="highlight-box"><strong>Concluzie:</strong> scripetele compus combină avantajele montajelor simple și poate reduce mai mult forța necesară.</div>
+        <div class="page-actions">
+          <button class="pager-btn prev-page" type="button">⟵ Pagina anterioară</button>
+          <button class="pager-btn primary next-page" type="button">Mergi mai departe ⟶</button>
+        </div>
+      </article>
+
+      <article class="lesson-page" data-title="Comparație între tipurile de scripeți">
+        <div class="page-chip">Pagina 5</div>
+        <h2>5. Comparație între tipurile de scripeți</h2>
+        <div class="compare-table-wrap">
+          <table class="compare-table" aria-label="Compararea tipurilor de scripeți">
+            <thead>
+              <tr>
+                <th>Tip de scripete</th>
+                <th>Ce face?</th>
+                <th>Relație ideală</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Scripete fix</strong></td><td>schimbă direcția forței</td><td>\(F = G\)</td></tr>
+              <tr><td><strong>Scripete mobil</strong></td><td>reduce forța necesară</td><td>\(F = \frac{G}{2}\)</td></tr>
+              <tr><td><strong>Scripete compus</strong></td><td>combină mai multe scripeți pentru avantaj mai mare</td><td>depinde de montaj</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note-box"><strong>Important:</strong> în practică apar frecări, iar forța reală poate fi mai mare decât în modelul ideal.</div>
+        <div class="page-actions">
+          <button class="pager-btn prev-page" type="button">⟵ Pagina anterioară</button>
+          <button class="pager-btn primary next-page" type="button">Mergi mai departe ⟶</button>
+        </div>
+      </article>
+
+      <article class="lesson-page" data-title="Exemplu numeric">
+        <div class="page-chip">Pagina 6</div>
+        <h2>6. Exemplu numeric</h2>
+        <p>O sarcină are greutatea \(G = 80\,N\).</p>
+        <div class="image-grid two">
+          <div class="formula-box">
+            <strong>Cu scripete fix</strong>
+            <div class="math-line">$$F = G = 80\,N$$</div>
+            <p class="formula-note">Forța necesară este egală cu greutatea sarcinii.</p>
+          </div>
+          <div class="formula-box">
+            <strong>Cu scripete mobil</strong>
+            <div class="math-line">$$F = \frac{G}{2} = \frac{80}{2} = 40\,N$$</div>
+            <p class="formula-note">Forța necesară este mai mică.</p>
+          </div>
+        </div>
+        <div class="highlight-box"><strong>Observă:</strong> fracțiile sunt scrise vizual cu MathJax, de exemplu \( \frac{80}{2} \).</div>
+        <div class="page-actions">
+          <button class="pager-btn prev-page" type="button">⟵ Pagina anterioară</button>
+          <button class="pager-btn primary next-page" type="button">Mergi mai departe ⟶</button>
+        </div>
+      </article>
+
+      <article class="lesson-page" data-title="Unde întâlnim scripeți">
+        <div class="page-chip">Pagina 7</div>
+        <h2>7. Unde întâlnim scripeți?</h2>
+        <p>Scripeții sunt folosiți în situații în care trebuie ridicate sau deplasate sarcini: la macarale, la unele lifturi, în ateliere, pe șantiere sau în diferite sisteme tehnice.</p>
+        <ul class="key-list">
+          <li>permit ridicarea mai ușoară a corpurilor;</li>
+          <li>pot schimba direcția de acțiune a forței;</li>
+          <li>ajută la obținerea unui avantaj mecanic.</li>
+        </ul>
+        <div class="note-box"><strong>Reține:</strong> mașinile simple nu creează energie, ci schimbă modul în care folosim forța.</div>
+        <div class="page-actions">
+          <button class="pager-btn prev-page" type="button">⟵ Pagina anterioară</button>
+          <button class="pager-btn primary next-page" type="button">Mergi mai departe ⟶</button>
+        </div>
+      </article>
+
+      <article class="lesson-page" data-title="Reținem și verificăm">
+        <div class="page-chip">Pagina 8</div>
+        <h2>8. Reținem</h2>
+        <ul class="retain-list">
+          <li>scripetele este o mașină simplă folosită la ridicarea sau deplasarea sarcinilor;</li>
+          <li>scripetele fix schimbă direcția forței;</li>
+          <li>scripetele mobil poate reduce forța necesară;</li>
+          <li>scripetele compus combină mai multe scripeți pentru un avantaj mecanic mai mare;</li>
+          <li>relațiile ideale sunt aproximative, deoarece în realitate apar pierderi prin frecare.</li>
+        </ul>
+
+        <div class="quick-check">
+          <h3>Verificare rapidă</h3>
+          <p class="quick-question">Bifează varianta corectă.</p>
+          <div class="quick-options">
+            <label class="quick-option"><input type="radio" name="check1" value="gresit1"><span>Scripetele fix micșorează întotdeauna forța la jumătate.</span></label>
+            <label class="quick-option"><input type="radio" name="check1" value="corect"><span>În modelul ideal, scripetele mobil poate reduce forța necesară la jumătate.</span></label>
+            <label class="quick-option"><input type="radio" name="check1" value="gresit2"><span>Scripetele nu este o mașină simplă.</span></label>
+          </div>
+          <button type="button" id="checkQuick">Verifică răspunsul</button>
+          <div id="quickFeedback" class="quick-feedback" aria-live="polite"></div>
+        </div>
+
+        <div class="page-actions">
+          <button class="pager-btn prev-page" type="button">⟵ Pagina anterioară</button>
+          <button class="pager-btn secondary" type="button" id="goToTop">Mergi la începutul lecției</button>
+        </div>
+      </article>
     </section>
 
     <section class="card">
-      <div class="status">
-        <div class="counter" id="counter">Pagina 1 din 8</div>
-      </div>
-      <div class="progress"><div id="progressBar"></div></div>
-
-      <article class="page active">
-        <h2>1. Ce este scripetele?</h2>
-        <p><strong>Scripetele</strong> este o mașină simplă formată dintr-o roată prevăzută cu un șanț pe circumferință, peste care trece un fir, o funie sau un cablu.</p>
-        <div class="grid">
-          <div class="mini">
-            <h3>Unde îl întâlnim?</h3>
-            <ul>
-              <li>la fântâni;</li>
-              <li>la macarale;</li>
-              <li>la ridicarea drapelelor;</li>
-              <li>în diferite mecanisme tehnice.</li>
-            </ul>
-          </div>
-          <div class="mini">
-            <h3>Rolul lui</h3>
-            <p>Scripetele ajută la schimbarea direcției forței sau la micșorarea forței necesare pentru ridicarea unui corp.</p>
-          </div>
-        </div>
-        <div class="notice">Scripetele este o mașină simplă folosită foarte des pentru ridicarea sarcinilor.</div>
-      </article>
-
-      <article class="page">
-        <h2>2. Scripetele fix</h2>
-        <p>La <strong>scripetele fix</strong>, axul roții rămâne într-o poziție fixă.</p>
-        <div class="grid">
-          <div class="mini">
-            <h3>Efect principal</h3>
-            <p>Schimbă direcția forței. Este mai comod să tragi în jos pentru a ridica o sarcină în sus.</p>
-          </div>
-          <div class="mini">
-            <h3>Important</h3>
-            <p>În cazul ideal, scripetele fix <strong>nu micșorează</strong> forța necesară. El doar schimbă direcția acesteia.</p>
-          </div>
-        </div>
-
-        <div class="formula">$$F = G$$</div>
-
-        <div class="example-box">
-          <strong>Interpretare:</strong>
-          <p>În situația ideală, forța activă este egală cu greutatea corpului ridicat.</p>
-        </div>
-      </article>
-
-      <article class="page">
-        <h2>3. Scripetele mobil</h2>
-        <p>La <strong>scripetele mobil</strong>, axul roții se deplasează împreună cu sarcina.</p>
-        <div class="grid">
-          <div class="mini">
-            <h3>Efect principal</h3>
-            <p>Micșorează forța necesară pentru ridicarea corpului.</p>
-          </div>
-          <div class="mini">
-            <h3>Condiție ideală</h3>
-            <p>Dacă neglijăm frecările și greutatea firului, forța necesară este de două ori mai mică decât greutatea sarcinii.</p>
-          </div>
-        </div>
-
-        <div class="formula">$$F = \frac{G}{2}$$</div>
-
-        <div class="notice warn">Pentru a ridica sarcina cu o anumită înălțime, trebuie tras de fir pe o distanță dublă.</div>
-      </article>
-
-      <article class="page">
-        <h2>4. Sistemul de scripeți</h2>
-        <p>Prin combinarea unui scripete fix cu unul mobil se obține un <strong>sistem de scripeți</strong>.</p>
-        <div class="grid">
-          <div class="mini">
-            <h3>Avantaj</h3>
-            <p>Se combină schimbarea direcției forței cu reducerea forței necesare.</p>
-          </div>
-          <div class="mini">
-            <h3>Utilizare</h3>
-            <p>Astfel de sisteme sunt întâlnite la macarale, palane și dispozitive de ridicare.</p>
-          </div>
-        </div>
-
-        <div class="example-box">
-          <strong>Idee-cheie:</strong>
-          <p>Cu cât sarcina este susținută de mai multe segmente de fir, cu atât forța necesară poate fi mai mică.</p>
-        </div>
-      </article>
-
-      <article class="page">
-        <h2>5. Avantajul mecanic</h2>
-        <p>Avantajul mecanic al scripetelui arată de câte ori este micșorată forța activă față de greutatea sarcinii.</p>
-
-        <table>
-          <thead>
-            <tr>
-              <th>Tip de scripete</th>
-              <th>Relație ideală</th>
-              <th>Concluzie</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Scripete fix</td>
-              <td>$F = G$</td>
-              <td>schimbă direcția forței</td>
-            </tr>
-            <tr>
-              <td>Scripete mobil</td>
-              <td>$F = \frac{G}{2}$</td>
-              <td>reduce forța la jumătate</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="notice">Avantajul mecanic se obține, în general, cu prețul măririi drumului parcurs de fir.</div>
-      </article>
-
-      <article class="page">
-        <h2>6. Exemplu simplu</h2>
-        <p>Un corp are greutatea $G = 80\,N$.</p>
-
-        <div class="grid">
-          <div class="mini">
-            <h3>Cu scripete fix</h3>
-            <div class="formula">$$F = G = 80\,N$$</div>
-            <p>Forța necesară este egală cu greutatea sarcinii.</p>
-          </div>
-          <div class="mini">
-            <h3>Cu scripete mobil</h3>
-            <div class="formula">$$F = \frac{G}{2} = \frac{80}{2} = 40\,N$$</div>
-            <p>Forța necesară se reduce la jumătate.</p>
-          </div>
-        </div>
-      </article>
-
-      <article class="page">
-        <h2>7. Ce trebuie să observi</h2>
-        <ul>
-          <li>scripetele fix este util mai ales pentru <strong>comoditate</strong>, deoarece schimbă direcția forței;</li>
-          <li>scripetele mobil este util pentru <strong>micșorarea forței</strong>;</li>
-          <li>în practică apar și pierderi prin frecare, deci relațiile ideale nu sunt respectate perfect;</li>
-          <li>scripeții sunt mașini simple foarte importante în tehnică.</li>
-        </ul>
-
-        <div class="notice warn">
-          În realitate, forța necesară poate fi puțin mai mare decât în calculele ideale, din cauza frecărilor și a greutății proprii a sistemului.
-        </div>
-      </article>
-
-      <article class="page">
-        <h2>8. Reținem</h2>
-        <ul>
-          <li>scripetele este o mașină simplă folosită la ridicarea sarcinilor;</li>
-          <li>scripetele fix schimbă direcția forței;</li>
-          <li>scripetele mobil poate reduce forța la jumătate, în condiții ideale;</li>
-          <li>sistemele de scripeți pot combina mai multe avantaje;</li>
-          <li>avantajul mecanic este însoțit de o distanță mai mare pe care trebuie tras firul.</li>
-        </ul>
-
-        <div class="question">
-          <div class="instruction">Alege o singură variantă corectă.</div>
-          <h3>Verificare rapidă</h3>
-          <p>Bifează enunțul corect.</p>
-          <table class="option-table" role="presentation">
-            <tr>
-              <td><label class="option-row">
-                <input type="radio" name="q1" value="0">
-                <span>Scripetele fix reduce întotdeauna forța la jumătate.</span>
-              </label></td>
-            </tr>
-            <tr>
-              <td><label class="option-row" style="background:#132033;">
-                <input type="radio" name="q1" value="1">
-                <span>În condiții ideale, la scripetele mobil forța necesară poate fi egală cu jumătate din greutatea sarcinii.</span>
-              </label></td>
-            </tr>
-            <tr>
-              <td><label class="option-row">
-                <input type="radio" name="q1" value="0">
-                <span>Scripetele nu este o mașină simplă.</span>
-              </label></td>
-            </tr>
-          </table>
-          <button onclick="checkQuiz()">Verifică răspunsul</button>
-          <div id="quizFeedback" class="feedback"></div>
-        </div>
-
-        <div class="nav">
-          <a class="btn btn-secondary" href="./lectia-3.html">Lecția anterioară</a>
-          <a class="btn btn-ghost" href="./index.html">Înapoi la lecții</a>
-          <a class="btn btn-primary" href="./lectia-5.html">Mergi la lecția 5</a>
-        </div>
-      </article>
-
-      <div class="nav">
-        <button class="btn btn-ghost" id="prevBtn" onclick="changePage(-1)">Înapoi</button>
-        <button class="btn btn-primary" id="nextBtn" onclick="changePage(1)">Mergi mai departe</button>
+      <h2>Navigare</h2>
+      <p class="mini-note">Butonul „Mergi mai departe” rămâne vizibil pe fiecare pagină a lecției.</p>
+      <div class="lesson-nav">
+        <a class="nav-button" href="./lectia-3.html">Lecția anterioară</a>
+        <a class="nav-button secondary" href="./index.html">Înapoi la lecții</a>
+        <a class="nav-button success" href="./lectia-5.html">Mergi la lecția 5</a>
       </div>
     </section>
   </main>
 
+  <div id="imageModal" class="image-modal" aria-hidden="true">
+    <div class="image-modal-dialog">
+      <button class="image-modal-close" type="button" id="closeModal" aria-label="Închide imaginea">&times;</button>
+      <img id="modalImage" src="" alt="">
+      <div id="modalCaption" class="image-modal-caption"></div>
+    </div>
+  </div>
+
   <footer class="site-footer">
-    <div class="wrapper">Fizica Galaction • Clasa a VII-a • Lecția 4</div>
+    <div class="wrapper">
+      <p>© Fizica Galaction · Prof. DĂNUȚ ANDRONIE</p>
+      <div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 8px;">
+        E-mail:
+        <a href="mailto:danutmg@gmail.com" style="color: #22d3ee; text-decoration: none;">danutmg@gmail.com</a><br>
+        <span style="font-size: 0.85rem; color: #94a3b8;">Pentru observații, propuneri și sugestii privind platforma educațională.</span>
+      </div>
+    </div>
   </footer>
 
+  <script src="../../../assets/js/main.js"></script>
   <script>
-    const pages = Array.from(document.querySelectorAll('.page'));
-    const counter = document.getElementById('counter');
-    const progressBar = document.getElementById('progressBar');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    let currentPage = 0;
+    (function () {
+      const pages = Array.from(document.querySelectorAll('.lesson-page'));
+      const progressBar = document.getElementById('progressBar');
+      const pageCounter = document.getElementById('pageCounter');
+      const pageTopic = document.getElementById('pageTopic');
+      const goToTop = document.getElementById('goToTop');
+      let currentPage = 0;
 
-    function renderPage() {
-      pages.forEach((page, index) => page.classList.toggle('active', index === currentPage));
-      counter.textContent = `Pagina ${currentPage + 1} din ${pages.length}`;
-      progressBar.style.width = `${((currentPage + 1) / pages.length) * 100}%`;
-      prevBtn.style.visibility = currentPage === 0 ? 'hidden' : 'visible';
-      nextBtn.style.display = currentPage === pages.length - 1 ? 'none' : 'inline-block';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      if (window.MathJax && window.MathJax.typesetPromise) {
-        window.MathJax.typesetPromise();
+      function showPage(index) {
+        currentPage = Math.max(0, Math.min(index, pages.length - 1));
+        pages.forEach((page, i) => page.classList.toggle('active', i === currentPage));
+        pageCounter.textContent = `Pagina ${currentPage + 1} din ${pages.length}`;
+        pageTopic.textContent = pages[currentPage].dataset.title || '';
+        progressBar.style.width = `${((currentPage + 1) / pages.length) * 100}%`;
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
-    }
 
-    function changePage(direction) {
-      const nextIndex = currentPage + direction;
-      if (nextIndex < 0 || nextIndex >= pages.length) return;
-      currentPage = nextIndex;
-      renderPage();
-    }
+      document.querySelectorAll('.next-page').forEach(btn => btn.addEventListener('click', () => showPage(currentPage + 1)));
+      document.querySelectorAll('.prev-page').forEach(btn => btn.addEventListener('click', () => showPage(currentPage - 1)));
+      if (goToTop) goToTop.addEventListener('click', () => showPage(0));
+      showPage(0);
 
-    function checkQuiz() {
-      const selected = document.querySelector('input[name="q1"]:checked');
-      const feedback = document.getElementById('quizFeedback');
-      if (!selected) {
-        feedback.textContent = 'Selectează o variantă, apoi apasă pe „Verifică răspunsul”.';
-        feedback.style.color = '#fbbf24';
-        return;
+      const checkQuick = document.getElementById('checkQuick');
+      const quickFeedback = document.getElementById('quickFeedback');
+      if (checkQuick) {
+        checkQuick.addEventListener('click', () => {
+          const selected = document.querySelector('input[name="check1"]:checked');
+          if (!selected) {
+            quickFeedback.textContent = 'Alege o variantă.';
+            quickFeedback.className = 'quick-feedback gresit';
+            return;
+          }
+          if (selected.value === 'corect') {
+            quickFeedback.textContent = 'Corect!';
+            quickFeedback.className = 'quick-feedback corect';
+          } else {
+            quickFeedback.textContent = 'Răspuns greșit. Varianta corectă este a doua.';
+            quickFeedback.className = 'quick-feedback gresit';
+          }
+        });
       }
-      if (selected.value === '1') {
-        feedback.textContent = 'Corect! În condiții ideale, la scripetele mobil forța necesară este G/2.';
-        feedback.style.color = '#4ade80';
-      } else {
-        feedback.textContent = 'Nu este corect. Recitește diferența dintre scripetele fix și cel mobil.';
-        feedback.style.color = '#f87171';
-      }
-    }
 
-    renderPage();
+      const modal = document.getElementById('imageModal');
+      const modalImage = document.getElementById('modalImage');
+      const modalCaption = document.getElementById('modalCaption');
+      const closeModal = document.getElementById('closeModal');
+
+      function openModal(img) {
+        modalImage.src = img.src;
+        modalImage.alt = img.alt;
+        modalCaption.textContent = img.dataset.caption || img.alt || '';
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function hideModal() {
+        modal.classList.remove('active');
+        modal.setAttribute('aria-hidden', 'true');
+        modalImage.src = '';
+        modalImage.alt = '';
+        modalCaption.textContent = '';
+        document.body.style.overflow = '';
+      }
+
+      document.querySelectorAll('.figure-card img').forEach(img => {
+        img.addEventListener('click', () => openModal(img));
+        img.addEventListener('keydown', (event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            openModal(img);
+          }
+        });
+        img.setAttribute('tabindex', '0');
+      });
+
+      closeModal.addEventListener('click', hideModal);
+      modal.addEventListener('click', (event) => { if (event.target === modal) hideModal(); });
+      document.addEventListener('keydown', (event) => { if (event.key === 'Escape' && modal.classList.contains('active')) hideModal(); });
+    })();
   </script>
 </body>
 </html>

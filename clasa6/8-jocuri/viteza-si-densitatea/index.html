@@ -465,6 +465,52 @@
       color:var(--muted2);
       font-size:.9rem;
     }
+
+    .certificate{
+      margin-top:16px;
+      background:#fffaf0;
+      color:#1f2937;
+      border:3px solid #fbbf24;
+      border-radius:22px;
+      padding:clamp(16px, 4vw, 30px);
+      box-shadow:0 18px 45px rgba(0,0,0,.22);
+      text-align:center;
+    }
+    .certificate h2{
+      color:#92400e;
+      font-size:clamp(1.5rem, 6vw, 2.4rem);
+      letter-spacing:.03em;
+      margin-bottom:12px;
+    }
+    .certificate .cert-name{
+      font-size:clamp(1.25rem, 5vw, 2rem);
+      font-weight:950;
+      color:#0f172a;
+      border-bottom:2px solid #92400e;
+      display:inline-block;
+      padding:4px 18px;
+      margin:8px 0 12px;
+    }
+    .certificate p{
+      font-size:clamp(1rem, 3.4vw, 1.2rem);
+      line-height:1.7;
+      margin:8px 0;
+    }
+    .certificate .signature{
+      margin-top:22px;
+      text-align:right;
+      font-weight:850;
+      color:#0f172a;
+    }
+    @media print{
+      body{background:white!important;color:black!important}
+      .topbar,.button-row,.feedback,.leaderboard,.lesson-grid,.toast{display:none!important}
+      .app{max-width:100%;padding:0}
+      .screen{display:block;padding:0}
+      .card{box-shadow:none;border:0;background:white;padding:0}
+      .certificate{box-shadow:none;margin:0;min-height:90vh;display:flex;flex-direction:column;justify-content:center}
+    }
+
     .kbd{
       font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       background:#020617;
@@ -566,7 +612,7 @@
     3. Copiază URL-ul care se termină în /exec și pune-l între ghilimelele de mai jos.
     Clasamentul din Google Sheets se resetează automat săptămânal și are și clasament lunar.
   */
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxF5tMe9nAdo_q6VWvByPFIBLfKkrNyxnokTtPJLlIku4Tm4Wv0Xzp2o2ZMTWmqxnF4YA/exec";
+  const GOOGLE_SCRIPT_URL = "PUNE_AICI_URL_WEB_APP_GOOGLE_APPS_SCRIPT";
   const ONLINE_KEY = "FIZICA_GALACTION_VITEZA_DENSITATE_2026";
   const TIME_ZONE = "Europe/Bucharest";
 
@@ -620,7 +666,6 @@
   function makeId(){
     return `${Date.now().toString(36)}-${Math.floor(randomUnit()*1e9).toString(36)}`;
   }
-
   function makeSpeedProblem(id, opts){
     const speeds = [];
     for(let v = opts.minV; v <= opts.maxV + 0.001; v += 0.5) speeds.push(oneDec(v));
@@ -628,27 +673,26 @@
     const combos = [];
     speeds.forEach(v => times.forEach(tMin => {
       const tSec = oneDec(tMin * 60);
-      const s = oneDec(v * tSec);
-      if(hasMaxOneDecimal(s) && hasMaxOneDecimal(speedToKmh(v))){
-        combos.push({v, tMin, tSec, s, kmh:speedToKmh(v)});
+      const d = oneDec(v * tSec);
+      if(hasMaxOneDecimal(d) && hasMaxOneDecimal(speedToKmh(v))){
+        combos.push({v, tMin, tSec, d, kmh:speedToKmh(v)});
       }
     }));
     const c = pick(combos);
     return {
       id, level: 1, icon: opts.icon, levelName:"Nivelul 1 – Pilotul vitezei", difficulty:"ușor",
       title: opts.title,
-      text:`${opts.subject} parcurge ${roNum(c.s)} m în ${roNum(c.tMin)} min. Determină viteza în SI și transformă în km/h.`,
-      known:[`s = ${roNum(c.s)} m`, `t = ${roNum(c.tMin)} min = ${roNum(c.tSec)} s`],
-      formula:"\\(v=\\frac{s}{t}\\), apoi \\(1\\,m/s=3{,}6\\,km/h\\)",
+      text:`${opts.subject} parcurge ${roNum(c.d)} m în ${roNum(c.tMin)} min. Determină viteza în SI și în km/h.`,
+      known:[`d = ${roNum(c.d)} m`, `t = ${roNum(c.tMin)} min`],
+      formula:"\\(v=\\frac{d}{t}\\)",
       inputs:[
         {key:"si", label:"Viteza în SI", unit:"m/s", answer:c.v, tol:0.01},
-        {key:"conv", label:"Viteza transformată", unit:"km/h", answer:c.kmh, tol:0.02}
+        {key:"conv", label:"Viteza în km/h", unit:"km/h", answer:c.kmh, tol:0.02}
       ],
-      hint:`Transformă mai întâi minutele în secunde: ${roNum(c.tMin)} min = ${roNum(c.tSec)} s.`,
-      solution:`\\(t=${mathNum(c.tMin)}\\,min=${mathNum(c.tSec)}\\,s\\). \\(v=\\frac{${mathNum(c.s)}}{${mathNum(c.tSec)}}=${mathNum(c.v)}\\,m/s\\). \\(${mathNum(c.v)}\\cdot3{,}6=${mathNum(c.kmh)}\\,km/h\\).`
+      hint:"Gândește-te dacă toate datele sunt în unități SI înainte de a calcula.",
+      solution:`Pentru SI: \\(t=${mathNum(c.tMin)}\\,min=${mathNum(c.tSec)}\\,s\\). \\(v=\\frac{d}{t}=\\frac{${mathNum(c.d)}}{${mathNum(c.tSec)}}=${mathNum(c.v)}\\,m/s\\). În km/h: \\(${mathNum(c.v)}\\cdot3{,}6=${mathNum(c.kmh)}\\,km/h\\).`
     };
   }
-
   function makeDistanceProblem(id, opts){
     const speeds = [];
     for(let v = opts.minV; v <= opts.maxV + 0.001; v += 0.5) speeds.push(oneDec(v));
@@ -656,28 +700,27 @@
     const combos = [];
     speeds.forEach(v => times.forEach(tMin => {
       const tSec = oneDec(tMin * 60);
-      const s = oneDec(v * tSec);
-      const km = oneDec(s / 1000);
-      if(hasMaxOneDecimal(s) && hasMaxOneDecimal(km) && Math.abs(km*1000 - s) < 1e-7){
-        combos.push({v, tMin, tSec, s, km});
+      const d = oneDec(v * tSec);
+      const km = oneDec(d / 1000);
+      if(hasMaxOneDecimal(d) && hasMaxOneDecimal(km) && Math.abs(km*1000 - d) < 1e-7){
+        combos.push({v, tMin, tSec, d, km});
       }
     }));
     const c = pick(combos);
     return {
       id, level: 2, icon: opts.icon, levelName:"Nivelul 2 – Navigatorul distanței și timpului", difficulty:"mediu",
       title: opts.title,
-      text:`${opts.subject} merge cu ${roNum(c.v)} m/s timp de ${roNum(c.tMin)} min. Determină distanța în SI și transformă în km.`,
-      known:[`v = ${roNum(c.v)} m/s`, `t = ${roNum(c.tMin)} min = ${roNum(c.tSec)} s`],
-      formula:"\\(s=v\\cdot t\\), apoi \\(1\\,km=1000\\,m\\)",
+      text:`${opts.subject} merge cu ${roNum(c.v)} m/s timp de ${roNum(c.tMin)} min. Determină distanța în SI și în km.`,
+      known:[`v = ${roNum(c.v)} m/s`, `t = ${roNum(c.tMin)} min`],
+      formula:"\\(d=v\\cdot t\\)",
       inputs:[
-        {key:"si", label:"Distanța în SI", unit:"m", answer:c.s, tol:0.5},
-        {key:"conv", label:"Distanța transformată", unit:"km", answer:c.km, tol:0.01}
+        {key:"si", label:"Distanța în SI", unit:"m", answer:c.d, tol:0.5},
+        {key:"conv", label:"Distanța în km", unit:"km", answer:c.km, tol:0.01}
       ],
-      hint:"Timpul se pune în secunde pentru SI, apoi înmulțești viteza cu timpul.",
-      solution:`\\(t=${mathNum(c.tMin)}\\,min=${mathNum(c.tSec)}\\,s\\). \\(s=v\\cdot t=${mathNum(c.v)}\\cdot${mathNum(c.tSec)}=${mathNum(c.s)}\\,m\\). \\(${mathNum(c.s)}\\,m=${mathNum(c.km)}\\,km\\).`
+      hint:"Verifică unitățile timpului înainte de calcul.",
+      solution:`Pentru SI: \\(t=${mathNum(c.tMin)}\\,min=${mathNum(c.tSec)}\\,s\\). \\(d=v\\cdot t=${mathNum(c.v)}\\cdot${mathNum(c.tSec)}=${mathNum(c.d)}\\,m\\). În km: \\(${mathNum(c.d)}\\,m=${mathNum(c.km)}\\,km\\).`
     };
   }
-
   function makeTimeProblem(id, opts){
     const speeds = [];
     for(let v = opts.minV; v <= opts.maxV + 0.001; v += 0.5) speeds.push(oneDec(v));
@@ -685,26 +728,27 @@
     const combos = [];
     speeds.forEach(v => times.forEach(tMin => {
       const tSec = oneDec(tMin * 60);
-      const s = oneDec(v * tSec);
-      if(hasMaxOneDecimal(s) && hasMaxOneDecimal(tMin)){
-        combos.push({v, tMin, tSec, s});
+      const d = oneDec(v * tSec);
+      if(hasMaxOneDecimal(d) && hasMaxOneDecimal(tMin)){
+        combos.push({v, tMin, tSec, d});
       }
     }));
     const c = pick(combos);
     return {
       id, level: 2, icon: opts.icon, levelName:"Nivelul 2 – Navigatorul distanței și timpului", difficulty:"mediu",
       title: opts.title,
-      text:`${opts.subject} parcurge ${roNum(c.s)} m cu viteza ${roNum(c.v)} m/s. Determină timpul în SI și transformă în minute.`,
-      known:[`s = ${roNum(c.s)} m`, `v = ${roNum(c.v)} m/s`],
-      formula:"\\(t=\\frac{s}{v}\\), apoi \\(1\\,min=60\\,s\\)",
+      text:`${opts.subject} parcurge ${roNum(c.d)} m cu viteza ${roNum(c.v)} m/s. Determină timpul în SI și în minute.`,
+      known:[`d = ${roNum(c.d)} m`, `v = ${roNum(c.v)} m/s`],
+      formula:"\\(t=\\frac{d}{v}\\)",
       inputs:[
         {key:"si", label:"Timpul în SI", unit:"s", answer:c.tSec, tol:0.5},
-        {key:"conv", label:"Timpul transformat", unit:"min", answer:c.tMin, tol:0.01}
+        {key:"conv", label:"Timpul în minute", unit:"min", answer:c.tMin, tol:0.01}
       ],
-      hint:"Împarte distanța la viteză, apoi împarte secundele la 60.",
-      solution:`\\(t=\\frac{${mathNum(c.s)}}{${mathNum(c.v)}}=${mathNum(c.tSec)}\\,s\\). \\(${mathNum(c.tSec)}:60=${mathNum(c.tMin)}\\,min\\).`
+      hint:"Împarte distanța la viteză, apoi verifică unitatea cerută.",
+      solution:`\\(t=\\frac{d}{v}=\\frac{${mathNum(c.d)}}{${mathNum(c.v)}}=${mathNum(c.tSec)}\\,s\\). În minute: \\(${mathNum(c.tSec)}:60=${mathNum(c.tMin)}\\,min\\).`
     };
   }
+
 
   function densityCombos(){
     const rhoG = [0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.5,1.8,2,2.5,3];
@@ -724,24 +768,22 @@
     }));
     return combos;
   }
-
   function makeDensityProblem(id, opts){
     const c = pick(densityCombos().filter(x => x.rhoG >= opts.minRhoG && x.rhoG <= opts.maxRhoG));
     return {
       id, level: 3, icon: opts.icon, levelName:"Nivelul 3 – Detectivul densității", difficulty:"mediu",
       title: opts.title,
-      text:`${opts.subject} are masa ${roNum(c.mass)} kg și volumul ${roNum(c.vdm3)} dm³. Determină densitatea în SI și transformă în g/cm³.`,
+      text:`${opts.subject} are masa ${roNum(c.mass)} kg și volumul ${roNum(c.vdm3)} dm³. Determină densitatea în SI și în g/cm³.`,
       known:[`m = ${roNum(c.mass)} kg`, `V = ${roNum(c.vdm3)} dm³`],
-      formula:"\\(\\rho=\\frac{m}{V}\\), \\(1\\,dm^3=0{,}001\\,m^3\\), apoi \\(1000\\,kg/m^3=1\\,g/cm^3\\)",
+      formula:"\\(\\rho=\\frac{m}{V}\\)",
       inputs:[
         {key:"si", label:"Densitatea în SI", unit:"kg/m³", answer:c.rhoSI, tol:1},
-        {key:"conv", label:"Densitatea transformată", unit:"g/cm³", answer:c.rhoG, tol:0.01}
+        {key:"conv", label:"Densitatea în g/cm³", unit:"g/cm³", answer:c.rhoG, tol:0.01}
       ],
-      hint:`Transformă volumul: ${roNum(c.vdm3)} dm³ = ${String(c.vm3).replace(".", ",")} m³. Apoi împarte masa la volum.`,
-      solution:`\\(${mathNum(c.vdm3)}\\,dm^3=${String(c.vm3).replace(".", ",")}\\,m^3\\). \\(\\rho=\\frac{${mathNum(c.mass)}}{${String(c.vm3).replace(".", ",")}}=${mathNum(c.rhoSI)}\\,kg/m^3\\). \\(${mathNum(c.rhoSI)}\\,kg/m^3=${mathNum(c.rhoG)}\\,g/cm^3\\).`
+      hint:"Înainte de calcul, verifică unitatea volumului cerută de SI.",
+      solution:`Pentru SI: \\(${mathNum(c.vdm3)}\\,dm^3=${String(c.vm3).replace(".", ",")}\\,m^3\\). \\(\\rho=\\frac{m}{V}=\\frac{${mathNum(c.mass)}}{${String(c.vm3).replace(".", ",")}}=${mathNum(c.rhoSI)}\\,kg/m^3\\). În g/cm³: \\(${mathNum(c.rhoSI)}\\,kg/m^3=${mathNum(c.rhoG)}\\,g/cm^3\\).`
     };
   }
-
   function makeMassProblem(id, opts){
     const candidates = densityCombos().filter(x => x.rhoG >= opts.minRhoG && x.rhoG <= opts.maxRhoG);
     const c = pick(candidates);
@@ -750,18 +792,17 @@
     return {
       id, level: 4, icon: opts.icon, levelName:"Nivelul 4 – Maestrul mărimilor", difficulty:"greu",
       title: opts.title,
-      text:`${opts.subject} are densitatea ${roNum(c.rhoSI)} kg/m³ și volumul ${roNum(c.vdm3)} dm³. Determină masa în SI și transformă în ${toUnit}.`,
+      text:`${opts.subject} are densitatea ${roNum(c.rhoSI)} kg/m³ și volumul ${roNum(c.vdm3)} dm³. Determină masa în SI și în ${toUnit}.`,
       known:[`ρ = ${roNum(c.rhoSI)} kg/m³`, `V = ${roNum(c.vdm3)} dm³`],
-      formula:"\\(m=\\rho\\cdot V\\), \\(1\\,dm^3=0{,}001\\,m^3\\), apoi \\(1\\,kg=1000\\,g\\)",
+      formula:"\\(m=\\rho\\cdot V\\)",
       inputs:[
         {key:"si", label:"Masa în SI", unit:"kg", answer:c.mass, tol:0.01},
-        {key:"conv", label:"Masa transformată", unit:toUnit, answer:converted, tol:toUnit==="g"?0.5:0.01}
+        {key:"conv", label:`Masa în ${toUnit}`, unit:toUnit, answer:converted, tol:toUnit==="g"?0.5:0.01}
       ],
-      hint:"Transformă volumul în m³, apoi înmulțește densitatea cu volumul.",
-      solution:`\\(${mathNum(c.vdm3)}\\,dm^3=${String(c.vm3).replace(".", ",")}\\,m^3\\). \\(m=${mathNum(c.rhoSI)}\\cdot${String(c.vm3).replace(".", ",")}=${mathNum(c.mass)}\\,kg\\). ${toUnit==="g" ? `\\(${mathNum(c.mass)}\\,kg=${mathNum(converted)}\\,g\\).` : `În SI, masa este tot \\(${mathNum(c.mass)}\\,kg\\).`}`
+      hint:"Verifică unitatea volumului înainte de înmulțire.",
+      solution:`Pentru SI: \\(${mathNum(c.vdm3)}\\,dm^3=${String(c.vm3).replace(".", ",")}\\,m^3\\). \\(m=\\rho\\cdot V=${mathNum(c.rhoSI)}\\cdot${String(c.vm3).replace(".", ",")}=${mathNum(c.mass)}\\,kg\\). ${toUnit==="g" ? `În grame: \\(${mathNum(c.mass)}\\,kg=${mathNum(converted)}\\,g\\).` : `Masa cerută în kg rămâne \\(${mathNum(c.mass)}\\,kg\\).`}`
     };
   }
-
   function makeVolumeProblem(id, opts){
     const densities = [500,800,1000,1200,1500,1800,2000,2500,3000];
     const volumes = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9];
@@ -776,17 +817,18 @@
     return {
       id, level: 4, icon: opts.icon, levelName:"Nivelul 4 – Maestrul mărimilor", difficulty:"greu",
       title: opts.title,
-      text:`${opts.subject} are masa ${roNum(c.mass)} kg și densitatea ${roNum(c.rho)} kg/m³. Determină volumul în SI și transformă în cm³.`,
+      text:`${opts.subject} are masa ${roNum(c.mass)} kg și densitatea ${roNum(c.rho)} kg/m³. Determină volumul în SI și în cm³.`,
       known:[`m = ${roNum(c.mass)} kg`, `ρ = ${roNum(c.rho)} kg/m³`],
-      formula:"\\(V=\\frac{m}{\\rho}\\), apoi \\(1\\,m^3=1\\,000\\,000\\,cm^3\\)",
+      formula:"\\(V=\\frac{m}{\\rho}\\)",
       inputs:[
         {key:"si", label:"Volumul în SI", unit:"m³", answer:c.v, tol:0.01},
-        {key:"conv", label:"Volumul transformat", unit:"cm³", answer:c.cm3, tol:1}
+        {key:"conv", label:"Volumul în cm³", unit:"cm³", answer:c.cm3, tol:1}
       ],
-      hint:"Volumul se obține împărțind masa la densitate.",
-      solution:`\\(V=\\frac{${mathNum(c.mass)}}{${mathNum(c.rho)}}=${mathNum(c.v)}\\,m^3\\). \\(${mathNum(c.v)}\\cdot1\\,000\\,000=${mathNum(c.cm3)}\\,cm^3\\).`
+      hint:"Volumul se obține împărțind masa la densitate, apoi verifici unitatea cerută.",
+      solution:`\\(V=\\frac{m}{\\rho}=\\frac{${mathNum(c.mass)}}{${mathNum(c.rho)}}=${mathNum(c.v)}\\,m^3\\). În cm³: \\(${mathNum(c.v)}\\cdot1\\,000\\,000=${mathNum(c.cm3)}\\,cm^3\\).`
     };
   }
+
 
   function createProblemSet(){
     const generated = [
@@ -855,7 +897,7 @@
     },
     {
       q:"Pentru a afla timpul din distanță și viteză folosim:",
-      options:["\\(t=\\frac{s}{v}\\)","\\(t=s\\cdot v\\)","\\(t=\\frac{v}{s}\\)"],
+      options:["\\(t=\\frac{d}{v}\\)","\\(t=d\\cdot v\\)","\\(t=\\frac{v}{d}\\)"],
       answer:0
     },
     {
@@ -880,7 +922,8 @@
   const botNames = ["Ana", "Mihai", "Ioana", "David", "Sofia", "Andrei", "Maria", "Tudor", "Elena", "Matei", "Irina", "Alex", "Daria", "Radu", "Ilinca", "Victor", "Sara", "Denis", "Carla", "Robert", "Eva", "Vlad", "Teo", "Luca", "Mara", "Nora", "Cezar", "Iulia", "Rareș", "Bianca"];
 
   const LS_KEY = "fizica_viteza_densitate_clasa6_leaderboard_weekly_v2";
-  const LS_SETTINGS = "fizica_viteza_densitate_clasa6_settings_v1";
+  const LS_MONTHLY = "fizica_viteza_densitate_clasa6_monthly_results_v1";
+  const LS_SETTINGS = "fizica_viteza_densitate_clasa6_settings_v2";
 
   const state = {
     page:0,
@@ -893,6 +936,8 @@
     quickScore:0,
     leaderboard:[],
     className:"",
+    schoolName:"",
+    locality:"",
     onlineStatus:"",
     saved:false,
     problemSetId:"",
@@ -970,6 +1015,114 @@
       }));
     }catch(e){}
   }
+
+  function loadMonthlyEntries(){
+    try{
+      const raw = localStorage.getItem(LS_MONTHLY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    }catch(e){ return []; }
+  }
+  function saveMonthlyEntries(list){
+    try{
+      const sorted = list
+        .filter(x => x && x.monthKey)
+        .sort((a,b)=> String(b.dateISO || "").localeCompare(String(a.dateISO || "")))
+        .slice(0,400);
+      localStorage.setItem(LS_MONTHLY, JSON.stringify(sorted));
+    }catch(e){}
+  }
+  function previousMonthKey(date = new Date()){
+    const p = getBucharestDateParts(date);
+    let y = p.year;
+    let m = p.month - 1;
+    if(m === 0){ m = 12; y -= 1; }
+    return `${y}-${pad2(m)}`;
+  }
+  function isClosedMonth(monthKey){
+    return String(monthKey || "") < getLocalMonthKey();
+  }
+  function playerIdentity(obj){
+    return [
+      String(obj.name || "").trim().toLowerCase(),
+      String(obj.schoolName || "").trim().toLowerCase(),
+      String(obj.locality || "").trim().toLowerCase()
+    ].join("|");
+  }
+  function recordMonthlyEntry(entry){
+    const list = loadMonthlyEntries();
+    list.push({
+      name: entry.name,
+      className: entry.className,
+      schoolName: entry.schoolName,
+      locality: entry.locality,
+      score: entry.score,
+      weekKey: entry.weekKey,
+      monthKey: entry.monthKey,
+      dateISO: new Date().toISOString()
+    });
+    saveMonthlyEntries(list);
+  }
+  function buildMonthlyBoard(monthKey){
+    const entries = loadMonthlyEntries().filter(x => x.monthKey === monthKey);
+    const grouped = new Map();
+    entries.forEach(e => {
+      const key = playerIdentity(e);
+      if(!grouped.has(key)){
+        grouped.set(key, {
+          name:e.name,
+          className:e.className,
+          schoolName:e.schoolName,
+          locality:e.locality,
+          participations:0,
+          weeks:{},
+          totalScore:0
+        });
+      }
+      const g = grouped.get(key);
+      g.participations += 1;
+      const w = e.weekKey || "fara-saptamana";
+      g.weeks[w] = Math.max(g.weeks[w] || 0, Number(e.score) || 0);
+    });
+    const board = Array.from(grouped.values()).map(g => ({
+      ...g,
+      totalScore:Object.values(g.weeks).reduce((a,b)=>a+b,0)
+    })).sort((a,b)=> b.totalScore - a.totalScore || b.participations - a.participations || String(a.name).localeCompare(String(b.name), "ro"));
+    return board;
+  }
+  function getMonthlyStatsForPlayer(monthKey){
+    const identity = playerIdentity(state);
+    const board = buildMonthlyBoard(monthKey);
+    const idx = board.findIndex(x => playerIdentity(x) === identity);
+    return {
+      monthKey,
+      rank: idx >= 0 ? idx + 1 : "-",
+      total: board.length,
+      entry: idx >= 0 ? board[idx] : null
+    };
+  }
+  function certificateHtml(stats){
+    if(!stats || !stats.entry) return "";
+    const e = stats.entry;
+    return `
+      <div class="certificate" id="diploma">
+        <h2>FELICITĂRI!</h2>
+        <p>Se adeverește prin prezenta că</p>
+        <div class="cert-name">${escapeHtml(e.name || state.name)}</div>
+        <p>
+          de la școala <strong>${escapeHtml(e.schoolName || state.schoolName || "-")}</strong>,
+          din localitatea <strong>${escapeHtml(e.locality || state.locality || "-")}</strong>,
+          a participat la competiția
+          <strong>Campionii fizicii – etapa viteza și densitatea</strong>
+          și s-a clasat pe locul <strong>${stats.rank}</strong>
+          din <strong>${stats.total}</strong> participanți.
+        </p>
+        <p class="small" style="color:#4b5563">Luna competiției: ${escapeHtml(stats.monthKey)} • Participări înregistrate pe acest dispozitiv: ${e.participations}</p>
+        <div class="signature">Semnează: prof. Dănuț Andronie</div>
+      </div>
+    `;
+  }
+
   function loadSettings(){
     try{
       const raw = localStorage.getItem(LS_SETTINGS);
@@ -982,18 +1135,32 @@
   function currentRank(score=state.score){
     const list = state.leaderboard.map(x => ({...x}));
     if(state.name){
-      const existing = list.findIndex(x => !x.bot && x.name === state.name && x.score === score);
+      const existing = list.findIndex(x =>
+        !x.bot &&
+        x.name === state.name &&
+        x.schoolName === state.schoolName &&
+        x.locality === state.locality &&
+        x.score === score
+      );
       if(existing >= 0){
         list[existing].current = true;
         list[existing].name = list[existing].name + " (tu)";
       }else{
-        list.push({name:state.name + " (tu)", className:state.className, score, current:true});
+        list.push({
+          name:state.name + " (tu)",
+          className:state.className,
+          schoolName:state.schoolName,
+          locality:state.locality,
+          score,
+          current:true
+        });
       }
     }
     list.sort((a,b)=> b.score - a.score || String(a.name).localeCompare(String(b.name), "ro"));
     const idx = list.findIndex(x=>x.current);
     return {rank: idx>=0 ? idx+1 : "-", total:list.length, list};
   }
+
   function topLeaders(n=7){
     const r = currentRank();
     return r.list.slice(0,n);
@@ -1020,7 +1187,7 @@
     topTitle.textContent = "Campionii Vitezei și Densității";
     topSubtitle.textContent = `Săptămâna ${getLocalWeekKey()} • luna ${getLocalMonthKey()}`;
     rankPill.textContent = `🏆 Ești pe locul ${r.rank} din ${r.total} jucători`;
-    statName.textContent = state.className ? `${state.name || "-"} • ${state.className}` : (state.name || "-");
+    statName.textContent = [state.name || "-", state.schoolName, state.locality].filter(Boolean).join(" • ");
     statScore.textContent = `${state.score} p`;
     statLevel.textContent = getCurrentLevel();
     statProgress.textContent = `${pct}%`;
@@ -1095,9 +1262,13 @@
   function resetGame(keepName=true, newProblems=false){
     const name = keepName ? state.name : "";
     const className = keepName ? state.className : "";
+    const schoolName = keepName ? state.schoolName : "";
+    const locality = keepName ? state.locality : "";
     state.page = 0;
     state.name = name;
     state.className = className;
+    state.schoolName = schoolName;
+    state.locality = locality;
     state.score = 0;
     state.problemStatus = {};
     state.quickAnswers = {};
@@ -1126,47 +1297,64 @@
     renderMath();
     window.scrollTo({top:0, behavior:"smooth"});
   }
-
   function renderHome(){
     const settings = loadSettings();
     const lastName = state.name || settings.lastName || "";
+    const lastClass = state.className || settings.lastClass || "";
+    const lastSchool = state.schoolName || settings.lastSchool || "";
+    const lastLocality = state.locality || settings.lastLocality || "";
     state.leaderboard = loadLeaderboard();
     const localWeek = getLocalWeekKey();
     const leaders = state.leaderboard.slice().sort((a,b)=> b.score - a.score).slice(0,5);
     const preview = leaders.length ? leaders.map((x,i)=>`
       <div class="leader-row">
         <div class="rank">#${i+1}</div>
-        <div>${escapeHtml(x.name)} <span class="small">${escapeHtml(x.className || "")}</span></div>
+        <div>
+          ${escapeHtml(x.name)}
+          <span class="small">${escapeHtml([x.schoolName, x.locality].filter(Boolean).join(" • "))}</span>
+        </div>
         <div class="score">${x.score} p</div>
       </div>
     `).join("") : `<div class="feedback">Nu există încă rezultate locale pentru săptămâna ${localWeek}.</div>`;
+    const prevStats = getMonthlyStatsForPlayer(previousMonthKey());
+    const certNotice = prevStats.entry && prevStats.entry.participations >= 4
+      ? `<div class="info-box good"><h3>🎓 Diplomă disponibilă</h3><p>Ai cel puțin 4 participări în luna ${previousMonthKey()}. După ce pornești jocul sau finalizezi o tură, diploma poate fi afișată pe telefon.</p></div>`
+      : `<div class="info-box"><h3>🎓 Diplomă lunară</h3><p>La încheierea lunii, dacă ai cel puțin 4 participări, jocul va afișa o diplomă pe telefon.</p></div>`;
     card.innerHTML = `
       <div class="hero">
         <div>
-          <div class="hero-badge">🎮 Joc de fizică • clasa a VI-a</div>
+          <div class="hero-badge">🎮 Joc de fizică • public larg</div>
           <h1>Campionii Vitezei și Densității</h1>
-          <p class="tagline">Rezolvi exerciții pe niveluri, cu date și ordine generate aleator la fiecare joc, primești puncte și vezi imediat pe ce loc ești în clasamentul săptămânii.</p>
+          <p class="tagline">Rezolvi exerciții pe niveluri, cu date și ordine generate aleator la fiecare joc, primești puncte și vezi imediat pe ce loc ești în clasament.</p>
 
           <div class="input-row">
-            <label for="playerName">Numele jucătorului</label>
-            <input id="playerName" type="text" maxlength="24" value="${escapeHtml(lastName)}" placeholder="Ex.: Andrei" autocomplete="off" />
-            <p class="small">Scorul local se păstrează doar pentru săptămâna curentă. Dacă setezi URL-ul Google Apps Script, rezultatul final se trimite în Google Sheets, unde profesorul vede clasamentul săptămânii și clasamentul lunii.</p>
+            <label for="playerName">Numele și prenumele jucătorului</label>
+            <input id="playerName" type="text" maxlength="48" value="${escapeHtml(lastName)}" placeholder="Ex.: Andrei Popescu" autocomplete="off" />
           </div>
 
           <div class="input-row">
             <label for="playerClass">Clasa / grupa</label>
-            <input id="playerClass" type="text" maxlength="12" value="${escapeHtml(settings.lastClass || "")}" placeholder="Ex.: 6A" autocomplete="off" />
+            <input id="playerClass" type="text" maxlength="24" value="${escapeHtml(lastClass)}" placeholder="Ex.: 6A sau juniori" autocomplete="off" />
           </div>
+
+          <div class="input-row">
+            <label for="playerSchool">Școala</label>
+            <input id="playerSchool" type="text" maxlength="80" value="${escapeHtml(lastSchool)}" placeholder="Ex.: Școala Gimnazială ..." autocomplete="organization" />
+          </div>
+
+          <div class="input-row">
+            <label for="playerLocality">Localitatea</label>
+            <input id="playerLocality" type="text" maxlength="60" value="${escapeHtml(lastLocality)}" placeholder="Ex.: Mangalia" autocomplete="address-level2" />
+          </div>
+
+          <p class="small">Poți folosi virgulă sau punct pentru zecimale: <span class="kbd">1,5</span> sau <span class="kbd">1.5</span>.</p>
 
           <div class="lesson-grid">
             <div class="info-box good">
               <h3>🏅 Scor</h3>
-              <p>100 p pentru răspuns corect din prima. Datele se schimbă la fiecare pornire, deci fiecare tură este diferită.</p>
+              <p>100 p pentru răspuns corect din prima. Fiecare tură are date generate aleator.</p>
             </div>
-            <div class="info-box warn">
-              <h3>📈 Ierarhizare săptămânală</h3>
-              <p>După fiecare răspuns, jocul te anunță: „Ești pe locul ... din ... jucători” pentru săptămâna curentă.</p>
-            </div>
+            ${certNotice}
           </div>
 
           <div class="button-row single">
@@ -1186,9 +1374,18 @@
     document.getElementById("startBtn").addEventListener("click", ()=>{
       const input = document.getElementById("playerName").value.trim();
       const classInput = document.getElementById("playerClass").value.trim();
+      const schoolInput = document.getElementById("playerSchool").value.trim();
+      const localityInput = document.getElementById("playerLocality").value.trim();
       state.name = input || "Jucător";
-      state.className = classInput || "clasa a VI-a";
-      saveSettings({lastName:state.name, lastClass:state.className});
+      state.className = classInput || "-";
+      state.schoolName = schoolInput || "-";
+      state.locality = localityInput || "-";
+      saveSettings({
+        lastName:state.name,
+        lastClass:state.className,
+        lastSchool:state.schoolName,
+        lastLocality:state.locality
+      });
       startNewProblemSet();
       state.page = 1;
       state.score = 0;
@@ -1200,14 +1397,12 @@
       state.saved = false;
       render();
     });
-    document.getElementById("playerName").addEventListener("keydown", (e)=>{
-      if(e.key === "Enter") document.getElementById("startBtn").click();
-    });
-    document.getElementById("playerClass").addEventListener("keydown", (e)=>{
-      if(e.key === "Enter") document.getElementById("startBtn").click();
+    ["playerName","playerClass","playerSchool","playerLocality"].forEach(id => {
+      document.getElementById(id).addEventListener("keydown", (e)=>{
+        if(e.key === "Enter") document.getElementById("startBtn").click();
+      });
     });
   }
-
   function renderLesson(item){
     const speed = item.key === "speed";
     const html = speed ? `
@@ -1216,13 +1411,13 @@
       <div class="lesson-grid">
         <div class="info-box">
           <h3>Formula vitezei</h3>
-          <div class="formula">\\[v=\\frac{s}{t}\\]</div>
-          <p>unde \\(s\\) este distanța, iar \\(t\\) este timpul.</p>
+          <div class="formula">\\[v=\\frac{d}{t}\\]</div>
+          <p>unde \\(d\\) este distanța, iar \\(t\\) este timpul.</p>
         </div>
         <div class="info-box">
           <h3>Exemplu numeric</h3>
           <div class="formula">\\[v=\\frac{100\\,m}{20\\,s}=5\\,m/s\\]</div>
-          <p>Transformare: \\(5\\,m/s\\cdot3{,}6=18\\,km/h\\).</p>
+          <p>În unele exerciții va trebui să observi singur dacă datele trebuie transformate înainte de calcul.</p>
         </div>
       </div>
       <div class="info-box warn">
@@ -1240,13 +1435,13 @@
         </div>
         <div class="info-box">
           <h3>Exemplu numeric</h3>
-          <div class="formula">\\[\\rho=\\frac{2\\,kg}{0{,}001\\,m^3}=2000\\,kg/m^3=2\\,g/cm^3\\]</div>
-          <p>Transformare: \\(1000\\,kg/m^3=1\\,g/cm^3\\).</p>
+          <div class="formula">\\[\\rho=\\frac{2\\,kg}{0{,}001\\,m^3}=2000\\,kg/m^3\\]</div>
+          <p>În unele exerciții va trebui să observi singur dacă volumul sau rezultatul trebuie transformat.</p>
         </div>
       </div>
       <div class="info-box warn">
         <h3>Formule derivate</h3>
-        <p>\\(m=\\rho\\cdot V\\) și \\(V=\\frac{m}{\\rho}\\). Pentru volum: \\(1\\,m^3=1\\,000\\,000\\,cm^3\\).</p>
+        <p>\\(m=\\rho\\cdot V\\) și \\(V=\\frac{m}{\\rho}\\).</p>
       </div>
     `;
     card.innerHTML = `
@@ -1259,7 +1454,6 @@
     document.getElementById("nextBtn").addEventListener("click", goNext);
     document.getElementById("backBtn").addEventListener("click", goPrev);
   }
-
   function renderLevel(level){
     const info = levelInfo[level];
     card.innerHTML = `
@@ -1279,7 +1473,7 @@
         </div>
         <div class="info-box warn">
           <h3>Bonus de atenție</h3>
-          <p>Scrie doar numerele. Poți folosi virgulă zecimală, de exemplu <span class="kbd">1,5</span>. Datele sunt generate aleator, au cel mult o zecimală, iar vitezele apar din 0,5 în 0,5 m/s.</p>
+          <p>Scrie doar numerele. Poți folosi virgulă sau punct pentru zecimale, de exemplu <span class="kbd">1,5</span> sau <span class="kbd">1.5</span>.</p>
         </div>
       </div>
       <div class="button-row">
@@ -1290,7 +1484,6 @@
     document.getElementById("nextBtn").addEventListener("click", goNext);
     document.getElementById("backBtn").addEventListener("click", goPrev);
   }
-
   function renderProblem(p){
     const st = statusFor(p.id);
     const feedbackClass = st.feedback ? (st.done ? "ok" : "no") : "";
@@ -1321,7 +1514,6 @@
       <p class="problem-text">${p.text}</p>
 
       <div class="known">${p.known.map(k=>`<span>${k}</span>`).join("")}</div>
-      <div class="formula">${p.formula}</div>
 
       <div class="answers">${inputsHtml}</div>
       <p class="small">Scrie doar valorile numerice. Exemple acceptate: <span class="kbd">2,5</span>, <span class="kbd">2.5</span>, <span class="kbd">12,6</span>.</p>
@@ -1334,7 +1526,7 @@
       <p class="hintline" id="hintLine" style="${st.hint ? "" : "display:none"}">${p.hint}</p>
 
       <div class="feedback ${feedbackClass}" id="feedback">
-        ${st.feedback || "Completează cele două răspunsuri, apoi apasă pe „Verifică răspunsul”."}
+        ${st.feedback || "Completează răspunsurile, apoi apasă pe „Verifică răspunsul”."}
       </div>
       ${solved}
 
@@ -1359,6 +1551,7 @@
     document.getElementById("nextBtn").addEventListener("click", goNext);
     document.getElementById("backBtn").addEventListener("click", goPrev);
   }
+
 
   function checkProblem(p){
     const st = statusFor(p.id);
@@ -1476,7 +1669,6 @@
   function isGoogleSheetsConfigured(){
     return /^https:\/\/script\.google\.com\/macros\/s\//.test(GOOGLE_SCRIPT_URL);
   }
-
   function sendScoreToGoogleSheets(entry){
     if(!isGoogleSheetsConfigured()){
       state.onlineStatus = "Clasamentul Google Sheets nu este activat încă. Completează GOOGLE_SCRIPT_URL în fișierul HTML.";
@@ -1485,11 +1677,14 @@
 
     const solved = Object.values(state.problemStatus).filter(x=>x.done).length;
     const strong = Object.values(state.problemStatus).filter(x=>x.done && x.points>=50).length;
+    const currentMonthStats = getMonthlyStatsForPlayer(getLocalMonthKey());
     const payload = {
       key: ONLINE_KEY,
-      game: "Campionii Vitezei și Densității",
+      game: "Campionii fizicii - etapa viteza și densitatea",
       name: entry.name,
-      className: state.className || "clasa a VI-a",
+      className: state.className || "-",
+      schoolName: state.schoolName || "-",
+      locality: state.locality || "-",
       score: entry.score,
       maxScore: state.maxScore,
       problemsSolved: solved,
@@ -1498,6 +1693,7 @@
       localWeekKey: getLocalWeekKey(),
       localMonthKey: getLocalMonthKey(),
       timeZone: TIME_ZONE,
+      monthlyParticipationsOnDevice: currentMonthStats.entry ? currentMonthStats.entry.participations : 1,
       pageUrl: location.href,
       problemSetId: state.problemSetId || "",
       problemOrder: (state.problemOrder || []).join(","),
@@ -1520,14 +1716,16 @@
       if(el) el.textContent = state.onlineStatus;
     });
   }
-
   function saveFinalScore(){
     if(state.saved) return;
     const entry = {
       name: state.name || "Jucător",
-      className: state.className || "clasa a VI-a",
+      className: state.className || "-",
+      schoolName: state.schoolName || "-",
+      locality: state.locality || "-",
       score: state.score,
       date: new Date().toLocaleDateString("ro-RO"),
+      dateISO: new Date().toISOString(),
       weekKey: getLocalWeekKey(),
       monthKey: getLocalMonthKey(),
       bot:false
@@ -1536,25 +1734,54 @@
     state.leaderboard.sort((a,b)=> b.score - a.score);
     state.leaderboard = state.leaderboard.slice(0,80);
     saveLeaderboard(state.leaderboard);
+    recordMonthlyEntry(entry);
     state.saved = true;
     sendScoreToGoogleSheets(entry);
   }
-
   function renderFinal(){
     saveFinalScore();
     const rankList = state.leaderboard.slice().sort((a,b)=> b.score - a.score || String(a.name).localeCompare(String(b.name), "ro"));
-    const myIndex = rankList.findIndex(x=>!x.bot && x.name === state.name && x.score === state.score);
+    const myIndex = rankList.findIndex(x =>
+      !x.bot &&
+      x.name === state.name &&
+      x.schoolName === state.schoolName &&
+      x.locality === state.locality &&
+      x.score === state.score
+    );
     const rank = myIndex >= 0 ? myIndex + 1 : currentRank().rank;
     const total = rankList.length;
     const accuracy = Math.round((Object.values(state.problemStatus).filter(x=>x.done && x.points>=50).length / 12) * 100);
     const top = rankList.slice(0,10).map((x,i)=>`
       <div class="leader-row ${i===myIndex?'me':''}">
         <div class="rank">#${i+1}</div>
-        <div>${escapeHtml(x.name)} ${x.bot?'<span class="small">demo</span>':''}</div>
+        <div>
+          ${escapeHtml(x.name)} ${x.bot?'<span class="small">demo</span>':''}
+          <span class="small">${escapeHtml([x.schoolName, x.locality].filter(Boolean).join(" • "))}</span>
+        </div>
         <div class="score">${x.score} p</div>
       </div>
     `).join("");
     let medal = rank === 1 ? "🥇" : rank <= 3 ? "🥈" : rank <= 10 ? "🏅" : "🎯";
+
+    const currentMonth = getLocalMonthKey();
+    const currentStats = getMonthlyStatsForPlayer(currentMonth);
+    const previousStats = getMonthlyStatsForPlayer(previousMonthKey());
+    let certificateBlock = "";
+    let certificateButton = "";
+    if(previousStats.entry && previousStats.entry.participations >= 4){
+      certificateBlock = certificateHtml(previousStats);
+      certificateButton = `<button class="btn warning" id="printDiplomaBtn">Afișează / tipărește diploma</button>`;
+    }else{
+      const participations = currentStats.entry ? currentStats.entry.participations : 0;
+      const needed = Math.max(0, 4 - participations);
+      certificateBlock = `
+        <div class="info-box warn" style="margin-top:16px">
+          <h3>🎓 Diploma lunară</h3>
+          <p>Participări în luna ${currentMonth}: <strong>${participations}</strong>. ${needed === 0 ? "Ai numărul necesar de participări; diploma se va afișa după încheierea lunii." : `Mai ai nevoie de ${needed} participări pentru diplomă.`}</p>
+        </div>
+      `;
+    }
+
     card.innerHTML = `
       <div class="avatar-board" style="min-height:auto; margin-bottom:14px">
         <div class="big-icon">${medal}</div>
@@ -1579,19 +1806,31 @@
       <h2>Clasament local – săptămâna curentă</h2>
       <div class="leaderboard">${top}</div>
 
+      ${certificateBlock}
+
       <div class="button-row">
         <button class="btn success" id="againBtn">Joacă din nou</button>
-        <button class="btn secondary" id="resetRankBtn">Resetează clasamentul local al săptămânii</button>
+        ${certificateButton || '<button class="btn secondary" id="resetRankBtn">Resetează clasamentul local al săptămânii</button>'}
       </div>
+      ${certificateButton ? '<div class="button-row single"><button class="btn secondary" id="resetRankBtn">Resetează clasamentul local al săptămânii</button></div>' : ''}
     `;
     document.getElementById("againBtn").addEventListener("click", ()=>{
       resetGame(true, true);
       state.page = 1;
       render();
     });
+    const printBtn = document.getElementById("printDiplomaBtn");
+    if(printBtn){
+      printBtn.addEventListener("click", ()=>{
+        const diploma = document.getElementById("diploma");
+        if(diploma){ diploma.scrollIntoView({behavior:"smooth", block:"center"}); }
+        setTimeout(()=>window.print(), 400);
+      });
+    }
     document.getElementById("resetRankBtn").addEventListener("click", resetLeaderboard);
     updateTop();
   }
+
 
   state.leaderboard = loadLeaderboard();
   render();

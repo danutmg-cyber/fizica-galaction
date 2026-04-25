@@ -646,8 +646,8 @@
     3. Copiază URL-ul care se termină în /exec și pune-l între ghilimelele de mai jos.
     Clasamentul din Google Sheets se resetează automat săptămânal și are și clasament lunar.
   */
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxCSfxRaU_5wiu555kA347-BLp0GNbyHFmY4JBIUp2RXaAcZl5VDsT1hBpXwA9WDrI1FQ/exec";
-  const ONLINE_KEY = "FIZICA_GALACTION_VITEZA_DENSITATE";
+  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxCSfxRaU_5wiu555kA347-BLpOGNbyHFmY4JBIUp2RXaAcZ15VDsT1hBpXwA9WDrI1FO/exec";
+  const ONLINE_KEY = "FIZICA_GALACTION_VITEZA_DENSITATE_2026";
   const TIME_ZONE = "Europe/Bucharest";
   const ADMIN_MODE = new URLSearchParams(window.location.search).get("admin") === "1" || window.location.hash === "#admin";
 
@@ -690,6 +690,20 @@
   }
   function mathNum(n){
     return roNum(n);
+  }
+  function resultNum(n){
+    const v = Number(n);
+    if(!Number.isFinite(v)) return "";
+    let decimals = 3;
+    if(Number.isInteger(v)) decimals = 0;
+    else if(Math.abs(v) >= 100) decimals = 1;
+    else if(Math.abs(v) < 1) decimals = 4;
+    return String(Number(v.toFixed(decimals))).replace(".", ",");
+  }
+  function truncateOneDecimal(n){
+    const v = Number(n);
+    if(!Number.isFinite(v)) return NaN;
+    return v >= 0 ? Math.floor((v + Number.EPSILON) * 10) / 10 : Math.ceil((v - Number.EPSILON) * 10) / 10;
   }
   function chooseCombo(list, predicate){
     const shuffled = shuffleArray(list);
@@ -786,17 +800,22 @@
 
 
   function densityCombos(){
-    const rhoG = [0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.5,1.8,2,2.5,3];
+    const rhoGTargets = [0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.5,1.8,2,2.5,3];
     const volumes = [0.5,1,1.5,2,2.5,3,4,5,6,8,10];
     const combos = [];
-    rhoG.forEach(rg => volumes.forEach(vdm3 => {
+    rhoGTargets.forEach(rg => volumes.forEach(vdm3 => {
       const mass = oneDec(rg * vdm3);
-      if(hasMaxOneDecimal(mass)){
+      if(hasMaxOneDecimal(mass) && mass > 0){
+        const vm3 = vdm3 * 0.001;
+        const actualRhoG = mass / vdm3;
+        const actualRhoSI = actualRhoG * 1000;
         combos.push({
-          rhoG:rg,
-          rhoSI:Math.round(rg*1000),
+          rhoG: actualRhoG,
+          rhoSI: actualRhoSI,
+          rhoTargetG: rg,
+          rhoTargetSI: Math.round(rg * 1000),
           vdm3,
-          vm3:vdm3 * 0.001,
+          vm3,
           mass
         });
       }
@@ -816,7 +835,7 @@
         {key:"conv", label:"Densitatea în g/cm³", unit:"g/cm³", answer:c.rhoG, tol:0.01}
       ],
       hint:"Înainte de calcul, verifică unitatea volumului cerută de SI.",
-      solution:`Pentru SI: \\(${mathNum(c.vdm3)}\\,dm^3=${String(c.vm3).replace(".", ",")}\\,m^3\\). \\(\\rho=\\frac{m}{V}=\\frac{${mathNum(c.mass)}}{${String(c.vm3).replace(".", ",")}}=${mathNum(c.rhoSI)}\\,kg/m^3\\). În g/cm³: \\(${mathNum(c.rhoSI)}\\,kg/m^3=${mathNum(c.rhoG)}\\,g/cm^3\\).`
+      solution:`Pentru SI: \\(${mathNum(c.vdm3)}\\,dm^3=${String(c.vm3).replace(".", ",")}\\,m^3\\). \\(\\rho=\\frac{m}{V}=\\frac{${mathNum(c.mass)}}{${String(c.vm3).replace(".", ",")}}=${resultNum(c.rhoSI)}\\,kg/m^3\\). În g/cm³: \\(${resultNum(c.rhoSI)}\\,kg/m^3=${resultNum(c.rhoG)}\\,g/cm^3\\). Dacă lucrezi cu o singură zecimală, este acceptat și răspunsul rotunjit sau tăiat la o zecimală.`
     };
   }
   function makeMassProblem(id, opts){
@@ -1461,8 +1480,23 @@
   }
   function closeEnough(value, answer, tol){
     if(!Number.isFinite(value)) return false;
-    const tolerance = Math.max(tol || 0.0001, Math.abs(answer) * 0.005);
-    return Math.abs(value - answer) <= tolerance;
+
+    const exactTolerance = Math.max(tol || 0.0001, Math.abs(answer) * 0.000001);
+    if(Math.abs(value - answer) <= exactTolerance) return true;
+
+    /* 
+      Pentru rezultate cu mai multe zecimale acceptăm:
+      - răspunsul exact, scris cu mai multe zecimale;
+      - răspunsul rotunjit la o zecimală;
+      - răspunsul tăiat la o zecimală.
+      Exemplu: 1133,333... este acceptat ca 1133,333, 1133,3.
+    */
+    const roundedOneDecimal = oneDec(answer);
+    const truncatedOneDecimal = truncateOneDecimal(answer);
+    const oneDecimalTolerance = Math.max(0.0001, Math.abs(answer) * 0.000001);
+
+    return Math.abs(value - roundedOneDecimal) <= oneDecimalTolerance ||
+           Math.abs(value - truncatedOneDecimal) <= oneDecimalTolerance;
   }
   function formatNumber(n){
     if(Math.abs(n) < 0.01 && n !== 0) return String(n).replace(".", ",");
@@ -1781,7 +1815,7 @@
       <div class="known">${p.known.map(k=>`<span>${k}</span>`).join("")}</div>
 
       <div class="answers">${inputsHtml}</div>
-      <p class="small">Scrie doar valorile numerice. Ai o singură încercare. Exemple acceptate: <span class="kbd">2,5</span>, <span class="kbd">2.5</span>, <span class="kbd">12,6</span>.</p>
+      <p class="small">Scrie doar valorile numerice. Ai o singură încercare. Poți folosi virgulă sau punct: <span class="kbd">2,5</span> / <span class="kbd">2.5</span>. Dacă rezultatul are mai multe zecimale, este acceptat și cu mai multe zecimale, și cu o singură zecimală rotunjită sau tăiată.</p>
 
       <div class="button-row">
         <button class="btn warning" id="hintBtn" ${st.done || st.hint ? "disabled" : ""}>Indiciu −${tierPoints(10)} p</button>

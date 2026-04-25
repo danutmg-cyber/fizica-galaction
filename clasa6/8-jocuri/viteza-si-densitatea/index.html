@@ -1,1 +1,1601 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Campionii Vitezei și Densității | Joc Fizică clasa a VI-a</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']], displayMath: [['\\[','\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    :root{
+      --bg:#0f172a;
+      --bg2:#111827;
+      --card:#1e293b;
+      --card2:#243145;
+      --text:#f8fafc;
+      --muted:#dbeafe;
+      --muted2:#cbd5e1;
+      --primary:#22d3ee;
+      --primary-dark:#0891b2;
+      --success:#22c55e;
+      --success-dark:#15803d;
+      --danger:#fb7185;
+      --danger-dark:#be123c;
+      --warning:#fbbf24;
+      --line:#334155;
+      --btn-text:#082f49;
+      --shadow:0 22px 70px rgba(0,0,0,.35);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html,body{min-height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34,211,238,.14), transparent 34rem),
+        radial-gradient(circle at bottom right, rgba(34,197,94,.12), transparent 28rem),
+        var(--bg);
+      color:var(--text);
+      line-height:1.5;
+    }
+    button,input{font:inherit}
+    .app{
+      width:min(100%, 980px);
+      margin:0 auto;
+      padding:14px;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:20;
+      background:rgba(15,23,42,.92);
+      backdrop-filter: blur(12px);
+      border:1px solid rgba(148,163,184,.2);
+      border-radius:0 0 18px 18px;
+      padding:10px 12px;
+      box-shadow:0 10px 30px rgba(0,0,0,.18);
+    }
+    .toprow{
+      display:grid;
+      grid-template-columns: 1fr auto;
+      gap:10px;
+      align-items:center;
+    }
+    h1,h2,h3,p{margin-top:0}
+    h1{
+      font-size:clamp(1.45rem, 5vw, 2.35rem);
+      line-height:1.1;
+      margin-bottom:8px;
+      letter-spacing:-.02em;
+    }
+    h2{
+      font-size:clamp(1.22rem, 4vw, 1.75rem);
+      line-height:1.15;
+      margin-bottom:10px;
+    }
+    h3{font-size:1.05rem;margin-bottom:6px}
+    .tagline{color:var(--muted2); margin:0; font-size:.95rem}
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(34,211,238,.35);
+      background:rgba(34,211,238,.1);
+      color:#e0faff;
+      font-weight:700;
+      font-size:.86rem;
+      white-space:nowrap;
+    }
+    .stats{
+      display:grid;
+      grid-template-columns: repeat(4, minmax(0,1fr));
+      gap:8px;
+      margin-top:10px;
+    }
+    .stat{
+      background:rgba(30,41,59,.82);
+      border:1px solid rgba(148,163,184,.18);
+      border-radius:14px;
+      padding:8px;
+      min-width:0;
+    }
+    .stat small{
+      display:block;
+      color:#cbd5e1;
+      font-size:.72rem;
+      line-height:1.1;
+      margin-bottom:3px;
+    }
+    .stat strong{
+      display:block;
+      font-size:.98rem;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+    .progress-wrap{
+      height:10px;
+      border-radius:99px;
+      background:#020617;
+      overflow:hidden;
+      border:1px solid rgba(148,163,184,.15);
+      margin-top:10px;
+    }
+    .progress{
+      height:100%;
+      width:0%;
+      border-radius:99px;
+      background:linear-gradient(90deg, var(--primary), var(--success));
+      transition:width .25s ease;
+    }
+    .screen{
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:10px 0 18px;
+    }
+    .card{
+      width:100%;
+      background:linear-gradient(180deg, rgba(30,41,59,.98), rgba(30,41,59,.92));
+      border:1px solid rgba(148,163,184,.25);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:clamp(16px, 4vw, 28px);
+      overflow:hidden;
+    }
+    .hero{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:18px;
+      align-items:center;
+    }
+    .hero-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(251,191,36,.12);
+      color:#fde68a;
+      border:1px solid rgba(251,191,36,.35);
+      font-weight:800;
+      margin-bottom:12px;
+    }
+    .avatar-board{
+      background:
+        linear-gradient(135deg, rgba(34,211,238,.18), rgba(34,197,94,.12)),
+        #0f172a;
+      border:1px solid rgba(34,211,238,.24);
+      border-radius:22px;
+      padding:18px;
+      text-align:center;
+      min-height:260px;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      overflow:hidden;
+    }
+    .avatar-board:before{
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background:conic-gradient(from 0deg, transparent, rgba(34,211,238,.16), transparent, rgba(34,197,94,.16), transparent);
+      animation:spin 10s linear infinite;
+    }
+    @keyframes spin{to{transform:rotate(360deg)}}
+    .avatar-board > *{position:relative}
+    .big-icon{
+      font-size:4.4rem;
+      filter:drop-shadow(0 12px 20px rgba(0,0,0,.32));
+      margin-bottom:10px;
+    }
+    .input-row{
+      display:grid;
+      gap:8px;
+      margin:16px 0;
+    }
+    label{font-weight:750;color:#eff6ff}
+    input[type="text"], input[type="number"]{
+      width:100%;
+      border:2px solid #475569;
+      border-radius:15px;
+      background:#0b1220;
+      color:var(--text);
+      padding:14px 14px;
+      outline:none;
+      min-height:52px;
+    }
+    input[type="text"]:focus, input[type="number"]:focus{
+      border-color:var(--primary);
+      box-shadow:0 0 0 4px rgba(34,211,238,.13);
+    }
+    .button-row{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+      margin-top:16px;
+      align-items:stretch;
+    }
+    .button-row.single{grid-template-columns:1fr}
+    .btn{
+      width:100%;
+      min-height:54px;
+      border:0;
+      border-radius:15px;
+      padding:13px 16px;
+      font-weight:900;
+      cursor:pointer;
+      transition:transform .08s ease, filter .12s ease, opacity .12s ease;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      text-align:center;
+    }
+    .btn:hover{filter:brightness(1.04)}
+    .btn:active{transform:translateY(1px)}
+    .btn:disabled{
+      opacity:.56;
+      cursor:not-allowed;
+      filter:saturate(.7);
+    }
+    .primary{background:var(--primary);color:var(--btn-text)}
+    .success{background:var(--success);color:#052e16}
+    .warning{background:var(--warning);color:#422006}
+    .danger{background:var(--danger);color:#fff}
+    .secondary{
+      background:#334155;
+      color:#f8fafc;
+      border:1px solid rgba(148,163,184,.24);
+    }
+    .lesson-grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap:12px;
+      margin:14px 0;
+    }
+    .info-box{
+      background:#0f172a;
+      border:1px solid rgba(148,163,184,.22);
+      border-radius:18px;
+      padding:14px;
+    }
+    .info-box.good{
+      border-color:rgba(34,197,94,.45);
+      background:rgba(34,197,94,.08);
+    }
+    .info-box.warn{
+      border-color:rgba(251,191,36,.45);
+      background:rgba(251,191,36,.08);
+    }
+    .formula{
+      font-size:1.08rem;
+      background:rgba(14,165,233,.11);
+      border:1px solid rgba(34,211,238,.35);
+      border-radius:18px;
+      padding:12px;
+      margin:10px 0;
+      overflow-x:auto;
+    }
+    .level-banner{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      background:linear-gradient(90deg, rgba(34,211,238,.13), rgba(34,197,94,.1));
+      border:1px solid rgba(34,211,238,.28);
+      border-radius:18px;
+      padding:12px;
+      margin-bottom:12px;
+    }
+    .level-name{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:950;
+    }
+    .level-num{
+      width:42px;
+      height:42px;
+      border-radius:13px;
+      display:grid;
+      place-items:center;
+      background:var(--primary);
+      color:#083344;
+      font-size:1.25rem;
+      flex:0 0 auto;
+    }
+    .problem-text{
+      font-size:clamp(1.05rem, 3.6vw, 1.28rem);
+      font-weight:750;
+      margin:10px 0 10px;
+      color:#fff;
+    }
+    .known{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin:10px 0;
+    }
+    .known span{
+      background:#0f172a;
+      border:1px solid rgba(148,163,184,.24);
+      padding:7px 10px;
+      border-radius:999px;
+      color:#e0f2fe;
+      font-weight:750;
+    }
+    .answers{
+      display:grid;
+      gap:12px;
+      margin-top:12px;
+    }
+    .answer-row{
+      display:grid;
+      grid-template-columns: minmax(0, 1fr) 110px;
+      gap:8px;
+      align-items:end;
+      background:rgba(15,23,42,.62);
+      border:1px solid rgba(148,163,184,.15);
+      border-radius:16px;
+      padding:10px;
+    }
+    .answer-row input{
+      text-align:center;
+      font-size:1.1rem;
+      font-weight:800;
+    }
+    .unit{
+      min-height:52px;
+      display:grid;
+      place-items:center;
+      background:#172033;
+      border:1px solid #475569;
+      border-radius:14px;
+      color:#fef3c7;
+      font-weight:950;
+      padding:0 8px;
+    }
+    .hintline{
+      color:#fde68a;
+      font-weight:750;
+      margin:10px 0 0;
+    }
+    .feedback{
+      margin-top:14px;
+      border-radius:16px;
+      padding:12px;
+      min-height:48px;
+      border:1px solid rgba(148,163,184,.18);
+      background:#0f172a;
+    }
+    .feedback.ok{
+      border-color:rgba(34,197,94,.45);
+      background:rgba(34,197,94,.12);
+      color:#dcfce7;
+    }
+    .feedback.no{
+      border-color:rgba(251,113,133,.45);
+      background:rgba(251,113,133,.12);
+      color:#ffe4e6;
+    }
+    .solution{
+      margin-top:12px;
+      background:rgba(34,211,238,.08);
+      border:1px solid rgba(34,211,238,.28);
+      border-radius:16px;
+      padding:12px;
+      overflow-x:auto;
+    }
+    .quick-grid{
+      display:grid;
+      gap:12px;
+      margin:14px 0;
+    }
+    .quick-item{
+      background:#0f172a;
+      border:1px solid rgba(148,163,184,.25);
+      border-radius:18px;
+      padding:12px;
+    }
+    .variants{
+      display:grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap:8px;
+      margin-top:8px;
+    }
+    .variant{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      min-height:48px;
+      padding:9px;
+      border:1px solid #475569;
+      border-radius:13px;
+      background:#172033;
+      cursor:pointer;
+      color:#f8fafc;
+      font-weight:700;
+    }
+    .variant input{accent-color:#22d3ee}
+    .leaderboard{
+      display:grid;
+      gap:8px;
+      margin-top:12px;
+    }
+    .leader-row{
+      display:grid;
+      grid-template-columns: 56px 1fr 90px;
+      gap:8px;
+      align-items:center;
+      border:1px solid rgba(148,163,184,.2);
+      background:#0f172a;
+      border-radius:14px;
+      padding:10px;
+    }
+    .leader-row.me{
+      border-color:rgba(34,197,94,.5);
+      background:rgba(34,197,94,.12);
+    }
+    .rank{
+      font-weight:950;
+      color:#fde68a;
+    }
+    .score{
+      text-align:right;
+      font-weight:950;
+      color:#bbf7d0;
+    }
+    .small{
+      color:var(--muted2);
+      font-size:.9rem;
+    }
+    .kbd{
+      font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background:#020617;
+      border:1px solid rgba(148,163,184,.3);
+      padding:2px 6px;
+      border-radius:7px;
+      color:#fef3c7;
+    }
+    .toast{
+      position:fixed;
+      left:50%;
+      bottom:18px;
+      transform:translateX(-50%);
+      width:min(calc(100% - 28px), 560px);
+      z-index:50;
+      background:#020617;
+      color:#fff;
+      border:1px solid rgba(34,211,238,.4);
+      box-shadow:0 20px 50px rgba(0,0,0,.35);
+      border-radius:16px;
+      padding:12px;
+      display:none;
+      font-weight:800;
+      text-align:center;
+    }
+    .toast.show{display:block}
+    .confetti{
+      pointer-events:none;
+      position:fixed;
+      inset:0;
+      overflow:hidden;
+      z-index:60;
+    }
+    .confetti span{
+      position:absolute;
+      width:9px;
+      height:14px;
+      top:-20px;
+      opacity:.9;
+      animation:fall 1.35s linear forwards;
+    }
+    @keyframes fall{
+      to{transform:translateY(110vh) rotate(720deg)}
+    }
+    @media (max-width:760px){
+      .hero{grid-template-columns:1fr}
+      .stats{grid-template-columns: repeat(2, minmax(0,1fr))}
+      .lesson-grid{grid-template-columns:1fr}
+      .button-row{grid-template-columns:1fr}
+      .answer-row{grid-template-columns:1fr}
+      .unit{min-height:44px}
+      .variants{grid-template-columns:1fr}
+      .leader-row{grid-template-columns:44px 1fr 70px}
+      .toprow{grid-template-columns:1fr}
+      .pill{justify-content:center}
+      .app{padding:8px}
+      .card{border-radius:18px}
+    }
+    @media (prefers-reduced-motion: reduce){
+      *{animation:none !important; transition:none !important}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar" id="topbar" style="display:none">
+      <div class="toprow">
+        <div>
+          <strong id="topTitle">Campionii Vitezei și Densității</strong>
+          <p class="tagline" id="topSubtitle">Antrenament pentru clasa a VI-a</p>
+        </div>
+        <div class="pill" id="rankPill">🏆 Locul - din - jucători</div>
+      </div>
+      <div class="stats">
+        <div class="stat"><small>Jucător</small><strong id="statName">-</strong></div>
+        <div class="stat"><small>Scor</small><strong id="statScore">0 p</strong></div>
+        <div class="stat"><small>Nivel</small><strong id="statLevel">-</strong></div>
+        <div class="stat"><small>Progres</small><strong id="statProgress">0%</strong></div>
+      </div>
+      <div class="progress-wrap" aria-label="Progresul jocului"><div class="progress" id="progress"></div></div>
+    </header>
 
+    <main class="screen">
+      <section class="card" id="screenCard"></section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="confetti" id="confetti"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /*
+    CONECTARE LA GOOGLE SHEETS
+    1. Creează un Google Apps Script cu fișierul Code_saptamanal_lunar.gs primit.
+    2. Publică scriptul ca Web app.
+    3. Copiază URL-ul care se termină în /exec și pune-l între ghilimelele de mai jos.
+    Clasamentul din Google Sheets se resetează automat săptămânal și are și clasament lunar.
+  */
+  const GOOGLE_SCRIPT_URL = "PUNE_AICI_URL_WEB_APP_GOOGLE_APPS_SCRIPT";
+  const ONLINE_KEY = "FIZICA_GALACTION_VITEZA_DENSITATE_2026";
+  const TIME_ZONE = "Europe/Bucharest";
+
+
+  const PROBLEM_COUNT = 12;
+  let problems = [];
+  let sequence = [{type:"home"}];
+
+  function randomUnit(){
+    if(window.crypto && window.crypto.getRandomValues){
+      const a = new Uint32Array(1);
+      window.crypto.getRandomValues(a);
+      return a[0] / 4294967296;
+    }
+    return Math.random();
+  }
+  function randInt(min, max){
+    return Math.floor(randomUnit() * (max - min + 1)) + min;
+  }
+  function pick(arr){
+    return arr[randInt(0, arr.length - 1)];
+  }
+  function shuffleArray(arr){
+    const copy = arr.slice();
+    for(let i = copy.length - 1; i > 0; i--){
+      const j = randInt(0, i);
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+  function oneDec(n){
+    return Math.round((Number(n) + Number.EPSILON) * 10) / 10;
+  }
+  function hasMaxOneDecimal(n){
+    return Math.abs(oneDec(n) - Number(n)) < 1e-9;
+  }
+  function roNum(n){
+    const fixed = hasMaxOneDecimal(n) ? oneDec(n) : Number(n.toFixed(3));
+    return String(fixed).replace(".", ",");
+  }
+  function mathNum(n){
+    return roNum(n);
+  }
+  function chooseCombo(list, predicate){
+    const shuffled = shuffleArray(list);
+    return shuffled.find(predicate) || list.find(predicate) || list[0];
+  }
+  function speedToKmh(v){
+    return oneDec(v * 3.6);
+  }
+  function makeId(){
+    return `${Date.now().toString(36)}-${Math.floor(randomUnit()*1e9).toString(36)}`;
+  }
+
+  function makeSpeedProblem(id, opts){
+    const speeds = [];
+    for(let v = opts.minV; v <= opts.maxV + 0.001; v += 0.5) speeds.push(oneDec(v));
+    const times = opts.times;
+    const combos = [];
+    speeds.forEach(v => times.forEach(tMin => {
+      const tSec = oneDec(tMin * 60);
+      const s = oneDec(v * tSec);
+      if(hasMaxOneDecimal(s) && hasMaxOneDecimal(speedToKmh(v))){
+        combos.push({v, tMin, tSec, s, kmh:speedToKmh(v)});
+      }
+    }));
+    const c = pick(combos);
+    return {
+      id, level: 1, icon: opts.icon, levelName:"Nivelul 1 – Pilotul vitezei", difficulty:"ușor",
+      title: opts.title,
+      text:`${opts.subject} parcurge ${roNum(c.s)} m în ${roNum(c.tMin)} min. Determină viteza în SI și transformă în km/h.`,
+      known:[`s = ${roNum(c.s)} m`, `t = ${roNum(c.tMin)} min = ${roNum(c.tSec)} s`],
+      formula:"\\(v=\\frac{s}{t}\\), apoi \\(1\\,m/s=3{,}6\\,km/h\\)",
+      inputs:[
+        {key:"si", label:"Viteza în SI", unit:"m/s", answer:c.v, tol:0.01},
+        {key:"conv", label:"Viteza transformată", unit:"km/h", answer:c.kmh, tol:0.02}
+      ],
+      hint:`Transformă mai întâi minutele în secunde: ${roNum(c.tMin)} min = ${roNum(c.tSec)} s.`,
+      solution:`\\(t=${mathNum(c.tMin)}\\,min=${mathNum(c.tSec)}\\,s\\). \\(v=\\frac{${mathNum(c.s)}}{${mathNum(c.tSec)}}=${mathNum(c.v)}\\,m/s\\). \\(${mathNum(c.v)}\\cdot3{,}6=${mathNum(c.kmh)}\\,km/h\\).`
+    };
+  }
+
+  function makeDistanceProblem(id, opts){
+    const speeds = [];
+    for(let v = opts.minV; v <= opts.maxV + 0.001; v += 0.5) speeds.push(oneDec(v));
+    const times = opts.times;
+    const combos = [];
+    speeds.forEach(v => times.forEach(tMin => {
+      const tSec = oneDec(tMin * 60);
+      const s = oneDec(v * tSec);
+      const km = oneDec(s / 1000);
+      if(hasMaxOneDecimal(s) && hasMaxOneDecimal(km) && Math.abs(km*1000 - s) < 1e-7){
+        combos.push({v, tMin, tSec, s, km});
+      }
+    }));
+    const c = pick(combos);
+    return {
+      id, level: 2, icon: opts.icon, levelName:"Nivelul 2 – Navigatorul distanței și timpului", difficulty:"mediu",
+      title: opts.title,
+      text:`${opts.subject} merge cu ${roNum(c.v)} m/s timp de ${roNum(c.tMin)} min. Determină distanța în SI și transformă în km.`,
+      known:[`v = ${roNum(c.v)} m/s`, `t = ${roNum(c.tMin)} min = ${roNum(c.tSec)} s`],
+      formula:"\\(s=v\\cdot t\\), apoi \\(1\\,km=1000\\,m\\)",
+      inputs:[
+        {key:"si", label:"Distanța în SI", unit:"m", answer:c.s, tol:0.5},
+        {key:"conv", label:"Distanța transformată", unit:"km", answer:c.km, tol:0.01}
+      ],
+      hint:"Timpul se pune în secunde pentru SI, apoi înmulțești viteza cu timpul.",
+      solution:`\\(t=${mathNum(c.tMin)}\\,min=${mathNum(c.tSec)}\\,s\\). \\(s=v\\cdot t=${mathNum(c.v)}\\cdot${mathNum(c.tSec)}=${mathNum(c.s)}\\,m\\). \\(${mathNum(c.s)}\\,m=${mathNum(c.km)}\\,km\\).`
+    };
+  }
+
+  function makeTimeProblem(id, opts){
+    const speeds = [];
+    for(let v = opts.minV; v <= opts.maxV + 0.001; v += 0.5) speeds.push(oneDec(v));
+    const times = opts.times;
+    const combos = [];
+    speeds.forEach(v => times.forEach(tMin => {
+      const tSec = oneDec(tMin * 60);
+      const s = oneDec(v * tSec);
+      if(hasMaxOneDecimal(s) && hasMaxOneDecimal(tMin)){
+        combos.push({v, tMin, tSec, s});
+      }
+    }));
+    const c = pick(combos);
+    return {
+      id, level: 2, icon: opts.icon, levelName:"Nivelul 2 – Navigatorul distanței și timpului", difficulty:"mediu",
+      title: opts.title,
+      text:`${opts.subject} parcurge ${roNum(c.s)} m cu viteza ${roNum(c.v)} m/s. Determină timpul în SI și transformă în minute.`,
+      known:[`s = ${roNum(c.s)} m`, `v = ${roNum(c.v)} m/s`],
+      formula:"\\(t=\\frac{s}{v}\\), apoi \\(1\\,min=60\\,s\\)",
+      inputs:[
+        {key:"si", label:"Timpul în SI", unit:"s", answer:c.tSec, tol:0.5},
+        {key:"conv", label:"Timpul transformat", unit:"min", answer:c.tMin, tol:0.01}
+      ],
+      hint:"Împarte distanța la viteză, apoi împarte secundele la 60.",
+      solution:`\\(t=\\frac{${mathNum(c.s)}}{${mathNum(c.v)}}=${mathNum(c.tSec)}\\,s\\). \\(${mathNum(c.tSec)}:60=${mathNum(c.tMin)}\\,min\\).`
+    };
+  }
+
+  function densityCombos(){
+    const rhoG = [0.5,0.6,0.7,0.8,0.9,1,1.1,1.2,1.5,1.8,2,2.5,3];
+    const volumes = [0.5,1,1.5,2,2.5,3,4,5,6,8,10];
+    const combos = [];
+    rhoG.forEach(rg => volumes.forEach(vdm3 => {
+      const mass = oneDec(rg * vdm3);
+      if(hasMaxOneDecimal(mass)){
+        combos.push({
+          rhoG:rg,
+          rhoSI:Math.round(rg*1000),
+          vdm3,
+          vm3:vdm3 * 0.001,
+          mass
+        });
+      }
+    }));
+    return combos;
+  }
+
+  function makeDensityProblem(id, opts){
+    const c = pick(densityCombos().filter(x => x.rhoG >= opts.minRhoG && x.rhoG <= opts.maxRhoG));
+    return {
+      id, level: 3, icon: opts.icon, levelName:"Nivelul 3 – Detectivul densității", difficulty:"mediu",
+      title: opts.title,
+      text:`${opts.subject} are masa ${roNum(c.mass)} kg și volumul ${roNum(c.vdm3)} dm³. Determină densitatea în SI și transformă în g/cm³.`,
+      known:[`m = ${roNum(c.mass)} kg`, `V = ${roNum(c.vdm3)} dm³`],
+      formula:"\\(\\rho=\\frac{m}{V}\\), \\(1\\,dm^3=0{,}001\\,m^3\\), apoi \\(1000\\,kg/m^3=1\\,g/cm^3\\)",
+      inputs:[
+        {key:"si", label:"Densitatea în SI", unit:"kg/m³", answer:c.rhoSI, tol:1},
+        {key:"conv", label:"Densitatea transformată", unit:"g/cm³", answer:c.rhoG, tol:0.01}
+      ],
+      hint:`Transformă volumul: ${roNum(c.vdm3)} dm³ = ${String(c.vm3).replace(".", ",")} m³. Apoi împarte masa la volum.`,
+      solution:`\\(${mathNum(c.vdm3)}\\,dm^3=${String(c.vm3).replace(".", ",")}\\,m^3\\). \\(\\rho=\\frac{${mathNum(c.mass)}}{${String(c.vm3).replace(".", ",")}}=${mathNum(c.rhoSI)}\\,kg/m^3\\). \\(${mathNum(c.rhoSI)}\\,kg/m^3=${mathNum(c.rhoG)}\\,g/cm^3\\).`
+    };
+  }
+
+  function makeMassProblem(id, opts){
+    const candidates = densityCombos().filter(x => x.rhoG >= opts.minRhoG && x.rhoG <= opts.maxRhoG);
+    const c = pick(candidates);
+    const toUnit = opts.toUnit || "g";
+    const converted = toUnit === "g" ? Math.round(c.mass * 1000) : c.mass;
+    return {
+      id, level: 4, icon: opts.icon, levelName:"Nivelul 4 – Maestrul mărimilor", difficulty:"greu",
+      title: opts.title,
+      text:`${opts.subject} are densitatea ${roNum(c.rhoSI)} kg/m³ și volumul ${roNum(c.vdm3)} dm³. Determină masa în SI și transformă în ${toUnit}.`,
+      known:[`ρ = ${roNum(c.rhoSI)} kg/m³`, `V = ${roNum(c.vdm3)} dm³`],
+      formula:"\\(m=\\rho\\cdot V\\), \\(1\\,dm^3=0{,}001\\,m^3\\), apoi \\(1\\,kg=1000\\,g\\)",
+      inputs:[
+        {key:"si", label:"Masa în SI", unit:"kg", answer:c.mass, tol:0.01},
+        {key:"conv", label:"Masa transformată", unit:toUnit, answer:converted, tol:toUnit==="g"?0.5:0.01}
+      ],
+      hint:"Transformă volumul în m³, apoi înmulțește densitatea cu volumul.",
+      solution:`\\(${mathNum(c.vdm3)}\\,dm^3=${String(c.vm3).replace(".", ",")}\\,m^3\\). \\(m=${mathNum(c.rhoSI)}\\cdot${String(c.vm3).replace(".", ",")}=${mathNum(c.mass)}\\,kg\\). ${toUnit==="g" ? `\\(${mathNum(c.mass)}\\,kg=${mathNum(converted)}\\,g\\).` : `În SI, masa este tot \\(${mathNum(c.mass)}\\,kg\\).`}`
+    };
+  }
+
+  function makeVolumeProblem(id, opts){
+    const densities = [500,800,1000,1200,1500,1800,2000,2500,3000];
+    const volumes = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9];
+    const combos = [];
+    densities.forEach(rho => volumes.forEach(v => {
+      const mass = oneDec(rho * v);
+      if(hasMaxOneDecimal(mass)){
+        combos.push({rho, v, mass, cm3:Math.round(v*1000000)});
+      }
+    }));
+    const c = pick(combos.filter(x => x.rho >= opts.minRho && x.rho <= opts.maxRho));
+    return {
+      id, level: 4, icon: opts.icon, levelName:"Nivelul 4 – Maestrul mărimilor", difficulty:"greu",
+      title: opts.title,
+      text:`${opts.subject} are masa ${roNum(c.mass)} kg și densitatea ${roNum(c.rho)} kg/m³. Determină volumul în SI și transformă în cm³.`,
+      known:[`m = ${roNum(c.mass)} kg`, `ρ = ${roNum(c.rho)} kg/m³`],
+      formula:"\\(V=\\frac{m}{\\rho}\\), apoi \\(1\\,m^3=1\\,000\\,000\\,cm^3\\)",
+      inputs:[
+        {key:"si", label:"Volumul în SI", unit:"m³", answer:c.v, tol:0.01},
+        {key:"conv", label:"Volumul transformat", unit:"cm³", answer:c.cm3, tol:1}
+      ],
+      hint:"Volumul se obține împărțind masa la densitate.",
+      solution:`\\(V=\\frac{${mathNum(c.mass)}}{${mathNum(c.rho)}}=${mathNum(c.v)}\\,m^3\\). \\(${mathNum(c.v)}\\cdot1\\,000\\,000=${mathNum(c.cm3)}\\,cm^3\\).`
+    };
+  }
+
+  function createProblemSet(){
+    const generated = [
+      makeSpeedProblem(1, {icon:"🏃", title:"Alergare pe stadion", subject:"Un elev", minV:1, maxV:4, times:[1,1.5,2,2.5,3,4,5]}),
+      makeSpeedProblem(2, {icon:"🚲", title:"Cursa cu bicicleta", subject:"O bicicletă", minV:2.5, maxV:8, times:[2,2.5,3,4,5,6,7,8]}),
+      makeDistanceProblem(3, {icon:"🚗", title:"Mașina în deplasare", subject:"O mașină", minV:5, maxV:20, times:[1,2,3,4,5,6,8,10]}),
+      makeDistanceProblem(4, {icon:"🏃‍♀️", title:"Alergătorul constant", subject:"Un alergător", minV:1, maxV:5, times:[1,2,3,4,5,6,8,10]}),
+      makeTimeProblem(5, {icon:"🚆", title:"Trenul de marfă", subject:"Un tren", minV:10, maxV:25, times:[2,3,4,5,6,8,10,12,15,20]}),
+      makeTimeProblem(6, {icon:"🧒", title:"Drumul spre școală", subject:"Un copil", minV:0.5, maxV:3, times:[1,1.5,2,2.5,3,4,5,6,8,10]}),
+      makeDensityProblem(7, {icon:"🧱", title:"Cubul misterios", subject:"Un corp", minRhoG:1, maxRhoG:3}),
+      makeDensityProblem(8, {icon:"🧪", title:"Lichidul necunoscut", subject:"Un lichid", minRhoG:0.5, maxRhoG:1.2}),
+      makeMassProblem(9, {icon:"📦", title:"Masa corpului", subject:"Un corp", minRhoG:0.6, maxRhoG:2, toUnit:"g"}),
+      makeMassProblem(10, {icon:"💧", title:"Rezervorul cu lichid", subject:"Un lichid", minRhoG:0.8, maxRhoG:1.2, toUnit:"kg"}),
+      makeVolumeProblem(11, {icon:"📐", title:"Volumul corpului", subject:"Un corp", minRho:800, maxRho:2000}),
+      makeVolumeProblem(12, {icon:"🎯", title:"Obiectul final", subject:"Un obiect", minRho:1500, maxRho:3000})
+    ];
+    return generated;
+  }
+
+  function createRandomSequence(){
+    const level1 = shuffleArray(problems.filter(p => p.level === 1));
+    const level2 = shuffleArray(problems.filter(p => p.level === 2));
+    const level3 = shuffleArray(problems.filter(p => p.level === 3));
+    const level4 = shuffleArray(problems.filter(p => p.level === 4));
+    const orderedProblems = [...level1, ...level2, ...level3, ...level4];
+    orderedProblems.forEach((p, i) => p.missionNumber = i + 1);
+    state.problemOrder = orderedProblems.map(p => p.id);
+    return [
+      {type:"home"},
+      {type:"lesson", key:"speed", title:"Briefing: viteza", icon:"⚡"},
+      {type:"level", level:1},
+      ...level1.map(p => ({type:"problem", id:p.id})),
+      {type:"level", level:2},
+      ...level2.map(p => ({type:"problem", id:p.id})),
+      {type:"lesson", key:"density", title:"Briefing: densitatea", icon:"🧪"},
+      {type:"level", level:3},
+      ...level3.map(p => ({type:"problem", id:p.id})),
+      {type:"level", level:4},
+      ...level4.map(p => ({type:"problem", id:p.id})),
+      {type:"quick"},
+      {type:"final"}
+    ];
+  }
+
+  function startNewProblemSet(){
+    state.problemSetId = makeId();
+    problems = createProblemSet();
+    sequence = createRandomSequence();
+  }
+
+  const quickChecks = [
+    {
+      q:"1 m/s este egal cu:",
+      options:["1 km/h","3,6 km/h","0,36 km/h"],
+      answer:1
+    },
+    {
+      q:"Formula corectă pentru densitate este:",
+      options:["\\(\\rho=\\frac{m}{V}\\)","\\(\\rho=\\frac{V}{m}\\)","\\(\\rho=m\\cdot V\\)"],
+      answer:0
+    },
+    {
+      q:"Dacă 1 m³ = 1 000 000 cm³, atunci 0,001 m³ =",
+      options:["10 cm³","100 cm³","1000 cm³"],
+      answer:2
+    },
+    {
+      q:"Pentru a afla timpul din distanță și viteză folosim:",
+      options:["\\(t=\\frac{s}{v}\\)","\\(t=s\\cdot v\\)","\\(t=\\frac{v}{s}\\)"],
+      answer:0
+    },
+    {
+      q:"1000 kg/m³ înseamnă:",
+      options:["0,1 g/cm³","1 g/cm³","10 g/cm³"],
+      answer:1
+    },
+    {
+      q:"Pentru a afla volumul din masă și densitate folosim:",
+      options:["\\(V=m\\cdot\\rho\\)","\\(V=\\frac{\\rho}{m}\\)","\\(V=\\frac{m}{\\rho}\\)"],
+      answer:2
+    }
+  ];
+
+  const levelInfo = {
+    1:{name:"Nivelul 1 – Pilotul vitezei", icon:"🚀", badge:"ușor", goal:"Calculezi viteza și o transformi în km/h."},
+    2:{name:"Nivelul 2 – Navigatorul distanței și timpului", icon:"🧭", badge:"mediu", goal:"Folosești formulele pentru distanță și timp."},
+    3:{name:"Nivelul 3 – Detectivul densității", icon:"🔎", badge:"mediu", goal:"Calculezi densitatea și transformi kg/m³ în g/cm³."},
+    4:{name:"Nivelul 4 – Maestrul mărimilor", icon:"🏆", badge:"greu", goal:"Alegi formula potrivită pentru masă sau volum."}
+  };
+
+  const botNames = ["Ana", "Mihai", "Ioana", "David", "Sofia", "Andrei", "Maria", "Tudor", "Elena", "Matei", "Irina", "Alex", "Daria", "Radu", "Ilinca", "Victor", "Sara", "Denis", "Carla", "Robert", "Eva", "Vlad", "Teo", "Luca", "Mara", "Nora", "Cezar", "Iulia", "Rareș", "Bianca"];
+
+  const LS_KEY = "fizica_viteza_densitate_clasa6_leaderboard_weekly_v2";
+  const LS_SETTINGS = "fizica_viteza_densitate_clasa6_settings_v1";
+
+  const state = {
+    page:0,
+    name:"",
+    score:0,
+    maxScore: 12*100 + quickChecks.length*30,
+    problemStatus:{},
+    quickAnswers:{},
+    quickSubmitted:false,
+    quickScore:0,
+    leaderboard:[],
+    className:"",
+    onlineStatus:"",
+    saved:false,
+    problemSetId:"",
+    problemOrder:[]
+  };
+
+  const card = document.getElementById("screenCard");
+  const topbar = document.getElementById("topbar");
+  const topTitle = document.getElementById("topTitle");
+  const topSubtitle = document.getElementById("topSubtitle");
+  const rankPill = document.getElementById("rankPill");
+  const statName = document.getElementById("statName");
+  const statScore = document.getElementById("statScore");
+  const statLevel = document.getElementById("statLevel");
+  const statProgress = document.getElementById("statProgress");
+  const progressEl = document.getElementById("progress");
+  const toast = document.getElementById("toast");
+  const confettiEl = document.getElementById("confetti");
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, (m)=>({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#039;" }[m]));
+  }
+  function getBucharestDateParts(date){
+    try{
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: TIME_ZONE,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).formatToParts(date);
+      const map = {};
+      parts.forEach(p => { if(p.type !== "literal") map[p.type] = p.value; });
+      return {year:Number(map.year), month:Number(map.month), day:Number(map.day)};
+    }catch(e){
+      return {year:date.getFullYear(), month:date.getMonth()+1, day:date.getDate()};
+    }
+  }
+  function pad2(n){ return String(n).padStart(2, "0"); }
+  function getLocalWeekKey(date = new Date()){
+    const p = getBucharestDateParts(date);
+    const local = new Date(Date.UTC(p.year, p.month - 1, p.day));
+    const isoDay = local.getUTCDay() === 0 ? 7 : local.getUTCDay();
+    const thursday = new Date(local);
+    thursday.setUTCDate(local.getUTCDate() + 4 - isoDay);
+    const weekYear = thursday.getUTCFullYear();
+    const yearStart = new Date(Date.UTC(weekYear, 0, 1));
+    const weekNumber = Math.ceil((((thursday - yearStart) / 86400000) + 1) / 7);
+    return `${weekYear}-W${pad2(weekNumber)}`;
+  }
+  function getLocalMonthKey(date = new Date()){
+    const p = getBucharestDateParts(date);
+    return `${p.year}-${pad2(p.month)}`;
+  }
+  function loadLeaderboard(){
+    const currentWeek = getLocalWeekKey();
+    try{
+      const raw = localStorage.getItem(LS_KEY);
+      if(raw){
+        const parsed = JSON.parse(raw);
+        if(parsed && parsed.weekKey === currentWeek && Array.isArray(parsed.list)){
+          return parsed.list;
+        }
+      }
+    }catch(e){}
+    saveLeaderboard([]);
+    return [];
+  }
+  function saveLeaderboard(list){
+    const currentWeek = getLocalWeekKey();
+    try{
+      localStorage.setItem(LS_KEY, JSON.stringify({
+        weekKey: currentWeek,
+        savedAt: new Date().toISOString(),
+        list: list.slice(0,80)
+      }));
+    }catch(e){}
+  }
+  function loadSettings(){
+    try{
+      const raw = localStorage.getItem(LS_SETTINGS);
+      return raw ? JSON.parse(raw) : {};
+    }catch(e){return {};}
+  }
+  function saveSettings(obj){
+    try{ localStorage.setItem(LS_SETTINGS, JSON.stringify(obj)); }catch(e){}
+  }
+  function currentRank(score=state.score){
+    const list = state.leaderboard.map(x => ({...x}));
+    if(state.name){
+      const existing = list.findIndex(x => !x.bot && x.name === state.name && x.score === score);
+      if(existing >= 0){
+        list[existing].current = true;
+        list[existing].name = list[existing].name + " (tu)";
+      }else{
+        list.push({name:state.name + " (tu)", className:state.className, score, current:true});
+      }
+    }
+    list.sort((a,b)=> b.score - a.score || String(a.name).localeCompare(String(b.name), "ro"));
+    const idx = list.findIndex(x=>x.current);
+    return {rank: idx>=0 ? idx+1 : "-", total:list.length, list};
+  }
+  function topLeaders(n=7){
+    const r = currentRank();
+    return r.list.slice(0,n);
+  }
+  function pageProgress(){
+    const total = sequence.length - 1;
+    return Math.max(0, Math.min(100, Math.round((state.page / total) * 100)));
+  }
+  function getCurrentLevel(){
+    const item = sequence[state.page];
+    if(item.type === "problem") return problems.find(p=>p.id===item.id).level;
+    if(item.type === "level") return item.level;
+    if(item.type === "lesson") return item.key==="density" ? 3 : 1;
+    if(item.type === "quick") return "Bonus";
+    if(item.type === "final") return "Final";
+    return "-";
+  }
+  function updateTop(){
+    const show = state.page > 0;
+    topbar.style.display = show ? "" : "none";
+    if(!show) return;
+    const pct = pageProgress();
+    const r = currentRank();
+    topTitle.textContent = "Campionii Vitezei și Densității";
+    topSubtitle.textContent = `Săptămâna ${getLocalWeekKey()} • luna ${getLocalMonthKey()}`;
+    rankPill.textContent = `🏆 Ești pe locul ${r.rank} din ${r.total} jucători`;
+    statName.textContent = state.className ? `${state.name || "-"} • ${state.className}` : (state.name || "-");
+    statScore.textContent = `${state.score} p`;
+    statLevel.textContent = getCurrentLevel();
+    statProgress.textContent = `${pct}%`;
+    progressEl.style.width = `${pct}%`;
+  }
+  function renderMath(){
+    if(window.MathJax && window.MathJax.typesetPromise){
+      window.MathJax.typesetPromise([card]).catch(()=>{});
+    }
+  }
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(()=>toast.classList.remove("show"), 2300);
+  }
+  function celebrate(){
+    confettiEl.innerHTML = "";
+    const colors = ["#22d3ee", "#22c55e", "#fbbf24", "#fb7185", "#c084fc", "#f8fafc"];
+    for(let i=0;i<55;i++){
+      const s = document.createElement("span");
+      s.style.left = (Math.random()*100)+"%";
+      s.style.background = colors[i % colors.length];
+      s.style.animationDelay = (Math.random()*0.35)+"s";
+      s.style.transform = `rotate(${Math.random()*180}deg)`;
+      confettiEl.appendChild(s);
+    }
+    setTimeout(()=>{confettiEl.innerHTML="";}, 1700);
+  }
+  function parseNumber(value){
+    const cleaned = String(value || "")
+      .trim()
+      .replace(/\s+/g, "")
+      .replace(",", ".")
+      .replace(/[−–—]/g, "-");
+    const m = cleaned.match(/[-+]?\d*\.?\d+(?:e[-+]?\d+)?/i);
+    return m ? Number(m[0]) : NaN;
+  }
+  function closeEnough(value, answer, tol){
+    if(!Number.isFinite(value)) return false;
+    const tolerance = Math.max(tol || 0.0001, Math.abs(answer) * 0.005);
+    return Math.abs(value - answer) <= tolerance;
+  }
+  function formatNumber(n){
+    if(Math.abs(n) < 0.01 && n !== 0) return String(n).replace(".", ",");
+    if(Number.isInteger(n)) return String(n);
+    return String(Number(n.toFixed(5))).replace(".", ",");
+  }
+  function problemById(id){ return problems.find(p=>p.id===id); }
+  function statusFor(id){
+    if(!state.problemStatus[id]){
+      state.problemStatus[id] = {attempts:0, done:false, points:0, hint:false, revealed:false, feedback:""};
+    }
+    return state.problemStatus[id];
+  }
+  function addScore(points){
+    state.score += points;
+    if(state.score < 0) state.score = 0;
+  }
+  function goNext(){
+    if(state.page < sequence.length - 1){
+      state.page += 1;
+      render();
+    }
+  }
+  function goPrev(){
+    if(state.page > 1){
+      state.page -= 1;
+      render();
+    }
+  }
+  function resetGame(keepName=true, newProblems=false){
+    const name = keepName ? state.name : "";
+    const className = keepName ? state.className : "";
+    state.page = 0;
+    state.name = name;
+    state.className = className;
+    state.score = 0;
+    state.problemStatus = {};
+    state.quickAnswers = {};
+    state.quickSubmitted = false;
+    state.quickScore = 0;
+    state.onlineStatus = "";
+    state.saved = false;
+    if(newProblems) startNewProblemSet();
+    render();
+  }
+  function resetLeaderboard(){
+    localStorage.removeItem(LS_KEY);
+    state.leaderboard = loadLeaderboard();
+    showToast("Clasamentul local al săptămânii a fost resetat.");
+    render();
+  }
+  function render(){
+    updateTop();
+    const item = sequence[state.page];
+    if(item.type === "home") renderHome();
+    if(item.type === "lesson") renderLesson(item);
+    if(item.type === "level") renderLevel(item.level);
+    if(item.type === "problem") renderProblem(problemById(item.id));
+    if(item.type === "quick") renderQuick();
+    if(item.type === "final") renderFinal();
+    renderMath();
+    window.scrollTo({top:0, behavior:"smooth"});
+  }
+
+  function renderHome(){
+    const settings = loadSettings();
+    const lastName = state.name || settings.lastName || "";
+    state.leaderboard = loadLeaderboard();
+    const localWeek = getLocalWeekKey();
+    const leaders = state.leaderboard.slice().sort((a,b)=> b.score - a.score).slice(0,5);
+    const preview = leaders.length ? leaders.map((x,i)=>`
+      <div class="leader-row">
+        <div class="rank">#${i+1}</div>
+        <div>${escapeHtml(x.name)} <span class="small">${escapeHtml(x.className || "")}</span></div>
+        <div class="score">${x.score} p</div>
+      </div>
+    `).join("") : `<div class="feedback">Nu există încă rezultate locale pentru săptămâna ${localWeek}.</div>`;
+    card.innerHTML = `
+      <div class="hero">
+        <div>
+          <div class="hero-badge">🎮 Joc de fizică • clasa a VI-a</div>
+          <h1>Campionii Vitezei și Densității</h1>
+          <p class="tagline">Rezolvi exerciții pe niveluri, cu date și ordine generate aleator la fiecare joc, primești puncte și vezi imediat pe ce loc ești în clasamentul săptămânii.</p>
+
+          <div class="input-row">
+            <label for="playerName">Numele jucătorului</label>
+            <input id="playerName" type="text" maxlength="24" value="${escapeHtml(lastName)}" placeholder="Ex.: Andrei" autocomplete="off" />
+            <p class="small">Scorul local se păstrează doar pentru săptămâna curentă. Dacă setezi URL-ul Google Apps Script, rezultatul final se trimite în Google Sheets, unde profesorul vede clasamentul săptămânii și clasamentul lunii.</p>
+          </div>
+
+          <div class="input-row">
+            <label for="playerClass">Clasa / grupa</label>
+            <input id="playerClass" type="text" maxlength="12" value="${escapeHtml(settings.lastClass || "")}" placeholder="Ex.: 6A" autocomplete="off" />
+          </div>
+
+          <div class="lesson-grid">
+            <div class="info-box good">
+              <h3>🏅 Scor</h3>
+              <p>100 p pentru răspuns corect din prima. Datele se schimbă la fiecare pornire, deci fiecare tură este diferită.</p>
+            </div>
+            <div class="info-box warn">
+              <h3>📈 Ierarhizare săptămânală</h3>
+              <p>După fiecare răspuns, jocul te anunță: „Ești pe locul ... din ... jucători” pentru săptămâna curentă.</p>
+            </div>
+          </div>
+
+          <div class="button-row single">
+            <button class="btn success" id="startBtn">Începe jocul</button>
+          </div>
+        </div>
+
+        <div class="avatar-board" aria-hidden="true">
+          <div class="big-icon">🚀</div>
+          <h2>12 misiuni</h2>
+          <p class="tagline">viteză • distanță • timp • densitate • masă • volum • aleatoriu</p>
+          <div class="leaderboard" style="width:100%; margin-top:16px">${preview}</div>
+        </div>
+      </div>
+    `;
+    document.getElementById("playerName").focus();
+    document.getElementById("startBtn").addEventListener("click", ()=>{
+      const input = document.getElementById("playerName").value.trim();
+      const classInput = document.getElementById("playerClass").value.trim();
+      state.name = input || "Jucător";
+      state.className = classInput || "clasa a VI-a";
+      saveSettings({lastName:state.name, lastClass:state.className});
+      startNewProblemSet();
+      state.page = 1;
+      state.score = 0;
+      state.problemStatus = {};
+      state.quickAnswers = {};
+      state.quickSubmitted = false;
+      state.quickScore = 0;
+      state.onlineStatus = "";
+      state.saved = false;
+      render();
+    });
+    document.getElementById("playerName").addEventListener("keydown", (e)=>{
+      if(e.key === "Enter") document.getElementById("startBtn").click();
+    });
+    document.getElementById("playerClass").addEventListener("keydown", (e)=>{
+      if(e.key === "Enter") document.getElementById("startBtn").click();
+    });
+  }
+
+  function renderLesson(item){
+    const speed = item.key === "speed";
+    const html = speed ? `
+      <h1>${item.icon} Briefing: viteza</h1>
+      <p class="problem-text">În acest joc folosim formulele de bază pentru mișcare.</p>
+      <div class="lesson-grid">
+        <div class="info-box">
+          <h3>Formula vitezei</h3>
+          <div class="formula">\\[v=\\frac{s}{t}\\]</div>
+          <p>unde \\(s\\) este distanța, iar \\(t\\) este timpul.</p>
+        </div>
+        <div class="info-box">
+          <h3>Exemplu numeric</h3>
+          <div class="formula">\\[v=\\frac{100\\,m}{20\\,s}=5\\,m/s\\]</div>
+          <p>Transformare: \\(5\\,m/s\\cdot3{,}6=18\\,km/h\\).</p>
+        </div>
+      </div>
+      <div class="info-box warn">
+        <h3>Reguli rapide</h3>
+        <p><span class="kbd">min → s</span>: înmulțești cu 60. &nbsp; <span class="kbd">m/s → km/h</span>: înmulțești cu 3,6.</p>
+      </div>
+    ` : `
+      <h1>${item.icon} Briefing: densitatea</h1>
+      <p class="problem-text">Acum intri în zona masei, volumului și densității.</p>
+      <div class="lesson-grid">
+        <div class="info-box">
+          <h3>Formula densității</h3>
+          <div class="formula">\\[\\rho=\\frac{m}{V}\\]</div>
+          <p>unde \\(m\\) este masa, iar \\(V\\) este volumul.</p>
+        </div>
+        <div class="info-box">
+          <h3>Exemplu numeric</h3>
+          <div class="formula">\\[\\rho=\\frac{2\\,kg}{0{,}001\\,m^3}=2000\\,kg/m^3=2\\,g/cm^3\\]</div>
+          <p>Transformare: \\(1000\\,kg/m^3=1\\,g/cm^3\\).</p>
+        </div>
+      </div>
+      <div class="info-box warn">
+        <h3>Formule derivate</h3>
+        <p>\\(m=\\rho\\cdot V\\) și \\(V=\\frac{m}{\\rho}\\). Pentru volum: \\(1\\,m^3=1\\,000\\,000\\,cm^3\\).</p>
+      </div>
+    `;
+    card.innerHTML = `
+      ${html}
+      <div class="button-row">
+        <button class="btn secondary" id="backBtn">Înapoi</button>
+        <button class="btn success" id="nextBtn">Mergi mai departe</button>
+      </div>
+    `;
+    document.getElementById("nextBtn").addEventListener("click", goNext);
+    document.getElementById("backBtn").addEventListener("click", goPrev);
+  }
+
+  function renderLevel(level){
+    const info = levelInfo[level];
+    card.innerHTML = `
+      <div class="level-banner">
+        <div class="level-name">
+          <div class="level-num">${level}</div>
+          <div>
+            <h1 style="margin-bottom:2px">${info.icon} ${info.name}</h1>
+            <p class="tagline">Dificultate: ${info.badge}</p>
+          </div>
+        </div>
+      </div>
+      <div class="lesson-grid">
+        <div class="info-box good">
+          <h3>Obiectiv</h3>
+          <p>${info.goal}</p>
+        </div>
+        <div class="info-box warn">
+          <h3>Bonus de atenție</h3>
+          <p>Scrie doar numerele. Poți folosi virgulă zecimală, de exemplu <span class="kbd">1,5</span>. Datele sunt generate aleator, au cel mult o zecimală, iar vitezele apar din 0,5 în 0,5 m/s.</p>
+        </div>
+      </div>
+      <div class="button-row">
+        <button class="btn secondary" id="backBtn">Înapoi</button>
+        <button class="btn success" id="nextBtn">Mergi mai departe</button>
+      </div>
+    `;
+    document.getElementById("nextBtn").addEventListener("click", goNext);
+    document.getElementById("backBtn").addEventListener("click", goPrev);
+  }
+
+  function renderProblem(p){
+    const st = statusFor(p.id);
+    const feedbackClass = st.feedback ? (st.done ? "ok" : "no") : "";
+    const inputsHtml = p.inputs.map((inp, i)=>`
+      <div class="answer-row">
+        <div>
+          <label for="ans_${p.id}_${inp.key}">${i+1}. ${inp.label}</label>
+          <input id="ans_${p.id}_${inp.key}" type="text" inputmode="decimal" autocomplete="off"
+            placeholder="Scrie numărul" ${st.done ? "disabled" : ""} />
+        </div>
+        <div class="unit">${inp.unit}</div>
+      </div>
+    `).join("");
+    const solved = st.done ? `<div class="solution"><strong>Rezolvare:</strong><br>${p.solution}</div>` : "";
+    card.innerHTML = `
+      <div class="level-banner">
+        <div class="level-name">
+          <div class="level-num">${p.icon}</div>
+          <div>
+            <h2 style="margin-bottom:2px">${p.levelName}</h2>
+            <p class="tagline">Misiunea ${p.missionNumber || p.id}/12 • dificultate: ${p.difficulty}</p>
+          </div>
+        </div>
+        <div class="pill">+100 p</div>
+      </div>
+
+      <h1>${p.title}</h1>
+      <p class="problem-text">${p.text}</p>
+
+      <div class="known">${p.known.map(k=>`<span>${k}</span>`).join("")}</div>
+      <div class="formula">${p.formula}</div>
+
+      <div class="answers">${inputsHtml}</div>
+      <p class="small">Scrie doar valorile numerice. Exemple acceptate: <span class="kbd">2,5</span>, <span class="kbd">2.5</span>, <span class="kbd">12,6</span>.</p>
+
+      <div class="button-row">
+        <button class="btn warning" id="hintBtn" ${st.done || st.hint ? "disabled" : ""}>Indiciu −10 p</button>
+        <button class="btn primary" id="checkBtn" ${st.done ? "disabled" : ""}>Verifică răspunsul</button>
+      </div>
+
+      <p class="hintline" id="hintLine" style="${st.hint ? "" : "display:none"}">${p.hint}</p>
+
+      <div class="feedback ${feedbackClass}" id="feedback">
+        ${st.feedback || "Completează cele două răspunsuri, apoi apasă pe „Verifică răspunsul”."}
+      </div>
+      ${solved}
+
+      <div class="button-row">
+        <button class="btn secondary" id="backBtn">Înapoi</button>
+        <button class="btn success" id="nextBtn" ${st.done ? "" : "disabled"}>Mergi mai departe</button>
+      </div>
+    `;
+    p.inputs.forEach(inp=>{
+      const el = document.getElementById(`ans_${p.id}_${inp.key}`);
+      if(st.values && st.values[inp.key] !== undefined) el.value = st.values[inp.key];
+    });
+    document.getElementById("hintBtn").addEventListener("click", ()=>{
+      if(!st.hint && !st.done){
+        st.hint = true;
+        addScore(-10);
+        showToast("Ai primit indiciul. Se scad 10 puncte.");
+        render();
+      }
+    });
+    document.getElementById("checkBtn").addEventListener("click", ()=>checkProblem(p));
+    document.getElementById("nextBtn").addEventListener("click", goNext);
+    document.getElementById("backBtn").addEventListener("click", goPrev);
+  }
+
+  function checkProblem(p){
+    const st = statusFor(p.id);
+    if(st.done) return;
+    st.values = {};
+    let allOk = true;
+    let details = [];
+    p.inputs.forEach(inp=>{
+      const el = document.getElementById(`ans_${p.id}_${inp.key}`);
+      const raw = el.value;
+      st.values[inp.key] = raw;
+      const val = parseNumber(raw);
+      const ok = closeEnough(val, inp.answer, inp.tol);
+      if(!ok) allOk = false;
+      details.push({inp, val, ok});
+    });
+    st.attempts += 1;
+
+    if(allOk){
+      const base = st.attempts === 1 ? 100 : st.attempts === 2 ? 75 : 50;
+      const points = Math.max(20, base - (st.hint ? 10 : 0));
+      st.done = true;
+      st.points = points;
+      addScore(points);
+      st.feedback = `Corect! Ai câștigat ${points} puncte. ${rankMessage()}`;
+      showToast("Răspuns corect! Ai urcat în clasament.");
+      celebrate();
+      render();
+      return;
+    }
+
+    if(st.attempts >= 3){
+      const points = st.hint ? 10 : 20;
+      st.done = true;
+      st.points = points;
+      addScore(points);
+      st.feedback = `Ai ajuns la 3 încercări. Primești ${points} puncte pentru efort. Verifică rezolvarea și mergi mai departe. ${rankMessage()}`;
+      showToast("Rezolvarea a fost afișată. Continuă jocul!");
+      render();
+      return;
+    }
+
+    const wrongLabels = details.filter(d=>!d.ok).map(d=>d.inp.label.toLowerCase()).join(", ");
+    st.feedback = `Mai încearcă. Verifică: ${wrongLabels}. Încercarea ${st.attempts}/3.`;
+    showToast("Mai încearcă. Ești aproape!");
+    render();
+  }
+
+  function rankMessage(){
+    const r = currentRank();
+    return `Ești pe locul ${r.rank} din ${r.total} jucători.`;
+  }
+
+  function renderQuick(){
+    const answered = Object.keys(state.quickAnswers).length;
+    let items = quickChecks.map((q, i)=>{
+      const selected = state.quickAnswers[i];
+      return `
+        <div class="quick-item">
+          <h3>${i+1}. ${q.q}</h3>
+          <div class="variants">
+            ${q.options.map((op, j)=>`
+              <label class="variant">
+                <input type="radio" name="quick_${i}" value="${j}" ${selected===j ? "checked" : ""} ${state.quickSubmitted ? "disabled" : ""}>
+                <span><strong>${String.fromCharCode(65+j)}.</strong> ${op}</span>
+              </label>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }).join("");
+    let feedback = "";
+    if(state.quickSubmitted){
+      feedback = `<div class="feedback ok">Verificare rapidă finalizată: ai obținut ${state.quickScore} puncte bonus. ${rankMessage()}</div>`;
+    }else{
+      feedback = `<div class="feedback">Alege câte o variantă la fiecare întrebare. Variantele sunt aliniate pentru verificare rapidă.</div>`;
+    }
+    card.innerHTML = `
+      <h1>⚡ Verificare rapidă – bonus</h1>
+      <p class="problem-text">Ultima provocare: formule și transformări. Primești 30 p pentru fiecare răspuns corect.</p>
+      <div class="quick-grid">${items}</div>
+      ${feedback}
+      <div class="button-row">
+        <button class="btn primary" id="submitQuick" ${state.quickSubmitted ? "disabled" : ""}>Verifică bonusul</button>
+        <button class="btn success" id="nextBtn" ${state.quickSubmitted ? "" : "disabled"}>Mergi mai departe</button>
+      </div>
+    `;
+    quickChecks.forEach((q,i)=>{
+      document.querySelectorAll(`input[name="quick_${i}"]`).forEach(inp=>{
+        inp.addEventListener("change", ()=>{
+          state.quickAnswers[i] = Number(inp.value);
+        });
+      });
+    });
+    document.getElementById("submitQuick").addEventListener("click", ()=>{
+      if(Object.keys(state.quickAnswers).length < quickChecks.length){
+        showToast("Alege câte un răspuns la toate întrebările.");
+        return;
+      }
+      let correct = 0;
+      quickChecks.forEach((q,i)=>{
+        if(state.quickAnswers[i] === q.answer) correct += 1;
+      });
+      state.quickScore = correct * 30;
+      state.quickSubmitted = true;
+      addScore(state.quickScore);
+      if(correct >= 4) celebrate();
+      showToast(`Ai răspuns corect la ${correct} din ${quickChecks.length}.`);
+      render();
+    });
+    document.getElementById("nextBtn").addEventListener("click", goNext);
+  }
+
+
+  function isGoogleSheetsConfigured(){
+    return /^https:\/\/script\.google\.com\/macros\/s\//.test(GOOGLE_SCRIPT_URL);
+  }
+
+  function sendScoreToGoogleSheets(entry){
+    if(!isGoogleSheetsConfigured()){
+      state.onlineStatus = "Clasamentul Google Sheets nu este activat încă. Completează GOOGLE_SCRIPT_URL în fișierul HTML.";
+      return;
+    }
+
+    const solved = Object.values(state.problemStatus).filter(x=>x.done).length;
+    const strong = Object.values(state.problemStatus).filter(x=>x.done && x.points>=50).length;
+    const payload = {
+      key: ONLINE_KEY,
+      game: "Campionii Vitezei și Densității",
+      name: entry.name,
+      className: state.className || "clasa a VI-a",
+      score: entry.score,
+      maxScore: state.maxScore,
+      problemsSolved: solved,
+      strongAnswers: strong,
+      dateISO: new Date().toISOString(),
+      localWeekKey: getLocalWeekKey(),
+      localMonthKey: getLocalMonthKey(),
+      timeZone: TIME_ZONE,
+      pageUrl: location.href,
+      problemSetId: state.problemSetId || "",
+      problemOrder: (state.problemOrder || []).join(","),
+      userAgent: navigator.userAgent
+    };
+
+    state.onlineStatus = "Se trimite rezultatul către Google Sheets...";
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    }).then(()=>{
+      state.onlineStatus = "Cererea de trimitere către Google Sheets a fost făcută. Verifică foile „Clasament_saptamana_curenta” și „Clasament_luna_curenta”.";
+      const el = document.getElementById("onlineStatus");
+      if(el) el.textContent = state.onlineStatus;
+    }).catch(()=>{
+      state.onlineStatus = "Nu s-a putut trimite rezultatul către Google Sheets. Verifică URL-ul Web app, conexiunea la internet și publicarea scriptului.";
+      const el = document.getElementById("onlineStatus");
+      if(el) el.textContent = state.onlineStatus;
+    });
+  }
+
+  function saveFinalScore(){
+    if(state.saved) return;
+    const entry = {
+      name: state.name || "Jucător",
+      className: state.className || "clasa a VI-a",
+      score: state.score,
+      date: new Date().toLocaleDateString("ro-RO"),
+      weekKey: getLocalWeekKey(),
+      monthKey: getLocalMonthKey(),
+      bot:false
+    };
+    state.leaderboard.push(entry);
+    state.leaderboard.sort((a,b)=> b.score - a.score);
+    state.leaderboard = state.leaderboard.slice(0,80);
+    saveLeaderboard(state.leaderboard);
+    state.saved = true;
+    sendScoreToGoogleSheets(entry);
+  }
+
+  function renderFinal(){
+    saveFinalScore();
+    const rankList = state.leaderboard.slice().sort((a,b)=> b.score - a.score || String(a.name).localeCompare(String(b.name), "ro"));
+    const myIndex = rankList.findIndex(x=>!x.bot && x.name === state.name && x.score === state.score);
+    const rank = myIndex >= 0 ? myIndex + 1 : currentRank().rank;
+    const total = rankList.length;
+    const accuracy = Math.round((Object.values(state.problemStatus).filter(x=>x.done && x.points>=50).length / 12) * 100);
+    const top = rankList.slice(0,10).map((x,i)=>`
+      <div class="leader-row ${i===myIndex?'me':''}">
+        <div class="rank">#${i+1}</div>
+        <div>${escapeHtml(x.name)} ${x.bot?'<span class="small">demo</span>':''}</div>
+        <div class="score">${x.score} p</div>
+      </div>
+    `).join("");
+    let medal = rank === 1 ? "🥇" : rank <= 3 ? "🥈" : rank <= 10 ? "🏅" : "🎯";
+    card.innerHTML = `
+      <div class="avatar-board" style="min-height:auto; margin-bottom:14px">
+        <div class="big-icon">${medal}</div>
+        <h1>Felicitări, ${escapeHtml(state.name)}!</h1>
+        <p class="problem-text">Ai terminat jocul cu <strong>${state.score} puncte</strong>.</p>
+        <h2>🏆 Ești pe locul ${rank} din ${total} jucători în săptămâna ${getLocalWeekKey()}.</h2>
+      </div>
+
+      <div class="lesson-grid">
+        <div class="info-box good">
+          <h3>Rezumat</h3>
+          <p>Scor maxim posibil: ${state.maxScore} p.<br>Probleme rezolvate: 12/12.<br>Răspunsuri solide: ${accuracy}%.</p>
+        </div>
+        <div class="info-box warn">
+          <h3>Ce ai antrenat</h3>
+          <p>Viteză, distanță, timp, densitate, masă, volum și transformări de unități.</p>
+        </div>
+      </div>
+
+      <div class="feedback" id="onlineStatus">${escapeHtml(state.onlineStatus || "Pregătesc trimiterea rezultatului...")}</div>
+
+      <h2>Clasament local – săptămâna curentă</h2>
+      <div class="leaderboard">${top}</div>
+
+      <div class="button-row">
+        <button class="btn success" id="againBtn">Joacă din nou</button>
+        <button class="btn secondary" id="resetRankBtn">Resetează clasamentul local al săptămânii</button>
+      </div>
+    `;
+    document.getElementById("againBtn").addEventListener("click", ()=>{
+      resetGame(true, true);
+      state.page = 1;
+      render();
+    });
+    document.getElementById("resetRankBtn").addEventListener("click", resetLeaderboard);
+    updateTop();
+  }
+
+  state.leaderboard = loadLeaderboard();
+  render();
+})();
+</script>
+</body>
+</html>

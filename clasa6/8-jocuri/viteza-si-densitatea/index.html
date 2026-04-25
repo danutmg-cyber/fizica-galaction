@@ -612,9 +612,10 @@
     3. Copiază URL-ul care se termină în /exec și pune-l între ghilimelele de mai jos.
     Clasamentul din Google Sheets se resetează automat săptămânal și are și clasament lunar.
   */
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxCSfxRaU_5wiu555kA347-BLp0GNbyHFmY4JBIUp2RXaAcZl5VDsT1hBpXwA9WDrI1FQ/exec";
+  const GOOGLE_SCRIPT_URL = "PUNE_AICI_URL_WEB_APP_GOOGLE_APPS_SCRIPT";
   const ONLINE_KEY = "FIZICA_GALACTION_VITEZA_DENSITATE_2026";
   const TIME_ZONE = "Europe/Bucharest";
+  const ADMIN_MODE = new URLSearchParams(window.location.search).get("admin") === "1" || window.location.hash === "#admin";
 
 
   const PROBLEM_COUNT = 12;
@@ -959,6 +960,9 @@
     locality:"",
     onlineStatus:"",
     saved:false,
+    onlineSent:false,
+    lastSubmissionPayload:null,
+    lastSubmissionId:"",
     problemSetId:"",
     problemOrder:[]
   };
@@ -1344,6 +1348,9 @@
     state.quickScore = 0;
     state.onlineStatus = "";
     state.saved = false;
+    state.onlineSent = false;
+    state.lastSubmissionPayload = null;
+    state.lastSubmissionId = "";
     if(newProblems) startNewProblemSet();
     render();
   }
@@ -1429,6 +1436,8 @@
           <div class="button-row single">
             <button class="btn success" id="startBtn">Începe jocul</button>
           </div>
+
+          ${adminPanelHtml()}
         </div>
 
         <div class="avatar-board" aria-hidden="true">
@@ -1439,6 +1448,7 @@
         </div>
       </div>
     `;
+    wireAdminPanel();
     document.getElementById("playerName").focus();
     document.getElementById("startBtn").addEventListener("click", ()=>{
       const input = document.getElementById("playerName").value.trim();
@@ -1734,18 +1744,18 @@
   function isGoogleSheetsConfigured(){
     return /^https:\/\/script\.google\.com\/macros\/s\//.test(GOOGLE_SCRIPT_URL);
   }
-  function sendScoreToGoogleSheets(entry){
-    if(!isGoogleSheetsConfigured()){
-      state.onlineStatus = "Clasamentul Google Sheets nu este activat încă. Completează GOOGLE_SCRIPT_URL în fișierul HTML.";
-      return;
-    }
 
+  function buildScorePayload(entry){
     const solved = Object.values(state.problemStatus).filter(x=>x.done).length;
     const strong = Object.values(state.problemStatus).filter(x=>x.done && x.points>=50).length;
     const currentMonthStats = getMonthlyStatsForPlayer(getLocalMonthKey());
-    const payload = {
+    const submissionId = state.lastSubmissionId || `${state.playerId || "player"}-${state.problemSetId || makeId()}-${Date.now().toString(36)}`;
+    state.lastSubmissionId = submissionId;
+
+    return {
       key: ONLINE_KEY,
       game: "Campionii fizicii - etapa viteza și densitatea",
+      submissionId,
       playerId: entry.playerId || state.playerId || "",
       accountKey: accountKey(state),
       name: entry.name,
@@ -1766,23 +1776,157 @@
       problemOrder: (state.problemOrder || []).join(","),
       userAgent: navigator.userAgent
     };
+  }
 
+  function sendByImageFallback(payload){
+    if(!isGoogleSheetsConfigured()) return false;
+    try{
+      // Fallback prin GET. Trimite doar datele esențiale, ca URL-ul să rămână scurt.
+      const compactPayload = {
+        key: payload.key,
+        game: payload.game,
+        submissionId: payload.submissionId,
+        playerId: payload.playerId,
+        accountKey: payload.accountKey,
+        name: payload.name,
+        className: payload.className,
+        schoolName: payload.schoolName,
+        locality: payload.locality,
+        score: payload.score,
+        maxScore: payload.maxScore,
+        problemsSolved: payload.problemsSolved,
+        strongAnswers: payload.strongAnswers,
+        dateISO: payload.dateISO,
+        localWeekKey: payload.localWeekKey,
+        localMonthKey: payload.localMonthKey,
+        timeZone: payload.timeZone,
+        monthlyParticipationsOnDevice: payload.monthlyParticipationsOnDevice,
+        pageUrl: location.origin + location.pathname,
+        problemSetId: payload.problemSetId,
+        problemOrder: payload.problemOrder,
+        userAgent: "GET fallback"
+      };
+      const img = new Image();
+      img.alt = "";
+      img.referrerPolicy = "no-referrer-when-downgrade";
+      img.src = GOOGLE_SCRIPT_URL + "?p=" + encodeURIComponent(JSON.stringify(compactPayload)) + "&_=" + Date.now();
+      return true;
+    }catch(e){
+      return false;
+    }
+  }
+
+  function sendScoreToGoogleSheets(entry, forceRetry=false){
+    if(!isGoogleSheetsConfigured()){
+      state.onlineStatus = "Clasamentul Google Sheets nu este activat încă. Completează GOOGLE_SCRIPT_URL în fișierul HTML.";
+      return;
+    }
+
+    const payload = forceRetry && state.lastSubmissionPayload ? state.lastSubmissionPayload : buildScorePayload(entry);
+    state.lastSubmissionPayload = payload;
     state.onlineStatus = "Se trimite rezultatul către Google Sheets...";
+    const elStart = document.getElementById("onlineStatus");
+    if(elStart) elStart.textContent = state.onlineStatus;
+
+    const body = JSON.stringify(payload);
+
+    // 1) Trimitere principală prin POST.
     fetch(GOOGLE_SCRIPT_URL, {
       method: "POST",
       mode: "no-cors",
+      keepalive: true,
       headers: { "Content-Type": "text/plain;charset=utf-8" },
-      body: JSON.stringify(payload)
+      body
     }).then(()=>{
-      state.onlineStatus = "Cererea de trimitere către Google Sheets a fost făcută. Verifică foile „Clasament_saptamana_curenta” și „Clasament_luna_curenta”.";
+      state.onlineSent = true;
+      state.onlineStatus = "Rezultatul a fost trimis către Google Sheets. Verifică foaia „Rezultate_brute”, apoi „Clasament_saptamana_curenta”.";
       const el = document.getElementById("onlineStatus");
       if(el) el.textContent = state.onlineStatus;
     }).catch(()=>{
-      state.onlineStatus = "Nu s-a putut trimite rezultatul către Google Sheets. Verifică URL-ul Web app, conexiunea la internet și publicarea scriptului.";
+      state.onlineStatus = "Trimiterea POST nu a pornit. Încerc trimitere de rezervă...";
       const el = document.getElementById("onlineStatus");
       if(el) el.textContent = state.onlineStatus;
     });
+
+    // 2) Trimitere de rezervă prin GET. Apps Script ignoră dublurile cu același submissionId.
+    setTimeout(()=>{
+      sendByImageFallback(payload);
+    }, 600);
   }
+
+
+  function sendAdminAction(payload){
+    if(!isGoogleSheetsConfigured()){
+      showToast("Google Sheets nu este configurat. Completează GOOGLE_SCRIPT_URL.");
+      return;
+    }
+
+    const body = JSON.stringify(payload);
+    fetch(GOOGLE_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      keepalive: true,
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body
+    }).catch(()=>{});
+
+    // Fallback prin GET. Apps Script verifică parola profesorului pe server.
+    setTimeout(()=>{
+      sendByImageFallback(payload);
+    }, 500);
+  }
+
+  function adminResetCurrentWeek(){
+    if(!ADMIN_MODE){
+      showToast("Administrarea nu este activă pe această pagină.");
+      return;
+    }
+
+    const code = prompt("Introdu codul profesorului pentru resetarea clasamentului:");
+    if(!code) return;
+
+    const ok = confirm(
+      "Sigur vrei să resetezi clasamentul săptămânii curente?\\n\\n" +
+      "Vor fi șterse din Google Sheets rezultatele din săptămâna " + getLocalWeekKey() + "."
+    );
+    if(!ok) return;
+
+    const payload = {
+      key: ONLINE_KEY,
+      action: "adminResetWeek",
+      adminCode: code.trim(),
+      localWeekKey: getLocalWeekKey(),
+      localMonthKey: getLocalMonthKey(),
+      dateISO: new Date().toISOString(),
+      pageUrl: location.href,
+      userAgent: navigator.userAgent
+    };
+
+    sendAdminAction(payload);
+
+    // Resetare locală doar pe dispozitivul profesorului.
+    localStorage.removeItem(LS_KEY);
+    state.leaderboard = loadLeaderboard();
+    showToast("Cererea de resetare a fost trimisă. Verifică foaia Google Sheets în câteva secunde.");
+    render();
+  }
+
+  function adminPanelHtml(){
+    if(!ADMIN_MODE) return "";
+    return `
+      <div class="info-box warn" style="margin-top:16px">
+        <h3>🔐 Administrare profesor</h3>
+        <p>Acest buton apare doar când pagina este deschisă cu <span class="kbd">?admin=1</span> sau <span class="kbd">#admin</span>. Resetarea reală este protejată și în Google Apps Script prin codul profesorului.</p>
+        <button class="btn danger" id="adminResetWeekBtn" type="button">Resetează clasamentul săptămânii curente</button>
+      </div>
+    `;
+  }
+
+  function wireAdminPanel(){
+    const btn = document.getElementById("adminResetWeekBtn");
+    if(btn) btn.addEventListener("click", adminResetCurrentWeek);
+  }
+
   function saveFinalScore(){
     if(state.saved) return;
     if(!state.playerId) state.playerId = getOrCreatePlayerId(state);
@@ -1899,12 +2043,28 @@
 
       ${certificateBlock}
 
+      ${adminPanelHtml()}
+
       <div class="button-row">
+        <button class="btn primary" id="retrySendBtn">Retrimite rezultatul</button>
         <button class="btn success" id="againBtn">Joacă din nou</button>
         <button class="btn secondary" id="exitBtn">Ieșire</button>
       </div>
       ${certificateButton ? `<div class="button-row single">${certificateButton}</div>` : ""}
     `;
+    wireAdminPanel();
+    document.getElementById("retrySendBtn").addEventListener("click", ()=>{
+      const entry = state.leaderboard.find(x => !x.bot && x.playerId === state.playerId) || {
+        name: state.name,
+        className: state.className,
+        schoolName: state.schoolName,
+        locality: state.locality,
+        playerId: state.playerId,
+        score: state.score
+      };
+      sendScoreToGoogleSheets(entry, true);
+      showToast("Retrimit rezultatul către Google Sheets...");
+    });
     document.getElementById("againBtn").addEventListener("click", ()=>{
       resetGame(true, true);
       state.page = 1;

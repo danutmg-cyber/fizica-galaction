@@ -269,6 +269,39 @@
       gap:12px;
       margin:14px 0;
     }
+
+    .tier-select{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:10px;
+      margin:14px 0;
+    }
+    .tier-card{
+      border:1px solid rgba(148,163,184,.28);
+      background:#0f172a;
+      color:#f8fafc;
+      border-radius:16px;
+      padding:12px;
+      cursor:pointer;
+      text-align:left;
+      min-height:112px;
+      transition:transform .08s ease, border-color .12s ease, filter .12s ease;
+    }
+    .tier-card:hover{filter:brightness(1.05)}
+    .tier-card.selected{
+      border-color:rgba(34,211,238,.75);
+      box-shadow:0 0 0 3px rgba(34,211,238,.14);
+      background:linear-gradient(180deg, rgba(14,165,233,.18), rgba(15,23,42,.96));
+    }
+    .tier-card.locked{
+      cursor:not-allowed;
+      opacity:.55;
+      filter:saturate(.55);
+    }
+    .tier-card strong{display:block;font-size:1.05rem;margin-bottom:4px}
+    .tier-card span{display:block;color:#cbd5e1;font-size:.88rem}
+    .tier-card .mini{margin-top:8px;color:#fde68a;font-weight:800}
+
     .info-box{
       background:#0f172a;
       border:1px solid rgba(148,163,184,.22);
@@ -563,6 +596,7 @@
       .answer-row{grid-template-columns:1fr}
       .unit{min-height:44px}
       .variants{grid-template-columns:1fr}
+      .tier-select{grid-template-columns:1fr}
       .leader-row{grid-template-columns:44px 1fr 70px}
       .toprow{grid-template-columns:1fr}
       .pill{justify-content:center}
@@ -612,7 +646,7 @@
     3. Copiază URL-ul care se termină în /exec și pune-l între ghilimelele de mai jos.
     Clasamentul din Google Sheets se resetează automat săptămânal și are și clasament lunar.
   */
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxCSfxRaU_5wiu555kA347-BLp0GNbyHFmY4JBIUp2RXaAcZl5VDsT1hBpXwA9WDrI1FQ/exec";
+  const GOOGLE_SCRIPT_URL = "PUNE_AICI_URL_WEB_APP_GOOGLE_APPS_SCRIPT";
   const ONLINE_KEY = "FIZICA_GALACTION_VITEZA_DENSITATE_2026";
   const TIME_ZONE = "Europe/Bucharest";
   const ADMIN_MODE = new URLSearchParams(window.location.search).get("admin") === "1" || window.location.hash === "#admin";
@@ -849,7 +883,8 @@
 
 
   function createProblemSet(){
-    const generated = [
+    const tier = Number(state.tier) || 1;
+    const generated = tier === 1 ? [
       makeSpeedProblem(1, {icon:"🏃", title:"Alergare pe stadion", subject:"Un elev", minV:1, maxV:4, times:[1,1.5,2,2.5,3,4,5]}),
       makeSpeedProblem(2, {icon:"🚲", title:"Cursa cu bicicleta", subject:"O bicicletă", minV:2.5, maxV:8, times:[2,2.5,3,4,5,6,7,8]}),
       makeDistanceProblem(3, {icon:"🚗", title:"Mașina în deplasare", subject:"O mașină", minV:5, maxV:20, times:[1,2,3,4,5,6,8,10]}),
@@ -858,11 +893,41 @@
       makeTimeProblem(6, {icon:"🧒", title:"Drumul spre școală", subject:"Un copil", minV:0.5, maxV:3, times:[1,1.5,2,2.5,3,4,5,6,8,10]}),
       makeDensityProblem(7, {icon:"🧱", title:"Cubul misterios", subject:"Un corp", minRhoG:1, maxRhoG:3}),
       makeDensityProblem(8, {icon:"🧪", title:"Lichidul necunoscut", subject:"Un lichid", minRhoG:0.5, maxRhoG:1.2}),
-      makeMassProblem(9, {icon:"📦", title:"Masa corpului", subject:"Un corp", minRhoG:0.6, maxRhoG:2, toUnit:"g"}),
-      makeMassProblem(10, {icon:"💧", title:"Rezervorul cu lichid", subject:"Un lichid", minRhoG:0.8, maxRhoG:1.2, toUnit:"kg"}),
+      makeMassProblem(9, {icon:"📦", title:"Masa corpului", subject:"Un corp", minRhoG:0.6, maxRhoG:2}),
+      makeMassProblem(10, {icon:"💧", title:"Rezervorul cu lichid", subject:"Un lichid", minRhoG:0.8, maxRhoG:1.2}),
       makeVolumeProblem(11, {icon:"📐", title:"Volumul corpului", subject:"Un corp", minRho:800, maxRho:2000}),
       makeVolumeProblem(12, {icon:"🎯", title:"Obiectul final", subject:"Un obiect", minRho:1500, maxRho:3000})
+    ] : tier === 2 ? [
+      makeSpeedProblem(1, {icon:"🏃", title:"Alergare cu ritm susținut", subject:"Un sportiv", minV:2.5, maxV:7, times:[2.5,3,3.5,4,4.5,5,6,7.5,8]}),
+      makeSpeedProblem(2, {icon:"🚲", title:"Traseu de bicicletă", subject:"O bicicletă", minV:6, maxV:13, times:[3,4,4.5,5,6,7.5,8,10,12]}),
+      makeDistanceProblem(3, {icon:"🚗", title:"Mașina pe șosea", subject:"O mașină", minV:12, maxV:30, times:[4,5,6,8,10,12,15]}),
+      makeDistanceProblem(4, {icon:"🏃‍♀️", title:"Antrenament pe pistă", subject:"Un alergător", minV:3, maxV:8, times:[2.5,4,5,6,7.5,8,10,12]}),
+      makeTimeProblem(5, {icon:"🚆", title:"Trenul accelerat", subject:"Un tren", minV:18, maxV:35, times:[4,5,6,8,10,12,15,18,20,25]}),
+      makeTimeProblem(6, {icon:"🧒", title:"Drum urban", subject:"Un copil cu trotineta", minV:1.5, maxV:5, times:[2,3,4,5,6,7.5,8,10,12]}),
+      makeDensityProblem(7, {icon:"🧱", title:"Material necunoscut", subject:"Un corp solid", minRhoG:1.2, maxRhoG:3}),
+      makeDensityProblem(8, {icon:"🧪", title:"Amestec lichid", subject:"Un lichid", minRhoG:0.6, maxRhoG:1.5}),
+      makeMassProblem(9, {icon:"📦", title:"Masa unei piese", subject:"O piesă metalică", minRhoG:1, maxRhoG:3}),
+      makeMassProblem(10, {icon:"💧", title:"Masa lichidului", subject:"Un lichid", minRhoG:0.8, maxRhoG:1.8}),
+      makeVolumeProblem(11, {icon:"📐", title:"Volum tehnic", subject:"Un corp", minRho:1000, maxRho:2500}),
+      makeVolumeProblem(12, {icon:"🎯", title:"Provocare de volum", subject:"Un obiect", minRho:1800, maxRho:3000})
+    ] : [
+      makeSpeedProblem(1, {icon:"🏃", title:"Sprint prelungit", subject:"Un sportiv de performanță", minV:4, maxV:10, times:[3.5,4,5,6.5,7.5,8,9,10,12]}),
+      makeSpeedProblem(2, {icon:"🚲", title:"Cursă rapidă", subject:"O bicicletă de concurs", minV:9, maxV:18, times:[4,5,6,7.5,8,10,12,15]}),
+      makeDistanceProblem(3, {icon:"🚗", title:"Autovehicul în regim constant", subject:"O mașină", minV:20, maxV:40, times:[5,6,8,10,12,15,18,20]}),
+      makeDistanceProblem(4, {icon:"🏃‍♀️", title:"Probă de rezistență", subject:"Un alergător", minV:5, maxV:10, times:[4,5,6,8,10,12,15]}),
+      makeTimeProblem(5, {icon:"🚆", title:"Tren expres", subject:"Un tren", minV:25, maxV:45, times:[6,8,10,12,15,20,24,30]}),
+      makeTimeProblem(6, {icon:"🛴", title:"Trotinetă electrică", subject:"Un copil cu trotineta", minV:2.5, maxV:8, times:[3,4,5,6,8,10,12,15]}),
+      makeDensityProblem(7, {icon:"🧱", title:"Corp compact", subject:"Un corp solid", minRhoG:1.5, maxRhoG:3}),
+      makeDensityProblem(8, {icon:"🧪", title:"Lichid dens", subject:"Un lichid", minRhoG:0.8, maxRhoG:1.8}),
+      makeMassProblem(9, {icon:"📦", title:"Masă de material", subject:"Un corp omogen", minRhoG:1.2, maxRhoG:3}),
+      makeMassProblem(10, {icon:"💧", title:"Volum industrial de lichid", subject:"Un lichid", minRhoG:0.9, maxRhoG:2}),
+      makeVolumeProblem(11, {icon:"📐", title:"Volum avansat", subject:"Un corp", minRho:1200, maxRho:3000}),
+      makeVolumeProblem(12, {icon:"🎯", title:"Misiunea finală", subject:"Un obiect", minRho:2000, maxRho:3000})
     ];
+    generated.forEach(p => {
+      p.difficulty = state.gameLevel;
+      p.levelName = `${p.levelName} • ${state.gameLevel}`;
+    });
     return generated;
   }
 
@@ -892,7 +957,9 @@
   }
 
   function startNewProblemSet(){
+    setGameTier(state.tier || 1);
     state.problemSetId = makeId();
+    state.maxScore = Math.round(BASE_MAX_SCORE * (Number(state.scoreMultiplier) || 1));
     problems = createProblemSet();
     sequence = createRandomSequence();
   }
@@ -930,6 +997,14 @@
     }
   ];
 
+  const GAME_TIERS = {
+    1:{label:"MEDIU", multiplier:1, icon:"🟢", title:"Nivel mediu", desc:"Date accesibile, potrivite pentru antrenament de bază."},
+    2:{label:"RIDICAT", multiplier:1.5, icon:"🟡", title:"Nivel ridicat", desc:"Date mai variate și calcule mai solicitante. Punctaj ×1,5."},
+    3:{label:"AVANSAT", multiplier:2, icon:"🔴", title:"Nivel avansat", desc:"Provocare superioară, cu numere mai mari și transformări mai atente. Punctaj ×2."}
+  };
+  const BASE_MAX_SCORE = 12*100 + quickChecks.length*30;
+  const LS_TIER_PROGRESS = "fizica_viteza_densitate_clasa6_tier_progress_v1";
+
   const levelInfo = {
     1:{name:"Nivelul 1 – Pilotul vitezei", icon:"🚀", badge:"ușor", goal:"Calculezi viteza și o transformi în km/h."},
     2:{name:"Nivelul 2 – Navigatorul distanței și timpului", icon:"🧭", badge:"mediu", goal:"Folosești formulele pentru distanță și timp."},
@@ -949,7 +1024,11 @@
     name:"",
     playerId:"",
     score:0,
-    maxScore: 12*100 + quickChecks.length*30,
+    tier:1,
+    gameLevel:"MEDIU",
+    scoreMultiplier:1,
+    unlockedTier:1,
+    maxScore: BASE_MAX_SCORE,
     problemStatus:{},
     quickAnswers:{},
     quickSubmitted:false,
@@ -1121,6 +1200,9 @@
       schoolName: entry.schoolName,
       locality: entry.locality,
       score: entry.score,
+      gameLevel: entry.gameLevel || state.gameLevel || "MEDIU",
+      tier: entry.tier || state.tier || 1,
+      scoreMultiplier: entry.scoreMultiplier || state.scoreMultiplier || 1,
       weekKey: entry.weekKey,
       monthKey: entry.monthKey,
       dateISO: new Date().toISOString()
@@ -1139,6 +1221,9 @@
           className:e.className,
           schoolName:e.schoolName,
           locality:e.locality,
+          gameLevel:e.gameLevel || "MEDIU",
+          tier:Number(e.tier) || tierRank(e.gameLevel),
+          scoreMultiplier:Number(e.scoreMultiplier) || (GAME_TIERS[Number(e.tier) || tierRank(e.gameLevel)] || GAME_TIERS[1]).multiplier,
           participations:0,
           weeks:{},
           totalScore:0
@@ -1147,7 +1232,13 @@
       const g = grouped.get(key);
       g.participations += 1;
       const w = e.weekKey || "fara-saptamana";
-      g.weeks[w] = Math.max(g.weeks[w] || 0, Number(e.score) || 0);
+      const score = Number(e.score) || 0;
+      g.weeks[w] = Math.max(g.weeks[w] || 0, score);
+      if(tierRank(e.gameLevel) > tierRank(g.gameLevel)){
+        g.gameLevel = e.gameLevel || g.gameLevel;
+        g.tier = Number(e.tier) || tierRank(e.gameLevel);
+        g.scoreMultiplier = Number(e.scoreMultiplier) || g.scoreMultiplier;
+      }
     });
     const board = Array.from(grouped.values()).map(g => ({
       ...g,
@@ -1178,11 +1269,12 @@
           de la școala <strong>${escapeHtml(e.schoolName || state.schoolName || "-")}</strong>,
           din localitatea <strong>${escapeHtml(e.locality || state.locality || "-")}</strong>,
           a participat la competiția
-          <strong>Campionii fizicii – etapa viteza și densitatea</strong>
+          <strong>Campionii fizicii – etapa viteza și densitatea</strong>,
+          nivelul <strong>${escapeHtml(e.gameLevel || "MEDIU")}</strong>,
           și s-a clasat pe locul <strong>${stats.rank}</strong>
           din <strong>${stats.total}</strong> participanți.
         </p>
-        <p class="small" style="color:#4b5563">Luna competiției: ${escapeHtml(stats.monthKey)} • Participări înregistrate pe acest cont: ${e.participations}</p>
+        <p class="small" style="color:#4b5563">Luna competiției: ${escapeHtml(stats.monthKey)} • Nivel: ${escapeHtml(e.gameLevel || "MEDIU")} • Participări înregistrate pe acest cont: ${e.participations}</p>
         <div class="signature">Semnează: prof. Dănuț Andronie</div>
       </div>
     `;
@@ -1196,6 +1288,71 @@
   }
   function saveSettings(obj){
     try{ localStorage.setItem(LS_SETTINGS, JSON.stringify(obj)); }catch(e){}
+  }
+
+  function loadTierProgress(){
+    try{
+      const raw = localStorage.getItem(LS_TIER_PROGRESS);
+      const parsed = raw ? JSON.parse(raw) : {};
+      const unlocked = Math.max(1, Math.min(3, Number(parsed.unlockedTier) || 1));
+      return {unlockedTier:unlocked};
+    }catch(e){ return {unlockedTier:1}; }
+  }
+  function saveTierProgress(unlockedTier){
+    try{
+      localStorage.setItem(LS_TIER_PROGRESS, JSON.stringify({
+        unlockedTier:Math.max(1, Math.min(3, Number(unlockedTier) || 1)),
+        savedAt:new Date().toISOString()
+      }));
+    }catch(e){}
+  }
+  function setGameTier(tier){
+    const progress = loadTierProgress();
+    const requested = Math.max(1, Math.min(3, Number(tier) || 1));
+    const allowed = Math.min(requested, progress.unlockedTier || 1);
+    const info = GAME_TIERS[allowed] || GAME_TIERS[1];
+    state.tier = allowed;
+    state.gameLevel = info.label;
+    state.scoreMultiplier = info.multiplier;
+    state.unlockedTier = progress.unlockedTier || 1;
+    state.maxScore = Math.round(BASE_MAX_SCORE * info.multiplier);
+  }
+  function unlockNextTier(){
+    const next = Math.min(3, (Number(state.tier) || 1) + 1);
+    const progress = loadTierProgress();
+    if(next > (progress.unlockedTier || 1)){
+      saveTierProgress(next);
+      state.unlockedTier = next;
+    }
+  }
+  function tierPoints(basePoints){
+    return Math.round(Number(basePoints || 0) * (Number(state.scoreMultiplier) || 1));
+  }
+  function tierLabel(tier){
+    return (GAME_TIERS[Number(tier) || 1] || GAME_TIERS[1]).label;
+  }
+  function tierRank(label){
+    const normalized = String(label || "MEDIU").toUpperCase();
+    if(normalized === "AVANSAT") return 3;
+    if(normalized === "RIDICAT") return 2;
+    return 1;
+  }
+  function tierSelectorHtml(selectedTier, unlockedTier){
+    return `
+      <div class="tier-select" role="group" aria-label="Alege nivelul jocului">
+        ${[1,2,3].map(t => {
+          const info = GAME_TIERS[t];
+          const locked = t > unlockedTier;
+          return `
+            <button type="button" class="tier-card ${t===selectedTier?'selected':''} ${locked?'locked':''}" data-tier="${t}" ${locked?'disabled':''}>
+              <strong>${info.icon} ${info.label}</strong>
+              <span>${info.desc}</span>
+              <span class="mini">${locked ? 'Blocat – termină nivelul anterior' : (t===selectedTier ? 'Selectat' : 'Disponibil')}</span>
+            </button>
+          `;
+        }).join("")}
+      </div>
+    `;
   }
   function currentRank(score=state.score){
     const list = state.leaderboard.map(x => ({...x}));
@@ -1212,6 +1369,9 @@
           locality: state.locality,
           playerId: state.playerId || list[existing].playerId,
           score: bestScore,
+          gameLevel: tierRank(state.gameLevel) >= tierRank(list[existing].gameLevel) ? state.gameLevel : (list[existing].gameLevel || "MEDIU"),
+          tier: Math.max(Number(state.tier) || 1, Number(list[existing].tier) || 1),
+          scoreMultiplier: Math.max(Number(state.scoreMultiplier) || 1, Number(list[existing].scoreMultiplier) || 1),
           current:true
         };
       }else{
@@ -1222,6 +1382,9 @@
           schoolName:state.schoolName,
           locality:state.locality,
           score,
+          gameLevel: state.gameLevel || "MEDIU",
+          tier: state.tier || 1,
+          scoreMultiplier: state.scoreMultiplier || 1,
           current:true
         });
       }
@@ -1244,8 +1407,8 @@
     if(item.type === "problem") return problems.find(p=>p.id===item.id).level;
     if(item.type === "level") return item.level;
     if(item.type === "lesson") return item.key==="density" ? 3 : 1;
-    if(item.type === "quick") return "Bonus";
-    if(item.type === "final") return "Final";
+    if(item.type === "quick") return `Bonus • ${state.gameLevel}`;
+    if(item.type === "final") return `Final • ${state.gameLevel}`;
     return "-";
   }
   function updateTop(){
@@ -1378,6 +1541,9 @@
     const lastClass = state.className || settings.lastClass || "";
     const lastSchool = state.schoolName || settings.lastSchool || "";
     const lastLocality = state.locality || settings.lastLocality || "";
+    const progressTier = loadTierProgress();
+    state.unlockedTier = progressTier.unlockedTier || 1;
+    if(!state.tier || state.tier > state.unlockedTier) setGameTier(settings.lastTier || 1);
     if(!state.playerId && settings.playerId) state.playerId = settings.playerId;
     state.leaderboard = loadLeaderboard();
     const localWeek = getLocalWeekKey();
@@ -1387,7 +1553,7 @@
         <div class="rank">#${i+1}</div>
         <div>
           ${escapeHtml(x.name)}
-          <span class="small">${escapeHtml([x.schoolName, x.locality].filter(Boolean).join(" • "))}</span>
+          <span class="small">${escapeHtml([x.schoolName, x.locality, x.gameLevel || "MEDIU"].filter(Boolean).join(" • "))}</span>
         </div>
         <div class="score">${x.score} p</div>
       </div>
@@ -1399,9 +1565,9 @@
     card.innerHTML = `
       <div class="hero">
         <div>
-          <div class="hero-badge">🎮 Joc de fizică </div>
+          <div class="hero-badge">🎮 Joc de fizică • public larg</div>
           <h1>Campionii Vitezei și Densității</h1>
-          <p class="tagline">Rezolvi exerciții pe niveluri, cu date și ordine generate aleator la fiecare joc, primești puncte și vezi imediat pe ce loc ești în clasament.</p>
+          <p class="tagline">Rezolvi exerciții cu date și ordine generate aleator, alegi treapta de dificultate deblocată și vezi imediat pe ce loc ești în clasament.</p>
 
           <div class="input-row">
             <label for="playerName">Numele și prenumele jucătorului</label>
@@ -1425,10 +1591,14 @@
 
           <p class="small">Poți folosi virgulă sau punct pentru zecimale: <span class="kbd">1,5</span> sau <span class="kbd">1.5</span>. Datele contului sunt memorate pe acest dispozitiv pentru participări ulterioare.</p>
 
+          <h3>Alege nivelul de dificultate</h3>
+          ${tierSelectorHtml(state.tier || 1, state.unlockedTier || 1)}
+          <p class="small">Nivelurile superioare se deblochează gradual: termini MEDIU pentru RIDICAT, apoi RIDICAT pentru AVANSAT. Nivelurile inferioare pot fi reluate oricând.</p>
+
           <div class="lesson-grid">
             <div class="info-box good">
               <h3>🏅 Scor</h3>
-              <p>100 p pentru răspuns corect din prima. Fiecare tură are date generate aleator.</p>
+              <p>La nivelul MEDIU primești 100 p pentru fiecare problemă corectă. La RIDICAT punctajul este ×1,5, iar la AVANSAT este ×2.</p>
             </div>
             ${certNotice}
           </div>
@@ -1443,12 +1613,25 @@
         <div class="avatar-board" aria-hidden="true">
           <div class="big-icon">🚀</div>
           <h2>12 misiuni</h2>
+          <p class="tagline">Nivel selectat: <strong>${GAME_TIERS[state.tier || 1].label}</strong> • multiplicator ×${GAME_TIERS[state.tier || 1].multiplier}</p>
           <p class="tagline">viteză • distanță • timp • densitate • masă • volum • aleatoriu</p>
           <div class="leaderboard" style="width:100%; margin-top:16px">${preview}</div>
         </div>
       </div>
     `;
     wireAdminPanel();
+    document.querySelectorAll(".tier-card").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const chosen = Number(btn.dataset.tier);
+        if(chosen > (state.unlockedTier || 1)){
+          showToast("Nivel blocat. Trebuie să termini mai întâi nivelul anterior.");
+          return;
+        }
+        setGameTier(chosen);
+        saveSettings({...loadSettings(), lastTier:state.tier});
+        render();
+      });
+    });
     document.getElementById("playerName").focus();
     document.getElementById("startBtn").addEventListener("click", ()=>{
       const input = document.getElementById("playerName").value.trim();
@@ -1465,7 +1648,8 @@
         lastName:state.name,
         lastClass:state.className,
         lastSchool:state.schoolName,
-        lastLocality:state.locality
+        lastLocality:state.locality,
+        lastTier:state.tier
       });
       startNewProblemSet();
       state.page = 1;
@@ -1488,7 +1672,7 @@
     const speed = item.key === "speed";
     const html = speed ? `
       <h1>${item.icon} Briefing: viteza</h1>
-      <p class="problem-text">În acest joc folosim formulele de bază pentru mișcare.</p>
+      <p class="problem-text">În acest joc folosim formulele de bază pentru mișcare. Nivelul competiției este <strong>${state.gameLevel}</strong>.</p>
       <div class="lesson-grid">
         <div class="info-box">
           <h3>Formula vitezei</h3>
@@ -1507,7 +1691,7 @@
       </div>
     ` : `
       <h1>${item.icon} Briefing: densitatea</h1>
-      <p class="problem-text">Acum intri în zona masei, volumului și densității.</p>
+      <p class="problem-text">Acum intri în zona masei, volumului și densității. Nivelul competiției este <strong>${state.gameLevel}</strong>.</p>
       <div class="lesson-grid">
         <div class="info-box">
           <h3>Formula densității</h3>
@@ -1543,7 +1727,7 @@
           <div class="level-num">${level}</div>
           <div>
             <h1 style="margin-bottom:2px">${info.icon} ${info.name}</h1>
-            <p class="tagline">Dificultate: ${info.badge}</p>
+            <p class="tagline">Treapta competiției: ${state.gameLevel} • Dificultate exercițiu: ${info.badge} • Punctaj ×${state.scoreMultiplier}</p>
           </div>
         </div>
       </div>
@@ -1588,7 +1772,7 @@
             <p class="tagline">Misiunea ${p.missionNumber || p.id}/12 • dificultate: ${p.difficulty}</p>
           </div>
         </div>
-        <div class="pill">+100 p</div>
+        <div class="pill">+${tierPoints(100)} p</div>
       </div>
 
       <h1>${p.title}</h1>
@@ -1600,7 +1784,7 @@
       <p class="small">Scrie doar valorile numerice. Ai o singură încercare. Exemple acceptate: <span class="kbd">2,5</span>, <span class="kbd">2.5</span>, <span class="kbd">12,6</span>.</p>
 
       <div class="button-row">
-        <button class="btn warning" id="hintBtn" ${st.done || st.hint ? "disabled" : ""}>Indiciu −10 p</button>
+        <button class="btn warning" id="hintBtn" ${st.done || st.hint ? "disabled" : ""}>Indiciu −${tierPoints(10)} p</button>
         <button class="btn primary" id="checkBtn" ${st.done ? "disabled" : ""}>Verifică răspunsul</button>
       </div>
 
@@ -1623,8 +1807,8 @@
     document.getElementById("hintBtn").addEventListener("click", ()=>{
       if(!st.hint && !st.done){
         st.hint = true;
-        addScore(-10);
-        showToast("Ai primit indiciul. Se scad 10 puncte.");
+        addScore(-tierPoints(10));
+        showToast(`Ai primit indiciul. Se scad ${tierPoints(10)} puncte.`);
         render();
       }
     });
@@ -1656,7 +1840,7 @@
     st.done = true;
 
     if(allOk){
-      const points = Math.max(0, 100 - (st.hint ? 10 : 0));
+      const points = Math.max(0, tierPoints(100 - (st.hint ? 10 : 0)));
       st.correct = true;
       st.points = points;
       addScore(points);
@@ -1700,13 +1884,13 @@
     }).join("");
     let feedback = "";
     if(state.quickSubmitted){
-      feedback = `<div class="feedback ok">Verificare rapidă finalizată: ai obținut ${state.quickScore} puncte bonus. ${rankMessage()}</div>`;
+      feedback = `<div class="feedback ok">Verificare rapidă finalizată la nivelul ${state.gameLevel}: ai obținut ${state.quickScore} puncte bonus. ${rankMessage()}</div>`;
     }else{
       feedback = `<div class="feedback">Alege câte o variantă la fiecare întrebare. Variantele sunt aliniate pentru verificare rapidă.</div>`;
     }
     card.innerHTML = `
       <h1>⚡ Verificare rapidă – bonus</h1>
-      <p class="problem-text">Ultima provocare: formule și transformări. Primești 30 p pentru fiecare răspuns corect.</p>
+      <p class="problem-text">Ultima provocare: formule și transformări. Primești ${tierPoints(30)} p pentru fiecare răspuns corect la nivelul ${state.gameLevel}.</p>
       <div class="quick-grid">${items}</div>
       ${feedback}
       <div class="button-row">
@@ -1730,7 +1914,7 @@
       quickChecks.forEach((q,i)=>{
         if(state.quickAnswers[i] === q.answer) correct += 1;
       });
-      state.quickScore = correct * 30;
+      state.quickScore = correct * tierPoints(30);
       state.quickSubmitted = true;
       addScore(state.quickScore);
       if(correct >= 4) celebrate();
@@ -1764,6 +1948,9 @@
       locality: state.locality || "-",
       score: entry.score,
       maxScore: state.maxScore,
+      gameLevel: state.gameLevel || "MEDIU",
+      tier: state.tier || 1,
+      scoreMultiplier: state.scoreMultiplier || 1,
       problemsSolved: solved,
       strongAnswers: strong,
       dateISO: new Date().toISOString(),
@@ -1876,24 +2063,33 @@
     }, 500);
   }
 
-  function adminResetCurrentWeek(){
+  function adminResetAllGame(){
     if(!ADMIN_MODE){
       showToast("Administrarea nu este activă pe această pagină.");
       return;
     }
 
-    const code = prompt("Introdu codul profesorului pentru resetarea clasamentului:");
+    const code = prompt("Introdu codul profesorului pentru resetarea completă a jocului:");
     if(!code) return;
 
+    const confirmation = prompt(
+      "Atenție! Resetarea completă șterge TOATE rezultatele din Google Sheets și golește clasamentele.\\n\\n" +
+      "Pentru confirmare, scrie exact: RESET"
+    );
+    if(String(confirmation || "").trim().toUpperCase() !== "RESET"){
+      showToast("Resetarea a fost anulată.");
+      return;
+    }
+
     const ok = confirm(
-      "Sigur vrei să resetezi clasamentul săptămânii curente?\\n\\n" +
-      "Vor fi șterse din Google Sheets rezultatele din săptămâna " + getLocalWeekKey() + "."
+      "Confirmi resetarea completă a jocului?\\n\\n" +
+      "Vor fi golite Rezultate_brute, Clasament_saptamana_curenta și Clasament_luna_curenta. Conturile jucătorilor rămân salvate în browser."
     );
     if(!ok) return;
 
     const payload = {
       key: ONLINE_KEY,
-      action: "adminResetWeek",
+      action: "adminResetAll",
       adminCode: code.trim(),
       localWeekKey: getLocalWeekKey(),
       localMonthKey: getLocalMonthKey(),
@@ -1904,10 +2100,12 @@
 
     sendAdminAction(payload);
 
-    // Resetare locală doar pe dispozitivul profesorului.
+    // Resetare locală doar pe dispozitivul profesorului: se șterg clasamentele locale,
+    // dar se păstrează setările și conturile jucătorilor.
     localStorage.removeItem(LS_KEY);
+    localStorage.removeItem(LS_MONTHLY);
     state.leaderboard = loadLeaderboard();
-    showToast("Cererea de resetare a fost trimisă. Verifică foaia Google Sheets în câteva secunde.");
+    showToast("Cererea de resetare completă a fost trimisă. Verifică Google Sheets în câteva secunde.");
     render();
   }
 
@@ -1916,15 +2114,15 @@
     return `
       <div class="info-box warn" style="margin-top:16px">
         <h3>🔐 Administrare profesor</h3>
-        <p>Acest buton apare doar când pagina este deschisă cu <span class="kbd">?admin=1</span> sau <span class="kbd">#admin</span>. Resetarea reală este protejată și în Google Apps Script prin codul profesorului.</p>
-        <button class="btn danger" id="adminResetWeekBtn" type="button">Resetează clasamentul săptămânii curente</button>
+        <p>Acest buton apare doar când pagina este deschisă cu <span class="kbd">?admin=1</span> sau <span class="kbd">#admin</span>. Resetarea reală este protejată și în Google Apps Script prin codul profesorului. Această acțiune golește rezultatele și clasamentele online, pentru ca jocul să poată fi reluat de la zero.</p>
+        <button class="btn danger" id="adminResetAllBtn" type="button">Resetează întreg jocul</button>
       </div>
     `;
   }
 
   function wireAdminPanel(){
-    const btn = document.getElementById("adminResetWeekBtn");
-    if(btn) btn.addEventListener("click", adminResetCurrentWeek);
+    const btn = document.getElementById("adminResetAllBtn");
+    if(btn) btn.addEventListener("click", adminResetAllGame);
   }
 
   function saveFinalScore(){
@@ -1938,6 +2136,9 @@
       locality: state.locality || "-",
       score: state.score,
       lastScore: state.score,
+      gameLevel: state.gameLevel || "MEDIU",
+      tier: state.tier || 1,
+      scoreMultiplier: state.scoreMultiplier || 1,
       attempts: 1,
       date: new Date().toLocaleDateString("ro-RO"),
       dateISO: new Date().toISOString(),
@@ -1959,6 +2160,9 @@
         locality: entry.locality,
         score: Math.max(Number(previous.score) || 0, Number(entry.score) || 0),
         lastScore: entry.lastScore,
+        gameLevel: tierRank(entry.gameLevel) >= tierRank(previous.gameLevel) ? entry.gameLevel : (previous.gameLevel || "MEDIU"),
+        tier: Math.max(Number(previous.tier) || 1, Number(entry.tier) || 1),
+        scoreMultiplier: Math.max(Number(previous.scoreMultiplier) || 1, Number(entry.scoreMultiplier) || 1),
         attempts: (Number(previous.attempts) || 1) + 1,
         date: entry.date,
         dateISO: entry.dateISO,
@@ -1980,6 +2184,7 @@
 
   function renderFinal(){
     saveFinalScore();
+    if((Number(state.tier) || 1) < 3) unlockNextTier();
     const rankList = state.leaderboard.slice().sort((a,b)=> b.score - a.score || String(a.name).localeCompare(String(b.name), "ro"));
     const myIdentity = playerIdentity(state);
     const myIndex = rankList.findIndex(x => !x.bot && playerIdentity(x) === myIdentity);
@@ -1991,12 +2196,16 @@
         <div class="rank">#${i+1}</div>
         <div>
           ${escapeHtml(x.name)} ${x.bot?'<span class="small">demo</span>':''}
-          <span class="small">${escapeHtml([x.schoolName, x.locality].filter(Boolean).join(" • "))}${x.attempts ? ` • ${x.attempts} participări` : ""}</span>
+          <span class="small">${escapeHtml([x.schoolName, x.locality, x.gameLevel || "MEDIU"].filter(Boolean).join(" • "))}${x.attempts ? ` • ${x.attempts} participări` : ""}</span>
         </div>
         <div class="score">${x.score} p</div>
       </div>
     `).join("");
     let medal = rank === 1 ? "🥇" : rank <= 3 ? "🥈" : rank <= 10 ? "🏅" : "🎯";
+    const nextTier = Math.min(3, (Number(state.tier) || 1) + 1);
+    const nextTierButton = (Number(state.tier) || 1) < 3
+      ? `<button class="btn warning" id="nextTierBtn">Treci la nivelul următor: ${GAME_TIERS[nextTier].label}</button>`
+      : "";
 
     const currentMonth = getLocalMonthKey();
     const currentStats = getMonthlyStatsForPlayer(currentMonth);
@@ -2021,14 +2230,14 @@
       <div class="avatar-board" style="min-height:auto; margin-bottom:14px">
         <div class="big-icon">${medal}</div>
         <h1>Felicitări, ${escapeHtml(state.name)}!</h1>
-        <p class="problem-text">Ai terminat jocul cu <strong>${state.score} puncte</strong>.</p>
+        <p class="problem-text">Ai terminat nivelul <strong>${state.gameLevel}</strong> cu <strong>${state.score} puncte</strong>.</p>
         <h2>🏆 Ești pe locul ${rank} din ${total} jucători în săptămâna ${getLocalWeekKey()}.</h2>
       </div>
 
       <div class="lesson-grid">
         <div class="info-box good">
           <h3>Rezumat</h3>
-          <p>Scor maxim posibil: ${state.maxScore} p.<br>Probleme rezolvate: 12/12.<br>Răspunsuri solide: ${accuracy}%.</p>
+          <p>Nivel: ${state.gameLevel}.<br>Multiplicator punctaj: ×${state.scoreMultiplier}.<br>Scor maxim posibil: ${state.maxScore} p.<br>Probleme rezolvate: 12/12.<br>Răspunsuri solide: ${accuracy}%.</p>
         </div>
         <div class="info-box warn">
           <h3>Ce ai antrenat</h3>
@@ -2048,6 +2257,7 @@
       <div class="button-row">
         <button class="btn primary" id="retrySendBtn">Retrimite rezultatul</button>
         <button class="btn success" id="againBtn">Joacă din nou</button>
+        ${nextTierButton}
         <button class="btn secondary" id="exitBtn">Ieșire</button>
       </div>
       ${certificateButton ? `<div class="button-row single">${certificateButton}</div>` : ""}
@@ -2070,8 +2280,19 @@
       state.page = 1;
       render();
     });
+    const nextTierBtn = document.getElementById("nextTierBtn");
+    if(nextTierBtn){
+      nextTierBtn.addEventListener("click", ()=>{
+        setGameTier(Math.min(3, (Number(state.tier) || 1) + 1));
+        saveSettings({...loadSettings(), lastTier:state.tier});
+        resetGame(true, true);
+        state.page = 1;
+        render();
+      });
+    }
     document.getElementById("exitBtn").addEventListener("click", ()=>{
-      window.location.href = "../index.html";
+      resetGame(true, false);
+      render();
     });
     const printBtn = document.getElementById("printDiplomaBtn");
     if(printBtn){
@@ -2086,6 +2307,7 @@
 
 
   state.leaderboard = loadLeaderboard();
+  setGameTier(loadSettings().lastTier || 1);
   render();
 })();
 </script>

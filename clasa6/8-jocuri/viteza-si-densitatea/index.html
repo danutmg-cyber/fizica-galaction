@@ -612,7 +612,7 @@
     3. Copiază URL-ul care se termină în /exec și pune-l între ghilimelele de mai jos.
     Clasamentul din Google Sheets se resetează automat săptămânal și are și clasament lunar.
   */
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzEe0tuM8ypPpvTkreaQ3fafm-o5cScfY57Me_qQoruW4rb30p4hGomCUSjwX-PqYfd8A/exec";
+  const GOOGLE_SCRIPT_URL = "PUNE_AICI_URL_WEB_APP_GOOGLE_APPS_SCRIPT";
   const ONLINE_KEY = "FIZICA_GALACTION_VITEZA_DENSITATE_2026";
   const TIME_ZONE = "Europe/Bucharest";
 
@@ -1239,7 +1239,7 @@
   function problemById(id){ return problems.find(p=>p.id===id); }
   function statusFor(id){
     if(!state.problemStatus[id]){
-      state.problemStatus[id] = {attempts:0, done:false, points:0, hint:false, revealed:false, feedback:""};
+      state.problemStatus[id] = {attempts:0, done:false, correct:false, points:0, hint:false, revealed:false, feedback:""};
     }
     return state.problemStatus[id];
   }
@@ -1486,7 +1486,7 @@
   }
   function renderProblem(p){
     const st = statusFor(p.id);
-    const feedbackClass = st.feedback ? (st.done ? "ok" : "no") : "";
+    const feedbackClass = st.feedback ? (st.correct ? "ok" : "no") : "";
     const inputsHtml = p.inputs.map((inp, i)=>`
       <div class="answer-row">
         <div>
@@ -1516,7 +1516,7 @@
       <div class="known">${p.known.map(k=>`<span>${k}</span>`).join("")}</div>
 
       <div class="answers">${inputsHtml}</div>
-      <p class="small">Scrie doar valorile numerice. Exemple acceptate: <span class="kbd">2,5</span>, <span class="kbd">2.5</span>, <span class="kbd">12,6</span>.</p>
+      <p class="small">Scrie doar valorile numerice. Ai o singură încercare. Exemple acceptate: <span class="kbd">2,5</span>, <span class="kbd">2.5</span>, <span class="kbd">12,6</span>.</p>
 
       <div class="button-row">
         <button class="btn warning" id="hintBtn" ${st.done || st.hint ? "disabled" : ""}>Indiciu −10 p</button>
@@ -1526,7 +1526,7 @@
       <p class="hintline" id="hintLine" style="${st.hint ? "" : "display:none"}">${p.hint}</p>
 
       <div class="feedback ${feedbackClass}" id="feedback">
-        ${st.feedback || "Completează răspunsurile, apoi apasă pe „Verifică răspunsul”."}
+        ${st.feedback || "Completează răspunsurile, apoi apasă pe „Verifică răspunsul”. Ai o singură încercare."}
       </div>
       ${solved}
 
@@ -1556,9 +1556,11 @@
   function checkProblem(p){
     const st = statusFor(p.id);
     if(st.done) return;
+
     st.values = {};
     let allOk = true;
     let details = [];
+
     p.inputs.forEach(inp=>{
       const el = document.getElementById(`ans_${p.id}_${inp.key}`);
       const raw = el.value;
@@ -1568,12 +1570,13 @@
       if(!ok) allOk = false;
       details.push({inp, val, ok});
     });
-    st.attempts += 1;
+
+    st.attempts = 1;
+    st.done = true;
 
     if(allOk){
-      const base = st.attempts === 1 ? 100 : st.attempts === 2 ? 75 : 50;
-      const points = Math.max(20, base - (st.hint ? 10 : 0));
-      st.done = true;
+      const points = Math.max(0, 100 - (st.hint ? 10 : 0));
+      st.correct = true;
       st.points = points;
       addScore(points);
       st.feedback = `Corect! Ai câștigat ${points} puncte. ${rankMessage()}`;
@@ -1583,20 +1586,11 @@
       return;
     }
 
-    if(st.attempts >= 3){
-      const points = st.hint ? 10 : 20;
-      st.done = true;
-      st.points = points;
-      addScore(points);
-      st.feedback = `Ai ajuns la 3 încercări. Primești ${points} puncte pentru efort. Verifică rezolvarea și mergi mai departe. ${rankMessage()}`;
-      showToast("Rezolvarea a fost afișată. Continuă jocul!");
-      render();
-      return;
-    }
-
+    st.correct = false;
+    st.points = 0;
     const wrongLabels = details.filter(d=>!d.ok).map(d=>d.inp.label.toLowerCase()).join(", ");
-    st.feedback = `Mai încearcă. Verifică: ${wrongLabels}. Încercarea ${st.attempts}/3.`;
-    showToast("Mai încearcă. Ești aproape!");
+    st.feedback = `Nu este corect la: ${wrongLabels}. Nu primești puncte la această problemă, dar vezi rezolvarea mai jos. Curaj! Data viitoare te vei descurca mai bine. ${rankMessage()}`;
+    showToast("Rezolvarea a fost afișată. Continuă cu încredere!");
     render();
   }
 

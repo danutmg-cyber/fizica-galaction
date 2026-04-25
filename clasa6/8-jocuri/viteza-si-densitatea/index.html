@@ -612,7 +612,7 @@
     3. Copiază URL-ul care se termină în /exec și pune-l între ghilimelele de mai jos.
     Clasamentul din Google Sheets se resetează automat săptămânal și are și clasament lunar.
   */
-  const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzEe0tuM8ypPpvTkreaQ3fafm-o5cScfY57Me_qQoruW4rb30p4hGomCUSjwX-PqYfd8A/exec";
+  const GOOGLE_SCRIPT_URL = "PUNE_AICI_URL_WEB_APP_GOOGLE_APPS_SCRIPT";
   const ONLINE_KEY = "FIZICA_GALACTION_VITEZA_DENSITATE_2026";
   const TIME_ZONE = "Europe/Bucharest";
 
@@ -785,22 +785,39 @@
     };
   }
   function makeMassProblem(id, opts){
-    const candidates = densityCombos().filter(x => x.rhoG >= opts.minRhoG && x.rhoG <= opts.maxRhoG);
-    const c = pick(candidates);
-    const toUnit = opts.toUnit || "g";
-    const converted = toUnit === "g" ? Math.round(c.mass * 1000) : c.mass;
+    const minRho = Math.round((opts.minRhoG || 0.5) * 1000);
+    const maxRho = Math.round((opts.maxRhoG || 3) * 1000);
+    const densities = [500,600,700,800,900,1000,1200,1500,1800,2000,2500,3000].filter(rho => rho >= minRho && rho <= maxRho);
+    const volumes = [0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1,1.2,1.5,1.8,2,2.5,3];
+    const combos = [];
+    densities.forEach(rho => volumes.forEach(v => {
+      const massKg = oneDec(rho * v);
+      if(hasMaxOneDecimal(massKg)){
+        combos.push({
+          rho,
+          v,
+          massKg,
+          massG: Math.round(massKg * 1000),
+          massQ: massKg / 100,
+          massT: massKg / 1000
+        });
+      }
+    }));
+    const c = pick(combos.length ? combos : [{rho:1000, v:1, massKg:1000, massG:1000000, massQ:10, massT:1}]);
     return {
       id, level: 4, icon: opts.icon, levelName:"Nivelul 4 – Maestrul mărimilor", difficulty:"greu",
       title: opts.title,
-      text:`${opts.subject} are densitatea ${roNum(c.rhoSI)} kg/m³ și volumul ${roNum(c.vdm3)} dm³. Determină masa în SI și în ${toUnit}.`,
-      known:[`ρ = ${roNum(c.rhoSI)} kg/m³`, `V = ${roNum(c.vdm3)} dm³`],
+      text:`${opts.subject} are densitatea ${roNum(c.rho)} kg/m³ și volumul ${roNum(c.v)} m³. Determină masa în SI, apoi transformă în g, q și t.`,
+      known:[`ρ = ${roNum(c.rho)} kg/m³`, `V = ${roNum(c.v)} m³`],
       formula:"\\(m=\\rho\\cdot V\\)",
       inputs:[
-        {key:"si", label:"Masa în SI", unit:"kg", answer:c.mass, tol:0.01},
-        {key:"conv", label:`Masa în ${toUnit}`, unit:toUnit, answer:converted, tol:toUnit==="g"?0.5:0.01}
+        {key:"si", label:"Masa în SI", unit:"kg", answer:c.massKg, tol:0.01},
+        {key:"g", label:"Masa în grame", unit:"g", answer:c.massG, tol:0.5},
+        {key:"q", label:"Masa în chintale", unit:"q", answer:c.massQ, tol:0.001},
+        {key:"t", label:"Masa în tone", unit:"t", answer:c.massT, tol:0.001}
       ],
-      hint:"Verifică unitatea volumului înainte de înmulțire.",
-      solution:`Pentru SI: \\(${mathNum(c.vdm3)}\\,dm^3=${String(c.vm3).replace(".", ",")}\\,m^3\\). \\(m=\\rho\\cdot V=${mathNum(c.rhoSI)}\\cdot${String(c.vm3).replace(".", ",")}=${mathNum(c.mass)}\\,kg\\). ${toUnit==="g" ? `În grame: \\(${mathNum(c.mass)}\\,kg=${mathNum(converted)}\\,g\\).` : `Masa cerută în kg rămâne \\(${mathNum(c.mass)}\\,kg\\).`}`
+      hint:"Întâi calculezi masa în SI, adică în kg. Apoi transformi: 1 kg = 1000 g, 1 q = 100 kg, 1 t = 1000 kg.",
+      solution:`Calcul în SI: \\(m=\\rho\\cdot V=${mathNum(c.rho)}\\cdot${mathNum(c.v)}=${mathNum(c.massKg)}\\,kg\\). Transformări: \\(${mathNum(c.massKg)}\\,kg=${mathNum(c.massG)}\\,g\\); \\(${mathNum(c.massKg)}\\,kg=${formatNumber(c.massQ)}\\,q\\); \\(${mathNum(c.massKg)}\\,kg=${formatNumber(c.massT)}\\,t\\).`
     };
   }
   function makeVolumeProblem(id, opts){
@@ -924,10 +941,12 @@
   const LS_KEY = "fizica_viteza_densitate_clasa6_leaderboard_weekly_v2";
   const LS_MONTHLY = "fizica_viteza_densitate_clasa6_monthly_results_v1";
   const LS_SETTINGS = "fizica_viteza_densitate_clasa6_settings_v2";
+  const LS_ACCOUNTS = "fizica_viteza_densitate_clasa6_accounts_v1";
 
   const state = {
     page:0,
     name:"",
+    playerId:"",
     score:0,
     maxScore: 12*100 + quickChecks.length*30,
     problemStatus:{},
@@ -1042,16 +1061,57 @@
   function isClosedMonth(monthKey){
     return String(monthKey || "") < getLocalMonthKey();
   }
-  function playerIdentity(obj){
+  function normalizeTextForKey(value){
+    return String(value || "")
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, " ");
+  }
+  function accountKey(obj){
     return [
-      String(obj.name || "").trim().toLowerCase(),
-      String(obj.schoolName || "").trim().toLowerCase(),
-      String(obj.locality || "").trim().toLowerCase()
+      normalizeTextForKey(obj.name),
+      normalizeTextForKey(obj.schoolName),
+      normalizeTextForKey(obj.locality)
     ].join("|");
+  }
+  function playerIdentity(obj){
+    const id = String(obj.playerId || "").trim();
+    if(id) return `id:${id}`;
+    return `profile:${accountKey(obj)}`;
+  }
+  function loadAccounts(){
+    try{
+      const raw = localStorage.getItem(LS_ACCOUNTS);
+      const parsed = raw ? JSON.parse(raw) : {};
+      return parsed && typeof parsed === "object" && !Array.isArray(parsed) ? parsed : {};
+    }catch(e){ return {}; }
+  }
+  function saveAccounts(accounts){
+    try{ localStorage.setItem(LS_ACCOUNTS, JSON.stringify(accounts)); }catch(e){}
+  }
+  function makePlayerId(){
+    if(window.crypto && window.crypto.getRandomValues){
+      const a = new Uint32Array(2);
+      window.crypto.getRandomValues(a);
+      return `p-${Date.now().toString(36)}-${a[0].toString(36)}${a[1].toString(36)}`;
+    }
+    return `p-${Date.now().toString(36)}-${Math.floor(Math.random()*1e12).toString(36)}`;
+  }
+  function getOrCreatePlayerId(profile){
+    const key = accountKey(profile);
+    const accounts = loadAccounts();
+    if(accounts[key]) return accounts[key];
+    const id = makePlayerId();
+    accounts[key] = id;
+    saveAccounts(accounts);
+    return id;
   }
   function recordMonthlyEntry(entry){
     const list = loadMonthlyEntries();
     list.push({
+      playerId: entry.playerId,
       name: entry.name,
       className: entry.className,
       schoolName: entry.schoolName,
@@ -1070,6 +1130,7 @@
       const key = playerIdentity(e);
       if(!grouped.has(key)){
         grouped.set(key, {
+          playerId:e.playerId,
           name:e.name,
           className:e.className,
           schoolName:e.schoolName,
@@ -1117,7 +1178,7 @@
           și s-a clasat pe locul <strong>${stats.rank}</strong>
           din <strong>${stats.total}</strong> participanți.
         </p>
-        <p class="small" style="color:#4b5563">Luna competiției: ${escapeHtml(stats.monthKey)} • Participări înregistrate pe acest dispozitiv: ${e.participations}</p>
+        <p class="small" style="color:#4b5563">Luna competiției: ${escapeHtml(stats.monthKey)} • Participări înregistrate pe acest cont: ${e.participations}</p>
         <div class="signature">Semnează: prof. Dănuț Andronie</div>
       </div>
     `;
@@ -1135,18 +1196,23 @@
   function currentRank(score=state.score){
     const list = state.leaderboard.map(x => ({...x}));
     if(state.name){
-      const existing = list.findIndex(x =>
-        !x.bot &&
-        x.name === state.name &&
-        x.schoolName === state.schoolName &&
-        x.locality === state.locality &&
-        x.score === score
-      );
+      const identity = playerIdentity(state);
+      const existing = list.findIndex(x => !x.bot && playerIdentity(x) === identity);
       if(existing >= 0){
-        list[existing].current = true;
-        list[existing].name = list[existing].name + " (tu)";
+        const bestScore = Math.max(Number(list[existing].score) || 0, Number(score) || 0);
+        list[existing] = {
+          ...list[existing],
+          name: `${state.name} (tu)`,
+          className: state.className,
+          schoolName: state.schoolName,
+          locality: state.locality,
+          playerId: state.playerId || list[existing].playerId,
+          score: bestScore,
+          current:true
+        };
       }else{
         list.push({
+          playerId:state.playerId,
           name:state.name + " (tu)",
           className:state.className,
           schoolName:state.schoolName,
@@ -1261,11 +1327,13 @@
   }
   function resetGame(keepName=true, newProblems=false){
     const name = keepName ? state.name : "";
+    const playerId = keepName ? state.playerId : "";
     const className = keepName ? state.className : "";
     const schoolName = keepName ? state.schoolName : "";
     const locality = keepName ? state.locality : "";
     state.page = 0;
     state.name = name;
+    state.playerId = playerId;
     state.className = className;
     state.schoolName = schoolName;
     state.locality = locality;
@@ -1303,6 +1371,7 @@
     const lastClass = state.className || settings.lastClass || "";
     const lastSchool = state.schoolName || settings.lastSchool || "";
     const lastLocality = state.locality || settings.lastLocality || "";
+    if(!state.playerId && settings.playerId) state.playerId = settings.playerId;
     state.leaderboard = loadLeaderboard();
     const localWeek = getLocalWeekKey();
     const leaders = state.leaderboard.slice().sort((a,b)=> b.score - a.score).slice(0,5);
@@ -1347,7 +1416,7 @@
             <input id="playerLocality" type="text" maxlength="60" value="${escapeHtml(lastLocality)}" placeholder="Ex.: Mangalia" autocomplete="address-level2" />
           </div>
 
-          <p class="small">Poți folosi virgulă sau punct pentru zecimale: <span class="kbd">1,5</span> sau <span class="kbd">1.5</span>.</p>
+          <p class="small">Poți folosi virgulă sau punct pentru zecimale: <span class="kbd">1,5</span> sau <span class="kbd">1.5</span>. Datele contului sunt memorate pe acest dispozitiv pentru participări ulterioare.</p>
 
           <div class="lesson-grid">
             <div class="info-box good">
@@ -1380,7 +1449,9 @@
       state.className = classInput || "-";
       state.schoolName = schoolInput || "-";
       state.locality = localityInput || "-";
+      state.playerId = getOrCreatePlayerId(state);
       saveSettings({
+        playerId:state.playerId,
         lastName:state.name,
         lastClass:state.className,
         lastSchool:state.schoolName,
@@ -1675,6 +1746,8 @@
     const payload = {
       key: ONLINE_KEY,
       game: "Campionii fizicii - etapa viteza și densitatea",
+      playerId: entry.playerId || state.playerId || "",
+      accountKey: accountKey(state),
       name: entry.name,
       className: state.className || "-",
       schoolName: state.schoolName || "-",
@@ -1712,36 +1785,60 @@
   }
   function saveFinalScore(){
     if(state.saved) return;
+    if(!state.playerId) state.playerId = getOrCreatePlayerId(state);
     const entry = {
+      playerId: state.playerId,
       name: state.name || "Jucător",
       className: state.className || "-",
       schoolName: state.schoolName || "-",
       locality: state.locality || "-",
       score: state.score,
+      lastScore: state.score,
+      attempts: 1,
       date: new Date().toLocaleDateString("ro-RO"),
       dateISO: new Date().toISOString(),
       weekKey: getLocalWeekKey(),
       monthKey: getLocalMonthKey(),
       bot:false
     };
-    state.leaderboard.push(entry);
-    state.leaderboard.sort((a,b)=> b.score - a.score);
+
+    const identity = playerIdentity(entry);
+    const existingIndex = state.leaderboard.findIndex(x => !x.bot && playerIdentity(x) === identity);
+    if(existingIndex >= 0){
+      const previous = state.leaderboard[existingIndex];
+      state.leaderboard[existingIndex] = {
+        ...previous,
+        playerId: entry.playerId,
+        name: entry.name,
+        className: entry.className,
+        schoolName: entry.schoolName,
+        locality: entry.locality,
+        score: Math.max(Number(previous.score) || 0, Number(entry.score) || 0),
+        lastScore: entry.lastScore,
+        attempts: (Number(previous.attempts) || 1) + 1,
+        date: entry.date,
+        dateISO: entry.dateISO,
+        weekKey: entry.weekKey,
+        monthKey: entry.monthKey,
+        bot:false
+      };
+    }else{
+      state.leaderboard.push(entry);
+    }
+
+    state.leaderboard.sort((a,b)=> b.score - a.score || String(a.name).localeCompare(String(b.name), "ro"));
     state.leaderboard = state.leaderboard.slice(0,80);
     saveLeaderboard(state.leaderboard);
     recordMonthlyEntry(entry);
     state.saved = true;
     sendScoreToGoogleSheets(entry);
   }
+
   function renderFinal(){
     saveFinalScore();
     const rankList = state.leaderboard.slice().sort((a,b)=> b.score - a.score || String(a.name).localeCompare(String(b.name), "ro"));
-    const myIndex = rankList.findIndex(x =>
-      !x.bot &&
-      x.name === state.name &&
-      x.schoolName === state.schoolName &&
-      x.locality === state.locality &&
-      x.score === state.score
-    );
+    const myIdentity = playerIdentity(state);
+    const myIndex = rankList.findIndex(x => !x.bot && playerIdentity(x) === myIdentity);
     const rank = myIndex >= 0 ? myIndex + 1 : currentRank().rank;
     const total = rankList.length;
     const accuracy = Math.round((Object.values(state.problemStatus).filter(x=>x.done && x.points>=50).length / 12) * 100);
@@ -1750,7 +1847,7 @@
         <div class="rank">#${i+1}</div>
         <div>
           ${escapeHtml(x.name)} ${x.bot?'<span class="small">demo</span>':''}
-          <span class="small">${escapeHtml([x.schoolName, x.locality].filter(Boolean).join(" • "))}</span>
+          <span class="small">${escapeHtml([x.schoolName, x.locality].filter(Boolean).join(" • "))}${x.attempts ? ` • ${x.attempts} participări` : ""}</span>
         </div>
         <div class="score">${x.score} p</div>
       </div>
@@ -1804,14 +1901,17 @@
 
       <div class="button-row">
         <button class="btn success" id="againBtn">Joacă din nou</button>
-        ${certificateButton || '<button class="btn secondary" id="resetRankBtn">Resetează clasamentul local al săptămânii</button>'}
+        <button class="btn secondary" id="exitBtn">Ieșire</button>
       </div>
-      ${certificateButton ? '<div class="button-row single"><button class="btn secondary" id="resetRankBtn">Resetează clasamentul local al săptămânii</button></div>' : ''}
+      ${certificateButton ? `<div class="button-row single">${certificateButton}</div>` : ""}
     `;
     document.getElementById("againBtn").addEventListener("click", ()=>{
       resetGame(true, true);
       state.page = 1;
       render();
+    });
+    document.getElementById("exitBtn").addEventListener("click", ()=>{
+      window.location.href = "../index.html";
     });
     const printBtn = document.getElementById("printDiplomaBtn");
     if(printBtn){
@@ -1821,7 +1921,6 @@
         setTimeout(()=>window.print(), 400);
       });
     }
-    document.getElementById("resetRankBtn").addEventListener("click", resetLeaderboard);
     updateTop();
   }
 

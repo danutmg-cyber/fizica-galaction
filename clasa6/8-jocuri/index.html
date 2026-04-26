@@ -8,51 +8,193 @@
   <link rel="stylesheet" href="../../assets/css/style.css">
 
   <style>
-    .game-card {
-      position: relative;
-      overflow: hidden;
+    :root {
+      --joc-bg: #0f172a;
+      --joc-card: #1e293b;
+      --joc-card-2: #243145;
+      --joc-text: #f8fafc;
+      --joc-text-soft: #e2e8f0;
+      --joc-muted: #cbd5e1;
+      --joc-primary: #22d3ee;
+      --joc-primary-2: #67e8f9;
+      --joc-green: #22c55e;
+      --joc-yellow: #fbbf24;
+      --joc-border: rgba(148, 163, 184, 0.35);
+      --joc-shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
+      --joc-radius: 18px;
     }
 
-    .game-card h3 {
-      margin-bottom: 8px;
+    * {
+      box-sizing: border-box;
+    }
+
+    body.games-page {
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.13), transparent 32rem),
+        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.10), transparent 28rem),
+        var(--joc-bg) !important;
+      color: var(--joc-text) !important;
+    }
+
+    .games-page .page-content {
+      padding-top: 18px;
+      padding-bottom: 28px;
+    }
+
+    .games-page .card,
+    .games-page .page-hero {
+      background: linear-gradient(180deg, rgba(30, 41, 59, 0.98), rgba(30, 41, 59, 0.92)) !important;
+      color: var(--joc-text) !important;
+      border: 1px solid var(--joc-border) !important;
+      border-radius: var(--joc-radius) !important;
+      box-shadow: var(--joc-shadow);
+    }
+
+    /* Titluri uniforme */
+    .games-page .page-title,
+    .games-page .section-title,
+    .games-page .card > h1,
+    .games-page .card > h2 {
+      font-size: clamp(1.35rem, 5vw, 1.75rem) !important;
+      line-height: 1.18;
+      margin-bottom: 14px;
+      color: #ffffff !important;
+      letter-spacing: -0.01em;
+    }
+
+    .games-page .link-card h3,
+    .games-page .teacher-item strong {
+      font-size: clamp(1.05rem, 4vw, 1.25rem) !important;
+      line-height: 1.25;
+      color: #ffffff !important;
+      margin: 0;
+    }
+
+    .games-page p,
+    .games-page li,
+    .games-page .small-muted {
+      color: var(--joc-text-soft) !important;
+      font-size: clamp(1rem, 3.7vw, 1.08rem);
+    }
+
+    .games-page .quote {
+      color: #fef3c7 !important;
+      background: rgba(251, 191, 36, 0.12);
+      border-left: 5px solid var(--joc-yellow);
+      border-radius: 14px;
+      padding: 12px 14px;
+      margin: 14px 0;
+      font-weight: 700;
+    }
+
+    .games-page .grid {
+      gap: 16px;
+    }
+
+    .games-page .link-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: 170px;
+      padding: 18px !important;
+      background:
+        linear-gradient(135deg, rgba(34, 211, 238, 0.12), rgba(34, 197, 94, 0.08)),
+        var(--joc-card-2) !important;
+      color: var(--joc-text) !important;
+      border: 1px solid rgba(103, 232, 249, 0.32) !important;
+      border-radius: 18px !important;
+      text-decoration: none !important;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.24);
+      transition: transform 0.15s ease, border-color 0.15s ease, filter 0.15s ease;
+    }
+
+    .games-page .link-card:hover,
+    .games-page .link-card:focus {
+      transform: translateY(-2px);
+      border-color: var(--joc-primary-2) !important;
+      filter: brightness(1.05);
+      outline: none;
     }
 
     .game-meta {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
-      margin: 12px 0;
+      margin-top: auto;
     }
 
     .badge-local {
-      display: inline-block;
-      padding: 6px 10px;
+      display: inline-flex;
+      align-items: center;
+      min-height: 34px;
+      padding: 7px 11px;
       border-radius: 999px;
-      font-weight: 700;
-      font-size: 0.9rem;
-      border: 1px solid rgba(255,255,255,0.20);
-      color: #f8fafc;
-      background: rgba(15, 23, 42, 0.35);
+      font-weight: 850;
+      font-size: 0.92rem;
+      border: 1px solid rgba(255, 255, 255, 0.24);
+      color: #ffffff;
+      background: rgba(15, 23, 42, 0.55);
+      line-height: 1;
     }
 
     .badge-ready {
-      background: rgba(34, 197, 94, 0.22);
+      background: rgba(34, 197, 94, 0.28);
       color: #dcfce7;
     }
 
     .badge-training {
-      background: rgba(59, 130, 246, 0.22);
+      background: rgba(59, 130, 246, 0.28);
       color: #dbeafe;
     }
 
     .badge-ranking {
-      background: rgba(251, 191, 36, 0.22);
+      background: rgba(251, 191, 36, 0.25);
       color: #fef3c7;
     }
 
     .badge-soon {
-      background: rgba(148, 163, 184, 0.22);
-      color: #e2e8f0;
+      background: rgba(148, 163, 184, 0.26);
+      color: #f8fafc;
+    }
+
+    .games-page .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .games-page .button {
+      min-height: 54px;
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 13px 18px !important;
+      border-radius: 14px !important;
+      background: var(--joc-primary) !important;
+      color: #082f49 !important;
+      border: 2px solid var(--joc-primary-2) !important;
+      font-weight: 900 !important;
+      text-decoration: none !important;
+      box-shadow: 0 10px 24px rgba(34, 211, 238, 0.24);
+      letter-spacing: 0.01em;
+    }
+
+    .games-page .button:hover,
+    .games-page .button:focus {
+      filter: brightness(1.08);
+      outline: 3px solid rgba(103, 232, 249, 0.38);
+      outline-offset: 2px;
+    }
+
+    .games-page .alert-info {
+      background: rgba(34, 211, 238, 0.10) !important;
+      border: 1px solid rgba(34, 211, 238, 0.38) !important;
+      color: #e0faff !important;
+      border-radius: 14px !important;
+      padding: 14px !important;
+      font-weight: 650;
     }
 
     .teacher-box {
@@ -63,21 +205,40 @@
     }
 
     .teacher-item {
-      background: var(--bg-secondary, rgba(15, 23, 42, 0.35));
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md, 12px);
+      background: rgba(15, 23, 42, 0.62);
+      border: 1px solid var(--joc-border);
+      border-radius: 14px;
       padding: 14px;
     }
 
-    .teacher-item strong {
+    .teacher-item span {
       display: block;
-      margin-bottom: 6px;
-      color: #f8fafc;
+      margin-top: 6px;
+      color: var(--joc-muted) !important;
+      line-height: 1.45;
     }
 
-    .small-muted {
-      color: var(--text-secondary, #cbd5e1);
-      font-size: 0.95rem;
+    .games-page ol {
+      color: var(--joc-text-soft) !important;
+      line-height: 1.75;
+      padding-left: 1.4rem;
+      margin-bottom: 0;
+    }
+
+    .games-page ol li {
+      margin-bottom: 8px;
+    }
+
+    .games-page .site-footer {
+      background: rgba(2, 6, 23, 0.72) !important;
+      color: var(--joc-text-soft) !important;
+      border-top: 1px solid var(--joc-border);
+    }
+
+    .games-page .site-footer a {
+      color: var(--joc-primary-2) !important;
+      font-weight: 800;
+      text-decoration: none;
     }
 
     @media (max-width: 900px) {
@@ -85,105 +246,133 @@
         grid-template-columns: 1fr;
       }
     }
+
+    @media (max-width: 680px) {
+      .games-page .page-content {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .games-page .card,
+      .games-page .page-hero {
+        padding: 16px !important;
+        border-radius: 16px !important;
+      }
+
+      .games-page .grid.grid-2 {
+        grid-template-columns: 1fr !important;
+      }
+
+      .games-page .link-card {
+        min-height: auto;
+      }
+
+      .games-page .actions {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .games-page .button {
+        width: 100%;
+      }
+
+      .badge-local {
+        font-size: 0.88rem;
+      }
+    }
   </style>
 </head>
 
-<body class="light">
-  <!-- HEADER DINAMIC -->
+<body class="light games-page">
   <div id="header-container"></div>
 
   <main class="page-content wrapper">
-    <!-- HERO -->
     <section class="page-hero card">
-      <h1>🎮 Jocuri interactive – clasa a VI-a</h1>
-     
+      <h1 class="page-title">🎮 Jocuri interactive – clasa a VI-a</h1>
+
       <div class="quote">
         „Fizica nu este o materie dominată de formule, ci de logică.”
       </div>
+
       <div class="actions">
         <a class="button" href="../index.html">Înapoi la clasa a VI-a</a>
         <a class="button" href="../../index.html">Pagina principală</a>
       </div>
     </section>
 
-    <!-- JOCURI DISPONIBILE -->
     <section class="card">
-      <h2>Jocuri disponibile</h2>
+      <h2 class="section-title">Jocuri disponibile</h2>
 
-      <div class="grid grid-2" style="margin-top: var(--spacing-lg, 18px);">
+      <div class="grid grid-2">
         <a class="link-card unit unit-3 game-card" href="viteza-si-densitatea/index.html">
           <h3>🏆 Campionii Vitezei și Densității</h3>
-          
+
+          <p class="small-muted">
+            Probleme cu viteză, densitate, masă și volum. Include niveluri și clasament.
+          </p>
+
           <div class="game-meta">
             <span class="badge-local badge-ready">Activ</span>
             <span class="badge-local badge-training">Niveluri</span>
             <span class="badge-local badge-ranking">Clasament</span>
           </div>
-          <p class="small-muted">
-            Recomandat pentru capitolele despre mărimi fizice, mișcare și proprietățile corpurilor.
-          </p>
         </a>
 
         <a class="link-card unit unit-2 game-card" href="unitati-de-masura/index.html">
           <h3>📏 Provocarea Unităților de Măsură</h3>
-         
+
+          <p class="small-muted">
+            Antrenament pentru conversii și folosirea corectă a unităților de măsură.
+          </p>
+
           <div class="game-meta">
             <span class="badge-local badge-ready">Activ</span>
             <span class="badge-local badge-training">Conversii</span>
             <span class="badge-local badge-soon">Antrenament</span>
           </div>
-          <p class="small-muted">
-            Recomandat înainte de problemele cu viteză, densitate și măsurări.
-          </p>
         </a>
       </div>
     </section>
 
-    <!-- INSTRUCȚIUNI PENTRU ELEVI -->
     <section class="card">
-      <h2>🚀 Cum te joci</h2>
-      <ol style="color: var(--text-primary); line-height: 1.8;">
+      <h2 class="section-title">🚀 Cum te joci</h2>
+
+      <ol>
         <li><strong>Scrii numele și clasa</strong> – folosește prenumele sau prenumele + inițiala numelui.</li>
-        <li><strong>Rezolvi problemele</strong> – citește enunțul, calculează și completează răspunsurile cerute.</li>
-        <li><strong>Primești feedback</strong> – vezi imediat ce ai făcut bine și unde trebuie să mai exersezi.</li>
-        <li><strong>Urmărești clasamentul</strong> – la final afli locul tău în clasamentul jocului.</li>
+        <li><strong>Rezolvi problemele</strong> – citește enunțul, calculează și completează răspunsurile.</li>
+        <li><strong>Primești feedback</strong> – vezi imediat ce ai făcut bine și unde mai ai de exersat.</li>
+        <li><strong>Urmărești clasamentul</strong> – la final afli locul tău.</li>
       </ol>
-      
     </section>
 
-    <!-- PENTRU PROFESOR -->
     <section class="card">
-      <h2>👨‍🏫 Pentru profesor</h2>
-      <p>
-        Jocurile pot fi folosite la începutul lecției, la recapitulare sau ca antrenament individual.
-        Pentru jocurile conectate la Google Sheets, rezultatele elevilor pot fi centralizate automat.
-      </p>
+      <h2 class="section-title">👨‍🏫 Pentru profesor</h2>
 
       <div class="teacher-box">
         <div class="teacher-item">
           <strong>📅 Clasament săptămânal</strong>
-          <span class="small-muted">Elevii concurează într-un interval scurt, potrivit pentru o lecție sau o temă.</span>
+          <span>Potrivit pentru lecții, teme sau recapitulări scurte.</span>
         </div>
 
         <div class="teacher-item">
           <strong>📆 Clasament lunar</strong>
-          <span class="small-muted">Profesorul poate urmări progresul pe termen mai lung.</span>
+          <span>Ajută la urmărirea progresului pe termen mai lung.</span>
         </div>
 
         <div class="teacher-item">
           <strong>🎯 Exersare diferențiată</strong>
-          <span class="small-muted">Nivelurile de dificultate îi ajută pe elevi să progreseze treptat.</span>
+          <span>Nivelurile îi ajută pe elevi să progreseze treptat.</span>
         </div>
       </div>
 
-      <div class="alert alert-info" style="margin-top: var(--spacing-lg, 18px);">
+      <div class="alert alert-info" style="margin-top: 18px;">
         ℹ️ Pentru protecția datelor, este recomandat ca elevii să scrie doar prenumele sau prenumele + inițiala numelui.
       </div>
     </section>
 
-    <!-- NAVIGAȚIE -->
     <section class="card">
-      <h2>🔎 Navigare rapidă</h2>
+      <h2 class="section-title">🔎 Navigare rapidă</h2>
+
       <div class="actions">
         <a class="button" href="../1-concepte-de-baza-in-fizica/index.html">Capitolul 1</a>
         <a class="button" href="../2-unitati-de-masura/index.html">Capitolul 2</a>
@@ -193,16 +382,17 @@
     </section>
   </main>
 
-  <!-- FOOTER -->
   <footer class="site-footer">
     <div class="wrapper">
-      <p>© 2024 Fizica Galaction • Clasa a VI-a • Prof. DĂNUȚ ANDRONIE</p>
-      <p>E-mail: <a href="mailto:danutmg@gmail.com" style="color: var(--primary); text-decoration: none;">danutmg@gmail.com</a></p>
-      <p style="font-size: 0.9rem; color: var(--text-light);">Pentru observații, propuneri și sugestii privind platforma educațională.</p>
+      <p>© 2026 • Prof. Dănuț Andronie</p>
+      <p>
+        E-mail:
+        <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+        pentru sugestii și observații
+      </p>
     </div>
   </footer>
 
-  <!-- SCRIPTS -->
   <script src="../../assets/js/theme-toggle.js"></script>
   <script src="../../assets/js/load-header.js"></script>
   <script src="../../assets/js/visitor-counter.js"></script>

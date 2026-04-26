@@ -43,6 +43,39 @@ button,input{font:inherit}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(2rem,6vw,3.
   min-height:54px;
 }
 
+.online-board{
+  margin-top:16px;
+  display:grid;
+  gap:8px;
+}
+.online-row{
+  display:grid;
+  grid-template-columns:54px 1fr 86px;
+  gap:8px;
+  align-items:center;
+  background:#07111f;
+  border:1px solid rgba(148,163,184,.35);
+  border-radius:14px;
+  padding:10px;
+}
+.online-row.me{
+  border-color:rgba(34,197,94,.75);
+  background:rgba(34,197,94,.14);
+}
+.online-rank{font-weight:1000;color:#fff0a8}
+.online-score{text-align:right;font-weight:1000;color:#bbf7d0}
+.online-name{font-weight:900;color:#f8fafc}
+.online-meta{display:block;color:#cbd5e1;font-size:.86rem}
+.online-status{
+  margin-top:14px;
+  padding:12px;
+  border-radius:16px;
+  border:1px solid rgba(34,211,238,.45);
+  background:rgba(34,211,238,.10);
+  color:#e0faff;
+  font-weight:850;
+}
+
 @media(max-width:820px){html{font-size:17px}.hero,.grid,.inputs{grid-template-columns:1fr}.tiers{grid-template-columns:1fr}.buttons{grid-template-columns:1fr}.answer{grid-template-columns:1fr}.variants{grid-template-columns:1fr}.scoregrid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.toprow{grid-template-columns:1fr}.app{padding:8px}.card{border-radius:20px}.pill{white-space:normal}.unit{min-height:50px}}
 @media(max-width:420px){html{font-size:16px}.stats{grid-template-columns:1fr}.banner{flex-direction:column;align-items:flex-start}.btitle{align-items:flex-start}}
 @media(print){body{background:white!important;color:black!important}.top,.buttons,.feedback,.grid,.scoregrid{display:none!important}.app{padding:0}.card{box-shadow:none;border:0;background:white}.cert{box-shadow:none;margin:0;min-height:90vh;display:flex;flex-direction:column;justify-content:center}}
@@ -216,6 +249,39 @@ input[type=text]{min-height:52px;border-radius:14px;padding:12px;font-size:1.05r
 }
 .admin-reset-panel .btn{
   min-height:54px;
+}
+
+.online-board{
+  margin-top:16px;
+  display:grid;
+  gap:8px;
+}
+.online-row{
+  display:grid;
+  grid-template-columns:54px 1fr 86px;
+  gap:8px;
+  align-items:center;
+  background:#07111f;
+  border:1px solid rgba(148,163,184,.35);
+  border-radius:14px;
+  padding:10px;
+}
+.online-row.me{
+  border-color:rgba(34,197,94,.75);
+  background:rgba(34,197,94,.14);
+}
+.online-rank{font-weight:1000;color:#fff0a8}
+.online-score{text-align:right;font-weight:1000;color:#bbf7d0}
+.online-name{font-weight:900;color:#f8fafc}
+.online-meta{display:block;color:#cbd5e1;font-size:.86rem}
+.online-status{
+  margin-top:14px;
+  padding:12px;
+  border-radius:16px;
+  border:1px solid rgba(34,211,238,.45);
+  background:rgba(34,211,238,.10);
+  color:#e0faff;
+  font-weight:850;
 }
 
 @media(max-width:820px){
@@ -443,6 +509,39 @@ input[type=text]{min-height:52px;border-radius:14px;padding:12px;font-size:1.05r
   min-height:54px;
 }
 
+.online-board{
+  margin-top:16px;
+  display:grid;
+  gap:8px;
+}
+.online-row{
+  display:grid;
+  grid-template-columns:54px 1fr 86px;
+  gap:8px;
+  align-items:center;
+  background:#07111f;
+  border:1px solid rgba(148,163,184,.35);
+  border-radius:14px;
+  padding:10px;
+}
+.online-row.me{
+  border-color:rgba(34,197,94,.75);
+  background:rgba(34,197,94,.14);
+}
+.online-rank{font-weight:1000;color:#fff0a8}
+.online-score{text-align:right;font-weight:1000;color:#bbf7d0}
+.online-name{font-weight:900;color:#f8fafc}
+.online-meta{display:block;color:#cbd5e1;font-size:.86rem}
+.online-status{
+  margin-top:14px;
+  padding:12px;
+  border-radius:16px;
+  border:1px solid rgba(34,211,238,.45);
+  background:rgba(34,211,238,.10);
+  color:#e0faff;
+  font-weight:850;
+}
+
 @media(max-width:820px){
   .hero-home{grid-template-columns:1fr}
   .avatar-board{min-height:auto}
@@ -474,10 +573,21 @@ input[type=text]{min-height:52px;border-radius:14px;padding:12px;font-size:1.05r
 (()=>{"use strict";
 const COUNT=20,BASE=100,BONUS=25,LS="campionii_unitatilor_masura_progress_v1";
 const ADMIN_MODE = new URLSearchParams(location.search).get("admin")==="1" || location.hash==="#admin";
+
+/*
+  CONECTARE LA GOOGLE SHEETS
+  1. Publică fișierul Code_universal_clasamente_jocuri.gs ca Web App.
+  2. Copiază URL-ul care se termină în /exec și pune-l mai jos.
+  3. Parola de resetare profesor este în Code.gs, nu în HTML.
+*/
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxCSfxRaU_5wiu555kA347-BLpOGNbyHFmY4JBIUp2RXaAcZ15VDsT1hBpXwA9WDrI1FO/exec";
+const ONLINE_KEY = "FIZICA_GALACTION_TOATE_JOCURILE_2026";
+const GAME_ID = "clasa6-unitati-de-masura";
+const LS_PLAYER_ID = "campionii_unitatilor_masura_player_id_v1";
 const TIERS={1:{label:"MEDIU",mult:1,icon:"🟢",desc:"Conversii directe, potrivite pentru antrenament de bază."},2:{label:"RIDICAT",mult:1.5,icon:"🟡",desc:"Conversii cu arie, volum, masă și timp. Punctaj ×1,5."},3:{label:"AVANSAT",mult:2,icon:"🔴",desc:"Conversii combinate și rezultate cu zecimale. Punctaj ×2."}};
 const U={length:{name:"lungime",f:{mm:.001,cm:.01,dm:.1,m:1,km:1000}},mass:{name:"masă",f:{mg:.000001,g:.001,kg:1,q:100,t:1000}},time:{name:"timp",f:{s:1,min:60,h:3600}},area:{name:"arie",f:{"cm²":.0001,"dm²":.01,"m²":1}},volume:{name:"volum",f:{"cm³":.000001,mL:.000001,"dm³":.001,L:.001,"m³":1}}};
 const BAD=["prost","proasta","idiot","idioata","bou","vaca","pula","pizda","muie","cur","cacat","rahat","jeg"];
-let S={page:"home",tier:1,level:"MEDIU",mult:1,score:0,i:0,name:"",cls:"",school:"",loc:"",qs:[],ans:{},quick:{},quickDone:false,quickScore:0,finished:false};
+let S={page:"home",tier:1,level:"MEDIU",mult:1,score:0,i:0,name:"",cls:"",school:"",loc:"",playerId:"",qs:[],ans:{},quick:{},quickDone:false,quickScore:0,finished:false,onlineStatus:"",onlineLeaders:[],onlineMonthly:[],onlineSent:false,lastSubmissionId:""};
 const $=id=>document.getElementById(id),card=$("card"),top=$("top");
 function rnd(){if(crypto?.getRandomValues){let a=new Uint32Array(1);crypto.getRandomValues(a);return a[0]/4294967296}return Math.random()}
 function ri(a,b){return Math.floor(rnd()*(b-a+1))+a}function pick(a){return a[ri(0,a.length-1)]}function sh(a){a=a.slice();for(let i=a.length-1;i>0;i--){let j=ri(0,i);[a[i],a[j]]=[a[j],a[i]]}return a}
@@ -492,18 +602,161 @@ function toast(m){$("toast").textContent=m;$("toast").classList.add("show");clea
 function conf(){let c=$("confetti");c.innerHTML="";["#22d3ee","#22c55e","#fbbf24","#fb7185","#fff"].forEach((col,k)=>{for(let i=0;i<14;i++){let s=document.createElement("span");s.style.left=rnd()*100+"%";s.style.background=col;s.style.animationDelay=rnd()*.35+"s";c.appendChild(s)}});setTimeout(()=>c.innerHTML="",1700)}
 function prog(){try{return JSON.parse(localStorage.getItem(LS))||{participations:0,unlockedTier:1,bestScore:0,bestLevel:"MEDIU"}}catch(e){return{participations:0,unlockedTier:1,bestScore:0,bestLevel:"MEDIU"}}}
 function save(p){try{localStorage.setItem(LS,JSON.stringify(p))}catch(e){}}
-function resetLocalProgress(){
+function isGoogleConfigured(){
+  return /^https:\/\/script\.google\.com\/macros\/s\//.test(GOOGLE_SCRIPT_URL);
+}
+function getPlayerId(){
+  try{
+    let id=localStorage.getItem(LS_PLAYER_ID);
+    if(id)return id;
+    id="u-"+Date.now().toString(36)+"-"+Math.floor(rnd()*1e12).toString(36);
+    localStorage.setItem(LS_PLAYER_ID,id);
+    return id;
+  }catch(e){
+    return "u-"+Date.now().toString(36)+"-"+Math.floor(rnd()*1e12).toString(36);
+  }
+}
+function submissionId(){
+  return "sub-"+Date.now().toString(36)+"-"+Math.floor(rnd()*1e12).toString(36);
+}
+function weekKey(){
+  let d=new Date(), day=d.getDay()||7;
+  let th=new Date(d); th.setDate(d.getDate()+4-day);
+  let y=new Date(th.getFullYear(),0,1);
+  let w=Math.ceil((((th-y)/86400000)+1)/7);
+  return th.getFullYear()+"-W"+String(w).padStart(2,"0");
+}
+function monthKey(){
+  let d=new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0");
+}
+function jsonp(params, timeout=8000){
+  return new Promise((resolve,reject)=>{
+    if(!isGoogleConfigured()){reject(new Error("Google Script URL nu este configurat."));return}
+    const cb="unitati_cb_"+Date.now()+"_"+Math.floor(rnd()*1e9);
+    const q=new URLSearchParams({...params, callback:cb});
+    const script=document.createElement("script");
+    let done=false;
+    const timer=setTimeout(()=>{cleanup();reject(new Error("Timp expirat la conectarea cu Google Sheets."));},timeout);
+    function cleanup(){
+      if(done)return;
+      done=true;
+      clearTimeout(timer);
+      try{delete window[cb]}catch(e){window[cb]=undefined}
+      if(script.parentNode)script.parentNode.removeChild(script);
+    }
+    window[cb]=data=>{cleanup();resolve(data||{})};
+    script.onerror=()=>{cleanup();reject(new Error("Nu s-a putut contacta Google Apps Script."))};
+    script.src=GOOGLE_SCRIPT_URL+"?"+q.toString();
+    document.body.appendChild(script);
+  });
+}
+function leaderboardHtml(list){
+  if(!Array.isArray(list)||!list.length)return `<div class="feedback">Nu există încă rezultate în clasamentul online pentru acest joc.</div>`;
+  const myId=S.playerId||"";
+  return `<div class="online-board">${list.slice(0,8).map(r=>{
+    const me=myId && String(r.playerId||"")===myId;
+    return `<div class="online-row ${me?"me":""}">
+      <div class="online-rank">#${esc(r.loc||"-")}</div>
+      <div>
+        <span class="online-name">${esc(r.name||"Jucător")}${me?" (tu)":""}</span>
+        <span class="online-meta">${esc(r.className||"")} • ${esc(r.schoolName||"")} • ${esc(r.locality||"")} • ${esc(r.gameLevel||"")}</span>
+      </div>
+      <div class="online-score">${esc(r.score||0)} p</div>
+    </div>`;
+  }).join("")}</div>`;
+}
+async function loadOnlineLeaderboard(){
+  if(!isGoogleConfigured())return;
+  try{
+    const data=await jsonp({action:"leaderboard",gameId:GAME_ID,key:ONLINE_KEY});
+    if(data&&data.ok){
+      S.onlineLeaders=data.weekly||[];
+      S.onlineMonthly=data.monthly||[];
+      if(S.page==="final")render();
+    }
+  }catch(e){}
+}
+async function sendScoreToGoogle(){
+  if(!isGoogleConfigured()){
+    S.onlineStatus="Clasamentul online nu este activat încă. Completează GOOGLE_SCRIPT_URL în index.html.";
+    return;
+  }
+  const correct=Object.values(S.ans).filter(x=>x.correct).length;
+  const p=S.after||prog();
+  if(!S.lastSubmissionId)S.lastSubmissionId=submissionId();
+  const payload={
+    action:"submit",
+    key:ONLINE_KEY,
+    gameId:GAME_ID,
+    submissionId:S.lastSubmissionId,
+    playerId:S.playerId||getPlayerId(),
+    name:S.name,
+    className:S.cls,
+    schoolName:S.school,
+    locality:S.loc,
+    gameLevel:S.level,
+    tier:S.tier,
+    scoreMultiplier:S.mult,
+    score:S.score,
+    maxScore:COUNT*BASE*S.mult+QQ.length*BONUS*S.mult,
+    correctAnswers:correct,
+    localParticipations:p.participations||0,
+    weekKey:weekKey(),
+    monthKey:monthKey(),
+    pageUrl:location.href,
+    userAgent:navigator.userAgent
+  };
+  S.onlineStatus="Se trimite rezultatul către clasamentul online...";
+  try{
+    const data=await jsonp({action:"submit",key:ONLINE_KEY,gameId:GAME_ID,payload:JSON.stringify(payload)});
+    if(data&&data.ok){
+      S.onlineSent=true;
+      S.onlineStatus=data.duplicate?"Rezultatul era deja înregistrat în Google Sheets.":"Rezultatul a fost înregistrat în Google Sheets.";
+      S.onlineLeaders=data.weekly||[];
+      S.onlineMonthly=data.monthly||[];
+    }else{
+      S.onlineStatus="Rezultatul nu a fost salvat: "+esc(data&&data.error?data.error:"eroare necunoscută");
+    }
+  }catch(e){
+    S.onlineStatus="Nu s-a putut trimite rezultatul: "+esc(e.message||e);
+  }
+  if(S.page==="final")render();
+}
+async function resetLocalProgress(){
   if(!ADMIN_MODE)return;
-  const ok = prompt("Resetarea șterge participările, diploma, scorul maxim și nivelurile deblocate salvate în acest browser. Pentru confirmare scrie RESET.");
+  if(!isGoogleConfigured()){
+    toast("Pentru resetare cu parolă trebuie configurat GOOGLE_SCRIPT_URL.");
+    return;
+  }
+
+  const parola = prompt("Introduceți parola profesorului pentru resetarea jocului.");
+  if(!parola){
+    toast("Resetarea a fost anulată.");
+    return;
+  }
+
+  const ok = prompt("Resetarea șterge rezultatele din Google Sheets și progresul local din acest browser. Pentru confirmare scrie RESET.");
   if(String(ok||"").trim().toUpperCase()!=="RESET"){
     toast("Resetarea a fost anulată.");
     return;
   }
-  try{localStorage.removeItem(LS)}catch(e){}
-  S={page:"home",tier:1,level:"MEDIU",mult:1,score:0,i:0,name:"",cls:"",school:"",loc:"",qs:[],ans:{},quick:{},quickDone:false,quickScore:0,finished:false};
-  setTier(1);
-  toast("Progresul local al jocului a fost resetat.");
-  render();
+
+  try{
+    const data=await jsonp({action:"resetGame",gameId:GAME_ID,key:ONLINE_KEY,adminCode:parola,confirm:"RESET"});
+    if(!data||!data.ok){
+      toast(data&&data.error?data.error:"Resetarea nu a reușit.");
+      return;
+    }
+    try{localStorage.removeItem(LS)}catch(e){}
+    try{localStorage.removeItem(LS_PLAYER_ID)}catch(e){}
+    S={page:"home",tier:1,level:"MEDIU",mult:1,score:0,i:0,name:"",cls:"",school:"",loc:"",playerId:"",qs:[],ans:{},quick:{},quickDone:false,quickScore:0,finished:false,onlineStatus:"",onlineLeaders:[],onlineMonthly:[],onlineSent:false,lastSubmissionId:""};
+    setTier(1);
+    toast("Jocul a fost resetat complet.");
+    render();
+  }catch(e){
+    toast("Resetarea nu a reușit: "+(e.message||e));
+  }
 }
 window.resetUnitatiMasuraProgress = resetLocalProgress;
 document.addEventListener("click", function(event){
@@ -604,8 +857,8 @@ function home(){
         ${ADMIN_MODE?`
         <div class="admin-reset-panel">
           <h3>🔐 Administrare profesor</h3>
-          <p>Resetarea șterge doar progresul salvat în browserul acestui dispozitiv: participări, diplomă, scor maxim și niveluri deblocate.</p>
-          <button type="button" class="btn danger" id="resetProgress">🔴 Resetează progresul jocului</button>
+          <p>Resetarea este protejată cu parola profesorului din Google Apps Script și șterge clasamentul online al acestui joc, apoi resetează și progresul local din browser.</p>
+          <button type="button" class="btn danger" id="resetProgress">🔴 Resetează jocul și clasamentul</button>
         </div>`:""}
       </div>
 
@@ -631,7 +884,8 @@ function home(){
     S.cls=$("c").value.trim()||"-";
     S.school=$("sc").value.trim()||"-";
     S.loc=$("l").value.trim()||"-";
-    S.score=0;S.i=0;S.ans={};S.quick={};S.quickDone=false;S.quickScore=0;S.finished=false;
+    S.playerId=getPlayerId();
+    S.score=0;S.i=0;S.ans={};S.quick={};S.quickDone=false;S.quickScore=0;S.finished=false;S.onlineStatus="";S.onlineSent=false;S.onlineLeaders=[];S.onlineMonthly=[];S.lastSubmissionId="";
     S.qs=makeSet(S.tier);
     S.page="info";
     render();
@@ -720,10 +974,24 @@ function question(){
   let a=$("a");if(a&&!st.checked){a.focus();a.onkeydown=e=>{if(e.key=="Enter")$("check").click()}}
 }
 const QQ=[["Unitatea SI pentru lungime este:",["metrul","kilometrul","centimetrul"],0],["Unitatea SI pentru masă este:",["gramul","kilogramul","tona"],1],["1 h are:",["60 s","600 s","3600 s"],2],["1 dm³ este egal cu:",["1 L","10 L","100 L"],0],["1 q este egal cu:",["10 kg","100 kg","1000 kg"],1]];
-function quick(){card.innerHTML=`<h1>⚡ Verificare rapidă – bonus</h1><p class="problem">Răspunde la 5 întrebări scurte. Fiecare răspuns corect aduce ${pts(BONUS)} puncte.</p><div class="quick">${QQ.map((q,i)=>`<div class="box"><h3>${i+1}. ${q[0]}</h3><div class="variants">${q[1].map((op,j)=>`<label class="variant"><input type="radio" name="q${i}" value="${j}" ${S.quick[i]===j?"checked":""} ${S.quickDone?"disabled":""}><span><strong>${String.fromCharCode(65+j)}.</strong> ${op}</span></label>`).join("")}</div></div>`).join("")}</div><div class="feedback ${S.quickDone?"ok":""}">${S.quickDone?`Bonus finalizat: ${S.quickScore} puncte.`:"Alege câte o variantă la fiecare întrebare."}</div><div class="buttons"><button class="btn secondary" id="back">Înapoi</button><button class="btn primary" id="check" ${S.quickDone?"disabled":""}>Verifică bonusul</button><button class="btn success" id="fin" ${S.quickDone?"":"disabled"}>Vezi rezultatul</button></div>`;QQ.forEach((q,i)=>document.querySelectorAll(`input[name=q${i}]`).forEach(inp=>inp.onchange=()=>S.quick[i]=Number(inp.value)));$("back").onclick=()=>{S.page="question";S.i=COUNT-1;render()};$("check").onclick=()=>{if(Object.keys(S.quick).length<QQ.length){toast("Alege un răspuns la fiecare întrebare.");return}let c=0;QQ.forEach((q,i)=>{if(S.quick[i]===q[2])c++});S.quickScore=pts(c*BONUS);S.score+=S.quickScore;S.quickDone=true;if(c>=4)conf();render()};$("fin").onclick=()=>{if(!S.finished){S.finished=true;let p=prog(),bestLevel=["MEDIU","RIDICAT","AVANSAT"].indexOf(S.level)>=["MEDIU","RIDICAT","AVANSAT"].indexOf(p.bestLevel||"MEDIU")?S.level:p.bestLevel||"MEDIU";S.after={participations:(p.participations||0)+1,unlockedTier:Math.min(3,Math.max(p.unlockedTier||1,S.tier+1)),bestScore:Math.max(p.bestScore||0,S.score),bestLevel,lastPlayed:new Date().toISOString()};save(S.after)}S.page="final";render()}}
+function quick(){card.innerHTML=`<h1>⚡ Verificare rapidă – bonus</h1><p class="problem">Răspunde la 5 întrebări scurte. Fiecare răspuns corect aduce ${pts(BONUS)} puncte.</p><div class="quick">${QQ.map((q,i)=>`<div class="box"><h3>${i+1}. ${q[0]}</h3><div class="variants">${q[1].map((op,j)=>`<label class="variant"><input type="radio" name="q${i}" value="${j}" ${S.quick[i]===j?"checked":""} ${S.quickDone?"disabled":""}><span><strong>${String.fromCharCode(65+j)}.</strong> ${op}</span></label>`).join("")}</div></div>`).join("")}</div><div class="feedback ${S.quickDone?"ok":""}">${S.quickDone?`Bonus finalizat: ${S.quickScore} puncte.`:"Alege câte o variantă la fiecare întrebare."}</div><div class="buttons"><button class="btn secondary" id="back">Înapoi</button><button class="btn primary" id="check" ${S.quickDone?"disabled":""}>Verifică bonusul</button><button class="btn success" id="fin" ${S.quickDone?"":"disabled"}>Vezi rezultatul</button></div>`;QQ.forEach((q,i)=>document.querySelectorAll(`input[name=q${i}]`).forEach(inp=>inp.onchange=()=>S.quick[i]=Number(inp.value)));$("back").onclick=()=>{S.page="question";S.i=COUNT-1;render()};$("check").onclick=()=>{if(Object.keys(S.quick).length<QQ.length){toast("Alege un răspuns la fiecare întrebare.");return}let c=0;QQ.forEach((q,i)=>{if(S.quick[i]===q[2])c++});S.quickScore=pts(c*BONUS);S.score+=S.quickScore;S.quickDone=true;if(c>=4)conf();render()};$("fin").onclick=()=>{if(!S.finished){S.finished=true;let p=prog(),bestLevel=["MEDIU","RIDICAT","AVANSAT"].indexOf(S.level)>=["MEDIU","RIDICAT","AVANSAT"].indexOf(p.bestLevel||"MEDIU")?S.level:p.bestLevel||"MEDIU";S.after={participations:(p.participations||0)+1,unlockedTier:Math.min(3,Math.max(p.unlockedTier||1,S.tier+1)),bestScore:Math.max(p.bestScore||0,S.score),bestLevel,lastPlayed:new Date().toISOString()};save(S.after)}S.page="final";render();sendScoreToGoogle()}}
 function diploma(p){return(p.participations||0)>=4?`<div class="cert" id="diploma"><h2>FELICITĂRI!</h2><p>Se adeverește prin prezenta că</p><div class="name">${esc(S.name)}</div><p>de la școala <strong>${esc(S.school)}</strong>, din localitatea <strong>${esc(S.loc)}</strong>, a participat la competiția <strong>Campionii fizicii – etapa unitățile de măsură</strong>, nivelul <strong>${esc(S.level)}</strong>, și a finalizat cel puțin <strong>4 exersări</strong>.</p><p>Scorul obținut la această participare: <strong>${S.score} puncte</strong>.</p><div class="sig">Semnează: prof. Dănuț Andronie</div></div>`:""}
-function final(){let p=S.after||prog(),cor=Object.values(S.ans).filter(x=>x.correct).length,need=Math.max(0,4-(p.participations||0)),next=S.tier<3&&(p.unlockedTier||1)>=S.tier+1;card.innerHTML=`<h1>🏁 Rezultat final</h1><p class="problem">Ai finalizat nivelul ${S.level}.</p><div class="scoregrid"><div class="tile"><strong>${S.score}</strong><span>puncte</span></div><div class="tile"><strong>${cor}/${COUNT}</strong><span>exerciții corecte</span></div><div class="tile"><strong>${p.participations}/4</strong><span>participări pentru diplomă</span></div></div><div class="box ${p.participations>=4?"good":"warn"}"><h3>${p.participations>=4?"🎓 Diplomă disponibilă":"🎓 Încă puțin până la diplomă"}</h3><p>${p.participations>=4?"Ai cel puțin 4 participări salvate în browserul acestui dispozitiv. Diploma este afișată mai jos.":`Mai ai nevoie de ${need} participare/participări finalizate pe acest dispozitiv.`}</p></div>${diploma(p)}<div class="buttons">${next?`<button class="btn warning" id="nt">Treci la nivelul următor</button>`:""}<button class="btn success" id="again">Joacă din nou</button><button class="btn secondary" id="exit">Ieșire</button>${p.participations>=4?`<button class="btn primary" id="print">Tipărește / salvează diploma</button>`:""}</div>`;if($("nt"))$("nt").onclick=()=>{setTier(S.tier+1);S.page="home";render()};$("again").onclick=()=>{S.page="home";render()};$("exit").onclick=()=>{location.href="../index.html"};if($("print"))$("print").onclick=()=>print()}
-setTier(1);render();
+function final(){
+  let p=S.after||prog(),cor=Object.values(S.ans).filter(x=>x.correct).length,need=Math.max(0,4-(p.participations||0)),next=S.tier<3&&(p.unlockedTier||1)>=S.tier+1;
+  const onlineBox=isGoogleConfigured()?`
+    <div class="online-status">${S.onlineStatus||"Clasamentul online este activ. Rezultatul se trimite la finalizarea jocului."}</div>
+    <h2 style="margin-top:16px">🏆 Clasament online săptămânal</h2>
+    ${leaderboardHtml(S.onlineLeaders)}
+    <div class="buttons single"><button class="btn primary" id="resend">Retrimite / actualizează clasamentul</button></div>
+  `:`<div class="online-status">Clasamentul online nu este activat încă. Completează GOOGLE_SCRIPT_URL în index.html după publicarea Apps Script.</div>`;
+  card.innerHTML=`<h1>🏁 Rezultat final</h1><p class="problem">Ai finalizat nivelul ${S.level}.</p><div class="scoregrid"><div class="tile"><strong>${S.score}</strong><span>puncte</span></div><div class="tile"><strong>${cor}/${COUNT}</strong><span>exerciții corecte</span></div><div class="tile"><strong>${p.participations}/4</strong><span>participări pentru diplomă</span></div></div><div class="box ${p.participations>=4?"good":"warn"}"><h3>${p.participations>=4?"🎓 Diplomă disponibilă":"🎓 Încă puțin până la diplomă"}</h3><p>${p.participations>=4?"Ai cel puțin 4 participări salvate în browserul acestui dispozitiv. Diploma este afișată mai jos.":`Mai ai nevoie de ${need} participare/participări finalizate pe acest dispozitiv.`}</p></div>${diploma(p)}${onlineBox}<div class="buttons">${next?`<button class="btn warning" id="nt">Treci la nivelul următor</button>`:""}<button class="btn success" id="again">Joacă din nou</button><button class="btn secondary" id="exit">Ieșire</button>${p.participations>=4?`<button class="btn primary" id="print">Tipărește / salvează diploma</button>`:""}</div>`;
+  if($("nt"))$("nt").onclick=()=>{setTier(S.tier+1);S.page="home";render()};
+  $("again").onclick=()=>{S.page="home";render()};
+  $("exit").onclick=()=>{location.href="../index.html"};
+  if($("print"))$("print").onclick=()=>print();
+  if($("resend"))$("resend").onclick=()=>sendScoreToGoogle();
+}
+setTier(1);render();loadOnlineLeaderboard();
 })();
 </script>
 </body>

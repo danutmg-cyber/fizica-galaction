@@ -13,6 +13,9 @@ button,input{font:inherit}h1,h2,h3,p{margin-top:0}h1{font-size:clamp(2rem,6vw,3.
 .hero{display:grid;grid-template-columns:1.05fr .95fr;gap:20px}.badge{display:inline-flex;gap:8px;padding:9px 13px;border-radius:999px;color:#fff7cd;background:rgba(251,191,36,.14);border:1px solid rgba(251,191,36,.52);font-weight:950}.quote{border-left:5px solid var(--cyan);background:rgba(34,211,238,.1);padding:12px 14px;border-radius:16px;font-weight:750}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:14px 0}.box{background:var(--card2);border:1px solid rgba(148,163,184,.35);border-radius:18px;padding:14px}.good{background:rgba(34,197,94,.11);border-color:rgba(34,197,94,.55)}.warn{background:rgba(251,191,36,.11);border-color:rgba(251,191,36,.55)}.danger{background:rgba(251,113,133,.11);border-color:rgba(251,113,133,.55)}
 .inputs{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:16px 0}.inp{display:grid;gap:7px}label{font-weight:900;color:white}input[type=text]{width:100%;min-height:58px;border:2px solid var(--line);border-radius:16px;padding:14px;background:#050b15;color:#fff;outline:none;font-weight:750;font-size:clamp(1.05rem,3.5vw,1.2rem)}input::placeholder{color:#91a6c7}input:focus{border-color:#67e8f9;box-shadow:0 0 0 4px rgba(34,211,238,.2)}
 .buttons{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:18px}.buttons.single{grid-template-columns:1fr}.btn{min-height:62px;border:0;border-radius:18px;padding:15px 18px;cursor:pointer;font-weight:1000;text-align:center;display:flex;align-items:center;justify-content:center;gap:10px;color:#06101f;font-size:clamp(1.05rem,3.7vw,1.22rem);box-shadow:0 10px 24px rgba(0,0,0,.22)}.btn:disabled{opacity:.55;cursor:not-allowed}.primary{background:var(--cyan)}.success{background:var(--green)}.warning{background:var(--yellow)}.secondary{background:#31435f;color:white;border:1px solid var(--line)}
+.btn.danger{background:linear-gradient(135deg,#ef4444,#be123c)!important;color:#fff!important;border:2px solid rgba(254,202,202,.9)!important;box-shadow:0 12px 28px rgba(239,68,68,.32)!important;}
+.btn.danger:hover{filter:brightness(1.08)}
+.admin-reset-panel .btn.danger{margin-top:10px;min-height:58px;font-size:clamp(1.05rem,3.7vw,1.2rem)}
 .tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}.tier{min-height:150px;border:2px solid rgba(148,163,184,.35);border-radius:20px;padding:16px;background:#0b1323;color:white;text-align:left;cursor:pointer}.tier strong{display:block;font-size:1.25rem}.tier span{display:block;color:#d8e8ff}.tier .mini{color:#fff0a8;font-weight:950;margin-top:9px}.tier.sel{border-color:#67e8f9;box-shadow:0 0 0 4px rgba(34,211,238,.16)}.tier.lock{opacity:.55;cursor:not-allowed}
 .banner{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:14px;border-radius:20px;background:linear-gradient(90deg,rgba(34,211,238,.16),rgba(34,197,94,.11));border:1px solid rgba(34,211,238,.45);margin-bottom:16px}.num{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;background:var(--cyan);color:#062033;font-weight:1000;font-size:1.35rem;flex:0 0 auto}.btitle{display:flex;gap:12px;align-items:center}.problem{font-weight:900;font-size:clamp(1.32rem,5vw,1.75rem);line-height:1.25}.known{display:flex;flex-wrap:wrap;gap:9px;margin:12px 0}.known span{border-radius:999px;background:#091426;border:1px solid rgba(148,163,184,.38);color:#e0f2fe;font-weight:900;padding:8px 12px}
 .answer{display:grid;grid-template-columns:1fr 115px;gap:10px;align-items:end;background:rgba(8,17,31,.72);border:1px solid rgba(148,163,184,.28);border-radius:18px;padding:12px;margin-top:12px}.answer input{text-align:center}.unit{min-height:58px;border-radius:16px;display:grid;place-items:center;background:#1e2a42;border:1px solid var(--line);color:#fff0a8;font-weight:1000}.feedback{margin-top:14px;border-radius:18px;border:1px solid rgba(148,163,184,.32);background:#08111f;padding:14px;min-height:56px;font-weight:800}.ok{background:rgba(34,197,94,.13);border-color:rgba(34,197,94,.58);color:#dcfce7}.no{background:rgba(251,113,133,.13);border-color:rgba(251,113,133,.58);color:#ffe4e6}.solution{margin-top:12px;background:rgba(34,211,238,.11);border:1px solid rgba(34,211,238,.45);border-radius:18px;padding:14px;color:#eefcff}
@@ -502,6 +505,14 @@ function resetLocalProgress(){
   toast("Progresul local al jocului a fost resetat.");
   render();
 }
+window.resetUnitatiMasuraProgress = resetLocalProgress;
+document.addEventListener("click", function(event){
+  const btn = event.target && event.target.closest ? event.target.closest("#resetProgress") : null;
+  if(btn){
+    event.preventDefault();
+    resetLocalProgress();
+  }
+});
 
 function bad(t){t=String(t).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");return BAD.some(w=>t.includes(w))}
 function conv(cat,v,from,to){return Number(v)*U[cat].f[from]/U[cat].f[to]}
@@ -594,7 +605,7 @@ function home(){
         <div class="admin-reset-panel">
           <h3>🔐 Administrare profesor</h3>
           <p>Resetarea șterge doar progresul salvat în browserul acestui dispozitiv: participări, diplomă, scor maxim și niveluri deblocate.</p>
-          <button class="btn danger" id="resetProgress">Resetează progresul jocului</button>
+          <button type="button" class="btn danger" id="resetProgress">🔴 Resetează progresul jocului</button>
         </div>`:""}
       </div>
 

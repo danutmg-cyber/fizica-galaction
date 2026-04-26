@@ -1654,6 +1654,68 @@
       }
     }
 
+
+    /* ULTRA COMPACT: pe paginile cu întrebări ascundem panoul repetitiv
+       Jucător / Scor / Nivel / Progres și păstrăm doar o linie mică. */
+    body.compact-question-mode .topbar{
+      padding:3px 6px;
+      border-radius:0 0 8px 8px;
+      border-left:0;
+      border-right:0;
+      box-shadow:0 4px 12px rgba(0,0,0,.18);
+      background:rgba(2,6,23,.96);
+    }
+
+    body.compact-question-mode .toprow{
+      display:block;
+    }
+
+    body.compact-question-mode #topTitle,
+    body.compact-question-mode #topSubtitle,
+    body.compact-question-mode .stats{
+      display:none !important;
+    }
+
+    body.compact-question-mode #rankPill{
+      display:flex;
+      justify-content:center;
+      width:100%;
+      min-height:26px;
+      padding:3px 8px;
+      border-radius:999px;
+      font-size:clamp(.82rem, 3vw, .94rem);
+      line-height:1.05;
+      background:rgba(34,211,238,.16);
+      border-color:rgba(125,211,252,.55);
+      color:#f8fafc;
+      white-space:normal;
+    }
+
+    body.compact-question-mode .progress-wrap{
+      height:4px;
+      margin-top:3px;
+      border:0;
+      background:#111827;
+    }
+
+    body.compact-question-mode .screen{
+      padding-top:4px;
+    }
+
+    @media (max-width:760px){
+      body.compact-question-mode .topbar{
+        position:sticky;
+        padding:2px 5px;
+      }
+      body.compact-question-mode #rankPill{
+        min-height:24px;
+        font-size:.84rem;
+      }
+      body.compact-question-mode .progress-wrap{
+        height:3px;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -2543,7 +2605,10 @@
     const r = currentRank();
     topTitle.textContent = "Campionii Vitezei și Densității";
     topSubtitle.textContent = `Săptămâna ${getLocalWeekKey()} • luna ${getLocalMonthKey()}`;
-    rankPill.textContent = `🏆 Ești pe locul ${r.rank} din ${r.total} jucători`;
+    const compactHeader = item && (item.type === "problem" || item.type === "quick");
+    rankPill.textContent = compactHeader
+      ? `🏆 Loc ${r.rank}/${r.total} • ${state.score} p • ${pct}%`
+      : `🏆 Ești pe locul ${r.rank} din ${r.total} jucători`;
     statName.textContent = [state.name || "-", state.schoolName, state.locality].filter(Boolean).join(" • ");
     statScore.textContent = `${state.score} p`;
     statLevel.textContent = getCurrentLevel();

@@ -1243,7 +1243,7 @@
 
   const PROBLEM_COUNT = 12;
   let problems = [];
-  let sequence = [{type:"home"}];
+  let sequence = [{type:"intro"}, {type:"home"}];
 
   function randomUnit(){
     if(window.crypto && window.crypto.getRandomValues){
@@ -1865,6 +1865,62 @@
       entry: idx >= 0 ? board[idx] : null
     };
   }
+
+  function buildAllTimeBoard(){
+    const entries = loadMonthlyEntries();
+    const grouped = new Map();
+    entries.forEach(e => {
+      const key = playerIdentity(e);
+      if(!grouped.has(key)){
+        grouped.set(key, {
+          playerId:e.playerId,
+          name:e.name,
+          className:e.className,
+          schoolName:e.schoolName,
+          locality:e.locality,
+          gameLevel:e.gameLevel || "MEDIU",
+          tier:Number(e.tier) || tierRank(e.gameLevel),
+          scoreMultiplier:Number(e.scoreMultiplier) || (GAME_TIERS[Number(e.tier) || tierRank(e.gameLevel)] || GAME_TIERS[1]).multiplier,
+          participations:0,
+          weeks:{},
+          totalScore:0,
+          bestScore:0
+        });
+      }
+      const g = grouped.get(key);
+      g.participations += 1;
+      const w = e.weekKey || e.monthKey || "participari";
+      const score = Number(e.score) || 0;
+      g.weeks[w] = Math.max(g.weeks[w] || 0, score);
+      g.bestScore = Math.max(Number(g.bestScore) || 0, score);
+      if(tierRank(e.gameLevel) > tierRank(g.gameLevel)){
+        g.gameLevel = e.gameLevel || g.gameLevel;
+        g.tier = Number(e.tier) || tierRank(e.gameLevel);
+        g.scoreMultiplier = Number(e.scoreMultiplier) || g.scoreMultiplier;
+      }
+    });
+    const board = Array.from(grouped.values()).map(g => ({
+      ...g,
+      totalScore:Object.values(g.weeks).reduce((a,b)=>a+b,0)
+    })).sort((a,b)=>
+      b.totalScore - a.totalScore ||
+      b.bestScore - a.bestScore ||
+      b.participations - a.participations ||
+      String(a.name).localeCompare(String(b.name), "ro")
+    );
+    return board;
+  }
+
+  function getAllTimeStatsForPlayer(){
+    const identity = playerIdentity(state);
+    const board = buildAllTimeBoard();
+    const idx = board.findIndex(x => playerIdentity(x) === identity);
+    return {
+      rank: idx >= 0 ? idx + 1 : "-",
+      total: board.length,
+      entry: idx >= 0 ? board[idx] : null
+    };
+  }
   function certificateHtml(stats){
     if(!stats || !stats.entry) return "";
     const e = stats.entry;
@@ -1882,7 +1938,7 @@
           și s-a clasat pe locul <strong>${stats.rank}</strong>
           din <strong>${stats.total}</strong> participanți.
         </p>
-        <p class="small" style="color:#4b5563">Luna competiției: ${escapeHtml(stats.monthKey)} • Nivel: ${escapeHtml(e.gameLevel || "MEDIU")} • Participări înregistrate pe acest cont: ${e.participations}</p>
+        <p class="small" style="color:#4b5563">Nivel: ${escapeHtml(e.gameLevel || "MEDIU")} • Participări înregistrate pe acest cont: ${e.participations} • Diploma este calculată din participările salvate în browserul acestui dispozitiv.</p>
         <div class="signature">Semnează: prof. Dănuț Andronie</div>
       </div>
     `;
@@ -2020,7 +2076,8 @@
     return "-";
   }
   function updateTop(){
-    const show = state.page > 0;
+    const item = sequence[state.page];
+    const show = item && item.type !== "intro" && item.type !== "home";
     topbar.style.display = show ? "" : "none";
     if(!show) return;
     const pct = pageProgress();
@@ -2149,6 +2206,7 @@
   function render(){
     updateTop();
     const item = sequence[state.page];
+    if(item.type === "intro") renderIntro();
     if(item.type === "home") renderHome();
     if(item.type === "lesson") renderLesson(item);
     if(item.type === "level") renderLevel(item.level);
@@ -2158,6 +2216,48 @@
     renderMath();
     window.scrollTo({top:0, behavior:"smooth"});
   }
+  function renderIntro(){
+    card.innerHTML = `
+      <div class="hero">
+        <div>
+          <div class="hero-badge">🎓 Criterii pentru diplomă</div>
+          <h1>Campionii Vitezei și Densității</h1>
+          <p class="problem-text">Diploma devine disponibilă după <strong>4 participări</strong>, fără limită de o lună.</p>
+
+          <div class="lesson-grid">
+            <div class="info-box good">
+              <h3>✅ Cum primești diploma</h3>
+              <p>Joacă de cel puțin 4 ori folosind același cont local: același nume, aceeași școală și aceeași localitate. După a patra participare, diploma poate fi afișată pe telefon, tabletă sau calculator.</p>
+            </div>
+            <div class="info-box warn">
+              <h3>📱 Atenție la dispozitiv</h3>
+              <p>Diploma este calculată din participările salvate în browserul aceluiași telefon, tabletă sau calculator.</p>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <h3>Important</h3>
+            <p>Dacă elevul schimbă dispozitivul sau șterge datele browserului, jocul local nu mai poate vedea participările anterioare. Clasamentul online din Google Sheets rămâne pentru profesor, dar diploma afișată pe dispozitiv folosește istoricul local.</p>
+          </div>
+
+          <div class="button-row single">
+            <button class="btn success" id="introNextBtn">Am înțeles. Mergi mai departe</button>
+          </div>
+        </div>
+
+        <div class="avatar-board" aria-hidden="true">
+          <div class="big-icon">🏆</div>
+          <h2>4 participări</h2>
+          <p class="tagline">fără limită de lună • același browser • același dispozitiv</p>
+        </div>
+      </div>
+    `;
+    document.getElementById("introNextBtn").addEventListener("click", ()=>{
+      state.page = 1;
+      render();
+    });
+  }
+
   function renderHome(){
     const settings = loadSettings();
     const lastName = state.name || settings.lastName || "";
@@ -2181,14 +2281,16 @@
         <div class="score">${x.score} p</div>
       </div>
     `).join("") : `<div class="feedback">Nu există încă rezultate locale pentru săptămâna ${localWeek}.</div>`;
-    const prevStats = getMonthlyStatsForPlayer(previousMonthKey());
-    const certNotice = prevStats.entry && prevStats.entry.participations >= 4
-      ? `<div class="info-box good"><h3>🎓 Diplomă disponibilă</h3><p>Ai cel puțin 4 participări în luna ${previousMonthKey()}. După ce pornești jocul sau finalizezi o tură, diploma poate fi afișată pe telefon.</p></div>`
-      : `<div class="info-box"><h3>🎓 Diplomă lunară</h3><p>La încheierea lunii, dacă ai cel puțin 4 participări, jocul va afișa o diplomă pe telefon.</p></div>`;
+    const allStats = getAllTimeStatsForPlayer();
+    const totalParticipations = allStats.entry ? allStats.entry.participations : 0;
+    const neededForDiploma = Math.max(0, 4 - totalParticipations);
+    const certNotice = totalParticipations >= 4
+      ? `<div class="info-box good"><h3>🎓 Diplomă disponibilă</h3><p>Ai ${totalParticipations} participări salvate în browserul acestui dispozitiv. După finalizarea unei ture, diploma poate fi afișată pe telefon. Dacă jocul este resetat de profesor, clasamentul pornește de la zero.</p></div>`
+      : `<div class="info-box"><h3>🎓 Diplomă după 4 participări</h3><p>Ai ${totalParticipations} participări salvate local. Mai ai nevoie de ${neededForDiploma} participări pentru diplomă. Dacă schimbi dispozitivul sau ștergi datele browserului, jocul local nu mai vede participările anterioare. Jocul se poate reseta din când în când.</p></div>`;
     card.innerHTML = `
       <div class="hero">
         <div>
-          <div class="hero-badge">🎮 Joc de fizică</div>
+          <div class="hero-badge">🎮 Joc de fizică • public larg</div>
           <h1>Campionii Vitezei și Densității</h1>
           <p class="tagline">Rezolvi exerciții cu date și ordine generate aleator, alegi treapta de dificultate deblocată și vezi imediat pe ce loc ești în clasament.</p>
 
@@ -2212,7 +2314,12 @@
             <input id="playerLocality" type="text" maxlength="60" value="${escapeHtml(lastLocality)}" placeholder="Ex.: Mangalia" autocomplete="address-level2" />
           </div>
 
-          <p class="small">Poți folosi virgulă sau punct pentru zecimale: <span class="kbd">1,5</span> sau <span class="kbd">1.5</span>. Datele contului sunt memorate pe acest dispozitiv pentru participări ulterioare.</p>
+          <div class="info-box warn">
+            <h3>🔐 Informare despre nume și diplomă</h3>
+            <p>Numele și prenumele sunt folosite numai pentru completarea diplomei. Dacă nu dorești diplomă, poți scrie orice nume fictiv, fără cuvinte obscene sau jignitoare.</p>
+            <p class="small">Datele personale nu vor fi stocate pe telefonul, tableta sau calculatorul folosit. Jocul păstrează local doar progresul necesar pentru participări și diplomă. Jocul se poate reseta din când în când, iar după resetare clasamentul pornește de la zero.</p>
+            <p class="small">Poți folosi virgulă sau punct pentru zecimale: <span class="kbd">1,5</span> sau <span class="kbd">1.5</span>.</p>
+          </div>
 
           <h3>Alege nivelul de dificultate</h3>
           ${tierSelectorHtml(state.tier || 1, state.unlockedTier || 1)}
@@ -2555,7 +2662,7 @@
   function buildScorePayload(entry){
     const solved = Object.values(state.problemStatus).filter(x=>x.done).length;
     const strong = Object.values(state.problemStatus).filter(x=>x.done && x.points>=50).length;
-    const currentMonthStats = getMonthlyStatsForPlayer(getLocalMonthKey());
+    const allTimeStats = getAllTimeStatsForPlayer();
     const submissionId = state.lastSubmissionId || `${state.playerId || "player"}-${state.problemSetId || makeId()}-${Date.now().toString(36)}`;
     state.lastSubmissionId = submissionId;
 
@@ -2580,7 +2687,8 @@
       localWeekKey: getLocalWeekKey(),
       localMonthKey: getLocalMonthKey(),
       timeZone: TIME_ZONE,
-      monthlyParticipationsOnDevice: currentMonthStats.entry ? currentMonthStats.entry.participations : 1,
+      monthlyParticipationsOnDevice: allTimeStats.entry ? allTimeStats.entry.participations : 1,
+      totalParticipationsOnDevice: allTimeStats.entry ? allTimeStats.entry.participations : 1,
       pageUrl: location.href,
       problemSetId: state.problemSetId || "",
       problemOrder: (state.problemOrder || []).join(","),
@@ -2830,21 +2938,20 @@
       ? `<button class="btn warning" id="nextTierBtn">Treci la nivelul următor: ${GAME_TIERS[nextTier].label}</button>`
       : "";
 
-    const currentMonth = getLocalMonthKey();
-    const currentStats = getMonthlyStatsForPlayer(currentMonth);
-    const previousStats = getMonthlyStatsForPlayer(previousMonthKey());
+    const allStats = getAllTimeStatsForPlayer();
     let certificateBlock = "";
     let certificateButton = "";
-    if(previousStats.entry && previousStats.entry.participations >= 4){
-      certificateBlock = certificateHtml(previousStats);
+    const participations = allStats.entry ? allStats.entry.participations : 0;
+    if(allStats.entry && participations >= 4){
+      certificateBlock = certificateHtml(allStats);
       certificateButton = `<button class="btn warning" id="printDiplomaBtn">Afișează / tipărește diploma</button>`;
     }else{
-      const participations = currentStats.entry ? currentStats.entry.participations : 0;
       const needed = Math.max(0, 4 - participations);
       certificateBlock = `
         <div class="info-box warn" style="margin-top:16px">
-          <h3>🎓 Diploma lunară</h3>
-          <p>Participări în luna ${currentMonth}: <strong>${participations}</strong>. ${needed === 0 ? "Ai numărul necesar de participări; diploma se va afișa după încheierea lunii." : `Mai ai nevoie de ${needed} participări pentru diplomă.`}</p>
+          <h3>🎓 Diplomă după 4 participări</h3>
+          <p>Participări salvate în browserul acestui dispozitiv: <strong>${participations}</strong>. Mai ai nevoie de <strong>${needed}</strong> participări pentru diplomă.</p>
+          <p class="small">Dacă elevul schimbă telefonul/tableta/calculatorul sau șterge datele browserului, jocul local nu mai poate vedea participările anterioare.</p>
         </div>
       `;
     }

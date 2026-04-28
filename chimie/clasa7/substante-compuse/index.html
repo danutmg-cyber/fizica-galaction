@@ -1,1 +1,388 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<title>Fișă de lucru – Substanțe compuse</title>
+
+<!-- Biblioteca pentru export PDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #eef2f7;
+        margin: 0;
+        padding: 20px;
+    }
+    h1, h2 {
+        text-align: center;
+        color: #2c3e50;
+    }
+    .card {
+        background: white;
+        padding: 20px;
+        margin: 20px auto;
+        border-radius: 12px;
+        max-width: 900px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .question {
+        margin-bottom: 20px;
+        padding: 15px;
+        background: #f7f9fc;
+        border-left: 4px solid #3498db;
+        border-radius: 8px;
+    }
+    button {
+        padding: 8px 14px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        background: #3498db;
+        color: white;
+        margin-top: 10px;
+    }
+    button:hover {
+        background: #217dbb;
+    }
+    .feedback {
+        margin-top: 10px;
+        font-weight: bold;
+    }
+    #popup {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        background: rgba(0,0,0,0.6);
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+    #popupContent {
+        background: white;
+        padding: 20px;
+        border-radius: 12px;
+        max-width: 800px;
+        max-height: 90vh;
+        overflow-y: auto;
+    }
+</style>
+</head>
+<body>
+
+<!-- ANTET -->
+<div id="antet" class="card">
+    <h2>Școala Gimnazială „Gala Galaction”, Mangalia</h2>
+    <h3>Fișă de lucru – Chimie, clasa a VII‑a</h3>
+
+    <label><b>Nume și prenume:</b></label>
+    <input id="elevNume" type="text" style="width:40%; padding:5px; margin-left:10px;"><br><br>
+
+    <label><b>Clasa:</b></label>
+    <input id="elevClasa" type="text" style="width:15%; padding:5px; margin-left:10px;"><br><br>
+
+    <label><b>Data:</b></label>
+    <input id="elevData" type="date" style="padding:5px; margin-left:10px;">
+</div>
+
+<!-- Punctaj -->
+<div class="card" style="text-align:center;">
+    <h2>Punctajul tău</h2>
+    <p style="font-size:22px;"><b id="score">0</b> puncte</p>
+    <p id="badge" style="font-size:20px; color:#8e44ad;"></p>
+    <button onclick="resetTest()">Resetează testul</button>
+    <button onclick="exportPDF()">Exportă fișa ca PDF</button>
+</div>
+
+<h1>Fișă de lucru – Substanțe compuse</h1>
+
+<!-- SECȚIUNEA 1 -->
+<div class="card" id="exerciseContainer"></div>
+
+<!-- SECȚIUNEA 2 -->
+<div class="card" id="section2">
+    <h2>Secțiunea 2 – Calculează valența metalului</h2>
+    <div id="valentaContainer"></div>
+</div>
+
+<!-- SECȚIUNEA 3 -->
+<div class="card" id="section3">
+    <h2>Secțiunea 3 – Corectează formulele greșite</h2>
+    <div id="greseliContainer"></div>
+</div>
+
+<!-- SECȚIUNEA 4 -->
+<div class="card" id="section4">
+    <h2>Secțiunea 4 – Completează tabelul</h2>
+    <div id="tabelContainer"></div>
+</div>
+
+<!-- POPUP TABEL MENDELEEV -->
+<div id="popup">
+    <div id="popupContent">
+        <h2>Tabelul lui Mendeleev</h2>
+        <button onclick="closePopup()">Închide</button>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/91/Periodic_Table_of_Elements.png" style="width:100%; margin-top:10px;">
+    </div>
+</div>
+
+<script>
+// ---------------------------
+// SISTEM DE PUNCTAJ
+// ---------------------------
+let score = 0;
+
+function addPoints(p) {
+    score += p;
+    document.getElementById("score").innerText = score;
+    updateBadge();
+}
+
+function updateBadge() {
+    const b = document.getElementById("badge");
+    if (score < 30) b.innerHTML = "🏅 Bronz – Continuă!";
+    else if (score < 60) b.innerHTML = "🥈 Argint – Foarte bine!";
+    else if (score < 90) b.innerHTML = "🥇 Aur – Excelent!";
+    else b.innerHTML = "💎 Diamant – Maestru al chimiei!";
+}
+
+function resetTest() {
+    score = 0;
+    document.getElementById("score").innerText = 0;
+    document.getElementById("badge").innerText = "";
+    loadQuestions();
+    loadValenta();
+    loadGreseli();
+    loadTabel();
+}
+
+// ---------------------------
+// SECȚIUNEA 1
+// ---------------------------
+const questions = [
+    { text: "Scrie formula chimică pentru acid sulfuric", answer: "H2SO4", explanation: "Acid ternar: H₂SO₄." },
+    { text: "Scrie formula chimică pentru oxid de fier(III)", answer: "Fe2O3", explanation: "Fe³⁺ + O²⁻ → Fe₂O₃." },
+    { text: "Scrie formula chimică pentru piatra iadului", answer: "AgNO3", explanation: "Azotat de argint: AgNO₃." },
+    { text: "Scrie formula chimică pentru clorură de bariu", answer: "BaCl2", explanation: "Ba²⁺ + 2Cl⁻ → BaCl₂." },
+    { text: "Scrie formula chimică pentru dioxid de sulf", answer: "SO2", explanation: "SO₂: dioxid = 2 oxigeni." },
+    { text: "Scrie formula chimică pentru acid clorhidric", answer: "HCl", explanation: "H⁺ + Cl⁻ → HCl." }
+];
+
+function loadQuestions() {
+    const c = document.getElementById("exerciseContainer");
+    c.innerHTML = "";
+    [...questions].sort(() => Math.random() - 0.5).forEach((q, i) => {
+        c.innerHTML += `
+        <div class="question">
+            <p><b>${i+1}. ${q.text}</b></p>
+            <input id="q${i}" type="text">
+            <button onclick="checkAnswer(${i}, '${q.answer}', '${q.explanation}')">Verifică</button>
+            <button onclick="openPopup()">Tabelul lui Mendeleev</button>
+            <div id="f${i}" class="feedback"></div>
+        </div>`;
+    });
+}
+
+function checkAnswer(i, correct, exp) {
+    const val = document.getElementById("q"+i).value.trim();
+    const fb = document.getElementById("f"+i);
+    if (val.toUpperCase() === correct.toUpperCase()) {
+        fb.style.color = "green";
+        fb.innerHTML = "Corect!";
+        addPoints(10);
+    } else {
+        fb.style.color = "red";
+        fb.innerHTML = "Greșit. " + exp;
+    }
+}
+
+// ---------------------------
+// SECȚIUNEA 2
+// ---------------------------
+const valentaQuestions = [
+    { formula:"NaCl", valenta:1, explanation:"Cl are valența I → Na I." },
+    { formula:"NiCl2", valenta:2, explanation:"Cl I → Ni II." },
+    { formula:"CuSO4", valenta:2, explanation:"SO₄ II → Cu II." },
+    { formula:"Hg(NO3)2", valenta:2, explanation:"NO₃ I → Hg II." },
+    { formula:"Zn(OH)2", valenta:2, explanation:"OH I → Zn II." },
+    { formula:"Cr2(SO4)3", valenta:3, explanation:"SO₄ II → Cr III." },
+    { formula:"Fe2O3", valenta:3, explanation:"O II → Fe III." },
+    { formula:"K2CO3", valenta:1, explanation:"CO₃ II → K I." }
+];
+
+function loadValenta() {
+    const c = document.getElementById("valentaContainer");
+    c.innerHTML = "";
+    [...valentaQuestions].sort(() => Math.random() - 0.5).forEach((q, i) => {
+        c.innerHTML += `
+        <div class="question">
+            <p><b>${i+1}. Valența metalului în ${q.formula}</b></p>
+            <input id="v${i}" type="number">
+            <button onclick="checkValenta(${i}, ${q.valenta}, '${q.explanation}')">Verifică</button>
+            <button onclick="openPopup()">Tabelul lui Mendeleev</button>
+            <div id="vf${i}" class="feedback"></div>
+        </div>`;
+    });
+}
+
+function checkValenta(i, correct, exp) {
+    const val = document.getElementById("v"+i).value;
+    const fb = document.getElementById("vf"+i);
+    if (parseInt(val) === correct) {
+        fb.style.color = "green";
+        fb.innerHTML = "Corect!";
+        addPoints(10);
+    } else {
+        fb.style.color = "red";
+        fb.innerHTML = "Greșit. " + exp;
+    }
+}
+
+// ---------------------------
+// SECȚIUNEA 3
+// ---------------------------
+const greseliQuestions = [
+    { wrong:"NaS", correct:"Na2S", explanation:"Na I, S II → Na₂S." },
+    { wrong:"MgOH", correct:"Mg(OH)2", explanation:"Mg II, OH I → Mg(OH)₂." },
+    { wrong:"CaO", correct:"CaO", explanation:"Formula este corectă." },
+    { wrong:"CO2", correct:"CO2", explanation:"Formula este corectă." },
+    { wrong:"AgCl2", correct:"AgCl", explanation:"Ag I, Cl I → AgCl." },
+    { wrong:"AlO2", correct:"Al2O3", explanation:"Al III, O II → Al₂O₃." }
+];
+
+function loadGreseli() {
+    const c = document.getElementById("greseliContainer");
+    c.innerHTML = "";
+    [...greseliQuestions].sort(() => Math.random() - 0.5).forEach((q, i) => {
+        c.innerHTML += `
+        <div class="question">
+            <p><b>${i+1}. Corectează formula: ${q.wrong}</b></p>
+            <input id="g${i}" type="text">
+            <button onclick="checkGreseli(${i}, '${q.correct}', '${q.explanation}')">Verifică</button>
+            <button onclick="openPopup()">Tabelul lui Mendeleev</button>
+            <div id="gf${i}" class="feedback"></div>
+        </div>`;
+    });
+}
+
+function checkGreseli(i, correct, exp) {
+    const val = document.getElementById("g"+i).value.trim();
+    const fb = document.getElementById("gf"+i);
+    if (val.toUpperCase() === correct.toUpperCase()) {
+        fb.style.color = "green";
+        fb.innerHTML = "Corect!";
+        addPoints(10);
+    } else {
+        fb.style.color = "red";
+        fb.innerHTML = `Greșit. Formula corectă este <b>${correct}</b>. ${exp}`;
+    }
+}
+
+// ---------------------------
+// SECȚIUNEA 4
+// ---------------------------
+const tabelQuestions = [
+    { formula:"H2SO4", name:"Acid sulfuric", category:"acid", explanation:"H₂SO₄ este un acid ternar." },
+    { formula:"Al(NO3)3", name:"Azotat de aluminiu", category:"sare", explanation:"Al³⁺ + NO₃⁻." },
+    { formula:"Na2O", name:"Oxid de sodiu", category:"oxid", explanation:"Na⁺ + O²⁻." },
+    { formula:"H3PO4", name:"Acid fosforic", category:"acid", explanation:"H⁺ + PO₄³⁻." },
+    { formula:"Ag2S", name:"Sulfură de argint(I)", category:"sare", explanation:"Ag⁺ + S²⁻." },
+    { formula:"Al(OH)3", name:"Hidroxid de aluminiu", category:"bază", explanation:"Al³⁺ + OH⁻." },
+    { formula:"CaCO3", name:"Carbonat de calciu", category:"sare", explanation:"Ca²⁺ + CO₃²⁻." },
+    { formula:"FeCl3", name:"Clorură de fier(III)", category:"sare", explanation:"Fe³⁺ + Cl⁻." }
+];
+
+function loadTabel() {
+    const c = document.getElementById("tabelContainer");
+    c.innerHTML = "";
+    [...tabelQuestions].sort(() => Math.random() - 0.5).forEach((q, i) => {
+        c.innerHTML += `
+        <div class="question">
+            <p><b>${i+1}. Completează datele pentru: ${q.name}</b></p>
+
+            <label>Formula:</label><br>
+            <input id="tf${i}" type="text"><br><br>
+
+            <label>Denumirea:</label><br>
+            <input id="tn${i}" type="text"><br><br>
+
+            <label>Categoria:</label><br>
+            <input id="tc${i}" type="text"><br><br>
+
+            <button onclick="checkTabel(${i}, '${q.formula}', '${q.name}', '${q.category}', '${q.explanation}')">Verifică</button>
+            <button onclick="openPopup()">Tabelul lui Mendeleev</button>
+
+            <div id="tfb${i}" class="feedback"></div>
+        </div>`;
+    });
+}
+
+function checkTabel(i, f, n, c, exp) {
+    const f1 = document.getElementById("tf"+i).value.trim();
+    const n1 = document.getElementById("tn"+i).value.trim();
+    const c1 = document.getElementById("tc"+i).value.trim().toLowerCase();
+    const fb = document.getElementById("tfb"+i);
+
+    if (f1.toUpperCase() === f.toUpperCase() &&
+        n1.toLowerCase() === n.toLowerCase() &&
+        c1 === c) {
+        fb.style.color = "green";
+        fb.innerHTML = "Corect!";
+        addPoints(15);
+    } else {
+        fb.style.color = "red";
+        fb.innerHTML = `
+            Greșit.<br>
+            <b>Formula:</b> ${f}<br>
+            <b>Denumirea:</b> ${n}<br>
+            <b>Categoria:</b> ${c}<br><br>
+            ${exp}
+        `;
+    }
+}
+
+// ---------------------------
+// POPUP MENDELEEV
+// ---------------------------
+function openPopup() {
+    document.getElementById("popup").style.display = "flex";
+}
+function closePopup() {
+    document.getElementById("popup").style.display = "none";
+}
+
+// ---------------------------
+// EXPORT PDF CU ANTET
+// ---------------------------
+function exportPDF() {
+    const clone = document.createElement("div");
+    clone.innerHTML = `
+        <div>${document.getElementById("antet").innerHTML}</div>
+        <hr>
+        <div>${document.body.innerHTML}</div>
+    `;
+
+    const opt = {
+        margin: 0.5,
+        filename: 'Fisa_Chimie_Clasa_7.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'cm', format: 'a4', orientation: 'portrait' }
+    };
+
+    html2pdf().set(opt).from(clone).save();
+}
+
+// ---------------------------
+// PORNIRE
+// ---------------------------
+loadQuestions();
+loadValenta();
+loadGreseli();
+loadTabel();
+
+</script>
+
+</body>
+</html>
 

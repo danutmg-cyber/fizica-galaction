@@ -1,1 +1,932 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecția 3 | Formarea imaginilor prin lentile subțiri | Fizica Galaction</title>
+  <meta name="description" content="Lecție interactivă paginată despre formarea imaginilor prin lentile subțiri, cu determinare geometrică și exemple de calcul.">
 
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --card-soft: #263449;
+      --text: #f8fafc;
+      --muted: #dbeafe;
+      --line: #334155;
+      --accent: #22d3ee;
+      --accent-dark: #0891b2;
+      --button-text: #06202a;
+      --green: #22c55e;
+      --amber: #fbbf24;
+      --red: #fb7185;
+      --shadow: rgba(0,0,0,0.28);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.13), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.10), transparent 32%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    a { color: inherit; }
+
+    .app {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      padding: clamp(10px, 2vw, 16px);
+    }
+
+    .lesson-frame {
+      background: rgba(15, 23, 42, 0.60);
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      border-radius: 24px;
+      padding: clamp(12px, 3vw, 20px);
+      box-shadow: 0 18px 42px var(--shadow);
+    }
+
+    .page {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: clamp(18px, 4vw, 30px);
+      min-height: min(630px, 76vh);
+    }
+
+    .page.active {
+      display: block;
+      animation: fadeIn 0.18s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .first-page {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.98), rgba(8, 47, 73, 0.94));
+      padding-top: clamp(22px, 5vw, 42px);
+    }
+
+    .badge {
+      display: inline-flex;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.14);
+      color: #cffafe;
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      font-weight: 850;
+      margin-bottom: 14px;
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+      line-height: 1.15;
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, 7vw, 3.7rem);
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: clamp(1.3rem, 4.6vw, 2rem);
+      color: #cffafe;
+      margin-bottom: 12px;
+    }
+
+    h3 {
+      color: #fef08a;
+      margin-bottom: 8px;
+    }
+
+    p { margin-top: 0; }
+
+    .lead {
+      color: var(--muted);
+      font-size: clamp(1rem, 2.8vw, 1.17rem);
+      margin-bottom: 12px;
+    }
+
+    .quote {
+      margin: 14px 0 0;
+      padding: 12px 14px;
+      border-left: 5px solid var(--accent);
+      background: rgba(34, 211, 238, 0.10);
+      border-radius: 12px;
+      color: #fef08a;
+      font-style: italic;
+      font-weight: 650;
+    }
+
+    .page-count {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      color: #dbeafe;
+      font-weight: 800;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+
+    .progress {
+      height: 10px;
+      background: #0f172a;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      margin: 0 0 14px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--accent), var(--green));
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+
+    .mini-card,
+    .note,
+    .formula-box,
+    .diagram-card,
+    .quick-check,
+    .feedback,
+    .calc-step {
+      border: 1px solid var(--line);
+      background: var(--card-soft);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .mini-card p {
+      margin-bottom: 0;
+      color: #e2e8f0;
+    }
+
+    .note {
+      color: #e0f2fe;
+      background: rgba(8, 47, 73, 0.72);
+      border-color: rgba(34, 211, 238, 0.32);
+      margin: 14px 0;
+    }
+
+    .warning {
+      background: rgba(245, 158, 11, 0.12);
+      border-color: rgba(251, 191, 36, 0.42);
+      color: #fef3c7;
+    }
+
+    .formula-box {
+      font-size: clamp(1rem, 3vw, 1.16rem);
+      background: rgba(2, 6, 23, 0.36);
+      margin: 12px 0;
+      overflow-x: auto;
+    }
+
+    .important {
+      color: #fef08a;
+      font-weight: 900;
+    }
+
+    .diagram-card {
+      overflow: hidden;
+      background: #0b1220;
+      margin: 14px 0;
+    }
+
+    .diagram-card svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .steps {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .step,
+    .calc-step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 10px;
+      align-items: start;
+      background: rgba(15, 23, 42, 0.58);
+    }
+
+    .step-number {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--button-text);
+      font-weight: 900;
+    }
+
+    .calc-step {
+      margin-top: 10px;
+    }
+
+    .button-row,
+    .nav-controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .btn {
+      appearance: none;
+      border: 0;
+      border-radius: 14px;
+      min-height: 48px;
+      padding: 13px 16px;
+      font-weight: 900;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+      transition: transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease;
+      flex: 1 1 210px;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    .btn:hover,
+    .btn:focus {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+      outline: 3px solid rgba(34, 211, 238, 0.20);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--button-text);
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .btn-success {
+      background: var(--green);
+      color: #052e16;
+    }
+
+    .nav-controls {
+      position: sticky;
+      bottom: 0;
+      background: linear-gradient(180deg, rgba(15,23,42,0), rgba(15,23,42,0.98) 30%);
+      padding-top: 18px;
+      padding-bottom: 2px;
+    }
+
+    .quick-check {
+      display: grid;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .question {
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .answer {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #0f172a;
+      border: 1px solid var(--line);
+      color: #f8fafc;
+      cursor: pointer;
+    }
+
+    .answer input {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 14px;
+      font-weight: 900;
+    }
+
+    .feedback.good {
+      display: block;
+      background: rgba(34, 197, 94, 0.16);
+      border-color: rgba(34, 197, 94, 0.48);
+      color: #dcfce7;
+    }
+
+    .feedback.bad {
+      display: block;
+      background: rgba(251, 113, 133, 0.14);
+      border-color: rgba(251, 113, 133, 0.42);
+      color: #ffe4e6;
+    }
+
+    .summary-list {
+      display: grid;
+      gap: 10px;
+      padding-left: 20px;
+    }
+
+    .summary-list li {
+      background: rgba(15, 23, 42, 0.48);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+
+    .small {
+      font-size: 0.92rem;
+      color: #cbd5e1;
+    }
+
+    @media (max-width: 720px) {
+      .app { padding: 8px; }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page {
+        min-height: 70vh;
+        border-radius: 18px;
+      }
+
+      .btn {
+        flex-basis: 100%;
+        width: 100%;
+      }
+
+      .nav-controls {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .step,
+      .calc-step {
+        grid-template-columns: 36px 1fr;
+      }
+
+      .step-number {
+        width: 36px;
+        height: 36px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <main class="lesson-frame" aria-live="polite">
+      <section class="page first-page active" data-title="Start">
+        <div class="badge">🔎 Lecția 3 • Lentile subțiri</div>
+        <h1>Formarea imaginilor prin lentile subțiri</h1>
+        <p class="lead">
+          În această lecție vei vedea cum se determină imaginea unui obiect cu ajutorul razelor principale
+          și cum se verifică rezultatul prin formule de calcul.
+        </p>
+
+        <div class="grid">
+          <div class="mini-card">
+            <h3>Vei învăța</h3>
+            <p>Construcția geometrică a imaginii pentru lentile convergente și divergente.</p>
+          </div>
+          <div class="mini-card">
+            <h3>Vei calcula</h3>
+            <p>Distanța imaginii, mărirea și înălțimea imaginii.</p>
+          </div>
+        </div>
+
+        <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică.”</p>
+      </section>
+
+      <section class="page" data-title="Ideea principală">
+        <div class="page-count" id="pageLabel2">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>1. Ce înseamnă „formarea imaginii”?</h2>
+        <p>
+          Un punct al obiectului trimite raze de lumină spre lentilă.
+          După trecerea prin lentilă, razele se întâlnesc sau par că se întâlnesc într-un punct.
+          Acolo se formează punctul corespunzător al imaginii.
+        </p>
+
+        <div class="grid">
+          <div class="mini-card">
+            <h3>Imagine reală</h3>
+            <p>Razele refractate se întâlnesc efectiv. Imaginea poate fi prinsă pe un ecran.</p>
+          </div>
+          <div class="mini-card">
+            <h3>Imagine virtuală</h3>
+            <p>Razele nu se întâlnesc efectiv, dar prelungirile lor par că pleacă dintr-un punct.</p>
+          </div>
+        </div>
+
+        <div class="note">
+          Pentru desen folosim doar câteva raze speciale. Ele sunt suficiente pentru a găsi poziția imaginii.
+        </div>
+      </section>
+
+      <section class="page" data-title="Razele principale">
+        <div class="page-count">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>2. Razele principale</h2>
+        <p>Pentru a construi imaginea, alegem de obicei vârful obiectului și trasăm două raze.</p>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div>
+              <strong>Raza paralelă cu axa optică.</strong><br>
+              La lentila convergentă trece prin focar. La lentila divergentă iese ca și cum ar veni din focar.
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-number">2</div>
+            <div>
+              <strong>Raza prin centrul optic.</strong><br>
+              Trece aproape nedeviată prin centrul lentilei.
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-number">3</div>
+            <div>
+              <strong>Intersecția razelor.</strong><br>
+              Punctul de intersecție dă vârful imaginii. Apoi coborâm perpendiculara pe axa optică.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-title="Lentila convergentă">
+        <div class="page-count">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>3. Determinare geometrică: lentilă convergentă</h2>
+        <p>
+          Când obiectul este mai departe decât focarul, imaginea se formează de obicei în partea opusă a lentilei.
+        </p>
+
+        <div class="diagram-card" aria-label="Construcția imaginii prin lentilă convergentă">
+          <svg viewBox="0 0 900 390" role="img">
+            <defs>
+              <marker id="arrowC" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L9,3 z" fill="#22d3ee"></path>
+              </marker>
+              <marker id="arrowG" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L9,3 z" fill="#22c55e"></path>
+              </marker>
+            </defs>
+
+            <rect x="0" y="0" width="900" height="390" fill="#0b1220"></rect>
+            <line x1="50" y1="210" x2="850" y2="210" stroke="#cbd5e1" stroke-width="3"></line>
+            <line x1="450" y1="55" x2="450" y2="335" stroke="#f8fafc" stroke-width="4"></line>
+            <path d="M450 55 C405 130 405 260 450 335" fill="none" stroke="#f8fafc" stroke-width="3"></path>
+            <path d="M450 55 C495 130 495 260 450 335" fill="none" stroke="#f8fafc" stroke-width="3"></path>
+
+            <circle cx="330" cy="210" r="5" fill="#fbbf24"></circle>
+            <circle cx="570" cy="210" r="5" fill="#fbbf24"></circle>
+            <text x="315" y="238" fill="#fef08a" font-size="22">F</text>
+            <text x="558" y="238" fill="#fef08a" font-size="22">F'</text>
+            <text x="438" y="238" fill="#e0f2fe" font-size="20">O</text>
+
+            <line x1="240" y1="210" x2="240" y2="95" stroke="#fb7185" stroke-width="7" marker-end="url(#arrowC)"></line>
+            <text x="204" y="238" fill="#fb7185" font-size="22">obiect</text>
+
+            <line x1="240" y1="95" x2="450" y2="95" stroke="#22d3ee" stroke-width="4" marker-end="url(#arrowC)"></line>
+            <line x1="450" y1="95" x2="645" y2="278" stroke="#22d3ee" stroke-width="4" marker-end="url(#arrowC)"></line>
+
+            <line x1="240" y1="95" x2="645" y2="278" stroke="#22c55e" stroke-width="4" marker-end="url(#arrowG)"></line>
+
+            <line x1="645" y1="210" x2="645" y2="278" stroke="#a78bfa" stroke-width="7" marker-end="url(#arrowC)"></line>
+            <text x="612" y="306" fill="#c4b5fd" font-size="22">imagine</text>
+          </svg>
+        </div>
+
+        <div class="note">
+          Imaginea din desen este <span class="important">reală, răsturnată și micșorată</span>.
+        </div>
+      </section>
+
+      <section class="page" data-title="Lentila divergentă">
+        <div class="page-count">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>4. Determinare geometrică: lentilă divergentă</h2>
+        <p>
+          Lentila divergentă împrăștie razele. Imaginea se găsește prin prelungirea razelor înapoi.
+        </p>
+
+        <div class="diagram-card" aria-label="Construcția imaginii prin lentilă divergentă">
+          <svg viewBox="0 0 900 390" role="img">
+            <defs>
+              <marker id="arrowD" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L9,3 z" fill="#22d3ee"></path>
+              </marker>
+              <marker id="arrowV" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L9,3 z" fill="#22c55e"></path>
+              </marker>
+            </defs>
+
+            <rect x="0" y="0" width="900" height="390" fill="#0b1220"></rect>
+            <line x1="50" y1="210" x2="850" y2="210" stroke="#cbd5e1" stroke-width="3"></line>
+            <line x1="450" y1="55" x2="450" y2="335" stroke="#f8fafc" stroke-width="4"></line>
+            <path d="M407 55 C455 130 455 260 407 335" fill="none" stroke="#f8fafc" stroke-width="3"></path>
+            <path d="M493 55 C445 130 445 260 493 335" fill="none" stroke="#f8fafc" stroke-width="3"></path>
+
+            <circle cx="330" cy="210" r="5" fill="#fbbf24"></circle>
+            <circle cx="570" cy="210" r="5" fill="#fbbf24"></circle>
+            <text x="315" y="238" fill="#fef08a" font-size="22">F</text>
+            <text x="558" y="238" fill="#fef08a" font-size="22">F'</text>
+            <text x="438" y="238" fill="#e0f2fe" font-size="20">O</text>
+
+            <line x1="240" y1="210" x2="240" y2="95" stroke="#fb7185" stroke-width="7" marker-end="url(#arrowD)"></line>
+            <text x="204" y="238" fill="#fb7185" font-size="22">obiect</text>
+
+            <line x1="240" y1="95" x2="450" y2="95" stroke="#22d3ee" stroke-width="4" marker-end="url(#arrowD)"></line>
+            <line x1="450" y1="95" x2="760" y2="15" stroke="#22d3ee" stroke-width="4" marker-end="url(#arrowD)"></line>
+            <line x1="450" y1="95" x2="330" y2="126" stroke="#fbbf24" stroke-width="3" stroke-dasharray="9 8"></line>
+
+            <line x1="240" y1="95" x2="760" y2="300" stroke="#22c55e" stroke-width="4" marker-end="url(#arrowV)"></line>
+            <line x1="240" y1="95" x2="335" y2="132" stroke="#22c55e" stroke-width="3" stroke-dasharray="9 8"></line>
+
+            <line x1="335" y1="210" x2="335" y2="132" stroke="#a78bfa" stroke-width="7" marker-end="url(#arrowD)"></line>
+            <text x="282" y="118" fill="#c4b5fd" font-size="22">imagine</text>
+          </svg>
+        </div>
+
+        <div class="note">
+          Pentru un obiect real, lentila divergentă formează o imagine <span class="important">virtuală, dreaptă și micșorată</span>.
+        </div>
+      </section>
+
+      <section class="page" data-title="Formule">
+        <div class="page-count">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>5. Formule de calcul</h2>
+
+        <div class="formula-box">
+          <p><strong>Formula lentilei subțiri:</strong></p>
+          <p>$$\frac{1}{f}=\frac{1}{x_1}+\frac{1}{x_2}$$</p>
+        </div>
+
+        <div class="grid">
+          <div class="mini-card">
+            <h3>Notații</h3>
+            <p>$f$ – distanța focală<br>$x_1$ – distanța obiectului<br>$x_2$ – distanța imaginii</p>
+          </div>
+          <div class="mini-card">
+            <h3>Mărirea liniară</h3>
+            <p>$$\beta=\frac{h_2}{h_1}=-\frac{x_2}{x_1}$$</p>
+          </div>
+        </div>
+
+        <div class="formula-box">
+          <p><strong>Convergența lentilei:</strong></p>
+          <p>$$C=\frac{1}{f}$$</p>
+          <p class="small">Atenție: aici $f$ se exprimă în metri, iar $C$ se măsoară în dioptrii.</p>
+        </div>
+      </section>
+
+      <section class="page" data-title="Semnele mărimilor">
+        <div class="page-count">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>6. Cum citim semnele?</h2>
+
+        <div class="grid">
+          <div class="mini-card">
+            <h3>Lentilă convergentă</h3>
+            <p>$f>0$. Dacă $x_2>0$, imaginea este reală și se află după lentilă.</p>
+          </div>
+          <div class="mini-card">
+            <h3>Lentilă divergentă</h3>
+            <p>$f<0$. Pentru un obiect real, de obicei $x_2<0$: imagine virtuală.</p>
+          </div>
+        </div>
+
+        <div class="note warning">
+          Dacă $\beta<0$, imaginea este răsturnată. Dacă $\beta>0$, imaginea este dreaptă.
+        </div>
+
+        <div class="formula-box">
+          <p>Exemplu de fracție folosită la calcul:</p>
+          <p>$$\frac{1}{x_2}=\frac{1}{f}-\frac{1}{x_1}$$</p>
+        </div>
+      </section>
+
+      <section class="page" data-title="Calcul convergent">
+        <div class="page-count">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>7. Exemplu pas cu pas: lentilă convergentă</h2>
+        <p><strong>Date:</strong> $f=10\,cm$, $x_1=30\,cm$, $h_1=4\,cm$.</p>
+
+        <div class="calc-step">
+          <div class="step-number">1</div>
+          <div>
+            Scriem formula:
+            $$\frac{1}{f}=\frac{1}{x_1}+\frac{1}{x_2}$$
+          </div>
+        </div>
+
+        <div class="calc-step">
+          <div class="step-number">2</div>
+          <div>
+            Izolăm necunoscuta:
+            $$\frac{1}{x_2}=\frac{1}{f}-\frac{1}{x_1}$$
+          </div>
+        </div>
+
+        <div class="calc-step">
+          <div class="step-number">3</div>
+          <div>
+            Înlocuim numeric:
+            $$\frac{1}{x_2}=\frac{1}{10}-\frac{1}{30}=\frac{3}{30}-\frac{1}{30}=\frac{2}{30}=\frac{1}{15}$$
+            Deci $x_2=15\,cm$.
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-title="Interpretare convergentă">
+        <div class="page-count">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>8. Interpretarea exemplului convergent</h2>
+
+        <div class="calc-step">
+          <div class="step-number">4</div>
+          <div>
+            Calculăm mărirea:
+            $$\beta=-\frac{x_2}{x_1}=-\frac{15}{30}=-0{,}5$$
+          </div>
+        </div>
+
+        <div class="calc-step">
+          <div class="step-number">5</div>
+          <div>
+            Calculăm înălțimea imaginii:
+            $$h_2=\beta \cdot h_1=-0{,}5\cdot 4=-2\,cm$$
+          </div>
+        </div>
+
+        <div class="note">
+          <strong>Răspuns:</strong> imaginea se formează la $15\,cm$ după lentilă, este
+          <span class="important">reală, răsturnată și micșorată de 2 ori</span>.
+        </div>
+      </section>
+
+      <section class="page" data-title="Calcul divergent">
+        <div class="page-count">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>9. Exemplu: lentilă divergentă</h2>
+        <p><strong>Date:</strong> $f=-12\,cm$, $x_1=24\,cm$, $h_1=3\,cm$.</p>
+
+        <div class="calc-step">
+          <div class="step-number">1</div>
+          <div>
+            Pornim de la:
+            $$\frac{1}{x_2}=\frac{1}{f}-\frac{1}{x_1}$$
+          </div>
+        </div>
+
+        <div class="calc-step">
+          <div class="step-number">2</div>
+          <div>
+            Înlocuim numeric:
+            $$\frac{1}{x_2}=\frac{1}{-12}-\frac{1}{24}=-\frac{2}{24}-\frac{1}{24}=-\frac{3}{24}=-\frac{1}{8}$$
+            Deci $x_2=-8\,cm$.
+          </div>
+        </div>
+
+        <div class="calc-step">
+          <div class="step-number">3</div>
+          <div>
+            Calculăm mărirea:
+            $$\beta=-\frac{x_2}{x_1}=-\frac{-8}{24}=\frac{1}{3}$$
+            $$h_2=\frac{1}{3}\cdot 3=1\,cm$$
+          </div>
+        </div>
+
+        <div class="note">
+          <strong>Răspuns:</strong> imaginea este la $8\,cm$ în fața lentilei, deci este
+          <span class="important">virtuală, dreaptă și micșorată</span>.
+        </div>
+      </section>
+
+      <section class="page" data-title="Verificare rapidă">
+        <div class="page-count">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>10. Verificare rapidă</h2>
+        <p>Alege varianta corectă, apoi apasă pe butonul de verificare.</p>
+
+        <div class="quick-check">
+          <div class="question">
+            <strong>1. Imaginea reală se formează când:</strong>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q1" value="a"> razele refractate se întâlnesc efectiv</label>
+              <label class="answer"><input type="radio" name="q1" value="b"> razele se îndepărtează și nu folosim prelungiri</label>
+              <label class="answer"><input type="radio" name="q1" value="c"> obiectul este mereu în focar</label>
+            </div>
+          </div>
+
+          <div class="question">
+            <strong>2. Pentru o lentilă divergentă, distanța focală are semnul:</strong>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q2" value="a"> pozitiv</label>
+              <label class="answer"><input type="radio" name="q2" value="b"> negativ</label>
+              <label class="answer"><input type="radio" name="q2" value="c"> zero</label>
+            </div>
+          </div>
+
+          <div class="question">
+            <strong>3. Formula lentilei subțiri este:</strong>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q3" value="a"> $\frac{1}{f}=\frac{1}{x_1}+\frac{1}{x_2}$</label>
+              <label class="answer"><input type="radio" name="q3" value="b"> $f=x_1+x_2$</label>
+              <label class="answer"><input type="radio" name="q3" value="c"> $C=f\cdot x_1$</label>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary" type="button" onclick="checkQuiz()">Verifică răspunsurile</button>
+        <div id="quizFeedback" class="feedback"></div>
+      </section>
+
+      <section class="page" data-title="Recapitulare">
+        <div class="page-count">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>11. Reține</h2>
+
+        <ul class="summary-list">
+          <li>Imaginea se găsește geometric la intersecția razelor sau a prelungirilor lor.</li>
+          <li>Lentila convergentă poate forma imagini reale sau virtuale, în funcție de poziția obiectului.</li>
+          <li>Lentila divergentă formează, pentru un obiect real, imagini virtuale, drepte și micșorate.</li>
+          <li>Formula de bază este: $\frac{1}{f}=\frac{1}{x_1}+\frac{1}{x_2}$.</li>
+        </ul>
+
+        <div class="button-row">
+          <a class="btn btn-success" href="4.ochiul-lupa-ochelarii.html">Lecția următoare →</a>
+          <a class="btn btn-secondary" href="index.html">← Înapoi la lecții</a>
+        </div>
+      </section>
+
+      <nav class="nav-controls" aria-label="Navigare lecție">
+        <button class="btn btn-secondary" type="button" id="prevBtn" onclick="prevPage()">← Înapoi</button>
+        <button class="btn btn-primary" type="button" id="nextBtn" onclick="nextPage()">Mergi mai departe →</button>
+      </nav>
+    </main>
+  </div>
+
+  <script>
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressBars = Array.from(document.querySelectorAll('.progress-bar'));
+    const pageCounts = Array.from(document.querySelectorAll('.page-count'));
+    let currentPage = 0;
+
+    function updateRepeatedLabels() {
+      const text = `Pagina ${currentPage + 1} din ${pages.length}`;
+      pageCounts.forEach((label) => {
+        label.textContent = text;
+      });
+
+      const width = `${((currentPage + 1) / pages.length) * 100}%`;
+      progressBars.forEach((bar) => {
+        bar.style.width = width;
+      });
+    }
+
+    function showPage(index) {
+      currentPage = Math.max(0, Math.min(index, pages.length - 1));
+
+      pages.forEach((page, i) => {
+        page.classList.toggle('active', i === currentPage);
+      });
+
+      updateRepeatedLabels();
+
+      prevBtn.disabled = currentPage === 0;
+      prevBtn.style.opacity = currentPage === 0 ? '0.55' : '1';
+
+      if (currentPage === pages.length - 1) {
+        nextBtn.textContent = 'Lecția este parcursă ✓';
+        nextBtn.classList.remove('btn-primary');
+        nextBtn.classList.add('btn-success');
+      } else {
+        nextBtn.textContent = 'Mergi mai departe →';
+        nextBtn.classList.add('btn-primary');
+        nextBtn.classList.remove('btn-success');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise([pages[currentPage]]).catch(() => {});
+      }
+    }
+
+    function nextPage() {
+      if (currentPage < pages.length - 1) {
+        showPage(currentPage + 1);
+      }
+    }
+
+    function prevPage() {
+      if (currentPage > 0) {
+        showPage(currentPage - 1);
+      }
+    }
+
+    function checkQuiz() {
+      const correct = { q1: 'a', q2: 'b', q3: 'a' };
+      let score = 0;
+
+      Object.keys(correct).forEach((name) => {
+        const selected = document.querySelector(`input[name="${name}"]:checked`);
+        if (selected && selected.value === correct[name]) score++;
+      });
+
+      const feedback = document.getElementById('quizFeedback');
+      feedback.className = 'feedback ' + (score === 3 ? 'good' : 'bad');
+      feedback.textContent = score === 3
+        ? 'Excelent! Ai răspuns corect la toate întrebările.'
+        : `Ai ${score}/3 răspunsuri corecte. Recitește paginile cu formule și încearcă din nou.`;
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') nextPage();
+      if (event.key === 'ArrowLeft') prevPage();
+    });
+
+    showPage(0);
+  </script>
+</body>
+</html>

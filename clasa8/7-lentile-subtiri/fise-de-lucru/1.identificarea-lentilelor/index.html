@@ -1,1 +1,931 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fișa 1 | Identificarea lentilelor | Lentile subțiri</title>
+  <meta name="description" content="Fișă de lucru interactivă și imprimabilă: Identificarea lentilelor, clasa a VIII-a.">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --card-soft: #111827;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --line: #334155;
+      --accent: #22d3ee;
+      --accent-dark: #0891b2;
+      --green: #22c55e;
+      --green-dark: #15803d;
+      --red: #fb7185;
+      --yellow: #facc15;
+      --paper: #ffffff;
+      --ink: #111827;
+      --paper-line: #d1d5db;
+      --radius: 18px;
+    }
 
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.18), transparent 30rem),
+        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.12), transparent 28rem),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body { padding: 14px; }
+
+    .page-shell {
+      width: min(980px, 100%);
+      margin: 0 auto;
+    }
+
+    .toolbar {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-bottom: 14px;
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      position: sticky;
+      top: 8px;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+
+    .toolbar a,
+    .toolbar button {
+      min-height: 48px;
+      border: 0;
+      border-radius: 14px;
+      padding: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #082f49;
+      background: var(--accent);
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+
+    .toolbar a.secondary,
+    .toolbar button.secondary {
+      color: #0f172a;
+      background: #e2e8f0;
+    }
+
+    .toolbar button.success {
+      color: #052e16;
+      background: var(--green);
+    }
+
+    .toolbar button.warning {
+      color: #422006;
+      background: var(--yellow);
+    }
+
+    .toolbar a:hover,
+    .toolbar button:hover {
+      filter: brightness(1.04);
+      transform: translateY(-1px);
+    }
+
+    .sheet {
+      background: rgba(30, 41, 59, 0.96);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: 0 20px 48px rgba(0,0,0,0.28);
+      padding: clamp(16px, 4vw, 30px);
+    }
+
+    .teacher-panel {
+      border: 1px solid var(--line);
+      background: rgba(15, 23, 42, 0.58);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .panel-title {
+      margin: 0 0 10px;
+      color: #e0f2fe;
+      font-size: 1.05rem;
+    }
+
+    .input-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    label.field {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.94rem;
+      font-weight: 700;
+    }
+
+    input[type="text"],
+    input[type="date"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 11px 12px;
+      background: #0f172a;
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    input[type="text"]::placeholder { color: #94a3b8; }
+
+    .hint {
+      color: #fde68a;
+      margin: 10px 0 0;
+      font-size: 0.94rem;
+      line-height: 1.45;
+    }
+
+    .print-header {
+      display: grid;
+      gap: 6px;
+      border-bottom: 2px solid var(--line);
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .school-name {
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      color: #cffafe;
+      text-transform: uppercase;
+      font-size: clamp(1rem, 3vw, 1.18rem);
+    }
+
+    .teacher-name,
+    .meta-line {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 8px 0 4px;
+      font-size: clamp(1.65rem, 6vw, 2.55rem);
+      line-height: 1.08;
+      text-align: center;
+      color: var(--text);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      margin: 0 auto 10px;
+      max-width: 720px;
+      line-height: 1.45;
+    }
+
+    .student-line {
+      display: grid;
+      grid-template-columns: 1.5fr 0.7fr 0.8fr;
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .line-box {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px;
+      background: rgba(15, 23, 42, 0.48);
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .intro {
+      border: 1px solid rgba(34, 211, 238, 0.4);
+      background: rgba(34, 211, 238, 0.10);
+      border-radius: 18px;
+      padding: 14px;
+      margin: 14px 0;
+    }
+
+    .intro p { margin: 0; color: #e0f2fe; line-height: 1.55; }
+
+    .section {
+      margin-top: 16px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      background: rgba(15, 23, 42, 0.48);
+      border-radius: 18px;
+    }
+
+    .section h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.15rem, 4vw, 1.45rem);
+      color: #f8fafc;
+    }
+
+    .question {
+      margin: 14px 0 0;
+      padding-top: 12px;
+      border-top: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    .question:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .question p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: stretch;
+    }
+
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      min-height: 48px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(30, 41, 59, 0.72);
+      color: var(--text);
+      line-height: 1.3;
+      cursor: pointer;
+    }
+
+    .option input {
+      margin-top: 3px;
+      accent-color: var(--accent);
+      min-width: 16px;
+    }
+
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px;
+      background: #0f172a;
+      color: var(--text);
+      font-size: 1rem;
+      margin-top: 6px;
+    }
+
+    .matching-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .shape-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(30, 41, 59, 0.72);
+    }
+
+    .shape-card svg {
+      width: 100%;
+      height: 110px;
+      display: block;
+      background: rgba(15, 23, 42, 0.38);
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+
+    .shape-card text {
+      fill: #f8fafc;
+      font: 700 14px system-ui, sans-serif;
+    }
+
+    .shape-card .lens {
+      fill: rgba(96, 165, 250, 0.24);
+      stroke: #60a5fa;
+      stroke-width: 4;
+    }
+
+    .shape-card .axis {
+      stroke: #94a3b8;
+      stroke-width: 2;
+      stroke-dasharray: 6 6;
+    }
+
+    .drop-select {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .feedback {
+      min-height: 24px;
+      margin-top: 8px;
+      font-weight: 900;
+    }
+
+    .feedback.ok { color: #86efac; }
+    .feedback.bad { color: #fda4af; }
+
+    .result {
+      display: none;
+      margin-top: 14px;
+      padding: 14px;
+      text-align: center;
+      border-radius: 18px;
+      background: rgba(34, 197, 94, 0.11);
+      border: 1px solid rgba(34, 197, 94, 0.38);
+      color: #dcfce7;
+      font-weight: 900;
+      font-size: 1.1rem;
+    }
+
+    .answer-key {
+      display: none;
+      margin-top: 14px;
+      border: 1px solid rgba(250, 204, 21, 0.45);
+      background: rgba(250, 204, 21, 0.10);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .answer-key.active { display: block; }
+
+    .answer-key h2 {
+      margin-top: 0;
+      color: #fef9c3;
+    }
+
+    .answer-key ol {
+      color: #fef9c3;
+      line-height: 1.55;
+    }
+
+    .print-only { display: none; }
+
+    @media (max-width: 720px) {
+      body { padding: 10px; }
+      .toolbar,
+      .input-grid,
+      .student-line,
+      .matching-grid,
+      .two-col,
+      .options {
+        grid-template-columns: 1fr;
+      }
+      .toolbar {
+        position: static;
+      }
+      .sheet { padding: 14px; border-radius: 20px; }
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 12mm;
+      }
+
+      html, body {
+        background: white !important;
+        color: var(--ink) !important;
+        padding: 0 !important;
+        font-family: Arial, sans-serif;
+      }
+
+      .page-shell {
+        width: 100%;
+        margin: 0;
+      }
+
+      .toolbar,
+      .teacher-panel,
+      .feedback,
+      .result,
+      .answer-key,
+      .no-print {
+        display: none !important;
+      }
+
+      .print-only { display: block; }
+
+      .sheet {
+        background: white !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        color: var(--ink) !important;
+      }
+
+      .print-header {
+        border-bottom: 1.5pt solid #111827 !important;
+        padding-bottom: 7mm;
+        margin-bottom: 6mm;
+      }
+
+      .school-name,
+      .teacher-name,
+      .meta-line,
+      h1,
+      .subtitle,
+      .section h2,
+      .question p,
+      .intro p {
+        color: var(--ink) !important;
+      }
+
+      h1 {
+        font-size: 20pt;
+        margin: 4mm 0 1mm;
+      }
+
+      .subtitle {
+        font-size: 10.5pt;
+      }
+
+      .student-line {
+        grid-template-columns: 1.5fr 0.7fr 0.8fr;
+        margin: 5mm 0;
+      }
+
+      .line-box {
+        background: white !important;
+        color: var(--ink) !important;
+        border: 1pt solid var(--paper-line) !important;
+        min-height: 12mm;
+      }
+
+      .intro,
+      .section,
+      .question,
+      .shape-card,
+      .option {
+        background: white !important;
+        color: var(--ink) !important;
+        border-color: var(--paper-line) !important;
+      }
+
+      .intro {
+        border: 1pt solid var(--paper-line) !important;
+        padding: 3mm;
+      }
+
+      .section {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        margin-top: 5mm;
+        padding: 3mm;
+      }
+
+      .question {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        margin-top: 4mm;
+        padding-top: 3mm;
+      }
+
+      .options {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3mm;
+      }
+
+      .option {
+        min-height: 9mm;
+        padding: 2.5mm;
+        color: var(--ink) !important;
+      }
+
+      .option input {
+        appearance: none;
+        width: 4mm;
+        height: 4mm;
+        border: 1pt solid var(--ink);
+        border-radius: 50%;
+        margin-top: 0.5mm;
+      }
+
+      .matching-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .two-col {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      select,
+      input[type="text"],
+      input[type="date"] {
+        display: none !important;
+      }
+
+      .print-answer-line {
+        display: block;
+        margin-top: 2mm;
+        border-bottom: 1pt solid var(--paper-line);
+        height: 8mm;
+      }
+
+      .shape-card svg {
+        height: 27mm;
+        background: white !important;
+        border: 1pt solid var(--paper-line);
+      }
+
+      .shape-card .lens {
+        fill: none;
+        stroke: #111827;
+      }
+
+      .shape-card .axis {
+        stroke: #6b7280;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <nav class="toolbar no-print" aria-label="Acțiuni fișă">
+      <a class="secondary" href="../index.html">Înapoi la fișe</a>
+      <button type="button" onclick="saveHeader()">Salvează antetul</button>
+      <button class="success" type="button" onclick="checkSheet()">Verifică fișa</button>
+      <button class="warning" type="button" onclick="printSheet()">Descarcă / tipărește</button>
+    </nav>
+
+    <article class="sheet" id="worksheet">
+      <section class="teacher-panel no-print">
+        <h2 class="panel-title">Antet completabil pentru profesor</h2>
+        <div class="input-grid">
+          <label class="field">
+            Antetul școlii
+            <input id="schoolInput" type="text" placeholder='Ex.: Școala Gimnazială „Gala Galaction” Mangalia'>
+          </label>
+          <label class="field">
+            Numele profesorului
+            <input id="teacherInput" type="text" placeholder="Ex.: Prof. Dănuț Andronie">
+          </label>
+          <label class="field">
+            Disciplina
+            <input id="subjectInput" type="text" value="Fizică">
+          </label>
+          <label class="field">
+            Data
+            <input id="dateInput" type="date">
+          </label>
+        </div>
+        <p class="hint">
+          Completează antetul, apasă „Salvează antetul”, apoi „Descarcă / tipărește”.
+          În fereastra de tipărire poți alege „Save as PDF” sau imprimanta.
+        </p>
+      </section>
+
+      <header class="print-header">
+        <div class="school-name" id="schoolDisplay">Școala: ............................................................</div>
+        <div class="teacher-name" id="teacherDisplay">Profesor: ............................................................</div>
+        <div class="meta-line" id="metaDisplay">Disciplina: Fizică • Data: .................</div>
+        <h1>Fișa 1 – Identificarea lentilelor</h1>
+        <p class="subtitle">
+          Capitolul: Lentile subțiri • Clasa a VIII-a • Fișă interactivă și imprimabilă
+        </p>
+      </header>
+
+      <section class="student-line">
+        <div class="line-box">Numele elevului: <span class="print-only">............................................................</span></div>
+        <div class="line-box">Clasa: <span class="print-only">....................</span></div>
+        <div class="line-box">Punctaj: <span class="print-only">........ / 10</span></div>
+      </section>
+
+      <section class="intro">
+        <p>
+          <strong>Reține:</strong> Lentila convergentă este mai groasă la mijloc și strânge razele.
+          Lentila divergentă este mai subțire la mijloc și împrăștie razele.
+        </p>
+      </section>
+
+      <section class="section" data-section="s1">
+        <h2>I. Alege varianta corectă</h2>
+
+        <div class="question" data-answer="b">
+          <p><strong>1.</strong> O lentilă convergentă este, de obicei:</p>
+          <div class="options">
+            <label class="option"><input type="radio" name="q1" value="a"> mai subțire la mijloc</label>
+            <label class="option"><input type="radio" name="q1" value="b"> mai groasă la mijloc</label>
+            <label class="option"><input type="radio" name="q1" value="c"> perfect plană</label>
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question" data-answer="c">
+          <p><strong>2.</strong> O lentilă divergentă transformă un fascicul paralel într-un fascicul:</p>
+          <div class="options">
+            <label class="option"><input type="radio" name="q2" value="a"> paralel</label>
+            <label class="option"><input type="radio" name="q2" value="b"> convergent</label>
+            <label class="option"><input type="radio" name="q2" value="c"> divergent</label>
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question" data-answer="a">
+          <p><strong>3.</strong> Lentila folosită ca lupă este o lentilă:</p>
+          <div class="options">
+            <label class="option"><input type="radio" name="q3" value="a"> convergentă</label>
+            <label class="option"><input type="radio" name="q3" value="b"> divergentă</label>
+            <label class="option"><input type="radio" name="q3" value="c"> opacă</label>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </section>
+
+      <section class="section" data-section="s2">
+        <h2>II. Identifică forma lentilei</h2>
+        <p class="no-print" style="color:#cbd5e1; margin-top:0;">Alege pentru fiecare desen tipul de lentilă.</p>
+
+        <div class="matching-grid">
+          <div class="shape-card" data-answer="convergenta">
+            <svg viewBox="0 0 260 120" role="img" aria-label="Lentilă biconvexă">
+              <line x1="20" y1="60" x2="240" y2="60" class="axis"/>
+              <path class="lens" d="M130 14 C90 42 90 78 130 106 C170 78 170 42 130 14 Z"/>
+              <text x="18" y="24">A</text>
+            </svg>
+            <label class="drop-select">
+              Desenul A:
+              <select name="q4">
+                <option value="">Alege...</option>
+                <option value="convergenta">lentilă convergentă</option>
+                <option value="divergenta">lentilă divergentă</option>
+              </select>
+            </label>
+            <span class="print-answer-line print-only"></span>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="shape-card" data-answer="divergenta">
+            <svg viewBox="0 0 260 120" role="img" aria-label="Lentilă biconcavă">
+              <line x1="20" y1="60" x2="240" y2="60" class="axis"/>
+              <path class="lens" d="M98 14 C132 38 132 82 98 106 L162 106 C128 82 128 38 162 14 Z"/>
+              <text x="18" y="24">B</text>
+            </svg>
+            <label class="drop-select">
+              Desenul B:
+              <select name="q5">
+                <option value="">Alege...</option>
+                <option value="convergenta">lentilă convergentă</option>
+                <option value="divergenta">lentilă divergentă</option>
+              </select>
+            </label>
+            <span class="print-answer-line print-only"></span>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="shape-card" data-answer="convergenta">
+            <svg viewBox="0 0 260 120" role="img" aria-label="Lentilă plan-convexă">
+              <line x1="20" y1="60" x2="240" y2="60" class="axis"/>
+              <path class="lens" d="M105 16 L105 104 C160 92 176 28 105 16 Z"/>
+              <text x="18" y="24">C</text>
+            </svg>
+            <label class="drop-select">
+              Desenul C:
+              <select name="q6">
+                <option value="">Alege...</option>
+                <option value="convergenta">lentilă convergentă</option>
+                <option value="divergenta">lentilă divergentă</option>
+              </select>
+            </label>
+            <span class="print-answer-line print-only"></span>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="shape-card" data-answer="divergenta">
+            <svg viewBox="0 0 260 120" role="img" aria-label="Lentilă plan-concavă">
+              <line x1="20" y1="60" x2="240" y2="60" class="axis"/>
+              <path class="lens" d="M105 16 L105 104 L160 104 C126 78 126 42 160 16 Z"/>
+              <text x="18" y="24">D</text>
+            </svg>
+            <label class="drop-select">
+              Desenul D:
+              <select name="q7">
+                <option value="">Alege...</option>
+                <option value="convergenta">lentilă convergentă</option>
+                <option value="divergenta">lentilă divergentă</option>
+              </select>
+            </label>
+            <span class="print-answer-line print-only"></span>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" data-section="s3">
+        <h2>III. Adevărat sau fals?</h2>
+
+        <div class="two-col">
+          <div class="question" data-answer="A">
+            <p><strong>8.</strong> Lentila convergentă poate forma imagini mărite.</p>
+            <select name="q8">
+              <option value="">Alege...</option>
+              <option value="A">Adevărat</option>
+              <option value="F">Fals</option>
+            </select>
+            <span class="print-answer-line print-only"></span>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="question" data-answer="F">
+            <p><strong>9.</strong> Lentila divergentă strânge razele paralele într-un focar real.</p>
+            <select name="q9">
+              <option value="">Alege...</option>
+              <option value="A">Adevărat</option>
+              <option value="F">Fals</option>
+            </select>
+            <span class="print-answer-line print-only"></span>
+            <div class="feedback"></div>
+          </div>
+        </div>
+
+        <div class="question" data-answer="A">
+          <p><strong>10.</strong> Ochelarii pentru miopie folosesc lentile divergente.</p>
+          <select name="q10">
+            <option value="">Alege...</option>
+            <option value="A">Adevărat</option>
+            <option value="F">Fals</option>
+          </select>
+          <span class="print-answer-line print-only"></span>
+          <div class="feedback"></div>
+        </div>
+      </section>
+
+      <div id="result" class="result"></div>
+
+      <section class="answer-key no-print" id="answerKey">
+        <h2>Barem pentru profesor</h2>
+        <ol>
+          <li>b – mai groasă la mijloc</li>
+          <li>c – fascicul divergent</li>
+          <li>a – lentilă convergentă</li>
+          <li>A – lentilă convergentă</li>
+          <li>B – lentilă divergentă</li>
+          <li>C – lentilă convergentă</li>
+          <li>D – lentilă divergentă</li>
+          <li>Adevărat</li>
+          <li>Fals</li>
+          <li>Adevărat</li>
+        </ol>
+      </section>
+
+      <div class="toolbar no-print" style="position:static; margin:16px 0 0;">
+        <button class="success" type="button" onclick="checkSheet()">Verifică fișa</button>
+        <button class="warning" type="button" onclick="printSheet()">Descarcă / tipărește</button>
+        <button type="button" onclick="toggleAnswerKey()">Arată/ascunde baremul</button>
+        <a class="secondary" href="../index.html">Înapoi la fișe</a>
+      </div>
+    </article>
+  </main>
+
+  <script>
+    const headerFields = {
+      school: document.getElementById('schoolInput'),
+      teacher: document.getElementById('teacherInput'),
+      subject: document.getElementById('subjectInput'),
+      date: document.getElementById('dateInput')
+    };
+
+    const headerDisplay = {
+      school: document.getElementById('schoolDisplay'),
+      teacher: document.getElementById('teacherDisplay'),
+      meta: document.getElementById('metaDisplay')
+    };
+
+    function formatDate(isoDate) {
+      if (!isoDate) return '.................';
+      const [year, month, day] = isoDate.split('-');
+      return `${day}.${month}.${year}`;
+    }
+
+    function updateHeader() {
+      const school = headerFields.school.value.trim();
+      const teacher = headerFields.teacher.value.trim();
+      const subject = headerFields.subject.value.trim() || 'Fizică';
+      const date = headerFields.date.value;
+
+      headerDisplay.school.textContent = school || 'Școala: ............................................................';
+      headerDisplay.teacher.textContent = teacher ? `Profesor: ${teacher}` : 'Profesor: ............................................................';
+      headerDisplay.meta.textContent = `Disciplina: ${subject} • Data: ${formatDate(date)}`;
+    }
+
+    function saveHeader() {
+      updateHeader();
+      const data = {
+        school: headerFields.school.value,
+        teacher: headerFields.teacher.value,
+        subject: headerFields.subject.value,
+        date: headerFields.date.value
+      };
+      localStorage.setItem('fisa1IdentificareaLentilelorHeader', JSON.stringify(data));
+      alert('Antetul a fost salvat în acest browser.');
+    }
+
+    function loadHeader() {
+      const saved = localStorage.getItem('fisa1IdentificareaLentilelorHeader');
+      if (saved) {
+        try {
+          const data = JSON.parse(saved);
+          headerFields.school.value = data.school || '';
+          headerFields.teacher.value = data.teacher || '';
+          headerFields.subject.value = data.subject || 'Fizică';
+          headerFields.date.value = data.date || '';
+        } catch (error) {}
+      }
+      if (!headerFields.date.value) {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        headerFields.date.value = `${yyyy}-${mm}-${dd}`;
+      }
+      updateHeader();
+    }
+
+    Object.values(headerFields).forEach(field => {
+      field.addEventListener('input', updateHeader);
+      field.addEventListener('change', updateHeader);
+    });
+
+    function getQuestionValue(question, index) {
+      const radio = question.querySelector('input[type="radio"]:checked');
+      if (radio) return radio.value;
+
+      const select = question.querySelector('select');
+      if (select) return select.value;
+
+      return '';
+    }
+
+    function checkSheet() {
+      let score = 0;
+      let total = 0;
+
+      document.querySelectorAll('.question, .shape-card').forEach((item, index) => {
+        const answer = item.dataset.answer;
+        if (!answer) return;
+
+        total++;
+        const selected = getQuestionValue(item, index);
+        const feedback = item.querySelector('.feedback');
+
+        if (!selected) {
+          feedback.textContent = 'Alege un răspuns.';
+          feedback.className = 'feedback bad';
+          return;
+        }
+
+        if (selected === answer) {
+          score++;
+          feedback.textContent = 'Corect!';
+          feedback.className = 'feedback ok';
+        } else {
+          feedback.textContent = 'Greșit. Recitește indiciul de la început.';
+          feedback.className = 'feedback bad';
+        }
+      });
+
+      const result = document.getElementById('result');
+      result.style.display = 'block';
+      result.textContent = `Rezultat: ${score} / ${total} puncte`;
+      result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function printSheet() {
+      updateHeader();
+      window.print();
+    }
+
+    function toggleAnswerKey() {
+      document.getElementById('answerKey').classList.toggle('active');
+    }
+
+    loadHeader();
+  </script>
+</body>
+</html>

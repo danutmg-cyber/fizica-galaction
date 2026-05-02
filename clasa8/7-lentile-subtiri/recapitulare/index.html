@@ -1,12 +1,431 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lentile subțiri - Recapitulare</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recapitulare | Lentile subțiri | Clasa a VIII-a</title>
+  <meta name="description" content="Recapitulare interactivă pentru capitolul Lentile subțiri: lentile convergente, divergente, construcții geometrice, formule și aplicații.">
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --line: #334155;
+      --accent: #22d3ee;
+      --green: #22c55e;
+      --yellow: #facc15;
+      --radius: 22px;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.16), transparent 32rem),
+        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.10), transparent 28rem),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    body { display: flex; justify-content: center; padding: 14px; }
+    a { color: inherit; }
+    .app { width: min(940px, 100%); min-height: calc(100vh - 28px); display: flex; flex-direction: column; }
+    .top-strip {
+      display: flex; justify-content: space-between; align-items: center; gap: 10px;
+      margin-bottom: 10px; color: var(--muted); font-size: .92rem;
+    }
+    .pill {
+      border: 1px solid var(--line); border-radius: 999px; padding: 7px 11px;
+      background: rgba(15, 23, 42, .72); white-space: nowrap;
+    }
+    .progress-wrap {
+      flex: 1; max-width: 330px; height: 10px; border-radius: 999px;
+      background: rgba(148, 163, 184, .18); overflow: hidden; border: 1px solid rgba(148,163,184,.25);
+    }
+    .progress { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--green)); transition: width .25s ease; }
+    .page { display: none; flex: 1; animation: fade .18s ease; }
+    .page.active { display: flex; flex-direction: column; }
+    @keyframes fade { from { opacity:0; transform:translateY(4px);} to { opacity:1; transform:translateY(0);} }
+    .card {
+      background: rgba(30, 41, 59, .94); border: 1px solid var(--line); border-radius: var(--radius);
+      box-shadow: 0 18px 46px rgba(0,0,0,.28); padding: clamp(18px, 4vw, 34px);
+      flex: 1; display: flex; flex-direction: column; justify-content: center;
+    }
+    .hero { min-height: 70vh; text-align: center; align-items: center; }
+    .badge {
+      display: inline-flex; border: 1px solid rgba(34,211,238,.45); background: rgba(34,211,238,.12);
+      color: #cffafe; padding: 8px 12px; border-radius: 999px; font-weight: 800; margin: 0 auto 14px;
+    }
+    h1,h2,h3,p { margin-top: 0; }
+    h1 { font-size: clamp(2rem, 8vw, 4rem); line-height: 1.02; margin-bottom: 14px; }
+    h2 { font-size: clamp(1.45rem, 5vw, 2.25rem); line-height: 1.12; margin-bottom: 14px; }
+    h3 { font-size: 1.1rem; margin-bottom: 10px; color: #e0f2fe; }
+    p, li { color: var(--muted); font-size: clamp(1rem, 2.9vw, 1.12rem); line-height: 1.55; }
+    strong { color: var(--text); }
+    .lead { max-width: 720px; margin-inline: auto; color: #e2e8f0; font-size: clamp(1.05rem, 3.1vw, 1.22rem); }
+    .quote {
+      border-left: 4px solid var(--accent); background: rgba(34,211,238,.08); padding: 12px 14px;
+      border-radius: 14px; color: #ecfeff; font-weight: 800; margin: 18px auto 0; max-width: 680px;
+    }
+    .grid { display: grid; gap: 14px; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 12px; }
+    .mini-card, .formula-box, .example-box, .warning-box, .check-card {
+      border: 1px solid var(--line); background: rgba(15, 23, 42, .55); border-radius: 18px; padding: 14px;
+    }
+    .formula-box { border-color: rgba(34,211,238,.38); background: rgba(34,211,238,.12); margin: 12px 0; }
+    .example-box { border-color: rgba(34,197,94,.42); background: rgba(34,197,94,.12); margin-top: 12px; }
+    .warning-box { border-color: rgba(250,204,21,.42); background: rgba(250,204,21,.13); margin-top: 12px; }
+    .warning-box p { color: #fef9c3; }
+    .schema {
+      width: 100%; max-width: 760px; margin: 10px auto 4px; display: block;
+      background: rgba(15,23,42,.55); border: 1px solid var(--line); border-radius: 18px; padding: 8px;
+    }
+    .schema text { fill: #f8fafc; font: 600 15px system-ui, sans-serif; }
+    .schema .muted { fill: #cbd5e1; font-weight: 500; }
+    .schema .axis { stroke: #94a3b8; stroke-width: 2; }
+    .schema .lens { stroke: #60a5fa; stroke-width: 5; fill: none; }
+    .nav { display: flex; gap: 12px; align-items: stretch; margin-top: 14px; }
+    button, .link-button {
+      border: 0; border-radius: 16px; padding: 14px 16px; font-weight: 900; font-size: 1rem;
+      cursor: pointer; text-decoration: none; text-align: center; transition: transform .15s ease, filter .15s ease;
+      display: inline-flex; align-items: center; justify-content: center; min-height: 52px;
+    }
+    button:hover, .link-button:hover, button:focus-visible, .link-button:focus-visible {
+      filter: brightness(1.04); transform: translateY(-1px); outline: 3px solid rgba(34,211,238,.26); outline-offset: 2px;
+    }
+    .btn-next { background: var(--green); color: #052e16; flex: 2; }
+    .btn-back { background: #e2e8f0; color: #0f172a; flex: 1; }
+    .btn-main { background: var(--accent); color: #082f49; flex: 1; }
+    .btn-dark { background: #0f172a; color: var(--text); border: 1px solid var(--line); flex: 1; }
+    .steps { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 10px; }
+    .steps li { background: rgba(15,23,42,.45); border: 1px solid var(--line); border-radius: 16px; padding: 12px; }
+    .steps span {
+      display: inline-flex; align-items: center; justify-content: center; min-width: 30px; height: 30px;
+      border-radius: 999px; background: var(--accent); color: #082f49; font-weight: 900; margin-right: 8px;
+    }
+    .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 16px; margin-top: 10px; }
+    table { width: 100%; border-collapse: collapse; min-width: 580px; }
+    th, td { border-bottom: 1px solid var(--line); padding: 11px 10px; text-align: left; color: var(--muted); vertical-align: top; }
+    tr:last-child td { border-bottom: 0; }
+    th { color: var(--text); background: rgba(15,23,42,.75); }
+    .check-grid { display: grid; gap: 12px; margin-top: 12px; }
+    .options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 10px; }
+    .option {
+      border: 1px solid var(--line); border-radius: 14px; padding: 10px; background: rgba(30,41,59,.72);
+      color: var(--text); display: flex; gap: 8px; align-items: flex-start; line-height: 1.3; cursor: pointer; min-height: 52px;
+    }
+    .option input { margin-top: 3px; accent-color: var(--accent); }
+    .feedback { min-height: 24px; margin-top: 8px; font-weight: 800; }
+    .feedback.ok { color: #86efac; }
+    .feedback.bad { color: #fda4af; }
+    .score {
+      margin-top: 12px; border-radius: 18px; padding: 14px; background: rgba(34,211,238,.10);
+      border: 1px solid rgba(34,211,238,.35); font-weight: 900; text-align: center; display: none;
+    }
+    .final-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 16px; }
+    @media (max-width: 680px) {
+      body { padding: 10px; }
+      .app { min-height: calc(100vh - 20px); }
+      .top-strip { flex-wrap: wrap; font-size: .82rem; }
+      .progress-wrap { order: 3; width: 100%; max-width: none; }
+      .card { min-height: calc(100vh - 108px); justify-content: flex-start; }
+      .hero { justify-content: center; min-height: calc(100vh - 108px); }
+      .grid, .final-grid, .options { grid-template-columns: 1fr; }
+      .nav { flex-direction: column; }
+      .btn-back, .btn-next, .btn-main, .btn-dark { width: 100%; flex: auto; }
+      .schema { padding: 4px; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Lentile subțiri - Recapitulare</h1>
-  <p>Pagina este în lucru.</p>
+  <main class="app">
+    <div class="top-strip" aria-label="Progres recapitulare">
+      <span class="pill">Clasa a VIII-a • Lentile subțiri</span>
+      <div class="progress-wrap" aria-hidden="true"><div class="progress" id="progress"></div></div>
+      <span class="pill" id="counter">1 / 10</span>
+    </div>
+
+    <section class="page active">
+      <article class="card hero">
+        <div class="badge">🔎 Recapitulare interactivă</div>
+        <h1>Lentile subțiri</h1>
+        <p class="lead">Recapitulăm ideile importante: tipuri de lentile, focar, construcția imaginii, formule de calcul, ochiul, lupa și ochelarii.</p>
+        <p class="quote">„Fizica nu este dominată de formule, ci de logică.”</p>
+        <div class="nav">
+          <a class="link-button btn-dark" href="../index.html">Înapoi la capitol</a>
+          <button class="btn-next" type="button" onclick="nextPage()">Începe recapitularea</button>
+        </div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <h2>1. Tipuri de lentile</h2>
+        <div class="grid">
+          <div class="mini-card">
+            <h3>🔵 Lentila convergentă</h3>
+            <p>Este mai groasă la mijloc decât la margini. Strânge razele paralele într-un focar.</p>
+            <p><strong>Semn util:</strong> $f &gt; 0$.</p>
+          </div>
+          <div class="mini-card">
+            <h3>🟣 Lentila divergentă</h3>
+            <p>Este mai subțire la mijloc decât la margini. Împrăștie razele paralele.</p>
+            <p><strong>Semn util:</strong> $f &lt; 0$.</p>
+          </div>
+        </div>
+        <div class="formula-box">
+          <p><strong>Distanța focală</strong> $f$ este distanța dintre centrul optic $O$ și focar.</p>
+        </div>
+        <div class="nav"><button class="btn-back" type="button" onclick="prevPage()">Înapoi</button><button class="btn-next" type="button" onclick="nextPage()">Mergi mai departe</button></div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <h2>2. Elemente importante</h2>
+        <svg class="schema" viewBox="0 0 760 260" role="img" aria-label="Schema elementelor unei lentile subțiri">
+          <line x1="40" y1="130" x2="720" y2="130" class="axis"/>
+          <path d="M382 35 C335 90 335 170 382 225 M378 35 C425 90 425 170 378 225" class="lens"/>
+          <circle cx="380" cy="130" r="5" fill="#f8fafc"/>
+          <circle cx="230" cy="130" r="5" fill="#facc15"/>
+          <circle cx="530" cy="130" r="5" fill="#facc15"/>
+          <circle cx="80" cy="130" r="5" fill="#94a3b8"/>
+          <circle cx="680" cy="130" r="5" fill="#94a3b8"/>
+          <text x="370" y="118">O</text><text x="221" y="116">F</text><text x="520" y="116">F'</text>
+          <text x="64" y="116" class="muted">2F</text><text x="660" y="116" class="muted">2F'</text>
+          <text x="294" y="166" class="muted">f</text>
+          <line x1="380" y1="150" x2="530" y2="150" stroke="#22d3ee" stroke-width="3"/>
+          <line x1="380" y1="142" x2="380" y2="158" stroke="#22d3ee" stroke-width="3"/>
+          <line x1="530" y1="142" x2="530" y2="158" stroke="#22d3ee" stroke-width="3"/>
+        </svg>
+        <ul class="steps">
+          <li><span>O</span><strong>Centrul optic</strong>: raza care trece prin el nu își schimbă direcția.</li>
+          <li><span>F</span><strong>Focarul</strong>: punctul folosit la construcția razelor.</li>
+          <li><span>f</span><strong>Distanța focală</strong>: $f = OF$.</li>
+        </ul>
+        <div class="nav"><button class="btn-back" type="button" onclick="prevPage()">Înapoi</button><button class="btn-next" type="button" onclick="nextPage()">Mergi mai departe</button></div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <h2>3. Determinarea geometrică a imaginii</h2>
+        <p>Imaginea se obține la intersecția a două raze principale sau a prelungirilor lor.</p>
+        <ul class="steps">
+          <li><span>1</span>Raza paralelă cu axa optică se refractă trecând prin focar.</li>
+          <li><span>2</span>Raza care trece prin centrul optic $O$ nu își schimbă direcția.</li>
+          <li><span>3</span>Raza care trece prin focar iese paralelă cu axa optică.</li>
+        </ul>
+        <div class="warning-box"><p><strong>Atenție:</strong> la lentila divergentă, imaginea se obține din prelungirile razelor refractate.</p></div>
+        <div class="nav"><button class="btn-back" type="button" onclick="prevPage()">Înapoi</button><button class="btn-next" type="button" onclick="nextPage()">Mergi mai departe</button></div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <h2>4. Lentila convergentă: imaginea</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Poziția obiectului</th><th>Poziția imaginii</th><th>Caracteristici</th></tr></thead>
+            <tbody>
+              <tr><td>Dincolo de $2F$</td><td>Între $F'$ și $2F'$</td><td>Reală, răsturnată, micșorată</td></tr>
+              <tr><td>În $2F$</td><td>În $2F'$</td><td>Reală, răsturnată, egală</td></tr>
+              <tr><td>Între $F$ și $2F$</td><td>Dincolo de $2F'$</td><td>Reală, răsturnată, mărită</td></tr>
+              <tr><td>Între $O$ și $F$</td><td>Pe aceeași parte cu obiectul</td><td>Virtuală, dreaptă, mărită</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="nav"><button class="btn-back" type="button" onclick="prevPage()">Înapoi</button><button class="btn-next" type="button" onclick="nextPage()">Mergi mai departe</button></div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <h2>5. Lentila divergentă: regulă rapidă</h2>
+        <div class="grid">
+          <div class="mini-card"><h3>Imaginea este</h3><p><strong>virtuală</strong>, deoarece se formează la intersecția prelungirilor razelor.</p></div>
+          <div class="mini-card"><h3>Poziția imaginii</h3><p>Între centrul optic $O$ și focarul $F$, pe aceeași parte cu obiectul.</p></div>
+          <div class="mini-card"><h3>Orientare</h3><p><strong>dreaptă</strong>.</p></div>
+          <div class="mini-card"><h3>Mărime</h3><p><strong>micșorată</strong>.</p></div>
+        </div>
+        <div class="nav"><button class="btn-back" type="button" onclick="prevPage()">Înapoi</button><button class="btn-next" type="button" onclick="nextPage()">Mergi mai departe</button></div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <h2>6. Formule de calcul</h2>
+        <div class="formula-box">
+          <p><strong>Formula lentilei subțiri:</strong></p>
+          <p style="font-size:1.25rem;">$\displaystyle \frac{1}{f}=\frac{1}{d_o}+\frac{1}{d_i}$</p>
+          <p>$d_o$ = distanța obiectului, $d_i$ = distanța imaginii, $f$ = distanța focală.</p>
+        </div>
+        <div class="formula-box">
+          <p><strong>Mărirea liniară:</strong></p>
+          <p style="font-size:1.25rem;">$\displaystyle m=\frac{h_i}{h_o}=-\frac{d_i}{d_o}$</p>
+        </div>
+        <div class="formula-box">
+          <p><strong>Vergenta lentilei:</strong></p>
+          <p style="font-size:1.25rem;">$\displaystyle C=\frac{1}{f}$, cu $f$ exprimată în metri.</p>
+          <p>Exemplu numeric: dacă $f=0{,}25\,m$, atunci $\displaystyle C=\frac{1}{0{,}25}=4\,\delta$.</p>
+        </div>
+        <div class="warning-box"><p>Pentru lentila divergentă se folosește $f&lt;0$. Imaginea virtuală are $d_i&lt;0$.</p></div>
+        <div class="nav"><button class="btn-back" type="button" onclick="prevPage()">Înapoi</button><button class="btn-next" type="button" onclick="nextPage()">Mergi mai departe</button></div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <h2>7. Exemplu: lentilă convergentă</h2>
+        <p><strong>Date:</strong> $f=20\,cm$, $d_o=60\,cm$.</p>
+        <ol class="steps">
+          <li><span>1</span>$\displaystyle \frac{1}{f}=\frac{1}{d_o}+\frac{1}{d_i}$</li>
+          <li><span>2</span>$\displaystyle \frac{1}{20}=\frac{1}{60}+\frac{1}{d_i}$</li>
+          <li><span>3</span>$\displaystyle \frac{1}{d_i}=\frac{1}{20}-\frac{1}{60}=\frac{2}{60}=\frac{1}{30}$</li>
+          <li><span>4</span>$d_i=30\,cm$</li>
+          <li><span>5</span>$\displaystyle m=-\frac{30}{60}=-0{,}5$</li>
+        </ol>
+        <div class="example-box"><p><strong>Răspuns:</strong> imaginea este reală, răsturnată și de 2 ori mai mică decât obiectul.</p></div>
+        <div class="nav"><button class="btn-back" type="button" onclick="prevPage()">Înapoi</button><button class="btn-next" type="button" onclick="nextPage()">Mergi mai departe</button></div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <h2>8. Exemplu: lentilă divergentă</h2>
+        <p><strong>Date:</strong> $f=-20\,cm$, $d_o=40\,cm$.</p>
+        <ol class="steps">
+          <li><span>1</span>$\displaystyle \frac{1}{f}=\frac{1}{d_o}+\frac{1}{d_i}$</li>
+          <li><span>2</span>$\displaystyle \frac{1}{-20}=\frac{1}{40}+\frac{1}{d_i}$</li>
+          <li><span>3</span>$\displaystyle \frac{1}{d_i}=-\frac{1}{20}-\frac{1}{40}=-\frac{3}{40}$</li>
+          <li><span>4</span>$\displaystyle d_i=-\frac{40}{3}\approx -13{,}3\,cm$</li>
+          <li><span>5</span>$\displaystyle m=-\frac{-13{,}3}{40}\approx 0{,}33$</li>
+        </ol>
+        <div class="example-box"><p><strong>Răspuns:</strong> imaginea este virtuală, dreaptă și micșorată.</p></div>
+        <div class="nav"><button class="btn-back" type="button" onclick="prevPage()">Înapoi</button><button class="btn-next" type="button" onclick="nextPage()">Mergi mai departe</button></div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <h2>9. Ochiul, lupa și ochelarii</h2>
+        <div class="grid">
+          <div class="mini-card"><h3>👁️ Ochiul</h3><p>Cristalinul funcționează ca o lentilă convergentă. Imaginea se formează pe retină.</p></div>
+          <div class="mini-card"><h3>🔍 Lupa</h3><p>Este o lentilă convergentă folosită pentru a vedea obiecte mici mărite.</p></div>
+          <div class="mini-card"><h3>👓 Miopie</h3><p>Se corectează cu lentile divergente.</p></div>
+          <div class="mini-card"><h3>👓 Hipermetropie</h3><p>Se corectează cu lentile convergente.</p></div>
+        </div>
+        <div class="nav"><button class="btn-back" type="button" onclick="prevPage()">Înapoi</button><button class="btn-next" type="button" onclick="nextPage()">Mergi mai departe</button></div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <h2>10. Verificare rapidă</h2>
+        <p>Alege varianta corectă, apoi apasă pe „Verifică”.</p>
+        <div class="check-grid">
+          <div class="check-card" data-answer="b">
+            <p><strong>1.</strong> O lentilă convergentă are:</p>
+            <div class="options">
+              <label class="option"><input type="radio" name="q1" value="a"> $f&lt;0$</label>
+              <label class="option"><input type="radio" name="q1" value="b"> $f&gt;0$</label>
+              <label class="option"><input type="radio" name="q1" value="c"> $f=0$</label>
+            </div>
+            <div class="feedback"></div>
+          </div>
+          <div class="check-card" data-answer="c">
+            <p><strong>2.</strong> Lentila divergentă formează pentru un obiect real o imagine:</p>
+            <div class="options">
+              <label class="option"><input type="radio" name="q2" value="a"> reală și răsturnată</label>
+              <label class="option"><input type="radio" name="q2" value="b"> reală și mărită</label>
+              <label class="option"><input type="radio" name="q2" value="c"> virtuală și dreaptă</label>
+            </div>
+            <div class="feedback"></div>
+          </div>
+          <div class="check-card" data-answer="a">
+            <p><strong>3.</strong> Formula lentilei subțiri este:</p>
+            <div class="options">
+              <label class="option"><input type="radio" name="q3" value="a"> $\frac{1}{f}=\frac{1}{d_o}+\frac{1}{d_i}$</label>
+              <label class="option"><input type="radio" name="q3" value="b"> $f=d_o+d_i$</label>
+              <label class="option"><input type="radio" name="q3" value="c"> $C=f$</label>
+            </div>
+            <div class="feedback"></div>
+          </div>
+          <div class="check-card" data-answer="b">
+            <p><strong>4.</strong> Miopia se corectează cu:</p>
+            <div class="options">
+              <label class="option"><input type="radio" name="q4" value="a"> lentilă convergentă</label>
+              <label class="option"><input type="radio" name="q4" value="b"> lentilă divergentă</label>
+              <label class="option"><input type="radio" name="q4" value="c"> oglindă plană</label>
+            </div>
+            <div class="feedback"></div>
+          </div>
+        </div>
+        <button class="btn-main" type="button" onclick="checkQuiz()" style="width:100%; margin-top:14px;">Verifică</button>
+        <div id="score" class="score"></div>
+        <div class="final-grid">
+          <a class="link-button btn-dark" href="../lectii/index.html">Înapoi la lecții</a>
+          <a class="link-button btn-dark" href="../fise-de-lucru/index.html">Fișe de lucru</a>
+          <a class="link-button btn-main" href="../index.html">Înapoi la capitol</a>
+          <a class="link-button btn-next" href="../test-final/index.html">Mergi la test final</a>
+        </div>
+        <div class="nav"><button class="btn-back" type="button" onclick="prevPage()">Înapoi</button></div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const progress = document.getElementById('progress');
+    const counter = document.getElementById('counter');
+    let current = 0;
+    function showPage(index) {
+      current = Math.max(0, Math.min(index, pages.length - 1));
+      pages.forEach((page, i) => page.classList.toggle('active', i === current));
+      progress.style.width = ((current + 1) / pages.length) * 100 + '%';
+      counter.textContent = (current + 1) + ' / ' + pages.length;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([pages[current]]).catch(() => {});
+    }
+    function nextPage() { showPage(current + 1); }
+    function prevPage() { showPage(current - 1); }
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') nextPage();
+      if (event.key === 'ArrowLeft') prevPage();
+    });
+    function checkQuiz() {
+      let correct = 0;
+      const cards = document.querySelectorAll('.check-card');
+      cards.forEach(card => {
+        const answer = card.dataset.answer;
+        const selected = card.querySelector('input[type="radio"]:checked');
+        const feedback = card.querySelector('.feedback');
+        if (!selected) {
+          feedback.textContent = 'Alege o variantă.';
+          feedback.className = 'feedback bad';
+          return;
+        }
+        if (selected.value === answer) {
+          correct++;
+          feedback.textContent = 'Corect!';
+          feedback.className = 'feedback ok';
+        } else {
+          feedback.textContent = 'Mai încearcă. Recitește recapitularea.';
+          feedback.className = 'feedback bad';
+        }
+      });
+      const score = document.getElementById('score');
+      score.style.display = 'block';
+      score.textContent = 'Scor: ' + correct + ' / ' + cards.length;
+    }
+    showPage(0);
+  </script>
 </body>
 </html>

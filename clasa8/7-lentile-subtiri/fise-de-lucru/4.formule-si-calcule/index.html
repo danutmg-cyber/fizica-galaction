@@ -1,1 +1,1036 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fișa 4 | Formule și calcule | Lentile subțiri</title>
+  <meta name="description" content="Fișă de lucru interactivă și imprimabilă: formule și calcule cu lentile subțiri, clasa a VIII-a.">
 
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --line: #334155;
+      --accent: #22d3ee;
+      --green: #22c55e;
+      --yellow: #facc15;
+      --red: #fb7185;
+      --ink: #111827;
+      --paper-line: #d1d5db;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.18), transparent 30rem),
+        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.12), transparent 28rem),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body { padding: 14px; }
+
+    .page-shell {
+      width: min(1040px, 100%);
+      margin: 0 auto;
+    }
+
+    .toolbar {
+      display: grid;
+      gap: 12px;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-bottom: 14px;
+      background: rgba(15, 23, 42, 0.78);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+      position: sticky;
+      top: 8px;
+      z-index: 10;
+      backdrop-filter: blur(10px);
+    }
+
+    .toolbar a,
+    .toolbar button {
+      min-height: 48px;
+      border: 0;
+      border-radius: 14px;
+      padding: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      text-decoration: none;
+      text-align: center;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #082f49;
+      background: var(--accent);
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+
+    .toolbar a.secondary,
+    .toolbar button.secondary {
+      color: #0f172a;
+      background: #e2e8f0;
+    }
+
+    .toolbar button.success {
+      color: #052e16;
+      background: var(--green);
+    }
+
+    .toolbar button.warning {
+      color: #422006;
+      background: var(--yellow);
+    }
+
+    .toolbar a:hover,
+    .toolbar button:hover {
+      filter: brightness(1.04);
+      transform: translateY(-1px);
+    }
+
+    .sheet {
+      background: rgba(30, 41, 59, 0.96);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: 0 20px 48px rgba(0,0,0,0.28);
+      padding: clamp(16px, 4vw, 30px);
+    }
+
+    .teacher-panel {
+      border: 1px solid var(--line);
+      background: rgba(15, 23, 42, 0.58);
+      border-radius: 18px;
+      padding: 14px;
+      margin-bottom: 16px;
+    }
+
+    .panel-title {
+      margin: 0 0 10px;
+      color: #e0f2fe;
+      font-size: 1.05rem;
+    }
+
+    .input-grid {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    label.field {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.94rem;
+      font-weight: 700;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 11px 12px;
+      background: #0f172a;
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    input[type="text"]::placeholder { color: #94a3b8; }
+
+    .hint {
+      color: #fde68a;
+      margin: 10px 0 0;
+      font-size: 0.94rem;
+      line-height: 1.45;
+    }
+
+    .print-header {
+      display: grid;
+      gap: 6px;
+      border-bottom: 2px solid var(--line);
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+
+    .school-name {
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      color: #cffafe;
+      text-transform: uppercase;
+      font-size: clamp(1rem, 3vw, 1.18rem);
+    }
+
+    .teacher-name,
+    .meta-line {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    h1 {
+      margin: 8px 0 4px;
+      font-size: clamp(1.55rem, 5.6vw, 2.45rem);
+      line-height: 1.08;
+      text-align: center;
+      color: var(--text);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      margin: 0 auto 10px;
+      max-width: 780px;
+      line-height: 1.45;
+    }
+
+    .student-line {
+      display: grid;
+      grid-template-columns: 1.5fr 0.7fr 0.8fr;
+      gap: 10px;
+      margin: 16px 0;
+    }
+
+    .line-box {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px;
+      background: rgba(15, 23, 42, 0.48);
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .intro {
+      border: 1px solid rgba(34, 211, 238, 0.4);
+      background: rgba(34, 211, 238, 0.10);
+      border-radius: 18px;
+      padding: 14px;
+      margin: 14px 0;
+    }
+
+    .intro p { margin: 0; color: #e0f2fe; line-height: 1.55; }
+
+    .formula-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .formula-card {
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      background: rgba(34, 211, 238, 0.08);
+      border-radius: 16px;
+      padding: 12px;
+      color: #e0f2fe;
+      line-height: 1.45;
+    }
+
+    .formula-card strong { color: #fff; }
+
+    .formula-main {
+      font-size: 1.18rem;
+      margin: 8px 0;
+      color: #f8fafc;
+    }
+
+    .section {
+      margin-top: 16px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      background: rgba(15, 23, 42, 0.48);
+      border-radius: 18px;
+    }
+
+    .section h2 {
+      margin: 0 0 10px;
+      font-size: clamp(1.15rem, 4vw, 1.45rem);
+      color: #f8fafc;
+    }
+
+    .section-note {
+      color: var(--muted);
+      line-height: 1.45;
+      margin-top: 0;
+    }
+
+    .question {
+      margin: 14px 0 0;
+      padding-top: 12px;
+      border-top: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    .question:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .question p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    .options {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      align-items: stretch;
+    }
+
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      min-height: 48px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(30, 41, 59, 0.72);
+      color: var(--text);
+      line-height: 1.3;
+      cursor: pointer;
+    }
+
+    .option input {
+      margin-top: 3px;
+      accent-color: var(--accent);
+      min-width: 16px;
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .calc-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(30, 41, 59, 0.72);
+      break-inside: avoid;
+    }
+
+    .calc-card label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    .work-lines {
+      display: none;
+      margin-top: 10px;
+    }
+
+    .work-line {
+      height: 24px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.55);
+    }
+
+    .mini-table {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      margin: 10px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 620px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--line);
+      padding: 10px;
+      color: var(--muted);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    th {
+      background: rgba(15, 23, 42, 0.72);
+      color: var(--text);
+    }
+
+    .feedback {
+      min-height: 24px;
+      margin-top: 8px;
+      font-weight: 900;
+    }
+
+    .feedback.ok { color: #86efac; }
+    .feedback.bad { color: #fda4af; }
+
+    .result {
+      display: none;
+      margin-top: 14px;
+      padding: 14px;
+      text-align: center;
+      border-radius: 18px;
+      background: rgba(34, 197, 94, 0.11);
+      border: 1px solid rgba(34, 197, 94, 0.38);
+      color: #dcfce7;
+      font-weight: 900;
+      font-size: 1.1rem;
+    }
+
+    .answer-key {
+      display: none;
+      margin-top: 14px;
+      border: 1px solid rgba(250, 204, 21, 0.45);
+      background: rgba(250, 204, 21, 0.10);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .answer-key.active { display: block; }
+
+    .answer-key h2 {
+      margin-top: 0;
+      color: #fef9c3;
+    }
+
+    .answer-key ol {
+      color: #fef9c3;
+      line-height: 1.55;
+    }
+
+    .answer-key li { margin-bottom: 8px; }
+
+    .print-only { display: none; }
+
+    @media (max-width: 760px) {
+      body { padding: 10px; }
+      .toolbar,
+      .input-grid,
+      .student-line,
+      .formula-grid,
+      .calc-grid,
+      .options {
+        grid-template-columns: 1fr;
+      }
+      .toolbar { position: static; }
+      .sheet { padding: 14px; border-radius: 20px; }
+    }
+
+    @media print {
+      @page {
+        size: A4;
+        margin: 12mm;
+      }
+
+      html, body {
+        background: white !important;
+        color: var(--ink) !important;
+        padding: 0 !important;
+        font-family: Arial, sans-serif;
+      }
+
+      .page-shell { width: 100%; margin: 0; }
+
+      .toolbar,
+      .teacher-panel,
+      .feedback,
+      .result,
+      .answer-key,
+      .no-print {
+        display: none !important;
+      }
+
+      .print-only { display: block; }
+
+      .sheet {
+        background: white !important;
+        border: 0 !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+        color: var(--ink) !important;
+      }
+
+      .print-header {
+        border-bottom: 1.5pt solid #111827 !important;
+        padding-bottom: 7mm;
+        margin-bottom: 6mm;
+      }
+
+      .school-name,
+      .teacher-name,
+      .meta-line,
+      h1,
+      .subtitle,
+      .section h2,
+      .question p,
+      .intro p,
+      .formula-card,
+      .calc-card label,
+      .section-note,
+      th,
+      td {
+        color: var(--ink) !important;
+      }
+
+      h1 {
+        font-size: 19pt;
+        margin: 4mm 0 1mm;
+      }
+
+      .subtitle { font-size: 10.5pt; }
+
+      .student-line {
+        grid-template-columns: 1.5fr 0.7fr 0.8fr;
+        margin: 5mm 0;
+      }
+
+      .line-box {
+        background: white !important;
+        color: var(--ink) !important;
+        border: 1pt solid var(--paper-line) !important;
+        min-height: 12mm;
+      }
+
+      .intro,
+      .section,
+      .question,
+      .option,
+      .formula-card,
+      .calc-card,
+      .mini-table {
+        background: white !important;
+        color: var(--ink) !important;
+        border-color: var(--paper-line) !important;
+      }
+
+      .section {
+        break-inside: avoid;
+        page-break-inside: avoid;
+        margin-top: 5mm;
+        padding: 3mm;
+      }
+
+      .question,
+      .calc-card {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+
+      .options,
+      .formula-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 3mm;
+      }
+
+      .calc-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .option {
+        min-height: 9mm;
+        padding: 2.5mm;
+        color: var(--ink) !important;
+      }
+
+      .option input {
+        appearance: none;
+        width: 4mm;
+        height: 4mm;
+        border: 1pt solid var(--ink);
+        border-radius: 50%;
+        margin-top: 0.5mm;
+      }
+
+      input[type="text"],
+      input[type="date"],
+      select,
+      .answer-input {
+        display: none !important;
+      }
+
+      .print-answer-line {
+        display: block;
+        margin-top: 2mm;
+        border-bottom: 1pt solid var(--paper-line);
+        height: 8mm;
+      }
+
+      .work-lines {
+        display: block;
+      }
+
+      table {
+        min-width: 0;
+        font-size: 9.8pt;
+      }
+
+      th {
+        background: white !important;
+      }
+
+      th, td {
+        border-color: var(--paper-line) !important;
+        padding: 2mm;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page-shell">
+    <nav class="toolbar no-print" aria-label="Acțiuni fișă">
+      <a class="secondary" href="../index.html">Înapoi la fișe</a>
+      <button type="button" onclick="saveHeader()">Salvează antetul</button>
+      <button class="success" type="button" onclick="checkSheet()">Verifică fișa</button>
+      <button class="warning" type="button" onclick="printSheet()">Descarcă / tipărește</button>
+    </nav>
+
+    <article class="sheet" id="worksheet">
+      <section class="teacher-panel no-print">
+        <h2 class="panel-title">Antet completabil pentru profesor</h2>
+        <div class="input-grid">
+          <label class="field">
+            Antetul școlii
+            <input id="schoolInput" type="text" placeholder='Ex.: Școala Gimnazială „Gala Galaction” Mangalia'>
+          </label>
+          <label class="field">
+            Numele profesorului
+            <input id="teacherInput" type="text" placeholder="Ex.: Prof. Dănuț Andronie">
+          </label>
+          <label class="field">
+            Disciplina
+            <input id="subjectInput" type="text" value="Fizică">
+          </label>
+          <label class="field">
+            Data
+            <input id="dateInput" type="date">
+          </label>
+        </div>
+        <p class="hint">
+          Completează antetul, apasă „Salvează antetul”, apoi „Descarcă / tipărește”.
+          În fereastra de tipărire poți alege „Save as PDF” sau imprimanta.
+        </p>
+      </section>
+
+      <header class="print-header">
+        <div class="school-name" id="schoolDisplay">Școala: ............................................................</div>
+        <div class="teacher-name" id="teacherDisplay">Profesor: ............................................................</div>
+        <div class="meta-line" id="metaDisplay">Disciplina: Fizică • Data: .................</div>
+        <h1>Fișa 4 – Formule și calcule</h1>
+        <p class="subtitle">
+          Capitolul: Lentile subțiri • Clasa a VIII-a • Fișă interactivă și imprimabilă
+        </p>
+      </header>
+
+      <section class="student-line">
+        <div class="line-box">Numele elevului: <span class="print-only">............................................................</span></div>
+        <div class="line-box">Clasa: <span class="print-only">....................</span></div>
+        <div class="line-box">Punctaj: <span class="print-only">........ / 10</span></div>
+      </section>
+
+      <section class="intro">
+        <p>
+          <strong>Reține:</strong> În probleme, scrie întâi datele, apoi formula, înlocuirea numerică,
+          calculul și interpretarea rezultatului. Ai grijă la unități: pentru vergentă, distanța focală
+          se exprimă în metri.
+        </p>
+      </section>
+
+      <section class="formula-grid">
+        <div class="formula-card">
+          <strong>Formula lentilei subțiri</strong>
+          <p class="formula-main">$\displaystyle \frac{1}{f}=\frac{1}{d_o}+\frac{1}{d_i}$</p>
+          <span>$d_o$ – distanța obiectului, $d_i$ – distanța imaginii.</span>
+        </div>
+        <div class="formula-card">
+          <strong>Mărirea liniară</strong>
+          <p class="formula-main">$\displaystyle m=\frac{h_i}{h_o}=-\frac{d_i}{d_o}$</p>
+          <span>Dacă $m<0$, imaginea este răsturnată.</span>
+        </div>
+        <div class="formula-card">
+          <strong>Vergenta</strong>
+          <p class="formula-main">$\displaystyle C=\frac{1}{f}$</p>
+          <span>Exemplu: $f=0{,}25\,m \Rightarrow C=\frac{1}{0{,}25}=4\,\delta$.</span>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>I. Recunoaște formula corectă</h2>
+
+        <div class="question" data-answer="b">
+          <p><strong>1.</strong> Formula lentilei subțiri este:</p>
+          <div class="options">
+            <label class="option"><input type="radio" name="q1" value="a"> $f=d_o+d_i$</label>
+            <label class="option"><input type="radio" name="q1" value="b"> $\frac{1}{f}=\frac{1}{d_o}+\frac{1}{d_i}$</label>
+            <label class="option"><input type="radio" name="q1" value="c"> $C=f$</label>
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question" data-answer="a">
+          <p><strong>2.</strong> Formula vergentei este:</p>
+          <div class="options">
+            <label class="option"><input type="radio" name="q2" value="a"> $C=\frac{1}{f}$</label>
+            <label class="option"><input type="radio" name="q2" value="b"> $C=f$</label>
+            <label class="option"><input type="radio" name="q2" value="c"> $C=d_o+d_i$</label>
+          </div>
+          <div class="feedback"></div>
+        </div>
+
+        <div class="question" data-answer="c">
+          <p><strong>3.</strong> Mărirea liniară se poate calcula cu:</p>
+          <div class="options">
+            <label class="option"><input type="radio" name="q3" value="a"> $m=f+d_o$</label>
+            <label class="option"><input type="radio" name="q3" value="b"> $m=C \cdot f$</label>
+            <label class="option"><input type="radio" name="q3" value="c"> $m=-\frac{d_i}{d_o}$</label>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>II. Calcule rapide cu vergenta</h2>
+        <p class="section-note">
+          Scrie doar numărul. Exemplu: pentru $4\,\delta$, scrie <strong>4</strong>.
+        </p>
+
+        <div class="calc-grid">
+          <div class="calc-card question" data-answer="5" data-tolerance="0.01">
+            <p><strong>4.</strong> O lentilă convergentă are $f=0{,}20\,m$. Calculează $C$.</p>
+            <label>
+              Răspuns:
+              <input class="answer-input" type="text" name="q4" placeholder="Ex.: 5">
+            </label>
+            <span class="print-answer-line print-only"></span>
+            <div class="work-lines print-only">
+              <div class="work-line"></div>
+              <div class="work-line"></div>
+            </div>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="calc-card question" data-answer="-2" data-tolerance="0.01">
+            <p><strong>5.</strong> O lentilă divergentă are $f=-0{,}50\,m$. Calculează $C$.</p>
+            <label>
+              Răspuns:
+              <input class="answer-input" type="text" name="q5" placeholder="Ex.: -2">
+            </label>
+            <span class="print-answer-line print-only"></span>
+            <div class="work-lines print-only">
+              <div class="work-line"></div>
+              <div class="work-line"></div>
+            </div>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>III. Probleme cu formula lentilei</h2>
+        <p class="section-note">
+          În calculele online, scrie răspunsul numeric în centimetri, fără unitate. În varianta tipărită,
+          rezolvă pe liniile libere.
+        </p>
+
+        <div class="mini-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Semn util</th>
+                <th>Interpretare</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>$d_i>0$</td>
+                <td>imagine reală, pe partea opusă obiectului</td>
+              </tr>
+              <tr>
+                <td>$d_i<0$</td>
+                <td>imagine virtuală, pe aceeași parte cu obiectul</td>
+              </tr>
+              <tr>
+                <td>$m<0$</td>
+                <td>imagine răsturnată</td>
+              </tr>
+              <tr>
+                <td>$m>0$</td>
+                <td>imagine dreaptă</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="calc-grid">
+          <div class="calc-card question" data-answer="15" data-tolerance="0.1">
+            <p><strong>6.</strong> Lentilă convergentă: $f=10\,cm$, $d_o=30\,cm$. Calculează $d_i$.</p>
+            <label>
+              $d_i=$
+              <input class="answer-input" type="text" name="q6" placeholder="Ex.: 15">
+            </label>
+            <span class="print-answer-line print-only"></span>
+            <div class="work-lines print-only">
+              <div class="work-line"></div>
+              <div class="work-line"></div>
+              <div class="work-line"></div>
+            </div>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="calc-card question" data-answer="-0.5" data-tolerance="0.02">
+            <p><strong>7.</strong> Pentru problema 6, calculează mărirea $m=-\frac{d_i}{d_o}$.</p>
+            <label>
+              $m=$
+              <input class="answer-input" type="text" name="q7" placeholder="Ex.: -0,5">
+            </label>
+            <span class="print-answer-line print-only"></span>
+            <div class="work-lines print-only">
+              <div class="work-line"></div>
+              <div class="work-line"></div>
+            </div>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="calc-card question" data-answer="30" data-tolerance="0.1">
+            <p><strong>8.</strong> Lentilă convergentă: $f=15\,cm$, $d_o=30\,cm$. Calculează $d_i$.</p>
+            <label>
+              $d_i=$
+              <input class="answer-input" type="text" name="q8" placeholder="Ex.: 30">
+            </label>
+            <span class="print-answer-line print-only"></span>
+            <div class="work-lines print-only">
+              <div class="work-line"></div>
+              <div class="work-line"></div>
+              <div class="work-line"></div>
+            </div>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="calc-card question" data-answer="-20" data-tolerance="0.1">
+            <p><strong>9.</strong> Lentilă convergentă: $f=20\,cm$, $d_o=10\,cm$. Calculează $d_i$.</p>
+            <label>
+              $d_i=$
+              <input class="answer-input" type="text" name="q9" placeholder="Ex.: -20">
+            </label>
+            <span class="print-answer-line print-only"></span>
+            <div class="work-lines print-only">
+              <div class="work-line"></div>
+              <div class="work-line"></div>
+              <div class="work-line"></div>
+            </div>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2>IV. Interpretarea rezultatului</h2>
+
+        <div class="question" data-answer="b">
+          <p><strong>10.</strong> Dacă într-o problemă obții $d_i=-20\,cm$, imaginea este:</p>
+          <div class="options">
+            <label class="option"><input type="radio" name="q10" value="a"> reală</label>
+            <label class="option"><input type="radio" name="q10" value="b"> virtuală</label>
+            <label class="option"><input type="radio" name="q10" value="c"> imposibil de descris</label>
+          </div>
+          <div class="feedback"></div>
+        </div>
+      </section>
+
+      <div id="result" class="result"></div>
+
+      <section class="answer-key no-print" id="answerKey">
+        <h2>Barem pentru profesor</h2>
+        <ol>
+          <li>$\displaystyle \frac{1}{f}=\frac{1}{d_o}+\frac{1}{d_i}$</li>
+          <li>$\displaystyle C=\frac{1}{f}$</li>
+          <li>$\displaystyle m=-\frac{d_i}{d_o}$</li>
+          <li>$\displaystyle C=\frac{1}{0{,}20}=5\,\delta$</li>
+          <li>$\displaystyle C=\frac{1}{-0{,}50}=-2\,\delta$</li>
+          <li>$\displaystyle \frac{1}{d_i}=\frac{1}{10}-\frac{1}{30}=\frac{2}{30}=\frac{1}{15}$, deci $d_i=15\,cm$</li>
+          <li>$\displaystyle m=-\frac{15}{30}=-0{,}5$</li>
+          <li>$\displaystyle \frac{1}{d_i}=\frac{1}{15}-\frac{1}{30}=\frac{1}{30}$, deci $d_i=30\,cm$</li>
+          <li>$\displaystyle \frac{1}{d_i}=\frac{1}{20}-\frac{1}{10}=-\frac{1}{20}$, deci $d_i=-20\,cm$</li>
+          <li>$d_i<0$, deci imaginea este virtuală</li>
+        </ol>
+      </section>
+
+      <div class="toolbar no-print" style="position:static; margin:16px 0 0;">
+        <button class="success" type="button" onclick="checkSheet()">Verifică fișa</button>
+        <button class="warning" type="button" onclick="printSheet()">Descarcă / tipărește</button>
+        <button type="button" onclick="toggleAnswerKey()">Arată/ascunde baremul</button>
+        <a class="secondary" href="../index.html">Înapoi la fișe</a>
+      </div>
+    </article>
+  </main>
+
+  <script>
+    const headerFields = {
+      school: document.getElementById('schoolInput'),
+      teacher: document.getElementById('teacherInput'),
+      subject: document.getElementById('subjectInput'),
+      date: document.getElementById('dateInput')
+    };
+
+    const headerDisplay = {
+      school: document.getElementById('schoolDisplay'),
+      teacher: document.getElementById('teacherDisplay'),
+      meta: document.getElementById('metaDisplay')
+    };
+
+    function formatDate(isoDate) {
+      if (!isoDate) return '.................';
+      const [year, month, day] = isoDate.split('-');
+      return `${day}.${month}.${year}`;
+    }
+
+    function updateHeader() {
+      const school = headerFields.school.value.trim();
+      const teacher = headerFields.teacher.value.trim();
+      const subject = headerFields.subject.value.trim() || 'Fizică';
+      const date = headerFields.date.value;
+
+      headerDisplay.school.textContent = school || 'Școala: ............................................................';
+      headerDisplay.teacher.textContent = teacher ? `Profesor: ${teacher}` : 'Profesor: ............................................................';
+      headerDisplay.meta.textContent = `Disciplina: ${subject} • Data: ${formatDate(date)}`;
+    }
+
+    function saveHeader() {
+      updateHeader();
+      const data = {
+        school: headerFields.school.value,
+        teacher: headerFields.teacher.value,
+        subject: headerFields.subject.value,
+        date: headerFields.date.value
+      };
+      localStorage.setItem('fisa4FormuleSiCalculeHeader', JSON.stringify(data));
+      alert('Antetul a fost salvat în acest browser.');
+    }
+
+    function loadHeader() {
+      const saved = localStorage.getItem('fisa4FormuleSiCalculeHeader');
+      if (saved) {
+        try {
+          const data = JSON.parse(saved);
+          headerFields.school.value = data.school || '';
+          headerFields.teacher.value = data.teacher || '';
+          headerFields.subject.value = data.subject || 'Fizică';
+          headerFields.date.value = data.date || '';
+        } catch (error) {}
+      }
+      if (!headerFields.date.value) {
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, '0');
+        const dd = String(today.getDate()).padStart(2, '0');
+        headerFields.date.value = `${yyyy}-${mm}-${dd}`;
+      }
+      updateHeader();
+    }
+
+    Object.values(headerFields).forEach(field => {
+      field.addEventListener('input', updateHeader);
+      field.addEventListener('change', updateHeader);
+    });
+
+    function normalizeNumber(value) {
+      return String(value)
+        .trim()
+        .replace(',', '.')
+        .replace(/[^\d.\-+]/g, '');
+    }
+
+    function isCloseNumber(value, answer, tolerance) {
+      const v = Number(normalizeNumber(value));
+      const a = Number(normalizeNumber(answer));
+      const t = Number(tolerance || 0.01);
+      return Number.isFinite(v) && Math.abs(v - a) <= t;
+    }
+
+    function getQuestionValue(question) {
+      const radio = question.querySelector('input[type="radio"]:checked');
+      if (radio) return radio.value;
+
+      const input = question.querySelector('.answer-input');
+      if (input) return input.value;
+
+      const select = question.querySelector('select');
+      if (select) return select.value;
+
+      return '';
+    }
+
+    function checkSheet() {
+      let score = 0;
+      let total = 0;
+
+      document.querySelectorAll('.question').forEach((item) => {
+        const answer = item.dataset.answer;
+        if (!answer) return;
+
+        total++;
+        const selected = getQuestionValue(item);
+        const feedback = item.querySelector('.feedback');
+
+        if (!selected) {
+          feedback.textContent = 'Completează răspunsul.';
+          feedback.className = 'feedback bad';
+          return;
+        }
+
+        const hasNumberInput = !!item.querySelector('.answer-input');
+        const ok = hasNumberInput
+          ? isCloseNumber(selected, answer, item.dataset.tolerance)
+          : selected === answer;
+
+        if (ok) {
+          score++;
+          feedback.textContent = 'Corect!';
+          feedback.className = 'feedback ok';
+        } else {
+          feedback.textContent = 'Greșit. Verifică formula, semnul și unitatea.';
+          feedback.className = 'feedback bad';
+        }
+      });
+
+      const result = document.getElementById('result');
+      result.style.display = 'block';
+      result.textContent = `Rezultat: ${score} / ${total} puncte`;
+      result.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function printSheet() {
+      updateHeader();
+      window.print();
+    }
+
+    function toggleAnswerKey() {
+      document.getElementById('answerKey').classList.toggle('active');
+      if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise([document.getElementById('answerKey')]).catch(() => {});
+      }
+    }
+
+    loadHeader();
+  </script>
+</body>
+</html>

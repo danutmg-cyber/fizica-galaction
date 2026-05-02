@@ -1,1 +1,889 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lecția 4 | Ochiul, lupa și ochelarii | Fizica Galaction</title>
+  <meta name="description" content="Lecție interactivă paginată despre ochi, lupă și ochelari, adaptată pentru telefon, tabletă și PC.">
 
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --card-soft: #263449;
+      --text: #f8fafc;
+      --muted: #dbeafe;
+      --line: #334155;
+      --accent: #22d3ee;
+      --accent-dark: #0891b2;
+      --button-text: #06202a;
+      --green: #22c55e;
+      --amber: #fbbf24;
+      --red: #fb7185;
+      --shadow: rgba(0,0,0,0.28);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.13), transparent 34%),
+        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.10), transparent 32%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    a { color: inherit; }
+
+    .app {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      padding: clamp(10px, 2vw, 16px);
+    }
+
+    .lesson-frame {
+      background: rgba(15, 23, 42, 0.60);
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      border-radius: 24px;
+      padding: clamp(12px, 3vw, 20px);
+      box-shadow: 0 18px 42px var(--shadow);
+    }
+
+    .page {
+      display: none;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: clamp(18px, 4vw, 30px);
+      min-height: min(630px, 76vh);
+    }
+
+    .page.active {
+      display: block;
+      animation: fadeIn 0.18s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .first-page {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.98), rgba(8, 47, 73, 0.94));
+      padding-top: clamp(22px, 5vw, 42px);
+    }
+
+    .badge {
+      display: inline-flex;
+      width: fit-content;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.14);
+      color: #cffafe;
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      font-weight: 850;
+      margin-bottom: 14px;
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+      line-height: 1.15;
+    }
+
+    h1 {
+      font-size: clamp(1.9rem, 7vw, 3.6rem);
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: clamp(1.3rem, 4.6vw, 2rem);
+      color: #cffafe;
+      margin-bottom: 12px;
+    }
+
+    h3 {
+      color: #fef08a;
+      margin-bottom: 8px;
+    }
+
+    p { margin-top: 0; }
+
+    .lead {
+      color: var(--muted);
+      font-size: clamp(1rem, 2.8vw, 1.17rem);
+      margin-bottom: 12px;
+    }
+
+    .quote {
+      margin: 14px 0 0;
+      padding: 12px 14px;
+      border-left: 5px solid var(--accent);
+      background: rgba(34, 211, 238, 0.10);
+      border-radius: 12px;
+      color: #fef08a;
+      font-style: italic;
+      font-weight: 650;
+    }
+
+    .page-count {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      color: #dbeafe;
+      font-weight: 800;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+    }
+
+    .progress {
+      height: 10px;
+      background: #0f172a;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      margin: 0 0 14px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--accent), var(--green));
+      border-radius: 999px;
+      transition: width 0.25s ease;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin: 16px 0;
+    }
+
+    .mini-card,
+    .note,
+    .formula-box,
+    .diagram-card,
+    .quick-check,
+    .feedback,
+    .calc-step {
+      border: 1px solid var(--line);
+      background: var(--card-soft);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .mini-card p {
+      margin-bottom: 0;
+      color: #e2e8f0;
+    }
+
+    .note {
+      color: #e0f2fe;
+      background: rgba(8, 47, 73, 0.72);
+      border-color: rgba(34, 211, 238, 0.32);
+      margin: 14px 0;
+    }
+
+    .warning {
+      background: rgba(245, 158, 11, 0.12);
+      border-color: rgba(251, 191, 36, 0.42);
+      color: #fef3c7;
+    }
+
+    .formula-box {
+      font-size: clamp(1rem, 3vw, 1.16rem);
+      background: rgba(2, 6, 23, 0.36);
+      margin: 12px 0;
+      overflow-x: auto;
+    }
+
+    .important {
+      color: #fef08a;
+      font-weight: 900;
+    }
+
+    .diagram-card {
+      overflow: hidden;
+      background: #0b1220;
+      margin: 14px 0;
+    }
+
+    .diagram-card svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .steps {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .step,
+    .calc-step {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 10px;
+      align-items: start;
+      background: rgba(15, 23, 42, 0.58);
+    }
+
+    .step-number {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--button-text);
+      font-weight: 900;
+    }
+
+    .calc-step { margin-top: 10px; }
+
+    .button-row,
+    .nav-controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .btn {
+      appearance: none;
+      border: 0;
+      border-radius: 14px;
+      min-height: 48px;
+      padding: 13px 16px;
+      font-weight: 900;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+      transition: transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease;
+      flex: 1 1 210px;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    .btn:hover,
+    .btn:focus {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+      outline: 3px solid rgba(34, 211, 238, 0.20);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: var(--button-text);
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .btn-success {
+      background: var(--green);
+      color: #052e16;
+    }
+
+    .nav-controls {
+      position: sticky;
+      bottom: 0;
+      background: linear-gradient(180deg, rgba(15,23,42,0), rgba(15,23,42,0.98) 30%);
+      padding-top: 18px;
+      padding-bottom: 2px;
+    }
+
+    .quick-check {
+      display: grid;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .question {
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .answer {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #0f172a;
+      border: 1px solid var(--line);
+      color: #f8fafc;
+      cursor: pointer;
+    }
+
+    .answer input {
+      width: 18px;
+      height: 18px;
+      margin: 0;
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 14px;
+      font-weight: 900;
+    }
+
+    .feedback.good {
+      display: block;
+      background: rgba(34, 197, 94, 0.16);
+      border-color: rgba(34, 197, 94, 0.48);
+      color: #dcfce7;
+    }
+
+    .feedback.bad {
+      display: block;
+      background: rgba(251, 113, 133, 0.14);
+      border-color: rgba(251, 113, 133, 0.42);
+      color: #ffe4e6;
+    }
+
+    .summary-list {
+      display: grid;
+      gap: 10px;
+      padding-left: 20px;
+    }
+
+    .summary-list li {
+      background: rgba(15, 23, 42, 0.48);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+
+    .small {
+      font-size: 0.92rem;
+      color: #cbd5e1;
+    }
+
+    @media (max-width: 720px) {
+      .app { padding: 8px; }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page {
+        min-height: 70vh;
+        border-radius: 18px;
+      }
+
+      .btn {
+        flex-basis: 100%;
+        width: 100%;
+      }
+
+      .nav-controls {
+        display: grid;
+        grid-template-columns: 1fr;
+      }
+
+      .step,
+      .calc-step {
+        grid-template-columns: 36px 1fr;
+      }
+
+      .step-number {
+        width: 36px;
+        height: 36px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <main class="lesson-frame" aria-live="polite">
+      <section class="page first-page active" data-title="Start">
+        <div class="badge">👁️ Lecția 4 • Lentile subțiri</div>
+        <h1>Ochiul, lupa și ochelarii</h1>
+        <p class="lead">
+          În această lecție vei vedea cum lucrează ochiul ca un sistem optic și cum sunt folosite
+          lentilele pentru mărire sau pentru corectarea vederii.
+        </p>
+
+        <div class="grid">
+          <div class="mini-card">
+            <h3>Vei înțelege</h3>
+            <p>Cum formează ochiul imaginea pe retină.</p>
+          </div>
+          <div class="mini-card">
+            <h3>Vei aplica</h3>
+            <p>Cum alegem tipul de lentilă pentru lupă și ochelari.</p>
+          </div>
+        </div>
+
+        <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică.”</p>
+      </section>
+
+      <section class="page" data-title="Ochiul">
+        <div class="page-count">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>1. Ochiul ca sistem optic</h2>
+        <p>
+          Ochiul primește lumina de la obiecte și formează imaginea pe <span class="important">retină</span>.
+          Din punct de vedere optic, el se comportă asemănător cu o lentilă convergentă.
+        </p>
+
+        <div class="diagram-card" aria-label="Schema simplificată a ochiului">
+          <svg viewBox="0 0 900 360" role="img">
+            <defs>
+              <marker id="arrowEye" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L9,3 z" fill="#22d3ee"></path>
+              </marker>
+            </defs>
+            <rect x="0" y="0" width="900" height="360" fill="#0b1220"></rect>
+            <ellipse cx="535" cy="180" rx="255" ry="130" fill="none" stroke="#e2e8f0" stroke-width="5"></ellipse>
+            <path d="M760 85 C835 150 835 210 760 275" fill="none" stroke="#fbbf24" stroke-width="8"></path>
+            <ellipse cx="385" cy="180" rx="40" ry="92" fill="rgba(34,211,238,0.2)" stroke="#22d3ee" stroke-width="5"></ellipse>
+            <circle cx="320" cy="180" r="28" fill="#0f172a" stroke="#cbd5e1" stroke-width="4"></circle>
+
+            <line x1="105" y1="125" x2="385" y2="160" stroke="#22d3ee" stroke-width="4" marker-end="url(#arrowEye)"></line>
+            <line x1="105" y1="235" x2="385" y2="200" stroke="#22d3ee" stroke-width="4" marker-end="url(#arrowEye)"></line>
+            <line x1="385" y1="160" x2="755" y2="225" stroke="#22d3ee" stroke-width="4" marker-end="url(#arrowEye)"></line>
+            <line x1="385" y1="200" x2="755" y2="135" stroke="#22d3ee" stroke-width="4" marker-end="url(#arrowEye)"></line>
+
+            <text x="250" y="72" fill="#cbd5e1" font-size="24">pupilă</text>
+            <text x="342" y="72" fill="#cffafe" font-size="24">cristalin</text>
+            <text x="735" y="72" fill="#fef08a" font-size="24">retină</text>
+            <text x="86" y="105" fill="#f8fafc" font-size="24">raze de lumină</text>
+          </svg>
+        </div>
+
+        <div class="note">
+          În lecțiile de optică folosim un model simplificat: cristalinul ochiului se comportă ca o
+          lentilă convergentă care ajută la focalizarea luminii.
+        </div>
+      </section>
+
+      <section class="page" data-title="Imaginea pe retină">
+        <div class="page-count">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>2. Cum se formează imaginea?</h2>
+        <p>
+          Imaginea formată pe retină este <span class="important">reală</span>,
+          <span class="important">răsturnată</span> și, de obicei,
+          <span class="important">micșorată</span>.
+        </p>
+
+        <div class="grid">
+          <div class="mini-card">
+            <h3>Reală</h3>
+            <p>Razele de lumină se întâlnesc efectiv pe retină.</p>
+          </div>
+          <div class="mini-card">
+            <h3>Răsturnată</h3>
+            <p>Partea de sus a obiectului ajunge în partea de jos a imaginii.</p>
+          </div>
+        </div>
+
+        <div class="formula-box">
+          Modelul lentilei subțiri rămâne util:
+          $$\frac{1}{f}=\frac{1}{x_1}+\frac{1}{x_2}$$
+          unde $x_1$ este distanța obiectului, iar $x_2$ distanța imaginii.
+        </div>
+
+        <p class="small">
+          Creierul interpretează semnalele primite de la retină, astfel încât percepem obiectele în poziția firească.
+        </p>
+      </section>
+
+      <section class="page" data-title="Acomodarea">
+        <div class="page-count">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>3. Acomodarea ochiului</h2>
+        <p>
+          Când privim obiecte apropiate sau îndepărtate, ochiul trebuie să păstreze imaginea pe retină.
+          Această adaptare se numește <span class="important">acomodare</span>.
+        </p>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div>
+              <strong>Obiect îndepărtat</strong><br>
+              Cristalinul este mai puțin bombat. Puterea lui optică este mai mică.
+            </div>
+          </div>
+
+          <div class="step">
+            <div class="step-number">2</div>
+            <div>
+              <strong>Obiect apropiat</strong><br>
+              Cristalinul devine mai bombat. Puterea lui optică crește.
+            </div>
+          </div>
+        </div>
+
+        <div class="note">
+          Pentru citit, se folosește des distanța convențională de vedere clară:
+          <span class="important">aproximativ 25 cm</span>.
+        </div>
+      </section>
+
+      <section class="page" data-title="Defecte de vedere">
+        <div class="page-count">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>4. Miopie și hipermetropie</h2>
+        <p>
+          Uneori, imaginea nu se formează exact pe retină. Atunci vederea devine neclară și poate fi corectată cu lentile.
+        </p>
+
+        <div class="diagram-card" aria-label="Corectarea miopiei și hipermetropiei">
+          <svg viewBox="0 0 900 420" role="img">
+            <rect x="0" y="0" width="900" height="420" fill="#0b1220"></rect>
+
+            <text x="60" y="42" fill="#fef08a" font-size="26">Miopie</text>
+            <text x="60" y="78" fill="#e2e8f0" font-size="20">imaginea s-ar forma înaintea retinei</text>
+            <ellipse cx="610" cy="100" rx="160" ry="70" fill="none" stroke="#e2e8f0" stroke-width="4"></ellipse>
+            <path d="M745 45 C790 82 790 118 745 155" fill="none" stroke="#fbbf24" stroke-width="6"></path>
+            <line x1="150" y1="75" x2="530" y2="100" stroke="#22d3ee" stroke-width="4"></line>
+            <line x1="150" y1="125" x2="530" y2="100" stroke="#22d3ee" stroke-width="4"></line>
+            <circle cx="530" cy="100" r="7" fill="#fb7185"></circle>
+            <text x="465" y="137" fill="#fb7185" font-size="20">focar înainte</text>
+            <text x="40" y="170" fill="#cffafe" font-size="20">Corecție: lentilă divergentă</text>
+            <path d="M115 98 C145 55 145 145 115 102" fill="none" stroke="#22c55e" stroke-width="5"></path>
+            <path d="M185 55 C155 98 155 102 185 145" fill="none" stroke="#22c55e" stroke-width="5"></path>
+
+            <line x1="40" y1="210" x2="860" y2="210" stroke="#334155" stroke-width="3"></line>
+
+            <text x="60" y="260" fill="#fef08a" font-size="26">Hipermetropie</text>
+            <text x="60" y="296" fill="#e2e8f0" font-size="20">imaginea s-ar forma în spatele retinei</text>
+            <ellipse cx="610" cy="330" rx="160" ry="70" fill="none" stroke="#e2e8f0" stroke-width="4"></ellipse>
+            <path d="M745 275 C790 312 790 348 745 385" fill="none" stroke="#fbbf24" stroke-width="6"></path>
+            <line x1="150" y1="305" x2="820" y2="330" stroke="#22d3ee" stroke-width="4"></line>
+            <line x1="150" y1="355" x2="820" y2="330" stroke="#22d3ee" stroke-width="4"></line>
+            <circle cx="820" cy="330" r="7" fill="#fb7185"></circle>
+            <text x="678" y="405" fill="#fb7185" font-size="20">focar în spate</text>
+            <text x="40" y="392" fill="#cffafe" font-size="20">Corecție: lentilă convergentă</text>
+            <path d="M130 288 C170 325 170 335 130 372" fill="none" stroke="#22c55e" stroke-width="5"></path>
+            <path d="M170 288 C130 325 130 335 170 372" fill="none" stroke="#22c55e" stroke-width="5"></path>
+          </svg>
+        </div>
+
+        <div class="grid">
+          <div class="mini-card">
+            <h3>Miopie</h3>
+            <p>Vederea la distanță este neclară. Se corectează cu lentilă divergentă.</p>
+          </div>
+          <div class="mini-card">
+            <h3>Hipermetropie</h3>
+            <p>Vederea de aproape este dificilă. Se corectează cu lentilă convergentă.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-title="Ochelarii">
+        <div class="page-count">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>5. Ochelarii și puterea optică</h2>
+        <p>
+          Ochelarii folosesc lentile care modifică drumul razelor înainte ca acestea să intre în ochi.
+          Puterea unei lentile se măsoară în <span class="important">dioptrii</span>.
+        </p>
+
+        <div class="formula-box">
+          $$C=\frac{1}{f}$$
+          $C$ = puterea optică, în dioptrii $(D)$<br>
+          $f$ = distanța focală, în metri $(m)$
+        </div>
+
+        <div class="calc-step">
+          <div class="step-number">Ex.</div>
+          <div>
+            Pentru o lentilă de ochelari cu $C=-2\,D$:
+            $$f=\frac{1}{C}=\frac{1}{-2}=-0{,}5\,m$$
+            Semnul minus arată că lentila este <span class="important">divergentă</span>.
+          </div>
+        </div>
+
+        <div class="calc-step">
+          <div class="step-number">Ex.</div>
+          <div>
+            Pentru o lentilă cu $C=+4\,D$:
+            $$f=\frac{1}{4}=0{,}25\,m=25\,cm$$
+            Semnul plus arată că lentila este <span class="important">convergentă</span>.
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-title="Lupa">
+        <div class="page-count">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>6. Lupa</h2>
+        <p>
+          Lupa este o <span class="important">lentilă convergentă</span> folosită pentru a vedea mai mare
+          un obiect mic.
+        </p>
+
+        <div class="diagram-card" aria-label="Lupa și formarea imaginii virtuale">
+          <svg viewBox="0 0 900 360" role="img">
+            <defs>
+              <marker id="arrowLupa" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L9,3 z" fill="#22d3ee"></path>
+              </marker>
+            </defs>
+            <rect x="0" y="0" width="900" height="360" fill="#0b1220"></rect>
+            <line x1="60" y1="200" x2="840" y2="200" stroke="#cbd5e1" stroke-width="3"></line>
+            <path d="M500 60 C440 130 440 270 500 340" fill="none" stroke="#f8fafc" stroke-width="4"></path>
+            <path d="M500 60 C560 130 560 270 500 340" fill="none" stroke="#f8fafc" stroke-width="4"></path>
+            <circle cx="390" cy="200" r="6" fill="#fbbf24"></circle>
+            <circle cx="610" cy="200" r="6" fill="#fbbf24"></circle>
+            <text x="375" y="230" fill="#fef08a" font-size="24">F</text>
+            <text x="596" y="230" fill="#fef08a" font-size="24">F'</text>
+            <line x1="445" y1="200" x2="445" y2="135" stroke="#22c55e" stroke-width="7" marker-end="url(#arrowLupa)"></line>
+            <text x="410" y="125" fill="#dcfce7" font-size="22">obiect</text>
+            <line x1="445" y1="135" x2="500" y2="135" stroke="#22d3ee" stroke-width="4"></line>
+            <line x1="500" y1="135" x2="770" y2="85" stroke="#22d3ee" stroke-width="4" marker-end="url(#arrowLupa)"></line>
+            <line x1="445" y1="135" x2="780" y2="255" stroke="#22d3ee" stroke-width="4" marker-end="url(#arrowLupa)"></line>
+
+            <line x1="500" y1="135" x2="260" y2="178" stroke="#22d3ee" stroke-width="3" stroke-dasharray="8 8"></line>
+            <line x1="445" y1="135" x2="260" y2="70" stroke="#22d3ee" stroke-width="3" stroke-dasharray="8 8"></line>
+            <line x1="260" y1="200" x2="260" y2="72" stroke="#fbbf24" stroke-width="7" marker-end="url(#arrowLupa)"></line>
+            <text x="132" y="60" fill="#fef08a" font-size="22">imagine virtuală, dreaptă, mărită</text>
+          </svg>
+        </div>
+
+        <div class="note">
+          Pentru lupă, obiectul se așază între lentilă și focar. Imaginea obținută este
+          <span class="important">virtuală, dreaptă și mărită</span>.
+        </div>
+      </section>
+
+      <section class="page" data-title="Calcul pentru lupă">
+        <div class="page-count">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>7. Mărirea lupei</h2>
+        <p>
+          Pentru o estimare simplă, folosim distanța de vedere clară $d_0=25\,cm$.
+        </p>
+
+        <div class="formula-box">
+          $$G \approx \frac{d_0}{f}$$
+          unde $G$ este grosismentul, iar $f$ este distanța focală a lupei.
+        </div>
+
+        <div class="calc-step">
+          <div class="step-number">1</div>
+          <div>
+            O lupă are distanța focală $f=5\,cm$.
+          </div>
+        </div>
+
+        <div class="calc-step">
+          <div class="step-number">2</div>
+          <div>
+            Calculăm:
+            $$G\approx \frac{25\,cm}{5\,cm}=5$$
+          </div>
+        </div>
+
+        <div class="calc-step">
+          <div class="step-number">3</div>
+          <div>
+            Interpretare: lupa oferă o mărire de aproximativ <span class="important">5 ori</span>.
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-title="Verificare">
+        <div class="page-count">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>8. Verificare rapidă</h2>
+        <p>Alege varianta corectă pentru fiecare întrebare.</p>
+
+        <div class="quick-check">
+          <div class="question">
+            <strong>1. Imaginea formată pe retină este:</strong>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q1" value="a"> reală, răsturnată și micșorată</label>
+              <label class="answer"><input type="radio" name="q1" value="b"> virtuală, dreaptă și mărită</label>
+              <label class="answer"><input type="radio" name="q1" value="c"> virtuală și răsturnată</label>
+            </div>
+          </div>
+
+          <div class="question">
+            <strong>2. Miopia se corectează cu:</strong>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q2" value="a"> lentilă convergentă</label>
+              <label class="answer"><input type="radio" name="q2" value="b"> lentilă divergentă</label>
+              <label class="answer"><input type="radio" name="q2" value="c"> prismă optică</label>
+            </div>
+          </div>
+
+          <div class="question">
+            <strong>3. Lupa este:</strong>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q3" value="a"> o lentilă divergentă</label>
+              <label class="answer"><input type="radio" name="q3" value="b"> o oglindă plană</label>
+              <label class="answer"><input type="radio" name="q3" value="c"> o lentilă convergentă</label>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" type="button" onclick="checkQuiz()">Verifică răspunsurile</button>
+          <div id="quizFeedback" class="feedback"></div>
+        </div>
+      </section>
+
+      <section class="page" data-title="Final">
+        <div class="page-count">Pagina</div>
+        <div class="progress"><div class="progress-bar"></div></div>
+
+        <h2>9. Recapitulare</h2>
+        <ul class="summary-list">
+          <li>Ochiul se comportă ca un sistem optic convergent.</li>
+          <li>Imaginea pe retină este reală, răsturnată și micșorată.</li>
+          <li>Miopia se corectează cu lentile divergente.</li>
+          <li>Hipermetropia se corectează cu lentile convergente.</li>
+          <li>Puterea optică se calculează cu formula $C=\frac{1}{f}$.</li>
+          <li>Lupa este o lentilă convergentă care formează o imagine virtuală, dreaptă și mărită.</li>
+        </ul>
+
+        <div class="button-row">
+          <a class="btn btn-success" href="5.recapitulare-lentile-subtiri.html">Mergi la recapitulare →</a>
+          <a class="btn btn-secondary" href="index.html">← Înapoi la lecții</a>
+        </div>
+      </section>
+
+      <nav class="nav-controls" aria-label="Navigare lecție">
+        <button class="btn btn-secondary" type="button" id="prevBtn" onclick="prevPage()">← Înapoi</button>
+        <button class="btn btn-primary" type="button" id="nextBtn" onclick="nextPage()">Mergi mai departe →</button>
+      </nav>
+    </main>
+  </div>
+
+  <script>
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const progressBars = Array.from(document.querySelectorAll('.progress-bar'));
+    const pageCounts = Array.from(document.querySelectorAll('.page-count'));
+    let currentPage = 0;
+
+    function updateRepeatedLabels() {
+      const text = `Pagina ${currentPage + 1} din ${pages.length}`;
+      pageCounts.forEach((label) => {
+        label.textContent = text;
+      });
+
+      const width = `${((currentPage + 1) / pages.length) * 100}%`;
+      progressBars.forEach((bar) => {
+        bar.style.width = width;
+      });
+    }
+
+    function showPage(index) {
+      currentPage = Math.max(0, Math.min(index, pages.length - 1));
+
+      pages.forEach((page, i) => {
+        page.classList.toggle('active', i === currentPage);
+      });
+
+      updateRepeatedLabels();
+
+      prevBtn.disabled = currentPage === 0;
+      prevBtn.style.opacity = currentPage === 0 ? '0.55' : '1';
+
+      if (currentPage === pages.length - 1) {
+        nextBtn.textContent = 'Lecția este parcursă ✓';
+        nextBtn.classList.remove('btn-primary');
+        nextBtn.classList.add('btn-success');
+      } else {
+        nextBtn.textContent = 'Mergi mai departe →';
+        nextBtn.classList.add('btn-primary');
+        nextBtn.classList.remove('btn-success');
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise([pages[currentPage]]).catch(() => {});
+      }
+    }
+
+    function nextPage() {
+      if (currentPage < pages.length - 1) {
+        showPage(currentPage + 1);
+      }
+    }
+
+    function prevPage() {
+      if (currentPage > 0) {
+        showPage(currentPage - 1);
+      }
+    }
+
+    function checkQuiz() {
+      const correct = { q1: 'a', q2: 'b', q3: 'c' };
+      let score = 0;
+
+      Object.keys(correct).forEach((name) => {
+        const selected = document.querySelector(`input[name="${name}"]:checked`);
+        if (selected && selected.value === correct[name]) score++;
+      });
+
+      const feedback = document.getElementById('quizFeedback');
+      feedback.className = 'feedback ' + (score === 3 ? 'good' : 'bad');
+      feedback.textContent = score === 3
+        ? 'Excelent! Ai răspuns corect la toate întrebările.'
+        : `Ai ${score}/3 răspunsuri corecte. Recitește paginile despre ochi, ochelari și lupă, apoi încearcă din nou.`;
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') nextPage();
+      if (event.key === 'ArrowLeft') prevPage();
+    });
+
+    showPage(0);
+  </script>
+</body>
+</html>

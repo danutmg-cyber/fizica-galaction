@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FIZICĂ VII – Echilibrul corpurilor – Test final</title>
-  <meta name="description" content="Test final interactiv pentru clasa a VII-a: momentul forței, echilibrul de rotație, pârghia și scripetele fix.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIZICĂ VII – Test final: Echilibrul corpurilor</title>
+  <meta name="description" content="Test final interactiv pentru clasa a VII-a: momentul forței, echilibrul de rotație, pârghia și scripeții." />
+
   <script>
     window.MathJax = {
       tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
@@ -12,22 +13,24 @@
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
   <style>
     :root {
       --bg: #0f172a;
       --panel: #111827;
       --card: #1e293b;
-      --card-2: #0b1220;
       --text: #f8fafc;
       --muted: #cbd5e1;
       --accent: #22d3ee;
-      --accent-2: #38bdf8;
+      --accent-dark: #0891b2;
       --success: #22c55e;
       --warning: #fbbf24;
       --danger: #fb7185;
       --border: #334155;
-      --shadow: 0 18px 55px rgba(0, 0, 0, 0.35);
+      --white-panel: #f8fafc;
+      --ink: #0f172a;
       --radius: 22px;
+      --shadow: 0 18px 55px rgba(0, 0, 0, 0.35);
     }
 
     * { box-sizing: border-box; }
@@ -54,7 +57,7 @@
 
     .topbar {
       border: 1px solid rgba(148, 163, 184, 0.25);
-      background: rgba(15, 23, 42, 0.78);
+      background: rgba(15, 23, 42, 0.82);
       backdrop-filter: blur(14px);
       border-radius: var(--radius);
       padding: clamp(16px, 4vw, 26px);
@@ -73,7 +76,7 @@
 
     .teacher {
       color: var(--muted);
-      font-weight: 700;
+      font-weight: 800;
       margin-top: 4px;
     }
 
@@ -86,7 +89,7 @@
       border-radius: 16px;
       padding: 10px 14px;
       font-style: italic;
-      font-weight: 700;
+      font-weight: 800;
     }
 
     .screen { display: none; }
@@ -116,14 +119,14 @@
       gap: 12px;
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 720px) {
       .grid-2 { grid-template-columns: 1fr; }
     }
 
     label.field span {
       display: block;
       color: var(--muted);
-      font-weight: 800;
+      font-weight: 900;
       margin-bottom: 6px;
     }
 
@@ -160,8 +163,8 @@
 
     .formula-panel {
       margin: 16px 0;
-      background: rgba(14, 165, 233, 0.10);
-      border: 1px solid rgba(56, 189, 248, 0.34);
+      background: rgba(14, 165, 233, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.36);
       border-radius: 18px;
       padding: 12px;
       color: #e0f2fe;
@@ -177,17 +180,17 @@
       margin-top: 18px;
     }
 
-    @media (max-width: 680px) {
+    @media (max-width: 700px) {
       .btn-row { grid-template-columns: 1fr; }
     }
 
     button {
-      min-height: 50px;
+      min-height: 52px;
       border: 0;
       border-radius: 15px;
       padding: 13px 16px;
       font-size: 1rem;
-      font-weight: 900;
+      font-weight: 950;
       cursor: pointer;
       transition: transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease;
     }
@@ -205,7 +208,7 @@
       display: grid;
       gap: 10px;
       margin-bottom: 14px;
-      background: rgba(15, 23, 42, 0.88);
+      background: rgba(15, 23, 42, 0.90);
       border: 1px solid rgba(148, 163, 184, 0.22);
       border-radius: 18px;
       padding: 12px;
@@ -217,7 +220,7 @@
       justify-content: space-between;
       gap: 12px;
       color: var(--muted);
-      font-weight: 800;
+      font-weight: 900;
       flex-wrap: wrap;
     }
 
@@ -252,23 +255,23 @@
       background: #bbf7d0;
       border-radius: 999px;
       padding: 6px 12px;
-      font-weight: 900;
+      font-weight: 950;
       margin: 4px auto 14px;
     }
 
     .statement {
       font-size: clamp(1.04rem, 3vw, 1.16rem);
       color: var(--text);
-      background: rgba(2, 6, 23, 0.42);
+      background: rgba(2, 6, 23, 0.44);
       border: 1px solid rgba(148, 163, 184, 0.20);
       border-radius: 18px;
       padding: 14px;
     }
 
-    .media-box {
+    .media-box, .svg-wrap {
       margin: 14px auto;
-      background: #f8fafc;
-      color: #0f172a;
+      background: var(--white-panel);
+      color: var(--ink);
       border-radius: 18px;
       padding: 10px;
       text-align: center;
@@ -285,22 +288,18 @@
     }
 
     .media-caption {
-      color: #0f172a;
-      font-weight: 800;
+      color: var(--ink);
+      font-weight: 900;
       margin-top: 8px;
       font-size: 0.9rem;
     }
 
-    .svg-wrap {
-      background: #f8fafc;
-      border-radius: 18px;
-      padding: 10px;
-      text-align: center;
-      border: 2px solid rgba(34, 211, 238, 0.35);
-      margin: 14px auto;
+    .svg-wrap svg {
+      width: min(100%, 650px);
+      height: auto;
+      display: block;
+      margin: 0 auto;
     }
-
-    .svg-wrap svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
 
     .answer-zone {
       margin-top: 18px;
@@ -310,7 +309,7 @@
 
     .quick-title {
       color: #fef08a;
-      font-weight: 900;
+      font-weight: 950;
       margin-bottom: 10px;
     }
 
@@ -321,7 +320,7 @@
       align-items: center;
     }
 
-    @media (max-width: 560px) {
+    @media (max-width: 580px) {
       .numeric-row { grid-template-columns: 1fr; }
     }
 
@@ -333,7 +332,7 @@
       padding: 13px 14px;
       min-width: 92px;
       text-align: center;
-      font-weight: 900;
+      font-weight: 950;
     }
 
     .option-grid {
@@ -347,8 +346,8 @@
       grid-template-columns: 32px 1fr;
       gap: 10px;
       align-items: center;
-      background: rgba(2, 6, 23, 0.55);
-      border: 2px solid rgba(148, 163, 184, 0.28);
+      background: rgba(2, 6, 23, 0.58);
+      border: 2px solid rgba(148, 163, 184, 0.30);
       border-radius: 16px;
       padding: 12px;
       cursor: pointer;
@@ -367,7 +366,7 @@
       margin-top: 14px;
       border-radius: 16px;
       padding: 14px;
-      font-weight: 800;
+      font-weight: 850;
     }
 
     .feedback.good {
@@ -407,7 +406,7 @@
       margin: 16px 0;
     }
 
-    @media (max-width: 700px) {
+    @media (max-width: 720px) {
       .result-grid { grid-template-columns: 1fr; }
     }
 
@@ -483,7 +482,7 @@
       color: #1e293b;
     }
 
-    @media (max-width: 560px) {
+    @media (max-width: 580px) {
       .cert-footer { grid-template-columns: 1fr; text-align: center; }
     }
 
@@ -500,6 +499,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="page-shell">
     <header class="topbar">
@@ -512,13 +512,13 @@
       <section id="screen-start" class="screen active">
         <div class="card">
           <h1>Test final – Echilibrul corpurilor</h1>
-          <p class="center muted">Clasa a VII-a • 4 probleme • 100 puncte • pagini separate pentru telefon, tabletă și laptop</p>
+          <p class="center muted">Clasa a VII-a • 4 probleme • 20 puncte din oficiu • pagini separate pentru telefon, tabletă și laptop</p>
 
           <div class="formula-panel">
             <strong>Formule utile:</strong>
-            <div>\(M = F \cdot b_F\), \(F = \frac{M}{b_F}\), \(b_F=\frac{M}{F}\)</div>
-            <div>\(F \cdot b_F = R \cdot b_R\), deci \(R=\frac{F \cdot b_F}{b_R}\)</div>
-            <div class="small">Exemplu numeric: \(M = 40\,\text{N}\cdot 0{,}25\,\text{m}=10\,\text{N}\cdot\text{m}\).</div>
+            <div>\(M = F \cdot b_F\), \(\sum M_{orar}=\sum M_{antiorar}\), \(F \cdot b_F = R \cdot b_R\)</div>
+            <div>Exemplu numeric: \(b_F=25\,\text{cm}=0{,}25\,\text{m}\), deci \(M=40\,\text{N}\cdot 0{,}25\,\text{m}=10\,\text{N}\cdot\text{m}\).</div>
+            <div>Exemplu cu fracție: \(R=\frac{F\cdot b_F}{b_R}\), de exemplu \(R=\frac{120\cdot45}{15}=360\,\text{N}\).</div>
           </div>
 
           <div class="grid-2">
@@ -542,18 +542,19 @@
               </select>
             </label>
             <label class="field">
-              <span>Mod de lucru</span>
+              <span>Tip test</span>
               <select id="modeInput">
-                <option value="normal">Test cu valori aleatorii</option>
-                <option value="practice">Exersare cu feedback detaliat</option>
+                <option value="test">Test cu valori aleatorii</option>
+                <option value="practice">Exersare cu explicații după verificare</option>
               </select>
             </label>
           </div>
 
           <ul class="info-list">
-            <li>Problema 1 cere aleatoriu \(M\), \(F\) sau \(b_F\).</li>
-            <li>Problema 2 cere aleatoriu echilibrul și sensul de rotație, \(F_1\), \(F_2\) sau \(F_3\).</li>
-            <li>Problema 3 cere aleatoriu \(R\), \(F\), \(b_R\) sau \(b_F\).</li>
+            <li>Problema 1: calculează momentul unei forțe, cu \(F\) și \(b_F\) aleatorii.</li>
+            <li>Problema 2: verifică echilibrul de rotație al unui disc și sensul de rotație.</li>
+            <li>Problema 3: calculează forța rezistentă \(R\) pentru o pârghie în echilibru.</li>
+            <li>Problema 4: reprezintă un scripete sau un sistem de scripeți și alege legea corectă.</li>
             <li>După 4 încercări, se afișează o diplomă cu punctajul mediu. Încercările sunt salvate local în browser.</li>
           </ul>
 
@@ -565,14 +566,14 @@
         <div class="progress-card">
           <div class="progress-line">
             <span id="progressText">Problema 1 / 4</span>
-            <span id="scoreText">Punctaj: 0 / 100</span>
+            <span id="scoreText">Punctaj: 20 / 100</span>
           </div>
           <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
         </div>
 
         <article class="card">
           <h2 id="questionTitle" class="problem-title">Problema</h2>
-          <div class="center"><span class="points-pill" id="pointsPill">25 puncte</span></div>
+          <div class="center"><span class="points-pill" id="pointsPill">20 puncte</span></div>
           <div id="mediaArea"></div>
           <div id="statementArea" class="statement"></div>
           <div id="formulaArea"></div>
@@ -644,49 +645,29 @@
 
 <script>
   const IMG_BASE = "https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/5-echilibrul-corpurilor/test-final/";
-  const POINTS_PER_QUESTION = 25;
+  const START_SCORE = 20;
+  const POINTS_PER_QUESTION = 20;
   const TOTAL_QUESTIONS = 4;
 
   const state = {
     school: "",
     name: "",
     className: "",
-    mode: "normal",
+    mode: "test",
     questions: [],
     current: 0,
-    score: 0,
+    score: START_SCORE,
     locked: false,
     answered: []
   };
 
-  const fixedPulleySvg = `
-    <div class="svg-wrap">
-      <svg viewBox="0 0 560 330" role="img" aria-label="Scripete fix ideal">
-        <defs>
-          <marker id="arrow" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
-            <path d="M0,0 L0,6 L7,3 z" fill="#0f172a"></path>
-          </marker>
-        </defs>
-        <rect x="80" y="28" width="400" height="28" rx="8" fill="#334155"></rect>
-        <line x1="280" y1="56" x2="280" y2="83" stroke="#0f172a" stroke-width="8"></line>
-        <circle cx="280" cy="148" r="65" fill="#e2e8f0" stroke="#0f172a" stroke-width="8"></circle>
-        <circle cx="280" cy="148" r="14" fill="#0f172a"></circle>
-        <path d="M215 148 C215 83, 345 83, 345 148" fill="none" stroke="#075985" stroke-width="10" stroke-linecap="round"></path>
-        <line x1="215" y1="148" x2="215" y2="260" stroke="#075985" stroke-width="10" stroke-linecap="round"></line>
-        <line x1="345" y1="148" x2="345" y2="260" stroke="#075985" stroke-width="10" stroke-linecap="round"></line>
-        <line x1="215" y1="188" x2="215" y2="282" stroke="#dc2626" stroke-width="5" marker-end="url(#arrow)"></line>
-        <line x1="345" y1="188" x2="345" y2="282" stroke="#16a34a" stroke-width="5" marker-end="url(#arrow)"></line>
-        <text x="185" y="308" font-size="28" fill="#0f172a" font-weight="800">R</text>
-        <text x="360" y="308" font-size="28" fill="#0f172a" font-weight="800">F</text>
-        <text x="230" y="154" font-size="24" fill="#0f172a" font-weight="800">r</text>
-        <text x="206" y="92" font-size="20" fill="#0f172a" font-weight="700">scripete fix</text>
-      </svg>
-      <div class="media-caption">Reprezentare: scripete fix ideal, cu forța activă \(F\) și forța rezistentă \(R\).</div>
-    </div>
-  `;
-
   function randInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  function randStep(min, max, step) {
+    const count = Math.floor((max - min) / step);
+    return min + step * randInt(0, count);
   }
 
   function choice(arr) {
@@ -708,7 +689,7 @@
     const cleaned = String(input)
       .toLowerCase()
       .replace(",", ".")
-      .replace(/n\s*·?\s*m|n\*m|nm|n|m|cm|dm/g, "")
+      .replace(/n\s*·?\s*m|n\*m|n m|nm|n|m|cm|dm/g, "")
       .replace(/[^\d.+\-*/()]/g, "");
     if (!cleaned.trim()) return NaN;
     if (!/^[\d.+\-*/()\s]+$/.test(cleaned)) return NaN;
@@ -718,15 +699,6 @@
     } catch (err) {
       return NaN;
     }
-  }
-
-  function normalizeText(input) {
-    return String(input || "")
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .replace(/\s+/g, " ")
-      .trim();
   }
 
   function showScreen(id) {
@@ -771,7 +743,7 @@
       makePulleyQuestion()
     ];
     state.current = 0;
-    state.score = 0;
+    state.score = START_SCORE;
     state.locked = false;
     state.answered = Array(TOTAL_QUESTIONS).fill(false);
 
@@ -780,129 +752,75 @@
   }
 
   function makeMomentQuestion() {
-    const variant = choice(["M", "F", "b"]);
-    const F = randInt(2, 12) * 10;              // 20...120 N
-    const bCm = randInt(10, 80);                // 10...80 cm
+    const F = randInt(28, 72);
+    const bCm = randInt(16, 32);
     const bM = bCm / 100;
     const M = roundTo(F * bM, 3);
-
-    let ask = "";
-    let expected = M;
-    let unit = "N·m";
-    let known = `Forța este \\(F=${F}\\,\\text{N}\\), iar brațul forței este \\(b_F=${bCm}\\,\\text{cm}\\).`;
-
-    if (variant === "M") {
-      ask = `Calculează momentul forței.`;
-      expected = M;
-      unit = "N·m";
-    } else if (variant === "F") {
-      ask = `Calculează mărimea forței \\(F\\).`;
-      known = `Momentul forței este \\(M=${formatNumber(M)}\\,\\text{N}\\cdot\\text{m}\\), iar brațul forței este \\(b_F=${bCm}\\,\\text{cm}\\).`;
-      expected = F;
-      unit = "N";
-    } else {
-      ask = `Calculează brațul forței \\(b_F\\), în centimetri.`;
-      known = `Momentul forței este \\(M=${formatNumber(M)}\\,\\text{N}\\cdot\\text{m}\\), iar forța este \\(F=${F}\\,\\text{N}\\).`;
-      expected = bCm;
-      unit = "cm";
-    }
 
     return {
       title: "Problema 1 – Momentul unei forțe",
       points: POINTS_PER_QUESTION,
       type: "numeric",
-      expected,
-      unit,
-      tolerance: variant === "b" ? 0.06 : 0.03,
+      expected: M,
+      unit: "N·m",
+      tolerance: 0.04,
       statementHTML: `
-        <p>${known}</p>
-        <p><strong>Cerință aleatorie:</strong> ${ask}</p>
+        <p>Calculează momentul unei forțe, știind că forța este \\(F=${F}\\,\\text{N}\\), iar brațul forței este \\(b_F=${bCm}\\,\\text{cm}\\).</p>
+        <p>Scrie rezultatul în \\(\\text{N}\\cdot\\text{m}\\).</p>
       `,
       formulaHTML: `
         <div class="formula-panel">
-          <strong>Relație:</strong> \\(M=F\\cdot b_F\\).
-          <span class="small">Atenție: \\(25\\,\\text{cm}=0{,}25\\,\\text{m}\\), iar \\(b_F=\\frac{M}{F}\\).</span>
+          <strong>Relație:</strong> \\(M=F\\cdot b_F\\). Transformă: \\(${bCm}\\,\\text{cm}=\\frac{${bCm}}{100}\\,\\text{m}=${formatNumber(bM)}\\,\\text{m}\\).
         </div>
       `,
       mediaHTML: "",
-      explanation: () => {
-        if (variant === "M") return `Transformăm brațul: ${bCm} cm = ${formatNumber(bM)} m. Rezultă M = ${F} · ${formatNumber(bM)} = ${formatNumber(M)} N·m.`;
-        if (variant === "F") return `Folosim F = M / bF = ${formatNumber(M)} / ${formatNumber(bM)} = ${formatNumber(F)} N.`;
-        return `Folosim bF = M / F = ${formatNumber(M)} / ${F} = ${formatNumber(bM)} m = ${formatNumber(bCm)} cm.`;
-      }
+      explanation: () => `Transformăm brațul: ${bCm} cm = ${formatNumber(bM)} m. Rezultă M = ${F} · ${formatNumber(bM)} = ${formatNumber(M)} N·m.`
     };
   }
 
   function makeDiscQuestion() {
-    const variant = choice(["state", "F1", "F2", "F3"]);
-    const rDm = randInt(2, 8); // 2...8 dm
+    const rDm = randStep(30, 70, 1) / 10;
     const rM = rDm / 10;
 
-    let F1, F2, F3, expected, unit = "N", type = "numeric", options = null, correctIndex = null, ask = "";
+    let F1, F2, F3;
+    const equilibriumCase = Math.random() < 0.25;
 
-    if (variant === "state") {
-      F1 = randInt(10, 80);
-      F2 = randInt(3, 20) * 4;
-      F3 = randInt(20, 110);
-      const anti = F1 * rM + F2 * (rM / 4);
-      const clockwise = F3 * (rM / 2);
-      const diff = roundTo(anti - clockwise, 4);
-      if (Math.abs(diff) < 0.05) F3 += 7;
-
-      const anti2 = F1 * rM + F2 * (rM / 4);
-      const clockwise2 = F3 * (rM / 2);
-
-      options = [
-        "Da, discul este în echilibru; nu se rotește.",
-        "Nu, discul se rotește în sens orar.",
-        "Nu, discul se rotește în sens antiorar."
-      ];
-
-      if (Math.abs(anti2 - clockwise2) < 0.05) correctIndex = 0;
-      else if (clockwise2 > anti2) correctIndex = 1;
-      else correctIndex = 2;
-
-      type = "radio";
-      expected = correctIndex;
-      ask = "Stabilește dacă discul este în echilibru de rotație și precizează sensul de rotație.";
+    if (equilibriumCase) {
+      F1 = randInt(16, 36);
+      F2 = randStep(28, 56, 2);
+      F3 = roundTo(2 * F1 + F2 / 2, 1);
     } else {
-      const hiddenF1 = randInt(10, 60);
-      const hiddenF2 = randInt(3, 20) * 4;
-      const hiddenF3 = 2 * hiddenF1 + hiddenF2 / 2; // din F1*r + F2*r/4 = F3*r/2
-      F1 = hiddenF1;
-      F2 = hiddenF2;
-      F3 = hiddenF3;
-
-      if (variant === "F1") {
-        F1 = "?";
-        expected = hiddenF1;
-        ask = "Află mărimea forței \\(F_1\\) pentru ca discul să fie în echilibru.";
-      } else if (variant === "F2") {
-        F2 = "?";
-        expected = hiddenF2;
-        ask = "Află mărimea forței \\(F_2\\) pentru ca discul să fie în echilibru.";
-      } else {
-        F3 = "?";
-        expected = hiddenF3;
-        ask = "Află mărimea forței \\(F_3\\) pentru ca discul să fie în echilibru.";
-      }
+      F1 = randInt(16, 40);
+      F2 = randStep(28, 56, 2);
+      F3 = randInt(44, 80);
+      const antiTest = F1 * rM + F2 * (rM / 4);
+      const clockwiseTest = F3 * (rM / 2);
+      if (Math.abs(antiTest - clockwiseTest) < 0.06) F3 += 5;
     }
 
-    const knownLine = `\\(r=${rDm}\\,\\text{dm}\\), \\(OA=r\\), \\(OC=\\frac{r}{2}\\), \\(OB=\\frac{r}{4}\\), \\(F_1=${F1}\\,\\text{N}\\), \\(F_2=${F2}\\,\\text{N}\\), \\(F_3=${F3}\\,\\text{N}\\).`;
+    const mAnti = roundTo(F1 * rM + F2 * (rM / 4), 4);
+    const mClock = roundTo(F3 * (rM / 2), 4);
+
+    let correctIndex;
+    if (Math.abs(mAnti - mClock) < 0.06) correctIndex = 0;
+    else if (mClock > mAnti) correctIndex = 1;
+    else correctIndex = 2;
 
     return {
-      title: "Problema 2 – Disc supus la trei forțe",
+      title: "Problema 2 – Disc în echilibru de rotație",
       points: POINTS_PER_QUESTION,
-      type,
-      expected,
-      unit,
-      tolerance: 0.05,
-      options,
+      type: "radio",
+      expected: correctIndex,
       correctIndex,
+      unit: "",
+      options: [
+        "Da, discul este în echilibru de rotație; nu are sens de rotație.",
+        "Nu, discul se rotește în sens orar.",
+        "Nu, discul se rotește în sens antiorar."
+      ],
       statementHTML: `
-        <p>În imagine, \\(F_1\\) și \\(F_2\\) rotesc discul în sens antiorar, iar \\(F_3\\) rotește discul în sens orar.</p>
-        <p>Se știe că: ${knownLine}</p>
-        <p><strong>Cerință aleatorie:</strong> ${ask}</p>
+        <p>Știm că \\(F_1=${F1}\\,\\text{N}\\), \\(F_2=${F2}\\,\\text{N}\\), \\(F_3=${F3}\\,\\text{N}\\), raza discului este \\(r=${formatNumber(rDm, 1)}\\,\\text{dm}\\), \\(OA=r\\), \\(OC=\\frac{r}{2}\\), \\(OB=\\frac{r}{4}\\).</p>
+        <p>Află dacă discul este în echilibru de rotație și care este sensul de rotație.</p>
       `,
       mediaHTML: `
         <div class="media-box">
@@ -912,120 +830,152 @@
       `,
       formulaHTML: `
         <div class="formula-panel">
-          <strong>Condiția de echilibru:</strong>
-          \\(M_{antiorar}=M_{orar}\\), adică
-          \\(F_1\\cdot r + F_2\\cdot \\frac{r}{4}=F_3\\cdot \\frac{r}{2}\\).
+          <strong>Comparație:</strong>
+          \\(M_{antiorar}=F_1\\cdot r+F_2\\cdot\\frac{r}{4}\\), iar
+          \\(M_{orar}=F_3\\cdot\\frac{r}{2}\\).
         </div>
       `,
       explanation: () => {
-        const visibleF1 = typeof F1 === "number" ? F1 : expected;
-        const visibleF2 = typeof F2 === "number" ? F2 : expected;
-        const visibleF3 = typeof F3 === "number" ? F3 : expected;
-        const anti = roundTo(visibleF1 * rM + visibleF2 * (rM / 4), 3);
-        const clockwise = roundTo(visibleF3 * (rM / 2), 3);
-        if (variant === "state") {
-          if (Math.abs(anti - clockwise) < 0.05) return `M antiorar = ${formatNumber(anti)} N·m și M orar = ${formatNumber(clockwise)} N·m, deci discul este în echilibru.`;
-          return `M antiorar = ${formatNumber(anti)} N·m, M orar = ${formatNumber(clockwise)} N·m. Momentul mai mare dă sensul de rotație.`;
+        if (correctIndex === 0) {
+          return `M antiorar = ${formatNumber(mAnti)} N·m și M orar = ${formatNumber(mClock)} N·m. Momentele sunt egale, deci discul este în echilibru.`;
         }
-        if (variant === "F1") return `F1 = F3/2 - F2/4 = ${visibleF3}/2 - ${visibleF2}/4 = ${formatNumber(expected)} N.`;
-        if (variant === "F2") return `F2 = 4·(F3/2 - F1) = 4·(${visibleF3}/2 - ${visibleF1}) = ${formatNumber(expected)} N.`;
-        return `F3 = 2·(F1 + F2/4) = 2·(${visibleF1} + ${visibleF2}/4) = ${formatNumber(expected)} N.`;
+        if (correctIndex === 1) {
+          return `M antiorar = ${formatNumber(mAnti)} N·m, iar M orar = ${formatNumber(mClock)} N·m. Momentul orar este mai mare, deci rotația este în sens orar.`;
+        }
+        return `M antiorar = ${formatNumber(mAnti)} N·m, iar M orar = ${formatNumber(mClock)} N·m. Momentul antiorar este mai mare, deci rotația este în sens antiorar.`;
       }
     };
   }
 
   function makeLeverQuestion() {
-    const variant = choice(["R", "F", "bR", "bF"]);
-    const baseF = randInt(4, 16) * 10;       // 40...160 N
-    const baseBF = randInt(4, 16) * 5;       // 20...80 cm
-    const baseBR = randInt(2, 9) * 5;        // 10...45 cm
-    const baseR = roundTo((baseF * baseBF) / baseBR, 2);
-
-    let F = baseF, bF = baseBF, bR = baseBR, R = baseR, expected, unit, ask;
-
-    if (variant === "R") {
-      R = "?";
-      expected = baseR;
-      unit = "N";
-      ask = "Află valoarea forței rezistente \\(R\\).";
-    } else if (variant === "F") {
-      F = "?";
-      expected = roundTo((baseR * baseBR) / baseBF, 3);
-      unit = "N";
-      ask = "Află valoarea forței active \\(F\\).";
-    } else if (variant === "bR") {
-      bR = "?";
-      expected = roundTo((baseF * baseBF) / baseR, 3);
-      unit = "cm";
-      ask = "Află brațul forței rezistente \\(b_R\\), în centimetri.";
-    } else {
-      bF = "?";
-      expected = roundTo((baseR * baseBR) / baseF, 3);
-      unit = "cm";
-      ask = "Află brațul forței active \\(b_F\\), în centimetri.";
-    }
+    const F = randStep(90, 220, 5);
+    const bF = randStep(30, 80, 5);
+    const bR = randStep(10, 40, 5);
+    const R = roundTo((F * bF) / bR, 2);
 
     return {
       title: "Problema 3 – Pârghie în echilibru",
       points: POINTS_PER_QUESTION,
       type: "numeric",
-      expected,
-      unit,
+      expected: R,
+      unit: "N",
       tolerance: 0.08,
       statementHTML: `
-        <p>Asupra pârghiei din imagine acționează forța activă \\(F\\), forța rezistentă \\(R\\), brațul activ \\(b_F\\) și brațul rezistent \\(b_R\\).</p>
-        <p>Date: \\(F=${F}\\,\\text{N}\\), \\(R=${R}\\,\\text{N}\\), \\(b_F=${bF}\\,\\text{cm}\\), \\(b_R=${bR}\\,\\text{cm}\\).</p>
-        <p><strong>Cerință aleatorie:</strong> ${ask}</p>
+        <p>Știind că asupra pârghiei din imagine acționează forța \\(F=${F}\\,\\text{N}\\), \\(b_F=${bF}\\,\\text{cm}\\), \\(b_R=${bR}\\,\\text{cm}\\), află valoarea forței rezistente \\(R\\), astfel încât să fie îndeplinită condiția de echilibru.</p>
       `,
       mediaHTML: `
         <div class="media-box">
-          <img src="${IMG_BASE}parghia-1.png" alt="Pârghie cu punct de sprijin O, forța R la B și forța F la A">
+          <img src="${IMG_BASE}parghia-1.png" alt="Pârghie cu punct de sprijin O, forța R și forța F">
           <div class="media-caption">Imagine pentru problema pârghiei: condiția de echilibru se scrie față de punctul \(O\).</div>
         </div>
       `,
       formulaHTML: `
         <div class="formula-panel">
-          <strong>Legea pârghiei:</strong> \\(F\\cdot b_F=R\\cdot b_R\\).
-          <span class="small">De exemplu, \\(R=\\frac{F\\cdot b_F}{b_R}\\).</span>
+          <strong>Legea pârghiei:</strong> \\(F\\cdot b_F=R\\cdot b_R\\), deci
+          \\(R=\\frac{F\\cdot b_F}{b_R}\\).
         </div>
       `,
-      explanation: () => {
-        if (variant === "R") return `R = F·bF / bR = ${baseF}·${baseBF}/${baseBR} = ${formatNumber(expected)} N.`;
-        if (variant === "F") return `F = R·bR / bF = ${formatNumber(baseR)}·${baseBR}/${baseBF} = ${formatNumber(expected)} N.`;
-        if (variant === "bR") return `bR = F·bF / R = ${baseF}·${baseBF}/${formatNumber(baseR)} = ${formatNumber(expected)} cm.`;
-        return `bF = R·bR / F = ${formatNumber(baseR)}·${baseBR}/${baseF} = ${formatNumber(expected)} cm.`;
-      }
+      explanation: () => `R = F·bF / bR = ${F}·${bF}/${bR} = ${formatNumber(R)} N.`
     };
   }
 
+  function pulleySvg(config) {
+    const mobileCount = config.mobileCount;
+    const subtitle = config.label;
+    const mobileLabels = Array.from({length: mobileCount}, (_, i) => `
+      <circle cx="${230 + i * 100}" cy="205" r="34" fill="#e2e8f0" stroke="#0f172a" stroke-width="6"></circle>
+      <circle cx="${230 + i * 100}" cy="205" r="7" fill="#0f172a"></circle>
+      <text x="${218 + i * 100}" y="214" font-size="24" font-weight="900" fill="#0f172a">M</text>
+    `).join("");
+
+    const fixedPulley = `
+      <circle cx="160" cy="92" r="34" fill="#e2e8f0" stroke="#0f172a" stroke-width="6"></circle>
+      <circle cx="160" cy="92" r="7" fill="#0f172a"></circle>
+      <text x="153" y="101" font-size="24" font-weight="900" fill="#0f172a">F</text>
+    `;
+
+    const ropeSegments = mobileCount === 0
+      ? `
+        <path d="M126 92 C126 58 194 58 194 92" fill="none" stroke="#075985" stroke-width="8" stroke-linecap="round"></path>
+        <line x1="126" y1="92" x2="126" y2="245" stroke="#075985" stroke-width="8" stroke-linecap="round"></line>
+        <line x1="194" y1="92" x2="194" y2="245" stroke="#075985" stroke-width="8" stroke-linecap="round"></line>
+        <line x1="126" y1="150" x2="126" y2="270" stroke="#dc2626" stroke-width="5" marker-end="url(#arrow)"></line>
+        <line x1="194" y1="150" x2="194" y2="270" stroke="#16a34a" stroke-width="5" marker-end="url(#arrow)"></line>
+        <text x="102" y="300" font-size="26" font-weight="900" fill="#0f172a">R</text>
+        <text x="205" y="300" font-size="26" font-weight="900" fill="#0f172a">F</text>
+      `
+      : `
+        <path d="M160 126 C160 180, 210 172, 230 205" fill="none" stroke="#075985" stroke-width="7" stroke-linecap="round"></path>
+        ${Array.from({length: mobileCount - 1}, (_, i) => {
+          const x1 = 230 + i * 100;
+          const x2 = 230 + (i + 1) * 100;
+          return `<path d="M${x1 + 34} 205 C${x1 + 60} 150, ${x2 - 60} 150, ${x2 - 34} 205" fill="none" stroke="#075985" stroke-width="7" stroke-linecap="round"></path>`;
+        }).join("")}
+        <line x1="${230 + (mobileCount - 1) * 100 + 34}" y1="205" x2="${230 + (mobileCount - 1) * 100 + 110}" y2="120" stroke="#075985" stroke-width="7" stroke-linecap="round"></line>
+        <line x1="${230 + (mobileCount - 1) * 100 + 110}" y1="120" x2="${230 + (mobileCount - 1) * 100 + 110}" y2="270" stroke="#16a34a" stroke-width="5" marker-end="url(#arrow)"></line>
+        <line x1="${230 + (mobileCount - 1) * 100}" y1="239" x2="${230 + (mobileCount - 1) * 100}" y2="282" stroke="#dc2626" stroke-width="5" marker-end="url(#arrow)"></line>
+        <text x="${230 + (mobileCount - 1) * 100 - 10}" y="312" font-size="26" font-weight="900" fill="#0f172a">R</text>
+        <text x="${230 + (mobileCount - 1) * 100 + 124}" y="300" font-size="26" font-weight="900" fill="#0f172a">F</text>
+      `;
+
+    return `
+      <div class="svg-wrap">
+        <svg viewBox="0 0 650 340" role="img" aria-label="${subtitle}">
+          <defs>
+            <marker id="arrow" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L0,6 L7,3 z" fill="#0f172a"></path>
+            </marker>
+          </defs>
+          <rect x="70" y="22" width="500" height="28" rx="8" fill="#334155"></rect>
+          <line x1="160" y1="50" x2="160" y2="58" stroke="#0f172a" stroke-width="7"></line>
+          ${fixedPulley}
+          ${mobileLabels}
+          ${ropeSegments}
+          <text x="88" y="326" font-size="20" fill="#0f172a" font-weight="900">${subtitle}</text>
+        </svg>
+        <div class="media-caption">Desenează în caiet schema cerută și selectează legea potrivită.</div>
+      </div>
+    `;
+  }
+
   function makePulleyQuestion() {
+    const configs = [
+      { label: "scripete fix", text: "un scripete fix", mobileCount: 0, correct: 0, law: "\\(F=R\\)", explanation: "La scripetele fix ideal nu se câștigă forță; se schimbă doar direcția forței." },
+      { label: "scripete mobil", text: "un scripete mobil", mobileCount: 1, correct: 1, law: "\\(F=\\frac{R}{2}\\)", explanation: "La scripetele mobil ideal, greutatea este susținută de două ramuri de fir, deci F = R/2." },
+      { label: "sistem: un fix și un mobil", text: "un sistem compus dintr-un scripete fix și unul mobil", mobileCount: 1, correct: 1, law: "\\(F=\\frac{R}{2}\\)", explanation: "Scripetele fix schimbă direcția, iar scripetele mobil înjumătățește forța necesară." },
+      { label: "sistem: un fix și doi mobili", text: "un sistem compus dintr-un scripete fix și doi mobili", mobileCount: 2, correct: 2, law: "\\(F=\\frac{R}{4}\\)", explanation: "Două scripeți mobili ideali dau avantaj mecanic 4, deci F = R/4." },
+      { label: "sistem: un fix și trei mobili", text: "un sistem compus dintr-un scripete fix și trei mobili", mobileCount: 3, correct: 3, law: "\\(F=\\frac{R}{8}\\)", explanation: "Trei scripeți mobili ideali dau avantaj mecanic 8, deci F = R/8." }
+    ];
+
+    const config = choice(configs);
     const options = [
       "\\(F=R\\)",
-      "\\(F=2R\\)",
       "\\(F=\\frac{R}{2}\\)",
-      "\\(F\\cdot 2r=R\\cdot r\\)"
+      "\\(F=\\frac{R}{4}\\)",
+      "\\(F=\\frac{R}{8}\\)",
+      "\\(F=2R\\)"
     ];
 
     return {
-      title: "Problema 4 – Scripetele fix",
+      title: "Problema 4 – Scripeți",
       points: POINTS_PER_QUESTION,
       type: "radio",
-      expected: 0,
+      expected: config.correct,
+      correctIndex: config.correct,
       unit: "",
       options,
-      correctIndex: 0,
       statementHTML: `
-        <p>Reprezintă în caiet un scripete fix, apoi alege legea corectă pentru scripetele fix ideal.</p>
-        <p>Indiciu: în scripetele fix ideal, cele două brațe ale forțelor sunt egale cu raza \\(r\\).</p>
+        <p>Reprezintă ${config.text} și scrie legea sa.</p>
+        <p>În verificarea rapidă, alege legea corectă pentru sistemul ideal, fără frecări.</p>
       `,
-      mediaHTML: fixedPulleySvg,
+      mediaHTML: pulleySvg(config),
       formulaHTML: `
         <div class="formula-panel">
-          <strong>Model de raționament:</strong>
-          \\(M_F(O)=M_R(O)\\Rightarrow F\\cdot r=R\\cdot r\\Rightarrow F=\\frac{R\\cdot r}{r}=R\\).
+          <strong>Indiciu:</strong> legea se stabilește din condiția de echilibru. Pentru un scripete mobil:
+          \\(F\\cdot 2r=R\\cdot r\\Rightarrow F=\\frac{R}{2}\\).
         </div>
       `,
-      explanation: () => "La scripetele fix ideal nu se câștigă forță: forța activă este egală cu forța rezistentă, F = R. Avantajul este schimbarea direcției forței."
+      explanation: () => `Legea corectă este ${config.law}. ${config.explanation}`
     };
   }
 
@@ -1083,12 +1033,10 @@
 
     const q = state.questions[state.current];
     let isCorrect = false;
-    let userText = "";
 
     if (q.type === "numeric") {
       const input = document.getElementById("numericAnswer");
-      userText = input.value;
-      const userNumber = parseNumber(userText);
+      const userNumber = parseNumber(input.value);
       if (Number.isNaN(userNumber)) {
         showFeedback("neutral", "Scrie un număr valid înainte de verificare.");
         return;
@@ -1101,11 +1049,7 @@
         showFeedback("neutral", "Alege o variantă înainte de verificare.");
         return;
       }
-      userText = selected.value;
       isCorrect = Number(selected.value) === q.correctIndex;
-    } else {
-      userText = normalizeText(document.getElementById("textAnswer").value);
-      isCorrect = q.accepted.some(ans => normalizeText(ans) === userText);
     }
 
     state.locked = true;
@@ -1168,7 +1112,7 @@
 
   function storageKey() {
     const raw = `${state.name}|${state.className}`.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    return "echilibrul-corpurilor-test-final-v1:" + raw.replace(/[^a-z0-9|]+/g, "-");
+    return "echilibrul-corpurilor-test-final-v2:" + raw.replace(/[^a-z0-9|]+/g, "-");
   }
 
   function saveAttempt(score) {

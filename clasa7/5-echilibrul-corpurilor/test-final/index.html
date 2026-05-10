@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FIZICĂ VII – Test final: Echilibrul corpurilor</title>
-  <meta name="description" content="Test final interactiv pentru clasa a VII-a: momentul forței, echilibrul de rotație, pârghia și scripeții." />
+  <title>FIZICĂ VII – Echilibrul corpurilor</title>
+  <meta name="description" content="Test interactiv pentru clasa a VII-a: momentul forței, echilibrul de rotație, pârghii și scripeți." />
 
   <script>
     window.MathJax = {
@@ -24,681 +24,713 @@
       --accent: #22d3ee;
       --accent-dark: #0891b2;
       --success: #22c55e;
+      --success-dark: #15803d;
       --warning: #fbbf24;
       --danger: #fb7185;
       --border: #334155;
-      --white-panel: #f8fafc;
       --ink: #0f172a;
+      --paper: #f8fafc;
       --radius: 22px;
       --shadow: 0 18px 55px rgba(0, 0, 0, 0.35);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+    }
 
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(34, 211, 238, 0.18), transparent 32rem),
-        radial-gradient(circle at bottom right, rgba(251, 191, 36, 0.10), transparent 34rem),
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.18), transparent 28rem),
+        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.12), transparent 30rem),
         var(--bg);
       color: var(--text);
       line-height: 1.55;
     }
 
-    .page-shell {
-      width: min(100%, 980px);
+    body.printing {
+      background: white;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 980px;
       margin: 0 auto;
-      padding: clamp(14px, 3vw, 28px);
+      padding: 16px;
     }
 
     .topbar {
-      border: 1px solid rgba(148, 163, 184, 0.25);
-      background: rgba(15, 23, 42, 0.82);
-      backdrop-filter: blur(14px);
-      border-radius: var(--radius);
-      padding: clamp(16px, 4vw, 26px);
-      box-shadow: var(--shadow);
-      margin-bottom: 18px;
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      padding: 14px 0 18px;
+      border-bottom: 2px solid rgba(34, 211, 238, 0.45);
+      margin-bottom: 16px;
     }
 
-    .school-name {
-      color: var(--accent);
-      text-transform: uppercase;
-      font-weight: 900;
-      letter-spacing: 0.04em;
-      font-size: clamp(1rem, 3.5vw, 1.35rem);
+    .brand {
+      display: grid;
+      gap: 2px;
     }
 
-    .teacher {
+    .brand strong {
+      font-size: clamp(1.15rem, 4vw, 1.8rem);
+      letter-spacing: 0.02em;
+    }
+
+    .brand span {
       color: var(--muted);
-      font-weight: 800;
-      margin-top: 4px;
+      font-size: 0.95rem;
     }
 
-    .quote {
-      margin: 16px auto 0;
-      max-width: 760px;
-      color: #fef3c7;
-      background: rgba(251, 191, 36, 0.12);
-      border: 1px solid rgba(251, 191, 36, 0.35);
-      border-radius: 16px;
-      padding: 10px 14px;
-      font-style: italic;
-      font-weight: 800;
+    .badge {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.12);
+      border: 1px solid rgba(34, 211, 238, 0.42);
+      color: #e0f2fe;
+      font-weight: 700;
+      white-space: nowrap;
     }
 
-    .screen { display: none; }
-    .screen.active { display: block; }
+    .screen {
+      display: none;
+      animation: fadeIn 0.22s ease-in-out;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
     .card {
-      background: linear-gradient(180deg, rgba(30, 41, 59, 0.97), rgba(15, 23, 42, 0.98));
-      border: 1px solid rgba(148, 163, 184, 0.25);
+      background: rgba(30, 41, 59, 0.96);
+      border: 1px solid var(--border);
       border-radius: var(--radius);
-      padding: clamp(16px, 4vw, 28px);
       box-shadow: var(--shadow);
+      padding: clamp(18px, 4vw, 30px);
+      margin: 16px 0;
     }
 
-    h1, h2, h3 { line-height: 1.15; margin-top: 0; }
-    h1 { font-size: clamp(1.55rem, 6vw, 2.4rem); text-align: center; }
-    h2 { font-size: clamp(1.25rem, 4.6vw, 1.9rem); }
-    h3 { font-size: 1.1rem; }
+    .card h1,
+    .card h2,
+    .card h3 {
+      margin-top: 0;
+      line-height: 1.22;
+    }
 
-    p { margin: 0.6rem 0; }
-    .muted { color: var(--muted); }
-    .small { font-size: 0.92rem; }
-    .center { text-align: center; }
-
-    .grid-2 {
+    .intro-grid {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
+      grid-template-columns: 1fr;
+      gap: 16px;
     }
 
-    @media (max-width: 720px) {
-      .grid-2 { grid-template-columns: 1fr; }
+    @media (min-width: 760px) {
+      .intro-grid {
+        grid-template-columns: 1.15fr 0.85fr;
+      }
     }
 
-    label.field span {
+    label {
       display: block;
-      color: var(--muted);
-      font-weight: 900;
-      margin-bottom: 6px;
+      font-weight: 700;
+      margin: 12px 0 6px;
     }
 
-    input[type="text"], input[type="number"], select {
+    input[type="text"] {
       width: 100%;
-      border: 2px solid rgba(148, 163, 184, 0.35);
+      min-height: 50px;
       border-radius: 14px;
-      background: #020617;
+      border: 2px solid #475569;
+      background: #0b1220;
       color: var(--text);
-      padding: 14px 15px;
-      font-size: 1rem;
+      font-size: 1.05rem;
+      padding: 12px 14px;
       outline: none;
     }
 
-    input:focus, select:focus {
+    input[type="text"]:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.16);
+      box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.16);
     }
 
-    .info-list {
-      display: grid;
-      gap: 8px;
-      margin: 16px 0;
-      padding: 0;
-      list-style: none;
+    .muted {
+      color: var(--muted);
     }
 
-    .info-list li {
-      border: 1px solid rgba(148, 163, 184, 0.22);
-      background: rgba(15, 23, 42, 0.7);
-      border-radius: 14px;
-      padding: 10px 12px;
-    }
-
-    .formula-panel {
-      margin: 16px 0;
-      background: rgba(14, 165, 233, 0.12);
-      border: 1px solid rgba(56, 189, 248, 0.36);
-      border-radius: 18px;
-      padding: 12px;
+    .note {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(34, 211, 238, 0.1);
+      border: 1px solid rgba(34, 211, 238, 0.3);
       color: #e0f2fe;
-      overflow-x: auto;
     }
 
-    .formula-panel strong { color: #f8fafc; }
-
-    .btn-row {
+    .actions {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 10px;
       margin-top: 18px;
     }
 
-    @media (max-width: 700px) {
-      .btn-row { grid-template-columns: 1fr; }
+    @media (min-width: 560px) {
+      .actions.two {
+        grid-template-columns: 1fr 1fr;
+      }
     }
 
     button {
-      min-height: 52px;
-      border: 0;
+      appearance: none;
+      border: none;
       border-radius: 15px;
-      padding: 13px 16px;
+      padding: 15px 18px;
+      min-height: 52px;
       font-size: 1rem;
-      font-weight: 950;
+      font-weight: 800;
       cursor: pointer;
       transition: transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease;
     }
 
-    button:hover { transform: translateY(-1px); filter: brightness(1.03); }
-    button:disabled { cursor: not-allowed; opacity: 0.58; transform: none; }
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      filter: brightness(1.04);
+    }
 
-    .btn-primary { background: var(--accent); color: #062333; }
-    .btn-success { background: var(--success); color: #052e16; }
-    .btn-secondary { background: #e2e8f0; color: #0f172a; }
-    .btn-danger { background: var(--danger); color: #450a0a; }
-    .btn-warning { background: var(--warning); color: #422006; }
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.58;
+    }
 
-    .progress-card {
+    .primary {
+      background: var(--accent);
+      color: #082f49;
+    }
+
+    .success {
+      background: var(--success);
+      color: #052e16;
+    }
+
+    .secondary {
+      background: #e2e8f0;
+      color: var(--ink);
+    }
+
+    .danger {
+      background: #fecdd3;
+      color: #7f1d1d;
+    }
+
+    .outline {
+      background: transparent;
+      color: var(--text);
+      border: 2px solid #475569;
+    }
+
+    .progress-wrap {
       display: grid;
       gap: 10px;
-      margin-bottom: 14px;
-      background: rgba(15, 23, 42, 0.90);
-      border: 1px solid rgba(148, 163, 184, 0.22);
-      border-radius: 18px;
-      padding: 12px;
+      margin-bottom: 16px;
     }
 
-    .progress-line {
+    .progress-text {
       display: flex;
-      align-items: center;
       justify-content: space-between;
       gap: 12px;
-      color: var(--muted);
-      font-weight: 900;
-      flex-wrap: wrap;
+      font-weight: 800;
+      color: #e0f2fe;
     }
 
-    .progress-track {
+    .bar {
       height: 12px;
+      background: #0b1220;
       border-radius: 999px;
-      background: #020617;
       overflow: hidden;
-      border: 1px solid rgba(148, 163, 184, 0.25);
+      border: 1px solid #334155;
     }
 
-    .progress-fill {
+    .bar > div {
       height: 100%;
-      width: 0;
+      width: 0%;
       background: linear-gradient(90deg, var(--accent), var(--success));
-      border-radius: 999px;
-      transition: width 0.25s ease;
+      transition: width 0.22s ease;
     }
 
-    .problem-title {
-      color: var(--accent);
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .points-pill {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      color: #052e16;
-      background: #bbf7d0;
-      border-radius: 999px;
-      padding: 6px 12px;
-      font-weight: 950;
-      margin: 4px auto 14px;
+    .question-title {
+      font-size: clamp(1.15rem, 4vw, 1.45rem);
+      margin-bottom: 12px;
+      color: #e0f2fe;
     }
 
     .statement {
-      font-size: clamp(1.04rem, 3vw, 1.16rem);
-      color: var(--text);
-      background: rgba(2, 6, 23, 0.44);
-      border: 1px solid rgba(148, 163, 184, 0.20);
-      border-radius: 18px;
-      padding: 14px;
+      font-size: clamp(1.02rem, 3.5vw, 1.16rem);
     }
 
-    .media-box, .svg-wrap {
-      margin: 14px auto;
-      background: var(--white-panel);
-      color: var(--ink);
+    .statement p {
+      margin: 9px 0;
+    }
+
+    .media-box {
+      margin: 18px 0;
+      padding: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
       border-radius: 18px;
-      padding: 10px;
+      background: #f8fafc;
       text-align: center;
-      overflow: hidden;
-      border: 2px solid rgba(34, 211, 238, 0.35);
     }
 
     .media-box img {
+      display: block;
       max-width: 100%;
       height: auto;
-      border-radius: 12px;
-      display: block;
+      max-height: 360px;
       margin: 0 auto;
+      object-fit: contain;
+      border-radius: 12px;
     }
 
     .media-caption {
-      color: var(--ink);
-      font-weight: 900;
       margin-top: 8px;
-      font-size: 0.9rem;
+      color: #334155;
+      font-size: 0.92rem;
+      font-weight: 700;
     }
 
-    .svg-wrap svg {
-      width: min(100%, 650px);
-      height: auto;
-      display: block;
-      margin: 0 auto;
-    }
-
-    .answer-zone {
+    .answer-area {
       margin-top: 18px;
-      border-top: 1px solid rgba(148, 163, 184, 0.22);
-      padding-top: 16px;
+      display: grid;
+      gap: 12px;
     }
 
-    .quick-title {
-      color: #fef08a;
-      font-weight: 950;
-      margin-bottom: 10px;
-    }
-
-    .numeric-row {
+    .answer-unit {
       display: grid;
       grid-template-columns: 1fr auto;
-      gap: 10px;
       align-items: center;
+      gap: 10px;
     }
 
-    @media (max-width: 580px) {
-      .numeric-row { grid-template-columns: 1fr; }
-    }
-
-    .unit-badge {
+    .unit-pill {
+      padding: 12px 14px;
       border-radius: 14px;
-      background: rgba(34, 211, 238, 0.13);
+      background: #0b1220;
+      border: 1px solid #475569;
       color: #e0f2fe;
-      border: 1px solid rgba(34, 211, 238, 0.35);
-      padding: 13px 14px;
-      min-width: 92px;
+      font-weight: 900;
+      min-width: 72px;
       text-align: center;
-      font-weight: 950;
     }
 
-    .option-grid {
+    @media (max-width: 420px) {
+      .answer-unit {
+        grid-template-columns: 1fr;
+      }
+
+      .unit-pill {
+        width: 100%;
+      }
+    }
+
+    .options {
       display: grid;
-      grid-template-columns: 1fr;
       gap: 10px;
     }
 
-    .option-label {
+    .option-row {
       display: grid;
-      grid-template-columns: 32px 1fr;
+      grid-template-columns: 28px 1fr;
+      align-items: start;
       gap: 10px;
-      align-items: center;
-      background: rgba(2, 6, 23, 0.58);
-      border: 2px solid rgba(148, 163, 184, 0.30);
-      border-radius: 16px;
-      padding: 12px;
+      padding: 13px;
+      border-radius: 15px;
+      border: 2px solid #475569;
+      background: #0b1220;
       cursor: pointer;
-      color: var(--text);
     }
 
-    .option-label:hover, .option-label:focus-within {
+    .option-row:hover {
       border-color: var(--accent);
-      background: rgba(14, 165, 233, 0.12);
     }
 
-    .option-label input { transform: scale(1.25); accent-color: var(--accent); }
+    .option-row input {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
+      accent-color: var(--accent);
+    }
+
+    .option-row span {
+      color: var(--text);
+      font-weight: 650;
+    }
 
     .feedback {
-      display: none;
-      margin-top: 14px;
+      min-height: 46px;
       border-radius: 16px;
-      padding: 14px;
-      font-weight: 850;
+      padding: 12px 14px;
+      border: 1px solid transparent;
+      font-weight: 800;
+      display: none;
+    }
+
+    .feedback.active {
+      display: block;
     }
 
     .feedback.good {
-      display: block;
-      background: rgba(34, 197, 94, 0.14);
-      border: 1px solid rgba(34, 197, 94, 0.42);
       color: #dcfce7;
+      background: rgba(34, 197, 94, 0.15);
+      border-color: rgba(34, 197, 94, 0.45);
     }
 
     .feedback.bad {
-      display: block;
-      background: rgba(251, 113, 133, 0.13);
-      border: 1px solid rgba(251, 113, 133, 0.42);
       color: #ffe4e6;
+      background: rgba(251, 113, 133, 0.15);
+      border-color: rgba(251, 113, 133, 0.45);
     }
 
-    .feedback.neutral {
-      display: block;
-      background: rgba(251, 191, 36, 0.12);
-      border: 1px solid rgba(251, 191, 36, 0.36);
+    .feedback.warn {
       color: #fef3c7;
+      background: rgba(251, 191, 36, 0.15);
+      border-color: rgba(251, 191, 36, 0.45);
     }
 
-    .result-score {
-      text-align: center;
-      font-size: clamp(3rem, 15vw, 6rem);
-      color: var(--accent);
-      font-weight: 1000;
-      line-height: 1;
-      margin: 18px 0 8px;
-    }
-
-    .result-grid {
+    .score-card {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
-      margin: 16px 0;
+      text-align: center;
     }
 
-    @media (max-width: 720px) {
-      .result-grid { grid-template-columns: 1fr; }
-    }
-
-    .stat-card {
-      background: rgba(2, 6, 23, 0.44);
-      border: 1px solid rgba(148, 163, 184, 0.22);
-      border-radius: 18px;
-      padding: 14px;
-    }
-
-    .stat-card strong {
-      display: block;
-      font-size: 1.5rem;
+    .score-number {
+      font-size: clamp(2.4rem, 10vw, 4.2rem);
+      font-weight: 900;
       color: var(--accent);
+      line-height: 1;
+    }
+
+    .attempt-list {
+      display: grid;
+      gap: 8px;
+      margin: 14px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .attempt-list li {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      background: #0b1220;
+      color: var(--muted);
+      font-weight: 700;
     }
 
     .certificate {
       display: none;
-      background: #fffaf0;
-      color: #172033;
-      border-radius: 22px;
-      padding: clamp(18px, 4vw, 34px);
-      margin-top: 18px;
+      background: var(--paper);
+      color: var(--ink);
       border: 8px double #0f172a;
+      border-radius: 24px;
+      padding: clamp(20px, 5vw, 42px);
+      margin-top: 20px;
       box-shadow: var(--shadow);
       text-align: center;
     }
 
-    .certificate.active { display: block; }
+    .certificate.active {
+      display: block;
+    }
 
-    .cert-school {
-      font-weight: 1000;
+    .certificate .school {
+      font-weight: 900;
       text-transform: uppercase;
-      color: #0f172a;
+      font-size: clamp(1rem, 3.4vw, 1.4rem);
       border-bottom: 2px solid #0f172a;
-      padding-bottom: 8px;
-      margin-bottom: 20px;
-      font-size: clamp(1rem, 3vw, 1.35rem);
+      padding-bottom: 10px;
+      margin-bottom: 18px;
     }
 
-    .cert-title {
+    .certificate h2 {
       font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(2rem, 8vw, 3.4rem);
-      color: #0f172a;
-      margin: 8px 0;
+      font-size: clamp(2rem, 8vw, 3.8rem);
+      letter-spacing: 0.04em;
+      margin: 14px 0 8px;
     }
 
-    .cert-name {
-      font-size: clamp(1.4rem, 5vw, 2.2rem);
-      font-weight: 1000;
-      color: #075985;
-      margin: 12px 0;
+    .certificate .subtitle {
+      font-size: clamp(1.1rem, 4vw, 1.45rem);
+      font-weight: 800;
     }
 
-    .cert-average {
+    .certificate .name {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.5rem, 6vw, 2.5rem);
+      font-weight: 900;
+      margin: 16px 0;
+      padding: 8px;
+      border-bottom: 2px solid #334155;
       display: inline-block;
-      margin: 14px auto;
-      border-radius: 18px;
-      background: #dbeafe;
-      color: #0f172a;
-      border: 2px solid #075985;
-      padding: 12px 18px;
-      font-size: clamp(1.2rem, 4vw, 1.8rem);
-      font-weight: 1000;
+      min-width: min(560px, 90%);
     }
 
-    .cert-footer {
+    .certificate .cert-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
       gap: 12px;
-      margin-top: 28px;
+      margin: 24px 0;
       text-align: left;
-      color: #1e293b;
+      max-width: 650px;
+      margin-left: auto;
+      margin-right: auto;
     }
 
-    @media (max-width: 580px) {
-      .cert-footer { grid-template-columns: 1fr; text-align: center; }
+    .certificate .cert-grid div {
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #e2e8f0;
+      font-weight: 800;
     }
 
-    .print-only { display: none; }
+    .signature {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      align-items: end;
+      margin-top: 30px;
+      text-align: right;
+      font-weight: 900;
+    }
+
+    .quote {
+      font-style: italic;
+      color: var(--muted);
+      text-align: center;
+      margin: 14px 0 0;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
+      border: 0;
+    }
 
     @media print {
-      body { background: white; }
-      .topbar, #screen-start, #screen-test, .no-print, #end-actions, #result-summary { display: none !important; }
-      .page-shell { padding: 0; width: 100%; }
-      #screen-end { display: block !important; }
-      .card { box-shadow: none; border: 0; background: white; padding: 0; }
-      .certificate { display: block !important; box-shadow: none; margin: 0; min-height: 95vh; }
-      .print-only { display: block; }
+      body * {
+        visibility: hidden !important;
+      }
+
+      #certificate,
+      #certificate * {
+        visibility: visible !important;
+      }
+
+      #certificate {
+        display: block !important;
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        min-height: 100vh;
+        margin: 0;
+        border-radius: 0;
+        box-shadow: none;
+      }
     }
   </style>
 </head>
 
 <body>
-  <div class="page-shell">
+  <div class="app">
     <header class="topbar">
-      <div class="school-name">ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</div>
-      <div class="teacher">Prof. DĂNUȚ ANDRONIE</div>
-      <div class="quote">„FIZICA NU ESTE O MATERIE DOMINATĂ DE FORMULE, CI DE LOGICĂ.”</div>
+      <div class="brand">
+        <strong>Fizică VII – Echilibrul corpurilor</strong>
+        <span>Prof. DĂNUȚ ANDRONIE</span>
+      </div>
+      <div class="badge">Echilibrul corpurilor</div>
     </header>
 
     <main>
       <section id="screen-start" class="screen active">
-        <div class="card">
-          <h1>Test final – Echilibrul corpurilor</h1>
-          <p class="center muted">Clasa a VII-a • 4 probleme • 20 puncte din oficiu • pagini separate pentru telefon, tabletă și laptop</p>
-
-          <div class="formula-panel">
-            <strong>Formule utile:</strong>
-            <div>\(M = F \cdot b_F\), \(\sum M_{orar}=\sum M_{antiorar}\), \(F \cdot b_F = R \cdot b_R\)</div>
-            <div>Exemplu numeric: \(b_F=25\,\text{cm}=0{,}25\,\text{m}\), deci \(M=40\,\text{N}\cdot 0{,}25\,\text{m}=10\,\text{N}\cdot\text{m}\).</div>
-            <div>Exemplu cu fracție: \(R=\frac{F\cdot b_F}{b_R}\), de exemplu \(R=\frac{120\cdot45}{15}=360\,\text{N}\).</div>
+        <div class="card intro-grid">
+          <div>
+            <h1>Test interactiv</h1>
+            <p class="muted">Completează datele elevului, apoi începe testul. Fiecare cerință se deschide pe o pagină separată.</p>
+            <p class="note">După 4 exersări finalizate, se poate genera diploma cu punctajul mediu.</p>
           </div>
+          <form id="studentForm" onsubmit="startTest(); return false;">
+            <label for="schoolInput">Antetul școlii</label>
+            <input id="schoolInput" type="text" autocomplete="organization" placeholder="Ex.: Școala Gimnazială ..." required>
 
-          <div class="grid-2">
-            <label class="field">
-              <span>Antetul școlii pentru diplomă</span>
-              <input id="schoolInput" type="text" value="ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA">
-            </label>
-            <label class="field">
-              <span>Numele și prenumele elevului</span>
-              <input id="nameInput" type="text" placeholder="Ex.: Popescu Ana-Maria" autocomplete="name">
-            </label>
-            <label class="field">
-              <span>Clasa</span>
-              <select id="classInput">
-                <option value="">Alege clasa...</option>
-                <option value="VII A">VII A</option>
-                <option value="VII B">VII B</option>
-                <option value="VII C">VII C</option>
-                <option value="VII D">VII D</option>
-                <option value="VII">VII</option>
-              </select>
-            </label>
-            <label class="field">
-              <span>Tip test</span>
-              <select id="modeInput">
-                <option value="test">Test cu valori aleatorii</option>
-                <option value="practice">Exersare cu explicații după verificare</option>
-              </select>
-            </label>
-          </div>
+            <label for="nameInput">Numele și prenumele elevului</label>
+            <input id="nameInput" type="text" autocomplete="name" placeholder="Nume și prenume" required>
 
-          <ul class="info-list">
-            <li>Problema 1: calculează momentul unei forțe, cu \(F\) și \(b_F\) aleatorii.</li>
-            <li>Problema 2: verifică echilibrul de rotație al unui disc și sensul de rotație.</li>
-            <li>Problema 3: calculează forța rezistentă \(R\) pentru o pârghie în echilibru.</li>
-            <li>Problema 4: reprezintă un scripete sau un sistem de scripeți și alege legea corectă.</li>
-            <li>După 4 încercări, se afișează o diplomă cu punctajul mediu. Încercările sunt salvate local în browser.</li>
-          </ul>
+            <label for="classInput">Clasa</label>
+            <input id="classInput" type="text" placeholder="Ex.: a VII-a A" required>
 
-          <button class="btn-primary" onclick="startTest()">Începe testul</button>
+            <div class="actions">
+              <button class="primary" type="submit">Începe testul</button>
+              <button class="outline" type="button" onclick="resetAttempts()">Resetează exersările salvate</button>
+            </div>
+          </form>
         </div>
       </section>
 
-      <section id="screen-test" class="screen">
-        <div class="progress-card">
-          <div class="progress-line">
-            <span id="progressText">Problema 1 / 4</span>
-            <span id="scoreText">Punctaj: 20 / 100</span>
+      <section id="screen-quiz" class="screen">
+        <div class="progress-wrap">
+          <div class="progress-text">
+            <span id="progressLabel">Problema 1 din 10</span>
+            <span id="scoreLabel">Punctaj: 0</span>
           </div>
-          <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+          <div class="bar" aria-hidden="true"><div id="progressBar"></div></div>
         </div>
 
-        <article class="card">
-          <h2 id="questionTitle" class="problem-title">Problema</h2>
-          <div class="center"><span class="points-pill" id="pointsPill">20 puncte</span></div>
-          <div id="mediaArea"></div>
-          <div id="statementArea" class="statement"></div>
-          <div id="formulaArea"></div>
+        <div class="card">
+          <h2 id="questionTitle" class="question-title"></h2>
+          <div id="statement" class="statement"></div>
+          <div id="media"></div>
+          <div id="answerArea" class="answer-area"></div>
 
-          <div class="answer-zone">
-            <div class="quick-title">Verificare rapidă</div>
-            <div id="answerArea"></div>
-            <div id="feedback" class="feedback" aria-live="polite"></div>
+          <div id="feedback" class="feedback" aria-live="polite"></div>
 
-            <div class="btn-row">
-              <button class="btn-secondary" onclick="restartTest()">Reia testul</button>
-              <button class="btn-primary" id="checkBtn" onclick="checkAnswer()">Verifică răspunsul</button>
-              <button class="btn-success" id="nextBtn" onclick="goNext()" disabled>Mergi mai departe</button>
-            </div>
+          <div class="actions two">
+            <button id="checkBtn" class="primary" type="button" onclick="checkAnswer()">Verifică răspunsul</button>
+            <button id="nextBtn" class="success" type="button" onclick="goNext()" disabled>Mergi mai departe</button>
           </div>
-        </article>
+        </div>
       </section>
 
       <section id="screen-end" class="screen">
-        <div class="card">
-          <div id="result-summary">
-            <h2 class="center">Rezultat final</h2>
-            <div class="result-score" id="finalScore">0</div>
-            <p class="center muted" id="finalDetails"></p>
-
-            <div class="result-grid">
-              <div class="stat-card">
-                <span class="muted">Încercări salvate pentru elev</span>
-                <strong id="attemptCount">0</strong>
-              </div>
-              <div class="stat-card">
-                <span class="muted">Pentru diplomă</span>
-                <strong id="diplomaStatus">încă 4</strong>
-              </div>
-            </div>
+        <div class="card score-card">
+          <h1>Test finalizat</h1>
+          <div id="finalScore" class="score-number">0 / 100</div>
+          <p id="certificateInfo" class="muted"></p>
+          <ul id="attemptList" class="attempt-list"></ul>
+          <div class="actions two">
+            <button class="primary" type="button" onclick="restartTest()">Reia testul</button>
+            <button id="printBtn" class="success" type="button" onclick="window.print()" disabled>Eliberează diploma</button>
           </div>
+        </div>
 
-          <div id="certificate" class="certificate">
-            <div class="cert-school" id="certSchool">ȘCOALA</div>
-            <div class="cert-title">DIPLOMĂ</div>
-            <p>Se acordă elevului/elevei</p>
-            <div class="cert-name" id="certName">Nume elev</div>
-            <p>din clasa <strong id="certClass">VII</strong>, pentru parcurgerea de 4 ori a testului</p>
-            <p><strong>„Echilibrul corpurilor”</strong></p>
-            <div class="cert-average" id="certAverage">Punctaj mediu: 0 / 100</div>
-            <p class="small" id="certAttempts">Încercări luate în calcul: -</p>
-            <div class="cert-footer">
-              <div>
-                <strong>Profesor:</strong><br>
-                Prof. DĂNUȚ ANDRONIE
-              </div>
-              <div>
-                <strong>Data:</strong><br>
-                <span id="certDate"></span>
-              </div>
-            </div>
-            <p class="print-only small">Diplomă generată automat după 4 încercări.</p>
+        <div id="certificate" class="certificate">
+          <div id="certSchool" class="school"></div>
+          <h2>DIPLOMĂ</h2>
+          <div class="subtitle">Se acordă elevului/elevei</div>
+          <div id="certName" class="name"></div>
+          <div class="cert-grid">
+            <div id="certClass"></div>
+            <div id="certAverage"></div>
+            <div id="certAttempts"></div>
+            <div id="certDate"></div>
           </div>
-
-          <div class="btn-row no-print" id="end-actions">
-            <button class="btn-primary" onclick="restartTest()">Fă o nouă încercare</button>
-            <button class="btn-warning" onclick="window.print()" id="printBtn" disabled>Tipărește diploma</button>
-            <button class="btn-danger" onclick="resetAttempts()">Resetează încercările</button>
+          <p>Pentru finalizarea a 4 exersări la testul „Echilibrul corpurilor”.</p>
+          <div class="signature">
+            <span>Semnătura profesorului</span>
+            <span>Prof. DĂNUȚ ANDRONIE</span>
           </div>
         </div>
       </section>
     </main>
+
+    <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică.”</p>
   </div>
 
 <script>
   const IMG_BASE = "https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/5-echilibrul-corpurilor/test-final/";
-  const START_SCORE = 20;
-  const POINTS_PER_QUESTION = 20;
-  const TOTAL_QUESTIONS = 4;
+  const TOTAL_QUESTIONS = 10;
+  const OFFICE_POINTS = 20;
+  const POINTS_PER_QUESTION = 8;
 
   const state = {
     school: "",
     name: "",
     className: "",
-    mode: "test",
     questions: [],
-    current: 0,
-    score: START_SCORE,
-    locked: false,
-    answered: []
+    index: 0,
+    score: OFFICE_POINTS,
+    checked: false,
+    currentEarned: 0
   };
+
+  const discConfigs = {
+    "disc-1.png": { f1: 1, f2: 1, f3: -1, label: "disc-1.png" },
+    "disc-2.png": { f1: 1, f2: 1, f3: -1, label: "disc-2.png" },
+    "disc-3.png": { f1: -1, f2: -1, f3: 1, label: "disc-3.png" },
+    "disc-4.png": { f1: -1, f2: -1, f3: 1, label: "disc-4.png" }
+  };
+
+  const pulleySystems = [
+    { text: "un scripete fix", law: "\\(F=R\\)" },
+    { text: "un scripete mobil", law: "\\(F=\\frac{R}{2}\\)" },
+    { text: "un sistem compus dintr-un scripete fix și unul mobil", law: "\\(F=\\frac{R}{2}\\)" },
+    { text: "un sistem compus dintr-un scripete fix și doi mobili", law: "\\(F=\\frac{R}{4}\\)" },
+    { text: "un sistem compus dintr-un scripete fix și trei mobili", law: "\\(F=\\frac{R}{8}\\)" }
+  ];
+
+  const pulleyOptions = [
+    "\\(F=R\\)",
+    "\\(F=\\frac{R}{2}\\)",
+    "\\(F=\\frac{R}{4}\\)",
+    "\\(F=\\frac{R}{6}\\)",
+    "\\(F=\\frac{R}{8}\\)"
+  ];
 
   function randInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
   function randStep(min, max, step) {
-    const count = Math.floor((max - min) / step);
-    return min + step * randInt(0, count);
+    const n = Math.floor((max - min) / step);
+    return min + randInt(0, n) * step;
   }
 
   function choice(arr) {
-    return arr[randInt(0, arr.length - 1)];
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  function shuffle(arr) {
+    const copy = [...arr];
+    for (let i = copy.length - 1; i > 0; i--) {
+      const j = randInt(0, i);
+      [copy[i], copy[j]] = [copy[j], copy[i]];
+    }
+    return copy;
+  }
+
+  function sample(arr, count) {
+    return shuffle(arr).slice(0, count);
   }
 
   function roundTo(value, digits = 3) {
-    const p = Math.pow(10, digits);
-    return Math.round((value + Number.EPSILON) * p) / p;
+    const factor = Math.pow(10, digits);
+    return Math.round((value + Number.EPSILON) * factor) / factor;
   }
 
   function formatNumber(value, digits = 3) {
     const rounded = roundTo(value, digits);
-    return Number.isInteger(rounded) ? String(rounded) : String(rounded).replace(".", ",");
+    return String(rounded).replace(".", ",");
   }
 
   function parseNumber(input) {
     if (!input) return NaN;
-    const cleaned = String(input)
-      .toLowerCase()
-      .replace(",", ".")
-      .replace(/n\s*·?\s*m|n\*m|n m|nm|n|m|cm|dm/g, "")
-      .replace(/[^\d.+\-*/()]/g, "");
-    if (!cleaned.trim()) return NaN;
-    if (!/^[\d.+\-*/()\s]+$/.test(cleaned)) return NaN;
-    try {
-      const value = Function('"use strict"; return (' + cleaned + ')')();
-      return Number(value);
-    } catch (err) {
-      return NaN;
-    }
+    const normalized = String(input).trim().replace(",", ".").replace(/[^\d.+-]/g, "");
+    return Number(normalized);
   }
 
   function showScreen(id) {
@@ -716,300 +748,325 @@
   function startTest() {
     const school = document.getElementById("schoolInput").value.trim();
     const name = document.getElementById("nameInput").value.trim();
-    const className = document.getElementById("classInput").value;
-    const mode = document.getElementById("modeInput").value;
+    const className = document.getElementById("classInput").value.trim();
 
-    if (!school) {
-      alert("Completează antetul școlii.");
-      return;
-    }
-    if (!name) {
-      alert("Completează numele și prenumele.");
-      return;
-    }
-    if (!className) {
-      alert("Alege clasa.");
+    if (!school || !name || !className) {
+      alert("Completează antetul școlii, numele și clasa.");
       return;
     }
 
     state.school = school;
     state.name = name;
     state.className = className;
-    state.mode = mode;
-    state.questions = [
-      makeMomentQuestion(),
-      makeDiscQuestion(),
-      makeLeverQuestion(),
+    state.index = 0;
+    state.score = OFFICE_POINTS;
+    state.checked = false;
+    state.currentEarned = 0;
+    state.questions = buildQuestions();
+
+    renderQuestion();
+    showScreen("screen-quiz");
+  }
+
+  function buildQuestions() {
+    const discImages = sample(Object.keys(discConfigs), 3);
+    const leverImages = sample(["parghia-1.png", "parghia-2.png", "parghia-3.png", "parghia-4.png", "parghia-5.png", "parghia-6.png"], 3);
+    const leverAsks = sample(["F", "R", "bF", "bR"], 3);
+
+    return [
+      makeMomentQuestion("M"),
+      makeMomentQuestion("F"),
+      makeMomentQuestion("bF"),
+      makeDiscQuestion("direction", discImages[0]),
+      makeDiscQuestion("F1", discImages[1]),
+      makeDiscQuestion("F3", discImages[2]),
+      makeLeverQuestion(leverAsks[0], leverImages[0]),
+      makeLeverQuestion(leverAsks[1], leverImages[1]),
+      makeLeverQuestion(leverAsks[2], leverImages[2]),
       makePulleyQuestion()
     ];
-    state.current = 0;
-    state.score = START_SCORE;
-    state.locked = false;
-    state.answered = Array(TOTAL_QUESTIONS).fill(false);
-
-    showScreen("screen-test");
-    renderQuestion();
   }
 
-  function makeMomentQuestion() {
-    const F = randInt(28, 72);
-    const bCm = randInt(16, 32);
-    const bM = bCm / 100;
-    const M = roundTo(F * bM, 3);
-
+  function makeNumberQuestion({ title, statementHTML, expected, unit, mediaHTML = "" }) {
     return {
-      title: "Problema 1 – Momentul unei forțe",
+      title,
+      type: "number",
+      expected: roundTo(expected, 3),
+      unit,
       points: POINTS_PER_QUESTION,
-      type: "numeric",
-      expected: M,
-      unit: "N·m",
-      tolerance: 0.04,
-      statementHTML: `
-        <p>Calculează momentul unei forțe, știind că forța este \\(F=${F}\\,\\text{N}\\), iar brațul forței este \\(b_F=${bCm}\\,\\text{cm}\\).</p>
-        <p>Scrie rezultatul în \\(\\text{N}\\cdot\\text{m}\\).</p>
-      `,
-      formulaHTML: `
-        <div class="formula-panel">
-          <strong>Relație:</strong> \\(M=F\\cdot b_F\\). Transformă: \\(${bCm}\\,\\text{cm}=\\frac{${bCm}}{100}\\,\\text{m}=${formatNumber(bM)}\\,\\text{m}\\).
-        </div>
-      `,
-      mediaHTML: "",
-      explanation: () => `Transformăm brațul: ${bCm} cm = ${formatNumber(bM)} m. Rezultă M = ${F} · ${formatNumber(bM)} = ${formatNumber(M)} N·m.`
-    };
-  }
-
-  function makeDiscQuestion() {
-    const rDm = randStep(30, 70, 1) / 10;
-    const rM = rDm / 10;
-
-    let F1, F2, F3;
-    const equilibriumCase = Math.random() < 0.25;
-
-    if (equilibriumCase) {
-      F1 = randInt(16, 36);
-      F2 = randStep(28, 56, 2);
-      F3 = roundTo(2 * F1 + F2 / 2, 1);
-    } else {
-      F1 = randInt(16, 40);
-      F2 = randStep(28, 56, 2);
-      F3 = randInt(44, 80);
-      const antiTest = F1 * rM + F2 * (rM / 4);
-      const clockwiseTest = F3 * (rM / 2);
-      if (Math.abs(antiTest - clockwiseTest) < 0.06) F3 += 5;
-    }
-
-    const mAnti = roundTo(F1 * rM + F2 * (rM / 4), 4);
-    const mClock = roundTo(F3 * (rM / 2), 4);
-
-    let correctIndex;
-    if (Math.abs(mAnti - mClock) < 0.06) correctIndex = 0;
-    else if (mClock > mAnti) correctIndex = 1;
-    else correctIndex = 2;
-
-    return {
-      title: "Problema 2 – Disc în echilibru de rotație",
-      points: POINTS_PER_QUESTION,
-      type: "radio",
-      expected: correctIndex,
-      correctIndex,
-      unit: "",
-      options: [
-        "Da, discul este în echilibru de rotație; nu are sens de rotație.",
-        "Nu, discul se rotește în sens orar.",
-        "Nu, discul se rotește în sens antiorar."
-      ],
-      statementHTML: `
-        <p>Știm că \\(F_1=${F1}\\,\\text{N}\\), \\(F_2=${F2}\\,\\text{N}\\), \\(F_3=${F3}\\,\\text{N}\\), raza discului este \\(r=${formatNumber(rDm, 1)}\\,\\text{dm}\\), \\(OA=r\\), \\(OC=\\frac{r}{2}\\), \\(OB=\\frac{r}{4}\\).</p>
-        <p>Află dacă discul este în echilibru de rotație și care este sensul de rotație.</p>
-      `,
-      mediaHTML: `
-        <div class="media-box">
-          <img src="${IMG_BASE}disc-1.png" alt="Disc cu forțele F1, F2 și F3 aplicate în punctele A, B și C">
-          <div class="media-caption">Imagine pentru problema discului: \(OA=r\), \(OC=\frac{r}{2}\), \(OB=\frac{r}{4}\).</div>
-        </div>
-      `,
-      formulaHTML: `
-        <div class="formula-panel">
-          <strong>Comparație:</strong>
-          \\(M_{antiorar}=F_1\\cdot r+F_2\\cdot\\frac{r}{4}\\), iar
-          \\(M_{orar}=F_3\\cdot\\frac{r}{2}\\).
-        </div>
-      `,
-      explanation: () => {
-        if (correctIndex === 0) {
-          return `M antiorar = ${formatNumber(mAnti)} N·m și M orar = ${formatNumber(mClock)} N·m. Momentele sunt egale, deci discul este în echilibru.`;
-        }
-        if (correctIndex === 1) {
-          return `M antiorar = ${formatNumber(mAnti)} N·m, iar M orar = ${formatNumber(mClock)} N·m. Momentul orar este mai mare, deci rotația este în sens orar.`;
-        }
-        return `M antiorar = ${formatNumber(mAnti)} N·m, iar M orar = ${formatNumber(mClock)} N·m. Momentul antiorar este mai mare, deci rotația este în sens antiorar.`;
+      statementHTML,
+      mediaHTML,
+      correctText() {
+        return `${formatNumber(this.expected)} ${this.unit}`.trim();
       }
     };
   }
 
-  function makeLeverQuestion() {
-    const F = randStep(90, 220, 5);
-    const bF = randStep(30, 80, 5);
-    const bR = randStep(10, 40, 5);
-    const R = roundTo((F * bF) / bR, 2);
+  function makeMomentQuestion(kind) {
+    if (kind === "M") {
+      const F = randStep(20, 95, 5);
+      const bCm = randStep(10, 75, 5);
+      const M = F * bCm / 100;
+      return makeNumberQuestion({
+        title: "Problema 1 – Momentul forței",
+        expected: M,
+        unit: "N·m",
+        statementHTML: `
+          <p>Se cunosc: \\(F=${F}\\,\\text{N}\\) și \\(b_F=${bCm}\\,\\text{cm}\\).</p>
+          <p>Determină \\(M_F\\). Scrie rezultatul în \\(\\text{N}\\cdot\\text{m}\\).</p>
+        `
+      });
+    }
 
-    return {
-      title: "Problema 3 – Pârghie în echilibru",
-      points: POINTS_PER_QUESTION,
-      type: "numeric",
-      expected: R,
-      unit: "N",
-      tolerance: 0.08,
+    if (kind === "F") {
+      const F = randStep(20, 120, 5);
+      const bCm = randStep(10, 75, 5);
+      const M = F * bCm / 100;
+      return makeNumberQuestion({
+        title: "Problema 2 – Momentul forței",
+        expected: F,
+        unit: "N",
+        statementHTML: `
+          <p>Se cunosc: \\(M_F=${formatNumber(M)}\\,\\text{N}\\cdot\\text{m}\\) și \\(b_F=${bCm}\\,\\text{cm}\\).</p>
+          <p>Determină \\(F\\). Scrie rezultatul în \\(\\text{N}\\).</p>
+        `
+      });
+    }
+
+    const F = randStep(20, 120, 5);
+    const bCm = randStep(10, 80, 5);
+    const M = F * bCm / 100;
+    return makeNumberQuestion({
+      title: "Problema 3 – Momentul forței",
+      expected: bCm,
+      unit: "cm",
       statementHTML: `
-        <p>Știind că asupra pârghiei din imagine acționează forța \\(F=${F}\\,\\text{N}\\), \\(b_F=${bF}\\,\\text{cm}\\), \\(b_R=${bR}\\,\\text{cm}\\), află valoarea forței rezistente \\(R\\), astfel încât să fie îndeplinită condiția de echilibru.</p>
-      `,
-      mediaHTML: `
-        <div class="media-box">
-          <img src="${IMG_BASE}parghia-1.png" alt="Pârghie cu punct de sprijin O, forța R și forța F">
-          <div class="media-caption">Imagine pentru problema pârghiei: condiția de echilibru se scrie față de punctul \(O\).</div>
-        </div>
-      `,
-      formulaHTML: `
-        <div class="formula-panel">
-          <strong>Legea pârghiei:</strong> \\(F\\cdot b_F=R\\cdot b_R\\), deci
-          \\(R=\\frac{F\\cdot b_F}{b_R}\\).
-        </div>
-      `,
-      explanation: () => `R = F·bF / bR = ${F}·${bF}/${bR} = ${formatNumber(R)} N.`
-    };
+        <p>Se cunosc: \\(M_F=${formatNumber(M)}\\,\\text{N}\\cdot\\text{m}\\) și \\(F=${F}\\,\\text{N}\\).</p>
+        <p>Determină \\(b_F\\). Scrie rezultatul în \\(\\text{cm}\\).</p>
+      `
+    });
   }
 
-  function pulleySvg(config) {
-    const mobileCount = config.mobileCount;
-    const subtitle = config.label;
-    const mobileLabels = Array.from({length: mobileCount}, (_, i) => `
-      <circle cx="${230 + i * 100}" cy="205" r="34" fill="#e2e8f0" stroke="#0f172a" stroke-width="6"></circle>
-      <circle cx="${230 + i * 100}" cy="205" r="7" fill="#0f172a"></circle>
-      <text x="${218 + i * 100}" y="214" font-size="24" font-weight="900" fill="#0f172a">M</text>
-    `).join("");
-
-    const fixedPulley = `
-      <circle cx="160" cy="92" r="34" fill="#e2e8f0" stroke="#0f172a" stroke-width="6"></circle>
-      <circle cx="160" cy="92" r="7" fill="#0f172a"></circle>
-      <text x="153" y="101" font-size="24" font-weight="900" fill="#0f172a">F</text>
-    `;
-
-    const ropeSegments = mobileCount === 0
-      ? `
-        <path d="M126 92 C126 58 194 58 194 92" fill="none" stroke="#075985" stroke-width="8" stroke-linecap="round"></path>
-        <line x1="126" y1="92" x2="126" y2="245" stroke="#075985" stroke-width="8" stroke-linecap="round"></line>
-        <line x1="194" y1="92" x2="194" y2="245" stroke="#075985" stroke-width="8" stroke-linecap="round"></line>
-        <line x1="126" y1="150" x2="126" y2="270" stroke="#dc2626" stroke-width="5" marker-end="url(#arrow)"></line>
-        <line x1="194" y1="150" x2="194" y2="270" stroke="#16a34a" stroke-width="5" marker-end="url(#arrow)"></line>
-        <text x="102" y="300" font-size="26" font-weight="900" fill="#0f172a">R</text>
-        <text x="205" y="300" font-size="26" font-weight="900" fill="#0f172a">F</text>
-      `
-      : `
-        <path d="M160 126 C160 180, 210 172, 230 205" fill="none" stroke="#075985" stroke-width="7" stroke-linecap="round"></path>
-        ${Array.from({length: mobileCount - 1}, (_, i) => {
-          const x1 = 230 + i * 100;
-          const x2 = 230 + (i + 1) * 100;
-          return `<path d="M${x1 + 34} 205 C${x1 + 60} 150, ${x2 - 60} 150, ${x2 - 34} 205" fill="none" stroke="#075985" stroke-width="7" stroke-linecap="round"></path>`;
-        }).join("")}
-        <line x1="${230 + (mobileCount - 1) * 100 + 34}" y1="205" x2="${230 + (mobileCount - 1) * 100 + 110}" y2="120" stroke="#075985" stroke-width="7" stroke-linecap="round"></line>
-        <line x1="${230 + (mobileCount - 1) * 100 + 110}" y1="120" x2="${230 + (mobileCount - 1) * 100 + 110}" y2="270" stroke="#16a34a" stroke-width="5" marker-end="url(#arrow)"></line>
-        <line x1="${230 + (mobileCount - 1) * 100}" y1="239" x2="${230 + (mobileCount - 1) * 100}" y2="282" stroke="#dc2626" stroke-width="5" marker-end="url(#arrow)"></line>
-        <text x="${230 + (mobileCount - 1) * 100 - 10}" y="312" font-size="26" font-weight="900" fill="#0f172a">R</text>
-        <text x="${230 + (mobileCount - 1) * 100 + 124}" y="300" font-size="26" font-weight="900" fill="#0f172a">F</text>
-      `;
-
+  function makeDiscMedia(imageName) {
     return `
-      <div class="svg-wrap">
-        <svg viewBox="0 0 650 340" role="img" aria-label="${subtitle}">
-          <defs>
-            <marker id="arrow" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
-              <path d="M0,0 L0,6 L7,3 z" fill="#0f172a"></path>
-            </marker>
-          </defs>
-          <rect x="70" y="22" width="500" height="28" rx="8" fill="#334155"></rect>
-          <line x1="160" y1="50" x2="160" y2="58" stroke="#0f172a" stroke-width="7"></line>
-          ${fixedPulley}
-          ${mobileLabels}
-          ${ropeSegments}
-          <text x="88" y="326" font-size="20" fill="#0f172a" font-weight="900">${subtitle}</text>
-        </svg>
-        <div class="media-caption">Desenează în caiet schema cerută și selectează legea potrivită.</div>
+      <div class="media-box">
+        <img src="${IMG_BASE}${imageName}" alt="Disc cu forțe aplicate">
+        <div class="media-caption">${imageName}</div>
       </div>
     `;
   }
 
-  function makePulleyQuestion() {
-    const configs = [
-      { label: "scripete fix", text: "un scripete fix", mobileCount: 0, correct: 0, law: "\\(F=R\\)", explanation: "La scripetele fix ideal nu se câștigă forță; se schimbă doar direcția forței." },
-      { label: "scripete mobil", text: "un scripete mobil", mobileCount: 1, correct: 1, law: "\\(F=\\frac{R}{2}\\)", explanation: "La scripetele mobil ideal, greutatea este susținută de două ramuri de fir, deci F = R/2." },
-      { label: "sistem: un fix și un mobil", text: "un sistem compus dintr-un scripete fix și unul mobil", mobileCount: 1, correct: 1, law: "\\(F=\\frac{R}{2}\\)", explanation: "Scripetele fix schimbă direcția, iar scripetele mobil înjumătățește forța necesară." },
-      { label: "sistem: un fix și doi mobili", text: "un sistem compus dintr-un scripete fix și doi mobili", mobileCount: 2, correct: 2, law: "\\(F=\\frac{R}{4}\\)", explanation: "Două scripeți mobili ideali dau avantaj mecanic 4, deci F = R/4." },
-      { label: "sistem: un fix și trei mobili", text: "un sistem compus dintr-un scripete fix și trei mobili", mobileCount: 3, correct: 3, law: "\\(F=\\frac{R}{8}\\)", explanation: "Trei scripeți mobili ideali dau avantaj mecanic 8, deci F = R/8." }
-    ];
+  function discMomentSum(config, F1, F2, F3, rM) {
+    const OA = rM;
+    const OB = rM / 4;
+    const OC = rM / 2;
+    return config.f1 * F1 * OA + config.f2 * F2 * OB + config.f3 * F3 * OC;
+  }
 
-    const config = choice(configs);
-    const options = [
-      "\\(F=R\\)",
-      "\\(F=\\frac{R}{2}\\)",
-      "\\(F=\\frac{R}{4}\\)",
-      "\\(F=\\frac{R}{8}\\)",
-      "\\(F=2R\\)"
-    ];
+  function makeDiscQuestion(kind, imageName) {
+    const config = discConfigs[imageName];
+    const rDm = randStep(32, 70, 1) / 10;
+    const rM = rDm / 10;
+
+    if (kind === "direction") {
+      let F1, F2, F3;
+      if (Math.random() < 0.25) {
+        F1 = randStep(18, 42, 2);
+        F2 = randStep(24, 60, 4);
+        F3 = 2 * F1 + F2 / 2;
+      } else {
+        F1 = randStep(18, 42, 2);
+        F2 = randStep(24, 60, 2);
+        F3 = randStep(44, 92, 2);
+        const sumTest = discMomentSum(config, F1, F2, F3, rM);
+        if (Math.abs(sumTest) < 0.06) F3 += 6;
+      }
+
+      const sum = discMomentSum(config, F1, F2, F3, rM);
+      let correctOption;
+      if (Math.abs(sum) < 0.06) correctOption = "Da, discul este în echilibru de rotație.";
+      else if (sum > 0) correctOption = "Nu, discul se rotește în sens antiorar.";
+      else correctOption = "Nu, discul se rotește în sens orar.";
+
+      const options = [
+        "Da, discul este în echilibru de rotație.",
+        "Nu, discul se rotește în sens orar.",
+        "Nu, discul se rotește în sens antiorar."
+      ];
+
+      return {
+        title: "Problema 4 – Rotația discului",
+        type: "radio",
+        options,
+        expected: options.indexOf(correctOption),
+        points: POINTS_PER_QUESTION,
+        statementHTML: `
+          <p>Se cunosc: \\(F_1=${F1}\\,\\text{N}\\), \\(F_2=${F2}\\,\\text{N}\\), \\(F_3=${formatNumber(F3)}\\,\\text{N}\\), \\(r=${formatNumber(rDm, 1)}\\,\\text{dm}\\).</p>
+          <p>În imagine: \\(OA=r\\), \\(OC=\\frac{r}{2}\\), \\(OB=\\frac{r}{4}\\).</p>
+          <p>Alege răspunsul corect.</p>
+        `,
+        mediaHTML: makeDiscMedia(imageName),
+        correctText() {
+          return this.options[this.expected];
+        }
+      };
+    }
+
+    if (kind === "F1") {
+      const F1 = randStep(18, 44, 2);
+      const F2 = randStep(24, 64, 4);
+      const F3 = 2 * F1 + F2 / 2;
+      return makeNumberQuestion({
+        title: "Problema 5 – Rotația discului",
+        expected: F1,
+        unit: "N",
+        mediaHTML: makeDiscMedia(imageName),
+        statementHTML: `
+          <p>Se cunosc: \\(F_2=${F2}\\,\\text{N}\\), \\(F_3=${formatNumber(F3)}\\,\\text{N}\\), \\(r=${formatNumber(rDm, 1)}\\,\\text{dm}\\).</p>
+          <p>În imagine: \\(OA=r\\), \\(OC=\\frac{r}{2}\\), \\(OB=\\frac{r}{4}\\).</p>
+          <p>Determină \\(F_1\\) pentru ca discul să fie în echilibru de rotație. Scrie rezultatul în \\(\\text{N}\\).</p>
+        `
+      });
+    }
+
+    const F1 = randStep(18, 44, 2);
+    const F2 = randStep(24, 64, 4);
+    const F3 = 2 * F1 + F2 / 2;
+    return makeNumberQuestion({
+      title: "Problema 6 – Rotația discului",
+      expected: F3,
+      unit: "N",
+      mediaHTML: makeDiscMedia(imageName),
+      statementHTML: `
+        <p>Se cunosc: \\(F_1=${F1}\\,\\text{N}\\), \\(F_2=${F2}\\,\\text{N}\\), \\(r=${formatNumber(rDm, 1)}\\,\\text{dm}\\).</p>
+        <p>În imagine: \\(OA=r\\), \\(OC=\\frac{r}{2}\\), \\(OB=\\frac{r}{4}\\).</p>
+        <p>Determină \\(F_3\\) pentru ca discul să fie în echilibru de rotație. Scrie rezultatul în \\(\\text{N}\\).</p>
+      `
+    });
+  }
+
+  function makeLeverMedia(imageName) {
+    return `
+      <div class="media-box">
+        <img src="${IMG_BASE}${imageName}" alt="Pârghie cu forța activă și forța rezistentă">
+        <div class="media-caption">${imageName}</div>
+      </div>
+    `;
+  }
+
+  function makeLeverQuestion(ask, imageName) {
+    const F = randStep(60, 220, 5);
+    const bF = randStep(20, 80, 5);
+    const bR = randStep(10, 45, 5);
+    const R = F * bF / bR;
+
+    if (ask === "F") {
+      return makeNumberQuestion({
+        title: "Problema 7 – Pârghia",
+        expected: F,
+        unit: "N",
+        mediaHTML: makeLeverMedia(imageName),
+        statementHTML: `
+          <p>Asupra pârghiei din imagine acționează forța rezistentă \\(R=${formatNumber(R)}\\,\\text{N}\\).</p>
+          <p>Se cunosc: \\(b_F=${bF}\\,\\text{cm}\\), \\(b_R=${bR}\\,\\text{cm}\\).</p>
+          <p>Determină \\(F\\). Scrie rezultatul în \\(\\text{N}\\).</p>
+        `
+      });
+    }
+
+    if (ask === "R") {
+      return makeNumberQuestion({
+        title: "Problema 8 – Pârghia",
+        expected: R,
+        unit: "N",
+        mediaHTML: makeLeverMedia(imageName),
+        statementHTML: `
+          <p>Asupra pârghiei din imagine acționează \\(F=${F}\\,\\text{N}\\).</p>
+          <p>Se cunosc: \\(b_F=${bF}\\,\\text{cm}\\), \\(b_R=${bR}\\,\\text{cm}\\).</p>
+          <p>Determină \\(R\\). Scrie rezultatul în \\(\\text{N}\\).</p>
+        `
+      });
+    }
+
+    if (ask === "bF") {
+      return makeNumberQuestion({
+        title: "Problema 9 – Pârghia",
+        expected: bF,
+        unit: "cm",
+        mediaHTML: makeLeverMedia(imageName),
+        statementHTML: `
+          <p>Asupra pârghiei din imagine acționează \\(F=${F}\\,\\text{N}\\) și \\(R=${formatNumber(R)}\\,\\text{N}\\).</p>
+          <p>Se cunoaște: \\(b_R=${bR}\\,\\text{cm}\\).</p>
+          <p>Determină \\(b_F\\). Scrie rezultatul în \\(\\text{cm}\\).</p>
+        `
+      });
+    }
+
+    return makeNumberQuestion({
+      title: "Problema 9 – Pârghia",
+      expected: bR,
+      unit: "cm",
+      mediaHTML: makeLeverMedia(imageName),
+      statementHTML: `
+        <p>Asupra pârghiei din imagine acționează \\(F=${F}\\,\\text{N}\\) și \\(R=${formatNumber(R)}\\,\\text{N}\\).</p>
+        <p>Se cunoaște: \\(b_F=${bF}\\,\\text{cm}\\).</p>
+        <p>Determină \\(b_R\\). Scrie rezultatul în \\(\\text{cm}\\).</p>
+      `
+    });
+  }
+
+  function makePulleyQuestion() {
+    const selected = choice(pulleySystems);
+    const options = shuffle(pulleyOptions);
+    const expected = options.indexOf(selected.law);
 
     return {
-      title: "Problema 4 – Scripeți",
-      points: POINTS_PER_QUESTION,
+      title: "Problema 10 – Scripeți",
       type: "radio",
-      expected: config.correct,
-      correctIndex: config.correct,
-      unit: "",
       options,
+      expected,
+      points: POINTS_PER_QUESTION,
       statementHTML: `
-        <p>Reprezintă ${config.text} și scrie legea sa.</p>
-        <p>În verificarea rapidă, alege legea corectă pentru sistemul ideal, fără frecări.</p>
+        <p>Se consideră ${selected.text}.</p>
+        <p>Alege legea corectă pentru sistemul de scripeți din enunț.</p>
       `,
-      mediaHTML: pulleySvg(config),
-      formulaHTML: `
-        <div class="formula-panel">
-          <strong>Indiciu:</strong> legea se stabilește din condiția de echilibru. Pentru un scripete mobil:
-          \\(F\\cdot 2r=R\\cdot r\\Rightarrow F=\\frac{R}{2}\\).
-        </div>
-      `,
-      explanation: () => `Legea corectă este ${config.law}. ${config.explanation}`
+      mediaHTML: "",
+      correctText() {
+        return this.options[this.expected];
+      }
     };
   }
 
   function renderQuestion() {
-    const q = state.questions[state.current];
-    state.locked = false;
+    const q = state.questions[state.index];
+    state.checked = false;
+    state.currentEarned = 0;
 
-    document.getElementById("progressText").textContent = `Problema ${state.current + 1} / ${TOTAL_QUESTIONS}`;
-    document.getElementById("scoreText").textContent = `Punctaj: ${state.score} / 100`;
-    document.getElementById("progressFill").style.width = `${(state.current / TOTAL_QUESTIONS) * 100}%`;
-
-    document.getElementById("questionTitle").textContent = q.title;
-    document.getElementById("pointsPill").textContent = `${q.points} puncte`;
-    document.getElementById("mediaArea").innerHTML = q.mediaHTML || "";
-    document.getElementById("statementArea").innerHTML = q.statementHTML;
-    document.getElementById("formulaArea").innerHTML = q.formulaHTML || "";
+    document.getElementById("progressLabel").textContent = `Problema ${state.index + 1} din ${TOTAL_QUESTIONS}`;
+    document.getElementById("scoreLabel").textContent = `Punctaj: ${state.score}`;
+    document.getElementById("progressBar").style.width = `${(state.index / TOTAL_QUESTIONS) * 100}%`;
+    const topic = q.topic || (q.title.includes("–") ? q.title.split("–").slice(1).join("–").trim() : q.title);
+    document.getElementById("questionTitle").innerHTML = `Problema ${state.index + 1} – ${topic}`;
+    document.getElementById("statement").innerHTML = q.statementHTML;
+    document.getElementById("media").innerHTML = q.mediaHTML || "";
 
     const answerArea = document.getElementById("answerArea");
-    if (q.type === "numeric") {
+    if (q.type === "number") {
       answerArea.innerHTML = `
-        <div class="numeric-row">
-          <input id="numericAnswer" type="text" inputmode="decimal" placeholder="Scrie rezultatul numeric" autocomplete="off">
-          <div class="unit-badge">${q.unit}</div>
+        <label for="answerInput">Răspuns</label>
+        <div class="answer-unit">
+          <input id="answerInput" type="text" inputmode="decimal" autocomplete="off" placeholder="Scrie valoarea numerică">
+          <div class="unit-pill">${q.unit}</div>
         </div>
-        <p class="small muted">Poți scrie cu virgulă sau punct. Exemplu: 10,5 sau 10.5.</p>
       `;
-      setTimeout(() => document.getElementById("numericAnswer").focus(), 50);
-    } else if (q.type === "radio") {
+      setTimeout(() => document.getElementById("answerInput")?.focus(), 100);
+    } else {
       answerArea.innerHTML = `
-        <div class="option-grid">
-          ${q.options.map((option, index) => `
-            <label class="option-label">
-              <input type="radio" name="answerOption" value="${index}">
-              <span>${String.fromCharCode(65 + index)}. ${option}</span>
+        <div class="options" role="radiogroup" aria-label="Variante de răspuns">
+          ${q.options.map((option, idx) => `
+            <label class="option-row">
+              <input type="radio" name="radioAnswer" value="${idx}">
+              <span>${option}</span>
             </label>
           `).join("")}
         </div>
@@ -1018,51 +1075,49 @@
 
     const feedback = document.getElementById("feedback");
     feedback.className = "feedback";
-    feedback.style.display = "none";
-    feedback.innerHTML = "";
+    feedback.textContent = "";
 
     document.getElementById("checkBtn").disabled = false;
     document.getElementById("nextBtn").disabled = true;
-    document.getElementById("nextBtn").textContent = state.current === TOTAL_QUESTIONS - 1 ? "Finalizează testul" : "Mergi mai departe";
 
     typeset();
   }
 
   function checkAnswer() {
-    if (state.locked) return;
+    if (state.checked) return;
 
-    const q = state.questions[state.current];
-    let isCorrect = false;
+    const q = state.questions[state.index];
+    let correct = false;
 
-    if (q.type === "numeric") {
-      const input = document.getElementById("numericAnswer");
-      const userNumber = parseNumber(input.value);
-      if (Number.isNaN(userNumber)) {
-        showFeedback("neutral", "Scrie un număr valid înainte de verificare.");
+    if (q.type === "number") {
+      const input = document.getElementById("answerInput").value;
+      const value = parseNumber(input);
+      if (Number.isNaN(value)) {
+        showFeedback("warn", "Scrie un răspuns numeric.");
         return;
       }
-      const tolerance = q.tolerance || 0.05;
-      isCorrect = Math.abs(userNumber - q.expected) <= tolerance;
-    } else if (q.type === "radio") {
-      const selected = document.querySelector('input[name="answerOption"]:checked');
-      if (!selected) {
-        showFeedback("neutral", "Alege o variantă înainte de verificare.");
-        return;
-      }
-      isCorrect = Number(selected.value) === q.correctIndex;
-    }
-
-    state.locked = true;
-    if (isCorrect) {
-      state.score += q.points;
-      state.answered[state.current] = true;
-      showFeedback("good", `Corect! Ai primit ${q.points} puncte.<br><span class="small">${q.explanation()}</span>`);
+      const tolerance = Math.max(0.05, Math.abs(q.expected) * 0.015);
+      correct = Math.abs(value - q.expected) <= tolerance;
     } else {
-      const correct = q.type === "radio" ? q.options[q.correctIndex] : `${formatNumber(q.expected)} ${q.unit}`;
-      showFeedback("bad", `Răspuns incorect. Răspuns corect: <strong>${correct}</strong>.<br><span class="small">${q.explanation()}</span>`);
+      const checked = document.querySelector('input[name="radioAnswer"]:checked');
+      if (!checked) {
+        showFeedback("warn", "Alege o variantă de răspuns.");
+        return;
+      }
+      correct = Number(checked.value) === q.expected;
     }
 
-    document.getElementById("scoreText").textContent = `Punctaj: ${state.score} / 100`;
+    state.checked = true;
+    state.currentEarned = correct ? q.points : 0;
+    state.score += state.currentEarned;
+
+    if (correct) {
+      showFeedback("good", `Corect! Ai obținut ${q.points} puncte.`);
+    } else {
+      showFeedback("bad", `Răspuns incorect. Răspuns corect: ${q.correctText()}.`);
+    }
+
+    document.getElementById("scoreLabel").textContent = `Punctaj: ${state.score}`;
     document.getElementById("checkBtn").disabled = true;
     document.getElementById("nextBtn").disabled = false;
     typeset();
@@ -1070,39 +1125,47 @@
 
   function showFeedback(kind, message) {
     const feedback = document.getElementById("feedback");
-    feedback.className = `feedback ${kind}`;
-    feedback.style.display = "block";
+    feedback.className = `feedback active ${kind}`;
     feedback.innerHTML = message;
   }
 
   function goNext() {
-    if (state.current < TOTAL_QUESTIONS - 1) {
-      state.current += 1;
+    if (!state.checked) return;
+
+    if (state.index < state.questions.length - 1) {
+      state.index += 1;
       renderQuestion();
-    } else {
-      finishTest();
+      return;
     }
+
+    finishTest();
   }
 
   function finishTest() {
-    document.getElementById("progressFill").style.width = "100%";
-    const attempts = saveAttempt(state.score);
+    const progress = document.getElementById("progressBar");
+    progress.style.width = "100%";
+
+    const finalScore = Math.min(100, state.score);
+    document.getElementById("finalScore").textContent = `${finalScore} / 100`;
+
+    const attempts = saveAttempt(finalScore);
     const lastFour = attempts.slice(-4);
-    const average = lastFour.length === 4 ? roundTo(lastFour.reduce((sum, item) => sum + item.score, 0) / 4, 2) : null;
-
-    document.getElementById("finalScore").textContent = `${state.score} / 100`;
-    document.getElementById("finalDetails").textContent = `${state.name}, clasa ${state.className}: ai obținut ${state.score} puncte din 100.`;
-    document.getElementById("attemptCount").textContent = String(attempts.length);
-
-    const remaining = Math.max(0, 4 - attempts.length);
-    document.getElementById("diplomaStatus").textContent = remaining === 0 ? "disponibilă" : `încă ${remaining}`;
+    const attemptList = document.getElementById("attemptList");
+    attemptList.innerHTML = lastFour.map((attempt, index) => {
+      const date = new Date(attempt.date).toLocaleDateString("ro-RO");
+      return `<li><span>Exersarea ${attempts.length - lastFour.length + index + 1}</span><span>${attempt.score}/100 – ${date}</span></li>`;
+    }).join("");
 
     const printBtn = document.getElementById("printBtn");
-    if (attempts.length >= 4 && average !== null) {
+    if (attempts.length >= 4) {
+      const average = lastFour.reduce((sum, item) => sum + item.score, 0) / lastFour.length;
+      document.getElementById("certificateInfo").textContent = "Diploma poate fi eliberată.";
       fillCertificate(lastFour, average);
       document.getElementById("certificate").classList.add("active");
       printBtn.disabled = false;
     } else {
+      const remaining = 4 - attempts.length;
+      document.getElementById("certificateInfo").textContent = `Mai sunt necesare ${remaining} exersări finalizate pentru eliberarea diplomei.`;
       document.getElementById("certificate").classList.remove("active");
       printBtn.disabled = true;
     }
@@ -1112,7 +1175,7 @@
 
   function storageKey() {
     const raw = `${state.name}|${state.className}`.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    return "echilibrul-corpurilor-test-final-v2:" + raw.replace(/[^a-z0-9|]+/g, "-");
+    return "echilibrul-corpurilor-test-final-v3:" + raw.replace(/[^a-z0-9|]+/g, "-");
   }
 
   function saveAttempt(score) {
@@ -1132,10 +1195,10 @@
   function fillCertificate(lastFour, average) {
     document.getElementById("certSchool").textContent = state.school;
     document.getElementById("certName").textContent = state.name;
-    document.getElementById("certClass").textContent = state.className;
-    document.getElementById("certAverage").textContent = `Punctaj mediu: ${formatNumber(average, 2)} / 100`;
-    document.getElementById("certAttempts").textContent = `Încercări luate în calcul: ${lastFour.map(item => item.score + "/100").join(", ")}`;
-    document.getElementById("certDate").textContent = new Date().toLocaleDateString("ro-RO");
+    document.getElementById("certClass").textContent = `Clasa: ${state.className}`;
+    document.getElementById("certAverage").textContent = `Punctaj mediu obținut: ${formatNumber(average, 2)} / 100`;
+    document.getElementById("certAttempts").textContent = `Punctaje luate în calcul: ${lastFour.map(item => item.score + "/100").join(", ")}`;
+    document.getElementById("certDate").textContent = `Data: ${new Date().toLocaleDateString("ro-RO")}`;
   }
 
   function restartTest() {
@@ -1143,14 +1206,19 @@
   }
 
   function resetAttempts() {
-    if (!state.name || !state.className) {
-      alert("Completează numele și clasa, apoi poți reseta încercările.");
+    const name = document.getElementById("nameInput").value.trim();
+    const className = document.getElementById("classInput").value.trim();
+    if (!name || !className) {
+      alert("Completează numele și clasa, apoi poți reseta exersările salvate.");
       return;
     }
-    if (confirm("Sigur vrei să ștergi încercările salvate local pentru acest elev?")) {
+
+    state.name = name;
+    state.className = className;
+
+    if (confirm("Sigur vrei să ștergi exersările salvate local pentru acest elev?")) {
       localStorage.removeItem(storageKey());
-      alert("Încercările au fost resetate.");
-      showScreen("screen-start");
+      alert("Exersările au fost resetate.");
     }
   }
 </script>

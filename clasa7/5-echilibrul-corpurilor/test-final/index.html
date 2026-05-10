@@ -1,882 +1,1214 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FIZICĂ VII – Echilibrul corpurilor – Test final</title>
-  <meta name="description" content="Test final interactiv pentru capitolul Echilibrul corpurilor, clasa a VII-a." />
+  <meta name="description" content="Test final interactiv pentru clasa a VII-a: momentul forței, echilibrul de rotație, pârghia și scripetele fix.">
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
   <style>
-    :root{
-      --primary:#06b6d4;
-      --bg:#0f172a;
-      --card:#1e293b;
-      --text:#f8fafc;
-      --accent:#22d3ee;
-      --muted:#94a3b8;
-      --ok:#4ade80;
-      --bad:#f87171;
-      --warn:#fbbf24;
-      --border:#334155;
+    :root {
+      --bg: #0f172a;
+      --panel: #111827;
+      --card: #1e293b;
+      --card-2: #0b1220;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --accent: #22d3ee;
+      --accent-2: #38bdf8;
+      --success: #22c55e;
+      --warning: #fbbf24;
+      --danger: #fb7185;
+      --border: #334155;
+      --shadow: 0 18px 55px rgba(0, 0, 0, 0.35);
+      --radius: 22px;
     }
-    *{box-sizing:border-box}
-    body{
-      font-family:"Segoe UI",sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      min-height:100vh;
-      margin:0;
-      padding:15px;
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.18), transparent 32rem),
+        radial-gradient(circle at bottom right, rgba(251, 191, 36, 0.10), transparent 34rem),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.55;
     }
-    .header{
-      text-align:center;
-      width:100%;
-      max-width:760px;
-      border-bottom:2px solid var(--primary);
-      margin-bottom:20px;
-      padding-bottom:10px;
-      transition:all .25s ease;
-      overflow:hidden;
+
+    .page-shell {
+      width: min(100%, 980px);
+      margin: 0 auto;
+      padding: clamp(14px, 3vw, 28px);
     }
-    body.testing-mode .header{
-      max-width:960px;
-      margin-bottom:8px;
-      padding-bottom:4px;
-      border-bottom-width:1px;
+
+    .topbar {
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      background: rgba(15, 23, 42, 0.78);
+      backdrop-filter: blur(14px);
+      border-radius: var(--radius);
+      padding: clamp(16px, 4vw, 26px);
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+      text-align: center;
     }
-    body.testing-mode .header .quote{
-      display:none;
+
+    .school-name {
+      color: var(--accent);
+      text-transform: uppercase;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      font-size: clamp(1rem, 3.5vw, 1.35rem);
     }
-    .container{
-      width:100%;
-      max-width:960px;
-      background:var(--card);
-      border-radius:22px;
-      padding:24px;
-      box-shadow:0 20px 50px rgba(0,0,0,.30);
-      border:1px solid var(--border);
+
+    .teacher {
+      color: var(--muted);
+      font-weight: 700;
+      margin-top: 4px;
     }
-    .hidden{display:none}
-    .title{
-      text-align:center;
-      margin:0 0 6px 0;
-      color:var(--text);
+
+    .quote {
+      margin: 16px auto 0;
+      max-width: 760px;
+      color: #fef3c7;
+      background: rgba(251, 191, 36, 0.12);
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      border-radius: 16px;
+      padding: 10px 14px;
+      font-style: italic;
+      font-weight: 700;
     }
-    .subtle{
-      text-align:center;
-      color:var(--muted);
-      margin:0 0 14px 0;
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .card {
+      background: linear-gradient(180deg, rgba(30, 41, 59, 0.97), rgba(15, 23, 42, 0.98));
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: var(--radius);
+      padding: clamp(16px, 4vw, 28px);
+      box-shadow: var(--shadow);
     }
-    .grid{
-      display:grid;
-      gap:12px;
+
+    h1, h2, h3 { line-height: 1.15; margin-top: 0; }
+    h1 { font-size: clamp(1.55rem, 6vw, 2.4rem); text-align: center; }
+    h2 { font-size: clamp(1.25rem, 4.6vw, 1.9rem); }
+    h3 { font-size: 1.1rem; }
+
+    p { margin: 0.6rem 0; }
+    .muted { color: var(--muted); }
+    .small { font-size: 0.92rem; }
+    .center { text-align: center; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
     }
-    input[type="text"], select{
-      width:100%;
-      padding:13px 14px;
-      border-radius:12px;
-      border:2px solid #4a5568;
-      background:#0f172a;
-      color:white;
-      font-size:1.06rem;
-      margin-bottom:12px;
+
+    @media (max-width: 700px) {
+      .grid-2 { grid-template-columns: 1fr; }
     }
-    .btn{
-      width:100%;
-      border:none;
-      padding:15px 16px;
-      border-radius:12px;
-      font-weight:800;
-      cursor:pointer;
-      font-size:1rem;
-      text-transform:uppercase;
+
+    label.field span {
+      display: block;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 6px;
     }
-    .btn-primary{background:var(--primary); color:#062b35;}
-    .btn-secondary{background:#059669; color:white;}
-    .btn-disabled{opacity:.6; cursor:not-allowed;}
-    .meta-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-bottom:14px;
+
+    input[type="text"], input[type="number"], select {
+      width: 100%;
+      border: 2px solid rgba(148, 163, 184, 0.35);
+      border-radius: 14px;
+      background: #020617;
+      color: var(--text);
+      padding: 14px 15px;
+      font-size: 1rem;
+      outline: none;
     }
-    .pill{
-      padding:8px 10px;
-      border-radius:999px;
-      background:#0f172a;
-      border:1px solid var(--border);
-      color:#cbd5e1;
-      font-size:.92rem;
-      font-weight:700;
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.16);
     }
-    .instruction-box{
-      font-size:.93rem;
-      color:#fef3c7;
-      text-align:left;
-      margin-bottom:14px;
-      font-weight:700;
-      background:rgba(251,191,36,.10);
-      padding:12px;
-      border-radius:12px;
-      border:1px solid rgba(251,191,36,.18);
-      line-height:1.5;
+
+    .info-list {
+      display: grid;
+      gap: 8px;
+      margin: 16px 0;
+      padding: 0;
+      list-style: none;
     }
-    .question-box{
-      font-size:clamp(0.95rem, 2vw, 1.18rem);
-      font-weight:600;
-      margin-bottom:14px;
-      text-align:center;
-      line-height:1.5;
-      min-height:auto;
-      overflow-wrap:anywhere;
-      word-break:break-word;
-      hyphens:auto;
-      padding:6px 4px;
+
+    .info-list li {
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      background: rgba(15, 23, 42, 0.7);
+      border-radius: 14px;
+      padding: 10px 12px;
     }
-    .feedback{
-      margin-top:14px;
-      padding:14px;
-      border-radius:12px;
-      display:none;
-      text-align:center;
-      font-weight:800;
-      line-height:1.55;
+
+    .formula-panel {
+      margin: 16px 0;
+      background: rgba(14, 165, 233, 0.10);
+      border: 1px solid rgba(56, 189, 248, 0.34);
+      border-radius: 18px;
+      padding: 12px;
+      color: #e0f2fe;
+      overflow-x: auto;
     }
-    .feedback.ok{display:block; background:rgba(74,222,128,.10); color:var(--ok); border:1px solid rgba(74,222,128,.22)}
-    .feedback.bad{display:block; background:rgba(248,113,113,.10); color:#fecaca; border:1px solid rgba(248,113,113,.20)}
-    .feedback.warn{display:block; background:rgba(251,191,36,.10); color:#fde68a; border:1px solid rgba(251,191,36,.20)}
-    #correctAnswerBox{
-      display:none;
-      margin-top:10px;
-      background:rgba(59,130,246,.10);
-      color:#dbeafe;
-      border:1px solid rgba(96,165,250,.20);
+
+    .formula-panel strong { color: #f8fafc; }
+
+    .btn-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin-top: 18px;
     }
-    #correctAnswerBox.show{
-      display:block;
+
+    @media (max-width: 680px) {
+      .btn-row { grid-template-columns: 1fr; }
     }
-    .result-score{
-      font-size:4.3rem;
-      color:var(--accent);
-      font-weight:900;
-      text-align:center;
-      margin:4px 0 10px;
+
+    button {
+      min-height: 50px;
+      border: 0;
+      border-radius: 15px;
+      padding: 13px 16px;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease;
     }
-    .center{text-align:center}
-    .quote{
-      background:rgba(245,158,11,.10);
-      border-left:4px solid var(--accent);
-      padding:9px;
-      margin-bottom:15px;
-      font-style:italic;
-      color:#fef08a;
-      font-size:.95rem;
+
+    button:hover { transform: translateY(-1px); filter: brightness(1.03); }
+    button:disabled { cursor: not-allowed; opacity: 0.58; transform: none; }
+
+    .btn-primary { background: var(--accent); color: #062333; }
+    .btn-success { background: var(--success); color: #052e16; }
+    .btn-secondary { background: #e2e8f0; color: #0f172a; }
+    .btn-danger { background: var(--danger); color: #450a0a; }
+    .btn-warning { background: var(--warning); color: #422006; }
+
+    .progress-card {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 14px;
+      background: rgba(15, 23, 42, 0.88);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 18px;
+      padding: 12px;
     }
-    body.testing-mode .header > div:first-child{
-      font-size:1rem !important;
-      margin-bottom:1px !important;
+
+    .progress-line {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      flex-wrap: wrap;
     }
-    body.testing-mode .header > div:nth-child(2){
-      font-size:.78rem !important;
-      margin-bottom:6px !important;
-      letter-spacing:.5px !important;
+
+    .progress-track {
+      height: 12px;
+      border-radius: 999px;
+      background: #020617;
+      overflow: hidden;
+      border: 1px solid rgba(148, 163, 184, 0.25);
     }
-    @media (max-width:900px){
-      .container{max-width:100%}
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--accent), var(--success));
+      border-radius: 999px;
+      transition: width 0.25s ease;
     }
-    @media (max-width:700px){
-      .meta-row{justify-content:center}
-      .pill{font-size:.84rem; padding:7px 9px}
+
+    .problem-title {
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 10px;
     }
-    @media (max-width:560px){
-      body{padding:10px}
-      .container{padding:16px}
-      .question-box{
-        font-size:clamp(0.9rem, 3vw, 1.04rem);
-        line-height:1.45;
-      }
-      .result-score{font-size:3.2rem}
-      input[type="text"],select{font-size:1rem}
+
+    .points-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: #052e16;
+      background: #bbf7d0;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-weight: 900;
+      margin: 4px auto 14px;
     }
-    @media (max-width:560px) and (orientation:landscape){
-      body{padding:8px}
-      .header{margin-bottom:10px; padding-bottom:8px}
-      .quote{font-size:.86rem; margin-bottom:10px}
-      body.testing-mode .header{
-        margin-bottom:4px;
-        padding-bottom:2px;
-      }
-      .container{padding:12px}
-      .question-box{
-        font-size:clamp(0.84rem, 2.2vw, 0.98rem);
-        line-height:1.38;
-        margin-bottom:10px;
-      }
-      .instruction-box{font-size:.86rem; padding:10px}
-      .meta-row{gap:6px; margin-bottom:10px}
-      .pill{font-size:.78rem; padding:6px 8px}
-      .btn{padding:12px 14px; font-size:.94rem}
-      input[type="text"],select{padding:11px 12px; margin-bottom:10px}
+
+    .statement {
+      font-size: clamp(1.04rem, 3vw, 1.16rem);
+      color: var(--text);
+      background: rgba(2, 6, 23, 0.42);
+      border: 1px solid rgba(148, 163, 184, 0.20);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .media-box {
+      margin: 14px auto;
+      background: #f8fafc;
+      color: #0f172a;
+      border-radius: 18px;
+      padding: 10px;
+      text-align: center;
+      overflow: hidden;
+      border: 2px solid rgba(34, 211, 238, 0.35);
+    }
+
+    .media-box img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 12px;
+      display: block;
+      margin: 0 auto;
+    }
+
+    .media-caption {
+      color: #0f172a;
+      font-weight: 800;
+      margin-top: 8px;
+      font-size: 0.9rem;
+    }
+
+    .svg-wrap {
+      background: #f8fafc;
+      border-radius: 18px;
+      padding: 10px;
+      text-align: center;
+      border: 2px solid rgba(34, 211, 238, 0.35);
+      margin: 14px auto;
+    }
+
+    .svg-wrap svg { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+
+    .answer-zone {
+      margin-top: 18px;
+      border-top: 1px solid rgba(148, 163, 184, 0.22);
+      padding-top: 16px;
+    }
+
+    .quick-title {
+      color: #fef08a;
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .numeric-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    @media (max-width: 560px) {
+      .numeric-row { grid-template-columns: 1fr; }
+    }
+
+    .unit-badge {
+      border-radius: 14px;
+      background: rgba(34, 211, 238, 0.13);
+      color: #e0f2fe;
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      padding: 13px 14px;
+      min-width: 92px;
+      text-align: center;
+      font-weight: 900;
+    }
+
+    .option-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+
+    .option-label {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      gap: 10px;
+      align-items: center;
+      background: rgba(2, 6, 23, 0.55);
+      border: 2px solid rgba(148, 163, 184, 0.28);
+      border-radius: 16px;
+      padding: 12px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .option-label:hover, .option-label:focus-within {
+      border-color: var(--accent);
+      background: rgba(14, 165, 233, 0.12);
+    }
+
+    .option-label input { transform: scale(1.25); accent-color: var(--accent); }
+
+    .feedback {
+      display: none;
+      margin-top: 14px;
+      border-radius: 16px;
+      padding: 14px;
+      font-weight: 800;
+    }
+
+    .feedback.good {
+      display: block;
+      background: rgba(34, 197, 94, 0.14);
+      border: 1px solid rgba(34, 197, 94, 0.42);
+      color: #dcfce7;
+    }
+
+    .feedback.bad {
+      display: block;
+      background: rgba(251, 113, 133, 0.13);
+      border: 1px solid rgba(251, 113, 133, 0.42);
+      color: #ffe4e6;
+    }
+
+    .feedback.neutral {
+      display: block;
+      background: rgba(251, 191, 36, 0.12);
+      border: 1px solid rgba(251, 191, 36, 0.36);
+      color: #fef3c7;
+    }
+
+    .result-score {
+      text-align: center;
+      font-size: clamp(3rem, 15vw, 6rem);
+      color: var(--accent);
+      font-weight: 1000;
+      line-height: 1;
+      margin: 18px 0 8px;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    @media (max-width: 700px) {
+      .result-grid { grid-template-columns: 1fr; }
+    }
+
+    .stat-card {
+      background: rgba(2, 6, 23, 0.44);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 18px;
+      padding: 14px;
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 1.5rem;
+      color: var(--accent);
+    }
+
+    .certificate {
+      display: none;
+      background: #fffaf0;
+      color: #172033;
+      border-radius: 22px;
+      padding: clamp(18px, 4vw, 34px);
+      margin-top: 18px;
+      border: 8px double #0f172a;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .certificate.active { display: block; }
+
+    .cert-school {
+      font-weight: 1000;
+      text-transform: uppercase;
+      color: #0f172a;
+      border-bottom: 2px solid #0f172a;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+      font-size: clamp(1rem, 3vw, 1.35rem);
+    }
+
+    .cert-title {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2rem, 8vw, 3.4rem);
+      color: #0f172a;
+      margin: 8px 0;
+    }
+
+    .cert-name {
+      font-size: clamp(1.4rem, 5vw, 2.2rem);
+      font-weight: 1000;
+      color: #075985;
+      margin: 12px 0;
+    }
+
+    .cert-average {
+      display: inline-block;
+      margin: 14px auto;
+      border-radius: 18px;
+      background: #dbeafe;
+      color: #0f172a;
+      border: 2px solid #075985;
+      padding: 12px 18px;
+      font-size: clamp(1.2rem, 4vw, 1.8rem);
+      font-weight: 1000;
+    }
+
+    .cert-footer {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 28px;
+      text-align: left;
+      color: #1e293b;
+    }
+
+    @media (max-width: 560px) {
+      .cert-footer { grid-template-columns: 1fr; text-align: center; }
+    }
+
+    .print-only { display: none; }
+
+    @media print {
+      body { background: white; }
+      .topbar, #screen-start, #screen-test, .no-print, #end-actions, #result-summary { display: none !important; }
+      .page-shell { padding: 0; width: 100%; }
+      #screen-end { display: block !important; }
+      .card { box-shadow: none; border: 0; background: white; padding: 0; }
+      .certificate { display: block !important; box-shadow: none; margin: 0; min-height: 95vh; }
+      .print-only { display: block; }
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <div style="font-size:1.1rem;font-weight:bold;color:var(--accent);margin-bottom:2px;">
-      ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA
-    </div>
-    <div style="font-size:0.92rem;color:#94a3b8;margin-bottom:12px;letter-spacing:1px;">
-      Prof. DĂNUȚ ANDRONIE
-    </div>
-    <div class="quote">„FIZICA NU ESTE O MATERIE DOMINATĂ DE FORMULE, CI DE LOGICĂ.”</div>
+  <div class="page-shell">
+    <header class="topbar">
+      <div class="school-name">ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</div>
+      <div class="teacher">Prof. DĂNUȚ ANDRONIE</div>
+      <div class="quote">„FIZICA NU ESTE O MATERIE DOMINATĂ DE FORMULE, CI DE LOGICĂ.”</div>
+    </header>
+
+    <main>
+      <section id="screen-start" class="screen active">
+        <div class="card">
+          <h1>Test final – Echilibrul corpurilor</h1>
+          <p class="center muted">Clasa a VII-a • 4 probleme • 100 puncte • pagini separate pentru telefon, tabletă și laptop</p>
+
+          <div class="formula-panel">
+            <strong>Formule utile:</strong>
+            <div>\(M = F \cdot b_F\), \(F = \frac{M}{b_F}\), \(b_F=\frac{M}{F}\)</div>
+            <div>\(F \cdot b_F = R \cdot b_R\), deci \(R=\frac{F \cdot b_F}{b_R}\)</div>
+            <div class="small">Exemplu numeric: \(M = 40\,\text{N}\cdot 0{,}25\,\text{m}=10\,\text{N}\cdot\text{m}\).</div>
+          </div>
+
+          <div class="grid-2">
+            <label class="field">
+              <span>Antetul școlii pentru diplomă</span>
+              <input id="schoolInput" type="text" value="ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA">
+            </label>
+            <label class="field">
+              <span>Numele și prenumele elevului</span>
+              <input id="nameInput" type="text" placeholder="Ex.: Popescu Ana-Maria" autocomplete="name">
+            </label>
+            <label class="field">
+              <span>Clasa</span>
+              <select id="classInput">
+                <option value="">Alege clasa...</option>
+                <option value="VII A">VII A</option>
+                <option value="VII B">VII B</option>
+                <option value="VII C">VII C</option>
+                <option value="VII D">VII D</option>
+                <option value="VII">VII</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Mod de lucru</span>
+              <select id="modeInput">
+                <option value="normal">Test cu valori aleatorii</option>
+                <option value="practice">Exersare cu feedback detaliat</option>
+              </select>
+            </label>
+          </div>
+
+          <ul class="info-list">
+            <li>Problema 1 cere aleatoriu \(M\), \(F\) sau \(b_F\).</li>
+            <li>Problema 2 cere aleatoriu echilibrul și sensul de rotație, \(F_1\), \(F_2\) sau \(F_3\).</li>
+            <li>Problema 3 cere aleatoriu \(R\), \(F\), \(b_R\) sau \(b_F\).</li>
+            <li>După 4 încercări, se afișează o diplomă cu punctajul mediu. Încercările sunt salvate local în browser.</li>
+          </ul>
+
+          <button class="btn-primary" onclick="startTest()">Începe testul</button>
+        </div>
+      </section>
+
+      <section id="screen-test" class="screen">
+        <div class="progress-card">
+          <div class="progress-line">
+            <span id="progressText">Problema 1 / 4</span>
+            <span id="scoreText">Punctaj: 0 / 100</span>
+          </div>
+          <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+        </div>
+
+        <article class="card">
+          <h2 id="questionTitle" class="problem-title">Problema</h2>
+          <div class="center"><span class="points-pill" id="pointsPill">25 puncte</span></div>
+          <div id="mediaArea"></div>
+          <div id="statementArea" class="statement"></div>
+          <div id="formulaArea"></div>
+
+          <div class="answer-zone">
+            <div class="quick-title">Verificare rapidă</div>
+            <div id="answerArea"></div>
+            <div id="feedback" class="feedback" aria-live="polite"></div>
+
+            <div class="btn-row">
+              <button class="btn-secondary" onclick="restartTest()">Reia testul</button>
+              <button class="btn-primary" id="checkBtn" onclick="checkAnswer()">Verifică răspunsul</button>
+              <button class="btn-success" id="nextBtn" onclick="goNext()" disabled>Mergi mai departe</button>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section id="screen-end" class="screen">
+        <div class="card">
+          <div id="result-summary">
+            <h2 class="center">Rezultat final</h2>
+            <div class="result-score" id="finalScore">0</div>
+            <p class="center muted" id="finalDetails"></p>
+
+            <div class="result-grid">
+              <div class="stat-card">
+                <span class="muted">Încercări salvate pentru elev</span>
+                <strong id="attemptCount">0</strong>
+              </div>
+              <div class="stat-card">
+                <span class="muted">Pentru diplomă</span>
+                <strong id="diplomaStatus">încă 4</strong>
+              </div>
+            </div>
+          </div>
+
+          <div id="certificate" class="certificate">
+            <div class="cert-school" id="certSchool">ȘCOALA</div>
+            <div class="cert-title">DIPLOMĂ</div>
+            <p>Se acordă elevului/elevei</p>
+            <div class="cert-name" id="certName">Nume elev</div>
+            <p>din clasa <strong id="certClass">VII</strong>, pentru parcurgerea de 4 ori a testului</p>
+            <p><strong>„Echilibrul corpurilor”</strong></p>
+            <div class="cert-average" id="certAverage">Punctaj mediu: 0 / 100</div>
+            <p class="small" id="certAttempts">Încercări luate în calcul: -</p>
+            <div class="cert-footer">
+              <div>
+                <strong>Profesor:</strong><br>
+                Prof. DĂNUȚ ANDRONIE
+              </div>
+              <div>
+                <strong>Data:</strong><br>
+                <span id="certDate"></span>
+              </div>
+            </div>
+            <p class="print-only small">Diplomă generată automat după 4 încercări.</p>
+          </div>
+
+          <div class="btn-row no-print" id="end-actions">
+            <button class="btn-primary" onclick="restartTest()">Fă o nouă încercare</button>
+            <button class="btn-warning" onclick="window.print()" id="printBtn" disabled>Tipărește diploma</button>
+            <button class="btn-danger" onclick="resetAttempts()">Resetează încercările</button>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
 
-  <section class="container" id="screen-login">
-    <h1 class="title">Echilibrul corpurilor</h1>
-    <p class="subtle">Clasa a VII-a • 20 itemi • 100 puncte</p>
-
-    <div class="grid">
-      <input type="text" id="stdName" placeholder="Nume și prenume elev" autocomplete="name" />
-      <select id="stdClass">
-        <option value="">Clasa...</option>
-        <option value="VII A">VII A</option>
-        <option value="VII B">VII B</option>
-        <option value="VII C">VII C</option>
-        <option value="VII D">VII D</option>
-      </select>
-    </div>
-
-    <div class="instruction-box">
-      <div>• Se consideră <strong>g = 10 N/kg</strong>.</div>
-      <div>• La itemii numerici, rezultatul se scrie cu <strong>maximum 3 zecimale</strong>, rotunjite sau nerotunjite.</div>
-      <div>• Unitatea de măsură se poate scrie <strong>lipită</strong> de rezultat, cu <strong>spațiu</strong> sau cu <strong>tab</strong>.</div>
-      <div>• Sunt acceptate exemple precum: <strong>12</strong>, <strong>12 N</strong>, <strong>12N</strong>, <strong>12&nbsp;&nbsp;N</strong>.</div>
-      <div>• După verificare, se afișează și <strong>răspunsul corect</strong>.</div>
-    </div>
-
-    <button class="btn btn-primary" id="startBtn">Începe testul</button>
-  </section>
-
-  <section class="container hidden" id="screen-game">
-    <div class="meta-row">
-      <div class="pill" id="qInfo">Cerința 1 / 20</div>
-      <div class="pill" id="pointsInfo">5 puncte</div>
-      <div class="pill" id="variantInfo">Varianta 1 / 100</div>
-      <div class="pill" id="testCode">Cod test</div>
-    </div>
-
-    <div class="question-box" id="question"></div>
-    <div id="inputArea"></div>
-    <div class="feedback" id="feedback"></div>
-    <div class="feedback hidden" id="correctAnswerBox"></div>
-    <button class="btn btn-secondary hidden" id="nextBtn">Următoarea</button>
-  </section>
-
-  <section class="container hidden" id="screen-end">
-    <h2 class="title">Rezultat</h2>
-    <div class="center subtle" id="endVariant"></div>
-    <div class="result-score" id="finalScore"></div>
-    <p class="center subtle" id="rawPoints"></p>
-    <p class="center subtle" id="finalGrade"></p>
-    <p class="center subtle" id="endCode"></p>
-    <button class="btn btn-primary" id="restartBtn">Reia testul</button>
-  </section>
-
 <script>
-const TOTAL_QUESTIONS = 20;
-const MIXED_COUNT = 10;
-const NUMERIC_COUNT = 10;
-const POINTS_PER_ITEM = 5;
-const TOTAL_POINTS = 100;
-const VARIANT_COUNT = 100;
-const G = 10;
+  const IMG_BASE = "https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/5-echilibrul-corpurilor/test-final/";
+  const POINTS_PER_QUESTION = 25;
+  const TOTAL_QUESTIONS = 4;
 
-const state = {
-  name: "",
-  className: "",
-  currentIdx: 0,
-  correctAnswers: 0,
-  questions: [],
-  variant: 1,
-  testCode: "",
-  seed: 0,
-  sessionSalt: ""
-};
-
-const el = {
-  login: document.getElementById("screen-login"),
-  game: document.getElementById("screen-game"),
-  end: document.getElementById("screen-end"),
-  stdName: document.getElementById("stdName"),
-  stdClass: document.getElementById("stdClass"),
-  startBtn: document.getElementById("startBtn"),
-  qInfo: document.getElementById("qInfo"),
-  pointsInfo: document.getElementById("pointsInfo"),
-  variantInfo: document.getElementById("variantInfo"),
-  testCode: document.getElementById("testCode"),
-  question: document.getElementById("question"),
-  inputArea: document.getElementById("inputArea"),
-  feedback: document.getElementById("feedback"),
-  correctAnswerBox: document.getElementById("correctAnswerBox"),
-  nextBtn: document.getElementById("nextBtn"),
-  endVariant: document.getElementById("endVariant"),
-  finalScore: document.getElementById("finalScore"),
-  rawPoints: document.getElementById("rawPoints"),
-  finalGrade: document.getElementById("finalGrade"),
-  endCode: document.getElementById("endCode"),
-  restartBtn: document.getElementById("restartBtn")
-};
-
-const fillPool = [
-  { q: "Punctul în care se poate considera concentrată greutatea unui corp se numește centrul de ..........", a: ["greutate"] },
-  { q: "Mărimea fizică ce caracterizează efectul de rotație al unei forțe se numește momentul ..........", a: ["forței", "fortei"] },
-  { q: "Formula momentului forței este M = F · ..........", a: ["b_f", "bf", "b"] },
-  { q: "În formula M = F · b_F, simbolul b_F reprezintă brațul ..........", a: ["forței", "fortei"] },
-  { q: "Unitatea de măsură pentru momentul forței este ..........", a: ["n·m", "nm", "n m"] },
-  { q: "O pârghie este în echilibru dacă momentele forțelor sunt ..........", a: ["egale"] },
-  { q: "La o pârghie, punctul fix în jurul căruia se poate roti se numește ..........", a: ["punct de sprijin", "sprijin"] },
-  { q: "Dacă după o mică deplasare corpul revine în poziția inițială, echilibrul este ..........", a: ["stabil"] },
-  { q: "Dacă după o mică deplasare corpul se îndepărtează de poziția inițială, echilibrul este ..........", a: ["instabil"] },
-  { q: "Dacă după o mică deplasare corpul rămâne în noua poziție, echilibrul este ..........", a: ["indiferent"] },
-  { q: "Greutatea unui corp se calculează cu formula G = m · ..........", a: ["g"] },
-  { q: "Pentru echilibrul de rotație, suma momentelor într-un sens este .......... cu suma momentelor în sens opus.", a: ["egală", "egala"] },
-  { q: "Brațul forței este distanța de la punctul de sprijin până la direcția de acțiune a ..........", a: ["forței", "fortei"] },
-  { q: "Când centrul de greutate este situat mai jos, corpul este în general mai ..........", a: ["stabil"] },
-  { q: "Pârghia face parte din categoria mașinilor ..........", a: ["simple"] }
-];
-
-const tfPool = [
-  { q: "Momentul forței depinde de valoarea forței și de brațul ei.", a: ["adevărat", "adevarat"] },
-  { q: "Unitatea de măsură a momentului forței este newtonul.", a: ["fals"] },
-  { q: "Un corp este în echilibru stabil dacă după deplasare revine în poziția inițială.", a: ["adevărat", "adevarat"] },
-  { q: "Centrul de greutate al unui corp se află întotdeauna în exteriorul corpului.", a: ["fals"] },
-  { q: "La echilibrul pârghiei, momentele forțelor sunt egale.", a: ["adevărat", "adevarat"] },
-  { q: "Brațul forței este chiar valoarea forței.", a: ["fals"] },
-  { q: "Cu cât centrul de greutate este mai jos, cu atât corpul poate fi mai stabil.", a: ["adevărat", "adevarat"] },
-  { q: "Greutatea unui corp cu masa de 4 kg este 40 N, dacă g = 10 N/kg.", a: ["adevărat", "adevarat"] },
-  { q: "În echilibru indiferent, corpul rămâne în noua poziție după o mică deplasare.", a: ["adevărat", "adevarat"] },
-  { q: "O pârghie este o mașină simplă.", a: ["adevărat", "adevarat"] },
-  { q: "Dacă brațul forței crește, momentul poate crește.", a: ["adevărat", "adevarat"] },
-  { q: "Echilibrul instabil apare când corpul revine singur în poziția inițială.", a: ["fals"] }
-];
-
-function normalizeText(value){
-  return String(value)
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function normalizeNumberString(value){
-  return String(value).replace(/\t/g, " ").trim().replace(/,/g, ".").replace(/\s+/g, "");
-}
-
-function parseLocaleNumber(value){
-  const cleaned = normalizeNumberString(value);
-  if(!/^[-+]?\d+(\.\d+)?$/.test(cleaned)) return NaN;
-  return Number(cleaned);
-}
-
-function decimalCount(value){
-  const cleaned = normalizeNumberString(value);
-  return cleaned.includes(".") ? cleaned.split(".")[1].length : 0;
-}
-
-function truncateTo(num, decimals = 3){
-  const factor = Math.pow(10, decimals);
-  return Math.trunc(num * factor) / factor;
-}
-
-function roundTo(num, decimals = 3){
-  const factor = Math.pow(10, decimals);
-  return Math.round(num * factor) / factor;
-}
-
-function formatNumber(num, maxDecimals = 3){
-  if (Number.isInteger(num)) return String(num);
-  return Number(num.toFixed(maxDecimals)).toString();
-}
-
-function formatPrecise(num){
-  if (Number.isInteger(num)) return String(num);
-  return Number(num.toFixed(6)).toString();
-}
-
-function normalizeUnit(unit){
-  return String(unit || "")
-    .toLowerCase()
-    .replace(/\s+/g, "")
-    .replace(/·/g, "")
-    .replace(/\*/g, "")
-    .replace(/×/g, "")
-    .replace(/\./g, "");
-}
-
-function splitNumericAndUnit(value){
-  const raw = String(value || "").replace(/\t/g, " ").trim();
-  const match = raw.match(/^([-+]?\d+(?:[.,]\d+)?)(.*)$/);
-  if(!match) return { numberPart:"", unitPart:"" };
-  return {
-    numberPart: match[1].trim(),
-    unitPart: (match[2] || "").trim()
+  const state = {
+    school: "",
+    name: "",
+    className: "",
+    mode: "normal",
+    questions: [],
+    current: 0,
+    score: 0,
+    locked: false,
+    answered: []
   };
-}
 
-function shortCode(seed){
-  return (seed >>> 0).toString(36).toUpperCase().slice(0, 6);
-}
-
-function hashString(str){
-  let h = 2166136261 >>> 0;
-  for(let i=0; i<str.length; i++){
-    h ^= str.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return h >>> 0;
-}
-
-function mulberry32(seed){
-  return function(){
-    let t = seed += 0x6D2B79F5;
-    t = Math.imul(t ^ t >>> 15, t | 1);
-    t ^= t + Math.imul(t ^ t >>> 7, t | 61);
-    return ((t ^ t >>> 14) >>> 0) / 4294967296;
-  };
-}
-
-function randFrom(rng, arr){
-  return arr[Math.floor(rng() * arr.length)];
-}
-
-function pickUnique(rng, pool, count){
-  const copy = [...pool];
-  const result = [];
-  while(result.length < count && copy.length){
-    const idx = Math.floor(rng() * copy.length);
-    result.push(copy.splice(idx, 1)[0]);
-  }
-  return result;
-}
-
-function shuffleArray(rng, arr){
-  const copy = [...arr];
-  for(let i = copy.length - 1; i > 0; i--){
-    const j = Math.floor(rng() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
-
-function questionFill(item){
-  return { type:"fill", q:item.q, answers:item.a, points:POINTS_PER_ITEM };
-}
-
-function questionTrueFalse(item){
-  return { type:"tf", q:item.q, answers:item.a, points:POINTS_PER_ITEM };
-}
-
-function buildAcceptedDisplay(exactAnswer, unit){
-  const exact = formatPrecise(exactAnswer);
-  const trunc = formatNumber(truncateTo(exactAnswer, 3), 3);
-  const round = formatNumber(roundTo(exactAnswer, 3), 3);
-  const suffix = unit ? " " + unit : "";
-  if (trunc === round && round === formatNumber(exactAnswer, 3)) {
-    return `${formatNumber(exactAnswer, 3)}${suffix}`;
-  }
-  return `${exact}${suffix} • acceptat și ${trunc}${suffix} sau ${round}${suffix}`;
-}
-
-function questionNumeric({ q, exactAnswer, unit = "", formula = "" }){
-  return {
-    type:"numeric",
-    q,
-    exactAnswer,
-    unit,
-    formula,
-    points:POINTS_PER_ITEM,
-    displayAnswer: buildAcceptedDisplay(exactAnswer, unit)
-  };
-}
-
-function genMoment(rng){
-  const force = randFrom(rng, [12, 15, 18, 20, 24, 30, 36, 40, 45, 50]);
-  const arm = randFrom(rng, [0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.75, 1, 1.2]);
-  return questionNumeric({
-    q: `Calculează momentul unei forțe de ${force} N aplicată la brațul b_F = ${formatNumber(arm)} m.`,
-    exactAnswer: force * arm,
-    unit: "N·m",
-    formula: "M = F · b_F"
-  });
-}
-
-function genForceFromMoment(rng){
-  const moment = randFrom(rng, [6, 8, 10, 12, 15, 18, 20, 24, 30, 36]);
-  const arm = randFrom(rng, [0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.75, 1, 1.2]);
-  return questionNumeric({
-    q: `Un moment are valoarea M = ${moment} N·m, iar brațul forței este b_F = ${formatNumber(arm)} m. Calculează forța.`,
-    exactAnswer: moment / arm,
-    unit: "N",
-    formula: "F = M / b_F"
-  });
-}
-
-function genArmFromMoment(rng){
-  const force = randFrom(rng, [10, 12, 15, 18, 20, 24, 30, 36, 40]);
-  const moment = randFrom(rng, [3, 4, 5, 6, 7.5, 9, 10, 12, 15]);
-  return questionNumeric({
-    q: `Pentru o forță F = ${force} N, momentul este M = ${formatNumber(moment)} N·m. Calculează brațul forței.`,
-    exactAnswer: moment / force,
-    unit: "m",
-    formula: "b_F = M / F"
-  });
-}
-
-function genWeight(rng){
-  const mass = randFrom(rng, [1.5, 2, 2.5, 3, 4, 5, 6, 7.5, 8]);
-  return questionNumeric({
-    q: `Calculează greutatea unui corp cu masa m = ${formatNumber(mass)} kg.`,
-    exactAnswer: mass * G,
-    unit: "N",
-    formula: "G = m · g"
-  });
-}
-
-function genLeverForce(rng){
-  const f1 = randFrom(rng, [20, 24, 30, 36, 40, 45, 50, 60]);
-  const d1 = randFrom(rng, [0.2, 0.3, 0.4, 0.5, 0.6, 0.75, 1]);
-  const d2 = randFrom(rng, [0.25, 0.4, 0.5, 0.6, 0.75, 1, 1.2, 1.5]);
-  return questionNumeric({
-    q: `O pârghie este în echilibru. Forța F₁ = ${f1} N acționează la brațul b₁ = ${formatNumber(d1)} m, iar F₂ acționează la brațul b₂ = ${formatNumber(d2)} m. Calculează F₂.`,
-    exactAnswer: (f1 * d1) / d2,
-    unit: "N",
-    formula: "F₁ · b₁ = F₂ · b₂"
-  });
-}
-
-function genLeverArm(rng){
-  const f1 = randFrom(rng, [20, 24, 30, 36, 40, 45, 50, 60]);
-  const d1 = randFrom(rng, [0.2, 0.3, 0.4, 0.5, 0.6, 0.75, 1]);
-  const f2 = randFrom(rng, [10, 12, 15, 18, 20, 24, 25, 30]);
-  return questionNumeric({
-    q: `O pârghie este în echilibru. Forța F₁ = ${f1} N acționează la brațul b₁ = ${formatNumber(d1)} m, iar forța F₂ = ${f2} N acționează la brațul b₂. Calculează b₂.`,
-    exactAnswer: (f1 * d1) / f2,
-    unit: "m",
-    formula: "F₁ · b₁ = F₂ · b₂"
-  });
-}
-
-function genMomentDifference(rng){
-  const f1 = randFrom(rng, [10, 12, 15, 18, 20, 24, 30]);
-  const d1 = randFrom(rng, [0.2, 0.3, 0.4, 0.5, 0.6, 0.8, 1]);
-  const f2 = randFrom(rng, [8, 10, 12, 15, 16, 18, 20]);
-  const d2 = randFrom(rng, [0.2, 0.25, 0.4, 0.5, 0.6, 0.75, 1]);
-  return questionNumeric({
-    q: `Două forțe produc momente opuse: F₁ = ${f1} N la b₁ = ${formatNumber(d1)} m și F₂ = ${f2} N la b₂ = ${formatNumber(d2)} m. Calculează diferența dintre momente.`,
-    exactAnswer: Math.abs((f1 * d1) - (f2 * d2)),
-    unit: "N·m",
-    formula: "M = F · b; apoi |M₁ - M₂|"
-  });
-}
-
-function genMassFromWeight(rng){
-  const mass = randFrom(rng, [2, 3, 4, 5, 6, 7, 8, 10, 12]);
-  const weight = mass * G;
-  return questionNumeric({
-    q: `Un corp are greutatea G = ${weight} N. Calculează masa corpului.`,
-    exactAnswer: mass,
-    unit: "kg",
-    formula: "m = G / g"
-  });
-}
-
-function genBalancingForceFromMass(rng){
-  const mass = randFrom(rng, [2, 3, 4, 5, 6, 8, 10]);
-  const d1 = randFrom(rng, [0.2, 0.3, 0.4, 0.5, 0.6, 0.75, 1]);
-  const d2 = randFrom(rng, [0.25, 0.4, 0.5, 0.75, 1, 1.25]);
-  const weight = mass * G;
-  return questionNumeric({
-    q: `Pe o pârghie, un corp de masă ${mass} kg acționează la brațul ${formatNumber(d1)} m. Ce forță trebuie aplicată la brațul ${formatNumber(d2)} m pentru echilibru?`,
-    exactAnswer: (weight * d1) / d2,
-    unit: "N",
-    formula: "G · b₁ = F · b₂, unde G = m · g"
-  });
-}
-
-function genMomentFromWeight(rng){
-  const mass = randFrom(rng, [2, 3, 4, 5, 6, 8, 10, 12]);
-  const arm = randFrom(rng, [0.2, 0.3, 0.4, 0.5, 0.6, 0.75, 1]);
-  return questionNumeric({
-    q: `Un corp cu masa ${mass} kg acționează la brațul b_F = ${formatNumber(arm)} m. Calculează momentul greutății.`,
-    exactAnswer: (mass * G) * arm,
-    unit: "N·m",
-    formula: "M = G · b_F, unde G = m · g"
-  });
-}
-
-function genTotalMoment(rng){
-  const f1 = randFrom(rng, [10, 12, 15, 18, 20, 24]);
-  const d1 = randFrom(rng, [0.2, 0.3, 0.4, 0.5, 0.75]);
-  const f2 = randFrom(rng, [8, 10, 12, 15, 16, 18]);
-  const d2 = randFrom(rng, [0.2, 0.25, 0.4, 0.5, 0.75]);
-  return questionNumeric({
-    q: `Două forțe acționează în același sens de rotație: F₁ = ${f1} N la b₁ = ${formatNumber(d1)} m și F₂ = ${f2} N la b₂ = ${formatNumber(d2)} m. Calculează momentul total.`,
-    exactAnswer: (f1 * d1) + (f2 * d2),
-    unit: "N·m",
-    formula: "M₁ = F₁ · b₁, M₂ = F₂ · b₂, apoi M_total = M₁ + M₂"
-  });
-}
-
-const numericGenerators = [
-  genMoment,
-  genForceFromMoment,
-  genArmFromMoment,
-  genWeight,
-  genLeverForce,
-  genLeverArm,
-  genMomentDifference,
-  genMassFromWeight,
-  genBalancingForceFromMass,
-  genMomentFromWeight,
-  genTotalMoment
-];
-
-function generateSessionSalt(){
-  if(window.crypto && window.crypto.getRandomValues){
-    const arr = new Uint32Array(1);
-    window.crypto.getRandomValues(arr);
-    return String(arr[0]);
-  }
-  return String(Math.floor(Math.random() * 1e9));
-}
-
-function getMinuteKey(){
-  const now = new Date();
-  const pad = (n) => String(n).padStart(2, "0");
-  return `${now.getFullYear()}${pad(now.getMonth()+1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}`;
-}
-
-function buildTest(){
-  const baseKey = `${state.name}|${state.className}|${getMinuteKey()}|${state.sessionSalt}`;
-  state.seed = hashString(baseKey);
-  state.variant = (state.seed % VARIANT_COUNT) + 1;
-  state.testCode = `EC7-V${String(state.variant).padStart(3, "0")}-${shortCode(state.seed)}`;
-  const rng = mulberry32(state.seed);
-
-  const mixedPool = [
-    ...fillPool.map(item => ({...item, itemType:"fill"})),
-    ...tfPool.map(item => ({...item, itemType:"tf"}))
-  ];
-
-  const mixedQuestions = pickUnique(rng, mixedPool, MIXED_COUNT).map(item =>
-    item.itemType === "fill" ? questionFill(item) : questionTrueFalse(item)
-  );
-
-  const numericQuestions = pickUnique(rng, numericGenerators, NUMERIC_COUNT).map(fn => fn(rng));
-  state.questions = shuffleArray(rng, [...mixedQuestions, ...numericQuestions]);
-  state.currentIdx = 0;
-  state.correctAnswers = 0;
-}
-
-function showScreen(screen){
-  [el.login, el.game, el.end].forEach(node => node.classList.add("hidden"));
-  screen.classList.remove("hidden");
-
-  document.body.classList.remove("testing-mode");
-  if(screen === el.game){
-    document.body.classList.add("testing-mode");
-  }
-}
-
-function fitQuestionToViewport(){
-  const qBox = el.question;
-  if(!qBox) return;
-
-  qBox.style.fontSize = "";
-  qBox.style.lineHeight = "";
-
-  const isLandscapePhone = window.innerWidth <= 560 && window.innerWidth > window.innerHeight;
-  const startPx = isLandscapePhone ? 17 : (window.innerWidth <= 560 ? 18 : 20);
-  const minPx = isLandscapePhone ? 12.5 : 14;
-  let size = startPx;
-
-  qBox.style.fontSize = size + "px";
-  qBox.style.lineHeight = isLandscapePhone ? "1.35" : "1.45";
-
-  const inputBlock = el.inputArea ? el.inputArea.offsetHeight : 0;
-  const metaBlock = document.querySelector(".meta-row") ? document.querySelector(".meta-row").offsetHeight : 0;
-  const feedbackBlock = el.feedback && el.feedback.style.display !== "none" ? el.feedback.offsetHeight : 0;
-
-  let reserved = 250 + inputBlock + metaBlock + feedbackBlock;
-  if (isLandscapePhone) reserved = 180 + inputBlock + metaBlock + feedbackBlock;
-
-  const availableHeight = Math.max(90, window.innerHeight - reserved);
-
-  while(qBox.scrollHeight > availableHeight && size > minPx){
-    size -= 0.5;
-    qBox.style.fontSize = size + "px";
-  }
-}
-
-function showQuestion(){
-  const q = state.questions[state.currentIdx];
-  el.qInfo.textContent = `Cerința ${state.currentIdx + 1} / ${TOTAL_QUESTIONS}`;
-  el.pointsInfo.textContent = `${q.points} puncte`;
-  el.variantInfo.textContent = `Varianta ${state.variant} / ${VARIANT_COUNT}`;
-  el.testCode.textContent = state.testCode;
-  el.question.textContent = q.q;
-  el.feedback.className = "feedback";
-  el.feedback.style.display = "none";
-  el.feedback.innerHTML = "";
-  el.correctAnswerBox.className = "feedback hidden";
-  el.correctAnswerBox.innerHTML = "";
-  el.nextBtn.classList.add("hidden");
-
-  el.inputArea.innerHTML = `
-    <input type="text" id="userAnswer" placeholder="Răspuns..." autocomplete="off" />
-    <button class="btn btn-primary" id="checkBtn">Verifică</button>
+  const fixedPulleySvg = `
+    <div class="svg-wrap">
+      <svg viewBox="0 0 560 330" role="img" aria-label="Scripete fix ideal">
+        <defs>
+          <marker id="arrow" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+            <path d="M0,0 L0,6 L7,3 z" fill="#0f172a"></path>
+          </marker>
+        </defs>
+        <rect x="80" y="28" width="400" height="28" rx="8" fill="#334155"></rect>
+        <line x1="280" y1="56" x2="280" y2="83" stroke="#0f172a" stroke-width="8"></line>
+        <circle cx="280" cy="148" r="65" fill="#e2e8f0" stroke="#0f172a" stroke-width="8"></circle>
+        <circle cx="280" cy="148" r="14" fill="#0f172a"></circle>
+        <path d="M215 148 C215 83, 345 83, 345 148" fill="none" stroke="#075985" stroke-width="10" stroke-linecap="round"></path>
+        <line x1="215" y1="148" x2="215" y2="260" stroke="#075985" stroke-width="10" stroke-linecap="round"></line>
+        <line x1="345" y1="148" x2="345" y2="260" stroke="#075985" stroke-width="10" stroke-linecap="round"></line>
+        <line x1="215" y1="188" x2="215" y2="282" stroke="#dc2626" stroke-width="5" marker-end="url(#arrow)"></line>
+        <line x1="345" y1="188" x2="345" y2="282" stroke="#16a34a" stroke-width="5" marker-end="url(#arrow)"></line>
+        <text x="185" y="308" font-size="28" fill="#0f172a" font-weight="800">R</text>
+        <text x="360" y="308" font-size="28" fill="#0f172a" font-weight="800">F</text>
+        <text x="230" y="154" font-size="24" fill="#0f172a" font-weight="800">r</text>
+        <text x="206" y="92" font-size="20" fill="#0f172a" font-weight="700">scripete fix</text>
+      </svg>
+      <div class="media-caption">Reprezentare: scripete fix ideal, cu forța activă \(F\) și forța rezistentă \(R\).</div>
+    </div>
   `;
 
-  const answerInput = document.getElementById("userAnswer");
-  const checkBtn = document.getElementById("checkBtn");
-
-  checkBtn.addEventListener("click", checkAnswer);
-  answerInput.addEventListener("keydown", (event) => {
-    if(event.key === "Enter") checkAnswer();
-  });
-  answerInput.focus();
-  requestAnimationFrame(fitQuestionToViewport);
-}
-
-function numericAccepted(userValue, exactAnswer, unit = ""){
-  const split = splitNumericAndUnit(userValue);
-  if(!split.numberPart) return false;
-  if(decimalCount(split.numberPart) > 3) return false;
-
-  const userNum = parseLocaleNumber(split.numberPart);
-  if(Number.isNaN(userNum)) return false;
-
-  const expectedUnit = normalizeUnit(unit);
-  const typedUnit = normalizeUnit(split.unitPart);
-
-  if(typedUnit && expectedUnit && typedUnit !== expectedUnit) return false;
-  if(typedUnit && !expectedUnit) return false;
-
-  const accepted = new Set([
-    exactAnswer,
-    truncateTo(exactAnswer, 3),
-    roundTo(exactAnswer, 3)
-  ].map(n => Number(n.toFixed(9))));
-
-  return accepted.has(Number(userNum.toFixed(9)));
-}
-
-function evaluateAnswer(userValue, q){
-  if(q.type === "fill" || q.type === "tf"){
-    const clean = normalizeText(userValue);
-    return q.answers.some(ans => normalizeText(ans) === clean);
-  }
-  if(q.type === "numeric"){
-    return numericAccepted(userValue, q.exactAnswer, q.unit);
-  }
-  return false;
-}
-
-function checkAnswer(){
-  const q = state.questions[state.currentIdx];
-  const answerInput = document.getElementById("userAnswer");
-  const userValue = answerInput.value;
-
-  if(!String(userValue).trim()){
-    el.feedback.className = "feedback warn";
-    el.feedback.innerHTML = "Scrie un răspuns înainte de verificare.";
-    return;
+  function randInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  const correct = evaluateAnswer(userValue, q);
-
-  answerInput.disabled = true;
-  const checkBtn = document.getElementById("checkBtn");
-  checkBtn.disabled = true;
-  checkBtn.classList.add("btn-disabled");
-
-  let answerText = "";
-  if(q.type === "numeric"){
-    answerText = q.displayAnswer;
-  } else {
-    answerText = q.answers[0];
+  function choice(arr) {
+    return arr[randInt(0, arr.length - 1)];
   }
 
-  if(correct){
-    state.correctAnswers++;
-    el.feedback.className = "feedback ok";
-    el.feedback.innerHTML = `Corect ✅<br>+${q.points} puncte`;
-  } else {
-    el.feedback.className = "feedback bad";
-    if(q.type === "numeric"){
-      el.feedback.innerHTML = `Greșit ❌<br>Formula: <strong>${q.formula}</strong>`;
-    } else {
-      el.feedback.innerHTML = `Greșit ❌`;
+  function roundTo(value, digits = 3) {
+    const p = Math.pow(10, digits);
+    return Math.round((value + Number.EPSILON) * p) / p;
+  }
+
+  function formatNumber(value, digits = 3) {
+    const rounded = roundTo(value, digits);
+    return Number.isInteger(rounded) ? String(rounded) : String(rounded).replace(".", ",");
+  }
+
+  function parseNumber(input) {
+    if (!input) return NaN;
+    const cleaned = String(input)
+      .toLowerCase()
+      .replace(",", ".")
+      .replace(/n\s*·?\s*m|n\*m|nm|n|m|cm|dm/g, "")
+      .replace(/[^\d.+\-*/()]/g, "");
+    if (!cleaned.trim()) return NaN;
+    if (!/^[\d.+\-*/()\s]+$/.test(cleaned)) return NaN;
+    try {
+      const value = Function('"use strict"; return (' + cleaned + ')')();
+      return Number(value);
+    } catch (err) {
+      return NaN;
     }
   }
 
-  el.correctAnswerBox.className = "feedback show";
-  el.correctAnswerBox.innerHTML = `Răspuns corect: <strong>${answerText}</strong>`;
-
-  el.nextBtn.classList.remove("hidden");
-  requestAnimationFrame(fitQuestionToViewport);
-}
-
-function nextQuestion(){
-  state.currentIdx++;
-  if(state.currentIdx < TOTAL_QUESTIONS){
-    showQuestion();
-  } else {
-    finishGame();
-  }
-}
-
-function finishGame(){
-  const points = state.correctAnswers * POINTS_PER_ITEM;
-  const grade = (1 + (points * 9) / TOTAL_POINTS).toFixed(2);
-
-  showScreen(el.end);
-  el.finalScore.textContent = `${points}p`;
-  el.rawPoints.textContent = `Scor: ${state.correctAnswers} / ${TOTAL_QUESTIONS} răspunsuri corecte • ${points} / ${TOTAL_POINTS} puncte.`;
-  el.finalGrade.textContent = `Notă orientativă: ${grade}`;
-  el.endVariant.textContent = `Varianta ${state.variant} din ${VARIANT_COUNT}`;
-  el.endCode.textContent = `Cod test: ${state.testCode}`;
-}
-
-async function startGame(){
-  state.name = el.stdName.value.trim();
-  state.className = el.stdClass.value;
-  state.sessionSalt = generateSessionSalt();
-
-  if(!state.name || !state.className){
-    alert("Completează numele și clasa!");
-    return;
+  function normalizeText(input) {
+    return String(input || "")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
   }
 
-  buildTest();
-  showScreen(el.game);
-  showQuestion();
-}
+  function showScreen(id) {
+    document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
 
-function restartApp(){
-  showScreen(el.login);
-  el.stdName.focus();
-}
+  function typeset() {
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      window.MathJax.typesetPromise();
+    }
+  }
 
-window.addEventListener("resize", fitQuestionToViewport);
-window.addEventListener("orientationchange", () => setTimeout(fitQuestionToViewport, 100));
+  function startTest() {
+    const school = document.getElementById("schoolInput").value.trim();
+    const name = document.getElementById("nameInput").value.trim();
+    const className = document.getElementById("classInput").value;
+    const mode = document.getElementById("modeInput").value;
 
-el.startBtn.addEventListener("click", startGame);
-el.nextBtn.addEventListener("click", nextQuestion);
-el.restartBtn.addEventListener("click", restartApp);
+    if (!school) {
+      alert("Completează antetul școlii.");
+      return;
+    }
+    if (!name) {
+      alert("Completează numele și prenumele.");
+      return;
+    }
+    if (!className) {
+      alert("Alege clasa.");
+      return;
+    }
+
+    state.school = school;
+    state.name = name;
+    state.className = className;
+    state.mode = mode;
+    state.questions = [
+      makeMomentQuestion(),
+      makeDiscQuestion(),
+      makeLeverQuestion(),
+      makePulleyQuestion()
+    ];
+    state.current = 0;
+    state.score = 0;
+    state.locked = false;
+    state.answered = Array(TOTAL_QUESTIONS).fill(false);
+
+    showScreen("screen-test");
+    renderQuestion();
+  }
+
+  function makeMomentQuestion() {
+    const variant = choice(["M", "F", "b"]);
+    const F = randInt(2, 12) * 10;              // 20...120 N
+    const bCm = randInt(10, 80);                // 10...80 cm
+    const bM = bCm / 100;
+    const M = roundTo(F * bM, 3);
+
+    let ask = "";
+    let expected = M;
+    let unit = "N·m";
+    let known = `Forța este \\(F=${F}\\,\\text{N}\\), iar brațul forței este \\(b_F=${bCm}\\,\\text{cm}\\).`;
+
+    if (variant === "M") {
+      ask = `Calculează momentul forței.`;
+      expected = M;
+      unit = "N·m";
+    } else if (variant === "F") {
+      ask = `Calculează mărimea forței \\(F\\).`;
+      known = `Momentul forței este \\(M=${formatNumber(M)}\\,\\text{N}\\cdot\\text{m}\\), iar brațul forței este \\(b_F=${bCm}\\,\\text{cm}\\).`;
+      expected = F;
+      unit = "N";
+    } else {
+      ask = `Calculează brațul forței \\(b_F\\), în centimetri.`;
+      known = `Momentul forței este \\(M=${formatNumber(M)}\\,\\text{N}\\cdot\\text{m}\\), iar forța este \\(F=${F}\\,\\text{N}\\).`;
+      expected = bCm;
+      unit = "cm";
+    }
+
+    return {
+      title: "Problema 1 – Momentul unei forțe",
+      points: POINTS_PER_QUESTION,
+      type: "numeric",
+      expected,
+      unit,
+      tolerance: variant === "b" ? 0.06 : 0.03,
+      statementHTML: `
+        <p>${known}</p>
+        <p><strong>Cerință aleatorie:</strong> ${ask}</p>
+      `,
+      formulaHTML: `
+        <div class="formula-panel">
+          <strong>Relație:</strong> \\(M=F\\cdot b_F\\).
+          <span class="small">Atenție: \\(25\\,\\text{cm}=0{,}25\\,\\text{m}\\), iar \\(b_F=\\frac{M}{F}\\).</span>
+        </div>
+      `,
+      mediaHTML: "",
+      explanation: () => {
+        if (variant === "M") return `Transformăm brațul: ${bCm} cm = ${formatNumber(bM)} m. Rezultă M = ${F} · ${formatNumber(bM)} = ${formatNumber(M)} N·m.`;
+        if (variant === "F") return `Folosim F = M / bF = ${formatNumber(M)} / ${formatNumber(bM)} = ${formatNumber(F)} N.`;
+        return `Folosim bF = M / F = ${formatNumber(M)} / ${F} = ${formatNumber(bM)} m = ${formatNumber(bCm)} cm.`;
+      }
+    };
+  }
+
+  function makeDiscQuestion() {
+    const variant = choice(["state", "F1", "F2", "F3"]);
+    const rDm = randInt(2, 8); // 2...8 dm
+    const rM = rDm / 10;
+
+    let F1, F2, F3, expected, unit = "N", type = "numeric", options = null, correctIndex = null, ask = "";
+
+    if (variant === "state") {
+      F1 = randInt(10, 80);
+      F2 = randInt(3, 20) * 4;
+      F3 = randInt(20, 110);
+      const anti = F1 * rM + F2 * (rM / 4);
+      const clockwise = F3 * (rM / 2);
+      const diff = roundTo(anti - clockwise, 4);
+      if (Math.abs(diff) < 0.05) F3 += 7;
+
+      const anti2 = F1 * rM + F2 * (rM / 4);
+      const clockwise2 = F3 * (rM / 2);
+
+      options = [
+        "Da, discul este în echilibru; nu se rotește.",
+        "Nu, discul se rotește în sens orar.",
+        "Nu, discul se rotește în sens antiorar."
+      ];
+
+      if (Math.abs(anti2 - clockwise2) < 0.05) correctIndex = 0;
+      else if (clockwise2 > anti2) correctIndex = 1;
+      else correctIndex = 2;
+
+      type = "radio";
+      expected = correctIndex;
+      ask = "Stabilește dacă discul este în echilibru de rotație și precizează sensul de rotație.";
+    } else {
+      const hiddenF1 = randInt(10, 60);
+      const hiddenF2 = randInt(3, 20) * 4;
+      const hiddenF3 = 2 * hiddenF1 + hiddenF2 / 2; // din F1*r + F2*r/4 = F3*r/2
+      F1 = hiddenF1;
+      F2 = hiddenF2;
+      F3 = hiddenF3;
+
+      if (variant === "F1") {
+        F1 = "?";
+        expected = hiddenF1;
+        ask = "Află mărimea forței \\(F_1\\) pentru ca discul să fie în echilibru.";
+      } else if (variant === "F2") {
+        F2 = "?";
+        expected = hiddenF2;
+        ask = "Află mărimea forței \\(F_2\\) pentru ca discul să fie în echilibru.";
+      } else {
+        F3 = "?";
+        expected = hiddenF3;
+        ask = "Află mărimea forței \\(F_3\\) pentru ca discul să fie în echilibru.";
+      }
+    }
+
+    const knownLine = `\\(r=${rDm}\\,\\text{dm}\\), \\(OA=r\\), \\(OC=\\frac{r}{2}\\), \\(OB=\\frac{r}{4}\\), \\(F_1=${F1}\\,\\text{N}\\), \\(F_2=${F2}\\,\\text{N}\\), \\(F_3=${F3}\\,\\text{N}\\).`;
+
+    return {
+      title: "Problema 2 – Disc supus la trei forțe",
+      points: POINTS_PER_QUESTION,
+      type,
+      expected,
+      unit,
+      tolerance: 0.05,
+      options,
+      correctIndex,
+      statementHTML: `
+        <p>În imagine, \\(F_1\\) și \\(F_2\\) rotesc discul în sens antiorar, iar \\(F_3\\) rotește discul în sens orar.</p>
+        <p>Se știe că: ${knownLine}</p>
+        <p><strong>Cerință aleatorie:</strong> ${ask}</p>
+      `,
+      mediaHTML: `
+        <div class="media-box">
+          <img src="${IMG_BASE}disc-1.png" alt="Disc cu forțele F1, F2 și F3 aplicate în punctele A, B și C">
+          <div class="media-caption">Imagine pentru problema discului: \(OA=r\), \(OC=\frac{r}{2}\), \(OB=\frac{r}{4}\).</div>
+        </div>
+      `,
+      formulaHTML: `
+        <div class="formula-panel">
+          <strong>Condiția de echilibru:</strong>
+          \\(M_{antiorar}=M_{orar}\\), adică
+          \\(F_1\\cdot r + F_2\\cdot \\frac{r}{4}=F_3\\cdot \\frac{r}{2}\\).
+        </div>
+      `,
+      explanation: () => {
+        const visibleF1 = typeof F1 === "number" ? F1 : expected;
+        const visibleF2 = typeof F2 === "number" ? F2 : expected;
+        const visibleF3 = typeof F3 === "number" ? F3 : expected;
+        const anti = roundTo(visibleF1 * rM + visibleF2 * (rM / 4), 3);
+        const clockwise = roundTo(visibleF3 * (rM / 2), 3);
+        if (variant === "state") {
+          if (Math.abs(anti - clockwise) < 0.05) return `M antiorar = ${formatNumber(anti)} N·m și M orar = ${formatNumber(clockwise)} N·m, deci discul este în echilibru.`;
+          return `M antiorar = ${formatNumber(anti)} N·m, M orar = ${formatNumber(clockwise)} N·m. Momentul mai mare dă sensul de rotație.`;
+        }
+        if (variant === "F1") return `F1 = F3/2 - F2/4 = ${visibleF3}/2 - ${visibleF2}/4 = ${formatNumber(expected)} N.`;
+        if (variant === "F2") return `F2 = 4·(F3/2 - F1) = 4·(${visibleF3}/2 - ${visibleF1}) = ${formatNumber(expected)} N.`;
+        return `F3 = 2·(F1 + F2/4) = 2·(${visibleF1} + ${visibleF2}/4) = ${formatNumber(expected)} N.`;
+      }
+    };
+  }
+
+  function makeLeverQuestion() {
+    const variant = choice(["R", "F", "bR", "bF"]);
+    const baseF = randInt(4, 16) * 10;       // 40...160 N
+    const baseBF = randInt(4, 16) * 5;       // 20...80 cm
+    const baseBR = randInt(2, 9) * 5;        // 10...45 cm
+    const baseR = roundTo((baseF * baseBF) / baseBR, 2);
+
+    let F = baseF, bF = baseBF, bR = baseBR, R = baseR, expected, unit, ask;
+
+    if (variant === "R") {
+      R = "?";
+      expected = baseR;
+      unit = "N";
+      ask = "Află valoarea forței rezistente \\(R\\).";
+    } else if (variant === "F") {
+      F = "?";
+      expected = roundTo((baseR * baseBR) / baseBF, 3);
+      unit = "N";
+      ask = "Află valoarea forței active \\(F\\).";
+    } else if (variant === "bR") {
+      bR = "?";
+      expected = roundTo((baseF * baseBF) / baseR, 3);
+      unit = "cm";
+      ask = "Află brațul forței rezistente \\(b_R\\), în centimetri.";
+    } else {
+      bF = "?";
+      expected = roundTo((baseR * baseBR) / baseF, 3);
+      unit = "cm";
+      ask = "Află brațul forței active \\(b_F\\), în centimetri.";
+    }
+
+    return {
+      title: "Problema 3 – Pârghie în echilibru",
+      points: POINTS_PER_QUESTION,
+      type: "numeric",
+      expected,
+      unit,
+      tolerance: 0.08,
+      statementHTML: `
+        <p>Asupra pârghiei din imagine acționează forța activă \\(F\\), forța rezistentă \\(R\\), brațul activ \\(b_F\\) și brațul rezistent \\(b_R\\).</p>
+        <p>Date: \\(F=${F}\\,\\text{N}\\), \\(R=${R}\\,\\text{N}\\), \\(b_F=${bF}\\,\\text{cm}\\), \\(b_R=${bR}\\,\\text{cm}\\).</p>
+        <p><strong>Cerință aleatorie:</strong> ${ask}</p>
+      `,
+      mediaHTML: `
+        <div class="media-box">
+          <img src="${IMG_BASE}parghia-1.png" alt="Pârghie cu punct de sprijin O, forța R la B și forța F la A">
+          <div class="media-caption">Imagine pentru problema pârghiei: condiția de echilibru se scrie față de punctul \(O\).</div>
+        </div>
+      `,
+      formulaHTML: `
+        <div class="formula-panel">
+          <strong>Legea pârghiei:</strong> \\(F\\cdot b_F=R\\cdot b_R\\).
+          <span class="small">De exemplu, \\(R=\\frac{F\\cdot b_F}{b_R}\\).</span>
+        </div>
+      `,
+      explanation: () => {
+        if (variant === "R") return `R = F·bF / bR = ${baseF}·${baseBF}/${baseBR} = ${formatNumber(expected)} N.`;
+        if (variant === "F") return `F = R·bR / bF = ${formatNumber(baseR)}·${baseBR}/${baseBF} = ${formatNumber(expected)} N.`;
+        if (variant === "bR") return `bR = F·bF / R = ${baseF}·${baseBF}/${formatNumber(baseR)} = ${formatNumber(expected)} cm.`;
+        return `bF = R·bR / F = ${formatNumber(baseR)}·${baseBR}/${baseF} = ${formatNumber(expected)} cm.`;
+      }
+    };
+  }
+
+  function makePulleyQuestion() {
+    const options = [
+      "\\(F=R\\)",
+      "\\(F=2R\\)",
+      "\\(F=\\frac{R}{2}\\)",
+      "\\(F\\cdot 2r=R\\cdot r\\)"
+    ];
+
+    return {
+      title: "Problema 4 – Scripetele fix",
+      points: POINTS_PER_QUESTION,
+      type: "radio",
+      expected: 0,
+      unit: "",
+      options,
+      correctIndex: 0,
+      statementHTML: `
+        <p>Reprezintă în caiet un scripete fix, apoi alege legea corectă pentru scripetele fix ideal.</p>
+        <p>Indiciu: în scripetele fix ideal, cele două brațe ale forțelor sunt egale cu raza \\(r\\).</p>
+      `,
+      mediaHTML: fixedPulleySvg,
+      formulaHTML: `
+        <div class="formula-panel">
+          <strong>Model de raționament:</strong>
+          \\(M_F(O)=M_R(O)\\Rightarrow F\\cdot r=R\\cdot r\\Rightarrow F=\\frac{R\\cdot r}{r}=R\\).
+        </div>
+      `,
+      explanation: () => "La scripetele fix ideal nu se câștigă forță: forța activă este egală cu forța rezistentă, F = R. Avantajul este schimbarea direcției forței."
+    };
+  }
+
+  function renderQuestion() {
+    const q = state.questions[state.current];
+    state.locked = false;
+
+    document.getElementById("progressText").textContent = `Problema ${state.current + 1} / ${TOTAL_QUESTIONS}`;
+    document.getElementById("scoreText").textContent = `Punctaj: ${state.score} / 100`;
+    document.getElementById("progressFill").style.width = `${(state.current / TOTAL_QUESTIONS) * 100}%`;
+
+    document.getElementById("questionTitle").textContent = q.title;
+    document.getElementById("pointsPill").textContent = `${q.points} puncte`;
+    document.getElementById("mediaArea").innerHTML = q.mediaHTML || "";
+    document.getElementById("statementArea").innerHTML = q.statementHTML;
+    document.getElementById("formulaArea").innerHTML = q.formulaHTML || "";
+
+    const answerArea = document.getElementById("answerArea");
+    if (q.type === "numeric") {
+      answerArea.innerHTML = `
+        <div class="numeric-row">
+          <input id="numericAnswer" type="text" inputmode="decimal" placeholder="Scrie rezultatul numeric" autocomplete="off">
+          <div class="unit-badge">${q.unit}</div>
+        </div>
+        <p class="small muted">Poți scrie cu virgulă sau punct. Exemplu: 10,5 sau 10.5.</p>
+      `;
+      setTimeout(() => document.getElementById("numericAnswer").focus(), 50);
+    } else if (q.type === "radio") {
+      answerArea.innerHTML = `
+        <div class="option-grid">
+          ${q.options.map((option, index) => `
+            <label class="option-label">
+              <input type="radio" name="answerOption" value="${index}">
+              <span>${String.fromCharCode(65 + index)}. ${option}</span>
+            </label>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    const feedback = document.getElementById("feedback");
+    feedback.className = "feedback";
+    feedback.style.display = "none";
+    feedback.innerHTML = "";
+
+    document.getElementById("checkBtn").disabled = false;
+    document.getElementById("nextBtn").disabled = true;
+    document.getElementById("nextBtn").textContent = state.current === TOTAL_QUESTIONS - 1 ? "Finalizează testul" : "Mergi mai departe";
+
+    typeset();
+  }
+
+  function checkAnswer() {
+    if (state.locked) return;
+
+    const q = state.questions[state.current];
+    let isCorrect = false;
+    let userText = "";
+
+    if (q.type === "numeric") {
+      const input = document.getElementById("numericAnswer");
+      userText = input.value;
+      const userNumber = parseNumber(userText);
+      if (Number.isNaN(userNumber)) {
+        showFeedback("neutral", "Scrie un număr valid înainte de verificare.");
+        return;
+      }
+      const tolerance = q.tolerance || 0.05;
+      isCorrect = Math.abs(userNumber - q.expected) <= tolerance;
+    } else if (q.type === "radio") {
+      const selected = document.querySelector('input[name="answerOption"]:checked');
+      if (!selected) {
+        showFeedback("neutral", "Alege o variantă înainte de verificare.");
+        return;
+      }
+      userText = selected.value;
+      isCorrect = Number(selected.value) === q.correctIndex;
+    } else {
+      userText = normalizeText(document.getElementById("textAnswer").value);
+      isCorrect = q.accepted.some(ans => normalizeText(ans) === userText);
+    }
+
+    state.locked = true;
+    if (isCorrect) {
+      state.score += q.points;
+      state.answered[state.current] = true;
+      showFeedback("good", `Corect! Ai primit ${q.points} puncte.<br><span class="small">${q.explanation()}</span>`);
+    } else {
+      const correct = q.type === "radio" ? q.options[q.correctIndex] : `${formatNumber(q.expected)} ${q.unit}`;
+      showFeedback("bad", `Răspuns incorect. Răspuns corect: <strong>${correct}</strong>.<br><span class="small">${q.explanation()}</span>`);
+    }
+
+    document.getElementById("scoreText").textContent = `Punctaj: ${state.score} / 100`;
+    document.getElementById("checkBtn").disabled = true;
+    document.getElementById("nextBtn").disabled = false;
+    typeset();
+  }
+
+  function showFeedback(kind, message) {
+    const feedback = document.getElementById("feedback");
+    feedback.className = `feedback ${kind}`;
+    feedback.style.display = "block";
+    feedback.innerHTML = message;
+  }
+
+  function goNext() {
+    if (state.current < TOTAL_QUESTIONS - 1) {
+      state.current += 1;
+      renderQuestion();
+    } else {
+      finishTest();
+    }
+  }
+
+  function finishTest() {
+    document.getElementById("progressFill").style.width = "100%";
+    const attempts = saveAttempt(state.score);
+    const lastFour = attempts.slice(-4);
+    const average = lastFour.length === 4 ? roundTo(lastFour.reduce((sum, item) => sum + item.score, 0) / 4, 2) : null;
+
+    document.getElementById("finalScore").textContent = `${state.score} / 100`;
+    document.getElementById("finalDetails").textContent = `${state.name}, clasa ${state.className}: ai obținut ${state.score} puncte din 100.`;
+    document.getElementById("attemptCount").textContent = String(attempts.length);
+
+    const remaining = Math.max(0, 4 - attempts.length);
+    document.getElementById("diplomaStatus").textContent = remaining === 0 ? "disponibilă" : `încă ${remaining}`;
+
+    const printBtn = document.getElementById("printBtn");
+    if (attempts.length >= 4 && average !== null) {
+      fillCertificate(lastFour, average);
+      document.getElementById("certificate").classList.add("active");
+      printBtn.disabled = false;
+    } else {
+      document.getElementById("certificate").classList.remove("active");
+      printBtn.disabled = true;
+    }
+
+    showScreen("screen-end");
+  }
+
+  function storageKey() {
+    const raw = `${state.name}|${state.className}`.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    return "echilibrul-corpurilor-test-final-v1:" + raw.replace(/[^a-z0-9|]+/g, "-");
+  }
+
+  function saveAttempt(score) {
+    const key = storageKey();
+    const attempts = JSON.parse(localStorage.getItem(key) || "[]");
+    attempts.push({
+      score,
+      date: new Date().toISOString(),
+      school: state.school,
+      name: state.name,
+      className: state.className
+    });
+    localStorage.setItem(key, JSON.stringify(attempts));
+    return attempts;
+  }
+
+  function fillCertificate(lastFour, average) {
+    document.getElementById("certSchool").textContent = state.school;
+    document.getElementById("certName").textContent = state.name;
+    document.getElementById("certClass").textContent = state.className;
+    document.getElementById("certAverage").textContent = `Punctaj mediu: ${formatNumber(average, 2)} / 100`;
+    document.getElementById("certAttempts").textContent = `Încercări luate în calcul: ${lastFour.map(item => item.score + "/100").join(", ")}`;
+    document.getElementById("certDate").textContent = new Date().toLocaleDateString("ro-RO");
+  }
+
+  function restartTest() {
+    showScreen("screen-start");
+  }
+
+  function resetAttempts() {
+    if (!state.name || !state.className) {
+      alert("Completează numele și clasa, apoi poți reseta încercările.");
+      return;
+    }
+    if (confirm("Sigur vrei să ștergi încercările salvate local pentru acest elev?")) {
+      localStorage.removeItem(storageKey());
+      alert("Încercările au fost resetate.");
+      showScreen("screen-start");
+    }
+  }
 </script>
 </body>
 </html>

@@ -1,1 +1,1256 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>VITEZA ȘI DENSITATEA - învățăm să calculăm pas cu pas</title>
 
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --dark: #020617;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --line: #334155;
+      --cyan: #22d3ee;
+      --green: #22c55e;
+      --red: #ef4444;
+      --yellow: #facc15;
+      --purple: #c084fc;
+      --orange: #fb923c;
+      --blue: #60a5fa;
+      --pink: #f472b6;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      font-size: 18px;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.16), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(192, 132, 252, 0.16), transparent 38%),
+        var(--bg);
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 760px;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; animation: fadeIn .25s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .header {
+      background: linear-gradient(135deg, rgba(34, 211, 238, 0.18), rgba(34, 197, 94, 0.12));
+      border: 1px solid rgba(34, 211, 238, 0.45);
+      border-radius: 24px;
+      padding: 18px;
+      text-align: center;
+      margin-bottom: 14px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, .28);
+    }
+
+    .header .small {
+      color: var(--muted);
+      font-size: clamp(1rem, 2.8vw, 1.15rem);
+      line-height: 1.45;
+    }
+
+    h1 {
+      margin: 8px 0 10px;
+      font-size: clamp(1.65rem, 6vw, 2.75rem);
+      line-height: 1.08;
+      letter-spacing: .02em;
+      color: #ffffff;
+    }
+
+    h2 {
+      font-size: clamp(1.35rem, 4.6vw, 2rem);
+      margin: 0 0 12px;
+      line-height: 1.15;
+    }
+
+    .card {
+      background: rgba(30, 41, 59, .96);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: clamp(16px, 4vw, 28px);
+      box-shadow: 0 20px 55px rgba(0,0,0,.35);
+    }
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .color-box {
+      border-radius: 18px;
+      padding: 14px;
+      font-size: clamp(1.05rem, 3.8vw, 1.25rem);
+      line-height: 1.35;
+      border: 1px solid rgba(255,255,255,.15);
+    }
+
+    .box-cyan { background: rgba(34, 211, 238, .14); }
+    .box-green { background: rgba(34, 197, 94, .14); }
+    .box-yellow { background: rgba(250, 204, 21, .14); }
+
+    label {
+      display: block;
+      font-size: clamp(1.02rem, 3.8vw, 1.25rem);
+      color: #eef2ff;
+      margin-bottom: 8px;
+      font-weight: 750;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      border: 2px solid #475569;
+      border-radius: 16px;
+      background: var(--dark);
+      color: white;
+      padding: 15px 16px;
+      font-size: clamp(1.12rem, 4vw, 1.45rem);
+      outline: none;
+      text-align: center;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 0 4px rgba(34, 211, 238, .16);
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    button {
+      width: 100%;
+      border: 0;
+      border-radius: 18px;
+      padding: 16px 18px;
+      font-size: clamp(1.12rem, 4.2vw, 1.35rem);
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform .15s ease, filter .15s ease, opacity .15s ease;
+      min-height: 58px;
+    }
+
+    button:hover { transform: translateY(-1px); filter: brightness(1.04); }
+    button:active { transform: translateY(0); }
+    button:disabled { opacity: .48; cursor: not-allowed; transform: none; }
+
+    .primary-btn { background: var(--cyan); color: #06202a; }
+    .success-btn { background: var(--green); color: #04130a; }
+    .ghost-btn { background: #e2e8f0; color: #111827; }
+    .print-btn { background: var(--yellow); color: #231a00; }
+
+    .topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-size: clamp(.95rem, 3vw, 1.05rem);
+    }
+
+    .progress-wrap {
+      width: 100%;
+      height: 12px;
+      background: var(--dark);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid #334155;
+      margin-bottom: 14px;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--green));
+      border-radius: 999px;
+      transition: width .25s ease;
+    }
+
+    .problem-card {
+      border-radius: 22px;
+      padding: 16px;
+      margin-bottom: 14px;
+      border: 2px solid rgba(255,255,255,.12);
+      background: linear-gradient(135deg, var(--stepColor, rgba(34,211,238,.18)), rgba(15,23,42,.7));
+    }
+
+    .problem-number {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      background: rgba(2, 6, 23, .78);
+      color: white;
+      padding: 8px 12px;
+      font-size: clamp(.95rem, 3vw, 1.05rem);
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .problem-text {
+      font-size: clamp(1.18rem, 4.4vw, 1.55rem);
+      line-height: 1.38;
+      font-weight: 760;
+      color: #ffffff;
+    }
+
+    .step-box {
+      background: rgba(15, 23, 42, .92);
+      border: 1px solid #475569;
+      border-radius: 22px;
+      padding: 16px;
+      margin-top: 12px;
+    }
+
+    .step-title {
+      color: var(--yellow);
+      font-size: clamp(1.1rem, 4vw, 1.35rem);
+      font-weight: 950;
+      margin-bottom: 8px;
+    }
+
+    .prompt {
+      color: #ffffff;
+      font-size: clamp(1.2rem, 4.7vw, 1.7rem);
+      line-height: 1.35;
+      margin: 6px 0 14px;
+      font-weight: 780;
+    }
+
+    .formula-note {
+      background: rgba(96, 165, 250, .13);
+      border: 1px solid rgba(96, 165, 250, .4);
+      border-radius: 16px;
+      padding: 12px;
+      margin: 12px 0;
+      color: #dbeafe;
+      font-size: clamp(1rem, 3.4vw, 1.18rem);
+      line-height: 1.4;
+    }
+
+    .answer-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin: 12px 0;
+    }
+
+    .mini-field {
+      background: rgba(255,255,255,.045);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 18px;
+      padding: 12px;
+    }
+
+    .unit {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 1rem;
+      text-align: center;
+      font-weight: 700;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .choice {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: center;
+      gap: 12px;
+      background: var(--dark);
+      color: #ffffff;
+      border: 2px solid #475569;
+      border-radius: 18px;
+      padding: 14px;
+      font-size: clamp(1.12rem, 4vw, 1.35rem);
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .choice input { width: 24px; height: 24px; accent-color: var(--cyan); }
+
+    .feedback {
+      display: none;
+      border-radius: 18px;
+      padding: 14px;
+      margin: 14px 0;
+      font-size: clamp(1.05rem, 3.8vw, 1.28rem);
+      line-height: 1.35;
+      font-weight: 850;
+    }
+
+    .feedback.ok {
+      display: block;
+      background: rgba(34,197,94,.17);
+      border: 1px solid rgba(34,197,94,.55);
+      color: #dcfce7;
+    }
+
+    .feedback.bad {
+      display: block;
+      background: rgba(239,68,68,.16);
+      border: 1px solid rgba(239,68,68,.55);
+      color: #fee2e2;
+    }
+
+    .feedback.warn {
+      display: block;
+      background: rgba(250,204,21,.15);
+      border: 1px solid rgba(250,204,21,.55);
+      color: #fef9c3;
+    }
+
+    .shake { animation: shake .32s ease; }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-7px); }
+      50% { transform: translateX(7px); }
+      75% { transform: translateX(-4px); }
+    }
+
+    .success-pop { animation: pop .35s ease; }
+    @keyframes pop {
+      0% { transform: scale(1); }
+      45% { transform: scale(1.025); }
+      100% { transform: scale(1); }
+    }
+
+    .confetti-piece {
+      position: fixed;
+      top: -12px;
+      width: 10px;
+      height: 16px;
+      border-radius: 4px;
+      animation: confettiFall 900ms ease-in forwards;
+      z-index: 999;
+      pointer-events: none;
+    }
+
+    @keyframes confettiFall {
+      to { transform: translateY(105vh) rotate(540deg); opacity: 0; }
+    }
+
+    .score-box {
+      text-align: center;
+      border-radius: 22px;
+      padding: 18px;
+      background: rgba(34, 211, 238, .12);
+      border: 1px solid rgba(34, 211, 238, .45);
+      margin: 14px 0;
+    }
+
+    .grade {
+      font-size: clamp(3rem, 13vw, 5.2rem);
+      font-weight: 1000;
+      color: var(--yellow);
+      line-height: 1;
+      margin: 10px 0;
+    }
+
+    .diploma {
+      margin: 18px 0;
+      padding: clamp(18px, 5vw, 30px);
+      border: 5px double #facc15;
+      border-radius: 24px;
+      background:
+        linear-gradient(135deg, rgba(250, 204, 21, .16), rgba(34, 211, 238, .12)),
+        #111827;
+      color: #ffffff;
+      text-align: center;
+    }
+
+    .diploma h2 {
+      color: #facc15;
+      font-size: clamp(1.7rem, 6vw, 2.6rem);
+      margin-bottom: 8px;
+    }
+
+    .diploma .name {
+      font-size: clamp(1.6rem, 6vw, 2.4rem);
+      color: #ffffff;
+      font-weight: 1000;
+      margin: 12px 0;
+      text-transform: uppercase;
+    }
+
+    .end-message {
+      font-size: clamp(1.1rem, 4vw, 1.35rem);
+      line-height: 1.45;
+      color: #f8fafc;
+      text-align: center;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (min-width: 640px) {
+      .intro-grid { grid-template-columns: repeat(3, 1fr); }
+      .answer-grid.two { grid-template-columns: repeat(2, 1fr); }
+      .choice-grid { grid-template-columns: 1fr 1fr; }
+      .button-row.two { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media print {
+      body { background: white; color: black; display: block; padding: 0; }
+      .screen:not(#finalScreen), .no-print { display: none !important; }
+      #finalScreen { display: block !important; }
+      .app { max-width: 100%; }
+      .card, .header, .diploma { box-shadow: none; color: black; background: white; border-color: #111; }
+      .diploma { color: black; border-color: #111; }
+      .diploma h2, .grade { color: #111; }
+      .end-message, .header .small { color: #111; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section id="startScreen" class="screen active">
+      <div class="header">
+        <div class="small">Fișă de lucru interactivă</div>
+        <h1>VITEZA ȘI DENSITATEA</h1>
+        <div class="small">învățăm să calculăm pas cu pas</div>
+        <div class="small" style="margin-top:12px;"><strong>Prof. Dănuț Andronie</strong><br>email: danutmg@gmail.com</div>
+      </div>
+
+      <div class="card">
+        <h2>Salut! Azi rezolvăm pe pași.</h2>
+        <div class="intro-grid">
+          <div class="color-box box-cyan">📘 Completezi un pas.</div>
+          <div class="color-box box-green">✅ Verifici răspunsul.</div>
+          <div class="color-box box-yellow">➡️ Treci mai departe doar dacă este corect.</div>
+        </div>
+
+        <div class="formula-note">
+          Datele sunt generate aleatoriu, dar calculele sunt alese astfel încât împărțirile să fie exacte sau rezultatele să aibă cel mult o zecimală.
+          Poți scrie numerele cu punct sau cu virgulă. Exemplu: $v=\frac{d}{t}=\frac{4200}{480}$.
+        </div>
+
+        <label for="studentName">Numele elevului</label>
+        <input id="studentName" type="text" placeholder="Scrie numele tău">
+
+        <div class="button-row">
+          <button class="primary-btn" onclick="startWorksheet()">Mergi mai departe</button>
+        </div>
+        <div id="startFeedback" class="feedback warn"></div>
+      </div>
+    </section>
+
+    <section id="workScreen" class="screen">
+      <div class="card" id="workCard">
+        <div class="topline">
+          <span id="progressText">Pasul 1</span>
+          <span id="scoreText">Greșeli: 0</span>
+        </div>
+        <div class="progress-wrap"><div id="progressBar" class="progress-bar"></div></div>
+
+        <div class="problem-card" id="problemCard">
+          <div class="problem-number" id="problemNumber">Problema 1</div>
+          <div class="problem-text" id="problemText"></div>
+        </div>
+
+        <div class="step-box">
+          <div class="step-title" id="stepTitle"></div>
+          <div class="prompt" id="prompt"></div>
+          <div id="formulaNote" class="formula-note hidden"></div>
+          <div id="answerArea"></div>
+          <div id="feedback" class="feedback"></div>
+
+          <div class="button-row two">
+            <button class="primary-btn" id="checkBtn" onclick="checkAnswer()">Verifică</button>
+            <button class="success-btn" id="nextBtn" onclick="nextStep()" disabled>Mergi mai departe</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="finalScreen" class="screen">
+      <div class="header">
+        <div class="small">Fișă de lucru interactivă</div>
+        <h1>VITEZA ȘI DENSITATEA</h1>
+        <div class="small">Rezultat final</div>
+        <div class="small" style="margin-top:12px;"><strong>Prof. Dănuț Andronie</strong><br>email: danutmg@gmail.com</div>
+      </div>
+
+      <div class="card">
+        <div class="score-box">
+          <h2 id="finalTitle">Felicitări!</h2>
+          <div class="grade" id="finalGrade">10</div>
+          <div class="end-message" id="finalMessage"></div>
+        </div>
+
+        <div id="diplomaBox" class="diploma hidden">
+          <h2>🏆 DIPLOMĂ DE RECUNOAȘTERE</h2>
+          <p>Se acordă elevului/elevei</p>
+          <div class="name" id="diplomaName"></div>
+          <p>pentru înțelegerea pașilor de calcul la <strong>viteză</strong> și <strong>densitate</strong>.</p>
+          <p>Nota obținută: <strong id="diplomaGrade"></strong></p>
+          <p>Profesorul tău este mândru că ai reușit să înțelegi tainele calculului vitezelor și ale densității.</p>
+          <p id="diplomaDate"></p>
+        </div>
+
+        <div class="button-row two no-print">
+          <button class="print-btn" id="printBtn" onclick="window.print()">Tipărește diploma</button>
+          <button class="ghost-btn" onclick="location.reload()">Mai exersează o dată</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let studentName = "";
+    let steps = [];
+    let currentStep = 0;
+    let wrongAttempts = 0;
+    let audioCtx = null;
+
+    const colors = [
+      "rgba(34, 211, 238, .20)",
+      "rgba(34, 197, 94, .20)",
+      "rgba(250, 204, 21, .20)",
+      "rgba(192, 132, 252, .20)",
+      "rgba(251, 146, 60, .20)",
+      "rgba(244, 114, 182, .20)"
+    ];
+
+    function pick(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
+    }
+
+    function round1(n) {
+      return Math.round((Number(n) + Number.EPSILON) * 10) / 10;
+    }
+
+    function fmt(n) {
+      const x = round1(Number(n));
+      const s = Number.isInteger(x) ? String(x) : String(x.toFixed(1)).replace(/\.0$/, "");
+      return s.replace(".", ",");
+    }
+
+    function fmtDot(n) {
+      const x = round1(Number(n));
+      return Number.isInteger(x) ? String(x) : String(x.toFixed(1)).replace(/\.0$/, "");
+    }
+
+    function parseUserNumber(value) {
+      if (!value || !String(value).trim()) return null;
+      const cleaned = String(value)
+        .trim()
+        .replace(/\s+/g, "")
+        .replace(",", ".")
+        .replace(/[−–—]/g, "-");
+      const match = cleaned.match(/-?\d+(\.\d+)?/);
+      if (!match) return null;
+      return Number(match[0]);
+    }
+
+    function numberOk(userValue, expected) {
+      const num = parseUserNumber(userValue);
+      if (num === null || Number.isNaN(num)) return false;
+
+      const exact = Number(expected);
+      const roundedOne = round1(exact);
+
+      const userRounded = Math.round((num + Number.EPSILON) * 10000) / 10000;
+      const exactRounded = Math.round((exact + Number.EPSILON) * 10000) / 10000;
+
+      return Math.abs(userRounded - exactRounded) < 0.001 ||
+             Math.abs(userRounded - roundedOne) < 0.001;
+    }
+
+    function ensureAudio() {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!audioCtx && AudioContext) audioCtx = new AudioContext();
+        if (audioCtx && audioCtx.state === "suspended") audioCtx.resume();
+      } catch (e) {
+        audioCtx = null;
+      }
+    }
+
+    function playTone(freq, start, duration, type = "sine", volume = 0.08) {
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = type;
+      osc.frequency.setValueAtTime(freq, audioCtx.currentTime + start);
+      gain.gain.setValueAtTime(0.0001, audioCtx.currentTime + start);
+      gain.gain.exponentialRampToValueAtTime(volume, audioCtx.currentTime + start + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + start + duration);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(audioCtx.currentTime + start);
+      osc.stop(audioCtx.currentTime + start + duration + 0.02);
+    }
+
+    function successSound() {
+      ensureAudio();
+      playTone(523.25, 0, .12, "sine");
+      playTone(659.25, .10, .12, "sine");
+      playTone(783.99, .20, .18, "sine");
+    }
+
+    function errorSound() {
+      ensureAudio();
+      playTone(220, 0, .16, "square", 0.05);
+      playTone(164.81, .14, .20, "square", 0.05);
+    }
+
+    function confetti(count = 20) {
+      const palette = ["#22d3ee", "#22c55e", "#facc15", "#fb923c", "#c084fc", "#f472b6"];
+      for (let i = 0; i < count; i++) {
+        const piece = document.createElement("div");
+        piece.className = "confetti-piece";
+        piece.style.left = Math.random() * 100 + "vw";
+        piece.style.background = pick(palette);
+        piece.style.animationDelay = (Math.random() * .18) + "s";
+        piece.style.transform = `rotate(${Math.random() * 180}deg)`;
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 1200);
+      }
+    }
+
+    function showScreen(id) {
+      document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
+      document.getElementById(id).classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function buildProblems() {
+      const p1 = pick([
+        { dKm: 3.6, tMin: 6 },
+        { dKm: 4.5, tMin: 5 },
+        { dKm: 7.2, tMin: 8 },
+        { dKm: 2.4, tMin: 4 },
+        { dKm: 5.4, tMin: 9 },
+        { dKm: 6.0, tMin: 10 },
+        { dKm: 9.0, tMin: 12 },
+        { dKm: 1.8, tMin: 3 },
+        { dKm: 4.8, tMin: 8 },
+        { dKm: 6.3, tMin: 7 }
+      ]);
+      p1.dM = p1.dKm * 1000;
+      p1.tS = p1.tMin * 60;
+      p1.vMs = p1.dM / p1.tS;
+      p1.vKmh = p1.vMs * 3.6;
+
+      const p2 = pick([
+        { vKmh: 60, tH: 0.2 },
+        { vKmh: 48, tH: 0.5 },
+        { vKmh: 72, tH: 0.3 },
+        { vKmh: 54, tH: 0.4 },
+        { vKmh: 36, tH: 0.7 },
+        { vKmh: 45, tH: 0.4 },
+        { vKmh: 90, tH: 0.1 },
+        { vKmh: 30, tH: 0.6 },
+        { vKmh: 75, tH: 0.2 }
+      ]);
+      p2.dKm = p2.vKmh * p2.tH;
+      p2.tMin = p2.tH * 60;
+
+      const p3 = { vKmh: pick([30, 36, 42, 48, 54, 60, 72, 84, 90]), tMin: 12 };
+      p3.tH = p3.tMin / 60;
+      p3.dKm = p3.vKmh * p3.tH;
+      p3.dM = p3.dKm * 1000;
+
+      const p4 = pick([
+        { mG: 850, vCm3: 50 },
+        { mG: 540, vCm3: 60 },
+        { mG: 135, vCm3: 50 },
+        { mG: 216, vCm3: 80 },
+        { mG: 780, vCm3: 100 },
+        { mG: 225, vCm3: 50 },
+        { mG: 360, vCm3: 80 }
+      ]);
+      p4.rho = p4.mG / p4.vCm3;
+
+      const p5 = pick([
+        { rho: 6.5, volume: 100 },
+        { rho: 2.7, volume: 50 },
+        { rho: 7.8, volume: 10 },
+        { rho: 8.9, volume: 20 },
+        { rho: 0.8, volume: 500 },
+        { rho: 1.2, volume: 50 },
+        { rho: 4.5, volume: 80 },
+        { rho: 2.5, volume: 40 }
+      ]);
+      p5.mG = p5.rho * p5.volume;
+
+      const p6 = pick([
+        { vCm3: 65, rho: 2.8 },
+        { vCm3: 65, rho: 2.9 },
+        { vCm3: 50, rho: 7.8 },
+        { vCm3: 80, rho: 2.7 },
+        { vCm3: 120, rho: 0.8 },
+        { vCm3: 40, rho: 8.9 },
+        { vCm3: 100, rho: 6.5 }
+      ]);
+      p6.mG = p6.vCm3 * p6.rho;
+
+      return { p1, p2, p3, p4, p5, p6 };
+    }
+
+    function problemStatement(n, p) {
+      if (n === 1) return `Calculează viteza unui mobil știind distanța <strong>d = ${fmt(p.dKm)} km</strong> și timpul <strong>t = ${fmt(p.tMin)} min</strong>.`;
+      if (n === 2) return `Calculează timpul știind că un mobil s-a deplasat cu viteza <strong>v = ${fmt(p.vKmh)} km/h</strong> pe distanța <strong>d = ${fmt(p.dKm)} km</strong>.`;
+      if (n === 3) return `Calculează distanța parcursă de un mobil care se deplasează cu viteza <strong>v = ${fmt(p.vKmh)} km/h</strong>, timp de <strong>12 min</strong>.`;
+      if (n === 4) return `Calculează densitatea unui corp știind masa <strong>m = ${fmt(p.mG)} g</strong> și volumul <strong>V = ${fmt(p.vCm3)} cm³</strong>.`;
+      if (n === 5) return `Calculează volumul unui corp știind masa <strong>m = ${fmt(p.mG)} g</strong> și densitatea <strong>ρ = ${fmt(p.rho)} g/cm³</strong>.`;
+      return `Calculează masa unui corp știind volumul <strong>V = ${fmt(p.vCm3)} cm³</strong> și densitatea <strong>ρ = ${fmt(p.rho)} g/cm³</strong>.`;
+    }
+
+    function makeSteps() {
+      const { p1, p2, p3, p4, p5, p6 } = buildProblems();
+
+      return [
+        {
+          problem: 1,
+          statement: problemStatement(1, p1),
+          title: "Pasul 1: Transformări în SI",
+          prompt: "Completează transformările:",
+          note: "Amintește-ți: $1\\,km=1000\\,m$ și $1\\,min=60\\,s$.",
+          type: "numeric",
+          fields: [
+            { label: "d =", unit: "m", expected: p1.dM },
+            { label: "t =", unit: "s", expected: p1.tS }
+          ],
+          success: `Corect! d = ${fmt(p1.dM)} m și t = ${fmt(p1.tS)} s.`
+        },
+        {
+          problem: 1,
+          statement: problemStatement(1, p1),
+          title: "Pasul 2: Formula de calcul",
+          prompt: "Alege formula corectă pentru viteză:",
+          type: "choice",
+          options: [
+            { text: "$v=\\frac{d}{t}$", correct: true },
+            { text: "$v=\\frac{t}{d}$", correct: false },
+            { text: "$v=d\\cdot t$", correct: false },
+            { text: "$v=d+t$", correct: false }
+          ],
+          success: "Corect! Viteza se calculează împărțind distanța la timp.",
+          hint: "Viteza arată ce distanță se parcurge într-o unitate de timp."
+        },
+        {
+          problem: 1,
+          statement: problemStatement(1, p1),
+          title: "Pasul 3: Înlocuiri",
+          prompt: "Completează înlocuirile în formulă:",
+          note: `$v=\\frac{d}{t}=\\frac{\\Box}{\\Box}$`,
+          type: "numeric",
+          fields: [
+            { label: "Numărătorul d =", unit: "m", expected: p1.dM },
+            { label: "Numitorul t =", unit: "s", expected: p1.tS }
+          ],
+          success: `Foarte bine! $v=\\frac{${fmtDot(p1.dM)}}{${fmtDot(p1.tS)}}$.`
+        },
+        {
+          problem: 1,
+          statement: problemStatement(1, p1),
+          title: "Pasul 4: Rezultat",
+          prompt: "Calculează viteza:",
+          note: `$v=\\frac{${fmtDot(p1.dM)}}{${fmtDot(p1.tS)}}$ și $1\\,m/s=3,6\\,km/h$.`,
+          type: "numeric",
+          fields: [
+            { label: "v =", unit: "m/s", expected: p1.vMs },
+            { label: "v =", unit: "km/h", expected: p1.vKmh }
+          ],
+          success: `Excelent! v = ${fmt(p1.vMs)} m/s = ${fmt(p1.vKmh)} km/h.`
+        },
+
+        {
+          problem: 2,
+          statement: problemStatement(2, p2),
+          title: "Pasul 1: Formula de calcul",
+          prompt: "Alege formula corectă pentru timp:",
+          type: "choice",
+          options: [
+            { text: "$t=\\frac{d}{v}$", correct: true },
+            { text: "$t=\\frac{v}{d}$", correct: false },
+            { text: "$t=d\\cdot v$", correct: false },
+            { text: "$t=d+v$", correct: false }
+          ],
+          success: "Corect! Timpul se află împărțind distanța la viteză.",
+          hint: "Când știm distanța și viteza, timpul este distanța împărțită la viteză."
+        },
+        {
+          problem: 2,
+          statement: problemStatement(2, p2),
+          title: "Pasul 2: Înlocuiri",
+          prompt: "Completează înlocuirile:",
+          note: `$t=\\frac{d}{v}=\\frac{\\Box}{\\Box}$`,
+          type: "numeric",
+          fields: [
+            { label: "Numărătorul d =", unit: "km", expected: p2.dKm },
+            { label: "Numitorul v =", unit: "km/h", expected: p2.vKmh }
+          ],
+          success: `Bine! $t=\\frac{${fmtDot(p2.dKm)}}{${fmtDot(p2.vKmh)}}$.`
+        },
+        {
+          problem: 2,
+          statement: problemStatement(2, p2),
+          title: "Pasul 3: Rezultat",
+          prompt: "Calculează timpul:",
+          note: `$t=\\frac{${fmtDot(p2.dKm)}}{${fmtDot(p2.vKmh)}}\\,h$. Apoi transformă în minute: $1\\,h=60\\,min$.`,
+          type: "numeric",
+          fields: [
+            { label: "t =", unit: "h", expected: p2.tH },
+            { label: "t =", unit: "min", expected: p2.tMin }
+          ],
+          success: `Perfect! t = ${fmt(p2.tH)} h = ${fmt(p2.tMin)} min.`
+        },
+
+        {
+          problem: 3,
+          statement: problemStatement(3, p3),
+          title: "Pasul 1: Transformarea timpului",
+          prompt: "Transformă 12 minute în ore:",
+          note: `$12\\,min=\\frac{12}{60}\\,h$.`,
+          type: "numeric",
+          fields: [
+            { label: "t =", unit: "h", expected: p3.tH }
+          ],
+          success: `Corect! 12 min = ${fmt(p3.tH)} h.`
+        },
+        {
+          problem: 3,
+          statement: problemStatement(3, p3),
+          title: "Pasul 2: Formula de calcul",
+          prompt: "Alege formula corectă pentru distanță:",
+          type: "choice",
+          options: [
+            { text: "$d=v\\cdot t$", correct: true },
+            { text: "$d=\\frac{v}{t}$", correct: false },
+            { text: "$d=\\frac{t}{v}$", correct: false },
+            { text: "$d=v-t$", correct: false }
+          ],
+          success: "Corect! Distanța se calculează prin viteză înmulțită cu timpul.",
+          hint: "Distanța parcursă crește dacă viteza sau timpul cresc."
+        },
+        {
+          problem: 3,
+          statement: problemStatement(3, p3),
+          title: "Pasul 3: Înlocuiri",
+          prompt: "Completează înlocuirile:",
+          note: `$d=v\\cdot t=\\Box\\cdot\\Box$`,
+          type: "numeric",
+          fields: [
+            { label: "v =", unit: "km/h", expected: p3.vKmh },
+            { label: "t =", unit: "h", expected: p3.tH }
+          ],
+          success: `Bine! $d=${fmtDot(p3.vKmh)}\\cdot ${fmtDot(p3.tH)}$.`
+        },
+        {
+          problem: 3,
+          statement: problemStatement(3, p3),
+          title: "Pasul 4: Rezultat",
+          prompt: "Calculează distanța parcursă:",
+          type: "numeric",
+          fields: [
+            { label: "d =", unit: "km", expected: p3.dKm },
+            { label: "d =", unit: "m", expected: p3.dM }
+          ],
+          success: `Foarte bine! d = ${fmt(p3.dKm)} km = ${fmt(p3.dM)} m.`
+        },
+
+        {
+          problem: 4,
+          statement: problemStatement(4, p4),
+          title: "Pasul 1: Formula de calcul",
+          prompt: "Alege formula corectă pentru densitate:",
+          type: "choice",
+          options: [
+            { text: "$\\rho=\\frac{m}{V}$", correct: true },
+            { text: "$\\rho=\\frac{V}{m}$", correct: false },
+            { text: "$\\rho=m\\cdot V$", correct: false },
+            { text: "$\\rho=m+V$", correct: false }
+          ],
+          success: "Corect! Densitatea este masa împărțită la volum.",
+          hint: "Densitatea arată câtă masă se află într-o unitate de volum."
+        },
+        {
+          problem: 4,
+          statement: problemStatement(4, p4),
+          title: "Pasul 2: Înlocuiri",
+          prompt: "Completează înlocuirile:",
+          note: `$\\rho=\\frac{m}{V}=\\frac{\\Box}{\\Box}$`,
+          type: "numeric",
+          fields: [
+            { label: "m =", unit: "g", expected: p4.mG },
+            { label: "V =", unit: "cm³", expected: p4.vCm3 }
+          ],
+          success: `Corect! $\\rho=\\frac{${fmtDot(p4.mG)}}{${fmtDot(p4.vCm3)}}$.`
+        },
+        {
+          problem: 4,
+          statement: problemStatement(4, p4),
+          title: "Pasul 3: Rezultat",
+          prompt: "Calculează densitatea:",
+          type: "numeric",
+          fields: [
+            { label: "ρ =", unit: "g/cm³", expected: p4.rho }
+          ],
+          success: `Excelent! ρ = ${fmt(p4.rho)} g/cm³.`
+        },
+
+        {
+          problem: 5,
+          statement: problemStatement(5, p5),
+          title: "Pasul 1: Formula de calcul",
+          prompt: "Alege formula corectă pentru volum:",
+          type: "choice",
+          options: [
+            { text: "$V=\\frac{m}{\\rho}$", correct: true },
+            { text: "$V=\\frac{\\rho}{m}$", correct: false },
+            { text: "$V=m\\cdot\\rho$", correct: false },
+            { text: "$V=m-\\rho$", correct: false }
+          ],
+          success: "Corect! Volumul se află împărțind masa la densitate.",
+          hint: "Pornește de la $\\rho=\\frac{m}{V}$ și scoate necunoscuta $V$."
+        },
+        {
+          problem: 5,
+          statement: problemStatement(5, p5),
+          title: "Pasul 2: Înlocuiri",
+          prompt: "Completează înlocuirile:",
+          note: `$V=\\frac{m}{\\rho}=\\frac{\\Box}{\\Box}$`,
+          type: "numeric",
+          fields: [
+            { label: "m =", unit: "g", expected: p5.mG },
+            { label: "ρ =", unit: "g/cm³", expected: p5.rho }
+          ],
+          success: `Bine! $V=\\frac{${fmtDot(p5.mG)}}{${fmtDot(p5.rho)}}$.`
+        },
+        {
+          problem: 5,
+          statement: problemStatement(5, p5),
+          title: "Pasul 3: Rezultat",
+          prompt: "Calculează volumul:",
+          type: "numeric",
+          fields: [
+            { label: "V =", unit: "cm³", expected: p5.volume }
+          ],
+          success: `Foarte bine! V = ${fmt(p5.volume)} cm³.`
+        },
+
+        {
+          problem: 6,
+          statement: problemStatement(6, p6),
+          title: "Pasul 1: Formula de calcul",
+          prompt: "Alege formula corectă pentru masă:",
+          type: "choice",
+          options: [
+            { text: "$m=\\rho\\cdot V$", correct: true },
+            { text: "$m=\\frac{\\rho}{V}$", correct: false },
+            { text: "$m=\\frac{V}{\\rho}$", correct: false },
+            { text: "$m=\\rho+V$", correct: false }
+          ],
+          success: "Corect! Masa se calculează prin densitate înmulțită cu volumul.",
+          hint: "Pornește de la $\\rho=\\frac{m}{V}$ și scoate necunoscuta $m$."
+        },
+        {
+          problem: 6,
+          statement: problemStatement(6, p6),
+          title: "Pasul 2: Înlocuiri",
+          prompt: "Completează înlocuirile:",
+          note: `$m=\\rho\\cdot V=\\Box\\cdot\\Box$`,
+          type: "numeric",
+          fields: [
+            { label: "ρ =", unit: "g/cm³", expected: p6.rho },
+            { label: "V =", unit: "cm³", expected: p6.vCm3 }
+          ],
+          success: `Corect! $m=${fmtDot(p6.rho)}\\cdot ${fmtDot(p6.vCm3)}$.`
+        },
+        {
+          problem: 6,
+          statement: problemStatement(6, p6),
+          title: "Pasul 3: Rezultat",
+          prompt: "Calculează masa:",
+          type: "numeric",
+          fields: [
+            { label: "m =", unit: "g", expected: p6.mG }
+          ],
+          success: `Excelent! m = ${fmt(p6.mG)} g.`
+        }
+      ].map(step => ({ ...step, solved: false, tries: 0 }));
+    }
+
+    function startWorksheet() {
+      ensureAudio();
+      const nameInput = document.getElementById("studentName");
+      const fb = document.getElementById("startFeedback");
+      const value = nameInput.value.trim();
+
+      if (!value) {
+        fb.textContent = "Scrie numele elevului înainte de a merge mai departe.";
+        fb.className = "feedback warn";
+        errorSound();
+        nameInput.focus();
+        return;
+      }
+
+      studentName = value;
+      steps = makeSteps();
+      currentStep = 0;
+      wrongAttempts = 0;
+      showScreen("workScreen");
+      renderStep();
+    }
+
+    function renderMath() {
+      if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise();
+      }
+    }
+
+    function renderStep() {
+      const step = steps[currentStep];
+      const total = steps.length;
+      const progressPercent = Math.round((currentStep / total) * 100);
+
+      document.getElementById("progressText").textContent = `Pasul ${currentStep + 1} din ${total}`;
+      document.getElementById("scoreText").textContent = `Greșeli: ${wrongAttempts}`;
+      document.getElementById("progressBar").style.width = progressPercent + "%";
+
+      const problemCard = document.getElementById("problemCard");
+      problemCard.style.setProperty("--stepColor", colors[(step.problem - 1) % colors.length]);
+      document.getElementById("problemNumber").textContent = `Problema ${step.problem}`;
+      document.getElementById("problemText").innerHTML = step.statement;
+      document.getElementById("stepTitle").textContent = step.title;
+      document.getElementById("prompt").innerHTML = step.prompt;
+
+      const note = document.getElementById("formulaNote");
+      if (step.note) {
+        note.classList.remove("hidden");
+        note.innerHTML = step.note;
+      } else {
+        note.classList.add("hidden");
+        note.innerHTML = "";
+      }
+
+      document.getElementById("feedback").className = "feedback";
+      document.getElementById("feedback").innerHTML = "";
+      document.getElementById("checkBtn").disabled = false;
+      document.getElementById("nextBtn").disabled = true;
+
+      renderAnswerArea(step);
+      renderMath();
+    }
+
+    function renderAnswerArea(step) {
+      const area = document.getElementById("answerArea");
+      area.innerHTML = "";
+
+      if (step.type === "choice") {
+        const grid = document.createElement("div");
+        grid.className = "choice-grid";
+
+        step.options.forEach((option, index) => {
+          const id = `choice-${currentStep}-${index}`;
+          const label = document.createElement("label");
+          label.className = "choice";
+          label.setAttribute("for", id);
+          label.innerHTML = `
+            <input id="${id}" type="radio" name="choice" value="${index}">
+            <span>${option.text}</span>
+          `;
+          grid.appendChild(label);
+        });
+
+        area.appendChild(grid);
+        return;
+      }
+
+      const grid = document.createElement("div");
+      grid.className = step.fields.length > 1 ? "answer-grid two" : "answer-grid";
+
+      step.fields.forEach((field, index) => {
+        const box = document.createElement("div");
+        box.className = "mini-field";
+        box.innerHTML = `
+          <label for="answer-${index}">${field.label}</label>
+          <input id="answer-${index}" type="text" inputmode="decimal" autocomplete="off" placeholder="Scrie numărul">
+          <span class="unit">${field.unit}</span>
+        `;
+        grid.appendChild(box);
+      });
+
+      area.appendChild(grid);
+      const firstInput = document.getElementById("answer-0");
+      if (firstInput) firstInput.focus();
+    }
+
+    function showFeedback(kind, text) {
+      const fb = document.getElementById("feedback");
+      fb.className = `feedback ${kind}`;
+      fb.innerHTML = text;
+      renderMath();
+    }
+
+    function markWrong(message) {
+      const step = steps[currentStep];
+      step.tries += 1;
+      wrongAttempts += 1;
+
+      document.getElementById("scoreText").textContent = `Greșeli: ${wrongAttempts}`;
+      const card = document.getElementById("workCard");
+      card.classList.remove("shake");
+      void card.offsetWidth;
+      card.classList.add("shake");
+      errorSound();
+
+      let hint = "";
+      if (step.tries >= 2 && step.hint) {
+        hint = `<br><br>💡 Indiciu: ${step.hint}`;
+      } else if (step.tries >= 2) {
+        hint = "<br><br>💡 Indiciu: verifică unitățile de măsură și folosește exact datele din problemă.";
+      }
+
+      showFeedback("bad", message + hint);
+    }
+
+    function checkAnswer() {
+      const step = steps[currentStep];
+
+      if (step.type === "choice") {
+        const selected = document.querySelector('input[name="choice"]:checked');
+        if (!selected) {
+          showFeedback("warn", "Alege o variantă înainte de verificare.");
+          errorSound();
+          return;
+        }
+
+        const option = step.options[Number(selected.value)];
+        if (option.correct) {
+          step.solved = true;
+          successSound();
+          confetti(16);
+          document.getElementById("workCard").classList.add("success-pop");
+          setTimeout(() => document.getElementById("workCard").classList.remove("success-pop"), 450);
+          document.getElementById("checkBtn").disabled = true;
+          document.getElementById("nextBtn").disabled = false;
+          showFeedback("ok", "✅ " + step.success);
+        } else {
+          markWrong("❌ Nu este varianta corectă. Reanalizează formula și încearcă din nou.");
+        }
+        return;
+      }
+
+      const inputs = step.fields.map((_, index) => document.getElementById(`answer-${index}`));
+      const empty = inputs.some(input => !input.value.trim());
+      if (empty) {
+        showFeedback("warn", "Completează toate casetele înainte de verificare.");
+        errorSound();
+        return;
+      }
+
+      const allCorrect = step.fields.every((field, index) => numberOk(inputs[index].value, field.expected));
+
+      if (allCorrect) {
+        step.solved = true;
+        successSound();
+        confetti(16);
+        document.getElementById("workCard").classList.add("success-pop");
+        setTimeout(() => document.getElementById("workCard").classList.remove("success-pop"), 450);
+        document.getElementById("checkBtn").disabled = true;
+        document.getElementById("nextBtn").disabled = false;
+        showFeedback("ok", "✅ " + step.success);
+      } else {
+        markWrong("❌ Mai verifică o dată. Poți folosi punct sau virgulă pentru zecimale.");
+      }
+    }
+
+    function nextStep() {
+      if (!steps[currentStep].solved) return;
+
+      currentStep++;
+      if (currentStep >= steps.length) {
+        showFinal();
+      } else {
+        renderStep();
+      }
+    }
+
+    function showFinal() {
+      const grade = Math.max(1, round1(10 - wrongAttempts * 0.4));
+      const finalGrade = document.getElementById("finalGrade");
+      const finalMessage = document.getElementById("finalMessage");
+      const diplomaBox = document.getElementById("diplomaBox");
+      const printBtn = document.getElementById("printBtn");
+
+      finalGrade.textContent = fmt(grade);
+
+      if (grade >= 9) {
+        document.getElementById("finalTitle").textContent = "Felicitări, ai reușit!";
+        finalMessage.innerHTML = `Ai parcurs toți pașii algoritmilor de calcul. Profesorul tău va fi mândru că ai reușit să înțelegi tainele calculului vitezelor și ale densității.`;
+        diplomaBox.classList.remove("hidden");
+        printBtn.classList.remove("hidden");
+        document.getElementById("diplomaName").textContent = studentName;
+        document.getElementById("diplomaGrade").textContent = fmt(grade);
+        document.getElementById("diplomaDate").textContent = `Data: ${new Date().toLocaleDateString("ro-RO")}`;
+        successSound();
+        setTimeout(() => confetti(48), 120);
+      } else {
+        document.getElementById("finalTitle").textContent = "Ai terminat fișa!";
+        finalMessage.innerHTML = `Nota ta este ${fmt(grade)}. Ai făcut pașii până la capăt, ceea ce este foarte important. Mai exersează și vei ajunge la perfecțiune!`;
+        diplomaBox.classList.add("hidden");
+        printBtn.classList.add("hidden");
+        successSound();
+      }
+
+      document.getElementById("progressBar").style.width = "100%";
+      showScreen("finalScreen");
+      renderMath();
+    }
+
+    document.addEventListener("keydown", function(event) {
+      if (event.key === "Enter" && document.getElementById("workScreen").classList.contains("active")) {
+        const nextBtn = document.getElementById("nextBtn");
+        if (!nextBtn.disabled) nextStep();
+        else checkAnswer();
+      }
+    });
+  </script>
+</body>
+</html>

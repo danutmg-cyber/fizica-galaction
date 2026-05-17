@@ -494,7 +494,9 @@
         </div>
 
         <div class="formula-note">
-          Poți scrie numerele cu punct sau cu virgulă.
+          Datele sunt generate aleatoriu, dar calculele sunt alese astfel încât împărțirile să fie exacte sau rezultatele să aibă cel mult o zecimală.
+          Vitezele în km/h sunt generate din 1,8 în 1,8, de la 18 la 90 km/h: 18; 19,8; 21,6; ...; 90.
+          Poți scrie numerele cu punct sau cu virgulă. Exemplu: $v=\frac{d}{t}=\frac{4200}{480}$.
         </div>
 
         <label for="studentName">Numele elevului</label>
@@ -694,41 +696,21 @@
     }
 
     function buildProblems() {
-      const p1 = pick([
-        { dKm: 3.6, tMin: 6 },
-        { dKm: 4.5, tMin: 5 },
-        { dKm: 7.2, tMin: 8 },
-        { dKm: 2.4, tMin: 4 },
-        { dKm: 5.4, tMin: 9 },
-        { dKm: 6.0, tMin: 10 },
-        { dKm: 9.0, tMin: 12 },
-        { dKm: 1.8, tMin: 3 },
-        { dKm: 4.8, tMin: 8 },
-        { dKm: 6.3, tMin: 7 }
-      ]);
+      const velocityValues = Array.from({ length: 41 }, (_, i) => round1(18 + i * 1.8));
+
+      const p1 = { vKmh: pick(velocityValues), tMin: 10 };
+      p1.dKm = round1(p1.vKmh * p1.tMin / 60);
       p1.dM = p1.dKm * 1000;
       p1.tS = p1.tMin * 60;
-      p1.vMs = p1.dM / p1.tS;
-      p1.vKmh = p1.vMs * 3.6;
+      p1.vMs = p1.vKmh / 3.6;
 
-      const p2 = pick([
-        { vKmh: 36, tH: 0.5 },
-        { vKmh: 45, tH: 0.2 },
-        { vKmh: 54, tH: 0.4 },
-        { vKmh: 63, tH: 0.4 },
-        { vKmh: 72, tH: 0.3 },
-        { vKmh: 81, tH: 0.2 },
-        { vKmh: 90, tH: 0.1 },
-        { vKmh: 27, tH: 0.6 },
-        { vKmh: 43.2, tH: 0.5 },
-        { vKmh: 64.8, tH: 0.5 }
-      ]);
-      p2.dKm = p2.vKmh * p2.tH;
+      const p2 = { vKmh: pick(velocityValues), tH: 0.5 };
+      p2.dKm = round1(p2.vKmh * p2.tH);
       p2.tMin = p2.tH * 60;
 
-      const p3 = { vKmh: pick([18, 27, 36, 45, 54, 63, 72, 81, 90]), tMin: 12 };
+      const p3 = { vKmh: pick(velocityValues), tMin: 30 };
       p3.tH = p3.tMin / 60;
-      p3.dKm = p3.vKmh * p3.tH;
+      p3.dKm = round1(p3.vKmh * p3.tH);
       p3.dM = p3.dKm * 1000;
 
       const p4 = pick([
@@ -771,7 +753,7 @@
     function problemStatement(n, p) {
       if (n === 1) return `Calculează viteza unui mobil știind distanța <strong>d = ${fmt(p.dKm)} km</strong> și timpul <strong>t = ${fmt(p.tMin)} min</strong>.`;
       if (n === 2) return `Calculează timpul știind că un mobil s-a deplasat cu viteza <strong>v = ${fmt(p.vKmh)} km/h</strong> pe distanța <strong>d = ${fmt(p.dKm)} km</strong>.`;
-      if (n === 3) return `Calculează distanța parcursă de un mobil care se deplasează cu viteza <strong>v = ${fmt(p.vKmh)} km/h</strong>, timp de <strong>12 min</strong>.`;
+      if (n === 3) return `Calculează distanța parcursă de un mobil care se deplasează cu viteza <strong>v = ${fmt(p.vKmh)} km/h</strong>, timp de <strong>${fmt(p.tMin)} min</strong>.`;
       if (n === 4) return `Calculează densitatea unui corp știind masa <strong>m = ${fmt(p.mG)} g</strong> și volumul <strong>V = ${fmt(p.vCm3)} cm³</strong>.`;
       if (n === 5) return `Calculează volumul unui corp știind masa <strong>m = ${fmt(p.mG)} g</strong> și densitatea <strong>ρ = ${fmt(p.rho)} g/cm³</strong>.`;
       return `Calculează masa unui corp știind volumul <strong>V = ${fmt(p.vCm3)} cm³</strong> și densitatea <strong>ρ = ${fmt(p.rho)} g/cm³</strong>.`;
@@ -882,13 +864,13 @@
           problem: 3,
           statement: problemStatement(3, p3),
           title: "Pasul 1: Transformarea timpului",
-          prompt: "Transformă 12 minute în ore:",
-          note: `$12\\,min=\\frac{12}{60}\\,h$.`,
+          prompt: `Transformă ${fmt(p3.tMin)} minute în ore:`,
+          note: `$${fmtDot(p3.tMin)}\\,min=\\frac{${fmtDot(p3.tMin)}}{60}\\,h$.``,
           type: "numeric",
           fields: [
             { label: "t =", unit: "h", expected: p3.tH }
           ],
-          success: `Corect! 12 min = ${fmt(p3.tH)} h.`
+          success: `Corect! ${fmt(p3.tMin)} min = ${fmt(p3.tH)} h.`
         },
         {
           problem: 3,

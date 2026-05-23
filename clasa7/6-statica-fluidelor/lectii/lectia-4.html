@@ -584,45 +584,92 @@
       }
     }
 
-    @media print {
-      body {
-        background: white;
-        color: black;
-        padding: 0;
-      }
+   @media print {
+  @page {
+    size: A4;
+    margin: 12mm;
+  }
 
-      .site-header,
-      .lesson-controls,
-      .progress-wrap,
-      .page-counter,
-      .kbd-hint {
-        display: none !important;
-      }
+  html,
+  body {
+    width: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+    background: white !important;
+    color: black !important;
+    padding: 0 !important;
+  }
 
-      .page {
-        display: block !important;
-        box-shadow: none;
-        background: white;
-        color: black;
-        border: 1px solid #999;
-        page-break-after: always;
-      }
+  .app,
+  main,
+  #lesson {
+    display: block !important;
+    width: 100% !important;
+    max-width: none !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
 
-      .info-card,
-      .question,
-      .formula-box {
-        color: black;
-        background: white;
-        border: 1px solid #999;
-      }
+  .site-header,
+  .lesson-controls,
+  .progress-wrap,
+  .page-counter,
+  .kbd-hint,
+  .print-btn,
+  button {
+    display: none !important;
+  }
 
-      .mini-table th,
-      .mini-table td {
-        color: black;
-        background: white;
-        border: 1px solid #999;
-      }
-    }
+  .page,
+  .page.active {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: static !important;
+    width: 100% !important;
+    min-height: auto !important;
+    height: auto !important;
+    overflow: visible !important;
+    box-shadow: none !important;
+    background: white !important;
+    color: black !important;
+    border: 1px solid #999 !important;
+    border-radius: 0 !important;
+    margin: 0 0 12mm 0 !important;
+    padding: 10mm !important;
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .page:last-of-type {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .info-card,
+  .question,
+  .formula-box,
+  .application-card {
+    color: black !important;
+    background: white !important;
+    border: 1px solid #999 !important;
+    box-shadow: none !important;
+  }
+
+  .mini-table th,
+  .mini-table td {
+    color: black !important;
+    background: white !important;
+    border: 1px solid #999 !important;
+  }
+
+  img,
+  svg {
+    max-width: 100% !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}
   </style>
 </head>
 
@@ -1119,7 +1166,9 @@ function savePDF() {
 }
 </script>
 
-<button onclick="savePDF()">💾 Salvează lecția PDF</button>
+  <button class="print-btn" type="button" onclick="printLessonPDF()">
+  Tipărește lecția PDF
+  </button>
 
       </section>
     </main>
@@ -1213,5 +1262,26 @@ function savePDF() {
 
     showPage(0);
   </script>
+              <script>
+  function printLessonPDF() {
+    const pages = document.querySelectorAll(".page");
+
+    // Facem toate paginile vizibile înainte de print/PDF.
+    pages.forEach(page => page.classList.add("active"));
+
+    // Așteptăm randarea formulelor MathJax, apoi deschidem print.
+    const doPrint = () => {
+      setTimeout(() => {
+        window.print();
+      }, 300);
+    };
+
+    if (window.MathJax && MathJax.typesetPromise) {
+      MathJax.typesetPromise().then(doPrint).catch(doPrint);
+    } else {
+      doPrint();
+    }
+  }
+</script>
 </body>
 </html>

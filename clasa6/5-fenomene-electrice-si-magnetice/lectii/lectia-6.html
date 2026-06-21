@@ -1,546 +1,788 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Lecția 6 | Generatoare, consumatori, circuite electrice | Fizica Galaction</title>
-  <meta name="description" content="Ce rol au generatoarele și consumatorii într-un circuit electric.">
-  <link rel="stylesheet" href="../../../assets/css/style.css">
-
+  <meta name="description" content="Lecția 6, clasa a VI-a: generatoare, consumatori și circuite electrice simple, în serie și în paralel." />
   <style>
-    .lesson-nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
-      justify-content: space-between;
-    }
-    .nav-button {
-      display: inline-block;
-      padding: 12px 18px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 700;
-      background: #22d3ee;
-      color: #082f49;
-      border: 2px solid #0891b2;
-      box-shadow: 0 4px 14px rgba(8,145,178,0.18);
-      cursor: pointer;
-    }
-    .nav-button.secondary {
-      background: #e2e8f0;
-      color: #0f172a;
-      border-color: #cbd5e1;
-    }
-    .nav-button.success {
-      background: #22c55e;
-      color: #052e16;
-      border-color: #16a34a;
-    }
-    .nav-button:hover,
-    .nav-button:focus {
-      filter: brightness(1.02);
-      transform: translateY(-1px);
-    }
-    .mini-note {
-      font-size: 0.95rem;
-      color: #cbd5e1;
-      margin-top: 8px;
+    :root {
+      --bg: #07111f;
+      --card: #102033;
+      --card2: #132944;
+      --text: #f8fafc;
+      --muted: #dbeafe;
+      --accent: #22d3ee;
+      --accent2: #facc15;
+      --good: #22c55e;
+      --bad: #fb7185;
+      --border: rgba(148, 163, 184, 0.32);
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
     }
 
-    /* Stiluri pentru imagini */
-    .illustration-container {
-      background: linear-gradient(135deg, rgba(79, 195, 247, 0.05), rgba(1, 87, 155, 0.05));
-      border: 2px solid rgba(79, 195, 247, 0.2);
-      border-radius: 12px;
-      padding: 20px;
-      margin: 20px 0;
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.15), transparent 35%),
+        linear-gradient(180deg, #07111f 0%, #0f172a 100%);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      font-size: clamp(20px, 5vw, 28px);
+      line-height: 1.55;
+      padding: 14px;
+      padding-bottom: 108px;
+    }
+
+    .lesson {
+      width: min(100%, 880px);
+      margin: 0 auto;
+    }
+
+    .page {
+      display: none;
+      min-height: calc(100svh - 140px);
+      animation: fade 180ms ease-in;
+    }
+
+    .page.active { display: block; }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .banner, .card, .final-banner {
+      background: linear-gradient(160deg, rgba(16, 32, 51, 0.98), rgba(19, 41, 68, 0.98));
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 5vw, 32px);
+      margin: 0 0 18px;
+    }
+
+    .banner { border-color: rgba(34, 211, 238, 0.55); }
+
+    .school {
+      color: var(--accent);
+      font-weight: 900;
+      font-size: clamp(18px, 4.6vw, 24px);
+      text-align: center;
+      letter-spacing: 0.02em;
+      margin: 0 0 10px;
+      text-transform: uppercase;
+    }
+
+    .teacher {
+      color: #e0f2fe;
+      text-align: center;
+      font-weight: 700;
+      margin: 0 0 16px;
+      font-size: clamp(18px, 4.8vw, 23px);
+    }
+
+    .quote {
+      margin: 12px 0 0;
+      padding: 14px;
+      border-left: 5px solid var(--accent2);
+      border-radius: 14px;
+      background: rgba(250, 204, 21, 0.11);
+      color: #fef9c3;
+      font-weight: 700;
+      font-style: italic;
       text-align: center;
     }
 
-    .illustration-container img {
-      max-width: 100%;
+    h1, h2, h3 {
+      line-height: 1.15;
+      margin: 0 0 16px;
+    }
+
+    h1 {
+      font-size: clamp(30px, 8.6vw, 54px);
+      color: #ffffff;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: clamp(28px, 7.5vw, 44px);
+      color: var(--accent);
+    }
+
+    h3 {
+      font-size: clamp(23px, 6vw, 34px);
+      color: #fef3c7;
+    }
+
+    p { margin: 0 0 16px; }
+
+    ul, ol {
+      padding-left: 1.2em;
+      margin: 0 0 16px;
+    }
+
+    li { margin: 12px 0; }
+
+    .kw {
+      color: #fef08a;
+      font-weight: 900;
+    }
+
+    .notice {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(34, 211, 238, 0.12);
+      border: 1px solid rgba(34, 211, 238, 0.38);
+      color: #e0f2fe;
+      font-weight: 700;
+    }
+
+    .example {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.38);
+      color: #dcfce7;
+      font-weight: 700;
+    }
+
+    .warning {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(250, 204, 21, 0.12);
+      border: 1px solid rgba(250, 204, 21, 0.42);
+      color: #fef9c3;
+      font-weight: 800;
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .type-card, .compare-card {
+      background: rgba(15, 23, 42, 0.52);
+      border: 1px solid rgba(148, 163, 184, 0.32);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .type-card strong,
+    .compare-card strong {
+      color: #fef08a;
+    }
+
+    .diagram {
+      margin: 16px 0;
+      padding: 16px;
+      border-radius: 18px;
+      background: #0b1728;
+      border: 1px solid rgba(34, 211, 238, 0.30);
+      overflow-x: auto;
+    }
+
+    .diagram svg {
+      width: 100%;
+      max-width: 760px;
+      min-width: 300px;
       height: auto;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
       display: block;
       margin: 0 auto;
     }
 
-    .illustration-container img:hover {
-      transform: scale(1.02);
-      box-shadow: 0 8px 24px rgba(52, 152, 219, 0.3);
+    .caption {
+      text-align: center;
+      color: #dbeafe;
+      font-size: 0.9em;
+      margin-top: 10px;
+      font-weight: 700;
     }
 
-    .image-click-hint {
-      font-size: 0.85rem;
-      color: #64748b;
-      margin-top: 8px;
-      font-style: italic;
+    .comparison {
+      display: grid;
+      gap: 12px;
     }
 
-    /* MODAL STYLES */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.9);
-      animation: fadeIn 0.3s ease-in;
+    @media (min-width: 760px) {
+      .comparison.two { grid-template-columns: 1fr 1fr; }
     }
 
-    .modal.active {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .quiz {
+      display: grid;
+      gap: 18px;
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
+    .question {
+      background: rgba(15, 23, 42, 0.58);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      border-radius: 18px;
+      padding: 16px;
     }
 
-    .modal-content {
-      position: relative;
-      max-width: 95vw;
-      max-height: 95vh;
-      padding: 20px;
-      animation: slideIn 0.3s ease-out;
-      overflow: auto;
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: scale(0.8);
-        opacity: 0;
-      }
-      to {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    .modal-content img {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 20px;
-      right: 35px;
-      color: white;
-      font-size: 40px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: color 0.2s;
-      z-index: 1001;
-    }
-
-    .modal-close:hover,
-    .modal-close:focus {
-      color: #ff6b6b;
-    }
-
-    .modal-info {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.8);
-      color: white;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 14px;
-      z-index: 1001;
-    }
-
-    .kw {
-      background: rgba(255, 107, 107, 0.1);
-      padding: 2px 6px;
-      border-radius: 4px;
-      color: #ff6b6b;
-    }
-
-    .definition {
-      background: rgba(79, 195, 247, 0.1);
-      border-left: 4px solid #22d3ee;
-      padding: 12px 16px;
-      border-radius: 6px;
+    .answers {
+      display: grid;
+      gap: 10px;
       margin-top: 12px;
     }
 
-    .comparison-table {
+    .answers button {
       width: 100%;
-      margin-top: 12px;
-      border-collapse: collapse;
-    }
-
-    .comparison-table th,
-    .comparison-table td {
-      padding: 12px;
+      min-height: 54px;
+      border: 2px solid rgba(34, 211, 238, 0.35);
+      border-radius: 16px;
+      background: rgba(8, 47, 73, 0.85);
+      color: #f8fafc;
+      font-size: clamp(18px, 4.5vw, 24px);
+      font-weight: 800;
       text-align: left;
-      border: 1px solid rgba(79, 195, 247, 0.3);
+      padding: 12px 14px;
+      cursor: pointer;
     }
 
-    .comparison-table th {
-      background: rgba(79, 195, 247, 0.15);
-      font-weight: bold;
+    .answers button.correct {
+      border-color: rgba(34, 197, 94, 0.95);
+      background: rgba(22, 101, 52, 0.75);
     }
 
-    .comparison-table tr:hover {
-      background: rgba(79, 195, 247, 0.08);
+    .answers button.wrong {
+      border-color: rgba(251, 113, 133, 0.95);
+      background: rgba(127, 29, 29, 0.75);
     }
 
-    @media (max-width: 768px) {
-      .modal-content {
-        padding: 10px;
-      }
-      .modal-close {
-        font-size: 30px;
-        right: 15px;
-        top: 10px;
-      }
-      .comparison-table th,
-      .comparison-table td {
-        padding: 8px;
-        font-size: 0.9rem;
-      }
+    .feedback {
+      min-height: 1.4em;
+      margin-top: 10px;
+      font-weight: 900;
+    }
+
+    .final-banner {
+      text-align: center;
+      border-color: rgba(34, 197, 94, 0.55);
+    }
+
+    .final-banner .name {
+      color: #86efac;
+      font-size: clamp(28px, 8vw, 48px);
+      font-weight: 950;
+      margin-bottom: 10px;
+    }
+
+    .final-banner a {
+      color: #67e8f9;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .visitor {
+      margin: 22px 0;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(34, 211, 238, 0.13);
+      border: 1px solid rgba(34, 211, 238, 0.42);
+      color: #e0f2fe;
+      font-weight: 900;
+    }
+
+    .top-links {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    @media (min-width: 620px) {
+      .top-links { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .top-links a {
+      display: block;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid rgba(34, 197, 94, 0.45);
+      color: #dcfce7;
+      text-decoration: none;
+      font-weight: 900;
+    }
+
+    .nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 20;
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(7, 17, 31, 0.92);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .nav-row {
+      width: min(100%, 880px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .nav button {
+      min-height: 52px;
+      border: none;
+      border-radius: 16px;
+      padding: 10px 12px;
+      font-size: clamp(16px, 4.4vw, 22px);
+      font-weight: 950;
+      cursor: pointer;
+      color: #052e16;
+      background: linear-gradient(135deg, #22c55e, #86efac);
+      box-shadow: 0 10px 28px rgba(34, 197, 94, 0.22);
+    }
+
+    .nav button:first-child {
+      color: #082f49;
+      background: linear-gradient(135deg, #22d3ee, #bae6fd);
+    }
+
+    .nav button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .counter {
+      min-width: 58px;
+      text-align: center;
+      color: #e0f2fe;
+      font-weight: 900;
+      font-size: clamp(15px, 4vw, 20px);
+      padding: 8px 6px;
+      border-radius: 14px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    @media (max-width: 420px) {
+      body { padding-left: 10px; padding-right: 10px; }
+      .nav-row { gap: 6px; }
+      .nav button { padding-left: 8px; padding-right: 8px; }
+      .counter { min-width: 48px; }
     }
   </style>
-
 </head>
+
 <body>
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction</h1>
-    </div>
-  </header>
-
-  <main class="page-content wrapper">
-
-    <section class="card">
-      <h1>Lecția 6 – Generatoare, consumatori, circuite electrice</h1>
-      <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică"</p>
-    </section>
-
-    <section class="card" id="generator">
-      <h2>1. Generatorul electric</h2>
-      <p><span class="kw"><strong>Generatorul electric</strong></span> este sursa care pune la dispoziție energia necesară pentru funcționarea circuitului.</p>
-      <p>Exemple simple: bateria, acumulatorul, pila, unele celule fotovoltaice.</p>
-
-      <div class="definition">
-        <strong>Tipuri de generatoare:</strong>
-        <ul style="margin: 8px 0; padding-left: 20px;">
-          <li><strong>Pile și baterii</strong> - furnizează curent continuu</li>
-          <li><strong>Alternatoare</strong> - furnizează curent alternativ</li>
-          <li><strong>Celule solare</strong> - transformă lumina în electricitate</li>
-          <li><strong>Dinamuri</strong> - transformă mișcarea în electricitate</li>
-        </ul>
+  <main class="lesson">
+    <section class="page active">
+      <div class="banner">
+        <p class="school">Școala Gimnazială „Gala Galaction” Mangalia</p>
+        <p class="teacher">Prof. Dănuț Andronie</p>
+        <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică”</p>
       </div>
 
-      <div class="notice">Un generator are doi poli: pozitiv (+) și negativ (-). Curentul electric curge de la + la - în exterior.</div>
-    </section>
-
-    <section class="card" id="consumator">
-      <h2>2. Consumatorul electric</h2>
-      <p><span class="kw"><strong>Consumatorul</strong></span> transformă energia electrică în alt tip de energie.</p>
-      <div class="example">Exemple: becul transformă energia electrică în lumină și căldură, iar un motor electric o transformă în mișcare.</div>
-
-      <div class="definition">
-        <strong>Tipuri de consumatori:</strong>
-        <ul style="margin: 8px 0; padding-left: 20px;">
-          <li><strong>Consumatori termici</strong> - aragaz, radiator, calorifер</li>
-          <li><strong>Consumatori luminosi</strong> - bec, LED, lampă</li>
-          <li><strong>Consumatori mecanici</strong> - motor, ventilator</li>
-          <li><strong>Consumatori electronici</strong> - calculator, televizor</li>
-        </ul>
+      <div class="card">
+        <h1>Lecția 6 – Generatoare, consumatori, circuite electrice</h1>
+        <p>
+          În această lecție învățăm din ce este alcătuit un circuit electric și de ce
+          unele circuite funcționează, iar altele nu.
+        </p>
+        <div class="notice">
+          Ideea principală: un circuit trebuie să fie închis pentru ca prin el să circule curent electric.
+        </div>
       </div>
     </section>
 
-    <section class="card" id="circuit">
-      <h2>3. Ce este un circuit electric</h2>
-      <p>Un <strong>circuit electric</strong> este un ansamblu de elemente conectate astfel încât curentul electric să poată circula.</p>
-      <p>Pentru ca un bec să lumineze, circuitul trebuie să fie <strong>închis</strong>.</p>
-
-      <div class="definition">
-        <strong>Elemente esențiale ale unui circuit:</strong>
-        <ul style="margin: 8px 0; padding-left: 20px;">
-          <li><strong>Generator</strong> - furnizează energia</li>
-          <li><strong>Conductori</strong> - transportă curentul (fire de cupru)</li>
-          <li><strong>Consumatori</strong> - utilizează curentul</li>
-          <li><strong>Întrerupător</strong> - deschide/închide circuitul</li>
+    <section class="page">
+      <div class="card">
+        <h2>1. Generatorul electric</h2>
+        <p>
+          <span class="kw">Generatorul electric</span> este sursa care pune la dispoziție
+          energia necesară pentru funcționarea circuitului.
+        </p>
+        <p>Exemple de generatoare:</p>
+        <ul>
+          <li>bateria;</li>
+          <li>acumulatorul;</li>
+          <li>pila electrică;</li>
+          <li>celula fotovoltaică;</li>
+          <li>dinamul sau alternatorul.</li>
         </ul>
-      </div>
-
-      <div class="notice">
-        <strong>Circuit deschis vs Circuit închis:</strong>
-        <ul style="margin: 8px 0; padding-left: 20px;">
-          <li><strong>Circuit deschis</strong> - curentul NU circulă (becul nu luminează)</li>
-          <li><strong>Circuit închis</strong> - curentul circulă (becul luminează)</li>
-        </ul>
+        <div class="example">
+          O baterie are doi poli: pozitiv (+) și negativ (−).
+        </div>
       </div>
     </section>
 
-    <section class="card" id="circuitSimple">
-      <h2>4. Circuit electric simplu</h2>
-      <p>Circuitul cel mai simplu conține: o baterie, un fir conductor și un bec.</p>
-
-      <!-- ILUSTRAȚIE CIRCUIT SIMPLU - CLICKABLE -->
-      <div class="illustration-container" id="circuitSimpleContainer">
-        <img src="../../../assets/img/circuit-electric-simplu.png" 
-             alt="Circuit electric simplu - baterie, fir, bec" 
-             style="max-width: 450px;">
-        <div class="image-click-hint">👆 Click pe imagine pentru a o vedea în mărime mare</div>
+    <section class="page">
+      <div class="card">
+        <h2>Tipuri de generatoare</h2>
+        <div class="grid">
+          <div class="type-card"><strong>Pile și baterii</strong><br>Furnizează curent continuu.</div>
+          <div class="type-card"><strong>Alternatoare</strong><br>Furnizează curent alternativ.</div>
+          <div class="type-card"><strong>Celule solare</strong><br>Transformă lumina în energie electrică.</div>
+          <div class="type-card"><strong>Dinamuri</strong><br>Transformă mișcarea în energie electrică.</div>
+        </div>
+        <div class="notice">
+          În exteriorul generatorului, curentul electric convențional circulă de la polul pozitiv spre polul negativ.
+        </div>
       </div>
+    </section>
 
-      <div class="definition">
-        <strong>Cum funcționează:</strong>
-        <ul style="margin: 8px 0; padding-left: 20px;">
-          <li>Bateria furnizează energia electrică</li>
-          <li>Firul de cupru transportă curentul</li>
-          <li>Becul consumă energia și luminează</li>
-          <li>Circuitul este închis, deci curentul circulă</li>
+    <section class="page">
+      <div class="card">
+        <h2>2. Consumatorul electric</h2>
+        <p>
+          <span class="kw">Consumatorul electric</span> folosește energia electrică și o
+          transformă în alt tip de energie.
+        </p>
+        <ul>
+          <li>becul transformă energia electrică în lumină și căldură;</li>
+          <li>motorul electric o transformă în mișcare;</li>
+          <li>radiatorul electric o transformă în căldură;</li>
+          <li>televizorul o transformă în lumină, sunet și căldură.</li>
         </ul>
       </div>
     </section>
 
-    <section class="card" id="circuitSerie">
-      <h2>5. Circuit electric în serie</h2>
-      <p>Într-un circuit în serie, consumatorii sunt conectați după aceluși drum. Dacă un bec se defectează, tot circuitul se oprește.</p>
-
-      <!-- ILUSTRAȚIE CIRCUIT SERIE - CLICKABLE -->
-      <div class="illustration-container" id="circuitSerieContainer">
-        <img src="../../../assets/img/circuit-electric-serie.png" 
-             alt="Circuit electric în serie - mai mulți becuri pe același drum" 
-             style="max-width: 450px;">
-        <div class="image-click-hint">👆 Click pe imagine pentru a o vedea în mărime mare</div>
+    <section class="page">
+      <div class="card">
+        <h2>3. Ce este un circuit electric?</h2>
+        <p>
+          <span class="kw">Circuitul electric</span> este un ansamblu de elemente conectate
+          astfel încât curentul electric să poată circula.
+        </p>
+        <p>Elemente esențiale:</p>
+        <ul>
+          <li><span class="kw">generatorul</span> – furnizează energia;</li>
+          <li><span class="kw">conductoarele</span> – transportă curentul;</li>
+          <li><span class="kw">consumatorul</span> – folosește energia;</li>
+          <li><span class="kw">întrerupătorul</span> – deschide sau închide circuitul.</li>
+        </ul>
+        <div class="notice">
+          Dacă circuitul este deschis, curentul nu circulă. Dacă circuitul este închis, curentul circulă.
+        </div>
       </div>
+    </section>
 
-      <div class="definition">
-        <strong>Caracteristici ale circuitului în serie:</strong>
-        <ul style="margin: 8px 0; padding-left: 20px;">
-          <li>Un singur drum pentru curent</li>
-          <li>Aceeași intensitate de curent în toate punctele</li>
-          <li>Dacă se defectează un element, circuitul se întrerupe</li>
-          <li>Becurile strălucesc mai slab (tensiune distribuită)</li>
+    <section class="page">
+      <div class="card">
+        <h2>4. Circuit electric simplu</h2>
+        <p>
+          Cel mai simplu circuit poate conține o baterie, fire conductoare și un bec.
+        </p>
+
+        <div class="diagram" aria-label="Circuit electric simplu cu baterie și bec">
+          <svg viewBox="0 0 760 320" role="img">
+            <defs>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L8,3 z" fill="#facc15"></path>
+              </marker>
+            </defs>
+            <rect x="30" y="35" width="700" height="250" rx="28" fill="#0f172a" stroke="#334155" stroke-width="4"/>
+            <line x1="210" y1="90" x2="540" y2="90" stroke="#67e8f9" stroke-width="10" stroke-linecap="round"/>
+            <line x1="540" y1="90" x2="540" y2="230" stroke="#67e8f9" stroke-width="10" stroke-linecap="round"/>
+            <line x1="540" y1="230" x2="210" y2="230" stroke="#67e8f9" stroke-width="10" stroke-linecap="round"/>
+            <line x1="210" y1="230" x2="210" y2="90" stroke="#67e8f9" stroke-width="10" stroke-linecap="round"/>
+            <rect x="145" y="124" width="130" height="72" rx="14" fill="#1e293b" stroke="#facc15" stroke-width="4"/>
+            <line x1="176" y1="112" x2="176" y2="208" stroke="#f8fafc" stroke-width="7"/>
+            <line x1="216" y1="132" x2="216" y2="188" stroke="#f8fafc" stroke-width="7"/>
+            <text x="160" y="105" fill="#fef08a" font-size="30" font-weight="800">+</text>
+            <text x="224" y="105" fill="#fef08a" font-size="30" font-weight="800">−</text>
+            <circle cx="540" cy="160" r="50" fill="#fef3c7" stroke="#facc15" stroke-width="6"/>
+            <path d="M510 190 L570 130 M510 130 L570 190" stroke="#78350f" stroke-width="6" stroke-linecap="round"/>
+            <path d="M330 70 C380 40 420 40 470 70" fill="none" stroke="#facc15" stroke-width="6" marker-end="url(#arrow)"/>
+            <text x="305" y="38" fill="#fef3c7" font-size="28" font-weight="800">curent electric</text>
+          </svg>
+          <div class="caption">Bateria furnizează energia, firele transportă curentul, iar becul luminează.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="card">
+        <h2>5. Circuit deschis și circuit închis</h2>
+        <div class="comparison two">
+          <div class="compare-card">
+            <h3>Circuit deschis</h3>
+            <p>Curentul <span class="kw">nu circulă</span>.</p>
+            <p>Becul nu luminează.</p>
+          </div>
+          <div class="compare-card">
+            <h3>Circuit închis</h3>
+            <p>Curentul <span class="kw">circulă</span>.</p>
+            <p>Becul luminează.</p>
+          </div>
+        </div>
+        <div class="warning">
+          Nu experimenta cu prizele sau instalațiile electrice din casă. Folosește numai baterii mici și sub supravegherea unui adult.
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="card">
+        <h2>6. Circuit electric în serie</h2>
+        <p>
+          Într-un <span class="kw">circuit în serie</span>, consumatorii sunt legați unul după altul,
+          pe același drum.
+        </p>
+
+        <div class="diagram" aria-label="Circuit electric în serie cu două becuri">
+          <svg viewBox="0 0 760 300" role="img">
+            <rect x="30" y="35" width="700" height="230" rx="28" fill="#0f172a" stroke="#334155" stroke-width="4"/>
+            <line x1="170" y1="95" x2="585" y2="95" stroke="#67e8f9" stroke-width="10" stroke-linecap="round"/>
+            <line x1="585" y1="95" x2="585" y2="215" stroke="#67e8f9" stroke-width="10" stroke-linecap="round"/>
+            <line x1="585" y1="215" x2="170" y2="215" stroke="#67e8f9" stroke-width="10" stroke-linecap="round"/>
+            <line x1="170" y1="215" x2="170" y2="95" stroke="#67e8f9" stroke-width="10" stroke-linecap="round"/>
+            <rect x="112" y="122" width="116" height="66" rx="14" fill="#1e293b" stroke="#facc15" stroke-width="4"/>
+            <line x1="142" y1="112" x2="142" y2="198" stroke="#f8fafc" stroke-width="7"/>
+            <line x1="178" y1="132" x2="178" y2="178" stroke="#f8fafc" stroke-width="7"/>
+            <circle cx="355" cy="95" r="40" fill="#fef3c7" stroke="#facc15" stroke-width="6"/>
+            <path d="M330 120 L380 70 M330 70 L380 120" stroke="#78350f" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="500" cy="95" r="40" fill="#fef3c7" stroke="#facc15" stroke-width="6"/>
+            <path d="M475 120 L525 70 M475 70 L525 120" stroke="#78350f" stroke-width="5" stroke-linecap="round"/>
+            <text x="300" y="265" fill="#fef3c7" font-size="28" font-weight="800">un singur drum</text>
+          </svg>
+          <div class="caption">Dacă un bec se arde, se întrerupe tot circuitul.</div>
+        </div>
+
+        <ul>
+          <li>există un singur drum pentru curent;</li>
+          <li>aceeași intensitate trece prin toate elementele;</li>
+          <li>dacă un element se defectează, circuitul se oprește.</li>
         </ul>
       </div>
     </section>
 
-    <section class="card" id="circuitParalel">
-      <h2>6. Circuit electric în paralel</h2>
-      <p>Într-un circuit în paralel, consumatorii sunt conectați pe drumuri diferite. Dacă un bec se defectează, celelalte continuă să funcționeze.</p>
+    <section class="page">
+      <div class="card">
+        <h2>7. Circuit electric în paralel</h2>
+        <p>
+          Într-un <span class="kw">circuit în paralel</span>, consumatorii sunt legați pe drumuri diferite.
+        </p>
 
-      <!-- ILUSTRAȚIE CIRCUIT PARALEL - CLICKABLE -->
-      <div class="illustration-container" id="circuitParalelContainer">
-        <img src="../../../assets/img/circuit-electric-paralel.png" 
-             alt="Circuit electric în paralel - mai mulți becuri pe drumuri diferite" 
-             style="max-width: 450px;">
-        <div class="image-click-hint">👆 Click pe imagine pentru a o vedea în mărime mare</div>
-      </div>
+        <div class="diagram" aria-label="Circuit electric în paralel cu două becuri">
+          <svg viewBox="0 0 760 330" role="img">
+            <rect x="30" y="35" width="700" height="260" rx="28" fill="#0f172a" stroke="#334155" stroke-width="4"/>
+            <rect x="105" y="132" width="120" height="66" rx="14" fill="#1e293b" stroke="#facc15" stroke-width="4"/>
+            <line x1="135" y1="122" x2="135" y2="208" stroke="#f8fafc" stroke-width="7"/>
+            <line x1="173" y1="142" x2="173" y2="188" stroke="#f8fafc" stroke-width="7"/>
+            <line x1="225" y1="100" x2="610" y2="100" stroke="#67e8f9" stroke-width="10" stroke-linecap="round"/>
+            <line x1="225" y1="230" x2="610" y2="230" stroke="#67e8f9" stroke-width="10" stroke-linecap="round"/>
+            <line x1="225" y1="100" x2="225" y2="230" stroke="#67e8f9" stroke-width="10" stroke-linecap="round"/>
+            <line x1="610" y1="100" x2="610" y2="230" stroke="#67e8f9" stroke-width="10" stroke-linecap="round"/>
+            <line x1="225" y1="165" x2="300" y2="165" stroke="#67e8f9" stroke-width="10" stroke-linecap="round"/>
+            <line x1="410" y1="165" x2="500" y2="165" stroke="#67e8f9" stroke-width="10" stroke-linecap="round"/>
+            <line x1="225" y1="100" x2="300" y2="100" stroke="#67e8f9" stroke-width="10" stroke-linecap="round"/>
+            <line x1="410" y1="100" x2="610" y2="100" stroke="#67e8f9" stroke-width="10" stroke-linecap="round"/>
+            <line x1="225" y1="230" x2="300" y2="230" stroke="#67e8f9" stroke-width="10" stroke-linecap="round"/>
+            <line x1="410" y1="230" x2="610" y2="230" stroke="#67e8f9" stroke-width="10" stroke-linecap="round"/>
+            <circle cx="355" cy="100" r="40" fill="#fef3c7" stroke="#facc15" stroke-width="6"/>
+            <path d="M330 125 L380 75 M330 75 L380 125" stroke="#78350f" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="355" cy="230" r="40" fill="#fef3c7" stroke="#facc15" stroke-width="6"/>
+            <path d="M330 255 L380 205 M330 205 L380 255" stroke="#78350f" stroke-width="5" stroke-linecap="round"/>
+            <text x="438" y="172" fill="#fef3c7" font-size="28" font-weight="800">drumuri diferite</text>
+          </svg>
+          <div class="caption">Dacă un bec se defectează, celălalt poate rămâne aprins.</div>
+        </div>
 
-      <div class="definition">
-        <strong>Caracteristici ale circuitului în paralel:</strong>
-        <ul style="margin: 8px 0; padding-left: 20px;">
-          <li>Mai multe drumuri pentru curent</li>
-          <li>Tensiune egală la fiecare ramură</li>
-          <li>Dacă se defectează un element, celelalte rămân funcționale</li>
-          <li>Becurile strălucesc mai strălucitor</li>
-          <li>Se folosește în locuințe și școli</li>
+        <ul>
+          <li>există mai multe drumuri pentru curent;</li>
+          <li>fiecare ramură poate funcționa separat;</li>
+          <li>se folosește în locuințe și școli.</li>
         </ul>
       </div>
     </section>
 
-    <section class="card" id="comparatie">
-      <h2>7. Comparație: Serie vs Paralel</h2>
-      
-      <table class="comparison-table">
-        <thead>
-          <tr>
-            <th>Caracteristică</th>
-            <th>Circuit în Serie</th>
-            <th>Circuit în Paralel</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td><strong>Drumuri</strong></td>
-            <td>Un singur drum</td>
-            <td>Mai multe drumuri</td>
-          </tr>
-          <tr>
-            <td><strong>Curent</strong></td>
-            <td>Aceeași în toate punctele</td>
-            <td>Se împarte la fiecare ramură</td>
-          </tr>
-          <tr>
-            <td><strong>Tensiune</strong></td>
-            <td>Se distribuie între elemente</td>
-            <td>Aceeași la fiecare ramură</td>
-          </tr>
-          <tr>
-            <td><strong>Defectare</strong></td>
-            <td>Totul se oprește</td>
-            <td>Restul continuă</td>
-          </tr>
-          <tr>
-            <td><strong>Strălucire</strong></td>
-            <td>Becurile mai slabe</td>
-            <td>Becurile mai strălucitoare</td>
-          </tr>
-          <tr>
-            <td><strong>Utilizare</strong></td>
-            <td>Rar (copaci de Crăciun)</td>
-            <td>Obișnuit (casă, școală)</td>
-          </tr>
-        </tbody>
-      </table>
+    <section class="page">
+      <div class="card">
+        <h2>8. Serie vs paralel</h2>
+        <div class="comparison">
+          <div class="compare-card"><strong>Drumuri:</strong> serie – un singur drum; paralel – mai multe drumuri.</div>
+          <div class="compare-card"><strong>Curent:</strong> serie – aceeași intensitate în toate punctele; paralel – curentul se poate împărți pe ramuri.</div>
+          <div class="compare-card"><strong>Defectare:</strong> serie – se oprește tot; paralel – restul poate continua.</div>
+          <div class="compare-card"><strong>Utilizare:</strong> serie – rar; paralel – în case, școli și aparate.</div>
+        </div>
+      </div>
     </section>
 
-    <section class="card" id="exemple">
-      <h2>8. Exemple de circuite</h2>
-      <p>Într-o lanternă, într-un clopoțel electric sau într-o jucărie cu baterii găsim circuite electrice simple.</p>
-      <p>În locuință și în școală întâlnim circuite mai complexe, dar bazate pe aceleași idei de bază.</p>
+    <section class="page">
+      <div class="card">
+        <h2>9. Exemple de circuite</h2>
+        <p>Circuite electrice se găsesc în multe obiecte din viața de zi cu zi.</p>
+        <ul>
+          <li><span class="kw">lanterna</span> – baterie, întrerupător și bec;</li>
+          <li><span class="kw">jucăria cu baterii</span> – motor mic și conductoare;</li>
+          <li><span class="kw">clopoțelul electric</span> – circuit cu electromagnet;</li>
+          <li><span class="kw">locuința</span> – multe circuite legate în paralel;</li>
+          <li><span class="kw">mașina</span> – mai multe circuite pentru lumini, motor și bord.</li>
+        </ul>
+        <div class="notice">
+          Toate au aceeași idee de bază: o sursă de energie, conductoare și consumatori.
+        </div>
+      </div>
+    </section>
 
-      <div class="definition">
-        <strong>Exemple practice:</strong>
-        <ul style="margin: 8px 0; padding-left: 20px;">
-          <li><strong>Lanternă</strong> - circuit simplu (baterie + bec)</li>
-          <li><strong>Clopoțel electric</strong> - circuit simplu cu electromagnet</li>
-          <li><strong>Locuință</strong> - circuite complexe în paralel</li>
-          <li><strong>Copac de Crăciun</strong> - poate fi serie sau paralel</li>
-          <li><strong>Mașină</strong> - circuite multiple în paralel</li>
+    <section class="page">
+      <div class="card">
+        <h2>Reține</h2>
+        <ul>
+          <li>Generatorul furnizează energia necesară circuitului.</li>
+          <li>Consumatorul folosește energia electrică.</li>
+          <li>Curentul circulă doar într-un circuit închis.</li>
+          <li>Circuitul simplu poate conține baterie, fire și bec.</li>
+          <li>Circuitul în serie are o singură cale.</li>
+          <li>Circuitul în paralel are mai multe căi.</li>
+          <li>În locuințe, circuitele sunt în mare parte în paralel.</li>
         </ul>
       </div>
     </section>
 
-    <section class="card">
-      <h2>Reține</h2>
-      <ul>
-        <li>Generatorul furnizează energia necesară circuitului</li>
-        <li>Consumatorul folosește energia electrică</li>
-        <li>Curentul circulă doar într-un circuit închis</li>
-        <li>Circuit simplu = baterie + fir + consumator</li>
-        <li>Circuit în serie = o cale, dacă se defectează ceva, se oprește tot</li>
-        <li>Circuit în paralel = mai multe căi, folosit în case și școli</li>
-        <li>Multe aparate din viața de zi cu zi funcționează cu ajutorul circuitelor electrice</li>
-      </ul>
-    </section>
+    <section class="page">
+      <div class="card">
+        <h2>Verificare rapidă</h2>
 
-    <section class="card">
-      <h2>Navigare</h2>
-      <p class="mini-note">Butonul „Mergi mai departe" te duce direct la lecția următoare.</p>
-      <div class="lesson-nav">
-        <a class="nav-button secondary" href="./index.html">Toate lecțiile</a>
-        <a class="nav-button" href="./lectia-5.html">Lecția anterioară</a>
-        <a class="nav-button success" href="./lectia-7.html">Mergi mai departe</a>
+        <div class="quiz">
+          <div class="question">
+            <p><strong>1. Ce rol are generatorul?</strong></p>
+            <div class="answers">
+              <button type="button" data-ok="1">furnizează energia necesară circuitului</button>
+              <button type="button" data-ok="0">măsoară temperatura</button>
+              <button type="button" data-ok="0">oprește mereu curentul</button>
+            </div>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="question">
+            <p><strong>2. Când luminează becul într-un circuit simplu?</strong></p>
+            <div class="answers">
+              <button type="button" data-ok="0">când circuitul este deschis</button>
+              <button type="button" data-ok="1">când circuitul este închis</button>
+              <button type="button" data-ok="0">când lipsește bateria</button>
+            </div>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="question">
+            <p><strong>3. Ce se întâmplă într-un circuit în serie dacă un bec se defectează?</strong></p>
+            <div class="answers">
+              <button type="button" data-ok="1">se întrerupe tot circuitul</button>
+              <button type="button" data-ok="0">celelalte becuri luminează mai tare</button>
+              <button type="button" data-ok="0">curentul merge pe alt drum</button>
+            </div>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="question">
+            <p><strong>4. De ce se folosesc circuite în paralel în locuințe?</strong></p>
+            <div class="answers">
+              <button type="button" data-ok="0">pentru că au un singur drum</button>
+              <button type="button" data-ok="1">pentru că fiecare ramură poate funcționa separat</button>
+              <button type="button" data-ok="0">pentru că nu au nevoie de generator</button>
+            </div>
+            <div class="feedback"></div>
+          </div>
+        </div>
       </div>
     </section>
 
+    <section class="page">
+      <div class="final-banner">
+        <div class="name">Prof. Dănuț Andronie</div>
+        <p>
+          E-mail:
+          <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+        </p>
+        <p>Pentru observații, propuneri și sugestii privind platforma educațională.</p>
+
+        <div class="visitor">
+          Vizitatori pe acest dispozitiv: <span id="visitCount">0</span>
+        </div>
+
+        <div class="top-links">
+          <a href="../index.html">Toate lecțiile</a>
+          <a href="./lectia-5.html">Lecția anterioară</a>
+          <a href="./lectia-7.html">Lecția următoare</a>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <!-- MODAL PENTRU IMAGINI PE FULL SCREEN -->
-  <div id="imageModal" class="modal">
-    <span class="modal-close" onclick="closeImageModal()">&times;</span>
-    <div class="modal-content" id="modalContent">
-      <!-- Imaginea va fi clonată aici -->
+  <nav class="nav" aria-label="Navigare lecție">
+    <div class="nav-row">
+      <button id="prevBtn" type="button">Înapoi</button>
+      <div class="counter"><span id="pageNow">1</span>/<span id="pageTotal">13</span></div>
+      <button id="nextBtn" type="button">Mergi mai departe</button>
     </div>
-    <div class="modal-info">Click oriunde pe ecran pentru a închide | Scroll pentru a mări/micșora</div>
-  </div>
-
-  <footer class="site-footer">
-    <div class="wrapper">
-      <p>© Fizica Galaction · Prof. DĂNUȚ ANDRONIE</p>
-      <div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 8px;">
-        E-mail:
-        <a href="mailto:danutmg@gmail.com" style="color: #22d3ee; text-decoration: none;">danutmg@gmail.com</a><br>
-        <span style="font-size: 0.85rem; color: #94a3b8;">
-          Pentru observații, propuneri și sugestii privind platforma educațională.
-        </span>
-      </div>
-    </div>
-  </footer>
-
-  <script src="../../../assets/js/main.js"></script>
+  </nav>
 
   <script>
-    // Modal functionality pentru toate imaginile de circuite
-    const circuits = [
-      { id: 'circuitSimpleContainer', name: 'Circuit Simplu' },
-      { id: 'circuitSerieContainer', name: 'Circuit Serie' },
-      { id: 'circuitParalelContainer', name: 'Circuit Paralel' }
-    ];
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageNow = document.getElementById('pageNow');
+    const pageTotal = document.getElementById('pageTotal');
+    const visitCount = document.getElementById('visitCount');
+    let index = 0;
 
-    const imageModal = document.getElementById('imageModal');
-    const modalContent = document.getElementById('modalContent');
+    pageTotal.textContent = pages.length;
 
-    circuits.forEach(circuit => {
-      const elem = document.getElementById(circuit.id);
-      if (elem) {
-        const img = elem.querySelector('img');
-        
-        elem.addEventListener('click', function() {
-          const clonedImg = img.cloneNode(true);
-          clonedImg.style.width = '90vw';
-          clonedImg.style.height = 'auto';
-          clonedImg.style.maxWidth = '900px';
-          clonedImg.style.maxHeight = '90vh';
-          clonedImg.style.cursor = 'auto';
-          clonedImg.style.borderRadius = '8px';
-          clonedImg.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.5)';
-          
-          modalContent.innerHTML = '';
-          modalContent.appendChild(clonedImg);
-          imageModal.classList.add('active');
-          document.body.style.overflow = 'hidden';
-        });
-      }
-    });
-
-    function closeImageModal() {
-      imageModal.classList.remove('active');
-      document.body.style.overflow = 'auto';
+    function showPage(i) {
+      index = Math.max(0, Math.min(i, pages.length - 1));
+      pages.forEach((page, pageIndex) => page.classList.toggle('active', pageIndex === index));
+      pageNow.textContent = index + 1;
+      prevBtn.disabled = index === 0;
+      nextBtn.textContent = index === pages.length - 1 ? 'La început' : 'Mergi mai departe';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Close modal when clicking outside the content
-    imageModal.addEventListener('click', function(e) {
-      if (e.target === imageModal) {
-        closeImageModal();
+    prevBtn.addEventListener('click', () => showPage(index - 1));
+    nextBtn.addEventListener('click', () => {
+      if (index === pages.length - 1) {
+        showPage(0);
+      } else {
+        showPage(index + 1);
       }
     });
 
-    // Close modal with Escape key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        closeImageModal();
-      }
-    });
+    document.querySelectorAll('.answers button').forEach(button => {
+      button.addEventListener('click', () => {
+        const group = button.closest('.answers');
+        const feedback = button.closest('.question').querySelector('.feedback');
 
-    // Zoom functionality with mouse wheel
-    let zoomLevel = 1;
-    modalContent.addEventListener('wheel', function(e) {
-      if (imageModal.classList.contains('active')) {
-        e.preventDefault();
-        const img = modalContent.querySelector('img');
-        if (img) {
-          zoomLevel += (e.deltaY > 0 ? -0.1 : 0.1);
-          zoomLevel = Math.max(0.5, Math.min(3, zoomLevel));
-          img.style.width = (90 * zoomLevel) + 'vw';
-          img.style.height = 'auto';
+        group.querySelectorAll('button').forEach(btn => {
+          btn.classList.remove('correct', 'wrong');
+          btn.disabled = false;
+        });
+
+        if (button.dataset.ok === '1') {
+          button.classList.add('correct');
+          feedback.textContent = 'Corect!';
+          feedback.style.color = '#86efac';
+        } else {
+          button.classList.add('wrong');
+          feedback.textContent = 'Mai încearcă.';
+          feedback.style.color = '#fda4af';
         }
-      }
+      });
     });
+
+    function updateLocalCounter() {
+      const key = 'vizite-electrice-magnetice-lectia-6';
+      const current = Number(localStorage.getItem(key) || '0') + 1;
+      localStorage.setItem(key, String(current));
+      if (visitCount) visitCount.textContent = current;
+    }
+
+    updateLocalCounter();
+    showPage(0);
   </script>
 </body>
 </html>

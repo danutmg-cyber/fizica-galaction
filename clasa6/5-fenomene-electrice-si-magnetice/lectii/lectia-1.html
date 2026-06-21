@@ -1,133 +1,681 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Lecția 1 | Magneți, interacțiuni între magneți, poli magnetici | Fizica Galaction</title>
-  <meta name="description" content="Ce sunt magneții, cum interacționează și ce înseamnă polii magnetici.">
-  <link rel="stylesheet" href="../../../assets/css/style.css">
-
+  <meta name="description" content="Lecția 1, clasa a VI-a: magneți, poli magnetici și interacțiuni între magneți." />
   <style>
-    .lesson-nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
-      justify-content: space-between;
+    :root {
+      --bg: #07111f;
+      --card: #102033;
+      --card2: #132944;
+      --text: #f8fafc;
+      --muted: #dbeafe;
+      --accent: #22d3ee;
+      --accent2: #facc15;
+      --good: #22c55e;
+      --bad: #fb7185;
+      --border: rgba(148, 163, 184, 0.32);
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
     }
-    .nav-button {
-      display: inline-block;
-      padding: 12px 18px;
-      border-radius: 12px;
-      text-decoration: none;
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.15), transparent 35%),
+        linear-gradient(180deg, #07111f 0%, #0f172a 100%);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      font-size: clamp(20px, 5vw, 28px);
+      line-height: 1.55;
+      padding: 14px;
+      padding-bottom: 108px;
+    }
+
+    .lesson {
+      width: min(100%, 860px);
+      margin: 0 auto;
+    }
+
+    .page {
+      display: none;
+      min-height: calc(100svh - 140px);
+      animation: fade 180ms ease-in;
+    }
+
+    .page.active { display: block; }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .banner, .card, .final-banner {
+      background: linear-gradient(160deg, rgba(16, 32, 51, 0.98), rgba(19, 41, 68, 0.98));
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 5vw, 32px);
+      margin: 0 0 18px;
+    }
+
+    .banner { border-color: rgba(34, 211, 238, 0.55); }
+
+    .school {
+      color: var(--accent);
+      font-weight: 900;
+      font-size: clamp(18px, 4.6vw, 24px);
+      text-align: center;
+      letter-spacing: 0.02em;
+      margin: 0 0 10px;
+      text-transform: uppercase;
+    }
+
+    .teacher {
+      color: #e0f2fe;
+      text-align: center;
       font-weight: 700;
-      background: #22d3ee;
-      color: #082f49;
-      border: 2px solid #0891b2;
-      box-shadow: 0 4px 14px rgba(8,145,178,0.18);
+      margin: 0 0 16px;
+      font-size: clamp(18px, 4.8vw, 23px);
     }
-    .nav-button.secondary {
-      background: #e2e8f0;
+
+    .quote {
+      margin: 12px 0 0;
+      padding: 14px;
+      border-left: 5px solid var(--accent2);
+      border-radius: 14px;
+      background: rgba(250, 204, 21, 0.11);
+      color: #fef9c3;
+      font-weight: 700;
+      font-style: italic;
+      text-align: center;
+    }
+
+    h1, h2, h3 {
+      line-height: 1.15;
+      margin: 0 0 16px;
+    }
+
+    h1 {
+      font-size: clamp(31px, 8.8vw, 54px);
+      color: #ffffff;
+      text-align: center;
+    }
+
+    h2 {
+      font-size: clamp(28px, 7.5vw, 44px);
+      color: var(--accent);
+    }
+
+    h3 {
+      font-size: clamp(23px, 6vw, 34px);
+      color: #fef3c7;
+    }
+
+    p { margin: 0 0 16px; }
+
+    ul {
+      padding-left: 1.2em;
+      margin: 0 0 16px;
+    }
+
+    li { margin: 12px 0; }
+
+    .kw {
+      color: #fef08a;
+      font-weight: 900;
+    }
+
+    .notice {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(34, 211, 238, 0.12);
+      border: 1px solid rgba(34, 211, 238, 0.38);
+      color: #e0f2fe;
+      font-weight: 700;
+    }
+
+    .example {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.38);
+      color: #dcfce7;
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .type-card {
+      background: rgba(15, 23, 42, 0.52);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .magnet-demo {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .magnet-line {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.56);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+    }
+
+    .magnet {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      overflow: hidden;
+      border-radius: 14px;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      font-weight: 1000;
+      text-align: center;
+      min-height: 54px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+    }
+
+    .pole-n {
+      background: #dc2626;
+      color: white;
+      display: grid;
+      place-items: center;
+      padding: 8px;
+    }
+
+    .pole-s {
+      background: #2563eb;
+      color: white;
+      display: grid;
+      place-items: center;
+      padding: 8px;
+    }
+
+    .arrow {
+      color: #67e8f9;
+      font-weight: 1000;
+      white-space: nowrap;
+      text-align: center;
+      font-size: clamp(24px, 7vw, 36px);
+    }
+
+    .check {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    .question {
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .answers button {
+      width: 100%;
+      border: 2px solid rgba(34, 211, 238, 0.35);
+      background: #0f2238;
+      color: #fff;
+      border-radius: 14px;
+      padding: 14px 12px;
+      font-size: clamp(18px, 4.7vw, 23px);
+      font-weight: 800;
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .answers button.correct {
+      background: rgba(34, 197, 94, 0.25);
+      border-color: var(--good);
+    }
+
+    .answers button.wrong {
+      background: rgba(251, 113, 133, 0.22);
+      border-color: var(--bad);
+    }
+
+    .feedback {
+      min-height: 1.5em;
+      margin-top: 10px;
+      font-weight: 900;
+    }
+
+    .final-banner {
+      text-align: center;
+      border-color: rgba(250, 204, 21, 0.65);
+      background:
+        linear-gradient(160deg, rgba(30, 41, 59, 0.98), rgba(12, 74, 110, 0.96));
+    }
+
+    .final-banner .name {
+      font-size: clamp(26px, 7vw, 42px);
+      color: #fef08a;
+      font-weight: 1000;
+      margin-bottom: 10px;
+    }
+
+    .final-banner a {
+      color: #67e8f9;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .visitor {
+      margin-top: 20px;
+      padding: 16px;
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.58);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      font-size: clamp(20px, 5.2vw, 28px);
+      font-weight: 900;
+    }
+
+    .nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 50;
+      padding: 10px max(12px, env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-right));
+      background: rgba(7, 17, 31, 0.94);
+      border-top: 1px solid rgba(148, 163, 184, 0.25);
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-row {
+      width: min(100%, 860px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .nav button, .nav a {
+      min-height: 52px;
+      border: none;
+      border-radius: 14px;
+      padding: 10px 10px;
+      font-size: clamp(16px, 4.2vw, 20px);
+      font-weight: 1000;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #prevBtn {
+      background: #334155;
+      color: #f8fafc;
+    }
+
+    #nextBtn {
+      background: linear-gradient(135deg, #22c55e, #06b6d4);
+      color: #03131a;
+    }
+
+    .counter {
+      min-width: 54px;
+      color: #e0f2fe;
+      text-align: center;
+      font-weight: 1000;
+      font-size: clamp(16px, 4.2vw, 20px);
+      white-space: nowrap;
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .top-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 16px;
+    }
+
+    .top-links a {
       color: #0f172a;
-      border-color: #cbd5e1;
+      background: #67e8f9;
+      border-radius: 999px;
+      padding: 10px 14px;
+      text-decoration: none;
+      font-size: clamp(16px, 4vw, 19px);
+      font-weight: 900;
     }
-    .nav-button.success {
-      background: #22c55e;
-      color: #052e16;
-      border-color: #16a34a;
-    }
-    .nav-button:hover,
-    .nav-button:focus {
-      filter: brightness(1.02);
-      transform: translateY(-1px);
-    }
-    .mini-note {
-      font-size: 0.95rem;
-      color: #cbd5e1;
-      margin-top: 8px;
+
+    @media (min-width: 680px) {
+      .answers { grid-template-columns: repeat(3, 1fr); }
+      .grid { grid-template-columns: repeat(2, 1fr); }
+      .magnet-demo { grid-template-columns: repeat(2, 1fr); }
+      body { padding-top: 24px; }
     }
   </style>
-
 </head>
 <body>
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction</h1>
-    </div>
-  </header>
+  <main class="lesson" aria-live="polite">
+    <section class="page active">
+      <div class="banner">
+        <p class="school">Școala Gimnazială „Gala Galaction” Mangalia</p>
+        <p class="teacher">Prof. Dănuț Andronie</p>
+        <h1>Lecția 1 – Magneți, interacțiuni între magneți, poli magnetici</h1>
+        <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică”</p>
+      </div>
 
-  <main class="page-content wrapper">
-
-
-    <section class="card">
-      <h1>Lecția 1 – Magneți, interacțiuni între magneți, poli magnetici</h1>
-      <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică”</p>
-    </section>
-
-    <section class="card" id="ce-este-magnetul">
-      <h2>1. Ce este un magnet</h2>
-      <p><span class="kw"><strong>Magnetul</strong></span> este un corp care poate atrage fierul și unele materiale care conțin fier.</p>
-<p>Îl întâlnim în jucării, în ușa frigiderului, în boxe, în busolă și în multe dispozitive tehnice.</p>
-<div class="notice">Magneții acționează și fără contact direct, adică pot interacționa de la distanță.</div>
-    </section>
-    <section class="card" id="poli">
-      <h2>2. Polii magnetici</h2>
-      <p>Fiecare magnet are doi poli: <span class="kw"><strong>polul Nord</strong></span> și <span class="kw"><strong>polul Sud</strong></span>.</p>
-<p>Polii sunt zonele în care efectul magnetic se observă cel mai puternic.</p>
-<div class="example">De exemplu, la capetele unui magnet-bară se prind cele mai multe agrafe.</div>
-    </section>
-    <section class="card" id="interactiuni">
-      <h2>3. Cum interacționează magneții</h2>
-      <p>Doi magneți se pot <strong>atrage</strong> sau se pot <strong>respinge</strong>.</p>
-<ul>
-  <li>polii de nume diferit se atrag;</li>
-  <li>polii de același nume se resping.</li>
-</ul>
-<p>Acest lucru explică de ce uneori doi magneți „se lipesc”, iar alteori „se împing”.</p>
-    </section>
-    <section class="card" id="magnetizare">
-      <h2>4. Magnetizarea</h2>
-      <p>Unele corpuri care conțin fier pot deveni temporar magnetice atunci când sunt puse în apropierea unui magnet.</p>
-<p>Acest proces se numește <span class="kw"><strong>magnetizare</strong></span>.</p>
-<div class="notice">Un magnet permanent își păstrează proprietățile magnetice, iar un magnet temporar le păstrează doar un timp sau în anumite condiții.</div>
-    </section>
-
-    <section class="card">
-      <h2>Reține</h2>
-      <ul>
-        <li>magneții atrag corpurile care conțin fier;</li>
-        <li>fiecare magnet are doi poli: Nord și Sud;</li>
-        <li>polii identici se resping, iar polii diferiți se atrag;</li>
-        <li>unele corpuri pot fi magnetizate.</li>
-      </ul>
-    </section>
-
-    <section class="card">
-      <h2>Navigare</h2>
-      <p class="mini-note">Butonul „Mergi mai departe” te duce direct la lecția următoare.</p>
-      <div class="lesson-nav">
-        <a class="nav-button secondary" href="./index.html">Toate lecțiile</a>
-        <a class="nav-button" href="./index.html">Înapoi la lecții</a>
-        <a class="nav-button success" href="./lectia-2.html">Mergi mai departe</a>
+      <div class="card">
+        <h2>Ideea lecției</h2>
+        <p>
+          Magneții sunt corpuri care pot atrage anumite materiale și pot interacționa
+          între ei chiar și fără contact direct.
+        </p>
+        <div class="notice">
+          În această lecție observăm ce sunt magneții, unde se află polii lor și când
+          doi magneți se atrag sau se resping.
+        </div>
       </div>
     </section>
 
+    <section class="page">
+      <div class="card">
+        <h2>1. Ce este un magnet?</h2>
+        <p>
+          <span class="kw">Magnetul</span> este un corp care poate atrage fierul și unele
+          materiale care conțin fier.
+        </p>
+        <p>
+          Întâlnim magneți în jucării, în ușa frigiderului, în boxe, în busolă și în
+          multe dispozitive tehnice.
+        </p>
+        <div class="example">
+          Exemplu: un magnet apropiat de câteva agrafe metalice le poate atrage fără să le atingă.
+        </div>
+      </div>
+    </section>
 
+    <section class="page">
+      <div class="card">
+        <h2>2. Acțiune la distanță</h2>
+        <p>
+          Magneții pot acționa <span class="kw">fără contact direct</span>.
+          Aceasta înseamnă că efectul lor se poate observa și când între magnet și corp
+          există o mică distanță.
+        </p>
+        <p>
+          De aceea, un magnet poate pune în mișcare o agrafă sau poate atrage un obiect
+          care conține fier înainte să îl atingă.
+        </p>
+        <div class="notice">
+          Interacțiunea magnetică este un exemplu de interacțiune care se poate manifesta la distanță.
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="card">
+        <h2>3. Polii magnetici</h2>
+        <p>
+          Fiecare magnet are doi poli: <span class="kw">polul Nord</span> și
+          <span class="kw">polul Sud</span>.
+        </p>
+        <p>
+          Polii sunt zonele în care efectul magnetic se observă cel mai puternic.
+          La un magnet-bară, de obicei, aceștia se află la capete.
+        </p>
+
+        <div class="magnet-line" aria-label="Magnet cu poli Nord și Sud">
+          <div class="magnet">
+            <div class="pole-n">N</div>
+            <div class="pole-s">S</div>
+          </div>
+          <div class="arrow">→</div>
+          <p style="margin:0;">Capetele atrag cele mai multe agrafe.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="card">
+        <h2>4. Cum interacționează magneții?</h2>
+        <p>
+          Doi magneți se pot <span class="kw">atrage</span> sau se pot
+          <span class="kw">respinge</span>, în funcție de polii care sunt apropiați.
+        </p>
+
+        <div class="magnet-demo">
+          <div class="type-card">
+            <h3>Poli diferiți</h3>
+            <div class="magnet-line">
+              <div class="magnet"><div class="pole-n">N</div><div class="pole-s">S</div></div>
+              <div class="arrow">↔</div>
+              <div class="magnet"><div class="pole-n">N</div><div class="pole-s">S</div></div>
+            </div>
+            <p>Polii de nume diferit se atrag.</p>
+          </div>
+
+          <div class="type-card">
+            <h3>Poli identici</h3>
+            <div class="magnet-line">
+              <div class="magnet"><div class="pole-s">S</div><div class="pole-n">N</div></div>
+              <div class="arrow">⟷</div>
+              <div class="magnet"><div class="pole-n">N</div><div class="pole-s">S</div></div>
+            </div>
+            <p>Polii de același nume se resping.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="card">
+        <h2>5. Regula polilor magnetici</h2>
+        <ul>
+          <li><span class="kw">Nord – Sud</span>: atracție.</li>
+          <li><span class="kw">Sud – Nord</span>: atracție.</li>
+          <li><span class="kw">Nord – Nord</span>: respingere.</li>
+          <li><span class="kw">Sud – Sud</span>: respingere.</li>
+        </ul>
+        <div class="notice">
+          Această regulă explică de ce uneori doi magneți „se lipesc”, iar alteori par că se împing.
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="card">
+        <h2>6. Magnetizarea</h2>
+        <p>
+          Unele corpuri care conțin fier pot deveni temporar magnetice atunci când sunt
+          puse în apropierea unui magnet.
+        </p>
+        <p>
+          Acest proces se numește <span class="kw">magnetizare</span>.
+        </p>
+        <div class="grid">
+          <div class="type-card">
+            <h3>Magnet permanent</h3>
+            <p>Își păstrează proprietățile magnetice timp îndelungat.</p>
+          </div>
+          <div class="type-card">
+            <h3>Magnet temporar</h3>
+            <p>Își păstrează proprietățile magnetice doar un timp sau în anumite condiții.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="card">
+        <h2>Reține</h2>
+        <ul>
+          <li>Magneții atrag corpurile care conțin fier.</li>
+          <li>Magneții pot acționa și fără contact direct.</li>
+          <li>Fiecare magnet are doi poli: Nord și Sud.</li>
+          <li>Polii identici se resping.</li>
+          <li>Polii diferiți se atrag.</li>
+          <li>Unele corpuri pot fi magnetizate.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="card">
+        <h2>Verificare rapidă</h2>
+        <p>Alege varianta corectă.</p>
+
+        <div class="check">
+          <div class="question">
+            <strong>1. Un magnet poate atrage:</strong>
+            <div class="answers">
+              <button data-ok="1">fierul și unele materiale care conțin fier</button>
+              <button data-ok="0">orice obiect din plastic</button>
+              <button data-ok="0">numai apa</button>
+            </div>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="question">
+            <strong>2. Polii de același nume:</strong>
+            <div class="answers">
+              <button data-ok="0">se atrag</button>
+              <button data-ok="1">se resping</button>
+              <button data-ok="0">dispar</button>
+            </div>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="question">
+            <strong>3. Polii de nume diferit:</strong>
+            <div class="answers">
+              <button data-ok="1">se atrag</button>
+              <button data-ok="0">se resping</button>
+              <button data-ok="0">nu interacționează</button>
+            </div>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="final-banner">
+        <div class="name">Prof. Dănuț Andronie</div>
+        <p>
+          E-mail:
+          <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+        </p>
+        <p>Pentru observații, propuneri și sugestii privind platforma educațională.</p>
+
+        <div class="visitor">
+          Vizitatori pe acest dispozitiv: <span id="visitCount">0</span>
+        </div>
+
+        <div class="top-links">
+          <a href="../index.html">Toate lecțiile</a>
+          <a href="./lectia-2.html">Lecția următoare</a>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrapper">
-      <p>© Fizica Galaction · Prof. DĂNUȚ ANDRONIE</p>
-      <div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 8px;">
-        E-mail:
-        <a href="mailto:danutmg@gmail.com" style="color: #22d3ee; text-decoration: none;">danutmg@gmail.com</a><br>
-        <span style="font-size: 0.85rem; color: #94a3b8;">
-          Pentru observații, propuneri și sugestii privind platforma educațională.
-        </span>
-      </div>
+  <nav class="nav" aria-label="Navigare lecție">
+    <div class="nav-row">
+      <button id="prevBtn" type="button">Înapoi</button>
+      <div class="counter"><span id="pageNow">1</span>/<span id="pageTotal">10</span></div>
+      <button id="nextBtn" type="button">Mergi mai departe</button>
     </div>
-  </footer>
+  </nav>
 
-  <script src="../../../assets/js/main.js"></script>
+  <script>
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageNow = document.getElementById('pageNow');
+    const pageTotal = document.getElementById('pageTotal');
+    const visitCount = document.getElementById('visitCount');
+    let index = 0;
+
+    pageTotal.textContent = pages.length;
+
+    function showPage(i) {
+      index = Math.max(0, Math.min(i, pages.length - 1));
+      pages.forEach((page, pageIndex) => page.classList.toggle('active', pageIndex === index));
+      pageNow.textContent = index + 1;
+      prevBtn.disabled = index === 0;
+      nextBtn.textContent = index === pages.length - 1 ? 'La început' : 'Mergi mai departe';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    prevBtn.addEventListener('click', () => showPage(index - 1));
+    nextBtn.addEventListener('click', () => {
+      if (index === pages.length - 1) {
+        showPage(0);
+      } else {
+        showPage(index + 1);
+      }
+    });
+
+    document.querySelectorAll('.answers button').forEach(button => {
+      button.addEventListener('click', () => {
+        const group = button.closest('.answers');
+        const feedback = button.closest('.question').querySelector('.feedback');
+
+        group.querySelectorAll('button').forEach(btn => {
+          btn.classList.remove('correct', 'wrong');
+          btn.disabled = false;
+        });
+
+        if (button.dataset.ok === '1') {
+          button.classList.add('correct');
+          feedback.textContent = 'Corect!';
+          feedback.style.color = '#86efac';
+        } else {
+          button.classList.add('wrong');
+          feedback.textContent = 'Mai încearcă.';
+          feedback.style.color = '#fda4af';
+        }
+      });
+    });
+
+    function updateLocalCounter() {
+      const key = 'vizite-electrice-magnetice-lectia-1';
+      const current = Number(localStorage.getItem(key) || '0') + 1;
+      localStorage.setItem(key, String(current));
+      if (visitCount) visitCount.textContent = current;
+    }
+
+    updateLocalCounter();
+    showPage(0);
+  </script>
 </body>
 </html>

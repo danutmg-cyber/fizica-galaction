@@ -1,435 +1,823 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Lecția 5 | Fulgerul. Curentul electric | Fizica Galaction</title>
-  <meta name="description" content="Legătura dintre descărcările electrice din natură și curentul electric.">
-  <link rel="stylesheet" href="../../../assets/css/style.css">
-
+  <meta name="description" content="Lecția 5, clasa a VI-a: fulgerul, trăsnetul, curentul electric și reguli de siguranță electrică." />
   <style>
-    .lesson-nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
-      justify-content: space-between;
-    }
-    .nav-button {
-      display: inline-block;
-      padding: 12px 18px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 700;
-      background: #22d3ee;
-      color: #082f49;
-      border: 2px solid #0891b2;
-      box-shadow: 0 4px 14px rgba(8,145,178,0.18);
-      cursor: pointer;
-    }
-    .nav-button.secondary {
-      background: #e2e8f0;
-      color: #0f172a;
-      border-color: #cbd5e1;
-    }
-    .nav-button.success {
-      background: #22c55e;
-      color: #052e16;
-      border-color: #16a34a;
-    }
-    .nav-button:hover,
-    .nav-button:focus {
-      filter: brightness(1.02);
-      transform: translateY(-1px);
-    }
-    .mini-note {
-      font-size: 0.95rem;
-      color: #cbd5e1;
-      margin-top: 8px;
+    :root {
+      --bg: #07111f;
+      --card: #102033;
+      --card2: #132944;
+      --text: #f8fafc;
+      --muted: #dbeafe;
+      --accent: #22d3ee;
+      --accent2: #facc15;
+      --good: #22c55e;
+      --bad: #fb7185;
+      --border: rgba(148, 163, 184, 0.32);
+      --shadow: 0 18px 50px rgba(0, 0, 0, 0.35);
     }
 
-    /* Stiluri pentru imagini */
-    .illustration-container {
-      background: linear-gradient(135deg, rgba(79, 195, 247, 0.05), rgba(1, 87, 155, 0.05));
-      border: 2px solid rgba(79, 195, 247, 0.2);
-      border-radius: 12px;
-      padding: 20px;
-      margin: 20px 0;
-      text-align: center;
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.15), transparent 35%),
+        linear-gradient(180deg, #07111f 0%, #0f172a 100%);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
-    .illustration-container img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      display: block;
+    body {
+      font-size: clamp(20px, 5vw, 28px);
+      line-height: 1.55;
+      padding: 14px;
+      padding-bottom: 108px;
+    }
+
+    .lesson {
+      width: min(100%, 860px);
       margin: 0 auto;
     }
 
-    .illustration-container img:hover {
-      transform: scale(1.02);
-      box-shadow: 0 8px 24px rgba(52, 152, 219, 0.3);
-    }
-
-    .image-click-hint {
-      font-size: 0.85rem;
-      color: #64748b;
-      margin-top: 8px;
-      font-style: italic;
-    }
-
-    /* MODAL STYLES */
-    .modal {
+    .page {
       display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.9);
-      animation: fadeIn 0.3s ease-in;
+      min-height: calc(100svh - 140px);
+      animation: fade 180ms ease-in;
     }
 
-    .modal.active {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .page.active { display: block; }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
+    .banner, .card, .final-banner {
+      background: linear-gradient(160deg, rgba(16, 32, 51, 0.98), rgba(19, 41, 68, 0.98));
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: clamp(18px, 5vw, 32px);
+      margin: 0 0 18px;
     }
 
-    .modal-content {
-      position: relative;
-      max-width: 95vw;
-      max-height: 95vh;
-      padding: 20px;
-      animation: slideIn 0.3s ease-out;
-      overflow: auto;
+    .banner { border-color: rgba(34, 211, 238, 0.55); }
+
+    .school {
+      color: var(--accent);
+      font-weight: 900;
+      font-size: clamp(18px, 4.6vw, 24px);
+      text-align: center;
+      letter-spacing: 0.02em;
+      margin: 0 0 10px;
+      text-transform: uppercase;
     }
 
-    @keyframes slideIn {
-      from {
-        transform: scale(0.8);
-        opacity: 0;
-      }
-      to {
-        transform: scale(1);
-        opacity: 1;
-      }
+    .teacher {
+      color: #e0f2fe;
+      text-align: center;
+      font-weight: 700;
+      margin: 0 0 16px;
+      font-size: clamp(18px, 4.8vw, 23px);
     }
 
-    .modal-content img {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    .quote {
+      margin: 12px 0 0;
+      padding: 14px;
+      border-left: 5px solid var(--accent2);
+      border-radius: 14px;
+      background: rgba(250, 204, 21, 0.11);
+      color: #fef9c3;
+      font-weight: 700;
+      font-style: italic;
+      text-align: center;
     }
 
-    .modal-close {
-      position: absolute;
-      top: 20px;
-      right: 35px;
-      color: white;
-      font-size: 40px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: color 0.2s;
-      z-index: 1001;
+    h1, h2, h3 {
+      line-height: 1.15;
+      margin: 0 0 16px;
     }
 
-    .modal-close:hover,
-    .modal-close:focus {
-      color: #ff6b6b;
+    h1 {
+      font-size: clamp(30px, 8.6vw, 54px);
+      color: #ffffff;
+      text-align: center;
     }
 
-    .modal-info {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.8);
-      color: white;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 14px;
-      z-index: 1001;
+    h2 {
+      font-size: clamp(28px, 7.5vw, 44px);
+      color: var(--accent);
     }
+
+    h3 {
+      font-size: clamp(23px, 6vw, 34px);
+      color: #fef3c7;
+    }
+
+    p { margin: 0 0 16px; }
+
+    ul, ol {
+      padding-left: 1.2em;
+      margin: 0 0 16px;
+    }
+
+    li { margin: 12px 0; }
 
     .kw {
-      background: rgba(255, 107, 107, 0.1);
-      padding: 2px 6px;
-      border-radius: 4px;
-      color: #ff6b6b;
+      color: #fef08a;
+      font-weight: 900;
     }
 
-    .definition {
-      background: rgba(79, 195, 247, 0.1);
-      border-left: 4px solid #22d3ee;
-      padding: 12px 16px;
-      border-radius: 6px;
-      margin-top: 12px;
+    .notice {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(34, 211, 238, 0.12);
+      border: 1px solid rgba(34, 211, 238, 0.38);
+      color: #e0f2fe;
+      font-weight: 700;
+    }
+
+    .example {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.38);
+      color: #dcfce7;
+      font-weight: 700;
     }
 
     .warning {
-      background: rgba(255, 193, 7, 0.1);
-      border-left: 4px solid #ffc107;
-      padding: 12px 16px;
-      border-radius: 6px;
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 16px;
+      background: rgba(250, 204, 21, 0.12);
+      border: 1px solid rgba(250, 204, 21, 0.42);
+      color: #fef9c3;
+      font-weight: 800;
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .type-card {
+      background: rgba(15, 23, 42, 0.52);
+      border: 1px solid rgba(148, 163, 184, 0.32);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .type-card strong {
+      color: #fef08a;
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .symbol-row {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin: 18px 0;
+    }
+
+    .symbol {
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: rgba(15, 23, 42, 0.58);
+      text-align: center;
+      padding: 18px 12px;
+      font-weight: 900;
+    }
+
+    .big-symbol {
+      display: block;
+      font-size: clamp(50px, 17vw, 92px);
+      line-height: 1;
+      color: #fef08a;
+      margin-bottom: 8px;
+    }
+
+    .mini {
+      font-size: 0.9em;
+      color: var(--muted);
+    }
+
+    .diagram {
+      display: block;
+      width: 100%;
+      max-width: 650px;
+      margin: 16px auto 8px;
+      border-radius: 20px;
+      background: rgba(15, 23, 42, 0.52);
+      border: 1px solid rgba(148, 163, 184, 0.30);
+    }
+
+    .caption {
+      color: #cbd5e1;
+      font-size: 0.86em;
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    .steps {
+      counter-reset: item;
+      list-style: none;
+      padding: 0;
+    }
+
+    .steps li {
+      position: relative;
+      padding: 14px 14px 14px 56px;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.52);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+    }
+
+    .steps li::before {
+      counter-increment: item;
+      content: counter(item);
+      position: absolute;
+      left: 14px;
+      top: 14px;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: var(--accent);
+      color: #082f49;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+    }
+
+    .check {
+      display: grid;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    .question {
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
       margin-top: 12px;
     }
 
-    @media (max-width: 768px) {
-      .modal-content {
-        padding: 10px;
+    .answers button {
+      width: 100%;
+      text-align: left;
+      font-size: clamp(18px, 4.8vw, 24px);
+      line-height: 1.25;
+      border: 2px solid rgba(148, 163, 184, 0.42);
+      border-radius: 16px;
+      padding: 13px 14px;
+      color: var(--text);
+      background: rgba(15, 23, 42, 0.72);
+      cursor: pointer;
+      font-weight: 700;
+    }
+
+    .answers button.correct {
+      border-color: var(--good);
+      background: rgba(34, 197, 94, 0.18);
+    }
+
+    .answers button.wrong {
+      border-color: var(--bad);
+      background: rgba(251, 113, 133, 0.18);
+    }
+
+    .feedback {
+      min-height: 32px;
+      margin-top: 10px;
+      font-weight: 900;
+    }
+
+    .final-banner {
+      text-align: center;
+      border-color: rgba(34, 197, 94, 0.48);
+    }
+
+    .final-banner .name {
+      font-size: clamp(28px, 7vw, 42px);
+      font-weight: 900;
+      color: #bbf7d0;
+      margin-bottom: 8px;
+    }
+
+    .final-banner a {
+      color: var(--accent);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .visitor {
+      margin: 20px auto;
+      padding: 16px;
+      width: min(100%, 460px);
+      border-radius: 18px;
+      border: 1px solid rgba(34, 211, 238, 0.45);
+      background: rgba(34, 211, 238, 0.12);
+      font-weight: 900;
+      color: #e0f2fe;
+    }
+
+    .top-links {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .top-links a {
+      display: block;
+      padding: 14px;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid rgba(148, 163, 184, 0.32);
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    .nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 50;
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      background: rgba(7, 17, 31, 0.92);
+      backdrop-filter: blur(14px);
+      border-top: 1px solid rgba(148, 163, 184, 0.25);
+    }
+
+    .nav-row {
+      width: min(100%, 860px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: 8px;
+      align-items: center;
+    }
+
+    .nav button {
+      border: 0;
+      border-radius: 16px;
+      padding: 13px 10px;
+      min-height: 52px;
+      font-size: clamp(16px, 4.3vw, 21px);
+      line-height: 1.1;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    #prevBtn {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    #nextBtn {
+      background: #22c55e;
+      color: #052e16;
+    }
+
+    .nav button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .counter {
+      min-width: 58px;
+      text-align: center;
+      color: #e0f2fe;
+      font-weight: 900;
+      font-size: clamp(16px, 4.2vw, 20px);
+    }
+
+    .formula-box {
+      margin-top: 18px;
+      padding: 18px;
+      border-radius: 18px;
+      background: rgba(250, 204, 21, 0.10);
+      border: 1px solid rgba(250, 204, 21, 0.42);
+      color: #fef9c3;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .formula-box .math {
+      font-size: clamp(28px, 7vw, 44px);
+      display: block;
+      margin: 8px 0;
+    }
+
+    .safety {
+      border-left: 7px solid #facc15;
+    }
+
+    @media (min-width: 700px) {
+      .answers { grid-template-columns: repeat(3, 1fr); }
+      .top-links { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    @media (max-width: 420px) {
+      body {
+        padding-left: 10px;
+        padding-right: 10px;
+        padding-bottom: 100px;
       }
-      .modal-close {
-        font-size: 30px;
-        right: 15px;
-        top: 10px;
+
+      .banner, .card, .final-banner {
+        border-radius: 18px;
+        padding: 18px;
+      }
+
+      .symbol-row {
+        grid-template-columns: 1fr;
+      }
+
+      .nav {
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+
+      .nav-row {
+        gap: 6px;
+      }
+
+      .nav button {
+        min-height: 48px;
+        padding: 10px 8px;
+        border-radius: 14px;
+      }
+
+      .counter {
+        min-width: 48px;
       }
     }
   </style>
-
 </head>
+
 <body>
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction</h1>
-    </div>
-  </header>
-
-  <main class="page-content wrapper">
-
-    <section class="card">
-      <h1>Lecția 5 – Fulgerul. Curentul electric</h1>
-      <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică"</p>
-    </section>
-
-    <section class="card" id="fulgerul">
-      <h2>1. Ce este fulgerul</h2>
-      <p><span class="kw"><strong>Fulgerul</strong></span> este o descărcare electrică produsă în atmosferă.</p>
-      <p>El apare când între nori sau între nor și Pământ se acumulează diferențe mari de sarcină electrică.</p>
-      <div class="notice">Lumina pe care o vedem este fulgerul, iar sunetul auzit după aceea este tunetul.</div>
-
-      <!-- ILUSTRAȚIE FULGERUL - CLICKABLE -->
-      <div class="illustration-container" id="fulgerulContainer">
-        <img src="../../../assets/img/fulgerul.png" 
-             alt="Fulgerul - descărcare electrică în atmosferă" 
-             style="max-width: 500px;">
-        <div class="image-click-hint">👆 Click pe imagine pentru a o vedea în mărime mare</div>
+  <main class="lesson">
+    <section class="page active">
+      <div class="banner">
+        <p class="school">Școala Gimnazială „Gala Galaction” Mangalia</p>
+        <p class="teacher">Prof. Dănuț Andronie</p>
+        <h1>Lecția 5 – Fulgerul. Curentul electric</h1>
+        <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică”</p>
       </div>
 
-      <div class="definition">
-        <strong>Explicație:</strong> Imaginea ilustrează procesul formării fulgerului:
-        <ul style="margin: 8px 0; padding-left: 20px;">
-          <li>Acumularea de sarcini electrice în nori</li>
-          <li>Descărcarea electrică între nori sau spre Pământ</li>
-          <li>Calea luminoasă a fulgerului prin atmosferă</li>
-          <li>Relația dintre fulger și tunet</li>
+      <div class="card">
+        <h2>Ideea lecției</h2>
+        <p>
+          Fulgerul și curentul electric au la bază deplasarea sarcinilor electrice.
+          Diferența este că fulgerul apare brusc în atmosferă, iar curentul electric
+          folosit de oameni este controlat în circuite.
+        </p>
+        <div class="notice">
+          Electricitatea este foarte utilă, dar trebuie folosită cu atenție.
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="card">
+        <h2>1. Ce este fulgerul?</h2>
+        <p>
+          <span class="kw">Fulgerul</span> este o descărcare electrică produsă în atmosferă.
+        </p>
+        <p>
+          El apare când între nori sau între un nor și Pământ se acumulează diferențe mari
+          de sarcină electrică.
+        </p>
+        <p>
+          Lumina pe care o vedem este fulgerul, iar sunetul auzit după aceea este
+          <span class="kw">tunetul</span>.
+        </p>
+        <div class="warning">
+          Fulgerul este extrem de periculos. În timpul furtunii, evităm copacii izolați,
+          terenurile deschise și obiectele metalice.
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="card">
+        <h2>Fulgerul – descărcare electrică</h2>
+        <svg class="diagram" viewBox="0 0 640 360" role="img" aria-label="Fulger între nor și Pământ">
+          <rect width="640" height="360" rx="24" fill="#0f172a"/>
+          <text x="320" y="42" text-anchor="middle" font-size="28" font-weight="900" fill="#e0f2fe">Descărcare electrică în atmosferă</text>
+
+          <g fill="#94a3b8">
+            <ellipse cx="210" cy="110" rx="70" ry="42"/>
+            <ellipse cx="285" cy="96" rx="85" ry="52"/>
+            <ellipse cx="365" cy="116" rx="75" ry="44"/>
+            <ellipse cx="285" cy="130" rx="150" ry="48"/>
+          </g>
+          <g fill="#fef08a" font-size="32" font-weight="900">
+            <text x="175" y="103">+</text>
+            <text x="245" y="82">−</text>
+            <text x="315" y="116">+</text>
+            <text x="385" y="96">−</text>
+          </g>
+
+          <path d="M318 152 L260 215 L306 210 L240 310 L365 190 L312 198 Z" fill="#facc15" stroke="#fef9c3" stroke-width="6" stroke-linejoin="round"/>
+          <path d="M0 310 C120 286 210 330 330 306 C450 282 520 318 640 298 L640 360 L0 360 Z" fill="#14532d"/>
+          <rect x="488" y="244" width="44" height="70" fill="#78350f"/>
+          <circle cx="510" cy="222" r="48" fill="#166534"/>
+          <text x="510" y="342" text-anchor="middle" font-size="20" font-weight="800" fill="#bbf7d0">copac izolat</text>
+        </svg>
+        <p class="caption">
+          Într-o furtună, sarcinile electrice se pot descărca rapid prin aer.
+        </p>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="card">
+        <h2>2. Fulger și trăsnet</h2>
+        <p>
+          Când descărcarea electrică ajunge la sol, ea este numită adesea
+          <span class="kw">trăsnet</span>.
+        </p>
+        <div class="grid">
+          <div class="type-card">
+            <strong>Fulgerul</strong>
+            descărcarea electrică luminoasă din atmosferă.
+          </div>
+          <div class="type-card">
+            <strong>Trăsnetul</strong>
+            fulgerul care atinge Pământul sau un obiect de pe sol.
+          </div>
+          <div class="type-card">
+            <strong>Tunetul</strong>
+            sunetul produs de încălzirea bruscă a aerului în calea fulgerului.
+          </div>
+        </div>
+        <div class="notice">
+          Paratrăsnetul protejează clădirile, conducând descărcarea electrică spre pământ.
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="card">
+        <h2>3. Ce este curentul electric?</h2>
+        <p>
+          <span class="kw">Curentul electric</span> reprezintă deplasarea ordonată
+          a sarcinilor electrice printr-un mediu.
+        </p>
+        <p>
+          În metale, curentul electric este legat mai ales de mișcarea electronilor.
+        </p>
+        <ul>
+          <li>curentul are sens convențional de la <span class="kw">+</span> la <span class="kw">−</span>;</li>
+          <li>intensitatea curentului se măsoară în <span class="kw">amperi</span>, notați \(A\);</li>
+          <li>purtătorii de sarcină din metale sunt electronii.</li>
+        </ul>
+        <div class="formula-box">
+          <span>Ideea intensității curentului:</span>
+          <span class="math">\(I = \frac{Q}{t}\)</span>
+          <span>Exemplu: dacă \(Q = 6\,C\) trece în \(t = 3\,s\), atunci \(I = \frac{6}{3} = 2\,A\).</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="card">
+        <h2>Curentul electric într-un circuit</h2>
+        <svg class="diagram" viewBox="0 0 640 360" role="img" aria-label="Circuit electric simplu cu baterie, fire și bec">
+          <rect width="640" height="360" rx="24" fill="#0f172a"/>
+          <text x="320" y="42" text-anchor="middle" font-size="28" font-weight="900" fill="#e0f2fe">Circuit electric simplu</text>
+
+          <path d="M170 190 H260" stroke="#38bdf8" stroke-width="10" stroke-linecap="round"/>
+          <path d="M380 190 H480" stroke="#38bdf8" stroke-width="10" stroke-linecap="round"/>
+          <path d="M170 190 V275 H480 V190" stroke="#38bdf8" stroke-width="10" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+          <rect x="125" y="138" width="90" height="104" rx="16" fill="#1e293b" stroke="#94a3b8" stroke-width="4"/>
+          <rect x="145" y="118" width="18" height="26" rx="4" fill="#facc15"/>
+          <rect x="178" y="128" width="18" height="16" rx="4" fill="#e2e8f0"/>
+          <text x="170" y="205" text-anchor="middle" font-size="34" font-weight="900" fill="#fef08a">+</text>
+          <text x="170" y="235" text-anchor="middle" font-size="34" font-weight="900" fill="#e2e8f0">−</text>
+
+          <circle cx="320" cy="190" r="58" fill="#fef3c7" stroke="#facc15" stroke-width="8"/>
+          <path d="M294 190 C305 160 335 160 346 190 C335 218 305 218 294 190" fill="none" stroke="#92400e" stroke-width="6"/>
+          <text x="320" y="315" text-anchor="middle" font-size="23" font-weight="900" fill="#bbf7d0">bateria pune sarcinile în mișcare, becul luminează</text>
+
+          <g fill="#fef08a" font-size="26" font-weight="900">
+            <text x="225" y="174">e−</text>
+            <text x="420" y="174">e−</text>
+            <text x="300" y="266">e−</text>
+          </g>
+        </svg>
+        <p class="caption">
+          Când circuitul este închis, sarcinile se deplasează ordonat prin conductoare.
+        </p>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="card">
+        <h2>4. Exemple din viața de zi cu zi</h2>
+        <p>
+          Curentul electric este folosit în foarte multe situații:
+        </p>
+        <ul>
+          <li>iluminat: becuri, LED-uri, lămpi;</li>
+          <li>încălzire: radiatoare, plite electrice;</li>
+          <li>răcire: frigider, aer condiționat;</li>
+          <li>comunicații: telefon, internet, calculator;</li>
+          <li>medicină: aparate medicale și investigații.</li>
+        </ul>
+        <div class="example">
+          Fără curent electric, multe activități zilnice ar fi mult mai dificile.
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="card safety">
+        <h2>5. Siguranța electrică</h2>
+        <p>
+          Lucrul cu electricitatea necesită precauții speciale.
+        </p>
+        <ul>
+          <li>Nu atingem priza cu mâinile ude.</li>
+          <li>Nu introducem obiecte metalice în priză.</li>
+          <li>Nu folosim cabluri deteriorate.</li>
+          <li>Nu reparăm singuri instalațiile electrice.</li>
+          <li>Anunțăm un adult sau un electrician când observăm o problemă.</li>
+        </ul>
+        <div class="warning">
+          Electricitatea este utilă doar când este folosită corect și în siguranță.
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="card">
+        <h2>Reține</h2>
+        <ul>
+          <li><span class="kw">Fulgerul</span> este o descărcare electrică naturală.</li>
+          <li><span class="kw">Trăsnetul</span> este fulgerul care atinge Pământul.</li>
+          <li><span class="kw">Curentul electric</span> este deplasarea ordonată a sarcinilor electrice.</li>
+          <li>În metale, curentul este legat de mișcarea electronilor.</li>
+          <li>Electricitatea este esențială în viața de zi cu zi.</li>
+          <li>Regulile de siguranță electrică trebuie respectate întotdeauna.</li>
         </ul>
       </div>
+    </section>
 
-      <div class="warning">
-        ⚠️ <strong>Atenție la fulgere:</strong> Fulgerul este extrem de periculos! Evită să stai sub pomi sau în apropierea punctelor înalte în timp de furtună.
+    <section class="page">
+      <div class="card">
+        <h2>Verificare rapidă</h2>
+        <div class="grid">
+          <div class="question">
+            <p><strong>1. Fulgerul este:</strong></p>
+            <div class="answers">
+              <button type="button" data-ok="0">o simplă lumină fără cauză electrică</button>
+              <button type="button" data-ok="1">o descărcare electrică în atmosferă</button>
+              <button type="button" data-ok="0">un obiect magnetic</button>
+            </div>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="question">
+            <p><strong>2. Curentul electric reprezintă:</strong></p>
+            <div class="answers">
+              <button type="button" data-ok="1">deplasarea ordonată a sarcinilor electrice</button>
+              <button type="button" data-ok="0">doar încălzirea unui corp</button>
+              <button type="button" data-ok="0">doar lumina produsă de un bec</button>
+            </div>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="question">
+            <p><strong>3. Ce NU este permis?</strong></p>
+            <div class="answers">
+              <button type="button" data-ok="0">să aprinzi o lampă folosind întrerupătorul</button>
+              <button type="button" data-ok="0">să ceri ajutorul unui adult</button>
+              <button type="button" data-ok="1">să atingi priza cu mâinile ude</button>
+            </div>
+            <div class="feedback"></div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section class="card" id="trasnet">
-      <h2>2. Fulger și trăsnet</h2>
-      <p>Când descărcarea electrică ajunge la sol, ea este numită adesea <strong>trăsnet</strong>.</p>
-      <p>Acesta poate fi periculos pentru oameni, animale, clădiri și instalații electrice.</p>
-      
-      <div class="definition">
-        <strong>Diferența între fulger și trăsnet:</strong>
-        <ul style="margin: 8px 0; padding-left: 20px;">
-          <li><strong>Fulgerul</strong> - descărcarea electrică în sine (fenomenul atmospheric)</li>
-          <li><strong>Trăsnetul</strong> - fulgerul care atinge Pământul și este periculos</li>
-          <li><strong>Tunetul</strong> - sunetul produs de fulger (unda sonoră)</li>
-        </ul>
-      </div>
+    <section class="page">
+      <div class="final-banner">
+        <div class="name">Prof. Dănuț Andronie</div>
+        <p>
+          E-mail:
+          <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+        </p>
+        <p>Pentru observații, propuneri și sugestii privind platforma educațională.</p>
 
-      <div class="warning">
-        ⚠️ <strong>Protecție împotriva fulgerelor:</strong> Clădirile moderne sunt protejate de paratrăsnete care direcționează descărcarea electrică în pământ.
-      </div>
-    </section>
+        <div class="visitor">
+          Vizitatori pe acest dispozitiv: <span id="visitCount">0</span>
+        </div>
 
-    <section class="card" id="curent">
-      <h2>3. Ce este curentul electric</h2>
-      <p><span class="kw"><strong>Curentul electric</strong></span> reprezintă deplasarea ordonată a sarcinilor electrice printr-un mediu.</p>
-      <p>În conductorii metalici, această deplasare este legată în special de mișcarea electronilor.</p>
-
-      <div class="definition">
-        <strong>Caracteristici ale curentului electric:</strong>
-        <ul style="margin: 8px 0; padding-left: 20px;">
-          <li><strong>Direcția</strong> - de la + la - (în mod convențional)</li>
-          <li><strong>Intensitate</strong> - cantitatea de sarcină pe unitate de timp</li>
-          <li><strong>Unitate de măsură</strong> - Amper (A)</li>
-          <li><strong>Purtători</strong> - în metale sunt electronii</li>
-        </ul>
-      </div>
-
-      <div class="notice">
-        Curentul electric din priză funcționează similar cu descărcarea din fulgeri, dar este controlat și reglementat.
+        <div class="top-links">
+          <a href="../index.html">Toate lecțiile</a>
+          <a href="./lectia-4.html">Lecția anterioară</a>
+          <a href="./lectia-6.html">Lecția următoare</a>
+        </div>
       </div>
     </section>
-
-    <section class="card" id="exemple">
-      <h2>4. Exemple din viața de zi cu zi</h2>
-      <p>Curentul electric este folosit pentru:</p>
-      <ul>
-        <li><strong>Iluminat</strong> - becuri, LED-uri, lămpi</li>
-        <li><strong>Încălzire</strong> - radiator, caloriferi, aragaz electric</li>
-        <li><strong>Răcire</strong> - frigider, aer condiționat</li>
-        <li><strong>Divertisment</strong> - televizor, calculator, telefon</li>
-        <li><strong>Transporturi</strong> - trenuri electrice, autobuzuri</li>
-        <li><strong>Medicină</strong> - aparate medicale, pacemaker</li>
-      </ul>
-      <p>Fără curent electric, multe activități zilnice ar fi mult mai dificile.</p>
-
-      <div class="definition">
-        <strong>De ce e important curentul electric:</strong>
-        <ul style="margin: 8px 0; padding-left: 20px;">
-          <li>Permite iluminarea locuințelor și stradelor</li>
-          <li>Putere pentru aparatele electrocasnice</li>
-          <li>Comunicații (internet, telefonie)</li>
-          <li>Industrie și fabrici</li>
-          <li>Scopuri medicale și de cercetare</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>5. Siguranța electrică</h2>
-      <p>Lucrul cu electricitate necesită precauții speciale:</p>
-      <div class="warning">
-        ⚠️ <strong>Reguli de siguranță:</strong>
-        <ul style="margin: 8px 0; padding-left: 20px;">
-          <li>Nu atinge priză cu mâinile ude</li>
-          <li>Nu introduce obiecte metalice în priza</li>
-          <li>Verific cablurile deteriorate înainte de utilizare</li>
-          <li>Folosesc aparate certificate și sigure</li>
-          <li>Sunez electricianul pentru reparații</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="card">
-      <h2>Reține</h2>
-      <ul>
-        <li>Fulgerul este o descărcare electrică naturală și pericloasă</li>
-        <li>Curentul electric este deplasarea ordonată a sarcinilor electrice</li>
-        <li>Descărcările electrice atmosferice (fulgere și trăsnete) pot fi periculoase</li>
-        <li>Electricitatea are un rol esențial în viața de zi cu zi</li>
-        <li>Siguranta electrică este foarte importantă</li>
-        <li>Fulgerul și curentul electric sunt fenomene similare, dar în contexte diferite</li>
-      </ul>
-    </section>
-
-    <section class="card">
-      <h2>Navigare</h2>
-      <p class="mini-note">Butonul „Mergi mai departe" te duce direct la lecția următoare.</p>
-      <div class="lesson-nav">
-        <a class="nav-button secondary" href="./index.html">Toate lecțiile</a>
-        <a class="nav-button" href="./lectia-4.html">Lecția anterioară</a>
-        <a class="nav-button success" href="./lectia-6.html">Mergi mai departe</a>
-      </div>
-    </section>
-
   </main>
 
-  <!-- MODAL PENTRU IMAGINI PE FULL SCREEN -->
-  <div id="imageModal" class="modal">
-    <span class="modal-close" onclick="closeImageModal()">&times;</span>
-    <div class="modal-content" id="modalContent">
-      <!-- Imaginea va fi clonată aici -->
+  <nav class="nav" aria-label="Navigare lecție">
+    <div class="nav-row">
+      <button id="prevBtn" type="button">Înapoi</button>
+      <div class="counter"><span id="pageNow">1</span>/<span id="pageTotal">11</span></div>
+      <button id="nextBtn" type="button">Mergi mai departe</button>
     </div>
-    <div class="modal-info">Click oriunde pe ecran pentru a închide | Scroll pentru a mări/micșora</div>
-  </div>
-
-  <footer class="site-footer">
-    <div class="wrapper">
-      <p>© Fizica Galaction · Prof. DĂNUȚ ANDRONIE</p>
-      <div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 8px;">
-        E-mail:
-        <a href="mailto:danutmg@gmail.com" style="color: #22d3ee; text-decoration: none;">danutmg@gmail.com</a><br>
-        <span style="font-size: 0.85rem; color: #94a3b8;">
-          Pentru observații, propuneri și sugestii privind platforma educațională.
-        </span>
-      </div>
-    </div>
-  </footer>
-
-  <script src="../../../assets/js/main.js"></script>
+  </nav>
 
   <script>
-    // Modal functionality pentru imaginea fulgerului
-    const fulgerulContainer = document.getElementById('fulgerulContainer');
-    const imageModal = document.getElementById('imageModal');
-    const modalContent = document.getElementById('modalContent');
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageNow = document.getElementById('pageNow');
+    const pageTotal = document.getElementById('pageTotal');
+    const visitCount = document.getElementById('visitCount');
+    let index = 0;
 
-    if (fulgerulContainer) {
-      const fulgerulImg = fulgerulContainer.querySelector('img');
-      
-      fulgerulContainer.addEventListener('click', function() {
-        const clonedImg = fulgerulImg.cloneNode(true);
-        clonedImg.style.width = '90vw';
-        clonedImg.style.height = 'auto';
-        clonedImg.style.maxWidth = '1000px';
-        clonedImg.style.maxHeight = '90vh';
-        clonedImg.style.cursor = 'auto';
-        clonedImg.style.borderRadius = '8px';
-        clonedImg.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.5)';
-        
-        modalContent.innerHTML = '';
-        modalContent.appendChild(clonedImg);
-        imageModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-      });
+    pageTotal.textContent = pages.length;
+
+    function showPage(i) {
+      index = Math.max(0, Math.min(i, pages.length - 1));
+      pages.forEach((page, pageIndex) => page.classList.toggle('active', pageIndex === index));
+      pageNow.textContent = index + 1;
+      prevBtn.disabled = index === 0;
+      nextBtn.textContent = index === pages.length - 1 ? 'La început' : 'Mergi mai departe';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function closeImageModal() {
-      imageModal.classList.remove('active');
-      document.body.style.overflow = 'auto';
-    }
-
-    // Close modal when clicking outside the content
-    imageModal.addEventListener('click', function(e) {
-      if (e.target === imageModal) {
-        closeImageModal();
+    prevBtn.addEventListener('click', () => showPage(index - 1));
+    nextBtn.addEventListener('click', () => {
+      if (index === pages.length - 1) {
+        showPage(0);
+      } else {
+        showPage(index + 1);
       }
     });
 
-    // Close modal with Escape key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        closeImageModal();
-      }
-    });
+    document.querySelectorAll('.answers button').forEach(button => {
+      button.addEventListener('click', () => {
+        const group = button.closest('.answers');
+        const feedback = button.closest('.question').querySelector('.feedback');
 
-    // Zoom functionality with mouse wheel
-    let zoomLevel = 1;
-    modalContent.addEventListener('wheel', function(e) {
-      if (imageModal.classList.contains('active')) {
-        e.preventDefault();
-        const img = modalContent.querySelector('img');
-        if (img) {
-          zoomLevel += (e.deltaY > 0 ? -0.1 : 0.1);
-          zoomLevel = Math.max(0.5, Math.min(3, zoomLevel));
-          img.style.width = (90 * zoomLevel) + 'vw';
-          img.style.height = 'auto';
+        group.querySelectorAll('button').forEach(btn => {
+          btn.classList.remove('correct', 'wrong');
+          btn.disabled = false;
+        });
+
+        if (button.dataset.ok === '1') {
+          button.classList.add('correct');
+          feedback.textContent = 'Corect!';
+          feedback.style.color = '#86efac';
+        } else {
+          button.classList.add('wrong');
+          feedback.textContent = 'Mai încearcă.';
+          feedback.style.color = '#fda4af';
         }
-      }
+      });
     });
+
+    function updateLocalCounter() {
+      const key = 'vizite-electrice-magnetice-lectia-5';
+      const current = Number(localStorage.getItem(key) || '0') + 1;
+      localStorage.setItem(key, String(current));
+      if (visitCount) visitCount.textContent = current;
+    }
+
+    updateLocalCounter();
+    showPage(0);
   </script>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
 </body>
+
 </html>

@@ -1,336 +1,567 @@
-from pathlib import Path
-
-html = """<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Lecția 4 | Proprietăți fizice | Fizica Galaction</title>
-  <meta name="description" content="Lecția 4 pentru clasa a VI-a: Proprietăți fizice.">
+  <meta name="description" content="Lecția 4 pentru clasa a VI-a: Proprietăți fizice, stări de agregare, stări fizice și fenomene fizice.">
   <link rel="stylesheet" href="../../../assets/css/style.css">
+
   <style>
-    :root{
-      --bg:#0f172a;
-      --panel:#1e293b;
-      --panel-2:#334155;
-      --text:#f8fafc;
-      --muted:#cbd5e1;
-      --accent:#22d3ee;
-      --accent-2:#38bdf8;
-      --ok:#22c55e;
-      --warn:#f59e0b;
-      --danger:#ef4444;
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      font-family:Arial, Helvetica, sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      line-height:1.65;
-    }
-    .wrapper{max-width:1000px;margin:0 auto;padding:20px}
-    .site-header,.site-footer{
-      background:#020617;
-      border-bottom:1px solid #1e293b;
-    }
-    .site-footer{border-top:1px solid #1e293b;border-bottom:none;margin-top:32px}
-    .site-title{margin:0;color:var(--accent);font-size:1.9rem}
-    .site-subtitle{margin:6px 0 0;color:var(--muted)}
-    .card{
-      background:var(--panel);
-      border:1px solid var(--panel-2);
-      border-radius:20px;
-      padding:22px;
-      margin:18px 0;
-      box-shadow:0 12px 30px rgba(0,0,0,.25);
-    }
-    h1,h2,h3{margin-top:0}
-    .quote{
-      margin-top:14px;
-      padding:12px 14px;
-      border-left:4px solid var(--accent);
-      background:rgba(34,211,238,.08);
-      border-radius:10px;
-      color:#e0f2fe;
-      font-style:italic;
-    }
-    .pillbar{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-top:12px;
-    }
-    .pill{
-      background:#0f172a;
-      border:1px solid #475569;
-      color:#e2e8f0;
-      padding:7px 12px;
-      border-radius:999px;
-      font-size:.9rem;
-    }
-    .page{display:none}
-    .page.active{
-      display:block;
-      animation:fade .25s ease;
-    }
-    @keyframes fade{
-      from{opacity:0;transform:translateY(6px)}
-      to{opacity:1;transform:translateY(0)}
-    }
-    .status{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      margin-bottom:14px;
-      flex-wrap:wrap;
-    }
-    .counter{
-      display:inline-block;
-      background:rgba(34,211,238,.12);
-      color:#cffafe;
-      border:1px solid rgba(34,211,238,.24);
-      padding:8px 12px;
-      border-radius:999px;
-      font-weight:700;
-      font-size:.92rem;
-    }
-    .progress{
-      height:10px;
-      background:#0f172a;
-      border-radius:999px;
-      overflow:hidden;
-      border:1px solid #334155;
-      margin:10px 0 18px;
-    }
-    .progress > div{
-      height:100%;
-      width:0;
-      background:linear-gradient(90deg, var(--accent), var(--accent-2));
-      transition:width .25s ease;
-    }
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:14px;
-    }
-    .mini{
-      background:#0f172a;
-      border:1px solid #334155;
-      border-radius:16px;
-      padding:16px;
-    }
-    .mini h3{font-size:1rem;margin-bottom:8px}
-    .notice{
-      padding:14px 16px;
-      border-radius:14px;
-      border:1px solid rgba(34,197,94,.28);
-      background:rgba(34,197,94,.12);
-      color:#dcfce7;
-      margin:14px 0;
-    }
-    .warn{
-      border-color:rgba(245,158,11,.32);
-      background:rgba(245,158,11,.12);
-      color:#fef3c7;
-    }
-    .question{
-      background:#0f172a;
-      border:1px solid #334155;
-      border-radius:16px;
-      padding:16px;
-      margin-top:14px;
-    }
-    .question h3{
-      margin-bottom:8px;
-    }
-    .question p{
-      margin:0 0 12px;
-    }
-    .question button{
-      margin-top:12px;
-      border:none;
-      background:var(--accent);
-      color:#082f49;
-      padding:10px 14px;
-      border-radius:10px;
-      font-weight:700;
-      cursor:pointer;
-    }
-    .feedback{margin-top:10px;font-weight:700}
 
-    .option-table{
-      width:100%;
-      border-collapse:separate;
-      border-spacing:0 10px;
-      margin-top:8px;
-    }
-    .option-table td{
-      vertical-align:middle;
-      padding:0;
-      border:none;
-    }
-    .option-table .cell-radio{
-      width:52px;
-      text-align:center;
-    }
-    .option-row{
-      background:#111827;
-      border:1px solid #334155;
-      border-radius:14px;
-      padding:14px 16px;
-      display:flex;
-      align-items:center;
-      gap:12px;
-      color:var(--text);
-      width:100%;
-      transition:border-color .2s ease, background .2s ease, transform .2s ease;
-      cursor:pointer;
-    }
-    .option-row:hover{
-      border-color:var(--accent);
-      background:#172033;
-      transform:translateY(-1px);
-    }
-    .option-row input[type="radio"]{
-      width:22px;
-      height:22px;
-      margin:0;
-      flex:0 0 auto;
-      accent-color:#22d3ee;
-    }
-    .option-text{
-      line-height:1.45;
-    }
-    .instruction{
-      display:inline-block;
-      background:rgba(56,189,248,.12);
-      border:1px solid rgba(56,189,248,.28);
-      color:#dbeafe;
-      padding:8px 12px;
-      border-radius:999px;
-      font-weight:700;
-      font-size:.92rem;
-      margin-bottom:12px;
+    :root {
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --panel-2: #111827;
+      --text: #f8fafc;
+      --muted: #dbeafe;
+      --accent: #22d3ee;
+      --accent-2: #22c55e;
+      --warning-bg: #422006;
+      --warning-text: #fef3c7;
+      --border: #334155;
+      --button-text: #052e16;
     }
 
-    ul,ol{padding-left:22px}
-    table{
-      width:100%;
-      border-collapse:collapse;
-      margin-top:12px;
-      overflow:hidden;
-      border-radius:14px;
+    * {
+      box-sizing: border-box;
     }
-    th,td{
-      padding:12px;
-      border:1px solid #334155;
-      text-align:left;
-      vertical-align:top;
+
+    html {
+      scroll-behavior: smooth;
     }
-    th{
-      background:#0f172a;
-      color:#bae6fd;
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, rgba(34, 211, 238, 0.18), transparent 32rem),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: clamp(20px, 5.5vw, 28px);
+      line-height: 1.5;
     }
-    .nav{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      justify-content:space-between;
-      margin-top:18px;
+
+    .site-header,
+    .site-footer {
+      display: none;
     }
-    .btn{
-      display:inline-block;
-      text-decoration:none;
-      border:none;
-      cursor:pointer;
-      text-align:center;
-      padding:13px 16px;
-      border-radius:12px;
-      font-weight:700;
-      min-width:180px;
+
+    .mobile-lesson {
+      width: min(100%, 860px);
+      margin: 0 auto;
+      padding: 14px;
+      padding-bottom: 108px;
     }
-    .btn-primary{background:var(--accent);color:#082f49}
-    .btn-secondary{background:#1d4ed8;color:#eff6ff}
-    .btn-ghost{background:#0f172a;color:#e2e8f0;border:1px solid #475569}
-    @media (max-width:760px){
-      .grid{grid-template-columns:1fr}
-      .nav .btn{width:100%}
-      .site-title{font-size:1.55rem}
-      .status{align-items:flex-start}
-      .option-row{
-        align-items:flex-start;
+
+    .lesson-page {
+      display: none;
+      min-height: calc(100vh - 122px);
+      animation: pageFade 0.25s ease;
+    }
+
+    .lesson-page.active {
+      display: block;
+    }
+
+    @keyframes pageFade {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
       }
-      .option-row input[type="radio"]{
-        margin-top:2px;
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
+
+    .lesson-card,
+    .first-banner,
+    .final-banner {
+      background: rgba(30, 41, 59, 0.96);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: clamp(20px, 6vw, 34px);
+      margin: 14px 0;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.28);
+    }
+
+    .first-banner {
+      text-align: center;
+      background:
+        linear-gradient(135deg, rgba(34, 211, 238, 0.18), rgba(34, 197, 94, 0.12)),
+        var(--panel);
+    }
+
+    .platform-title {
+      margin: 0 0 0.35rem;
+      color: var(--accent);
+      font-size: clamp(2rem, 10vw, 4.3rem);
+      line-height: 1.05;
+      letter-spacing: 0.02em;
+      font-weight: 950;
+    }
+
+    h1,
+    h2,
+    h3 {
+      line-height: 1.14;
+      margin-top: 0;
+      color: #ffffff;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 8vw, 3.6rem);
+    }
+
+    h2 {
+      font-size: clamp(1.65rem, 7vw, 3rem);
+      color: var(--accent);
+    }
+
+    h3 {
+      font-size: clamp(1.35rem, 6vw, 2.3rem);
+      color: #e0f2fe;
+      margin-bottom: 0.4rem;
+    }
+
+    p,
+    li,
+    td,
+    th {
+      font-size: clamp(1.16rem, 5.5vw, 1.7rem);
+    }
+
+    ul,
+    ol {
+      padding-left: 1.25em;
+    }
+
+    li {
+      margin: 0.45em 0;
+    }
+
+    .quote {
+      color: #fef08a;
+      background: rgba(113, 63, 18, 0.45);
+      border-left: 7px solid #facc15;
+      border-radius: 14px;
+      padding: 16px 18px;
+      font-weight: 800;
+      text-align: left;
+    }
+
+    .notice {
+      background: rgba(14, 116, 144, 0.22);
+      border: 2px solid rgba(34, 211, 238, 0.42);
+      border-radius: 18px;
+      color: #ecfeff;
+      padding: 16px 18px;
+      margin-top: 16px;
+      font-weight: 700;
+    }
+
+    .kw {
+      color: #fef08a;
+    }
+
+    .page-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(34, 211, 238, 0.15);
+      border: 1px solid rgba(34, 211, 238, 0.5);
+      color: #cffafe;
+      border-radius: 999px;
+      padding: 8px 13px;
+      margin-bottom: 14px;
+      font-size: clamp(0.98rem, 4.2vw, 1.2rem);
+      font-weight: 800;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .tag-row span {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      border: 1px solid rgba(34, 211, 238, 0.45);
+      background: rgba(15, 23, 42, 0.72);
+      color: #cffafe;
+      padding: 8px 13px;
+      font-size: clamp(0.98rem, 4.2vw, 1.12rem);
+      font-weight: 900;
+    }
+
+    .example-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0 10px;
+      margin-top: 14px;
+    }
+
+    .example-table th {
+      text-align: left;
+      color: #cffafe;
+      padding: 10px;
+      font-weight: 950;
+    }
+
+    .example-table td {
+      background: rgba(15, 23, 42, 0.72);
+      border-top: 1px solid #334155;
+      border-bottom: 1px solid #334155;
+      padding: 12px;
+      vertical-align: top;
+      font-weight: 750;
+    }
+
+    .example-table td:first-child {
+      border-left: 1px solid #334155;
+      border-radius: 14px 0 0 14px;
+      color: #f8fafc;
+      font-weight: 950;
+    }
+
+    .example-table td:last-child {
+      border-right: 1px solid #334155;
+      border-radius: 0 14px 14px 0;
+      color: #bbf7d0;
+      font-weight: 900;
+    }
+
+    details {
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid #334155;
+      border-radius: 18px;
+      padding: 14px 16px;
+      margin-top: 16px;
+    }
+
+    summary {
+      cursor: pointer;
+      color: #fef08a;
+      font-weight: 950;
+    }
+
+    .lesson-controls {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 50;
+      background: rgba(15, 23, 42, 0.98);
+      border-top: 1px solid var(--border);
+      padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+      display: grid;
+      grid-template-columns: minmax(70px, 0.8fr) auto minmax(132px, 1.35fr);
+      gap: 6px;
+      align-items: center;
+      box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.38);
+    }
+
+    .nav-button {
+      min-height: 48px;
+      border: none;
+      border-radius: 14px;
+      padding: 9px 8px;
+      font-size: clamp(0.9rem, 3.9vw, 1.18rem);
+      line-height: 1.1;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.22);
+      white-space: normal;
+    }
+
+    .nav-button.primary {
+      background: var(--accent-2);
+      color: var(--button-text);
+      border: 2px solid #86efac;
+    }
+
+    .nav-button.secondary {
+      background: #e2e8f0;
+      color: #0f172a;
+      border: 2px solid #cbd5e1;
+    }
+
+    .nav-button:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .progress-pill {
+      color: #e0f2fe;
+      background: rgba(30, 41, 59, 0.98);
+      border: 1px solid #334155;
+      border-radius: 999px;
+      padding: 7px 8px;
+      text-align: center;
+      font-weight: 900;
+      font-size: clamp(0.84rem, 3.4vw, 1rem);
+      white-space: nowrap;
+    }
+
+    .actions {
+      display: grid;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .actions .button,
+    .actions a {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 16px;
+      padding: 16px;
+      font-size: clamp(1.05rem, 4.8vw, 1.4rem);
+      font-weight: 900;
+      background: #22d3ee;
+      color: #082f49;
+      border: 2px solid #67e8f9;
+    }
+
+    .final-banner {
+      background:
+        linear-gradient(135deg, rgba(34, 211, 238, 0.16), rgba(59, 130, 246, 0.16)),
+        var(--panel);
+      text-align: center;
+      border-color: rgba(34, 211, 238, 0.55);
+    }
+
+    .final-banner .name {
+      margin: 0 0 8px;
+      font-size: clamp(1.55rem, 7vw, 2.5rem);
+      color: #ffffff;
+      font-weight: 950;
+    }
+
+    .final-banner .email a {
+      color: #67e8f9;
+      font-weight: 900;
+      text-decoration: none;
+      word-break: break-word;
+    }
+
+    .visitor-counter {
+      margin-top: 18px;
+      background: #020617;
+      border: 2px solid #334155;
+      border-radius: 18px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .visitor-counter strong {
+      color: #86efac;
+      font-size: clamp(2rem, 9vw, 3.6rem);
+      display: block;
+      line-height: 1;
+      margin: 8px 0;
+    }
+
+    .small-note {
+      color: #cbd5e1;
+      font-size: clamp(0.88rem, 3.8vw, 1.08rem);
+      margin-bottom: 0;
+    }
+
+    .quick-check {
+      display: grid;
+      gap: 14px;
+    }
+
+    .question {
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid #334155;
+      border-radius: 18px;
+      padding: 16px;
+    }
+
+    .question p {
+      margin-top: 0;
+      font-weight: 900;
+    }
+
+    .answer-row {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .answer-row label {
+      display: grid;
+      grid-template-columns: 34px 1fr;
+      gap: 10px;
+      align-items: start;
+      background: #111827;
+      border: 1px solid #475569;
+      border-radius: 14px;
+      padding: 13px;
+      color: #f8fafc;
+      font-size: clamp(1rem, 4.8vw, 1.35rem);
+    }
+
+    .answer-row input {
+      width: 24px;
+      height: 24px;
+      margin-top: 3px;
+    }
+
+    .check-button {
+      width: 100%;
+      min-height: 58px;
+      border: none;
+      border-radius: 16px;
+      margin-top: 14px;
+      padding: 14px 16px;
+      background: #22d3ee;
+      color: #082f49;
+      border: 2px solid #67e8f9;
+      font-size: clamp(1rem, 4.8vw, 1.4rem);
+      font-weight: 950;
+      cursor: pointer;
+    }
+
+    .feedback {
+      margin-top: 12px;
+      border-radius: 14px;
+      padding: 12px;
+      font-weight: 900;
+      display: none;
+    }
+
+    .feedback.good {
+      display: block;
+      color: #052e16;
+      background: #86efac;
+    }
+
+    .feedback.bad {
+      display: block;
+      color: #450a0a;
+      background: #fecaca;
+    }
+
+    @media (max-width: 520px) {
+      .example-table,
+      .example-table tbody,
+      .example-table tr,
+      .example-table td {
+        display: block;
+        width: 100%;
+      }
+
+      .example-table thead {
+        display: none;
+      }
+
+      .example-table tr {
+        margin: 0 0 14px;
+      }
+
+      .example-table td:first-child {
+        border-radius: 14px 14px 0 0;
+        border-right: 1px solid #334155;
+      }
+
+      .example-table td:last-child {
+        border-radius: 0 0 14px 14px;
+        border-left: 1px solid #334155;
+        border-top: none;
+      }
+
+      .example-table td::before {
+        content: attr(data-label);
+        display: block;
+        color: #cffafe;
+        font-size: 0.82em;
+        margin-bottom: 3px;
+        font-weight: 950;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .mobile-lesson {
+        padding: 10px;
+        padding-bottom: 84px;
+      }
+
+      .lesson-controls {
+        grid-template-columns: minmax(64px, 0.75fr) auto minmax(128px, 1.35fr);
+      }
+
+      .nav-button {
+        min-height: 46px;
+        padding: 8px 6px;
+      }
+    }
+
   </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction</h1>
-      <p class="site-subtitle">Clasa a VI-a • Lecția 4 • Proprietăți fizice</p>
-    </div>
-  </header>
-
-  <main class="wrapper">
-    <section class="card">
-      <h1>Lecția 4 – Proprietăți fizice</h1>
-      <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică.”</p>
-      <p>
-        În această lecție înveți despre stările de agregare, starea fizică a unui corp
-        și despre principalele categorii de fenomene fizice.
-      </p>
-      <div class="pillbar">
-        <span class="pill">stări de agregare</span>
-        <span class="pill">stare mecanică</span>
-        <span class="pill">stare termică</span>
-        <span class="pill">fenomene fizice</span>
+  <main class="mobile-lesson" id="lessonApp">
+    <section class="lesson-page active" data-page="1">
+      <div class="first-banner" role="banner">
+        <div class="platform-title">Fizica Galaction</div>
+        <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică”</p>
       </div>
-    </section>
 
-    <section class="card">
-      <div class="status">
-        <div class="counter" id="counter">Pagina 1 din 8</div>
-        <div class="pillbar">
-          <span class="pill">telefon</span>
-          <span class="pill">tabletă</span>
-          <span class="pill">PC</span>
-        </div>
-      </div>
-      <div class="progress"><div id="progressBar"></div></div>
-
-      <article class="page active">
-        <h2>1. Stările de agregare ale corpurilor</h2>
-        <p>Corpurile din jurul nostru pot exista în mai multe stări de agregare.</p>
-        <div class="grid">
-          <div class="mini">
-            <h3>Stare solidă</h3>
-            <p>Exemple: creion, bancă, carte, gheață.</p>
-          </div>
-          <div class="mini">
-            <h3>Stare lichidă</h3>
-            <p>Exemple: apă, lapte, ulei, parfum.</p>
-          </div>
-          <div class="mini">
-            <h3>Stare gazoasă</h3>
-            <p>Exemple: aer, vapori, gaz dintr-un balon.</p>
-          </div>
-          <div class="mini">
-            <h3>Plasma</h3>
-            <p>Este o stare specială, întâlnită în anumite situații, de exemplu în flacără sau în Soare.</p>
-          </div>
-        </div>
-        <div class="notice warn">
-          Pentru clasa a VI-a reținem în primul rând solid, lichid și gazos.
+      <article class="lesson-card">
+        <span class="page-chip">Pagina 1</span>
+        <h1>Lecția 4 – Proprietăți fizice</h1>
+        <p>
+          În această lecție înveți despre <span class="kw"><strong>stările de agregare</strong></span>,
+          <span class="kw"><strong>starea fizică</strong></span> a unui corp și despre principalele
+          categorii de <span class="kw"><strong>fenomene fizice</strong></span>.
+        </p>
+        <div class="tag-row" aria-label="Cuvinte-cheie">
+          <span>stări de agregare</span>
+          <span>stare mecanică</span>
+          <span>stare termică</span>
+          <span>fenomene fizice</span>
         </div>
       </article>
+    </section>
 
-      <article class="page">
+    <section class="lesson-page" data-page="2" id="stari-agregare">
+      <article class="lesson-card">
+        <span class="page-chip">Pagina 2</span>
+        <h2>1. Stările de agregare ale corpurilor</h2>
+        <p>
+          Corpurile din jurul nostru pot exista în mai multe
+          <span class="kw"><strong>stări de agregare</strong></span>.
+        </p>
+
+        <h3>Stare solidă</h3>
+        <p>Exemple: creion, bancă, carte, gheață.</p>
+
+        <h3>Stare lichidă</h3>
+        <p>Exemple: apă, lapte, ulei, parfum.</p>
+
+        <h3>Stare gazoasă</h3>
+        <p>Exemple: aer, vapori, gaz dintr-un balon.</p>
+
+        <h3>Plasma</h3>
+        <p>Este o stare specială, întâlnită în anumite situații, de exemplu în flacără sau în Soare.</p>
+
+        <div class="notice">
+          Pentru clasa a VI-a reținem în primul rând: solid, lichid și gazos.
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-page" data-page="3" id="exemple-viata">
+      <article class="lesson-card">
+        <span class="page-chip">Pagina 3</span>
         <h2>2. Exemple din viața de zi cu zi</h2>
         <p>Privește corpurile de mai jos și spune în ce stare de agregare se află:</p>
         <ol>
@@ -342,19 +573,21 @@ html = """<!DOCTYPE html>
           <li>un săpun;</li>
           <li>gheață într-un vas.</li>
         </ol>
-        <div class="question">
-          <h3>Gândește-te</h3>
-          <p>Ce stare are aerul din balon? Dar gheața? Dar parfumul?</p>
-          <button onclick="toggleAnswer('ans1')">Arată răspuns orientativ</button>
-          <div id="ans1" class="feedback" style="display:none;">
-            Aerul este gazos, gheața este solidă, iar parfumul este lichid.
-          </div>
-        </div>
-      </article>
 
-      <article class="page">
+        <details>
+          <summary>Gândește-te</summary>
+          <p>Ce stare are aerul din balon? Dar gheața? Dar parfumul?</p>
+          <p><strong>Răspuns orientativ:</strong> aerul este gazos, gheața este solidă, iar parfumul este lichid.</p>
+        </details>
+      </article>
+    </section>
+
+    <section class="lesson-page" data-page="4" id="solide-lichide-gaze">
+      <article class="lesson-card">
+        <span class="page-chip">Pagina 4</span>
         <h2>3. Ce reținem despre solide, lichide și gaze</h2>
-        <table>
+
+        <table class="example-table">
           <thead>
             <tr>
               <th>Stare</th>
@@ -364,260 +597,302 @@ html = """<!DOCTYPE html>
           </thead>
           <tbody>
             <tr>
-              <td>Solidă</td>
-              <td>are volum propriu</td>
-              <td>are formă proprie</td>
+              <td data-label="Stare">Solidă</td>
+              <td data-label="Volum">are volum propriu</td>
+              <td data-label="Formă">are formă proprie</td>
             </tr>
             <tr>
-              <td>Lichidă</td>
-              <td>are volum propriu</td>
-              <td>nu are formă proprie; ia forma vasului</td>
+              <td data-label="Stare">Lichidă</td>
+              <td data-label="Volum">are volum propriu</td>
+              <td data-label="Formă">nu are formă proprie; ia forma vasului</td>
             </tr>
             <tr>
-              <td>Gazoasă</td>
-              <td>nu are volum propriu</td>
-              <td>nu are formă proprie; ocupă spațiul disponibil</td>
+              <td data-label="Stare">Gazoasă</td>
+              <td data-label="Volum">nu are volum propriu</td>
+              <td data-label="Formă">nu are formă proprie; ocupă spațiul disponibil</td>
             </tr>
           </tbody>
         </table>
+
         <div class="notice">
           Când descriem un corp, spunem nu doar ce este, ci și cum se află el la un anumit moment.
         </div>
       </article>
+    </section>
 
-      <article class="page">
+    <section class="lesson-page" data-page="5" id="starea-fizica">
+      <article class="lesson-card">
+        <span class="page-chip">Pagina 5</span>
         <h2>4. Starea fizică a unui corp</h2>
         <p>
-          <strong>Starea fizică</strong> a unui corp reprezintă totalitatea proprietăților sale
-          fizice la un anumit moment și în anumite condiții.
+          <span class="kw"><strong>Starea fizică</strong></span> a unui corp reprezintă totalitatea
+          proprietăților sale fizice la un anumit moment și în anumite condiții.
         </p>
         <p>Un corp poate fi descris prin mai multe tipuri de stări fizice.</p>
-        <div class="grid">
-          <div class="mini">
-            <h3>Stare mecanică</h3>
-            <p>Arată dacă un corp este în repaus sau în mișcare față de un reper ales.</p>
-          </div>
-          <div class="mini">
-            <h3>Stare termică</h3>
-            <p>Arată cât de cald sau cât de rece este un corp.</p>
-          </div>
-          <div class="mini">
-            <h3>Stare de electrizare</h3>
-            <p>Arată dacă un corp se poate electriza sau nu.</p>
-          </div>
-          <div class="mini">
-            <h3>Stare optică / magnetică</h3>
-            <p>Arată cum interacționează corpul cu lumina sau cu magneții.</p>
-          </div>
-        </div>
-      </article>
 
-      <article class="page">
+        <h3>Stare mecanică</h3>
+        <p>Arată dacă un corp este în repaus sau în mișcare față de un reper ales.</p>
+
+        <h3>Stare termică</h3>
+        <p>Arată cât de cald sau cât de rece este un corp.</p>
+
+        <h3>Stare de electrizare</h3>
+        <p>Arată dacă un corp se poate electriza sau nu.</p>
+
+        <h3>Stare optică / magnetică</h3>
+        <p>Arată cum interacționează corpul cu lumina sau cu magneții.</p>
+      </article>
+    </section>
+
+    <section class="lesson-page" data-page="6" id="mecanica-termica">
+      <article class="lesson-card">
+        <span class="page-chip">Pagina 6</span>
         <h2>5. Starea mecanică și starea termică</h2>
-        <div class="grid">
-          <div class="mini">
-            <h3>Starea mecanică</h3>
-            <p>
-              Un corp este în <strong>mișcare</strong> atunci când își schimbă poziția față de un reper ales.
-              Un corp este în <strong>repaus</strong> atunci când nu își schimbă poziția față de acel reper.
-            </p>
-          </div>
-          <div class="mini">
-            <h3>Starea termică</h3>
-            <p>
-              Starea termică arată starea de încălzire a corpului: mai cald sau mai rece.
-            </p>
-          </div>
-        </div>
-        <div class="question">
-          <h3>Exersează</h3>
+
+        <h3>Starea mecanică</h3>
+        <p>
+          Un corp este în <span class="kw"><strong>mișcare</strong></span> atunci când își schimbă
+          poziția față de un reper ales.
+        </p>
+        <p>
+          Un corp este în <span class="kw"><strong>repaus</strong></span> atunci când nu își schimbă
+          poziția față de acel reper.
+        </p>
+
+        <h3>Starea termică</h3>
+        <p>
+          Starea termică arată starea de încălzire a corpului: mai cald sau mai rece.
+        </p>
+
+        <details>
+          <summary>Exersează</summary>
           <p>Bec aprins, zăpadă, sobă, Soare, înghețată. Care sunt corpuri calde și care sunt corpuri reci?</p>
-          <button onclick="toggleAnswer('ans2')">Arată un posibil răspuns</button>
-          <div id="ans2" class="feedback" style="display:none;">
-            Calde: bec aprins, sobă, Soare. Reci: zăpadă, înghețată.
-          </div>
-        </div>
+          <p><strong>Un posibil răspuns:</strong> calde: bec aprins, sobă, Soare. Reci: zăpadă, înghețată.</p>
+        </details>
       </article>
+    </section>
 
-      <article class="page">
+    <section class="lesson-page" data-page="7" id="alte-stari-fenomen">
+      <article class="lesson-card">
+        <span class="page-chip">Pagina 7</span>
         <h2>6. Alte tipuri de stări fizice</h2>
-        <div class="grid">
-          <div class="mini">
-            <h3>Starea de electrizare</h3>
-            <p>
-              Este determinată de proprietățile electrostatice ale corpului.
-              Unele corpuri se electrizează ușor, altele nu.
-            </p>
-          </div>
-          <div class="mini">
-            <h3>Starea de magnetizare</h3>
-            <p>
-              Este determinată de proprietățile magnetice. Un magnet poate atrage fierul,
-              dar nu atrage orice material.
-            </p>
-          </div>
-          <div class="mini" style="grid-column:1/-1;">
-            <h3>Starea optică</h3>
-            <p>
-              Este determinată de interacțiunea luminii cu un corp. Prin sticlă lumina poate trece,
-              prin lemn nu.
-            </p>
-          </div>
-        </div>
-      </article>
 
-      <article class="page">
+        <h3>Starea de electrizare</h3>
+        <p>
+          Este determinată de proprietățile electrostatice ale corpului.
+          Unele corpuri se electrizează ușor, altele nu.
+        </p>
+
+        <h3>Starea de magnetizare</h3>
+        <p>
+          Este determinată de proprietățile magnetice. Un magnet poate atrage fierul,
+          dar nu atrage orice material.
+        </p>
+
+        <h3>Starea optică</h3>
+        <p>
+          Este determinată de interacțiunea luminii cu un corp. Prin sticlă lumina poate trece,
+          prin lemn nu.
+        </p>
+
         <h2>7. Ce este un fenomen fizic?</h2>
         <p>
-          Un <strong>fenomen fizic</strong> este un proces, o transformare, o evoluție sau un efect
-          care poate fi observat în natură.
+          Un <span class="kw"><strong>fenomen fizic</strong></span> este un proces, o transformare,
+          o evoluție sau un efect care poate fi observat în natură.
         </p>
-        <p>Fenomenul fizic presupune modificarea stării fizice a unui corp.</p>
-        <div class="mini">
-          <h3>Exemple</h3>
-          <ul>
-            <li>schimbarea poziției unui corp în timp → fenomen mecanic;</li>
-            <li>încălzirea sau răcirea unui corp → fenomen termic;</li>
-            <li>schimbarea stării de agregare → fenomen termic;</li>
-            <li>comportarea luminii într-un mediu → fenomen optic.</li>
-          </ul>
+        <div class="notice">
+          Fenomenul fizic presupune modificarea stării fizice a unui corp.
         </div>
       </article>
+    </section>
 
-      <article class="page">
+    <section class="lesson-page" data-page="8" id="final">
+      <article class="lesson-card">
+        <span class="page-chip">Pagina 8</span>
         <h2>8. Clasificarea fenomenelor fizice</h2>
         <ul>
-          <li><strong>fenomene mecanice</strong> – mișcare, echilibru, deformare;</li>
-          <li><strong>fenomene termice</strong> – încălzire, răcire, transformări de stare;</li>
-          <li><strong>fenomene optice</strong> – comportamentul luminii;</li>
-          <li><strong>fenomene electrice</strong> – comportamentul sarcinilor electrice;</li>
-          <li><strong>fenomene magnetice</strong> – fenomene datorate magneților.</li>
+          <li><span class="kw"><strong>fenomene mecanice</strong></span> – mișcare, echilibru, deformare;</li>
+          <li><span class="kw"><strong>fenomene termice</strong></span> – încălzire, răcire, transformări de stare;</li>
+          <li><span class="kw"><strong>fenomene optice</strong></span> – comportamentul luminii;</li>
+          <li><span class="kw"><strong>fenomene electrice</strong></span> – comportamentul sarcinilor electrice;</li>
+          <li><span class="kw"><strong>fenomene magnetice</strong></span> – fenomene datorate magneților.</li>
         </ul>
 
         <div class="notice">
-          <strong>Reține:</strong><br>
-          proprietățile fizice ne ajută să descriem corpurile; starea fizică arată cum este un corp
-          la un moment dat; fenomenele fizice apar atunci când starea corpului se modifică.
-        </div>
-
-        <div class="question">
-          <div class="instruction">Alege o singură variantă corectă.</div>
-          <h3>Verificare rapidă</h3>
-          <p>Bifează enunțul corect.</p>
-
-          <table class="option-table" role="presentation">
-            <tr>
-              <td>
-                <label class="option-row">
-                  <input type="radio" name="q1" value="0">
-                  <span class="option-text">Gazele au formă proprie.</span>
-                </label>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label class="option-row" style="background:#132033;">
-                  <input type="radio" name="q1" value="1">
-                  <span class="option-text">Lichidele au volum propriu, dar nu au formă proprie.</span>
-                </label>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label class="option-row">
-                  <input type="radio" name="q1" value="0">
-                  <span class="option-text">Starea mecanică arată numai culoarea corpului.</span>
-                </label>
-              </td>
-            </tr>
-          </table>
-
-          <button onclick="checkQuiz()">Verifică răspunsul</button>
-          <div id="quizFeedback" class="feedback"></div>
-        </div>
-
-        <div class="nav">
-          <a class="btn btn-secondary" href="./lectia-3.html">Lecția anterioară</a>
-          <a class="btn btn-ghost" href="./index.html">Înapoi la lecții</a>
-          <a class="btn btn-primary" href="../fise-de-lucru/index.html">Mergi la fișa de lucru</a>
+          <strong>Reține:</strong> proprietățile fizice ne ajută să descriem corpurile;
+          starea fizică arată cum este un corp la un moment dat; fenomenele fizice apar
+          atunci când starea corpului se modifică.
         </div>
       </article>
 
-      <div class="nav">
-        <button class="btn btn-ghost" id="prevBtn" onclick="changePage(-1)">Înapoi</button>
-        <button class="btn btn-primary" id="nextBtn" onclick="changePage(1)">Mergi mai departe</button>
-      </div>
+      <article class="lesson-card">
+        <h2>Verificare rapidă</h2>
+
+        <div class="quick-check" id="quickCheck">
+          <div class="question" data-answer="b">
+            <p>1. Bifează enunțul corect.</p>
+            <div class="answer-row">
+              <label><input type="radio" name="q1" value="a"> Gazele au formă proprie.</label>
+              <label><input type="radio" name="q1" value="b"> Lichidele au volum propriu, dar nu au formă proprie.</label>
+              <label><input type="radio" name="q1" value="c"> Starea mecanică arată numai culoarea corpului.</label>
+            </div>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>2. Un fenomen fizic presupune:</p>
+            <div class="answer-row">
+              <label><input type="radio" name="q2" value="a"> doar numirea unui corp</label>
+              <label><input type="radio" name="q2" value="b"> dispariția oricărei proprietăți</label>
+              <label><input type="radio" name="q2" value="c"> modificarea stării fizice a unui corp</label>
+            </div>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>3. Mișcarea unui corp este un fenomen:</p>
+            <div class="answer-row">
+              <label><input type="radio" name="q3" value="a"> mecanic</label>
+              <label><input type="radio" name="q3" value="b"> optic</label>
+              <label><input type="radio" name="q3" value="c"> magnetic</label>
+            </div>
+          </div>
+
+          <button class="check-button" type="button" id="checkQuick">Verifică răspunsurile</button>
+          <div class="feedback" id="quickFeedback" role="status" aria-live="polite"></div>
+        </div>
+      </article>
+
+      <article class="final-banner" role="contentinfo">
+        <p class="name">Prof. Dănuț Andronie</p>
+        <p class="email">E-mail: <a href="mailto:danutmg@gmil.com">danutmg@gmil.com</a></p>
+        <p class="small-note">Pentru observații, propuneri și sugestii privind platforma educațională.</p>
+
+        <div class="visitor-counter" aria-label="Contor vizitatori">
+          <span>Contor vizitatori</span>
+          <strong id="visitorCount">0</strong>
+          <p class="small-note">Contor local: numără deschiderile acestei lecții pe dispozitivul folosit.</p>
+        </div>
+      </article>
+
+      <section class="actions" aria-label="Linkuri utile">
+        <a class="button" href="./lectia-3.html">Lecția anterioară</a>
+        <a class="button" href="./index.html">Înapoi la lecții</a>
+        <a class="button" href="../fise-de-lucru/fisa-4.html">Fișa de lucru</a>
+      </section>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrapper">
-      Fizica Galaction • Clasa a VI-a • Lecția 4
+  <nav class="lesson-controls" aria-label="Navigare între paginile lecției">
+    <button class="nav-button secondary" type="button" id="prevPage">Înapoi</button>
+    <div class="progress-pill" aria-live="polite">
+      <span id="currentPage">1</span>/<span id="totalPages">8</span>
     </div>
-  </footer>
+    <button class="nav-button primary" type="button" id="nextPage">Mergi mai departe</button>
+  </nav>
 
+  <script src="../../../assets/js/main.js"></script>
   <script>
-    const pages = Array.from(document.querySelectorAll('.page'));
-    const counter = document.getElementById('counter');
-    const progressBar = document.getElementById('progressBar');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    let currentPage = 0;
+    (function () {
+      const pages = Array.from(document.querySelectorAll(".lesson-page"));
+      const prevBtn = document.getElementById("prevPage");
+      const nextBtn = document.getElementById("nextPage");
+      const currentPageEl = document.getElementById("currentPage");
+      const totalPagesEl = document.getElementById("totalPages");
+      const visitorCountEl = document.getElementById("visitorCount");
+      const quickButton = document.getElementById("checkQuick");
+      const quickFeedback = document.getElementById("quickFeedback");
 
-    function renderPage() {
-      pages.forEach((page, index) => {
-        page.classList.toggle('active', index === currentPage);
+      let index = 0;
+      totalPagesEl.textContent = pages.length;
+
+      function showPage(newIndex) {
+        index = Math.max(0, Math.min(newIndex, pages.length - 1));
+
+        pages.forEach(function (page, i) {
+          page.classList.toggle("active", i === index);
+        });
+
+        currentPageEl.textContent = String(index + 1);
+        prevBtn.disabled = index === 0;
+
+        if (index === pages.length - 1) {
+          nextBtn.style.visibility = "hidden";
+          nextBtn.setAttribute("aria-hidden", "true");
+        } else {
+          nextBtn.style.visibility = "visible";
+          nextBtn.removeAttribute("aria-hidden");
+          nextBtn.textContent = "Mergi mai departe";
+        }
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        history.replaceState(null, "", "#pagina-" + (index + 1));
+      }
+
+      function readPageFromHash() {
+        const match = window.location.hash.match(/pagina-(\d+)/);
+        if (!match) {
+          return 0;
+        }
+        const pageNumber = Number(match[1]);
+        if (!Number.isFinite(pageNumber)) {
+          return 0;
+        }
+        return Math.max(0, Math.min(pageNumber - 1, pages.length - 1));
+      }
+
+      function updateVisitorCounter() {
+        const counterKey = "fizica-galaction-lectia-4-vizite";
+        let count = Number(localStorage.getItem(counterKey) || "0");
+        count += 1;
+        localStorage.setItem(counterKey, String(count));
+        if (visitorCountEl) {
+          visitorCountEl.textContent = String(count);
+        }
+      }
+
+      function checkQuickAnswers() {
+        const questions = Array.from(document.querySelectorAll("#quickCheck .question"));
+        let score = 0;
+
+        questions.forEach(function (question) {
+          const correct = question.dataset.answer;
+          const selected = question.querySelector("input[type='radio']:checked");
+          if (selected && selected.value === correct) {
+            score += 1;
+          }
+        });
+
+        if (!quickFeedback) {
+          return;
+        }
+
+        quickFeedback.className = "feedback " + (score === questions.length ? "good" : "bad");
+        quickFeedback.textContent = "Ai răspuns corect la " + score + " din " + questions.length + " întrebări.";
+      }
+
+      prevBtn.addEventListener("click", function () {
+        showPage(index - 1);
       });
 
-      counter.textContent = `Pagina ${currentPage + 1} din ${pages.length}`;
-      progressBar.style.width = `${((currentPage + 1) / pages.length) * 100}%`;
+      nextBtn.addEventListener("click", function () {
+        showPage(index + 1);
+      });
 
-      prevBtn.style.visibility = currentPage === 0 ? 'hidden' : 'visible';
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "ArrowLeft") {
+          showPage(index - 1);
+        }
+        if (event.key === "ArrowRight") {
+          showPage(index + 1);
+        }
+      });
 
-      if (currentPage === pages.length - 1) {
-        nextBtn.style.display = 'none';
-      } else {
-        nextBtn.style.display = 'inline-block';
+      if (quickButton) {
+        quickButton.addEventListener("click", checkQuickAnswers);
       }
 
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function changePage(direction) {
-      const nextIndex = currentPage + direction;
-      if (nextIndex < 0 || nextIndex >= pages.length) return;
-      currentPage = nextIndex;
-      renderPage();
-    }
-
-    function toggleAnswer(id) {
-      const el = document.getElementById(id);
-      el.style.display = el.style.display === 'none' ? 'block' : 'none';
-    }
-
-    function checkQuiz() {
-      const selected = document.querySelector('input[name="q1"]:checked');
-      const feedback = document.getElementById('quizFeedback');
-      if (!selected) {
-        feedback.textContent = 'Selectează o variantă, apoi apasă pe „Verifică răspunsul”.';
-        feedback.style.color = '#fbbf24';
-        return;
-      }
-      if (selected.value === '1') {
-        feedback.textContent = 'Corect! Lichidele au volum propriu, dar nu au formă proprie.';
-        feedback.style.color = '#4ade80';
-      } else {
-        feedback.textContent = 'Nu este corect. Recitește tabelul despre solide, lichide și gaze.';
-        feedback.style.color = '#f87171';
-      }
-    }
-
-    renderPage();
+      updateVisitorCounter();
+      showPage(readPageFromHash());
+    })();
   </script>
 </body>
 </html>
-"""
-
-out = Path("/mnt/data/lectia-4-verificare-rapida-refacuta.html")
-out.write_text(html, encoding="utf-8")
-print(out.as_posix())

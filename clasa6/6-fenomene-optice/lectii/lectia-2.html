@@ -1,139 +1,773 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Lecția 2 | Propagarea rectilinie a luminii. Viteza luminii | Fizica Galaction</title>
-  <meta name="description" content="Cum se propagă lumina, ce este un fascicul luminos și de ce spunem că lumina are o viteză foarte mare.">
-  <link rel="stylesheet" href="../../../assets/css/style.css">
+  <meta name="description" content="Lecția 2, clasa a VI-a: propagarea rectilinie a luminii, fascicule de lumină și viteza luminii." />
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 
   <style>
-    .lesson-nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
-      justify-content: space-between;
+    :root {
+      --bg: #0f172a;
+      --card: #172033;
+      --card-2: #1e293b;
+      --text: #f8fafc;
+      --muted: #dbeafe;
+      --accent: #22d3ee;
+      --accent-2: #38bdf8;
+      --good: #22c55e;
+      --warning: #fbbf24;
+      --danger: #fb7185;
+      --line: #334155;
+      --button-text: #052f3f;
     }
-    .nav-button {
-      display: inline-block;
-      padding: 12px 18px;
-      border-radius: 12px;
-      text-decoration: none;
+
+    * { box-sizing: border-box; }
+
+    html {
+      font-size: 20px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100svh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.13), transparent 32rem),
+        linear-gradient(135deg, #0f172a 0%, #111827 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .app {
+      width: min(100%, 900px);
+      margin: 0 auto;
+      padding: 12px 12px 96px;
+    }
+
+    .lesson-page {
+      display: none;
+      min-height: calc(100svh - 108px);
+      animation: fadeIn 0.22s ease;
+    }
+
+    .lesson-page.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .banner,
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(23, 32, 51, 0.94);
+      box-shadow: 0 18px 45px rgba(0,0,0,0.28);
+    }
+
+    .banner {
+      margin-bottom: 12px;
+      padding: 14px 16px;
+      text-align: center;
+      background:
+        linear-gradient(135deg, rgba(34,211,238,0.18), rgba(56,189,248,0.06)),
+        rgba(15, 23, 42, 0.96);
+    }
+
+    .banner p { margin: 0.2rem 0; }
+
+    .school {
+      color: #e0f2fe;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      font-size: clamp(1rem, 4vw, 1.28rem);
+    }
+
+    .prof {
+      color: #bae6fd;
+      font-weight: 800;
+      font-size: clamp(0.95rem, 3.6vw, 1.12rem);
+    }
+
+    .quote {
+      margin-top: 0.55rem !important;
+      color: #fef08a;
+      font-weight: 800;
+      font-style: italic;
+      font-size: clamp(0.98rem, 3.8vw, 1.15rem);
+    }
+
+    .card {
+      padding: clamp(18px, 5vw, 32px);
+      margin: 0 0 14px;
+    }
+
+    .page-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-bottom: 0.7rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.13);
+      color: #a5f3fc;
+      font-weight: 900;
+      font-size: 0.9rem;
+    }
+
+    h1, h2, h3 {
+      margin: 0 0 0.85rem;
+      line-height: 1.15;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+
+    h1 { font-size: clamp(1.95rem, 9vw, 3.15rem); }
+    h2 { font-size: clamp(1.55rem, 7vw, 2.45rem); }
+    h3 { font-size: clamp(1.2rem, 5vw, 1.6rem); color: #e0f2fe; }
+
+    p, li {
+      font-size: clamp(1.08rem, 5.2vw, 1.35rem);
+    }
+
+    ul {
+      padding-left: 1.3rem;
+      margin-bottom: 0.2rem;
+    }
+
+    li { margin: 0.55rem 0; }
+
+    .lead {
+      font-size: clamp(1.18rem, 5.8vw, 1.55rem);
       font-weight: 700;
-      background: #22d3ee;
-      color: #082f49;
-      border: 2px solid #0891b2;
-      box-shadow: 0 4px 14px rgba(8,145,178,0.18);
+      color: #e0f2fe;
     }
-    .nav-button.secondary {
-      background: #e2e8f0;
-      color: #0f172a;
-      border-color: #cbd5e1;
+
+    .kw {
+      color: #67e8f9;
+      font-weight: 900;
     }
-    .nav-button.success {
-      background: #22c55e;
-      color: #052e16;
-      border-color: #16a34a;
+
+    .formula {
+      margin: 1rem 0;
+      padding: 0.85rem;
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      border-radius: 18px;
+      background: rgba(8, 47, 73, 0.42);
+      text-align: center;
+      font-size: clamp(1.15rem, 5.5vw, 1.5rem);
+      overflow-x: auto;
     }
-    .nav-button:hover,
-    .nav-button:focus {
-      filter: brightness(1.02);
-      transform: translateY(-1px);
+
+    .notice,
+    .important {
+      margin: 1rem 0 0;
+      padding: 1rem;
+      border-radius: 18px;
+      border-left: 6px solid var(--accent);
+      background: rgba(34, 211, 238, 0.12);
+      color: #e0f2fe;
+      font-size: clamp(1.05rem, 5vw, 1.25rem);
+      font-weight: 700;
     }
-    .mini-note {
-      font-size: 0.95rem;
+
+    .important {
+      border-left-color: var(--warning);
+      background: rgba(251, 191, 36, 0.12);
+      color: #fef3c7;
+    }
+
+    .pill-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      padding: 1rem;
+      border-radius: 18px;
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid #334155;
+    }
+
+    .pill b {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #a5f3fc;
+      font-size: clamp(1.08rem, 4.8vw, 1.25rem);
+    }
+
+    .pill span {
+      display: block;
+      color: #e5e7eb;
+      font-size: clamp(0.98rem, 4.5vw, 1.12rem);
+    }
+
+    .svg-wrap {
+      margin-top: 1rem;
+      overflow-x: auto;
+      border-radius: 18px;
+      border: 1px solid #334155;
+      background: #0f172a;
+    }
+
+    .svg-wrap svg {
+      display: block;
+      width: 100%;
+      min-width: 330px;
+      height: auto;
+    }
+
+    .caption {
+      margin-top: 0.45rem;
       color: #cbd5e1;
-      margin-top: 8px;
+      text-align: center;
+      font-size: clamp(0.92rem, 4vw, 1rem);
+    }
+
+    .quick-check {
+      display: grid;
+      gap: 0.7rem;
+      margin-top: 1rem;
+    }
+
+    .answer {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.75rem;
+      align-items: start;
+      padding: 0.9rem;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.72);
+      cursor: pointer;
+    }
+
+    .answer input {
+      width: 1.3rem;
+      height: 1.3rem;
+      margin-top: 0.18rem;
+      accent-color: var(--accent);
+    }
+
+    .answer span {
+      font-size: clamp(1.05rem, 5vw, 1.25rem);
+      color: #f8fafc;
+    }
+
+    .check-btn {
+      width: 100%;
+      border: 0;
+      border-radius: 16px;
+      padding: 0.85rem 1rem;
+      margin-top: 0.75rem;
+      background: var(--accent);
+      color: var(--button-text);
+      font-size: clamp(1.05rem, 5vw, 1.2rem);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 0.8rem;
+      padding: 0.9rem;
+      border-radius: 16px;
+      font-weight: 800;
+      font-size: clamp(1rem, 4.8vw, 1.18rem);
+    }
+
+    .feedback.ok,
+    .feedback.bad {
+      display: block;
+    }
+
+    .feedback.ok {
+      color: #dcfce7;
+      background: rgba(34, 197, 94, 0.16);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+    }
+
+    .feedback.bad {
+      color: #ffe4e6;
+      background: rgba(251, 113, 133, 0.16);
+      border: 1px solid rgba(251, 113, 133, 0.4);
+    }
+
+    .final-banner {
+      padding: 1.15rem;
+      border-radius: 20px;
+      background:
+        linear-gradient(135deg, rgba(34,211,238,0.18), rgba(251,191,36,0.12)),
+        rgba(30, 41, 59, 0.95);
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      text-align: center;
+    }
+
+    .final-banner strong {
+      display: block;
+      color: #ffffff;
+      font-size: clamp(1.25rem, 5.5vw, 1.65rem);
+    }
+
+    .final-banner a {
+      color: #67e8f9;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .visitor {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px dashed #64748b;
+      text-align: center;
+      color: #e0f2fe;
+      font-size: clamp(1.05rem, 5vw, 1.25rem);
+      font-weight: 800;
+    }
+
+    .links {
+      display: grid;
+      gap: 0.65rem;
+      margin-top: 1rem;
+    }
+
+    .links a {
+      display: block;
+      padding: 0.85rem;
+      border-radius: 16px;
+      background: rgba(34, 211, 238, 0.12);
+      color: #a5f3fc;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 900;
+      font-size: clamp(1rem, 4.8vw, 1.15rem);
+      border: 1px solid rgba(34, 211, 238, 0.28);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 20;
+      padding: 8px max(8px, env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-right));
+      background: rgba(15, 23, 42, 0.93);
+      border-top: 1px solid #334155;
+      backdrop-filter: blur(10px);
+    }
+
+    .bottom-nav-inner {
+      width: min(100%, 900px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: 8px;
+      align-items: center;
+    }
+
+    .nav-btn {
+      min-width: 0;
+      border: 0;
+      border-radius: 14px;
+      padding: 0.68rem 0.45rem;
+      color: #052f3f;
+      background: var(--accent);
+      font-size: clamp(0.9rem, 4.4vw, 1.05rem);
+      font-weight: 950;
+      line-height: 1.05;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(34, 211, 238, 0.16);
+    }
+
+    .nav-btn.secondary {
+      color: #e0f2fe;
+      background: #334155;
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.48;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .counter {
+      min-width: 3.9rem;
+      padding: 0.55rem 0.6rem;
+      border-radius: 999px;
+      text-align: center;
+      color: #e0f2fe;
+      background: rgba(30, 41, 59, 0.95);
+      border: 1px solid #475569;
+      font-weight: 900;
+      font-size: clamp(0.85rem, 4vw, 0.95rem);
+    }
+
+    @media (max-width: 560px) {
+      html { font-size: 22px; }
+      .app { padding-left: 10px; padding-right: 10px; }
+      .card { border-radius: 20px; }
+      .pill-grid { grid-template-columns: 1fr; }
+      .bottom-nav-inner { gap: 6px; }
+      .nav-btn { padding: 0.66rem 0.32rem; }
+      .counter { min-width: 3.45rem; padding-left: 0.45rem; padding-right: 0.45rem; }
     }
   </style>
-
 </head>
+
 <body>
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction</h1>
-    </div>
-  </header>
-
-  <main class="page-content wrapper">
-
-    <section class="card">
-      <h1>Lecția 2 – Propagarea rectilinie a luminii. Viteza luminii</h1>
-      <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică”</p>
-    </section>
-
-    <section class="card" id="propagare">
-      <h2>1. Cum se propagă lumina</h2>
-      <p>Într-un mediu omogen și transparent, lumina se propagă <span class="kw"><strong>în linie dreaptă</strong></span>.</p>
-<p>Această proprietate se numește <strong>propagare rectilinie a luminii</strong> și explică apariția umbrelor și funcționarea camerei obscure.</p>
-<div class="notice">Pentru a descrie drumul luminii folosim modelul numit <strong>rază de lumină</strong>.</div>
-    </section>
-
-    <section class="card" id="fascicule">
-      <h2>2. Fascicule de lumină</h2>
-      <p>Un <span class="kw"><strong>fascicul de lumină</strong></span> este un grup de raze de lumină apropiate.</p>
-<p>Fasciculele pot fi:</p>
-<ul>
-  <li><strong>paralele</strong> – razele merg una lângă alta;</li>
-  <li><strong>divergente</strong> – razele se depărtează unele de altele;</li>
-  <li><strong>convergente</strong> – razele tind să se întâlnească într-un punct.</li>
-</ul>
-<p>Un pointer laser sau o lanternă cu deschidere mică poate evidenția ușor forma unui fascicul luminos.</p>
-    </section>
-
-    <section class="card" id="viteza">
-      <h2>3. Viteza luminii</h2>
-      <p>Lumina are o <span class="kw"><strong>viteză foarte mare</strong></span>. În vid, valoarea ei este aproximativ <strong>300 000 km/s</strong>.</p>
-<p>Din acest motiv, lumina ajunge foarte repede de la sursă la ochii noștri și ni se pare că efectul este instantaneu.</p>
-<p>În alte medii, cum sunt apa sau sticla, viteza luminii este mai mică decât în vid.</p>
-    </section>
-
-    <section class="card" id="aplicatii">
-      <h2>4. Aplicații simple</h2>
-      <ul>
-  <li>camera obscură funcționează datorită propagării rectilinii a luminii;</li>
-  <li>umbrele obiectelor apar deoarece lumina nu ocolește corpurile opace;</li>
-  <li>fasciculele luminoase pot fi observate mai bine în aer cu praf, fum fin sau ceață.</li>
-</ul>
-<p>Poți observa traseul unui fascicul luminos într-un pahar cu apă ușor tulbure sau într-o cameră în care intră razele Soarelui.</p>
-    </section>
-
-    <section class="card">
-      <h2>Reține</h2>
-      <ul>
-        <li>lumina se propagă rectiliniu în medii omogene și transparente;</li>
-        <li>raza de lumină este modelul folosit pentru descrierea drumului luminii;</li>
-        <li>fasciculele luminoase pot fi paralele, divergente sau convergente;</li>
-        <li>viteza luminii este foarte mare și este maximă în vid.</li>
-      </ul>
-    </section>
-
-    <section class="card">
-      <h2>Navigare</h2>
-      <p class="mini-note">Butonul „Mergi mai departe” rămâne vizibil și te duce la pasul următor din capitol.</p>
-      <div class="lesson-nav">
-        <a class="nav-button secondary" href="./index.html">Toate lecțiile</a>
-        <a class="nav-button" href="./lectia-1.html">Înapoi</a>
-        <a class="nav-button success" href="./lectia-3.html">Mergi mai departe</a>
+  <main class="app" id="lessonApp">
+    <section class="lesson-page active" data-title="Introducere">
+      <div class="banner">
+        <p class="school">Școala Gimnazială „Gala Galaction” Mangalia</p>
+        <p class="prof">Prof. Dănuț Andronie</p>
+        <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică”</p>
       </div>
+
+      <article class="card">
+        <span class="page-tag">Lecția 2</span>
+        <h1>Propagarea rectilinie a luminii. Viteza luminii</h1>
+        <p class="lead">
+          Lumina se deplasează în linie dreaptă prin medii omogene și transparente.
+        </p>
+        <p>
+          Această proprietate explică formarea umbrelor, funcționarea camerei obscure și modul în care putem descrie drumul luminii cu ajutorul razelor de lumină.
+        </p>
+        <div class="notice">
+          Întrebarea principală: de ce umbra unui obiect are margini clare atunci când sursa de lumină este mică?
+        </div>
+      </article>
     </section>
 
+    <section class="lesson-page" data-title="Propagarea luminii">
+      <article class="card">
+        <span class="page-tag">Pagina 1</span>
+        <h2>1. Cum se propagă lumina?</h2>
+        <p>
+          Într-un <span class="kw">mediu omogen</span> și <span class="kw">transparent</span>, lumina se propagă în linie dreaptă.
+        </p>
+        <p>
+          Această proprietate se numește <span class="kw">propagarea rectilinie a luminii</span>.
+        </p>
+        <p>
+          Pentru a descrie drumul luminii folosim un model simplu: <span class="kw">raza de lumină</span>.
+        </p>
+
+        <div class="svg-wrap" aria-label="Propagarea rectilinie a luminii">
+          <svg viewBox="0 0 760 330" role="img">
+            <defs>
+              <marker id="arrowRay" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#fde047"/>
+              </marker>
+            </defs>
+            <rect width="760" height="330" rx="24" fill="#0f172a"/>
+            <circle cx="105" cy="165" r="45" fill="#fde047" stroke="#facc15" stroke-width="8"/>
+            <g stroke="#fde047" stroke-width="6" stroke-linecap="round">
+              <line x1="105" y1="90" x2="105" y2="60"/>
+              <line x1="105" y1="270" x2="105" y2="240"/>
+              <line x1="30" y1="165" x2="0" y2="165"/>
+              <line x1="210" y1="165" x2="180" y2="165"/>
+              <line x1="53" y1="113" x2="30" y2="90"/>
+              <line x1="157" y1="113" x2="180" y2="90"/>
+            </g>
+            <line x1="170" y1="165" x2="635" y2="165" stroke="#fde047" stroke-width="8" marker-end="url(#arrowRay)"/>
+            <rect x="500" y="95" width="72" height="140" rx="14" fill="#38bdf8" stroke="#e0f2fe" stroke-width="5"/>
+            <path d="M572 105 L710 70 L710 260 L572 225 Z" fill="rgba(15,23,42,0.65)" stroke="#334155" stroke-width="3"/>
+            <text x="105" y="302" fill="#fef9c3" font-size="27" font-weight="900" text-anchor="middle">sursă</text>
+            <text x="380" y="130" fill="#fef08a" font-size="26" font-weight="900" text-anchor="middle">rază de lumină</text>
+            <text x="536" y="282" fill="#e0f2fe" font-size="25" font-weight="900" text-anchor="middle">corp opac</text>
+            <text x="670" y="302" fill="#cbd5e1" font-size="25" font-weight="900" text-anchor="middle">umbră</text>
+          </svg>
+        </div>
+        <p class="caption">Imaginea 1 – lumina se propagă rectiliniu și nu ocolește corpul opac</p>
+      </article>
+    </section>
+
+    <section class="lesson-page" data-title="Fascicule">
+      <article class="card">
+        <span class="page-tag">Pagina 2</span>
+        <h2>2. Fascicule de lumină</h2>
+        <p>
+          Un <span class="kw">fascicul de lumină</span> este un grup de raze de lumină apropiate.
+        </p>
+
+        <div class="pill-grid">
+          <div class="pill">
+            <b>Paralel</b>
+            <span>Razele merg una lângă alta.</span>
+          </div>
+          <div class="pill">
+            <b>Divergent</b>
+            <span>Razele se depărtează.</span>
+          </div>
+          <div class="pill">
+            <b>Convergent</b>
+            <span>Razele tind să se întâlnească.</span>
+          </div>
+        </div>
+
+        <div class="svg-wrap" aria-label="Tipuri de fascicule luminoase">
+          <svg viewBox="0 0 760 370" role="img">
+            <defs>
+              <marker id="arrowF" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#fde047"/>
+              </marker>
+            </defs>
+            <rect width="760" height="370" rx="24" fill="#0f172a"/>
+
+            <text x="150" y="48" fill="#a5f3fc" font-size="28" font-weight="900" text-anchor="middle">paralel</text>
+            <line x1="55" y1="100" x2="245" y2="100" stroke="#fde047" stroke-width="6" marker-end="url(#arrowF)"/>
+            <line x1="55" y1="145" x2="245" y2="145" stroke="#fde047" stroke-width="6" marker-end="url(#arrowF)"/>
+            <line x1="55" y1="190" x2="245" y2="190" stroke="#fde047" stroke-width="6" marker-end="url(#arrowF)"/>
+
+            <text x="380" y="48" fill="#a5f3fc" font-size="28" font-weight="900" text-anchor="middle">divergent</text>
+            <circle cx="315" cy="145" r="9" fill="#fbbf24"/>
+            <line x1="320" y1="145" x2="500" y2="85" stroke="#fde047" stroke-width="6" marker-end="url(#arrowF)"/>
+            <line x1="320" y1="145" x2="500" y2="145" stroke="#fde047" stroke-width="6" marker-end="url(#arrowF)"/>
+            <line x1="320" y1="145" x2="500" y2="205" stroke="#fde047" stroke-width="6" marker-end="url(#arrowF)"/>
+
+            <text x="610" y="48" fill="#a5f3fc" font-size="28" font-weight="900" text-anchor="middle">convergent</text>
+            <circle cx="675" cy="145" r="9" fill="#fbbf24"/>
+            <line x1="530" y1="85" x2="670" y2="142" stroke="#fde047" stroke-width="6" marker-end="url(#arrowF)"/>
+            <line x1="530" y1="145" x2="670" y2="145" stroke="#fde047" stroke-width="6" marker-end="url(#arrowF)"/>
+            <line x1="530" y1="205" x2="670" y2="148" stroke="#fde047" stroke-width="6" marker-end="url(#arrowF)"/>
+
+            <text x="380" y="315" fill="#e5e7eb" font-size="25" font-weight="800" text-anchor="middle">
+              Un pointer laser sau o lanternă cu deschidere mică poate evidenția fasciculul.
+            </text>
+          </svg>
+        </div>
+        <p class="caption">Imaginea 2 – fascicule paralele, divergente și convergente</p>
+      </article>
+    </section>
+
+    <section class="lesson-page" data-title="Viteza luminii">
+      <article class="card">
+        <span class="page-tag">Pagina 3</span>
+        <h2>3. Viteza luminii</h2>
+        <p>
+          Lumina are o viteză foarte mare. În vid, valoarea ei este aproximativ <span class="kw">300 000 km/s</span>.
+        </p>
+
+        <div class="formula">
+          $c \approx 300\,000\ \frac{km}{s}$
+        </div>
+
+        <p>
+          Aceasta înseamnă că, într-o secundă, lumina poate parcurge aproximativ 300 000 km în vid.
+        </p>
+
+        <div class="formula">
+          Exemplu: $s = c \cdot t = 300\,000\ \frac{km}{s} \cdot 1\,s = 300\,000\,km$
+        </div>
+
+        <div class="important">
+          În apă, sticlă sau alte medii transparente, viteza luminii este mai mică decât în vid.
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-page" data-title="Aplicații">
+      <article class="card">
+        <span class="page-tag">Pagina 4</span>
+        <h2>4. Aplicații simple</h2>
+        <ul>
+          <li><span class="kw">Camera obscură</span> funcționează datorită propagării rectilinii a luminii.</li>
+          <li><span class="kw">Umbrele</span> apar deoarece lumina nu trece prin corpurile opace.</li>
+          <li><span class="kw">Fasciculele luminoase</span> se observă mai ușor în aer cu praf, fum fin sau ceață.</li>
+        </ul>
+
+        <div class="svg-wrap" aria-label="Camera obscură">
+          <svg viewBox="0 0 760 350" role="img">
+            <defs>
+              <marker id="arrowC" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#fde047"/>
+              </marker>
+            </defs>
+            <rect width="760" height="350" rx="24" fill="#0f172a"/>
+            <rect x="360" y="70" width="300" height="210" rx="16" fill="#1e293b" stroke="#94a3b8" stroke-width="5"/>
+            <circle cx="360" cy="175" r="8" fill="#fde047"/>
+            <line x1="120" y1="95" x2="360" y2="175" stroke="#fde047" stroke-width="5" marker-end="url(#arrowC)"/>
+            <line x1="120" y1="255" x2="360" y2="175" stroke="#fde047" stroke-width="5" marker-end="url(#arrowC)"/>
+            <line x1="360" y1="175" x2="610" y2="250" stroke="#fde047" stroke-width="5" marker-end="url(#arrowC)"/>
+            <line x1="360" y1="175" x2="610" y2="100" stroke="#fde047" stroke-width="5" marker-end="url(#arrowC)"/>
+            <line x1="120" y1="95" x2="120" y2="255" stroke="#38bdf8" stroke-width="10" stroke-linecap="round"/>
+            <circle cx="120" cy="95" r="17" fill="#22c55e"/>
+            <rect x="103" y="255" width="34" height="42" fill="#22c55e"/>
+            <line x1="610" y1="100" x2="610" y2="250" stroke="#f8fafc" stroke-width="8" stroke-linecap="round"/>
+            <text x="120" y="322" fill="#e0f2fe" font-size="25" font-weight="900" text-anchor="middle">obiect</text>
+            <text x="510" y="322" fill="#e0f2fe" font-size="25" font-weight="900" text-anchor="middle">camera obscură</text>
+            <text x="610" y="54" fill="#f8fafc" font-size="25" font-weight="900" text-anchor="middle">imagine răsturnată</text>
+          </svg>
+        </div>
+        <p class="caption">Imaginea 3 – principiul camerei obscure</p>
+      </article>
+    </section>
+
+    <section class="lesson-page" data-title="Reține">
+      <article class="card">
+        <span class="page-tag">Pagina 5</span>
+        <h2>Reține</h2>
+        <ul>
+          <li>Lumina se propagă <span class="kw">rectiliniu</span> în medii omogene și transparente.</li>
+          <li><span class="kw">Raza de lumină</span> este un model folosit pentru descrierea drumului luminii.</li>
+          <li>Fasciculele luminoase pot fi <span class="kw">paralele</span>, <span class="kw">divergente</span> sau <span class="kw">convergente</span>.</li>
+          <li>Viteza luminii este foarte mare și este maximă în vid.</li>
+          <li>În vid: $c \approx 300\,000\ \frac{km}{s}$.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="lesson-page" data-title="Verificare">
+      <article class="card">
+        <span class="page-tag">Pagina 6</span>
+        <h2>Verificare rapidă</h2>
+        <p class="lead">Alege varianta corectă.</p>
+        <p>
+          Într-un mediu omogen și transparent, lumina:
+        </p>
+
+        <div class="quick-check">
+          <label class="answer">
+            <input type="radio" name="q1" value="curba">
+            <span>se propagă pe linii curbe</span>
+          </label>
+          <label class="answer">
+            <input type="radio" name="q1" value="rectiliniu">
+            <span>se propagă în linie dreaptă</span>
+          </label>
+          <label class="answer">
+            <input type="radio" name="q1" value="nu">
+            <span>nu se poate propaga</span>
+          </label>
+        </div>
+
+        <button class="check-btn" type="button" onclick="checkAnswer()">Verifică răspunsul</button>
+        <div id="feedback" class="feedback"></div>
+      </article>
+    </section>
+
+    <section class="lesson-page" data-title="Final">
+      <article class="card">
+        <span class="page-tag">Final</span>
+        <h2>Ai terminat lecția</h2>
+        <p class="lead">
+          Ai recapitulat propagarea rectilinie a luminii, tipurile de fascicule și viteza luminii.
+        </p>
+
+        <div class="final-banner">
+          <strong>Prof. Dănuț Andronie</strong>
+          <span>E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a></span>
+        </div>
+
+        <div class="visitor">
+          Vizitatori pe acest dispozitiv: <span id="visitorCount">0</span>
+        </div>
+
+        <div class="links">
+          <a href="./lectia-1.html">Înapoi la lecția 1</a>
+          <a href="./lectia-3.html">Mergi la lecția 3</a>
+          <a href="../recapitulare/index.html">Recapitulare capitol</a>
+          <a href="./index.html">Toate lecțiile</a>
+        </div>
+      </article>
+    </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrapper">
-      <p>© Fizica Galaction · Prof. DĂNUȚ ANDRONIE</p>
-      <div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 8px;">
-        E-mail:
-        <a href="mailto:danutmg@gmail.com" style="color: #22d3ee; text-decoration: none;">danutmg@gmail.com</a><br>
-        <span style="font-size: 0.85rem; color: #94a3b8;">
-          Pentru observații, propuneri și sugestii privind platforma educațională.
-        </span>
-      </div>
+  <nav class="bottom-nav" aria-label="Navigare lecție">
+    <div class="bottom-nav-inner">
+      <button class="nav-btn secondary" type="button" id="prevBtn" onclick="prevPage()">Înapoi</button>
+      <div class="counter" id="pageCounter">1/8</div>
+      <button class="nav-btn" type="button" id="nextBtn" onclick="nextPage()">Mergi mai departe</button>
     </div>
-  </footer>
+  </nav>
 
-  <script src="../../../assets/js/main.js"></script>
+  <script>
+    const pages = Array.from(document.querySelectorAll('.lesson-page'));
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageCounter = document.getElementById('pageCounter');
+    let currentPage = 0;
+
+    function showPage(index) {
+      currentPage = Math.max(0, Math.min(index, pages.length - 1));
+      pages.forEach((page, i) => page.classList.toggle('active', i === currentPage));
+      prevBtn.disabled = currentPage === 0;
+      nextBtn.textContent = currentPage === pages.length - 1 ? 'Mergi la început' : 'Mergi mai departe';
+      pageCounter.textContent = `${currentPage + 1}/${pages.length}`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (currentPage === pages.length - 1) updateVisitorCounter();
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([pages[currentPage]]).catch(() => {});
+      }
+    }
+
+    function nextPage() {
+      if (currentPage === pages.length - 1) {
+        showPage(0);
+      } else {
+        showPage(currentPage + 1);
+      }
+    }
+
+    function prevPage() {
+      showPage(currentPage - 1);
+    }
+
+    function checkAnswer() {
+      const selected = document.querySelector('input[name="q1"]:checked');
+      const feedback = document.getElementById('feedback');
+      feedback.className = 'feedback';
+
+      if (!selected) {
+        feedback.textContent = 'Alege mai întâi o variantă.';
+        feedback.classList.add('bad');
+        return;
+      }
+
+      if (selected.value === 'rectiliniu') {
+        feedback.textContent = 'Corect! Într-un mediu omogen și transparent, lumina se propagă în linie dreaptă.';
+        feedback.classList.add('ok');
+      } else {
+        feedback.textContent = 'Mai încearcă. Proprietatea importantă este propagarea rectilinie a luminii.';
+        feedback.classList.add('bad');
+      }
+    }
+
+    function updateVisitorCounter() {
+      const key = 'vizitatori_optice_lectia_2_propagarea_luminii';
+      const alreadyCountedKey = key + '_counted_this_session';
+      let count = Number(localStorage.getItem(key) || '0');
+      if (!sessionStorage.getItem(alreadyCountedKey)) {
+        count += 1;
+        localStorage.setItem(key, String(count));
+        sessionStorage.setItem(alreadyCountedKey, '1');
+      }
+      document.getElementById('visitorCount').textContent = count;
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') nextPage();
+      if (event.key === 'ArrowLeft') prevPage();
+    });
+
+    showPage(0);
+  </script>
 </body>
 </html>

@@ -1,136 +1,735 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Lecția 5 | Devierea fasciculelor de lumină: reflexia și refracția | Fizica Galaction</title>
-  <meta name="description" content="Cum își schimbă lumina direcția la suprafața dintre două medii și care este diferența dintre reflexie și refracție.">
-  <link rel="stylesheet" href="../../../assets/css/style.css">
+  <meta name="description" content="Lecția 5, clasa a VI-a: reflexia și refracția luminii." />
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 
   <style>
-    .lesson-nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
-      justify-content: space-between;
+    :root {
+      --bg: #0f172a;
+      --card: #172033;
+      --card-2: #1e293b;
+      --text: #f8fafc;
+      --muted: #dbeafe;
+      --accent: #22d3ee;
+      --accent-2: #38bdf8;
+      --good: #22c55e;
+      --warning: #fbbf24;
+      --danger: #fb7185;
+      --line: #334155;
+      --button-text: #052f3f;
     }
-    .nav-button {
-      display: inline-block;
-      padding: 12px 18px;
-      border-radius: 12px;
-      text-decoration: none;
+
+    * { box-sizing: border-box; }
+
+    html {
+      font-size: 20px;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100svh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.13), transparent 32rem),
+        linear-gradient(135deg, #0f172a 0%, #111827 100%);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    .app {
+      width: min(100%, 900px);
+      margin: 0 auto;
+      padding: 12px 12px 96px;
+    }
+
+    .lesson-page {
+      display: none;
+      min-height: calc(100svh - 108px);
+      animation: fadeIn 0.22s ease;
+    }
+
+    .lesson-page.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .banner,
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: rgba(23, 32, 51, 0.94);
+      box-shadow: 0 18px 45px rgba(0,0,0,0.28);
+    }
+
+    .banner {
+      margin-bottom: 12px;
+      padding: 14px 16px;
+      text-align: center;
+      background:
+        linear-gradient(135deg, rgba(34,211,238,0.18), rgba(56,189,248,0.06)),
+        rgba(15, 23, 42, 0.96);
+    }
+
+    .banner p { margin: 0.2rem 0; }
+
+    .school {
+      color: #e0f2fe;
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      font-size: clamp(1rem, 4vw, 1.28rem);
+    }
+
+    .prof {
+      color: #bae6fd;
+      font-weight: 800;
+      font-size: clamp(0.95rem, 3.6vw, 1.12rem);
+    }
+
+    .quote {
+      margin-top: 0.55rem !important;
+      color: #fef08a;
+      font-weight: 800;
+      font-style: italic;
+      font-size: clamp(0.98rem, 3.8vw, 1.15rem);
+    }
+
+    .card {
+      padding: clamp(18px, 5vw, 32px);
+      margin: 0 0 14px;
+    }
+
+    .page-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      margin-bottom: 0.7rem;
+      padding: 0.3rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.13);
+      color: #a5f3fc;
+      font-weight: 900;
+      font-size: 0.9rem;
+    }
+
+    h1, h2, h3 {
+      margin: 0 0 0.85rem;
+      line-height: 1.15;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+
+    h1 { font-size: clamp(1.95rem, 9vw, 3.15rem); }
+    h2 { font-size: clamp(1.55rem, 7vw, 2.45rem); }
+    h3 { font-size: clamp(1.2rem, 5vw, 1.6rem); color: #e0f2fe; }
+
+    p, li { font-size: clamp(1.08rem, 5.2vw, 1.35rem); }
+
+    ul {
+      padding-left: 1.3rem;
+      margin-bottom: 0.2rem;
+    }
+
+    li { margin: 0.55rem 0; }
+
+    .lead {
+      font-size: clamp(1.18rem, 5.8vw, 1.55rem);
       font-weight: 700;
-      background: #22d3ee;
-      color: #082f49;
-      border: 2px solid #0891b2;
-      box-shadow: 0 4px 14px rgba(8,145,178,0.18);
+      color: #e0f2fe;
     }
-    .nav-button.secondary {
-      background: #e2e8f0;
-      color: #0f172a;
-      border-color: #cbd5e1;
+
+    .kw {
+      color: #67e8f9;
+      font-weight: 900;
     }
-    .nav-button.success {
-      background: #22c55e;
-      color: #052e16;
-      border-color: #16a34a;
+
+    .notice,
+    .important {
+      margin: 1rem 0 0;
+      padding: 1rem;
+      border-radius: 18px;
+      border-left: 6px solid var(--accent);
+      background: rgba(34, 211, 238, 0.12);
+      color: #e0f2fe;
+      font-size: clamp(1.05rem, 5vw, 1.25rem);
+      font-weight: 700;
     }
-    .nav-button:hover,
-    .nav-button:focus {
-      filter: brightness(1.02);
-      transform: translateY(-1px);
+
+    .important {
+      border-left-color: var(--warning);
+      background: rgba(251, 191, 36, 0.12);
+      color: #fef3c7;
     }
-    .mini-note {
-      font-size: 0.95rem;
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      padding: 1rem;
+      border-radius: 18px;
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid #334155;
+    }
+
+    .pill b {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #a5f3fc;
+      font-size: clamp(1.08rem, 4.8vw, 1.25rem);
+    }
+
+    .pill span {
+      display: block;
+      color: #e5e7eb;
+      font-size: clamp(0.98rem, 4.5vw, 1.12rem);
+    }
+
+    .svg-wrap {
+      margin-top: 1rem;
+      overflow-x: auto;
+      border-radius: 18px;
+      border: 1px solid #334155;
+      background: #0f172a;
+    }
+
+    .svg-wrap svg {
+      display: block;
+      width: 100%;
+      min-width: 330px;
+      height: auto;
+    }
+
+    .caption {
+      margin-top: 0.45rem;
       color: #cbd5e1;
-      margin-top: 8px;
+      text-align: center;
+      font-size: clamp(0.92rem, 4vw, 1rem);
+    }
+
+    .quick-check {
+      display: grid;
+      gap: 0.7rem;
+      margin-top: 1rem;
+    }
+
+    .answer {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.75rem;
+      align-items: start;
+      padding: 0.9rem;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.72);
+      cursor: pointer;
+    }
+
+    .answer input {
+      width: 1.3rem;
+      height: 1.3rem;
+      margin-top: 0.18rem;
+      accent-color: var(--accent);
+    }
+
+    .answer span {
+      font-size: clamp(1.05rem, 5vw, 1.25rem);
+      color: #f8fafc;
+    }
+
+    .check-btn {
+      width: 100%;
+      border: 0;
+      border-radius: 16px;
+      padding: 0.85rem 1rem;
+      margin-top: 0.75rem;
+      background: var(--accent);
+      color: var(--button-text);
+      font-size: clamp(1.05rem, 5vw, 1.2rem);
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 0.8rem;
+      padding: 0.9rem;
+      border-radius: 16px;
+      font-weight: 800;
+      font-size: clamp(1rem, 4.8vw, 1.18rem);
+    }
+
+    .feedback.ok,
+    .feedback.bad { display: block; }
+
+    .feedback.ok {
+      color: #dcfce7;
+      background: rgba(34, 197, 94, 0.16);
+      border: 1px solid rgba(34, 197, 94, 0.4);
+    }
+
+    .feedback.bad {
+      color: #ffe4e6;
+      background: rgba(251, 113, 133, 0.16);
+      border: 1px solid rgba(251, 113, 133, 0.4);
+    }
+
+    .final-banner {
+      padding: 1.15rem;
+      border-radius: 20px;
+      background:
+        linear-gradient(135deg, rgba(34,211,238,0.18), rgba(251,191,36,0.12)),
+        rgba(30, 41, 59, 0.95);
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      text-align: center;
+    }
+
+    .final-banner strong {
+      display: block;
+      color: #ffffff;
+      font-size: clamp(1.25rem, 5.5vw, 1.65rem);
+    }
+
+    .final-banner a {
+      color: #67e8f9;
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .visitor {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px dashed #64748b;
+      text-align: center;
+      color: #e0f2fe;
+      font-size: clamp(1.05rem, 5vw, 1.25rem);
+      font-weight: 800;
+    }
+
+    .links {
+      display: grid;
+      gap: 0.65rem;
+      margin-top: 1rem;
+    }
+
+    .links a {
+      display: block;
+      padding: 0.85rem;
+      border-radius: 16px;
+      background: rgba(34, 211, 238, 0.12);
+      color: #a5f3fc;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 900;
+      font-size: clamp(1rem, 4.8vw, 1.15rem);
+      border: 1px solid rgba(34, 211, 238, 0.28);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 20;
+      padding: 8px max(8px, env(safe-area-inset-left)) calc(8px + env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-right));
+      background: rgba(15, 23, 42, 0.93);
+      border-top: 1px solid #334155;
+      backdrop-filter: blur(10px);
+    }
+
+    .bottom-nav-inner {
+      width: min(100%, 900px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: 8px;
+      align-items: center;
+    }
+
+    .nav-btn {
+      min-width: 0;
+      border: 0;
+      border-radius: 14px;
+      padding: 0.68rem 0.45rem;
+      color: #052f3f;
+      background: var(--accent);
+      font-size: clamp(0.9rem, 4.4vw, 1.05rem);
+      font-weight: 950;
+      line-height: 1.05;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(34, 211, 238, 0.16);
+    }
+
+    .nav-btn.secondary {
+      color: #e0f2fe;
+      background: #334155;
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.48;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .counter {
+      min-width: 3.9rem;
+      padding: 0.55rem 0.6rem;
+      border-radius: 999px;
+      text-align: center;
+      color: #e0f2fe;
+      background: rgba(30, 41, 59, 0.95);
+      border: 1px solid #475569;
+      font-weight: 900;
+      font-size: clamp(0.85rem, 4vw, 0.95rem);
+    }
+
+    @media (max-width: 560px) {
+      html { font-size: 22px; }
+      .app { padding-left: 10px; padding-right: 10px; }
+      .card { border-radius: 20px; }
+      .grid { grid-template-columns: 1fr; }
+      .bottom-nav-inner { gap: 6px; }
+      .nav-btn { padding: 0.66rem 0.32rem; }
+      .counter { min-width: 3.45rem; padding-left: 0.45rem; padding-right: 0.45rem; }
     }
   </style>
-
 </head>
 <body>
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction</h1>
-    </div>
-  </header>
-
-  <main class="page-content wrapper">
-
-    <section class="card">
-      <h1>Lecția 5 – Devierea fasciculelor de lumină: reflexia și refracția</h1>
-      <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică”</p>
-    </section>
-
-    <section class="card" id="suprafata">
-      <h2>1. Ce se întâmplă la suprafața dintre două medii</h2>
-      <p>Când un fascicul de lumină ajunge la limita dintre două medii, direcția lui se poate schimba.</p>
-<p>În funcție de medii și de unghiul sub care ajunge lumina, pot apărea fenomene precum <strong>reflexia</strong> și <strong>refracția</strong>.</p>
-    </section>
-
-    <section class="card" id="reflexia">
-      <h2>2. Reflexia luminii</h2>
-      <p><span class="kw"><strong>Reflexia</strong></span> este fenomenul prin care lumina se întoarce în mediul din care a venit.</p>
-<p>Acest fenomen apare ușor pe suprafețe lucioase sau netede, cum sunt oglinzile, apa liniștită sau metalul bine lustruit.</p>
-<ul>
-  <li>vedem obiectele din jur și pentru că ele reflectă lumina;</li>
-  <li>oglinzile folosesc reflexia pentru a forma imagini.</li>
-</ul>
-    </section>
-
-    <section class="card" id="refractia">
-      <h2>3. Refracția luminii</h2>
-      <p><span class="kw"><strong>Refracția</strong></span> este fenomenul prin care lumina își schimbă direcția și trece dintr-un mediu în altul.</p>
-<p>Refracția apare deoarece viteza luminii se modifică atunci când lumina trece, de exemplu, din aer în apă sau din aer în sticlă.</p>
-<p>Din această cauză, un creion introdus într-un pahar cu apă poate părea „frânt”, iar obiectele aflate în apă pot părea mai aproape de suprafață decât sunt în realitate.</p>
-    </section>
-
-    <section class="card" id="exemple">
-      <h2>4. Exemple și comparații</h2>
-      <ul>
-  <li>imaginea unui copac în apa liniștită este legată de reflexie;</li>
-  <li>aspectul aparent „rupt” al unui pai într-un pahar cu apă este legat de refracție;</li>
-  <li>atunci când privim prin sticlă, lumina poate suferi și refracție, nu doar trecere directă.</li>
-</ul>
-<p><strong>Comparație rapidă:</strong> la reflexie lumina se întoarce, iar la refracție lumina pătrunde în al doilea mediu, schimbându-și direcția.</p>
-    </section>
-
-    <section class="card">
-      <h2>Reține</h2>
-      <ul>
-        <li>reflexia înseamnă întoarcerea luminii în mediul inițial;</li>
-        <li>refracția înseamnă pătrunderea luminii în alt mediu cu schimbarea direcției;</li>
-        <li>oglinzile folosesc reflexia;</li>
-        <li>apa și sticla pot evidenția ușor fenomenul de refracție.</li>
-      </ul>
-    </section>
-
-    <section class="card">
-      <h2>Navigare</h2>
-      <p class="mini-note">Butonul „Mergi mai departe” rămâne vizibil și te duce la pasul următor din capitol.</p>
-      <div class="lesson-nav">
-        <a class="nav-button secondary" href="./index.html">Toate lecțiile</a>
-        <a class="nav-button" href="./lectia-4.html">Înapoi</a>
-        <a class="nav-button success" href="./index.html">Mergi mai departe</a>
+  <main class="app">
+    <section class="lesson-page active" data-title="Start">
+      <div class="banner">
+        <p class="school">Școala Gimnazială „Gala Galaction” Mangalia</p>
+        <p class="prof">Prof. Dănuț Andronie</p>
+        <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică”</p>
       </div>
+
+      <article class="card">
+        <span class="page-tag">Lecția 5</span>
+        <h1>Devierea fasciculelor de lumină: reflexia și refracția</h1>
+        <p class="lead">
+          Lumina își poate schimba direcția atunci când întâlnește suprafața de separare dintre două medii.
+        </p>
+        <div class="notice">
+          Două fenomene importante sunt <span class="kw">reflexia</span> și <span class="kw">refracția</span>.
+        </div>
+      </article>
     </section>
 
+    <section class="lesson-page" data-title="Două medii">
+      <article class="card">
+        <span class="page-tag">Pagina 2</span>
+        <h2>1. La suprafața dintre două medii</h2>
+        <p>
+          Când un fascicul de lumină ajunge la limita dintre două medii, direcția lui se poate schimba.
+        </p>
+        <p>
+          Mediile pot fi, de exemplu: <span class="kw">aer</span>, <span class="kw">apă</span>,
+          <span class="kw">sticlă</span> sau alte corpuri transparente.
+        </p>
+        <div class="important">
+          În funcție de suprafață și de mediile întâlnite, lumina se poate întoarce sau poate pătrunde în alt mediu.
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-page" data-title="Reflexia">
+      <article class="card">
+        <span class="page-tag">Pagina 3</span>
+        <h2>2. Reflexia luminii</h2>
+        <p>
+          <span class="kw">Reflexia</span> este fenomenul prin care lumina se întoarce în mediul din care a venit.
+        </p>
+        <p>
+          Reflexia apare ușor pe suprafețe lucioase sau netede: oglinzi, apă liniștită, metal bine lustruit.
+        </p>
+        <ul>
+          <li>vedem obiectele din jur și pentru că ele reflectă lumina;</li>
+          <li>oglinzile folosesc reflexia pentru a forma imagini.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="lesson-page" data-title="Schema reflexiei">
+      <article class="card">
+        <span class="page-tag">Pagina 4</span>
+        <h2>3. Cum se vede reflexia</h2>
+        <p>
+          O rază de lumină ajunge pe o suprafață lucioasă și se întoarce în același mediu.
+        </p>
+
+        <div class="svg-wrap" aria-label="Schema reflexiei luminii">
+          <svg viewBox="0 0 820 380" role="img">
+            <rect width="820" height="380" fill="#0f172a"/>
+            <line x1="80" y1="260" x2="740" y2="260" stroke="#94a3b8" stroke-width="8" stroke-linecap="round"/>
+            <text x="410" y="314" fill="#e0f2fe" font-size="26" font-weight="900" text-anchor="middle">oglindă / suprafață lucioasă</text>
+
+            <line x1="410" y1="70" x2="410" y2="260" stroke="#64748b" stroke-width="4" stroke-dasharray="10 10"/>
+            <text x="432" y="92" fill="#cbd5e1" font-size="22" font-weight="800">normală</text>
+
+            <line x1="170" y1="80" x2="398" y2="246" stroke="#fef08a" stroke-width="8" stroke-linecap="round"/>
+            <polygon points="398,246 369,239 384,219" fill="#fef08a"/>
+            <text x="195" y="75" fill="#f8fafc" font-size="25" font-weight="900">rază incidentă</text>
+
+            <line x1="422" y1="246" x2="650" y2="80" stroke="#67e8f9" stroke-width="8" stroke-linecap="round"/>
+            <polygon points="650,80 621,88 636,108" fill="#67e8f9"/>
+            <text x="625" y="75" fill="#f8fafc" font-size="25" font-weight="900" text-anchor="middle">rază reflectată</text>
+
+            <circle cx="410" cy="260" r="10" fill="#f8fafc"/>
+            <path d="M350 214 A74 74 0 0 1 410 186" fill="none" stroke="#fbbf24" stroke-width="4"/>
+            <path d="M410 186 A74 74 0 0 1 470 214" fill="none" stroke="#38bdf8" stroke-width="4"/>
+            <text x="338" y="197" fill="#fbbf24" font-size="22" font-weight="900">unghi</text>
+            <text x="485" y="197" fill="#38bdf8" font-size="22" font-weight="900">unghi</text>
+          </svg>
+        </div>
+        <p class="caption">La reflexie, lumina se întoarce în mediul inițial.</p>
+      </article>
+    </section>
+
+    <section class="lesson-page" data-title="Refracția">
+      <article class="card">
+        <span class="page-tag">Pagina 5</span>
+        <h2>4. Refracția luminii</h2>
+        <p>
+          <span class="kw">Refracția</span> este fenomenul prin care lumina își schimbă direcția
+          când trece dintr-un mediu în altul.
+        </p>
+        <p>
+          Refracția apare deoarece viteza luminii se modifică atunci când lumina trece,
+          de exemplu, din aer în apă sau din aer în sticlă.
+        </p>
+        <div class="notice">
+          Din cauza refracției, un pai introdus într-un pahar cu apă poate părea „frânt”.
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-page" data-title="Schema refracției">
+      <article class="card">
+        <span class="page-tag">Pagina 6</span>
+        <h2>5. Cum se vede refracția</h2>
+        <p>
+          Lumina pătrunde în al doilea mediu și își schimbă direcția de propagare.
+        </p>
+
+        <div class="svg-wrap" aria-label="Schema refracției luminii">
+          <svg viewBox="0 0 820 420" role="img">
+            <rect width="820" height="210" fill="#0f172a"/>
+            <rect y="210" width="820" height="210" fill="#0c4a6e" opacity="0.82"/>
+            <line x1="80" y1="210" x2="740" y2="210" stroke="#bae6fd" stroke-width="6"/>
+            <text x="105" y="68" fill="#f8fafc" font-size="26" font-weight="900">aer</text>
+            <text x="105" y="374" fill="#f8fafc" font-size="26" font-weight="900">apă / sticlă</text>
+
+            <line x1="410" y1="70" x2="410" y2="350" stroke="#94a3b8" stroke-width="4" stroke-dasharray="10 10"/>
+            <text x="432" y="92" fill="#cbd5e1" font-size="22" font-weight="800">normală</text>
+
+            <line x1="190" y1="78" x2="400" y2="202" stroke="#fef08a" stroke-width="8" stroke-linecap="round"/>
+            <polygon points="400,202 370,200 384,179" fill="#fef08a"/>
+            <text x="200" y="72" fill="#f8fafc" font-size="25" font-weight="900">rază incidentă</text>
+
+            <line x1="412" y1="214" x2="520" y2="350" stroke="#67e8f9" stroke-width="8" stroke-linecap="round"/>
+            <polygon points="520,350 494,334 516,320" fill="#67e8f9"/>
+            <text x="604" y="347" fill="#f8fafc" font-size="25" font-weight="900" text-anchor="middle">rază refractată</text>
+
+            <circle cx="410" cy="210" r="10" fill="#f8fafc"/>
+            <path d="M356 178 A72 72 0 0 1 410 138" fill="none" stroke="#fbbf24" stroke-width="4"/>
+            <path d="M410 282 A72 72 0 0 1 456 266" fill="none" stroke="#38bdf8" stroke-width="4"/>
+            <text x="326" y="164" fill="#fbbf24" font-size="22" font-weight="900">în aer</text>
+            <text x="468" y="288" fill="#38bdf8" font-size="22" font-weight="900">în apă</text>
+          </svg>
+        </div>
+        <p class="caption">La refracție, lumina intră în alt mediu și direcția ei se schimbă.</p>
+      </article>
+    </section>
+
+    <section class="lesson-page" data-title="Exemple">
+      <article class="card">
+        <span class="page-tag">Pagina 7</span>
+        <h2>6. Exemple din viața de zi cu zi</h2>
+        <div class="grid">
+          <div class="pill">
+            <b>Reflexie</b>
+            <span>Imaginea unui copac în apa liniștită.</span>
+          </div>
+          <div class="pill">
+            <b>Refracție</b>
+            <span>Paiul pare frânt într-un pahar cu apă.</span>
+          </div>
+          <div class="pill">
+            <b>Sticlă</b>
+            <span>Lumina poate trece, dar direcția ei se poate modifica.</span>
+          </div>
+        </div>
+        <div class="important">
+          La reflexie lumina se întoarce; la refracție lumina pătrunde în al doilea mediu.
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-page" data-title="Reține">
+      <article class="card">
+        <span class="page-tag">Pagina 8</span>
+        <h2>Reține</h2>
+        <ul>
+          <li>Reflexia înseamnă întoarcerea luminii în mediul inițial.</li>
+          <li>Refracția înseamnă pătrunderea luminii în alt mediu cu schimbarea direcției.</li>
+          <li>Oglinzile folosesc reflexia luminii.</li>
+          <li>Apa și sticla pot evidenția ușor refracția luminii.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="lesson-page" data-title="Verificare">
+      <article class="card">
+        <span class="page-tag">Pagina 9</span>
+        <h2>Verificare rapidă</h2>
+        <p class="lead">Alege varianta corectă.</p>
+        <p>
+          Fenomenul prin care lumina trece din aer în apă și își schimbă direcția se numește:
+        </p>
+
+        <div class="quick-check">
+          <label class="answer">
+            <input type="radio" name="q1" value="reflexie">
+            <span>reflexie</span>
+          </label>
+          <label class="answer">
+            <input type="radio" name="q1" value="refractie">
+            <span>refracție</span>
+          </label>
+          <label class="answer">
+            <input type="radio" name="q1" value="umbra">
+            <span>umbră</span>
+          </label>
+        </div>
+
+        <button class="check-btn" type="button" onclick="checkAnswer()">Verifică răspunsul</button>
+        <div id="feedback" class="feedback"></div>
+      </article>
+    </section>
+
+    <section class="lesson-page" data-title="Final">
+      <article class="card">
+        <span class="page-tag">Final</span>
+        <h2>Ai terminat lecția</h2>
+        <p class="lead">
+          Ai învățat să deosebești reflexia de refracția luminii și să recunoști exemple simple din jur.
+        </p>
+
+        <div class="final-banner">
+          <strong>Prof. Dănuț Andronie</strong>
+          <span>E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a></span>
+        </div>
+
+        <div class="visitor">
+          Vizitatori pe acest dispozitiv: <span id="visitorCount">0</span>
+        </div>
+
+        <div class="links">
+          <a href="./lectia-4.html">Înapoi la lecția 4</a>
+          <a href="../recapitulare/index.html">Recapitulare capitol</a>
+          <a href="./index.html">Toate lecțiile</a>
+        </div>
+      </article>
+    </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrapper">
-      <p>© Fizica Galaction · Prof. DĂNUȚ ANDRONIE</p>
-      <div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 8px;">
-        E-mail:
-        <a href="mailto:danutmg@gmail.com" style="color: #22d3ee; text-decoration: none;">danutmg@gmail.com</a><br>
-        <span style="font-size: 0.85rem; color: #94a3b8;">
-          Pentru observații, propuneri și sugestii privind platforma educațională.
-        </span>
-      </div>
+  <nav class="bottom-nav" aria-label="Navigare lecție">
+    <div class="bottom-nav-inner">
+      <button class="nav-btn secondary" type="button" id="prevBtn" onclick="prevPage()">Înapoi</button>
+      <div class="counter" id="pageCounter">1/10</div>
+      <button class="nav-btn" type="button" id="nextBtn" onclick="nextPage()">Mergi mai departe</button>
     </div>
-  </footer>
+  </nav>
 
-  <script src="../../../assets/js/main.js"></script>
+  <script>
+    const pages = Array.from(document.querySelectorAll('.lesson-page'));
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageCounter = document.getElementById('pageCounter');
+    let currentPage = 0;
+
+    function showPage(index) {
+      currentPage = Math.max(0, Math.min(index, pages.length - 1));
+      pages.forEach((page, i) => page.classList.toggle('active', i === currentPage));
+      prevBtn.disabled = currentPage === 0;
+      nextBtn.textContent = currentPage === pages.length - 1 ? 'Mergi la început' : 'Mergi mai departe';
+      pageCounter.textContent = `${currentPage + 1}/${pages.length}`;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (currentPage === pages.length - 1) updateVisitorCounter();
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([pages[currentPage]]).catch(() => {});
+      }
+    }
+
+    function nextPage() {
+      if (currentPage === pages.length - 1) {
+        showPage(0);
+      } else {
+        showPage(currentPage + 1);
+      }
+    }
+
+    function prevPage() {
+      showPage(currentPage - 1);
+    }
+
+    function checkAnswer() {
+      const selected = document.querySelector('input[name="q1"]:checked');
+      const feedback = document.getElementById('feedback');
+      feedback.className = 'feedback';
+
+      if (!selected) {
+        feedback.textContent = 'Alege mai întâi o variantă.';
+        feedback.classList.add('bad');
+        return;
+      }
+
+      if (selected.value === 'refractie') {
+        feedback.textContent = 'Corect! Refracția apare când lumina trece în alt mediu și își schimbă direcția.';
+        feedback.classList.add('ok');
+      } else {
+        feedback.textContent = 'Mai încearcă. Reflexia înseamnă întoarcerea luminii, iar refracția înseamnă trecerea în alt mediu cu schimbarea direcției.';
+        feedback.classList.add('bad');
+      }
+    }
+
+    function updateVisitorCounter() {
+      const key = 'vizitatori_optice_lectia_5_reflexia_refractia';
+      const alreadyCountedKey = key + '_counted_this_session';
+      let count = Number(localStorage.getItem(key) || '0');
+      if (!sessionStorage.getItem(alreadyCountedKey)) {
+        count += 1;
+        localStorage.setItem(key, String(count));
+        sessionStorage.setItem(alreadyCountedKey, '1');
+      }
+      document.getElementById('visitorCount').textContent = count;
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') nextPage();
+      if (event.key === 'ArrowLeft') prevPage();
+    });
+
+    showPage(0);
+  </script>
 </body>
 </html>

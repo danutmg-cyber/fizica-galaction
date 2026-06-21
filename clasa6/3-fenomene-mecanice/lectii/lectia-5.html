@@ -2,10 +2,404 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Lecția 5 | Mișcarea rectilinie și uniformă. Reprezentarea grafică a mișcării | Fizica Galaction</title>
-  <meta name="description" content="Mișcare pe linie dreaptă, cu viteză constantă.">
+  <meta name="description" content="Lecția 5 pentru clasa a VI-a: mișcarea rectilinie și uniformă și reprezentarea grafică distanță–timp.">
   <link rel="stylesheet" href="../../../assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["\\(", "\\)"], ["$", "$"]],
+        displayMath: [["\\[", "\\]"]]
+      },
+      svg: { fontCache: "global" }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --text: #f8fafc;
+      --muted: #dbeafe;
+      --accent: #22d3ee;
+      --accent-2: #22c55e;
+      --warning-bg: #422006;
+      --warning-text: #fef3c7;
+      --border: #334155;
+      --button-text: #052e16;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, rgba(34, 211, 238, 0.18), transparent 32rem),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: clamp(20px, 5.5vw, 28px);
+      line-height: 1.5;
+    }
+
+    .site-header,
+    .site-footer { display: none; }
+
+    .mobile-lesson {
+      width: min(100%, 860px);
+      margin: 0 auto;
+      padding: 14px;
+      padding-bottom: 108px;
+    }
+
+    .lesson-page {
+      display: none;
+      min-height: calc(100vh - 122px);
+      animation: pageFade 0.25s ease;
+    }
+
+    .lesson-page.active { display: block; }
+
+    @keyframes pageFade {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .lesson-card,
+    .first-banner,
+    .final-banner {
+      background: rgba(30, 41, 59, 0.96);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: clamp(20px, 6vw, 34px);
+      margin: 14px 0;
+      box-shadow: 0 18px 42px rgba(0,0,0,0.28);
+    }
+
+    .first-banner {
+      text-align: center;
+      border-color: rgba(34, 211, 238, 0.55);
+    }
+
+    .platform-title {
+      color: var(--accent);
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: clamp(22px, 6vw, 34px);
+      margin-bottom: 10px;
+    }
+
+    .quote {
+      margin: 0;
+      color: #fef08a;
+      font-style: italic;
+      font-weight: 700;
+    }
+
+    .page-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.14);
+      color: var(--accent);
+      font-size: 0.72em;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 12px;
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+      line-height: 1.15;
+      color: #ffffff;
+    }
+
+    h1 {
+      font-size: clamp(30px, 8vw, 50px);
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      font-size: clamp(26px, 7vw, 42px);
+      margin-bottom: 16px;
+    }
+
+    h3 { font-size: clamp(23px, 6vw, 34px); }
+
+    p { margin: 0 0 18px; }
+
+    ul {
+      margin: 0;
+      padding-left: 1.2em;
+    }
+
+    li { margin: 12px 0; }
+
+    .kw {
+      color: #67e8f9;
+      font-weight: 900;
+    }
+
+    .notice,
+    .example,
+    .formula-box,
+    .graph-box {
+      border-radius: 18px;
+      padding: 16px;
+      margin: 18px 0 0;
+    }
+
+    .notice {
+      background: rgba(34, 211, 238, 0.12);
+      border: 1px solid rgba(34, 211, 238, 0.38);
+      color: #e0f2fe;
+      font-weight: 750;
+    }
+
+    .example {
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(34, 197, 94, 0.38);
+      color: #dcfce7;
+      font-weight: 750;
+    }
+
+    .formula-box {
+      background: rgba(250, 204, 21, 0.10);
+      border: 1px solid rgba(250, 204, 21, 0.38);
+      color: #fef9c3;
+      font-weight: 800;
+      text-align: center;
+      overflow-x: auto;
+    }
+
+    .formula-box .math { font-size: 1.15em; }
+
+    .graph-box {
+      background: rgba(15, 23, 42, 0.62);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+
+    .graph-box svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .graph-label {
+      fill: #f8fafc;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .graph-line {
+      stroke: #22c55e;
+      stroke-width: 5;
+      stroke-linecap: round;
+    }
+
+    .graph-axis {
+      stroke: #cbd5e1;
+      stroke-width: 3;
+      stroke-linecap: round;
+    }
+
+    .graph-grid {
+      stroke: rgba(203, 213, 225, 0.24);
+      stroke-width: 1.5;
+    }
+
+    .quick-check { display: grid; gap: 18px; }
+
+    .question {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      background: rgba(15, 23, 42, 0.58);
+    }
+
+    .question p {
+      font-weight: 850;
+      margin-bottom: 12px;
+    }
+
+    .answers { display: grid; gap: 10px; }
+
+    .answers label {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      align-items: start;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 14px;
+      background: rgba(51, 65, 85, 0.75);
+      color: #f8fafc;
+      cursor: pointer;
+    }
+
+    .answers input {
+      width: 1.15em;
+      height: 1.15em;
+      margin-top: 0.18em;
+      accent-color: var(--accent-2);
+    }
+
+    .check-button {
+      width: 100%;
+      border: 0;
+      border-radius: 16px;
+      margin-top: 18px;
+      padding: 14px 16px;
+      font-size: 1em;
+      font-weight: 900;
+      color: var(--button-text);
+      background: var(--accent-2);
+      cursor: pointer;
+    }
+
+    .feedback {
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 16px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .feedback.good {
+      color: #052e16;
+      background: #86efac;
+    }
+
+    .feedback.bad {
+      color: #450a0a;
+      background: #fecaca;
+    }
+
+    .final-banner {
+      text-align: center;
+      border-color: rgba(34, 197, 94, 0.55);
+    }
+
+    .final-banner .name {
+      margin: 0 0 8px;
+      font-size: clamp(28px, 7vw, 44px);
+      font-weight: 950;
+      color: #bbf7d0;
+    }
+
+    .final-banner .email,
+    .final-banner a {
+      color: #67e8f9;
+      font-weight: 900;
+    }
+
+    .small-note {
+      color: #dbeafe;
+      font-size: 0.78em;
+      margin-bottom: 0;
+    }
+
+    .visitor-counter {
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 20px;
+      border: 1px solid rgba(34, 211, 238, 0.4);
+      background: rgba(15, 23, 42, 0.62);
+    }
+
+    .visitor-counter span {
+      display: block;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .visitor-counter strong {
+      display: block;
+      font-size: clamp(38px, 12vw, 70px);
+      line-height: 1;
+      color: #ffffff;
+    }
+
+    .actions {
+      display: grid;
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .button {
+      display: block;
+      padding: 14px 16px;
+      border-radius: 16px;
+      text-align: center;
+      text-decoration: none;
+      background: #22d3ee;
+      color: #082f49;
+      font-weight: 950;
+      border: 2px solid rgba(255,255,255,0.18);
+    }
+
+    .lesson-nav-bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 999;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      gap: 8px;
+      padding: 10px;
+      padding-bottom: max(10px, env(safe-area-inset-bottom));
+      background: rgba(15, 23, 42, 0.94);
+      border-top: 1px solid rgba(148, 163, 184, 0.26);
+      backdrop-filter: blur(12px);
+    }
+
+    .nav-compact {
+      min-height: 48px;
+      border: 0;
+      border-radius: 14px;
+      padding: 10px 8px;
+      font-size: clamp(15px, 4.2vw, 20px);
+      font-weight: 950;
+      color: #0f172a;
+      background: #e2e8f0;
+      cursor: pointer;
+    }
+
+    .nav-compact.primary {
+      background: var(--accent-2);
+      color: var(--button-text);
+    }
+
+    .nav-compact:disabled {
+      opacity: 0.38;
+      cursor: not-allowed;
+    }
+
+    .page-counter {
+      min-width: 58px;
+      text-align: center;
+      color: #ffffff;
+      font-weight: 950;
+      font-size: clamp(16px, 4.8vw, 22px);
+    }
+
+    @media (min-width: 720px) {
+      .mobile-lesson { padding-top: 24px; }
+      .actions { grid-template-columns: repeat(3, 1fr); }
+    }
+  </style>
 </head>
 <body>
   <header class="site-header">
@@ -14,68 +408,293 @@
     </div>
   </header>
 
-  <main class="page-content wrapper">
-    <section class="card">
-      <h1>Lecția 5 – Mișcarea rectilinie și uniformă. Reprezentarea grafică a mișcării</h1>
-      <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică”</p>
+  <main class="mobile-lesson" id="lesson">
+    <section class="lesson-page active" data-page="1">
+      <div class="first-banner">
+        <div class="platform-title">Fizica Galaction</div>
+        <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică”</p>
+      </div>
+
+      <article class="lesson-card">
+        <span class="page-chip">Lecția 5</span>
+        <h1>Mișcarea rectilinie și uniformă. Reprezentarea grafică a mișcării</h1>
+        <p>
+          În această lecție învățăm să recunoaștem o mișcare pe linie dreaptă, cu viteză constantă,
+          și să citim graficul distanță–timp.
+        </p>
+        <div class="notice">
+          Ideea-cheie: în mișcarea rectilinie și uniformă, corpul merge pe o linie dreaptă și parcurge distanțe egale în timpuri egale.
+        </div>
+      </article>
     </section>
 
-    <section class="card" id="rectilinie">
-      <h2>1. Mișcarea rectilinie</h2>
-      <p>O mișcare este <span class="kw"><strong>rectilinie</strong></span> atunci când traiectoria este o linie dreaptă.</p>
+    <section class="lesson-page" data-page="2">
+      <article class="lesson-card">
+        <span class="page-chip">1. Mișcarea rectilinie</span>
+        <h2>Traiectoria este o linie dreaptă</h2>
+        <p>
+          O mișcare este <span class="kw">rectilinie</span> atunci când traiectoria corpului este o linie dreaptă.
+        </p>
+        <div class="example">
+          Exemplu: o mașină care se deplasează pe o porțiune dreaptă de șosea poate avea mișcare rectilinie.
+        </div>
+        <div class="notice">
+          Cuvântul „rectilinie” ne amintește de „linie dreaptă”.
+        </div>
+      </article>
     </section>
 
-    <section class="card" id="uniforma">
-      <h2>2. Mișcarea uniformă</h2>
-      <p>O mișcare este <span class="kw"><strong>uniformă</strong></span> atunci când viteza rămâne constantă.</p>
-<p>Asta înseamnă că în intervale egale de timp corpul parcurge distanțe egale.</p>
-<div class="notice">Mișcarea rectilinie și uniformă este una dintre cele mai simple mișcări studiate în fizică.</div>
+    <section class="lesson-page" data-page="3">
+      <article class="lesson-card">
+        <span class="page-chip">2. Mișcarea uniformă</span>
+        <h2>Viteza rămâne constantă</h2>
+        <p>
+          O mișcare este <span class="kw">uniformă</span> atunci când viteza corpului rămâne constantă.
+        </p>
+        <p>
+          Asta înseamnă că, în intervale egale de timp, corpul parcurge distanțe egale.
+        </p>
+        <div class="example">
+          Dacă un corp parcurge 2 m în fiecare secundă, mișcarea lui este uniformă.
+        </div>
+      </article>
     </section>
 
-    <section class="card" id="grafic">
-      <h2>3. Reprezentarea grafică</h2>
-      <p>Mișcarea poate fi reprezentată printr-un grafic în care comparăm distanța și timpul.</p>
-<p>Pentru mișcarea rectilinie și uniformă, graficul distanță–timp este o linie dreaptă crescătoare.</p>
+    <section class="lesson-page" data-page="4">
+      <article class="lesson-card">
+        <span class="page-chip">3. Mișcarea rectilinie și uniformă</span>
+        <h2>Cele două condiții împreună</h2>
+        <p>
+          <span class="kw">Mișcarea rectilinie și uniformă</span> are două caracteristici:
+        </p>
+        <ul>
+          <li>traiectoria este o <span class="kw">linie dreaptă</span>;</li>
+          <li>viteza este <span class="kw">constantă</span>.</li>
+        </ul>
+        <div class="formula-box">
+          <div class="math">\[
+            s = v \cdot t
+          \]</div>
+          <p>Dacă viteza este constantă, distanța parcursă crește proporțional cu timpul.</p>
+        </div>
+        <div class="formula-box">
+          <div class="math">\[
+            s = 3\,\text{m/s} \cdot 4\,\text{s} = 12\,\text{m}
+          \]</div>
+          <p>Exemplu numeric: la viteza de \(3\,\text{m/s}\), în \(4\,\text{s}\), corpul parcurge \(12\,\text{m}\).</p>
+        </div>
+      </article>
     </section>
 
-    <section class="card" id="interpretare">
-      <h2>4. Cum interpretăm graficul?</h2>
-      <p>Dacă linia este mai înclinată, viteza este mai mare.</p>
-<p>Dacă linia este mai puțin înclinată, viteza este mai mică.</p>
-<div class="tip">Graficul ne ajută să observăm rapid cum se desfășoară mișcarea.</div>
+    <section class="lesson-page" data-page="5">
+      <article class="lesson-card">
+        <span class="page-chip">4. Reprezentarea grafică</span>
+        <h2>Graficul distanță–timp</h2>
+        <p>
+          Mișcarea poate fi reprezentată printr-un grafic în care comparăm distanța parcursă cu timpul.
+        </p>
+        <p>
+          Pentru mișcarea rectilinie și uniformă, graficul distanță–timp este o <span class="kw">linie dreaptă crescătoare</span>.
+        </p>
+
+        <div class="graph-box" aria-label="Grafic distanță timp pentru mișcare rectilinie și uniformă">
+          <svg viewBox="0 0 520 330" role="img">
+            <line class="graph-grid" x1="90" y1="250" x2="460" y2="250"></line>
+            <line class="graph-grid" x1="90" y1="190" x2="460" y2="190"></line>
+            <line class="graph-grid" x1="90" y1="130" x2="460" y2="130"></line>
+            <line class="graph-grid" x1="90" y1="70" x2="460" y2="70"></line>
+
+            <line class="graph-grid" x1="170" y1="270" x2="170" y2="50"></line>
+            <line class="graph-grid" x1="250" y1="270" x2="250" y2="50"></line>
+            <line class="graph-grid" x1="330" y1="270" x2="330" y2="50"></line>
+            <line class="graph-grid" x1="410" y1="270" x2="410" y2="50"></line>
+
+            <line class="graph-axis" x1="80" y1="270" x2="470" y2="270"></line>
+            <line class="graph-axis" x1="90" y1="280" x2="90" y2="45"></line>
+
+            <line class="graph-line" x1="95" y1="255" x2="435" y2="75"></line>
+
+            <text class="graph-label" x="430" y="305">timp</text>
+            <text class="graph-label" x="20" y="60">distanță</text>
+            <text class="graph-label" x="100" y="300">0</text>
+            <text class="graph-label" x="185" y="300">1 s</text>
+            <text class="graph-label" x="265" y="300">2 s</text>
+            <text class="graph-label" x="345" y="300">3 s</text>
+            <text class="graph-label" x="95" y="138">6 m</text>
+            <text class="graph-label" x="95" y="78">9 m</text>
+          </svg>
+        </div>
+
+        <div class="notice">
+          Dacă linia este mai înclinată, viteza este mai mare. Dacă linia este mai puțin înclinată, viteza este mai mică.
+        </div>
+      </article>
     </section>
 
-    <section class="card">
-      <h2>Reține</h2>
-      <ul>
-        <li>mișcarea rectilinie are traiectorie dreaptă;</li>
-        <li>mișcarea uniformă are viteză constantă;</li>
-        <li>în timpuri egale se parcurg distanțe egale;</li>
-        <li>graficul distanță–timp pentru această mișcare este o dreaptă.</li>
-      </ul>
+    <section class="lesson-page" data-page="6">
+      <article class="lesson-card">
+        <span class="page-chip">Reține</span>
+        <h2>Ideile principale</h2>
+        <ul>
+          <li>Mișcarea rectilinie are traiectorie dreaptă.</li>
+          <li>Mișcarea uniformă are viteză constantă.</li>
+          <li>În timpuri egale se parcurg distanțe egale.</li>
+          <li>Mișcarea rectilinie și uniformă este una dintre cele mai simple mișcări studiate în fizică.</li>
+          <li>Graficul distanță–timp pentru această mișcare este o dreaptă crescătoare.</li>
+        </ul>
+      </article>
+
+      <article class="lesson-card" id="quickCheck">
+        <span class="page-chip">Verificare rapidă</span>
+        <h2>Alege varianta corectă</h2>
+
+        <div class="quick-check">
+          <div class="question" data-answer="b">
+            <p>1. O mișcare este rectilinie dacă:</p>
+            <div class="answers">
+              <label><input type="radio" name="q1" value="a"> viteza crește mereu</label>
+              <label><input type="radio" name="q1" value="b"> traiectoria este o linie dreaptă</label>
+              <label><input type="radio" name="q1" value="c"> timpul este foarte scurt</label>
+            </div>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>2. O mișcare este uniformă dacă:</p>
+            <div class="answers">
+              <label><input type="radio" name="q2" value="a"> viteza rămâne constantă</label>
+              <label><input type="radio" name="q2" value="b"> traiectoria este întotdeauna curbată</label>
+              <label><input type="radio" name="q2" value="c"> corpul se oprește des</label>
+            </div>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>3. Graficul distanță–timp al mișcării rectilinii uniforme este:</p>
+            <div class="answers">
+              <label><input type="radio" name="q3" value="a"> o linie frântă fără regulă</label>
+              <label><input type="radio" name="q3" value="b"> un cerc</label>
+              <label><input type="radio" name="q3" value="c"> o linie dreaptă crescătoare</label>
+            </div>
+          </div>
+        </div>
+
+        <button class="check-button" type="button" id="checkQuick">Verifică răspunsurile</button>
+        <div id="quickFeedback" aria-live="polite"></div>
+      </article>
     </section>
 
-    <section class="actions">
-      <a class="button" href="./lectia-4.html">Lecția anterioară</a>
-      <a class="button" href="./index.html">Vezi toate lecțiile</a>
-      <a class="button" href="./lectia-6.html">Mergi mai departe</a>
-    </section>
+    <section class="lesson-page" data-page="7">
+      <article class="final-banner" role="contentinfo">
+        <p class="name">Prof. Dănuț Andronie</p>
+        <p class="email">E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a></p>
+        <p class="small-note">Pentru observații, propuneri și sugestii privind platforma educațională.</p>
 
+        <div class="visitor-counter" aria-label="Contor vizitatori">
+          <span>Contor vizitatori</span>
+          <strong id="visitorCount">0</strong>
+          <p class="small-note">Contor local: numără deschiderile acestei lecții pe dispozitivul folosit.</p>
+        </div>
+      </article>
+
+      <section class="actions" aria-label="Linkuri utile">
+        <a class="button" href="./lectia-4.html">Lecția anterioară</a>
+        <a class="button" href="./index.html">Vezi toate lecțiile</a>
+        <a class="button" href="./lectia-6.html">Mergi mai departe</a>
+      </section>
+    </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrapper">
-      <p>© Fizica Galaction · Prof. DĂNUȚ ANDRONIE</p>
-      <div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 8px;">
-        E-mail:
-        <a href="mailto:danutmg@gmail.com" style="color: #22d3ee; text-decoration: none;">danutmg@gmail.com</a><br>
-        <span style="font-size: 0.85rem; color: #94a3b8;">
-          Pentru observații, propuneri și sugestii privind platforma educațională.
-        </span>
-      </div>
-    </div>
-  </footer>
+  <nav class="lesson-nav-bar" aria-label="Navigare lecție">
+    <button class="nav-compact" type="button" id="prevPage">Înapoi</button>
+    <span class="page-counter"><span id="currentPage">1</span>/<span id="totalPages">7</span></span>
+    <button class="nav-compact primary" type="button" id="nextPage">Mergi mai departe</button>
+  </nav>
 
-  <script src="../../../assets/js/main.js"></script>
+  <script>
+    (function () {
+      const pages = Array.from(document.querySelectorAll(".lesson-page"));
+      const prevBtn = document.getElementById("prevPage");
+      const nextBtn = document.getElementById("nextPage");
+      const currentPageEl = document.getElementById("currentPage");
+      const totalPagesEl = document.getElementById("totalPages");
+      const visitorCountEl = document.getElementById("visitorCount");
+      const quickButton = document.getElementById("checkQuick");
+      const quickFeedback = document.getElementById("quickFeedback");
+
+      let index = 0;
+      totalPagesEl.textContent = pages.length;
+
+      function showPage(newIndex) {
+        index = Math.max(0, Math.min(newIndex, pages.length - 1));
+
+        pages.forEach(function (page, i) {
+          page.classList.toggle("active", i === index);
+        });
+
+        currentPageEl.textContent = String(index + 1);
+        prevBtn.disabled = index === 0;
+
+        if (index === pages.length - 1) {
+          nextBtn.style.visibility = "hidden";
+          nextBtn.setAttribute("aria-hidden", "true");
+        } else {
+          nextBtn.style.visibility = "visible";
+          nextBtn.removeAttribute("aria-hidden");
+          nextBtn.textContent = "Mergi mai departe";
+        }
+
+        if (window.MathJax && window.MathJax.typesetPromise) {
+          window.MathJax.typesetPromise([pages[index]]).catch(function () {});
+        }
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        history.replaceState(null, "", "#pagina-" + (index + 1));
+      }
+
+      function readPageFromHash() {
+        const match = window.location.hash.match(/pagina-(\d+)/);
+        if (!match) return 0;
+        const pageNumber = Number(match[1]);
+        if (!Number.isFinite(pageNumber)) return 0;
+        return Math.max(0, Math.min(pageNumber - 1, pages.length - 1));
+      }
+
+      function updateVisitorCounter() {
+        const counterKey = "fizica-galaction-clasa6-fenomene-mecanice-lectia-5-vizite";
+        let count = Number(localStorage.getItem(counterKey) || "0");
+        count += 1;
+        localStorage.setItem(counterKey, String(count));
+        if (visitorCountEl) visitorCountEl.textContent = String(count);
+      }
+
+      function checkQuickAnswers() {
+        const questions = Array.from(document.querySelectorAll("#quickCheck .question"));
+        let score = 0;
+
+        questions.forEach(function (question) {
+          const correct = question.dataset.answer;
+          const selected = question.querySelector("input[type='radio']:checked");
+          if (selected && selected.value === correct) score += 1;
+        });
+
+        if (!quickFeedback) return;
+
+        quickFeedback.className = "feedback " + (score === questions.length ? "good" : "bad");
+        quickFeedback.textContent = "Ai răspuns corect la " + score + " din " + questions.length + " întrebări.";
+      }
+
+      prevBtn.addEventListener("click", function () { showPage(index - 1); });
+      nextBtn.addEventListener("click", function () { showPage(index + 1); });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "ArrowLeft") showPage(index - 1);
+        if (event.key === "ArrowRight") showPage(index + 1);
+      });
+
+      if (quickButton) quickButton.addEventListener("click", checkQuickAnswers);
+
+      updateVisitorCounter();
+      showPage(readPageFromHash());
+    })();
+  </script>
 </body>
 </html>

@@ -2,85 +2,615 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Lecția 11 | Interacțiunea; efectele interacțiunii | Fizica Galaction</title>
-  <meta name="description" content="Cum se influențează corpurile între ele.">
+  <meta name="description" content="Lecția 11 pentru clasa a VI-a: interacțiunea și efectele interacțiunii dintre corpuri.">
   <link rel="stylesheet" href="../../../assets/css/style.css">
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --text: #f8fafc;
+      --muted: #dbeafe;
+      --accent: #22d3ee;
+      --accent-2: #22c55e;
+      --warning-bg: #422006;
+      --warning-text: #fef3c7;
+      --border: #334155;
+      --button-text: #052e16;
+      --danger: #fca5a5;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 20px;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, rgba(34, 211, 238, 0.16), transparent 32rem),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.65;
+    }
+
+    body, button, input, select {
+      font-size: 1rem;
+    }
+
+    .lesson-shell {
+      width: min(100%, 920px);
+      margin: 0 auto;
+      padding: 12px 12px 98px;
+    }
+
+    .lesson-screen {
+      display: none;
+      min-height: calc(100vh - 110px);
+      padding: 10px 0;
+    }
+
+    .lesson-screen.active {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .top-banner,
+    .final-banner,
+    .card {
+      background: rgba(30, 41, 59, 0.94);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+    }
+
+    .top-banner {
+      padding: 18px;
+      margin-bottom: 14px;
+      text-align: center;
+      border-top: 5px solid var(--accent);
+    }
+
+    .school {
+      margin: 0 0 4px;
+      color: var(--accent);
+      font-size: clamp(1.05rem, 3.4vw, 1.35rem);
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .prof {
+      margin: 0;
+      color: #e0f2fe;
+      font-size: clamp(0.95rem, 3vw, 1.1rem);
+      font-weight: 700;
+    }
+
+    .quote {
+      margin: 12px 0 0;
+      padding: 10px;
+      border-left: 4px solid var(--accent);
+      border-radius: 12px;
+      background: rgba(34, 211, 238, 0.09);
+      color: #fef08a;
+      font-size: clamp(0.98rem, 3vw, 1.14rem);
+      font-weight: 700;
+    }
+
+    .card {
+      padding: clamp(18px, 5vw, 34px);
+      margin: 0 0 14px;
+    }
+
+    h1, h2, h3 {
+      line-height: 1.2;
+      color: #ffffff;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: clamp(1.75rem, 8vw, 3rem);
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      font-size: clamp(1.45rem, 6.2vw, 2.25rem);
+    }
+
+    h3 {
+      margin: 18px 0 8px;
+      font-size: clamp(1.15rem, 4.5vw, 1.55rem);
+      color: var(--muted);
+    }
+
+    p, li {
+      font-size: clamp(1.08rem, 5vw, 1.46rem);
+    }
+
+    p {
+      margin: 0 0 14px;
+    }
+
+    ul, ol {
+      padding-left: 1.35em;
+      margin: 0 0 14px;
+    }
+
+    li + li {
+      margin-top: 8px;
+    }
+
+    .kw {
+      color: #67e8f9;
+      font-weight: 900;
+    }
+
+    .notice, .example, .remember-box {
+      margin: 16px 0;
+      padding: 14px;
+      border-radius: 18px;
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      background: rgba(8, 47, 73, 0.42);
+      color: #e0f2fe;
+      font-size: clamp(1.05rem, 4.7vw, 1.35rem);
+      font-weight: 700;
+    }
+
+    .example {
+      border-color: rgba(34, 197, 94, 0.42);
+      background: rgba(20, 83, 45, 0.34);
+    }
+
+    .remember-box {
+      border-color: rgba(250, 204, 21, 0.45);
+      background: rgba(66, 32, 6, 0.56);
+      color: var(--warning-text);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .mini-card {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.58);
+      border: 1px solid var(--border);
+    }
+
+    .mini-card p {
+      margin-bottom: 8px;
+    }
+
+    .final-banner {
+      padding: 18px;
+      text-align: center;
+      border-top: 5px solid var(--accent-2);
+    }
+
+    .final-banner h2 {
+      color: var(--accent-2);
+    }
+
+    .final-banner a {
+      color: #67e8f9;
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    .visitor-counter {
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      font-size: clamp(1.05rem, 4.6vw, 1.35rem);
+      font-weight: 800;
+    }
+
+    .quick-check {
+      display: grid;
+      gap: 14px;
+    }
+
+    .question {
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.66);
+      border: 1px solid var(--border);
+    }
+
+    .answers {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .answers label {
+      display: grid;
+      grid-template-columns: 32px 1fr;
+      align-items: start;
+      gap: 8px;
+      padding: 10px;
+      border-radius: 14px;
+      background: rgba(30, 41, 59, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      font-size: clamp(1.02rem, 4.5vw, 1.25rem);
+    }
+
+    .answers input {
+      width: 22px;
+      height: 22px;
+      margin-top: 4px;
+      accent-color: var(--accent-2);
+    }
+
+    .check-button {
+      width: 100%;
+      border: 0;
+      border-radius: 16px;
+      padding: 12px 14px;
+      background: var(--accent);
+      color: #06232b;
+      font-weight: 900;
+      cursor: pointer;
+    }
+
+    .feedback {
+      min-height: 1.8em;
+      margin-top: 10px;
+      font-weight: 900;
+      color: #bbf7d0;
+    }
+
+    .feedback.bad {
+      color: var(--danger);
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 50;
+      background: rgba(15, 23, 42, 0.96);
+      border-top: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+      padding: 8px 10px 10px;
+    }
+
+    .bottom-nav-inner {
+      width: min(100%, 920px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .nav-btn {
+      min-height: 46px;
+      border: 0;
+      border-radius: 14px;
+      padding: 10px 8px;
+      font-weight: 900;
+      cursor: pointer;
+      background: var(--accent-2);
+      color: var(--button-text);
+      box-shadow: 0 8px 20px rgba(34, 197, 94, 0.18);
+      white-space: nowrap;
+    }
+
+    .nav-btn.secondary {
+      background: #e2e8f0;
+      color: #0f172a;
+      box-shadow: none;
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.42;
+      cursor: not-allowed;
+    }
+
+    .page-indicator {
+      min-width: 62px;
+      text-align: center;
+      color: var(--muted);
+      font-weight: 900;
+      font-size: 0.95rem;
+    }
+
+    .actions-row {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .link-button {
+      display: block;
+      text-align: center;
+      padding: 13px;
+      border-radius: 16px;
+      background: var(--accent);
+      color: #082f49;
+      text-decoration: none;
+      font-weight: 900;
+    }
+
+    @media (max-width: 640px) {
+      html { font-size: 19px; }
+      .lesson-shell { padding: 8px 8px 92px; }
+      .card { border-radius: 18px; }
+      .two-col { grid-template-columns: 1fr; }
+      .nav-btn { min-height: 44px; font-size: 0.92rem; }
+      .page-indicator { min-width: 54px; font-size: 0.85rem; }
+    }
+  </style>
 </head>
+
 <body>
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction</h1>
-    </div>
-  </header>
+  <main class="lesson-shell">
 
-  <main class="page-content wrapper">
-    <section class="card">
-      <h1>Lecția 11 – Interacțiunea; efectele interacțiunii</h1>
-      <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică”</p>
+    <section class="lesson-screen active" data-screen="1">
+      <div class="top-banner">
+        <p class="school">Școala Gimnazială „Gala Galaction” Mangalia</p>
+        <p class="prof">Prof. Dănuț Andronie</p>
+        <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică”</p>
+      </div>
+
+      <article class="card">
+        <h1>Lecția 11 – Interacțiunea; efectele interacțiunii</h1>
+        <p>
+          În această lecție învățăm ce înseamnă
+          <span class="kw">interacțiunea</span> și ce efecte poate avea asupra corpurilor.
+        </p>
+        <div class="notice">
+          Când un corp acționează asupra altui corp, spunem că între ele are loc o interacțiune.
+        </div>
+      </article>
     </section>
 
-    <section class="card" id="def">
-      <h2>1. Ce este interacțiunea?</h2>
-      <p><span class="kw"><strong>Interacțiunea</strong></span> apare atunci când două corpuri acționează unul asupra celuilalt.</p>
-<p>În natură, corpurile nu sunt izolate complet. Ele se pot influența reciproc.</p>
+    <section class="lesson-screen" data-screen="2">
+      <article class="card">
+        <h2>1. Ce este interacțiunea?</h2>
+        <p>
+          <span class="kw">Interacțiunea</span> apare atunci când două corpuri acționează
+          unul asupra celuilalt.
+        </p>
+        <p>
+          În natură, corpurile nu sunt izolate complet. Ele se pot influența reciproc.
+        </p>
+        <div class="example">
+          Exemplu: când împingi o ușă, mâna acționează asupra ușii, iar ușa acționează asupra mâinii.
+        </div>
+      </article>
     </section>
 
-    <section class="card" id="efecte">
-      <h2>2. Efectele interacțiunii</h2>
-      <p>Interacțiunea poate produce două efecte importante:</p>
-<ul>
-  <li><strong>efect static</strong> – corpul se deformează;</li>
-  <li><strong>efect dinamic</strong> – corpul își schimbă starea de mișcare.</li>
-</ul>
+    <section class="lesson-screen" data-screen="3">
+      <article class="card">
+        <h2>2. Efectele interacțiunii</h2>
+        <p>
+          Interacțiunea poate produce două efecte importante:
+        </p>
+        <div class="two-col">
+          <div class="mini-card">
+            <h3>Efect static</h3>
+            <p>Corpul se <span class="kw">deformează</span>.</p>
+          </div>
+          <div class="mini-card">
+            <h3>Efect dinamic</h3>
+            <p>Corpul își schimbă <span class="kw">starea de mișcare</span>.</p>
+          </div>
+        </div>
+        <div class="notice">
+          Același tip de interacțiune poate avea efecte diferite, în funcție de corpuri și de condiții.
+        </div>
+      </article>
     </section>
 
-    <section class="card" id="exemple">
-      <h2>3. Exemple</h2>
-      <ul>
-  <li>o minge lovită își schimbă viteza;</li>
-  <li>un arc comprimat se deformează;</li>
-  <li>plastilina apăsată își schimbă forma.</li>
-</ul>
+    <section class="lesson-screen" data-screen="4">
+      <article class="card">
+        <h2>3. Efectul static</h2>
+        <p>
+          Efectul static apare atunci când un corp își schimbă forma sau dimensiunile.
+        </p>
+        <ul>
+          <li>un arc comprimat se deformează;</li>
+          <li>plastilina apăsată își schimbă forma;</li>
+          <li>un burete strâns în mână se turtește.</li>
+        </ul>
+        <div class="remember-box">
+          Efect static = deformare.
+        </div>
+      </article>
     </section>
 
-    <section class="card" id="tipuri">
-      <h2>4. Tipuri simple de interacțiuni</h2>
-      <p>Interacțiunile pot avea loc prin contact direct sau de la distanță.</p>
-<div class="notice">Exemplu de contact: împingerea unei cutii. Exemplu de acțiune la distanță: atracția Pământului asupra corpurilor.</div>
+    <section class="lesson-screen" data-screen="5">
+      <article class="card">
+        <h2>4. Efectul dinamic</h2>
+        <p>
+          Efectul dinamic apare atunci când interacțiunea modifică mișcarea unui corp.
+        </p>
+        <ul>
+          <li>o minge lovită își schimbă viteza;</li>
+          <li>o sanie împinsă începe să se miște;</li>
+          <li>o bicicletă frânată își micșorează viteza.</li>
+        </ul>
+        <div class="remember-box">
+          Efect dinamic = schimbarea stării de mișcare.
+        </div>
+      </article>
     </section>
 
-    <section class="card">
-      <h2>Reține</h2>
-      <ul>
-        <li>interacțiunea înseamnă influențarea reciprocă a corpurilor;</li>
-        <li>interacțiunea poate produce deformări;</li>
-        <li>interacțiunea poate modifica mișcarea unui corp;</li>
-        <li>interacțiunile pot fi prin contact sau de la distanță.</li>
-      </ul>
+    <section class="lesson-screen" data-screen="6">
+      <article class="card">
+        <h2>5. Tipuri simple de interacțiuni</h2>
+        <p>
+          Interacțiunile pot avea loc <span class="kw">prin contact direct</span> sau
+          <span class="kw">de la distanță</span>.
+        </p>
+        <div class="two-col">
+          <div class="mini-card">
+            <h3>Prin contact</h3>
+            <p>Împingerea unei cutii.</p>
+          </div>
+          <div class="mini-card">
+            <h3>De la distanță</h3>
+            <p>Atracția Pământului asupra corpurilor.</p>
+          </div>
+        </div>
+        <div class="notice">
+          Contactul direct nu este obligatoriu pentru orice interacțiune.
+        </div>
+      </article>
     </section>
 
-    <section class="actions">
-      <a class="button" href="./lectia-10.html">Lecția anterioară</a>
-      <a class="button" href="./index.html">Vezi toate lecțiile</a>
-      <a class="button" href="./lectia-12.html">Mergi mai departe</a>
+    <section class="lesson-screen" data-screen="7">
+      <article class="card">
+        <h2>Reține</h2>
+        <ul>
+          <li><span class="kw">Interacțiunea</span> înseamnă influențarea reciprocă a corpurilor.</li>
+          <li>Interacțiunea poate produce <span class="kw">deformări</span>.</li>
+          <li>Interacțiunea poate modifica <span class="kw">mișcarea</span> unui corp.</li>
+          <li>Interacțiunile pot fi <span class="kw">prin contact</span> sau <span class="kw">de la distanță</span>.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="8">
+      <article class="card">
+        <h2>Verificare rapidă</h2>
+        <div class="quick-check">
+          <div class="question">
+            <p><strong>1. Interacțiunea apare când:</strong></p>
+            <div class="answers">
+              <label><input type="radio" name="q1" value="0"><span>un corp este complet izolat</span></label>
+              <label><input type="radio" name="q1" value="1"><span>două corpuri acționează unul asupra celuilalt</span></label>
+              <label><input type="radio" name="q1" value="0"><span>un corp nu are masă</span></label>
+            </div>
+          </div>
+
+          <div class="question">
+            <p><strong>2. Efectul static înseamnă:</strong></p>
+            <div class="answers">
+              <label><input type="radio" name="q2" value="1"><span>deformarea corpului</span></label>
+              <label><input type="radio" name="q2" value="0"><span>dispariția corpului</span></label>
+              <label><input type="radio" name="q2" value="0"><span>schimbarea culorii fără cauză</span></label>
+            </div>
+          </div>
+
+          <div class="question">
+            <p><strong>3. Atracția Pământului asupra corpurilor este o interacțiune:</strong></p>
+            <div class="answers">
+              <label><input type="radio" name="q3" value="0"><span>doar prin atingere</span></label>
+              <label><input type="radio" name="q3" value="1"><span>de la distanță</span></label>
+              <label><input type="radio" name="q3" value="0"><span>fără efect</span></label>
+            </div>
+          </div>
+
+          <button class="check-button" type="button" onclick="checkQuiz()">Verifică</button>
+          <div id="quiz-feedback" class="feedback" aria-live="polite"></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="9">
+      <article class="final-banner">
+        <h2>Fizica Galaction</h2>
+        <p><strong>Prof. Dănuț Andronie</strong></p>
+        <p>
+          E-mail:
+          <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+        </p>
+        <div class="visitor-counter">
+          Vizitatori pe acest dispozitiv: <span id="visitor-count">0</span>
+        </div>
+        <div class="actions-row">
+          <a class="link-button" href="./lectia-12.html">Lecția următoare</a>
+          <a class="link-button" href="./index.html">Vezi toate lecțiile</a>
+        </div>
+      </article>
     </section>
 
   </main>
 
-  <footer class="site-footer">
-    <div class="wrapper">
-      <p>© Fizica Galaction · Prof. DĂNUȚ ANDRONIE</p>
-      <div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 8px;">
-        E-mail:
-        <a href="mailto:danutmg@gmail.com" style="color: #22d3ee; text-decoration: none;">danutmg@gmail.com</a><br>
-        <span style="font-size: 0.85rem; color: #94a3b8;">
-          Pentru observații, propuneri și sugestii privind platforma educațională.
-        </span>
-      </div>
+  <nav class="bottom-nav" aria-label="Navigare lecție">
+    <div class="bottom-nav-inner">
+      <button class="nav-btn secondary" id="prevBtn" type="button" onclick="prevScreen()">Înapoi</button>
+      <div class="page-indicator" id="pageIndicator">1/9</div>
+      <button class="nav-btn" id="nextBtn" type="button" onclick="nextScreen()">Mergi mai departe</button>
     </div>
-  </footer>
+  </nav>
 
-  <script src="../../../assets/js/main.js"></script>
+  <script>
+    const screens = Array.from(document.querySelectorAll(".lesson-screen"));
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    const pageIndicator = document.getElementById("pageIndicator");
+    let currentScreen = 0;
+
+    function showScreen(index) {
+      currentScreen = Math.max(0, Math.min(index, screens.length - 1));
+      screens.forEach((screen, i) => {
+        screen.classList.toggle("active", i === currentScreen);
+      });
+
+      prevBtn.disabled = currentScreen === 0;
+      nextBtn.textContent = currentScreen === screens.length - 1 ? "Final" : "Mergi mai departe";
+      nextBtn.disabled = currentScreen === screens.length - 1;
+      pageIndicator.textContent = `${currentScreen + 1}/${screens.length}`;
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function nextScreen() {
+      showScreen(currentScreen + 1);
+    }
+
+    function prevScreen() {
+      showScreen(currentScreen - 1);
+    }
+
+    function checkQuiz() {
+      const total = 3;
+      let score = 0;
+
+      for (let i = 1; i <= total; i++) {
+        const checked = document.querySelector(`input[name="q${i}"]:checked`);
+        if (checked && checked.value === "1") score++;
+      }
+
+      const feedback = document.getElementById("quiz-feedback");
+      feedback.classList.toggle("bad", score < total);
+      feedback.textContent = score === total
+        ? "Felicitări! Ai răspuns corect la toate întrebările."
+        : `Ai ${score} răspunsuri corecte din ${total}. Recitește explicațiile și încearcă din nou.`;
+    }
+
+    function updateVisitorCounter() {
+      const key = "fizica-galaction-mecanice-lectia-11-vizite";
+      const visits = Number(localStorage.getItem(key) || "0") + 1;
+      localStorage.setItem(key, String(visits));
+      const el = document.getElementById("visitor-count");
+      if (el) el.textContent = visits;
+    }
+
+    updateVisitorCounter();
+    showScreen(0);
+  </script>
 </body>
 </html>

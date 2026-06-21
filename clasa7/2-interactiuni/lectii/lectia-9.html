@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Lecția 9 | Tensiunea în fir | Fizica Galaction</title>
+  <meta name="description" content="Lecția 9 pentru clasa a VII-a: Tensiunea în fir." />
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']], displayMath: [['\\[','\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root{
+      --bg:#07111f;
+      --card:#102033;
+      --card2:#14263d;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --accent:#22d3ee;
+      --accent2:#38bdf8;
+      --good:#22c55e;
+      --bad:#fb7185;
+      --warn:#facc15;
+      --line:rgba(148,163,184,.28);
+      --shadow:0 18px 45px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34,211,238,.18), transparent 30rem),
+        linear-gradient(180deg,#07111f,#0f172a);
+      color:var(--text);
+      font-size:clamp(20px, 4.6vw, 27px);
+      line-height:1.55;
+      overflow-x:hidden;
+    }
+    .app{
+      min-height:100dvh;
+      display:flex;
+      flex-direction:column;
+      width:min(100%, 920px);
+      margin:0 auto;
+      padding:10px;
+    }
+    .top-banner{
+      background:linear-gradient(135deg, rgba(34,211,238,.22), rgba(59,130,246,.12));
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:14px 14px 12px;
+      margin-bottom:10px;
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+    .school{
+      font-size:clamp(16px, 3.7vw, 22px);
+      color:#e0f2fe;
+      font-weight:800;
+      letter-spacing:.02em;
+      text-transform:uppercase;
+    }
+    .prof{
+      margin-top:4px;
+      font-size:clamp(15px, 3.4vw, 19px);
+      color:#bae6fd;
+      font-weight:700;
+    }
+    .motto{
+      margin:10px auto 0;
+      width:fit-content;
+      max-width:100%;
+      border-left:4px solid var(--accent);
+      border-radius:12px;
+      padding:8px 12px;
+      background:rgba(250,204,21,.10);
+      color:#fef9c3;
+      font-size:clamp(15px, 3.5vw, 20px);
+      font-style:italic;
+    }
+    main{flex:1;display:flex;min-height:0}
+    .page{display:none;width:100%}
+    .page.active{display:flex;flex-direction:column;animation:fade .22s ease-out;padding-bottom:78px}
+    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .card{
+      background:linear-gradient(180deg, rgba(16,32,51,.98), rgba(15,23,42,.98));
+      border:1px solid var(--line);
+      border-radius:26px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      width:100%;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:rgba(34,211,238,.13);
+      border:1px solid rgba(34,211,238,.28);
+      color:#e0f2fe;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:clamp(14px, 3.2vw, 18px);
+      font-weight:800;
+      margin-bottom:10px;
+    }
+    h1,h2,h3{line-height:1.12;margin:8px 0 14px}
+    h1{font-size:clamp(30px, 8.5vw, 54px);color:#f8fafc}
+    h2{font-size:clamp(26px, 7vw, 42px);color:#e0f2fe}
+    h3{font-size:clamp(22px, 5.6vw, 32px);color:#bae6fd}
+    p{margin:12px 0}
+    .lead{font-size:1.08em;color:#e2e8f0}
+    .kw{color:#67e8f9;font-weight:900}
+    .formula{
+      margin:14px 0;
+      padding:16px;
+      border-radius:20px;
+      background:rgba(14,165,233,.10);
+      border:1px solid rgba(56,189,248,.32);
+      text-align:center;
+      font-size:1.04em;
+      overflow-x:auto;
+    }
+    .notice,.warn,.success{
+      margin:14px 0;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:rgba(148,163,184,.10);
+    }
+    .notice{border-left:6px solid var(--accent)}
+    .warn{border-left:6px solid var(--warn);background:rgba(250,204,21,.10)}
+    .success{border-left:6px solid var(--good);background:rgba(34,197,94,.10)}
+    ul,ol{padding-left:1.25em;margin:10px 0}
+    li{margin:8px 0}
+    .two-col{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+    .mini{
+      background:rgba(20,38,61,.92);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:13px;
+    }
+    .svgbox{
+      background:rgba(15,23,42,.55);
+      border:1px solid rgba(148,163,184,.28);
+      border-radius:20px;
+      padding:10px;
+      margin:12px 0;
+      overflow:hidden;
+    }
+    /* Doar desenele lecției sunt întinse pe lățimea cardului.
+       Nu aplicăm regula la SVG-urile generate de MathJax, altfel formulele devin uriașe. */
+    .svgbox svg{width:100%;height:auto;display:block}
+    mjx-container{
+      max-width:100%;
+      overflow-x:auto;
+      overflow-y:hidden;
+    }
+    mjx-container[display="true"]{
+      display:block;
+      max-width:100%;
+      overflow-x:auto;
+      overflow-y:hidden;
+      padding:2px 0;
+    }
+    mjx-container svg{
+      max-width:100% !important;
+      height:auto !important;
+      display:inline-block !important;
+    }
+    .formula mjx-container{
+      font-size:1em !important;
+    }
+    .q{
+      border:1px solid rgba(148,163,184,.28);
+      background:rgba(20,38,61,.85);
+      border-radius:18px;
+      padding:14px;
+      margin:14px 0;
+    }
+    .answers{
+      display:grid;
+      gap:8px;
+      margin-top:10px;
+    }
+    label.answer{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      border:1px solid rgba(148,163,184,.28);
+      background:rgba(15,23,42,.66);
+      padding:10px;
+      border-radius:14px;
+    }
+    input[type="radio"]{
+      transform:scale(1.25);
+      margin-top:6px;
+      accent-color:#22d3ee;
+    }
+    .check{
+      width:100%;
+      border:none;
+      background:#22d3ee;
+      color:#05202d;
+      font-weight:900;
+      border-radius:16px;
+      padding:12px 14px;
+      margin-top:12px;
+      font-size:clamp(17px, 4.2vw, 22px);
+      cursor:pointer;
+    }
+    .feedback{
+      min-height:1.2em;
+      margin-top:10px;
+      font-weight:900;
+    }
+    .feedback.good{color:#86efac}
+    .feedback.bad{color:#fda4af}
+    .footer-card{
+      text-align:center;
+      background:linear-gradient(135deg, rgba(34,211,238,.15), rgba(34,197,94,.10));
+      border:1px solid rgba(34,211,238,.30);
+      border-radius:22px;
+      padding:16px;
+      margin-top:14px;
+    }
+    .footer-card a{color:#67e8f9;font-weight:900;text-decoration:none}
+    .nav{
+      position:sticky;
+      bottom:0;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:8px;
+      padding:10px 0 calc(10px + env(safe-area-inset-bottom));
+      margin-top:10px;
+      background:linear-gradient(180deg, rgba(7,17,31,0), rgba(7,17,31,.96) 28%, rgba(7,17,31,1));
+      z-index:10;
+    }
+    .nav button{
+      min-height:54px;
+      border:none;
+      border-radius:16px;
+      padding:13px 10px;
+      color:#06121f;
+      font-weight:900;
+      font-size:clamp(16px, 4vw, 22px);
+      cursor:pointer;
+      box-shadow:0 10px 22px rgba(0,0,0,.22);
+    }
+    #prevBtn{background:#e2e8f0}
+    #nextBtn{background:#22c55e}
+    .nav button.disabled{
+      opacity:.45;
+      pointer-events:none;
+    }
+    .counter{
+      color:#e2e8f0;
+      font-weight:900;
+      font-size:clamp(14px,3.6vw,18px);
+      padding:0 2px;
+      min-width:42px;
+      text-align:center;
+    }
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border-radius:16px;
+      margin:12px 0;
+    }
+    th,td{
+      border:1px solid rgba(148,163,184,.3);
+      padding:10px;
+      text-align:left;
+      vertical-align:top;
+    }
+    th{background:rgba(34,211,238,.14);color:#e0f2fe}
+    td{background:rgba(15,23,42,.55)}
+    @media (max-width:520px){
+      .app{padding:8px}
+      .card{padding:15px;border-radius:22px}
+      .two-col{grid-template-columns:1fr}
+      ul,ol{padding-left:1.05em}
+      .nav{gap:6px}
+      .nav button{min-height:50px;padding:12px 8px}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header class="top-banner" id="topBanner">
+      <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+      <div class="prof">Prof. Dănuț Andronie</div>
+      <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+    </header>
+
+    <main>
+
+      <section class="page active">
+        <div class="card">
+          <span class="badge">Clasa a VII-a • Interacțiuni</span>
+          <h1>Lecția 9 – Tensiunea în fir</h1>
+          <p class="lead">
+            În această lecție înveți cum un <span class="kw">fir întins</span> poate transmite o forță
+            de la un corp la altul.
+          </p>
+          <div class="notice">
+            Ideea-cheie: un fir întins exercită asupra corpului o forță numită
+            <span class="kw">tensiune în fir</span>.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Observ</span>
+          <h2>Forța transmisă prin fir</h2>
+          <p>
+            Un copil poate trage o sanie cu ajutorul unei sfori. Forța copilului se transmite
+            până la sanie prin firul întins.
+          </p>
+          <p>
+            La fel, câinii trag sania prin hamuri și cabluri, iar o mașină poate trage o remorcă
+            printr-o bară de legătură.
+          </p>
+
+          <div class="svgbox" aria-label="Sanie trasă printr-un fir">
+            <svg viewBox="0 0 760 300" role="img">
+              <defs>
+                <marker id="arrT1" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">
+                  <path d="M0,0 L12,4 L0,8 Z" fill="#22d3ee"/>
+                </marker>
+              </defs>
+              <line x1="90" y1="230" x2="690" y2="230" stroke="#64748b" stroke-width="6"/>
+              <rect x="430" y="145" width="190" height="70" rx="16" fill="#38bdf8" stroke="#e0f2fe" stroke-width="4"/>
+              <path d="M420 215 Q520 250 630 215" fill="none" stroke="#cbd5e1" stroke-width="8" stroke-linecap="round"/>
+              <circle cx="120" cy="150" r="28" fill="#facc15"/>
+              <line x1="120" y1="180" x2="120" y2="220" stroke="#e2e8f0" stroke-width="9" stroke-linecap="round"/>
+              <line x1="120" y1="190" x2="185" y2="172" stroke="#e2e8f0" stroke-width="8" stroke-linecap="round"/>
+              <line x1="120" y1="220" x2="95" y2="250" stroke="#e2e8f0" stroke-width="8" stroke-linecap="round"/>
+              <line x1="120" y1="220" x2="150" y2="250" stroke="#e2e8f0" stroke-width="8" stroke-linecap="round"/>
+              <line x1="185" y1="172" x2="430" y2="178" stroke="#f8fafc" stroke-width="7" stroke-linecap="round"/>
+              <line x1="425" y1="130" x2="610" y2="130" stroke="#22d3ee" stroke-width="10" marker-end="url(#arrT1)"/>
+              <text x="465" y="104" fill="#e0f2fe" font-size="30" font-weight="900">tensiune</text>
+            </svg>
+          </div>
+
+          <div class="notice">
+            Firul nu „împinge” sania; el trage de sanie pe direcția lui.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Rețin</span>
+          <h2>Ce este tensiunea în fir?</h2>
+          <p>
+            <span class="kw">Tensiunea în fir</span> este forța care apare într-un fir întins
+            atunci când asupra lui se exercită o forță de întindere.
+          </p>
+          <p>
+            Ea se transmite de-a lungul firului, din aproape în aproape, de la un capăt la celălalt.
+          </p>
+          <div class="formula">
+            \[
+              \vec{T}
+            \]
+          </div>
+          <p>
+            Simbolul folosit pentru tensiunea în fir este, de obicei, \(T\) sau \(\vec{T}\).
+          </p>
+          <div class="success">
+            Dacă firul este întins, el poate transmite o forță. Dacă firul este moale și neîntins,
+            el nu transmite eficient această forță.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Direcție și sens</span>
+          <h2>Cum se reprezintă tensiunea?</h2>
+          <p>
+            Tensiunea exercitată de fir asupra corpului are direcția firului.
+          </p>
+          <p>
+            Sensul este dinspre corp spre fir, adică firul trage corpul de punctul în care este prins.
+          </p>
+
+          <div class="svgbox" aria-label="Corp tras cu un fir pe masă">
+            <svg viewBox="0 0 760 330" role="img">
+              <defs>
+                <marker id="arrT2" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">
+                  <path d="M0,0 L12,4 L0,8 Z" fill="#22d3ee"/>
+                </marker>
+                <marker id="arrG" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">
+                  <path d="M0,0 L12,4 L0,8 Z" fill="#fb7185"/>
+                </marker>
+                <marker id="arrN" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">
+                  <path d="M0,0 L12,4 L0,8 Z" fill="#22c55e"/>
+                </marker>
+              </defs>
+              <line x1="70" y1="255" x2="690" y2="255" stroke="#64748b" stroke-width="8"/>
+              <rect x="270" y="160" width="165" height="85" rx="16" fill="#38bdf8" stroke="#e0f2fe" stroke-width="4"/>
+              <line x1="435" y1="192" x2="630" y2="140" stroke="#f8fafc" stroke-width="7" stroke-linecap="round"/>
+              <line x1="435" y1="192" x2="585" y2="152" stroke="#22d3ee" stroke-width="9" marker-end="url(#arrT2)"/>
+              <line x1="352" y1="160" x2="352" y2="80" stroke="#22c55e" stroke-width="9" marker-end="url(#arrN)"/>
+              <line x1="352" y1="245" x2="352" y2="315" stroke="#fb7185" stroke-width="9" marker-end="url(#arrG)"/>
+              <text x="500" y="118" fill="#e0f2fe" font-size="34" font-weight="900">T</text>
+              <text x="372" y="106" fill="#bbf7d0" font-size="32" font-weight="900">N</text>
+              <text x="370" y="302" fill="#fecdd3" font-size="32" font-weight="900">G</text>
+            </svg>
+          </div>
+
+          <div class="notice">
+            Pe corpul tras apar mai multe forțe: greutatea \(G\), normala \(N\),
+            tensiunea \(T\) și, de obicei, forța de frecare \(F_f\).
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Experiment</span>
+          <h2>Determinarea tensiunii</h2>
+          <p>
+            Poți măsura tensiunea dintr-un fir cu ajutorul unui dinamometru.
+          </p>
+          <ol>
+            <li>Leagă un corp de dinamometru printr-un fir.</li>
+            <li>Trage corpul uniform pe masă.</li>
+            <li>Citește forța indicată de dinamometru.</li>
+          </ol>
+          <div class="formula">
+            \[
+              T = F_{\text{dinamometru}}
+            \]
+          </div>
+          <div class="success">
+            Dacă mișcarea este uniformă și firul are masă neglijabilă, tensiunea din fir este egală
+            cu forța indicată de dinamometru.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Fir ideal</span>
+          <h2>Tensiunea are aceeași valoare?</h2>
+          <p>
+            În problemele simple, considerăm firul <span class="kw">ușor</span> și
+            <span class="kw">inextensibil</span>.
+          </p>
+          <p>
+            În acest caz, tensiunea are aceeași valoare în orice punct al firului.
+          </p>
+          <div class="formula">
+            \[
+              T_1 = T_2 = T
+            \]
+          </div>
+          <div class="warn">
+            Dacă firul are masă mare sau dacă este elastic, situația poate fi mai complicată.
+            Pentru clasa a VII-a folosim, de obicei, modelul firului ideal.
+          </div>
+
+          <div class="svgbox" aria-label="Fir ideal cu aceeași tensiune la capete">
+            <svg viewBox="0 0 760 220" role="img">
+              <defs>
+                <marker id="arrT3" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">
+                  <path d="M0,0 L12,4 L0,8 Z" fill="#22d3ee"/>
+                </marker>
+              </defs>
+              <line x1="145" y1="110" x2="615" y2="110" stroke="#f8fafc" stroke-width="10" stroke-linecap="round"/>
+              <line x1="375" y1="70" x2="220" y2="70" stroke="#22d3ee" stroke-width="8" marker-end="url(#arrT3)"/>
+              <line x1="385" y1="150" x2="540" y2="150" stroke="#22d3ee" stroke-width="8" marker-end="url(#arrT3)"/>
+              <text x="255" y="54" fill="#e0f2fe" font-size="32" font-weight="900">T</text>
+              <text x="470" y="190" fill="#e0f2fe" font-size="32" font-weight="900">T</text>
+              <text x="272" y="120" fill="#bae6fd" font-size="26" font-weight="800">fir ideal</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Exemplu numeric</span>
+          <h2>Calcul simplu</h2>
+          <p>
+            Un corp este tras uniform cu un dinamometru. Dinamometrul indică \(4\,N\).
+          </p>
+          <p>
+            Dacă firul este ușor, iar mișcarea este uniformă, tensiunea din fir este:
+          </p>
+          <div class="formula">
+            \[
+              T = F_{\text{dinamometru}} = 4\,N
+            \]
+          </div>
+          <div class="success">
+            Răspuns: \(T = 4\,N\).
+          </div>
+          <p>
+            Observă că tensiunea se măsoară tot în <span class="kw">newtoni</span>, deoarece este o forță.
+          </p>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Atenție</span>
+          <h2>Tensiunea de rupere</h2>
+          <p>
+            În viața de zi cu zi, firele nu rezistă la orice forță.
+          </p>
+          <p>
+            Fiecare fir are o <span class="kw">tensiune de rupere</span>, care depinde de material,
+            grosime și structură.
+          </p>
+          <div class="warn">
+            Dacă forța de întindere depășește valoarea maximă suportată de fir,
+            firul se poate deforma permanent sau se poate rupe.
+          </div>
+          <div class="formula">
+            \[
+              T < F_{\text{rupere}}
+            \]
+          </div>
+          <p>
+            Condiția de siguranță este ca tensiunea din fir să fie mai mică decât forța de rupere.
+          </p>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Alege varianta corectă</h2>
+
+          <div class="q" data-answer="b">
+            <p><strong>1. Tensiunea în fir este:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q1" value="a"> o unitate de măsură</label>
+              <label class="answer"><input type="radio" name="q1" value="b"> o forță care apare într-un fir întins</label>
+              <label class="answer"><input type="radio" name="q1" value="c"> masa firului</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="q" data-answer="c">
+            <p><strong>2. Tensiunea se măsoară în:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q2" value="a"> kilograme</label>
+              <label class="answer"><input type="radio" name="q2" value="b"> metri</label>
+              <label class="answer"><input type="radio" name="q2" value="c"> newtoni</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Aplică ideea</h2>
+
+          <div class="q" data-answer="a">
+            <p><strong>3. Dinamometrul indică \(6\,N\). Pentru un fir ușor, tras uniform, tensiunea este:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q3" value="a"> \(6\,N\)</label>
+              <label class="answer"><input type="radio" name="q3" value="b"> \(6\,kg\)</label>
+              <label class="answer"><input type="radio" name="q3" value="c"> \(0\,N\)</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="footer-card">
+            <strong>Prof. Dănuț Andronie</strong><br>
+            E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <nav class="nav" aria-label="Navigare lecție">
+      <button id="prevBtn" type="button" onclick="prevPage()">Înapoi</button>
+      <div class="counter" id="pageCounter">1/10</div>
+      <button id="nextBtn" type="button" onclick="nextPage()">Mergi mai departe</button>
+    </nav>
+  </div>
+
+  <script>
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const topBanner = document.getElementById('topBanner');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageCounter = document.getElementById('pageCounter');
+    let current = 0;
+
+    function updatePage(){
+      pages.forEach((p, i) => p.classList.toggle('active', i === current));
+      topBanner.style.display = current === 0 ? 'block' : 'none';
+      prevBtn.classList.toggle('disabled', current === 0);
+      pageCounter.textContent = (current + 1) + '/' + pages.length;
+
+      if(current === pages.length - 1){
+        nextBtn.textContent = 'Lecția următoare';
+        nextBtn.onclick = () => { window.location.href = './lectia-10.html'; };
+      } else {
+        nextBtn.textContent = 'Mergi mai departe';
+        nextBtn.onclick = nextPage;
+      }
+
+      window.scrollTo({top: 0, behavior: 'smooth'});
+      if(window.MathJax && window.MathJax.typesetPromise){
+        window.MathJax.typesetPromise();
+      }
+    }
+
+    function nextPage(){
+      if(current < pages.length - 1){
+        current++;
+        updatePage();
+      }
+    }
+
+    function prevPage(){
+      if(current > 0){
+        current--;
+        updatePage();
+      }
+    }
+
+    function checkAnswer(button){
+      const block = button.closest('.q');
+      const correct = block.dataset.answer;
+      const checked = block.querySelector('input[type="radio"]:checked');
+      const feedback = block.querySelector('.feedback');
+
+      if(!checked){
+        feedback.textContent = 'Alege mai întâi o variantă.';
+        feedback.className = 'feedback bad';
+        return;
+      }
+
+      if(checked.value === correct){
+        feedback.textContent = 'Corect!';
+        feedback.className = 'feedback good';
+      } else {
+        feedback.textContent = 'Mai încearcă. Recitește pagina cu explicația.';
+        feedback.className = 'feedback bad';
+      }
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if(event.key === 'ArrowRight') nextPage();
+      if(event.key === 'ArrowLeft') prevPage();
+    });
+
+    updatePage();
+  </script>
+
+</body>
+</html>

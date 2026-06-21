@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Lecția 14 | Regula poligonului pentru compunerea mai multor vectori | Fizica Galaction</title>
+  <meta name="description" content="Lecția 14 pentru clasa a VII-a: Regula poligonului pentru compunerea mai multor vectori." />
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']], displayMath: [['\\[','\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root{
+      --bg:#07111f;
+      --card:#102033;
+      --card2:#14263d;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --accent:#22d3ee;
+      --good:#22c55e;
+      --bad:#fb7185;
+      --warn:#facc15;
+      --line:rgba(148,163,184,.28);
+      --shadow:0 14px 36px rgba(0,0,0,.32);
+    }
+    *{box-sizing:border-box}
+    html,body{min-height:100%}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34,211,238,.18), transparent 26rem),
+        linear-gradient(180deg,#07111f,#0f172a);
+      color:var(--text);
+      font-size:clamp(18px, 3.8vw, 24px);
+      line-height:1.5;
+      overflow-x:hidden;
+    }
+    .app{
+      min-height:100dvh;
+      display:flex;
+      flex-direction:column;
+      width:min(100%, 900px);
+      margin:0 auto;
+      padding:10px;
+      padding-bottom:0;
+    }
+    .top-banner{
+      background:linear-gradient(135deg, rgba(34,211,238,.22), rgba(59,130,246,.12));
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:13px 12px 12px;
+      margin-bottom:10px;
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+    .school{
+      font-size:clamp(15px,3.3vw,20px);
+      color:#e0f2fe;
+      font-weight:850;
+      letter-spacing:.02em;
+      text-transform:uppercase;
+    }
+    .prof{
+      margin-top:4px;
+      font-size:clamp(14px,3vw,18px);
+      color:#bae6fd;
+      font-weight:750;
+    }
+    .motto{
+      margin:9px auto 0;
+      width:fit-content;
+      max-width:100%;
+      border-left:4px solid var(--accent);
+      border-radius:12px;
+      padding:8px 11px;
+      background:rgba(250,204,21,.10);
+      color:#fef9c3;
+      font-size:clamp(14px,3.1vw,18px);
+      font-style:italic;
+    }
+    main{
+      flex:1;
+      display:flex;
+      min-height:0;
+      padding-bottom:88px;
+    }
+    .page{display:none;width:100%}
+    .page.active{display:flex;flex-direction:column;animation:fade .2s ease-out}
+    @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+    .card{
+      background:linear-gradient(180deg, rgba(16,32,51,.98), rgba(15,23,42,.98));
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:16px;
+      box-shadow:var(--shadow);
+      width:100%;
+      overflow-wrap:anywhere;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:rgba(34,211,238,.13);
+      border:1px solid rgba(34,211,238,.28);
+      color:#e0f2fe;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:clamp(13px,2.9vw,17px);
+      font-weight:850;
+      margin-bottom:8px;
+    }
+    h1,h2,h3{line-height:1.13;margin:7px 0 12px}
+    h1{font-size:clamp(27px, 6.5vw, 46px);color:#f8fafc}
+    h2{font-size:clamp(23px, 5.6vw, 36px);color:#e0f2fe}
+    h3{font-size:clamp(20px, 4.7vw, 29px);color:#bae6fd}
+    p{margin:10px 0}
+    .lead{font-size:1.04em;color:#e2e8f0}
+    .kw{color:#67e8f9;font-weight:900}
+    .formula{
+      margin:12px 0;
+      padding:14px 12px;
+      border-radius:18px;
+      background:rgba(14,165,233,.10);
+      border:1px solid rgba(56,189,248,.32);
+      text-align:center;
+      overflow-x:auto;
+      font-size:1.02em;
+    }
+    .notice,.warn,.success{
+      margin:13px 0;
+      padding:13px;
+      border-radius:17px;
+      border:1px solid var(--line);
+      background:rgba(148,163,184,.10);
+    }
+    .notice{border-left:6px solid var(--accent)}
+    .warn{border-left:6px solid var(--warn);background:rgba(250,204,21,.10)}
+    .success{border-left:6px solid var(--good);background:rgba(34,197,94,.10)}
+    ul,ol{padding-left:1.1em;margin:10px 0}
+    li{margin:7px 0}
+    .mini{
+      background:rgba(20,38,61,.92);
+      border:1px solid var(--line);
+      border-radius:17px;
+      padding:12px;
+      margin:10px 0;
+    }
+    .steps{
+      display:grid;
+      gap:10px;
+      margin:12px 0;
+    }
+    .step{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:10px;
+      align-items:start;
+      background:rgba(20,38,61,.92);
+      border:1px solid var(--line);
+      border-radius:17px;
+      padding:12px;
+    }
+    .num{
+      width:34px;
+      height:34px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:#22d3ee;
+      color:#05202d;
+      font-weight:950;
+      flex:0 0 auto;
+    }
+    .image-card{
+      background:rgba(15,23,42,.55);
+      border:1px solid rgba(148,163,184,.28);
+      border-radius:18px;
+      padding:9px;
+      margin:12px 0;
+      overflow:hidden;
+    }
+    .lesson-img{
+      display:block;
+      width:100%;
+      max-height:48dvh;
+      object-fit:contain;
+      border-radius:12px;
+      background:#f8fafc;
+    }
+    .caption{
+      margin-top:8px;
+      color:#cbd5e1;
+      font-size:clamp(13px,2.8vw,16px);
+      font-weight:750;
+    }
+    .q{
+      border:1px solid rgba(148,163,184,.28);
+      background:rgba(20,38,61,.85);
+      border-radius:18px;
+      padding:14px;
+      margin:14px 0;
+    }
+    .answers{
+      display:grid;
+      gap:8px;
+      margin-top:10px;
+    }
+    label.answer{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      border:1px solid rgba(148,163,184,.28);
+      background:rgba(15,23,42,.66);
+      padding:10px;
+      border-radius:14px;
+    }
+    input[type="radio"]{
+      transform:scale(1.2);
+      margin-top:6px;
+      accent-color:#22d3ee;
+      flex:0 0 auto;
+    }
+    .check{
+      width:100%;
+      border:none;
+      background:#22d3ee;
+      color:#05202d;
+      font-weight:900;
+      border-radius:16px;
+      padding:12px 14px;
+      margin-top:12px;
+      font-size:clamp(17px, 3.6vw, 21px);
+      cursor:pointer;
+    }
+    .feedback{
+      min-height:1.2em;
+      margin-top:10px;
+      font-weight:900;
+    }
+    .feedback.good{color:#86efac}
+    .feedback.bad{color:#fda4af}
+    .footer-card{
+      text-align:center;
+      background:linear-gradient(135deg, rgba(34,211,238,.15), rgba(34,197,94,.10));
+      border:1px solid rgba(34,211,238,.30);
+      border-radius:20px;
+      padding:15px;
+      margin-top:14px;
+    }
+    .footer-card a{color:#67e8f9;font-weight:900;text-decoration:none}
+    .nav{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:0;
+      width:min(100%,900px);
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:7px;
+      padding:9px 10px calc(9px + env(safe-area-inset-bottom));
+      background:linear-gradient(180deg, rgba(7,17,31,0), rgba(7,17,31,.97) 26%, rgba(7,17,31,1));
+      z-index:10;
+    }
+    .nav button{
+      min-height:50px;
+      border:none;
+      border-radius:15px;
+      padding:11px 8px;
+      color:#06121f;
+      font-weight:900;
+      font-size:clamp(15px,3.5vw,20px);
+      cursor:pointer;
+      box-shadow:0 10px 22px rgba(0,0,0,.22);
+      white-space:normal;
+    }
+    #prevBtn{background:#e2e8f0}
+    #nextBtn{background:#22c55e}
+    .nav button.disabled{
+      opacity:.45;
+      pointer-events:none;
+    }
+    .page-number{
+      color:#e2e8f0;
+      font-weight:900;
+      font-size:clamp(13px,3.1vw,17px);
+      padding:0 2px;
+      min-width:42px;
+      text-align:center;
+    }
+    @media (max-width:520px){
+      body{font-size:clamp(19px,4.7vw,23px)}
+      .app{padding:8px}
+      .card{padding:14px;border-radius:20px}
+      main{padding-bottom:86px}
+      .formula{font-size:.98em;padding:12px 10px}
+      .lesson-img{max-height:44dvh}
+      .nav{gap:6px;padding-left:8px;padding-right:8px}
+      .nav button{min-height:48px;padding:10px 7px}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="top-banner" id="topBanner">
+      <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+      <div class="prof">Prof. Dănuț Andronie</div>
+      <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+    </header>
+
+    <main>
+      <section class="page active">
+        <div class="card">
+          <span class="badge">Clasa a VII-a • Interacțiuni</span>
+          <h1>Lecția 14 – Regula poligonului pentru compunerea mai multor vectori</h1>
+          <p class="lead">
+            În această lecție înveți cum afli <span class="kw">rezultanta</span> atunci când asupra unui corp acționează mai multe forțe.
+          </p>
+          <div class="notice">
+            Ideea-cheie: vectorii se așază unul după altul, păstrând direcția, sensul și modulul fiecăruia.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Observ</span>
+          <h2>De ce este nevoie de o regulă nouă?</h2>
+          <p>
+            În multe situații, asupra aceluiași corp nu acționează doar una sau două forțe, ci mai multe.
+            De exemplu, un corp poate fi tras de mai multe fire sau poate fi susținut de mai multe cabluri.
+          </p>
+          <p>
+            Pentru a înțelege efectul total, înlocuim toate forțele cu o singură forță numită <span class="kw">rezultantă</span>.
+          </p>
+          <div class="notice">
+            Rezultanta produce același efect mecanic ca toate forțele compuse.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Reamintire</span>
+          <h2>Regula triunghiului</h2>
+          <p>
+            Pentru două forțe, putem folosi <span class="kw">regula triunghiului</span>.
+            Așezăm a doua forță cu originea în vârful primei.
+          </p>
+          <p>
+            Rezultanta este vectorul care pornește din originea primei forțe și ajunge în vârful celei de-a doua.
+          </p>
+          <div class="formula">
+            \[
+              \vec{R}=\vec{F}_1+\vec{F}_2
+            \]
+          </div>
+          <div class="warn">
+            Forțele se mută doar grafic. Ele își păstrează modulul, direcția și sensul.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Imagine</span>
+          <h2>Regula poligonului</h2>
+          <p>
+            Pentru mai multe forțe, se construiește un lanț de vectori. Fiecare vector începe în vârful vectorului anterior.
+          </p>
+          <div class="image-card">
+            <img
+              class="lesson-img"
+              src="./regula-poligonului.png"
+              alt="Regula poligonului pentru compunerea mai multor vectori"
+              onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/2-interactiuni/lectii/regula-poligonului.png';"
+            />
+            <div class="caption">Schema: vectorii sunt așezați cap-la-coadă, iar rezultanta închide poligonul.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Rețin</span>
+          <h2>Pașii de construcție</h2>
+          <div class="steps">
+            <div class="step">
+              <div class="num">1</div>
+              <div>Alege o scară de reprezentare: de exemplu \(1\,cm = 1\,N\).</div>
+            </div>
+            <div class="step">
+              <div class="num">2</div>
+              <div>Desenează prima forță, păstrând direcția, sensul și lungimea corespunzătoare modulului.</div>
+            </div>
+            <div class="step">
+              <div class="num">3</div>
+              <div>Mută a doua forță cu originea în vârful primei, apoi procedează la fel cu următoarele forțe.</div>
+            </div>
+            <div class="step">
+              <div class="num">4</div>
+              <div>Desenează rezultanta din originea primei forțe până în vârful ultimei forțe.</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Definiție</span>
+          <h2>Regula poligonului</h2>
+          <p>
+            Pentru a determina rezultanta mai multor forțe, se construiește poligonul care are ca laturi forțele date,
+            mutate astfel încât fiecare forță să înceapă din vârful forței anterioare.
+          </p>
+          <p>
+            <span class="kw">Rezultanta</span> este forța care închide poligonul:
+          </p>
+          <div class="formula">
+            \[
+              \vec{R}=\vec{F}_1+\vec{F}_2+\vec{F}_3+...+\vec{F}_n
+            \]
+          </div>
+          <div class="success">
+            Rezultanta pornește din originea primei forțe și ajunge în vârful ultimei forțe.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Exemplu</span>
+          <h2>Când unele forțe se compensează</h2>
+          <p>
+            Presupunem că asupra unui corp acționează trei forțe:
+          </p>
+          <ul>
+            <li>\(F_1 = 3\,N\), spre dreapta;</li>
+            <li>\(F_2 = 4\,N\), în sus;</li>
+            <li>\(F_3 = 3\,N\), spre stânga.</li>
+          </ul>
+          <p>
+            Forțele \(F_1\) și \(F_3\) au module egale și sensuri opuse, deci se compensează.
+          </p>
+          <div class="formula">
+            \[
+              \vec{F}_1+\vec{F}_3=\vec{0}
+            \]
+            \[
+              \vec{R}=\vec{F}_2
+            \]
+          </div>
+          <div class="success">
+            Rezultanta are modulul \(R=4\,N\) și sensul în sus.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Aplic</span>
+          <h2>Poduri, cabluri și structuri</h2>
+          <p>
+            În construcții, mai multe cabluri pot acționa asupra aceluiași element. Pentru a afla efectul total,
+            inginerii compun vectorii forță.
+          </p>
+          <p>
+            Regula poligonului ajută la stabilirea rezultantei atunci când sunt mai mult de două forțe.
+          </p>
+          <div class="notice">
+            Cu cât sunt mai multe forțe, cu atât este mai important să păstrăm corect direcția, sensul și scara desenului.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Întrebarea 1</h2>
+
+          <div class="q" data-answer="b">
+            <p><strong>1. Pentru regula poligonului, vectorii se așază:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q1" value="a"> toți cu aceeași origine</label>
+              <label class="answer"><input type="radio" name="q1" value="b"> unul după altul, cap-la-coadă</label>
+              <label class="answer"><input type="radio" name="q1" value="c"> numai pe direcție verticală</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Întrebarea 2</h2>
+
+          <div class="q" data-answer="c">
+            <p><strong>2. Rezultanta la regula poligonului este vectorul care:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q2" value="a"> unește mijloacele a două forțe</label>
+              <label class="answer"><input type="radio" name="q2" value="b"> este mereu vertical</label>
+              <label class="answer"><input type="radio" name="q2" value="c"> închide poligonul forțelor</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Întrebarea 3</h2>
+
+          <div class="q" data-answer="a">
+            <p><strong>3. Dacă \(F_1=3\,N\) spre dreapta și \(F_3=3\,N\) spre stânga, atunci:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q3" value="a"> se compensează</label>
+              <label class="answer"><input type="radio" name="q3" value="b"> dau rezultanta \(6\,N\) spre dreapta</label>
+              <label class="answer"><input type="radio" name="q3" value="c"> dau rezultanta \(6\,N\) spre stânga</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="footer-card">
+            <strong>Prof. Dănuț Andronie</strong><br>
+            E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="nav" aria-label="Navigare lecție">
+      <button id="prevBtn" type="button" onclick="prevPage()">Înapoi</button>
+      <div class="page-number" id="pageCounter">1/11</div>
+      <button id="nextBtn" type="button" onclick="nextPage()">Mergi mai departe</button>
+    </nav>
+  </div>
+
+  <script>
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const topBanner = document.getElementById('topBanner');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageCounter = document.getElementById('pageCounter');
+    let current = 0;
+
+    function updatePage(){
+      pages.forEach((p, i) => p.classList.toggle('active', i === current));
+      topBanner.style.display = current === 0 ? 'block' : 'none';
+      prevBtn.classList.toggle('disabled', current === 0);
+      pageCounter.textContent = (current + 1) + '/' + pages.length;
+
+      if(current === pages.length - 1){
+        nextBtn.textContent = 'Lecția următoare';
+        nextBtn.onclick = () => { window.location.href = './lectia-15.html'; };
+      } else {
+        nextBtn.textContent = 'Mergi mai departe';
+        nextBtn.onclick = nextPage;
+      }
+
+      window.scrollTo({top: 0, behavior: 'smooth'});
+      if(window.MathJax && window.MathJax.typesetPromise){
+        window.MathJax.typesetPromise();
+      }
+    }
+
+    function nextPage(){
+      if(current < pages.length - 1){
+        current++;
+        updatePage();
+      }
+    }
+
+    function prevPage(){
+      if(current > 0){
+        current--;
+        updatePage();
+      }
+    }
+
+    function checkAnswer(button){
+      const block = button.closest('.q');
+      const correct = block.dataset.answer;
+      const checked = block.querySelector('input[type="radio"]:checked');
+      const feedback = block.querySelector('.feedback');
+
+      if(!checked){
+        feedback.textContent = 'Alege mai întâi o variantă.';
+        feedback.className = 'feedback bad';
+        return;
+      }
+
+      if(checked.value === correct){
+        feedback.textContent = 'Corect!';
+        feedback.className = 'feedback good';
+      } else {
+        feedback.textContent = 'Mai încearcă. Recitește explicația.';
+        feedback.className = 'feedback bad';
+      }
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if(event.key === 'ArrowRight') nextPage();
+      if(event.key === 'ArrowLeft') prevPage();
+    });
+
+    updatePage();
+  </script>
+</body>
+</html>

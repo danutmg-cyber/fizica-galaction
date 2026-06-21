@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Lecția 8 | Forța de frecare | Fizica Galaction</title>
+  <meta name="description" content="Lecția 8 pentru clasa a VII-a: Forța de frecare." />
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']], displayMath: [['\\[','\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root{
+      --bg:#07111f;
+      --card:#102033;
+      --card2:#14263d;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --accent:#22d3ee;
+      --accent2:#38bdf8;
+      --good:#22c55e;
+      --bad:#fb7185;
+      --warn:#facc15;
+      --line:rgba(148,163,184,.28);
+      --shadow:0 18px 45px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34,211,238,.18), transparent 30rem),
+        linear-gradient(180deg,#07111f,#0f172a);
+      color:var(--text);
+      font-size:clamp(19px, 4.5vw, 27px);
+      line-height:1.55;
+      overflow-x:hidden;
+    }
+    .app{
+      min-height:100dvh;
+      display:flex;
+      flex-direction:column;
+      width:min(100%, 920px);
+      margin:0 auto;
+      padding:10px;
+    }
+    .top-banner{
+      background:linear-gradient(135deg, rgba(34,211,238,.22), rgba(59,130,246,.12));
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:14px 14px 12px;
+      margin-bottom:10px;
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+    .school{
+      font-size:clamp(16px, 3.7vw, 22px);
+      color:#e0f2fe;
+      font-weight:800;
+      letter-spacing:.02em;
+      text-transform:uppercase;
+    }
+    .prof{
+      margin-top:4px;
+      font-size:clamp(15px, 3.4vw, 19px);
+      color:#bae6fd;
+      font-weight:700;
+    }
+    .motto{
+      margin:10px auto 0;
+      width:fit-content;
+      max-width:100%;
+      border-left:4px solid var(--accent);
+      border-radius:12px;
+      padding:8px 12px;
+      background:rgba(250,204,21,.10);
+      color:#fef9c3;
+      font-size:clamp(15px, 3.5vw, 20px);
+      font-style:italic;
+    }
+    main{
+      flex:1;
+      display:flex;
+      min-height:0;
+      padding-bottom:78px;
+    }
+    .page{display:none;width:100%}
+    .page.active{display:flex;flex-direction:column;animation:fade .22s ease-out}
+    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .card{
+      background:linear-gradient(180deg, rgba(16,32,51,.98), rgba(15,23,42,.98));
+      border:1px solid var(--line);
+      border-radius:26px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      width:100%;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:rgba(34,211,238,.13);
+      border:1px solid rgba(34,211,238,.28);
+      color:#e0f2fe;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:clamp(14px, 3.2vw, 18px);
+      font-weight:800;
+      margin-bottom:10px;
+    }
+    h1,h2,h3{line-height:1.12;margin:8px 0 14px}
+    h1{font-size:clamp(28px, 7.8vw, 48px);color:#f8fafc}
+    h2{font-size:clamp(25px, 6.5vw, 38px);color:#e0f2fe}
+    h3{font-size:clamp(22px, 5.4vw, 31px);color:#bae6fd}
+    p{margin:12px 0}
+    .lead{font-size:1.06em;color:#e2e8f0}
+    .kw{color:#67e8f9;font-weight:900}
+    .formula{
+      margin:14px 0;
+      padding:14px;
+      border-radius:20px;
+      background:rgba(14,165,233,.10);
+      border:1px solid rgba(56,189,248,.32);
+      text-align:center;
+      font-size:1.08em;
+      overflow-x:auto;
+    }
+    .notice,.warn,.success{
+      margin:14px 0;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:rgba(148,163,184,.10);
+    }
+    .notice{border-left:6px solid var(--accent)}
+    .warn{border-left:6px solid var(--warn);background:rgba(250,204,21,.10)}
+    .success{border-left:6px solid var(--good);background:rgba(34,197,94,.10)}
+    ul,ol{padding-left:1.25em;margin:10px 0}
+    li{margin:8px 0}
+    .two-col{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+    .mini{
+      background:rgba(20,38,61,.92);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:13px;
+    }
+    .mini h3{margin-top:0}
+    .svgbox{
+      background:rgba(15,23,42,.55);
+      border:1px solid rgba(148,163,184,.28);
+      border-radius:20px;
+      padding:10px;
+      margin:12px 0;
+      overflow:hidden;
+    }
+    .svgbox > svg{
+      width:100%;
+      height:auto;
+      display:block;
+      max-height:320px;
+    }
+    .q{
+      border:1px solid rgba(148,163,184,.28);
+      background:rgba(20,38,61,.85);
+      border-radius:18px;
+      padding:14px;
+      margin:14px 0;
+    }
+    .answers{
+      display:grid;
+      gap:8px;
+      margin-top:10px;
+    }
+    label.answer{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      border:1px solid rgba(148,163,184,.28);
+      background:rgba(15,23,42,.66);
+      padding:10px;
+      border-radius:14px;
+    }
+    input[type="radio"]{
+      transform:scale(1.25);
+      margin-top:6px;
+      accent-color:#22d3ee;
+    }
+    .check{
+      width:100%;
+      border:none;
+      background:#22d3ee;
+      color:#05202d;
+      font-weight:900;
+      border-radius:16px;
+      padding:12px 14px;
+      margin-top:12px;
+      font-size:clamp(17px, 4.2vw, 22px);
+      cursor:pointer;
+    }
+    .feedback{
+      min-height:1.2em;
+      margin-top:10px;
+      font-weight:900;
+    }
+    .feedback.good{color:#86efac}
+    .feedback.bad{color:#fda4af}
+    .footer-card{
+      text-align:center;
+      background:linear-gradient(135deg, rgba(34,211,238,.15), rgba(34,197,94,.10));
+      border:1px solid rgba(34,211,238,.30);
+      border-radius:22px;
+      padding:16px;
+      margin-top:14px;
+    }
+    .footer-card a{color:#67e8f9;font-weight:900;text-decoration:none}
+    .nav{
+      position:sticky;
+      bottom:0;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:8px;
+      padding:10px 0 calc(10px + env(safe-area-inset-bottom));
+      margin-top:10px;
+      background:linear-gradient(180deg, rgba(7,17,31,0), rgba(7,17,31,.96) 28%, rgba(7,17,31,1));
+      z-index:10;
+    }
+    .nav button{
+      min-height:54px;
+      border:none;
+      border-radius:16px;
+      padding:13px 10px;
+      color:#06121f;
+      font-weight:900;
+      font-size:clamp(16px, 4vw, 22px);
+      cursor:pointer;
+      box-shadow:0 10px 22px rgba(0,0,0,.22);
+    }
+    #prevBtn{background:#e2e8f0}
+    #nextBtn{background:#22c55e}
+    .nav button.disabled{
+      opacity:.45;
+      pointer-events:none;
+    }
+    .counter{
+      color:#e2e8f0;
+      font-weight:900;
+      font-size:clamp(14px,3.6vw,18px);
+      padding:0 2px;
+      min-width:46px;
+      text-align:center;
+    }
+    .small{
+      font-size:.92em;
+      color:var(--muted);
+    }
+    @media (max-width:520px){
+      .app{padding:8px}
+      .card{padding:15px;border-radius:22px}
+      .two-col{grid-template-columns:1fr}
+      ul,ol{padding-left:1.05em}
+      .nav{gap:6px}
+      .nav button{min-height:50px;padding:12px 8px}
+      .formula{font-size:1.02em}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="top-banner" id="topBanner">
+      <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+      <div class="prof">Prof. Dănuț Andronie</div>
+      <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+    </header>
+
+    <main>
+      <section class="page active">
+        <div class="card">
+          <span class="badge">Clasa a VII-a • Interacțiuni</span>
+          <h1>Lecția 8 – Forța de frecare</h1>
+          <p class="lead">
+            În această lecție înveți de ce unele corpuri alunecă ușor, iar altele se opresc repede.
+          </p>
+          <div class="notice">
+            Ideea-cheie: <span class="kw">forța de frecare</span> apare la contactul dintre corpuri și se opune alunecării.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Observ</span>
+          <h2>De ce se oprește un corp?</h2>
+          <p>
+            Împinge ușor o carte pe bancă. Cartea pornește, apoi încetinește și se oprește.
+          </p>
+          <p>
+            O cauză este interacțiunea dintre suprafața cărții și suprafața băncii.
+          </p>
+          <div class="svgbox" aria-label="Corp care alunecă pe masă și forța de frecare opusă mișcării">
+            <svg viewBox="0 0 760 300" role="img">
+              <defs>
+                <marker id="arrowGreen" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">
+                  <path d="M0,0 L12,4 L0,8 Z" fill="#22c55e"/>
+                </marker>
+                <marker id="arrowRed" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">
+                  <path d="M0,0 L12,4 L0,8 Z" fill="#fb7185"/>
+                </marker>
+              </defs>
+              <rect x="190" y="120" width="230" height="95" rx="16" fill="#38bdf8" stroke="#e0f2fe" stroke-width="4"/>
+              <line x1="60" y1="235" x2="700" y2="235" stroke="#94a3b8" stroke-width="8"/>
+              <line x1="435" y1="165" x2="630" y2="165" stroke="#22c55e" stroke-width="10" marker-end="url(#arrowGreen)"/>
+              <line x1="175" y1="185" x2="70" y2="185" stroke="#fb7185" stroke-width="10" marker-end="url(#arrowRed)"/>
+              <text x="500" y="135" fill="#bbf7d0" font-size="30" font-weight="900">mișcare</text>
+              <text x="42" y="155" fill="#fecdd3" font-size="30" font-weight="900">frecare</text>
+              <text x="240" y="178" fill="#082f49" font-size="34" font-weight="900">corp</text>
+            </svg>
+          </div>
+          <div class="notice">
+            Forța de frecare are sens opus mișcării sau tendinței de mișcare.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Experimentez</span>
+          <h2>Ce influențează frecarea?</h2>
+          <p>
+            Trage același corp cu un dinamometru pe suprafețe diferite: bancă, hârtie, material textil.
+          </p>
+          <p>
+            Pentru mișcare uniformă, citește forța indicată de dinamometru. Aceasta compensează forța de frecare la alunecare.
+          </p>
+          <div class="two-col">
+            <div class="mini">
+              <h3>Suprafață netedă</h3>
+              <p>Frecarea este mai mică.</p>
+            </div>
+            <div class="mini">
+              <h3>Suprafață aspră</h3>
+              <p>Frecarea este mai mare.</p>
+            </div>
+          </div>
+          <div class="warn">
+            Trage corpul lent și uniform. Dacă viteza se schimbă mult, citirea nu mai reprezintă simplu forța de frecare la alunecare.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Concluzie</span>
+          <h2>Forța de frecare la alunecare</h2>
+          <p>
+            <span class="kw">Forța de frecare la alunecare</span> apare la suprafața de contact dintre două corpuri care alunecă unul peste celălalt.
+          </p>
+          <p>
+            Ea se opune mișcării relative dintre cele două corpuri.
+          </p>
+          <div class="success">
+            Direcția forței de frecare este direcția mișcării, iar sensul ei este opus sensului mișcării.
+          </div>
+          <div class="svgbox" aria-label="Forțe pe un corp care alunecă pe plan orizontal">
+            <svg viewBox="0 0 760 340" role="img">
+              <defs>
+                <marker id="arrBlue" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">
+                  <path d="M0,0 L12,4 L0,8 Z" fill="#38bdf8"/>
+                </marker>
+                <marker id="arrPink" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">
+                  <path d="M0,0 L12,4 L0,8 Z" fill="#fb7185"/>
+                </marker>
+                <marker id="arrYellow" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">
+                  <path d="M0,0 L12,4 L0,8 Z" fill="#facc15"/>
+                </marker>
+                <marker id="arrGreen2" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">
+                  <path d="M0,0 L12,4 L0,8 Z" fill="#22c55e"/>
+                </marker>
+              </defs>
+              <rect x="275" y="125" width="210" height="95" rx="16" fill="#38bdf8" stroke="#e0f2fe" stroke-width="4"/>
+              <line x1="70" y1="245" x2="700" y2="245" stroke="#94a3b8" stroke-width="8"/>
+              <line x1="380" y1="125" x2="380" y2="45" stroke="#facc15" stroke-width="8" marker-end="url(#arrYellow)"/>
+              <line x1="380" y1="220" x2="380" y2="300" stroke="#38bdf8" stroke-width="8" marker-end="url(#arrBlue)"/>
+              <line x1="500" y1="170" x2="665" y2="170" stroke="#22c55e" stroke-width="8" marker-end="url(#arrGreen2)"/>
+              <line x1="260" y1="190" x2="110" y2="190" stroke="#fb7185" stroke-width="8" marker-end="url(#arrPink)"/>
+              <text x="395" y="60" fill="#fef9c3" font-size="30" font-weight="900">N</text>
+              <text x="397" y="306" fill="#dbeafe" font-size="30" font-weight="900">G</text>
+              <text x="560" y="140" fill="#bbf7d0" font-size="30" font-weight="900">F</text>
+              <text x="115" y="160" fill="#fecdd3" font-size="30" font-weight="900">Ff</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Rețin</span>
+          <h2>Legile frecării la alunecare</h2>
+          <ul>
+            <li>Forța de frecare la alunecare se opune mișcării.</li>
+            <li>Depinde de natura și prelucrarea suprafețelor aflate în contact.</li>
+            <li>Depinde de forța normală de apăsare \(N\).</li>
+            <li>În general, nu depinde de aria suprafeței de contact.</li>
+          </ul>
+          <div class="formula">
+            \[
+              F_f=\mu \cdot N
+            \]
+          </div>
+          <p>
+            \(\mu\) se numește <span class="kw">coeficient de frecare la alunecare</span> și nu are unitate de măsură.
+          </p>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Interpretare</span>
+          <h2>Ce arată formula?</h2>
+          <div class="two-col">
+            <div class="mini">
+              <h3>\(N\) mai mare</h3>
+              <p>
+                Corpul apasă mai tare pe suprafață, deci frecarea crește.
+              </p>
+              <div class="formula">\[
+                F_f \sim N
+              \]</div>
+            </div>
+            <div class="mini">
+              <h3>\(\mu\) mai mare</h3>
+              <p>
+                Suprafețele sunt mai aspre sau materialele au frecare mai mare.
+              </p>
+              <div class="formula">\[
+                F_f \sim \mu
+              \]</div>
+            </div>
+          </div>
+          <div class="notice">
+            Pe plan orizontal, dacă asupra corpului nu acționează alte forțe verticale, de obicei \(N=G\).
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Exemplu numeric</span>
+          <h2>Calculăm forța de frecare</h2>
+          <p>
+            Un corp este tras pe o masă orizontală. Normala are valoarea \(N=20\,N\), iar coeficientul de frecare este \(\mu=0{,}3\).
+          </p>
+          <p>Determină forța de frecare.</p>
+          <div class="formula">
+            \[
+              F_f=\mu \cdot N
+            \]
+            \[
+              F_f=0{,}3 \cdot 20\,N = 6\,N
+            \]
+          </div>
+          <div class="success">
+            Răspuns: forța de frecare este \(6\,N\), orientată opus mișcării.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Aplic</span>
+          <h2>Frecarea poate ajuta sau poate încurca</h2>
+          <div class="two-col">
+            <div class="mini">
+              <h3>Ajută</h3>
+              <ul>
+                <li>putem merge fără să alunecăm;</li>
+                <li>frânele opresc bicicleta;</li>
+                <li>roțile mașinii se prind de asfalt.</li>
+              </ul>
+            </div>
+            <div class="mini">
+              <h3>Încurcă</h3>
+              <ul>
+                <li>încălzește piesele mașinilor;</li>
+                <li>uzează suprafețele;</li>
+                <li>încetinește mișcarea.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="notice">
+            Inginerii reduc frecarea prin ungere, rulmenți sau suprafețe bine șlefuite, dar o folosesc când este nevoie de aderență.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Întrebarea 1</h2>
+          <div class="q" data-answer="b">
+            <p><strong>Forța de frecare la alunecare are sensul:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q1" value="a"> același cu mișcarea</label>
+              <label class="answer"><input type="radio" name="q1" value="b"> opus mișcării</label>
+              <label class="answer"><input type="radio" name="q1" value="c"> mereu vertical în sus</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Întrebarea 2</h2>
+          <div class="q" data-answer="c">
+            <p><strong>Formula forței de frecare la alunecare este:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q2" value="a"> \(G=m \cdot g\)</label>
+              <label class="answer"><input type="radio" name="q2" value="b"> \(F_R=m \cdot a\)</label>
+              <label class="answer"><input type="radio" name="q2" value="c"> \(F_f=\mu \cdot N\)</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Întrebarea 3</h2>
+          <div class="q" data-answer="a">
+            <p><strong>Dacă \(N=30\,N\) și \(\mu=0{,}2\), atunci forța de frecare este:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q3" value="a"> \(6\,N\)</label>
+              <label class="answer"><input type="radio" name="q3" value="b"> \(15\,N\)</label>
+              <label class="answer"><input type="radio" name="q3" value="c"> \(30{,}2\,N\)</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="footer-card">
+            <strong>Prof. Dănuț Andronie</strong><br>
+            E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="nav" aria-label="Navigare lecție">
+      <button id="prevBtn" type="button" onclick="prevPage()">Înapoi</button>
+      <div class="counter" id="pageCounter">1/11</div>
+      <button id="nextBtn" type="button" onclick="nextPage()">Mergi mai departe</button>
+    </nav>
+  </div>
+
+  <script>
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const topBanner = document.getElementById('topBanner');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageCounter = document.getElementById('pageCounter');
+    let current = 0;
+
+    function updatePage(){
+      pages.forEach((p, i) => p.classList.toggle('active', i === current));
+      topBanner.style.display = current === 0 ? 'block' : 'none';
+      prevBtn.classList.toggle('disabled', current === 0);
+      pageCounter.textContent = (current + 1) + '/' + pages.length;
+
+      if(current === pages.length - 1){
+        nextBtn.textContent = 'Lecția următoare';
+        nextBtn.onclick = () => { window.location.href = './lectia-9.html'; };
+      } else {
+        nextBtn.textContent = 'Mergi mai departe';
+        nextBtn.onclick = nextPage;
+      }
+
+      window.scrollTo({top: 0, behavior: 'smooth'});
+      if(window.MathJax && window.MathJax.typesetPromise){
+        window.MathJax.typesetPromise();
+      }
+    }
+
+    function nextPage(){
+      if(current < pages.length - 1){
+        current++;
+        updatePage();
+      }
+    }
+
+    function prevPage(){
+      if(current > 0){
+        current--;
+        updatePage();
+      }
+    }
+
+    function checkAnswer(button){
+      const block = button.closest('.q');
+      const correct = block.dataset.answer;
+      const checked = block.querySelector('input[type="radio"]:checked');
+      const feedback = block.querySelector('.feedback');
+
+      if(!checked){
+        feedback.textContent = 'Alege mai întâi o variantă.';
+        feedback.className = 'feedback bad';
+        return;
+      }
+
+      if(checked.value === correct){
+        feedback.textContent = 'Corect!';
+        feedback.className = 'feedback good';
+      } else {
+        feedback.textContent = 'Mai încearcă. Recitește explicația.';
+        feedback.className = 'feedback bad';
+      }
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if(event.key === 'ArrowRight') nextPage();
+      if(event.key === 'ArrowLeft') prevPage();
+    });
+
+    updatePage();
+  </script>
+</body>
+</html>

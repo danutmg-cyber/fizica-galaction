@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Lecția 13 | Compunerea forțelor. Regula paralelogramului | Fizica Galaction</title>
+  <meta name="description" content="Lecția 13 pentru clasa a VII-a: Compunerea forțelor. Regula paralelogramului." />
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']], displayMath: [['\\[','\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root{
+      --bg:#07111f;
+      --card:#102033;
+      --card2:#14263d;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --accent:#22d3ee;
+      --good:#22c55e;
+      --bad:#fb7185;
+      --warn:#facc15;
+      --line:rgba(148,163,184,.28);
+      --shadow:0 14px 36px rgba(0,0,0,.32);
+    }
+    *{box-sizing:border-box}
+    html,body{min-height:100%}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34,211,238,.18), transparent 26rem),
+        linear-gradient(180deg,#07111f,#0f172a);
+      color:var(--text);
+      font-size:clamp(18px, 3.8vw, 24px);
+      line-height:1.5;
+      overflow-x:hidden;
+    }
+    .app{
+      min-height:100dvh;
+      display:flex;
+      flex-direction:column;
+      width:min(100%, 900px);
+      margin:0 auto;
+      padding:10px;
+      padding-bottom:0;
+    }
+    .top-banner{
+      background:linear-gradient(135deg, rgba(34,211,238,.22), rgba(59,130,246,.12));
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:13px 12px 12px;
+      margin-bottom:10px;
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+    .school{
+      font-size:clamp(15px,3.3vw,20px);
+      color:#e0f2fe;
+      font-weight:850;
+      letter-spacing:.02em;
+      text-transform:uppercase;
+    }
+    .prof{
+      margin-top:4px;
+      font-size:clamp(14px,3vw,18px);
+      color:#bae6fd;
+      font-weight:750;
+    }
+    .motto{
+      margin:9px auto 0;
+      width:fit-content;
+      max-width:100%;
+      border-left:4px solid var(--accent);
+      border-radius:12px;
+      padding:8px 11px;
+      background:rgba(250,204,21,.10);
+      color:#fef9c3;
+      font-size:clamp(14px,3.1vw,18px);
+      font-style:italic;
+    }
+    main{
+      flex:1;
+      display:flex;
+      min-height:0;
+      padding-bottom:88px;
+    }
+    .page{display:none;width:100%}
+    .page.active{display:flex;flex-direction:column;animation:fade .2s ease-out}
+    @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+    .card{
+      background:linear-gradient(180deg, rgba(16,32,51,.98), rgba(15,23,42,.98));
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:16px;
+      box-shadow:var(--shadow);
+      width:100%;
+      overflow-wrap:anywhere;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:rgba(34,211,238,.13);
+      border:1px solid rgba(34,211,238,.28);
+      color:#e0f2fe;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:clamp(13px,2.9vw,17px);
+      font-weight:850;
+      margin-bottom:8px;
+    }
+    h1,h2,h3{line-height:1.13;margin:7px 0 12px}
+    h1{font-size:clamp(27px, 6.5vw, 46px);color:#f8fafc}
+    h2{font-size:clamp(23px, 5.6vw, 36px);color:#e0f2fe}
+    h3{font-size:clamp(20px, 4.7vw, 29px);color:#bae6fd}
+    p{margin:10px 0}
+    .lead{font-size:1.04em;color:#e2e8f0}
+    .kw{color:#67e8f9;font-weight:900}
+    .formula{
+      margin:12px 0;
+      padding:14px 12px;
+      border-radius:18px;
+      background:rgba(14,165,233,.10);
+      border:1px solid rgba(56,189,248,.32);
+      text-align:center;
+      overflow-x:auto;
+      font-size:1.02em;
+    }
+    .notice,.warn,.success{
+      margin:13px 0;
+      padding:13px;
+      border-radius:17px;
+      border:1px solid var(--line);
+      background:rgba(148,163,184,.10);
+    }
+    .notice{border-left:6px solid var(--accent)}
+    .warn{border-left:6px solid var(--warn);background:rgba(250,204,21,.10)}
+    .success{border-left:6px solid var(--good);background:rgba(34,197,94,.10)}
+    ul,ol{padding-left:1.1em;margin:10px 0}
+    li{margin:7px 0}
+    .mini{
+      background:rgba(20,38,61,.92);
+      border:1px solid var(--line);
+      border-radius:17px;
+      padding:12px;
+      margin:10px 0;
+    }
+    .image-card{
+      background:rgba(15,23,42,.55);
+      border:1px solid rgba(148,163,184,.28);
+      border-radius:18px;
+      padding:9px;
+      margin:12px 0;
+      overflow:hidden;
+    }
+    .lesson-img{
+      display:block;
+      width:100%;
+      max-height:48dvh;
+      object-fit:contain;
+      border-radius:12px;
+      background:#f8fafc;
+    }
+    .caption{
+      margin-top:8px;
+      color:#cbd5e1;
+      font-size:clamp(13px,2.8vw,16px);
+      font-weight:750;
+    }
+    .q{
+      border:1px solid rgba(148,163,184,.28);
+      background:rgba(20,38,61,.85);
+      border-radius:18px;
+      padding:14px;
+      margin:14px 0;
+    }
+    .answers{
+      display:grid;
+      gap:8px;
+      margin-top:10px;
+    }
+    label.answer{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      border:1px solid rgba(148,163,184,.28);
+      background:rgba(15,23,42,.66);
+      padding:10px;
+      border-radius:14px;
+    }
+    input[type="radio"]{
+      transform:scale(1.2);
+      margin-top:6px;
+      accent-color:#22d3ee;
+      flex:0 0 auto;
+    }
+    .check{
+      width:100%;
+      border:none;
+      background:#22d3ee;
+      color:#05202d;
+      font-weight:900;
+      border-radius:16px;
+      padding:12px 14px;
+      margin-top:12px;
+      font-size:clamp(17px, 3.6vw, 21px);
+      cursor:pointer;
+    }
+    .feedback{
+      min-height:1.2em;
+      margin-top:10px;
+      font-weight:900;
+    }
+    .feedback.good{color:#86efac}
+    .feedback.bad{color:#fda4af}
+    .footer-card{
+      text-align:center;
+      background:linear-gradient(135deg, rgba(34,211,238,.15), rgba(34,197,94,.10));
+      border:1px solid rgba(34,211,238,.30);
+      border-radius:20px;
+      padding:15px;
+      margin-top:14px;
+    }
+    .footer-card a{color:#67e8f9;font-weight:900;text-decoration:none}
+    .nav{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:0;
+      width:min(100%,900px);
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:7px;
+      padding:9px 10px calc(9px + env(safe-area-inset-bottom));
+      background:linear-gradient(180deg, rgba(7,17,31,0), rgba(7,17,31,.97) 26%, rgba(7,17,31,1));
+      z-index:10;
+    }
+    .nav button{
+      min-height:50px;
+      border:none;
+      border-radius:15px;
+      padding:11px 8px;
+      color:#06121f;
+      font-weight:900;
+      font-size:clamp(15px,3.5vw,20px);
+      cursor:pointer;
+      box-shadow:0 10px 22px rgba(0,0,0,.22);
+      white-space:normal;
+    }
+    #prevBtn{background:#e2e8f0}
+    #nextBtn{background:#22c55e}
+    .nav button.disabled{
+      opacity:.45;
+      pointer-events:none;
+    }
+    .page-number{
+      color:#e2e8f0;
+      font-weight:900;
+      font-size:clamp(13px,3.1vw,17px);
+      padding:0 2px;
+      min-width:42px;
+      text-align:center;
+    }
+    @media (max-width:520px){
+      body{font-size:clamp(19px,4.7vw,23px)}
+      .app{padding:8px}
+      .card{padding:14px;border-radius:20px}
+      main{padding-bottom:86px}
+      .formula{font-size:.98em;padding:12px 10px}
+      .lesson-img{max-height:44dvh}
+      .nav{gap:6px;padding-left:8px;padding-right:8px}
+      .nav button{min-height:48px;padding:10px 7px}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="top-banner" id="topBanner">
+      <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+      <div class="prof">Prof. Dănuț Andronie</div>
+      <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+    </header>
+
+    <main>
+      <section class="page active">
+        <div class="card">
+          <span class="badge">Clasa a VII-a • Interacțiuni</span>
+          <h1>Lecția 13 – Compunerea forțelor. Regula paralelogramului</h1>
+          <p class="lead">
+            În această lecție înveți cum se înlocuiesc două forțe care acționează asupra aceluiași corp
+            cu o singură forță: <span class="kw">forța rezultantă</span>.
+          </p>
+          <div class="notice">
+            Ideea-cheie: rezultanta produce asupra corpului același efect ca forțele pe care le înlocuiește.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Observ</span>
+          <h2>Mai multe forțe pot acționa simultan</h2>
+          <p>
+            O barcă poate fi pusă în mișcare de mai mulți sportivi, iar un vapor poate fi ținut la mal
+            de mai multe parâme.
+          </p>
+          <p>
+            În fiecare situație, efectul total este produs de <span class="kw">toate forțele</span> care acționează simultan.
+          </p>
+          <div class="notice">
+            Căutăm o forță unică, echivalentă cu toate aceste forțe: <strong>rezultanta</strong>.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Caz simplu</span>
+          <h2>Forțe paralele, același sens</h2>
+          <p>
+            Dacă două forțe sunt paralele și au același sens, efectele lor se adună direct.
+          </p>
+          <div class="formula">
+            \[
+              R = F_1 + F_2
+            \]
+          </div>
+          <p>
+            Exemplu: dacă \(F_1=4\,N\) și \(F_2=3\,N\), atunci:
+          </p>
+          <div class="formula">
+            \[
+              R = 4\,N + 3\,N = 7\,N
+            \]
+          </div>
+          <div class="success">
+            Rezultanta are aceeași direcție și același sens cu cele două forțe.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Forțe concurente</span>
+          <h2>Când direcțiile se întâlnesc</h2>
+          <p>
+            Două forțe sunt <span class="kw">concurente</span> dacă au același punct de aplicație
+            sau dacă direcțiile lor se intersectează.
+          </p>
+          <p>
+            Pentru două forțe concurente, rezultanta nu se obține întotdeauna prin adunarea simplă
+            a modulelor.
+          </p>
+          <div class="warn">
+            Contează și unghiul dintre direcțiile forțelor.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Imagine</span>
+          <h2>Regula paralelogramului</h2>
+          <div class="image-card">
+            <img
+              class="lesson-img"
+              src="./regula-paralelogramului.png"
+              alt="Regula paralelogramului pentru compunerea a două forțe"
+              onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/2-interactiuni/lectii/regula-paralelogramului.png';">
+            <div class="caption">
+              Forțele \(\vec{F}_1\) și \(\vec{F}_2\) pornesc din același punct \(O\), iar diagonala paralelogramului reprezintă rezultanta \(\vec{R}\).
+            </div>
+          </div>
+          <div class="notice">
+            Imaginea trebuie să fie în același folder cu lecția: <strong>regula-paralelogramului.png</strong>.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Pași</span>
+          <h2>Cum construim rezultanta?</h2>
+          <ol>
+            <li>Reprezinți cele două forțe din același punct de aplicație.</li>
+            <li>Din vârful lui \(\vec{F}_1\) duci o paralelă la direcția lui \(\vec{F}_2\).</li>
+            <li>Din vârful lui \(\vec{F}_2\) duci o paralelă la direcția lui \(\vec{F}_1\).</li>
+            <li>Diagonala dusă din punctul de aplicație este rezultanta \(\vec{R}\).</li>
+          </ol>
+          <div class="formula">
+            \[
+              \vec{R} = \vec{F}_1 + \vec{F}_2
+            \]
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Rețin</span>
+          <h2>Ce este rezultanta?</h2>
+          <p>
+            Rezultanta a două forțe concurente este forța care produce același efect ca cele două forțe
+            aplicate simultan.
+          </p>
+          <div class="formula">
+            \[
+              \vec{R} = \vec{F}_1 + \vec{F}_2
+            \]
+          </div>
+          <p>
+            Modulul rezultantei depinde de:
+          </p>
+          <ul>
+            <li>modulul forței \(F_1\);</li>
+            <li>modulul forței \(F_2\);</li>
+            <li>unghiul \(\alpha\) dintre cele două forțe.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Formulă</span>
+          <h2>Modulul rezultantei</h2>
+          <p>
+            Pentru două forțe concurente care fac între ele un unghi \(\alpha\), modulul rezultantei este:
+          </p>
+          <div class="formula">
+            \[
+              R^2 = F_1^2 + F_2^2 + 2F_1F_2\cos\alpha
+            \]
+          </div>
+          <div class="notice">
+            Formula arată de ce rezultanta depinde de unghiul dintre forțe.
+          </div>
+          <p>
+            Când unghiul crește, rezultanta scade. Când unghiul scade, rezultanta crește.
+          </p>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Exemplu numeric</span>
+          <h2>Forțe perpendiculare</h2>
+          <p>
+            Două forțe concurente au modulele \(F_1=4\,N\) și \(F_2=3\,N\), iar unghiul dintre ele este \(90^\circ\).
+          </p>
+          <p>
+            Pentru \(\alpha=90^\circ\), \(\cos 90^\circ=0\), deci:
+          </p>
+          <div class="formula">
+            \[
+              R^2 = 4^2 + 3^2
+            \]
+            \[
+              R^2 = 16+9=25
+            \]
+            \[
+              R=5\,N
+            \]
+          </div>
+          <div class="success">
+            Rezultanta are modulul \(5\,N\).
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Aplic</span>
+          <h2>Lucru pe caiet</h2>
+          <p>
+            Desenează două forțe concurente:
+          </p>
+          <ul>
+            <li>\(F_1=6\,N\), orizontal spre dreapta;</li>
+            <li>\(F_2=4\,N\), oblic în sus;</li>
+            <li>unghiul dintre ele: \(\alpha=60^\circ\).</li>
+          </ul>
+          <p>
+            Construiește paralelogramul și trasează rezultanta \(\vec{R}\).
+          </p>
+          <div class="warn">
+            Folosește o scară simplă: \(1\,cm \leftrightarrow 1\,N\).
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Alege varianta corectă</h2>
+
+          <div class="q" data-answer="b">
+            <p><strong>1. Rezultanta a două forțe concurente este:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q1" value="a"> o forță care apare doar la frecare</label>
+              <label class="answer"><input type="radio" name="q1" value="b"> forța care înlocuiește efectul celor două forțe</label>
+              <label class="answer"><input type="radio" name="q1" value="c"> masa corpului asupra căruia se acționează</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="q" data-answer="a">
+            <p><strong>2. În regula paralelogramului, rezultanta este reprezentată de:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q2" value="a"> diagonala paralelogramului dusă din originea forțelor</label>
+              <label class="answer"><input type="radio" name="q2" value="b"> latura cea mai mică a paralelogramului</label>
+              <label class="answer"><input type="radio" name="q2" value="c"> un segment perpendicular pe ambele forțe</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="footer-card">
+            <strong>Prof. Dănuț Andronie</strong><br>
+            E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="nav" aria-label="Navigare lecție">
+      <button id="prevBtn" type="button" onclick="prevPage()">Înapoi</button>
+      <div class="page-number" id="pageCounter">1/11</div>
+      <button id="nextBtn" type="button" onclick="nextPage()">Mergi mai departe</button>
+    </nav>
+  </div>
+
+  <script>
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const topBanner = document.getElementById('topBanner');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageCounter = document.getElementById('pageCounter');
+    let current = 0;
+
+    function updatePage(){
+      pages.forEach((p, i) => p.classList.toggle('active', i === current));
+      topBanner.style.display = current === 0 ? 'block' : 'none';
+      prevBtn.classList.toggle('disabled', current === 0);
+      pageCounter.textContent = (current + 1) + '/' + pages.length;
+
+      if(current === pages.length - 1){
+        nextBtn.textContent = 'Lecția următoare';
+        nextBtn.onclick = () => { window.location.href = './lectia-14.html'; };
+      } else {
+        nextBtn.textContent = 'Mergi mai departe';
+        nextBtn.onclick = nextPage;
+      }
+
+      window.scrollTo({top: 0, behavior: 'smooth'});
+      if(window.MathJax && window.MathJax.typesetPromise){
+        window.MathJax.typesetPromise();
+      }
+    }
+
+    function nextPage(){
+      if(current < pages.length - 1){
+        current++;
+        updatePage();
+      }
+    }
+
+    function prevPage(){
+      if(current > 0){
+        current--;
+        updatePage();
+      }
+    }
+
+    function checkAnswer(button){
+      const block = button.closest('.q');
+      const correct = block.dataset.answer;
+      const checked = block.querySelector('input[type="radio"]:checked');
+      const feedback = block.querySelector('.feedback');
+
+      if(!checked){
+        feedback.textContent = 'Alege mai întâi o variantă.';
+        feedback.className = 'feedback bad';
+        return;
+      }
+
+      if(checked.value === correct){
+        feedback.textContent = 'Corect!';
+        feedback.className = 'feedback good';
+      } else {
+        feedback.textContent = 'Mai încearcă. Recitește pagina cu explicația.';
+        feedback.className = 'feedback bad';
+      }
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if(event.key === 'ArrowRight') nextPage();
+      if(event.key === 'ArrowLeft') prevPage();
+    });
+
+    updatePage();
+  </script>
+</body>
+</html>

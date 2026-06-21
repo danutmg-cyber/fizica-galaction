@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Lecția 15 | Mișcarea unui corp pe un plan înclinat | Fizica Galaction</title>
+  <meta name="description" content="Lecția 15 pentru clasa a VII-a: Mișcarea unui corp pe un plan înclinat." />
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']], displayMath: [['\\[','\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root{
+      --bg:#07111f;
+      --card:#102033;
+      --card2:#14263d;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --accent:#22d3ee;
+      --accent2:#38bdf8;
+      --good:#22c55e;
+      --bad:#fb7185;
+      --warn:#facc15;
+      --line:rgba(148,163,184,.28);
+      --shadow:0 18px 45px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34,211,238,.16), transparent 30rem),
+        linear-gradient(180deg,#07111f,#0f172a);
+      color:var(--text);
+      font-size:clamp(19px, 4.2vw, 25px);
+      line-height:1.5;
+      overflow-x:hidden;
+    }
+    .app{
+      min-height:100dvh;
+      display:flex;
+      flex-direction:column;
+      width:min(100%, 900px);
+      margin:0 auto;
+      padding:10px;
+    }
+    .top-banner{
+      background:linear-gradient(135deg, rgba(34,211,238,.22), rgba(59,130,246,.12));
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:14px 14px 12px;
+      margin-bottom:10px;
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+    .school{
+      font-size:clamp(16px,3.5vw,22px);
+      color:#e0f2fe;
+      font-weight:800;
+      letter-spacing:.02em;
+      text-transform:uppercase;
+    }
+    .prof{
+      margin-top:4px;
+      font-size:clamp(15px,3.1vw,19px);
+      color:#bae6fd;
+      font-weight:700;
+    }
+    .motto{
+      margin:10px auto 0;
+      width:fit-content;
+      max-width:100%;
+      border-left:4px solid var(--accent);
+      border-radius:12px;
+      padding:8px 12px;
+      background:rgba(250,204,21,.10);
+      color:#fef9c3;
+      font-size:clamp(15px,3.2vw,20px);
+      font-style:italic;
+    }
+    main{flex:1;display:flex;min-height:0}
+    .page{display:none;width:100%; padding-bottom:82px}
+    .page.active{display:flex;flex-direction:column;animation:fade .22s ease-out}
+    @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+    .card{
+      background:linear-gradient(180deg, rgba(16,32,51,.98), rgba(15,23,42,.98));
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      width:100%;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:rgba(34,211,238,.13);
+      border:1px solid rgba(34,211,238,.28);
+      color:#e0f2fe;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:clamp(14px,3vw,18px);
+      font-weight:800;
+      margin-bottom:10px;
+    }
+    h1,h2,h3{line-height:1.12;margin:8px 0 14px}
+    h1{font-size:clamp(29px,7.5vw,48px);color:#f8fafc}
+    h2{font-size:clamp(25px,6vw,38px);color:#e0f2fe}
+    h3{font-size:clamp(22px,5vw,30px);color:#bae6fd}
+    p{margin:12px 0}
+    .lead{font-size:1.06em;color:#e2e8f0}
+    .kw{color:#67e8f9;font-weight:900}
+    .formula{
+      margin:14px 0;
+      padding:14px;
+      border-radius:18px;
+      background:rgba(14,165,233,.10);
+      border:1px solid rgba(56,189,248,.32);
+      text-align:center;
+      font-size:1.02em;
+      overflow-x:auto;
+      overflow-y:hidden;
+    }
+    .formula mjx-container{font-size:112% !important; max-width:100%; overflow-x:auto; overflow-y:hidden}
+    .formula mjx-container[jax="SVG"] > svg{width:auto !important; max-width:none !important}
+    .notice,.warn,.success{
+      margin:14px 0;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:rgba(148,163,184,.10);
+    }
+    .notice{border-left:6px solid var(--accent)}
+    .warn{border-left:6px solid var(--warn);background:rgba(250,204,21,.10)}
+    .success{border-left:6px solid var(--good);background:rgba(34,197,94,.10)}
+    ul,ol{padding-left:1.15em;margin:10px 0}
+    li{margin:8px 0}
+    .two-col{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+    .mini{
+      background:rgba(20,38,61,.92);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:13px;
+    }
+    .lesson-figure{
+      background:#f8fafc;
+      border:1px solid rgba(148,163,184,.35);
+      border-radius:18px;
+      padding:10px;
+      margin:14px 0;
+      overflow:hidden;
+    }
+    .lesson-figure img{
+      display:block;
+      width:100%;
+      max-width:100%;
+      height:auto;
+      margin:0 auto;
+      border-radius:12px;
+    }
+    .caption{
+      color:#0f172a;
+      text-align:center;
+      font-size:clamp(13px,3vw,16px);
+      line-height:1.35;
+      margin-top:8px;
+      font-weight:700;
+    }
+    .q{
+      border:1px solid rgba(148,163,184,.28);
+      background:rgba(20,38,61,.85);
+      border-radius:18px;
+      padding:14px;
+      margin:14px 0;
+    }
+    .answers{
+      display:grid;
+      gap:8px;
+      margin-top:10px;
+    }
+    label.answer{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      border:1px solid rgba(148,163,184,.28);
+      background:rgba(15,23,42,.66);
+      padding:10px;
+      border-radius:14px;
+    }
+    input[type="radio"]{
+      transform:scale(1.25);
+      margin-top:6px;
+      accent-color:#22d3ee;
+    }
+    .check{
+      width:100%;
+      border:none;
+      background:#22d3ee;
+      color:#05202d;
+      font-weight:900;
+      border-radius:16px;
+      padding:12px 14px;
+      margin-top:12px;
+      font-size:clamp(17px,4vw,22px);
+      cursor:pointer;
+    }
+    .feedback{min-height:1.2em;margin-top:10px;font-weight:900}
+    .feedback.good{color:#86efac}
+    .feedback.bad{color:#fda4af}
+    .footer-card{
+      text-align:center;
+      background:linear-gradient(135deg, rgba(34,211,238,.15), rgba(34,197,94,.10));
+      border:1px solid rgba(34,211,238,.30);
+      border-radius:22px;
+      padding:16px;
+      margin-top:14px;
+    }
+    .footer-card a{color:#67e8f9;font-weight:900;text-decoration:none}
+    .nav{
+      position:sticky;
+      bottom:0;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:8px;
+      padding:10px 0 calc(10px + env(safe-area-inset-bottom));
+      margin-top:10px;
+      background:linear-gradient(180deg, rgba(7,17,31,0), rgba(7,17,31,.96) 28%, rgba(7,17,31,1));
+      z-index:10;
+    }
+    .nav button{
+      min-height:52px;
+      border:none;
+      border-radius:16px;
+      padding:12px 10px;
+      color:#06121f;
+      font-weight:900;
+      font-size:clamp(16px,3.8vw,21px);
+      cursor:pointer;
+      box-shadow:0 10px 22px rgba(0,0,0,.22);
+    }
+    #prevBtn{background:#e2e8f0}
+    #nextBtn{background:#22c55e}
+    .nav button.disabled{opacity:.45;pointer-events:none}
+    .counter{
+      color:#e2e8f0;
+      font-weight:900;
+      font-size:clamp(14px,3.3vw,18px);
+      padding:0 2px;
+      min-width:44px;
+      text-align:center;
+    }
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border-radius:16px;
+      margin:12px 0;
+      font-size:.92em;
+    }
+    th,td{
+      border:1px solid rgba(148,163,184,.3);
+      padding:10px;
+      text-align:left;
+      vertical-align:top;
+    }
+    th{background:rgba(34,211,238,.14);color:#e0f2fe}
+    td{background:rgba(15,23,42,.55)}
+    @media (max-width:520px){
+      .app{padding:8px}
+      .card{padding:15px;border-radius:22px}
+      body{font-size:clamp(18px,4.6vw,22px)}
+      .two-col{grid-template-columns:1fr}
+      ul,ol{padding-left:1.05em}
+      .nav{gap:6px}
+      .nav button{min-height:50px;padding:11px 8px}
+      .formula{font-size:.98em;padding:12px 10px}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="top-banner" id="topBanner">
+      <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+      <div class="prof">Prof. Dănuț Andronie</div>
+      <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+    </header>
+
+    <main>
+      <section class="page active">
+        <div class="card">
+          <span class="badge">Clasa a VII-a • Interacțiuni</span>
+          <h1>Lecția 15 – Mișcarea unui corp pe un plan înclinat</h1>
+          <p class="lead">
+            Un plan înclinat permite ridicarea unui corp la o înălțime folosind o forță mai mică decât greutatea corpului.
+          </p>
+          <div class="notice">
+            Ideea-cheie: cu cât planul este mai puțin înclinat, cu atât urcarea corpului este mai ușoară.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Observ</span>
+          <h2>De ce folosim rampe?</h2>
+          <p>
+            Șoselele montane sunt șerpuite, rampele pentru acces au înclinații mici, iar scările fixe pot fi mai ușor de urcat decât scările rulante foarte înclinate.
+          </p>
+          <p>
+            Toate acestea sunt exemple de <span class="kw">plane înclinate</span>.
+          </p>
+          <div class="success">
+            În practică, un drum mai lung, dar mai puțin abrupt, cere o forță mai mică.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Imagine</span>
+          <h2>Forțele pe planul înclinat</h2>
+          <div class="lesson-figure">
+            <img src="./planul%20inclinat.png"
+                 alt="Forțele care acționează asupra unui corp pe planul înclinat"
+                 onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/2-interactiuni/lectii/planul%20inclinat.png';">
+            <div class="caption">Greutatea se descompune în componentă tangențială și componentă normală.</div>
+          </div>
+          <p>
+            Pe corp acționează greutatea \(\vec G\), reacțiunea normală \(\vec N\) și, dacă există alunecare, forța de frecare \(\vec F_f\).
+          </p>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Rețin</span>
+          <h2>Ce este planul înclinat?</h2>
+          <p>
+            <span class="kw">Planul înclinat</span> este un plan care formează cu planul orizontal un unghi ascuțit \(\alpha\).
+          </p>
+          <ul>
+            <li>\(h\) – înălțimea planului înclinat;</li>
+            <li>\(l\) – lungimea planului înclinat;</li>
+            <li>\(b\) – baza planului înclinat;</li>
+            <li>\(\alpha\) – unghiul planului înclinat.</li>
+          </ul>
+          <div class="lesson-figure">
+            <img src="./planul%20inclinat-1.png"
+                 alt="Urcarea uniformă a unui corp pe un plan înclinat"
+                 onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/2-interactiuni/lectii/planul%20inclinat-1.png';">
+            <div class="caption">Parametrii planului înclinat și forțele care acționează asupra corpului.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Descompunerea greutății</span>
+          <h2>Componentele greutății</h2>
+          <p>
+            Greutatea \(\vec G\) poate fi înlocuită cu două componente:
+          </p>
+          <ul>
+            <li>\(\vec G_t\) – componenta tangențială, pe direcția planului;</li>
+            <li>\(\vec G_n\) – componenta normală, perpendiculară pe plan.</li>
+          </ul>
+          <div class="formula">
+            \[
+              \vec G = \vec G_t + \vec G_n
+            \]
+          </div>
+          <div class="formula">
+            \[
+              G^2 = G_t^2 + G_n^2
+            \]
+          </div>
+          <div class="notice">
+            Componenta \(\vec G_t\) tinde să miște corpul de-a lungul planului.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Relații utile</span>
+          <h2>Legătura cu dimensiunile planului</h2>
+          <p>
+            Triunghiul planului înclinat este asemenea cu triunghiul format de greutate și componentele ei.
+          </p>
+          <div class="formula">
+            \[
+              G_t = G \cdot \frac{h}{l}
+            \]
+          </div>
+          <div class="formula">
+            \[
+              G_n = G \cdot \frac{b}{l}
+            \]
+          </div>
+          <p>
+            Cu notațiile trigonometrice:
+          </p>
+          <div class="formula">
+            \[
+              G_t = G\sin\alpha,\qquad G_n = G\cos\alpha
+            \]
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Mișcare uniformă</span>
+          <h2>Coborâre și urcare</h2>
+          <p>
+            Dacă un corp coboară uniform pe planul înclinat, atunci forța de frecare echilibrează componenta tangențială a greutății.
+          </p>
+          <div class="formula">
+            \[
+              G_t = F_f
+            \]
+          </div>
+          <p>
+            Pentru urcarea uniformă pe plan, forța aplicată trebuie să compenseze componenta tangențială și frecarea.
+          </p>
+          <div class="formula">
+            \[
+              F = G_t + F_f
+            \]
+          </div>
+          <p>Dacă frecarea se neglijează:</p>
+          <div class="formula">
+            \[
+              F = G_t = G\cdot\frac{h}{l}
+            \]
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Exemplu numeric</span>
+          <h2>Forța necesară pe plan</h2>
+          <p>
+            Un corp are greutatea \(G = 100\,N\). Planul înclinat are înălțimea \(h = 2\,m\) și lungimea \(l = 5\,m\).
+          </p>
+          <p>Neglijăm frecarea. Care este forța necesară pentru urcare uniformă?</p>
+          <div class="formula">
+            \[
+              F = G\cdot\frac{h}{l}
+            \]
+            \[
+              F = 100\,N\cdot\frac{2\,m}{5\,m}=40\,N
+            \]
+          </div>
+          <div class="success">
+            Răspuns: forța necesară este \(40\,N\), mai mică decât greutatea de \(100\,N\).
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Experimentez</span>
+          <h2>Studierea urcării uniforme</h2>
+          <p>Materiale: plan înclinat, corp paralelipipedic, riglă și dinamometru.</p>
+          <ol>
+            <li>Ridică vertical corpul cu dinamometrul și notează forța \(F_1\).</li>
+            <li>Trage corpul uniform pe planul înclinat și notează forța \(F_2\).</li>
+            <li>Schimbă înălțimea planului și repetă măsurarea.</li>
+          </ol>
+          <table>
+            <tr><th>Determinare</th><th>\(h\)</th><th>\(F_1\)</th><th>\(F_2\)</th></tr>
+            <tr><td>1</td><td>...</td><td>...</td><td>...</td></tr>
+            <tr><td>2</td><td>...</td><td>...</td><td>...</td></tr>
+          </table>
+          <div class="notice">
+            Compară valorile: de obicei \(F_2 < F_1\), iar \(F_2\) crește când crește înălțimea planului.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Întrebarea 1</h2>
+          <div class="q" data-answer="b">
+            <p><strong>Planul înclinat este:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q1" value="a"> un plan vertical</label>
+              <label class="answer"><input type="radio" name="q1" value="b"> un plan care face un unghi ascuțit cu orizontala</label>
+              <label class="answer"><input type="radio" name="q1" value="c"> un corp aflat mereu în repaus</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Întrebarea 2</h2>
+          <div class="q" data-answer="a">
+            <p><strong>Componenta greutății pe direcția planului este:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q2" value="a"> \(G_t\)</label>
+              <label class="answer"><input type="radio" name="q2" value="b"> \(G_n\)</label>
+              <label class="answer"><input type="radio" name="q2" value="c"> \(N\)</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Întrebarea 3</h2>
+          <div class="q" data-answer="c">
+            <p><strong>Dacă \(G=100\,N\), \(h=1\,m\), \(l=4\,m\), iar frecarea se neglijează, forța de urcare uniformă este:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q3" value="a"> \(400\,N\)</label>
+              <label class="answer"><input type="radio" name="q3" value="b"> \(100\,N\)</label>
+              <label class="answer"><input type="radio" name="q3" value="c"> \(25\,N\)</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="footer-card">
+            <strong>Prof. Dănuț Andronie</strong><br>
+            E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="nav" aria-label="Navigare lecție">
+      <button id="prevBtn" type="button" onclick="prevPage()">Înapoi</button>
+      <div class="counter" id="pageCounter">1/12</div>
+      <button id="nextBtn" type="button" onclick="nextPage()">Mergi mai departe</button>
+    </nav>
+  </div>
+
+  <script>
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const topBanner = document.getElementById('topBanner');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageCounter = document.getElementById('pageCounter');
+    let current = 0;
+
+    function updatePage(){
+      pages.forEach((p, i) => p.classList.toggle('active', i === current));
+      topBanner.style.display = current === 0 ? 'block' : 'none';
+      prevBtn.classList.toggle('disabled', current === 0);
+      pageCounter.textContent = (current + 1) + '/' + pages.length;
+
+      if(current === pages.length - 1){
+        nextBtn.textContent = 'Lecția următoare';
+        nextBtn.onclick = () => { window.location.href = './lectia-16.html'; };
+      } else {
+        nextBtn.textContent = 'Mergi mai departe';
+        nextBtn.onclick = nextPage;
+      }
+
+      window.scrollTo({top: 0, behavior: 'smooth'});
+      if(window.MathJax && window.MathJax.typesetPromise){
+        window.MathJax.typesetPromise();
+      }
+    }
+
+    function nextPage(){
+      if(current < pages.length - 1){
+        current++;
+        updatePage();
+      }
+    }
+
+    function prevPage(){
+      if(current > 0){
+        current--;
+        updatePage();
+      }
+    }
+
+    function checkAnswer(button){
+      const block = button.closest('.q');
+      const correct = block.dataset.answer;
+      const checked = block.querySelector('input[type="radio"]:checked');
+      const feedback = block.querySelector('.feedback');
+
+      if(!checked){
+        feedback.textContent = 'Alege mai întâi o variantă.';
+        feedback.className = 'feedback bad';
+        return;
+      }
+
+      if(checked.value === correct){
+        feedback.textContent = 'Corect!';
+        feedback.className = 'feedback good';
+      } else {
+        feedback.textContent = 'Mai încearcă. Recitește pagina cu explicația.';
+        feedback.className = 'feedback bad';
+      }
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if(event.key === 'ArrowRight') nextPage();
+      if(event.key === 'ArrowLeft') prevPage();
+    });
+
+    updatePage();
+  </script>
+</body>
+</html>

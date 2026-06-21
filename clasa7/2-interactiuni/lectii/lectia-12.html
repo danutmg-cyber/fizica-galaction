@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Lecția 12 | Mișcarea unui corp sub acțiunea mai multor forțe | Fizica Galaction</title>
+  <meta name="description" content="Lecția 12 pentru clasa a VII-a: Mișcarea unui corp sub acțiunea mai multor forțe." />
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']], displayMath: [['\\[','\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root{
+      --bg:#07111f;
+      --card:#102033;
+      --card2:#14263d;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --accent:#22d3ee;
+      --good:#22c55e;
+      --bad:#fb7185;
+      --warn:#facc15;
+      --line:rgba(148,163,184,.28);
+      --shadow:0 14px 36px rgba(0,0,0,.32);
+    }
+    *{box-sizing:border-box}
+    html,body{min-height:100%}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34,211,238,.18), transparent 26rem),
+        linear-gradient(180deg,#07111f,#0f172a);
+      color:var(--text);
+      font-size:clamp(18px, 3.8vw, 24px);
+      line-height:1.5;
+      overflow-x:hidden;
+    }
+    .app{
+      min-height:100dvh;
+      display:flex;
+      flex-direction:column;
+      width:min(100%, 900px);
+      margin:0 auto;
+      padding:10px;
+      padding-bottom:0;
+    }
+    .top-banner{
+      background:linear-gradient(135deg, rgba(34,211,238,.22), rgba(59,130,246,.12));
+      border:1px solid var(--line);
+      border-radius:20px;
+      padding:13px 12px 12px;
+      margin-bottom:10px;
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+    .school{
+      font-size:clamp(15px,3.3vw,20px);
+      color:#e0f2fe;
+      font-weight:850;
+      letter-spacing:.02em;
+      text-transform:uppercase;
+    }
+    .prof{
+      margin-top:4px;
+      font-size:clamp(14px,3vw,18px);
+      color:#bae6fd;
+      font-weight:750;
+    }
+    .motto{
+      margin:9px auto 0;
+      width:fit-content;
+      max-width:100%;
+      border-left:4px solid var(--accent);
+      border-radius:12px;
+      padding:8px 11px;
+      background:rgba(250,204,21,.10);
+      color:#fef9c3;
+      font-size:clamp(14px,3.1vw,18px);
+      font-style:italic;
+    }
+    main{
+      flex:1;
+      display:flex;
+      min-height:0;
+      padding-bottom:88px;
+    }
+    .page{display:none;width:100%}
+    .page.active{display:flex;flex-direction:column;animation:fade .2s ease-out}
+    @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+    .card{
+      background:linear-gradient(180deg, rgba(16,32,51,.98), rgba(15,23,42,.98));
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:16px;
+      box-shadow:var(--shadow);
+      width:100%;
+      overflow-wrap:anywhere;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:rgba(34,211,238,.13);
+      border:1px solid rgba(34,211,238,.28);
+      color:#e0f2fe;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:clamp(13px,2.9vw,17px);
+      font-weight:850;
+      margin-bottom:8px;
+    }
+    h1,h2,h3{line-height:1.13;margin:7px 0 12px}
+    h1{font-size:clamp(27px, 6.5vw, 46px);color:#f8fafc}
+    h2{font-size:clamp(23px, 5.6vw, 36px);color:#e0f2fe}
+    h3{font-size:clamp(20px, 4.7vw, 29px);color:#bae6fd}
+    p{margin:10px 0}
+    .lead{font-size:1.04em;color:#e2e8f0}
+    .kw{color:#67e8f9;font-weight:900}
+    .formula{
+      margin:12px 0;
+      padding:14px 12px;
+      border-radius:18px;
+      background:rgba(14,165,233,.10);
+      border:1px solid rgba(56,189,248,.32);
+      text-align:center;
+      overflow-x:auto;
+      font-size:1.02em;
+    }
+    .notice,.warn,.success{
+      margin:13px 0;
+      padding:13px;
+      border-radius:17px;
+      border:1px solid var(--line);
+      background:rgba(148,163,184,.10);
+    }
+    .notice{border-left:6px solid var(--accent)}
+    .warn{border-left:6px solid var(--warn);background:rgba(250,204,21,.10)}
+    .success{border-left:6px solid var(--good);background:rgba(34,197,94,.10)}
+    ul,ol{padding-left:1.1em;margin:10px 0}
+    li{margin:7px 0}
+    .mini{
+      background:rgba(20,38,61,.92);
+      border:1px solid var(--line);
+      border-radius:17px;
+      padding:12px;
+      margin:10px 0;
+    }
+    .image-card{
+      background:rgba(15,23,42,.55);
+      border:1px solid rgba(148,163,184,.28);
+      border-radius:18px;
+      padding:9px;
+      margin:12px 0;
+      overflow:hidden;
+    }
+    .lesson-img{
+      display:block;
+      width:100%;
+      max-height:48dvh;
+      object-fit:contain;
+      border-radius:12px;
+      background:#f8fafc;
+    }
+    .caption{
+      margin-top:8px;
+      color:#cbd5e1;
+      font-size:clamp(13px,2.8vw,16px);
+      font-weight:750;
+    }
+    .table-wrap{
+      overflow-x:auto;
+      margin:10px 0;
+      border-radius:15px;
+      border:1px solid rgba(148,163,184,.28);
+    }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:430px;
+    }
+    th,td{
+      border:1px solid rgba(148,163,184,.28);
+      padding:9px;
+      text-align:left;
+      vertical-align:top;
+    }
+    th{background:rgba(34,211,238,.14);color:#e0f2fe}
+    td{background:rgba(15,23,42,.55)}
+    .q{
+      border:1px solid rgba(148,163,184,.28);
+      background:rgba(20,38,61,.85);
+      border-radius:18px;
+      padding:14px;
+      margin:14px 0;
+    }
+    .answers{
+      display:grid;
+      gap:8px;
+      margin-top:10px;
+    }
+    label.answer{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      border:1px solid rgba(148,163,184,.28);
+      background:rgba(15,23,42,.66);
+      padding:10px;
+      border-radius:14px;
+    }
+    input[type="radio"]{
+      transform:scale(1.18);
+      margin-top:6px;
+      accent-color:#22d3ee;
+      flex:0 0 auto;
+    }
+    .check{
+      width:100%;
+      border:none;
+      background:#22d3ee;
+      color:#05202d;
+      font-weight:900;
+      border-radius:16px;
+      padding:12px 14px;
+      margin-top:12px;
+      font-size:clamp(17px, 3.6vw, 21px);
+      cursor:pointer;
+    }
+    .feedback{
+      min-height:1.2em;
+      margin-top:10px;
+      font-weight:900;
+    }
+    .feedback.good{color:#86efac}
+    .feedback.bad{color:#fda4af}
+    .footer-card{
+      text-align:center;
+      background:linear-gradient(135deg, rgba(34,211,238,.15), rgba(34,197,94,.10));
+      border:1px solid rgba(34,211,238,.30);
+      border-radius:20px;
+      padding:15px;
+      margin-top:14px;
+    }
+    .footer-card a{color:#67e8f9;font-weight:900;text-decoration:none}
+    .nav{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:0;
+      width:min(100%,900px);
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:7px;
+      padding:9px 10px calc(9px + env(safe-area-inset-bottom));
+      background:linear-gradient(180deg, rgba(7,17,31,0), rgba(7,17,31,.97) 26%, rgba(7,17,31,1));
+      z-index:10;
+    }
+    .nav button{
+      min-height:50px;
+      border:none;
+      border-radius:15px;
+      padding:11px 8px;
+      color:#06121f;
+      font-weight:900;
+      font-size:clamp(15px,3.5vw,20px);
+      cursor:pointer;
+      box-shadow:0 10px 22px rgba(0,0,0,.22);
+      white-space:normal;
+    }
+    #prevBtn{background:#e2e8f0}
+    #nextBtn{background:#22c55e}
+    .nav button.disabled{
+      opacity:.45;
+      pointer-events:none;
+    }
+    .page-number{
+      color:#e2e8f0;
+      font-weight:900;
+      font-size:clamp(13px,3.1vw,17px);
+      padding:0 2px;
+      min-width:42px;
+      text-align:center;
+    }
+    @media (max-width:520px){
+      body{font-size:clamp(19px,4.7vw,23px)}
+      .app{padding:8px}
+      .card{padding:14px;border-radius:20px}
+      main{padding-bottom:86px}
+      .formula{font-size:.98em;padding:12px 10px}
+      .lesson-img{max-height:44dvh}
+      .nav{gap:6px;padding-left:8px;padding-right:8px}
+      .nav button{min-height:48px;padding:10px 7px}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="top-banner" id="topBanner">
+      <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+      <div class="prof">Prof. Dănuț Andronie</div>
+      <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+    </header>
+
+    <main>
+      <section class="page active">
+        <div class="card">
+          <span class="badge">Clasa a VII-a • Interacțiuni</span>
+          <h1>Lecția 12 – Mișcarea unui corp sub acțiunea mai multor forțe</h1>
+          <p class="lead">
+            În multe situații, asupra unui corp acționează simultan mai multe forțe.
+            Mișcarea corpului depinde de <span class="kw">forța rezultantă</span>.
+          </p>
+          <div class="notice">
+            Ideea-cheie: nu analizăm o singură forță, ci efectul total al tuturor forțelor.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Observ</span>
+          <h2>Cărucior tras pe o suprafață</h2>
+          <p>
+            Un corp tras pe orizontală poate fi acționat simultan de:
+          </p>
+          <ul>
+            <li>greutatea \( \vec{G} \), vertical în jos;</li>
+            <li>normala \( \vec{N} \), vertical în sus;</li>
+            <li>forța de tracțiune \( \vec{F} \), în sensul mișcării;</li>
+            <li>forța de frecare \( \vec{F}_f \), opusă mișcării.</li>
+          </ul>
+          <div class="notice">
+            Starea de mișcare se decide comparând forțele pe fiecare direcție.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Imagine</span>
+          <h2>Forțe pe orizontală și verticală</h2>
+          <div class="image-card">
+            <img class="lesson-img"
+                 src="./miscarea-unui-corp-sub-actiunea-mai-multor-forte.png"
+                 alt="Mișcarea unui corp pe orizontală sub acțiunea forței de tracțiune, frecării, normalei și greutății"
+                 onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/2-interactiuni/lectii/miscarea-unui-corp-sub-actiunea-mai-multor-forte.png';">
+            <div class="caption">
+              Dacă forțele pe orizontală se compensează, corpul se poate mișca rectiliniu uniform.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Rețin</span>
+          <h2>Forța rezultantă</h2>
+          <p>
+            <span class="kw">Forța rezultantă</span> este forța care are același efect mecanic
+            ca toate forțele care acționează simultan asupra corpului.
+          </p>
+          <div class="formula">
+            \[
+              \vec{F}_R = \vec{F}_1 + \vec{F}_2 + \vec{F}_3 + \ldots
+            \]
+          </div>
+          <p>
+            Dacă \( \vec{F}_R = \vec{0} \), forțele sunt în echilibru.
+          </p>
+          <p>
+            Dacă \( \vec{F}_R \neq \vec{0} \), corpul își modifică starea de mișcare.
+          </p>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Stări mecanice</span>
+          <h2>Ce poate face corpul?</h2>
+          <p>
+            Un corp acționat de mai multe forțe poate avea una dintre următoarele stări mecanice:
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Stare mecanică</th>
+                  <th>Descriere</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Repaus</td>
+                  <td>corpul rămâne nemișcat față de reper</td>
+                </tr>
+                <tr>
+                  <td>Mișcare uniformă</td>
+                  <td>viteza rămâne constantă</td>
+                </tr>
+                <tr>
+                  <td>Mișcare accelerată</td>
+                  <td>viteza crește în timp</td>
+                </tr>
+                <tr>
+                  <td>Mișcare încetinită</td>
+                  <td>viteza scade în timp</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Cazul 1</span>
+          <h2>Forța rezultantă este zero</h2>
+          <p>
+            Pe verticală, greutatea și normala se pot compensa:
+          </p>
+          <div class="formula">
+            \[
+              N = G \quad \Rightarrow \quad R_{\text{verticală}} = 0
+            \]
+          </div>
+          <p>
+            Pe orizontală, forța de tracțiune și frecarea se pot compensa:
+          </p>
+          <div class="formula">
+            \[
+              F = F_f \quad \Rightarrow \quad R_{\text{orizontală}} = 0
+            \]
+          </div>
+          <div class="success">
+            Concluzie: corpul este în repaus sau se mișcă rectiliniu uniform.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Cazul 2</span>
+          <h2>Forța rezultantă nu este zero</h2>
+          <p>
+            Dacă forța de tracțiune este mai mare decât forța de frecare, apare o rezultantă în sensul mișcării.
+          </p>
+          <div class="formula">
+            \[
+              F_R = F - F_f
+            \]
+          </div>
+          <p>
+            Conform principiului fundamental al mecanicii:
+          </p>
+          <div class="formula">
+            \[
+              F_R = m \cdot a
+            \]
+          </div>
+          <div class="notice">
+            Corpul va avea mișcare accelerată dacă rezultanta are sensul mișcării.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Imagine</span>
+          <h2>Forțe reprezentate pe corp</h2>
+          <div class="image-card">
+            <img class="lesson-img"
+                 src="./miscarea%20unui%20corp%20sub%20actiunea%20mai%20multor%20forte-2.jpg"
+                 alt="Reprezentare cu forța de frecare, forța de tracțiune și greutatea"
+                 onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/2-interactiuni/lectii/miscarea%20unui%20corp%20sub%20actiunea%20mai%20multor%20forte-2.jpg';">
+            <div class="caption">
+              Pentru fiecare corp, se desenează forțele care acționează asupra lui, cu direcție, sens și punct de aplicație.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Experiment</span>
+          <h2>Observarea mișcării</h2>
+          <p>
+            Poți studia mișcarea unui corp folosind o scândură, un corp paralelipipedic,
+            un resort elastic și un dinamometru.
+          </p>
+          <ol>
+            <li>Trage corpul lent cu dinamometrul.</li>
+            <li>Observă când corpul pornește.</li>
+            <li>Compară forța de tracțiune cu forța de frecare.</li>
+            <li>Notează dacă mișcarea este uniformă, accelerată sau încetinită.</li>
+          </ol>
+          <div class="warn">
+            Dacă indicația dinamometrului se schimbă, rezultanta forțelor se schimbă și ea.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Exemplu numeric</span>
+          <h2>Calculăm rezultanta</h2>
+          <p>
+            Un corp de masă \(m = 3\,kg\) este tras cu forța \(F = 10\,N\).
+            Forța de frecare este \(F_f = 4\,N\).
+          </p>
+          <p>Forța rezultantă pe orizontală este:</p>
+          <div class="formula">
+            \[
+              F_R = F - F_f = 10\,N - 4\,N = 6\,N
+            \]
+          </div>
+          <p>Accelerația corpului este:</p>
+          <div class="formula">
+            \[
+              a = \frac{F_R}{m} = \frac{6\,N}{3\,kg}=2\,\frac{m}{s^2}
+            \]
+          </div>
+          <div class="success">
+            Răspuns: corpul are accelerația \(2\,\frac{m}{s^2}\).
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Alege varianta corectă</h2>
+
+          <div class="q" data-answer="b">
+            <p><strong>1. Dacă rezultanta forțelor este zero, corpul poate:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q1" value="a"> să aibă obligatoriu mișcare accelerată</label>
+              <label class="answer"><input type="radio" name="q1" value="b"> să fie în repaus sau în mișcare uniformă</label>
+              <label class="answer"><input type="radio" name="q1" value="c"> să își mărească viteza mereu</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="q" data-answer="c">
+            <p><strong>2. Forța de frecare are, de obicei, sens:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q2" value="a"> mereu în jos</label>
+              <label class="answer"><input type="radio" name="q2" value="b"> mereu în sus</label>
+              <label class="answer"><input type="radio" name="q2" value="c"> opus mișcării sau tendinței de mișcare</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Încă o aplicație</h2>
+
+          <div class="q" data-answer="a">
+            <p><strong>3. Un corp este tras cu \(12\,N\), iar frecarea este \(5\,N\). Rezultanta este:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q3" value="a"> \(7\,N\), în sensul tracțiunii</label>
+              <label class="answer"><input type="radio" name="q3" value="b"> \(17\,N\), în sens opus tracțiunii</label>
+              <label class="answer"><input type="radio" name="q3" value="c"> \(0\,N\)</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="footer-card">
+            <strong>Prof. Dănuț Andronie</strong><br>
+            E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="nav" aria-label="Navigare lecție">
+      <button id="prevBtn" type="button" onclick="prevPage()">Înapoi</button>
+      <div class="page-number" id="pageCounter">1/12</div>
+      <button id="nextBtn" type="button" onclick="nextPage()">Mergi mai departe</button>
+    </nav>
+  </div>
+
+  <script>
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const topBanner = document.getElementById('topBanner');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageCounter = document.getElementById('pageCounter');
+    let current = 0;
+
+    function updatePage(){
+      pages.forEach((p, i) => p.classList.toggle('active', i === current));
+      topBanner.style.display = current === 0 ? 'block' : 'none';
+      prevBtn.classList.toggle('disabled', current === 0);
+      pageCounter.textContent = (current + 1) + '/' + pages.length;
+
+      if(current === pages.length - 1){
+        nextBtn.textContent = 'Lecția următoare';
+        nextBtn.onclick = () => { window.location.href = './lectia-13.html'; };
+      } else {
+        nextBtn.textContent = 'Mergi mai departe';
+        nextBtn.onclick = nextPage;
+      }
+
+      window.scrollTo({top: 0, behavior: 'smooth'});
+      if(window.MathJax && window.MathJax.typesetPromise){
+        window.MathJax.typesetPromise();
+      }
+    }
+
+    function nextPage(){
+      if(current < pages.length - 1){
+        current++;
+        updatePage();
+      }
+    }
+
+    function prevPage(){
+      if(current > 0){
+        current--;
+        updatePage();
+      }
+    }
+
+    function checkAnswer(button){
+      const block = button.closest('.q');
+      const correct = block.dataset.answer;
+      const checked = block.querySelector('input[type="radio"]:checked');
+      const feedback = block.querySelector('.feedback');
+
+      if(!checked){
+        feedback.textContent = 'Alege mai întâi o variantă.';
+        feedback.className = 'feedback bad';
+        return;
+      }
+
+      if(checked.value === correct){
+        feedback.textContent = 'Corect!';
+        feedback.className = 'feedback good';
+      } else {
+        feedback.textContent = 'Mai încearcă. Recitește explicația.';
+        feedback.className = 'feedback bad';
+      }
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if(event.key === 'ArrowRight') nextPage();
+      if(event.key === 'ArrowLeft') prevPage();
+    });
+
+    updatePage();
+  </script>
+</body>
+</html>

@@ -2,9 +2,11 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Recapitulare – Magnetism și electrizare</title>
-  <meta name="description" content="Recapitulare structurată: magneți, magnetism, electrizare, fulger, trăsnet, viteză și densitate.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Recapitulare | Fenomene electrice și magnetice | Fizica Galaction</title>
+  <meta name="description" content="Recapitulare interactivă pentru clasa a VI-a: fenomene electrice și magnetice.">
+  <link rel="stylesheet" href="../../../assets/css/style.css">
+
   <script>
     window.MathJax = {
       tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
@@ -16,1294 +18,1069 @@
   <style>
     :root {
       --bg: #0f172a;
-      --panel: #111827;
-      --card: #1e293b;
-      --card-2: #253449;
+      --panel: #1e293b;
+      --panel-2: #111827;
       --text: #f8fafc;
-      --muted: #cbd5e1;
-      --line: #334155;
+      --muted: #dbeafe;
       --accent: #22d3ee;
-      --accent-dark: #0e7490;
-      --success: #22c55e;
-      --success-dark: #15803d;
-      --warning: #fde68a;
+      --accent-2: #22c55e;
+      --warning-bg: #422006;
+      --warning-text: #fef3c7;
+      --border: #334155;
+      --button-text: #052e16;
       --danger: #fca5a5;
-      --btn-text: #052e16;
-      --shadow: 0 20px 55px rgba(0,0,0,0.35);
+      --good: #86efac;
+      --choice: #0f172a;
     }
 
     * { box-sizing: border-box; }
 
     html {
       scroll-behavior: smooth;
+      font-size: 20px;
     }
 
     body {
       margin: 0;
       min-height: 100vh;
-      font-family: "Segoe UI", Arial, sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(34, 211, 238, 0.16), transparent 34rem),
-        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.11), transparent 32rem),
+        radial-gradient(circle at top, rgba(34, 211, 238, 0.16), transparent 32rem),
         var(--bg);
       color: var(--text);
-      line-height: 1.6;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
     }
 
-    .app {
-      width: min(940px, 100%);
+    .lesson-shell {
+      width: min(100%, 900px);
       margin: 0 auto;
-      padding: 14px 14px 24px;
+      padding: 0.8rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    .topbar {
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      background: rgba(15, 23, 42, 0.88);
-      box-shadow: var(--shadow);
-      padding: 16px;
-      margin: 12px 0 16px;
+    .lesson-screen {
+      display: none;
+      min-height: calc(100vh - 6.8rem);
+      padding-bottom: 1rem;
+    }
+
+    .lesson-screen.active {
+      display: block;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(0.35rem); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .top-banner,
+    .final-banner,
+    .card {
+      background: rgba(30, 41, 59, 0.96);
+      border: 1px solid var(--border);
+      border-radius: 1.1rem;
+      box-shadow: 0 1rem 2.4rem rgba(0, 0, 0, 0.28);
+    }
+
+    .top-banner {
       text-align: center;
+      padding: 0.9rem 0.85rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .top-banner p {
+      margin: 0.25rem 0;
     }
 
     .school {
       color: var(--accent);
-      font-weight: 800;
-      letter-spacing: 0.03em;
-      font-size: clamp(0.95rem, 2.5vw, 1.1rem);
-      margin-bottom: 4px;
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      font-size: clamp(0.95rem, 4vw, 1.05rem);
     }
 
     .prof {
-      color: #e2e8f0;
-      font-size: 0.92rem;
-      margin-bottom: 10px;
-    }
-
-    .motto {
-      display: inline-block;
-      color: #fef3c7;
-      background: rgba(245, 158, 11, 0.13);
-      border-left: 4px solid var(--accent);
-      border-radius: 10px;
-      padding: 8px 12px;
-      font-weight: 700;
-      font-size: 0.94rem;
-    }
-
-    .progress-wrap {
-      margin-top: 14px;
-      background: #020617;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      height: 12px;
-      overflow: hidden;
-    }
-
-    .progress {
-      width: 0%;
-      height: 100%;
-      background: linear-gradient(90deg, #22d3ee, #22c55e);
-      transition: width 0.25s ease;
-    }
-
-    .page-count {
       color: var(--muted);
+      font-size: clamp(0.92rem, 3.8vw, 1rem);
       font-weight: 700;
-      font-size: 0.88rem;
-      margin-top: 8px;
     }
 
-    .screen {
-      display: none;
-      animation: fadeIn 0.22s ease;
-    }
-
-    .screen.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
+    .quote {
+      display: inline-block;
+      margin-top: 0.45rem !important;
+      padding: 0.45rem 0.6rem;
+      border-left: 0.18rem solid var(--accent);
+      border-radius: 0.55rem;
+      background: rgba(245, 158, 11, 0.12);
+      color: #fef08a;
+      font-style: italic;
+      font-weight: 700;
+      font-size: clamp(0.9rem, 3.9vw, 1rem);
     }
 
     .card {
-      background: rgba(30, 41, 59, 0.96);
-      border: 1px solid var(--line);
-      border-radius: 24px;
-      padding: clamp(18px, 4vw, 30px);
-      box-shadow: var(--shadow);
+      padding: clamp(1rem, 4.6vw, 1.35rem);
+      margin: 0 0 0.85rem;
     }
 
     h1, h2, h3 {
-      line-height: 1.2;
+      line-height: 1.18;
       margin-top: 0;
     }
 
     h1 {
-      text-align: center;
-      font-size: clamp(1.55rem, 6vw, 2.6rem);
-      margin-bottom: 8px;
+      font-size: clamp(1.65rem, 8vw, 2.45rem);
+      color: #e0f2fe;
+      margin-bottom: 0.75rem;
     }
 
     h2 {
+      font-size: clamp(1.35rem, 6.6vw, 1.85rem);
       color: var(--accent);
-      font-size: clamp(1.35rem, 5vw, 2rem);
-      margin-bottom: 14px;
+      margin-bottom: 0.7rem;
     }
 
     h3 {
-      color: #e0f2fe;
-      font-size: 1.1rem;
-      margin-bottom: 8px;
-      margin-top: 18px;
+      font-size: clamp(1.08rem, 5.2vw, 1.35rem);
+      color: #bfdbfe;
+      margin-bottom: 0.5rem;
     }
 
-    p { margin: 10px 0; }
-
-    .subtitle {
-      text-align: center;
-      color: var(--muted);
-      font-size: 1.02rem;
-      margin: 0 auto 18px;
-      max-width: 720px;
+    p, li {
+      font-size: clamp(1.02rem, 5.2vw, 1.22rem);
     }
 
-    .lesson-map {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 18px;
+    p { margin: 0.55rem 0; }
+
+    ul, ol {
+      padding-left: 1.15rem;
+      margin: 0.55rem 0;
     }
 
-    .map-item,
-    .info,
-    .formula,
-    .example,
-    .remember,
-    .warning-box {
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: rgba(15, 23, 42, 0.72);
-      padding: 14px;
+    li {
+      margin: 0.42rem 0;
     }
 
-    .map-item strong {
+    .kw {
       color: #fef08a;
-      display: block;
-      margin-bottom: 3px;
+      font-weight: 900;
     }
 
-    .lead {
-      font-size: 1.08rem;
-      color: #e2e8f0;
+    .notice {
+      margin-top: 0.85rem;
+      padding: 0.85rem;
+      border-radius: 0.85rem;
+      background: rgba(14, 116, 144, 0.24);
+      border: 1px solid rgba(34, 211, 238, 0.38);
+      color: #e0f2fe;
+      font-size: clamp(1rem, 5vw, 1.16rem);
+      font-weight: 700;
+    }
+
+    .warning {
+      margin-top: 0.85rem;
+      padding: 0.85rem;
+      border-radius: 0.85rem;
+      background: rgba(127, 29, 29, 0.46);
+      border: 1px solid rgba(252, 165, 165, 0.55);
+      color: #fee2e2;
+      font-size: clamp(1rem, 5vw, 1.16rem);
+      font-weight: 800;
+    }
+
+    .formula {
+      margin: 0.9rem 0;
+      padding: 0.85rem;
+      border-radius: 0.9rem;
+      background: #0f172a;
+      border: 1px solid #475569;
+      text-align: center;
+      font-size: clamp(1.18rem, 6.2vw, 1.55rem);
+      overflow-x: auto;
+    }
+
+    .example {
+      margin-top: 0.85rem;
+      padding: 0.85rem;
+      border-radius: 0.85rem;
+      background: rgba(66, 32, 6, 0.9);
+      color: var(--warning-text);
+      border: 1px solid rgba(251, 191, 36, 0.5);
+      font-size: clamp(1rem, 5vw, 1.16rem);
     }
 
     .grid {
       display: grid;
-      gap: 12px;
+      gap: 0.75rem;
     }
 
-    .grid.two {
+    .two-col {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .grid.three {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    ul, ol {
-      padding-left: 1.25rem;
-    }
-
-    li {
-      margin: 7px 0;
-    }
-
-    .tag-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin: 12px 0;
-    }
-
-    .tag {
-      background: rgba(34, 211, 238, 0.12);
-      color: #e0f2fe;
-      border: 1px solid rgba(34, 211, 238, 0.35);
-      border-radius: 999px;
-      padding: 7px 10px;
-      font-weight: 700;
-      font-size: 0.92rem;
-    }
-
-    .rule {
-      display: grid;
-      gap: 10px;
-      margin: 14px 0;
-    }
-
-    .rule-item {
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      gap: 10px;
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      background: rgba(2, 6, 23, 0.45);
-      font-weight: 700;
-    }
-
-    .charge,
-    .pole {
-      min-width: 46px;
-      text-align: center;
-      border-radius: 12px;
-      padding: 7px 8px;
-      background: #020617;
+    .mini-card {
+      background: #0f172a;
       border: 1px solid #475569;
-      color: #fff;
+      border-radius: 0.9rem;
+      padding: 0.85rem;
     }
 
-    .arrow {
+    .mini-card strong {
       color: #fef08a;
-      font-size: 1.2rem;
-    }
-
-    .visual {
-      margin: 16px 0;
-      display: flex;
-      justify-content: center;
-    }
-
-    .visual svg {
-      max-width: 100%;
-      height: auto;
-      border-radius: 18px;
-      border: 1px solid var(--line);
-      background: rgba(15,23,42,0.82);
-    }
-
-    .formula {
-      font-size: 1.08rem;
-      margin: 14px 0;
-      color: #f8fafc;
-    }
-
-    .formula .math {
-      display: block;
-      text-align: center;
-      font-size: clamp(1.2rem, 6vw, 1.7rem);
-      margin: 8px 0 4px;
-    }
-
-    .example {
-      border-left: 5px solid var(--accent);
-      margin: 12px 0;
-    }
-
-    .remember {
-      border-left: 5px solid var(--success);
-    }
-
-    .warning-box {
-      border-left: 5px solid #f59e0b;
-      background: rgba(120, 53, 15, 0.22);
     }
 
     .table-wrap {
       overflow-x: auto;
-      border-radius: 16px;
-      border: 1px solid var(--line);
-      margin: 14px 0;
+      border-radius: 0.9rem;
+      border: 1px solid #475569;
+      margin-top: 0.8rem;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 520px;
-      background: rgba(15,23,42,0.78);
+      min-width: 30rem;
+      background: #0f172a;
+      font-size: clamp(0.92rem, 4.8vw, 1.05rem);
     }
 
     th, td {
-      padding: 12px;
+      padding: 0.65rem;
+      border-bottom: 1px solid #334155;
       text-align: left;
-      border-bottom: 1px solid var(--line);
       vertical-align: top;
     }
 
     th {
-      color: #e0f2fe;
-      background: rgba(34, 211, 238, 0.12);
-    }
-
-    tr:last-child td { border-bottom: 0; }
-
-    .quiz-card {
-      margin-top: 18px;
-      padding: 16px;
-      border-radius: 20px;
-      border: 1px solid rgba(34,211,238,0.35);
-      background: rgba(8, 47, 73, 0.3);
-    }
-
-    .quiz-card h3 {
-      margin-top: 0;
       color: #fef08a;
+      background: #111827;
     }
 
-    .question {
-      padding: 14px 0;
-      border-bottom: 1px solid rgba(148, 163, 184, 0.25);
+    .visual {
+      margin: 0.9rem 0;
+      padding: 0.9rem;
+      border-radius: 1rem;
+      border: 1px solid #475569;
+      background: #0f172a;
+      text-align: center;
+      overflow-x: auto;
     }
 
-    .question:last-child {
-      border-bottom: 0;
-    }
-
-    .question-title {
-      font-weight: 800;
-      margin-bottom: 10px;
-    }
-
-    .answers {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      align-items: stretch;
-    }
-
-    .answers.two {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .answers label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-height: 46px;
-      padding: 10px;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: rgba(15,23,42,0.76);
-      cursor: pointer;
-      font-weight: 700;
-    }
-
-    .answers input {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--success);
-      flex: 0 0 auto;
-    }
-
-    .feedback {
-      min-height: 22px;
-      margin-top: 8px;
-      font-weight: 800;
-    }
-
-    .ok { color: #86efac; }
-    .bad { color: var(--danger); }
-
-    .pager {
-      position: sticky;
-      bottom: 0;
+    .magnet {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 16px;
-      padding: 12px 0 max(10px, env(safe-area-inset-bottom));
-      background: linear-gradient(180deg, transparent, rgba(15,23,42,0.95) 22%, rgba(15,23,42,0.98));
-      z-index: 10;
-    }
-
-    .pager.single {
-      grid-template-columns: 1fr;
-    }
-
-    button,
-    .nav-link {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 50px;
-      width: 100%;
-      border: 0;
-      border-radius: 15px;
-      padding: 13px 16px;
-      font-size: 1rem;
+      width: min(100%, 18rem);
+      margin: 0.2rem auto 0.8rem;
+      border-radius: 0.7rem;
+      overflow: hidden;
+      border: 2px solid #93c5fd;
+      font-size: 1.25rem;
       font-weight: 900;
-      text-decoration: none;
-      cursor: pointer;
-      transition: transform 0.15s ease, filter 0.15s ease;
     }
 
-    button:hover,
-    .nav-link:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.05);
+    .magnet .n {
+      background: #b91c1c;
+      color: #fff;
+      padding: 0.55rem;
     }
 
-    .next {
-      background: var(--success);
-      color: var(--btn-text);
-      box-shadow: 0 10px 24px rgba(34,197,94,0.22);
+    .magnet .s {
+      background: #1d4ed8;
+      color: #fff;
+      padding: 0.55rem;
     }
 
-    .back {
-      background: #e2e8f0;
-      color: #0f172a;
-    }
-
-    .check {
-      background: var(--accent);
-      color: #083344;
-      margin-top: 12px;
-    }
-
-    .final-actions {
+    .interaction-row {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin-top: 18px;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 0.5rem;
+      align-items: center;
+      margin: 0.55rem auto;
+      max-width: 22rem;
+      font-weight: 900;
     }
 
-    .chapter-btn {
-      background: #e2e8f0;
-      color: #0f172a;
-    }
-
-    .test-btn {
-      background: var(--success);
-      color: var(--btn-text);
-    }
-
-    .small {
-      font-size: 0.93rem;
-      color: var(--muted);
-    }
-
-    .center { text-align: center; }
-
-    .kbd {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-      background: #020617;
-      border: 1px solid #475569;
-      border-radius: 7px;
-      padding: 1px 6px;
+    .pole {
+      display: inline-flex;
+      min-height: 2.4rem;
+      align-items: center;
+      justify-content: center;
+      border-radius: 0.65rem;
+      border: 1px solid #93c5fd;
+      background: #111827;
       color: #f8fafc;
     }
 
-    @media (max-width: 760px) {
-      .app {
-        padding: 10px 10px 18px;
-      }
-
-      .topbar {
-        border-radius: 18px;
-        padding: 13px;
-        margin-top: 8px;
-      }
-
-      .card {
-        border-radius: 20px;
-        padding: 18px;
-      }
-
-      .lesson-map,
-      .grid.two,
-      .grid.three,
-      .answers,
-      .answers.two,
-      .final-actions {
-        grid-template-columns: 1fr;
-      }
-
-      .rule-item {
-        grid-template-columns: 1fr;
-        text-align: center;
-      }
-
-      .arrow {
-        transform: rotate(90deg);
-      }
-
-      .pager {
-        grid-template-columns: 1fr;
-      }
-
-      .pager button:first-child:not(:only-child) {
-        order: 2;
-      }
-
-      .pager button:last-child {
-        order: 1;
-      }
+    .atom {
+      position: relative;
+      width: 13rem;
+      height: 13rem;
+      max-width: 72vw;
+      max-height: 72vw;
+      margin: 0.4rem auto;
+      border-radius: 50%;
+      border: 2px dashed #38bdf8;
+      display: grid;
+      place-items: center;
     }
 
-    @media (prefers-reduced-motion: reduce) {
-      * { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
+    .nucleus {
+      width: 4.2rem;
+      height: 4.2rem;
+      border-radius: 50%;
+      background: #7f1d1d;
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+      border: 2px solid #fecaca;
+      text-align: center;
+      font-size: 0.78rem;
+    }
+
+    .electron {
+      position: absolute;
+      width: 1.55rem;
+      height: 1.55rem;
+      border-radius: 50%;
+      background: #2563eb;
+      border: 2px solid #bfdbfe;
+      color: white;
+      display: grid;
+      place-items: center;
+      font-weight: 900;
+    }
+
+    .e1 { top: 0.8rem; left: calc(50% - 0.8rem); }
+    .e2 { bottom: 1rem; left: 1.4rem; }
+    .e3 { bottom: 1rem; right: 1.4rem; }
+
+    .circuit {
+      width: min(100%, 27rem);
+      margin: 0.4rem auto;
+    }
+
+    .circuit svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .symbols {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.7rem;
+    }
+
+    .symbol-card {
+      background: #111827;
+      border: 1px solid #475569;
+      border-radius: 0.75rem;
+      padding: 0.65rem;
+      text-align: center;
+      font-weight: 800;
+    }
+
+    .symbol-card span {
+      display: block;
+      font-size: 1.55rem;
+      color: #fef08a;
+      margin-bottom: 0.25rem;
+    }
+
+    .quiz-block {
+      display: grid;
+      gap: 0.95rem;
+    }
+
+    .quiz-question {
+      padding: 0.85rem;
+      border-radius: 0.9rem;
+      background: #0f172a;
+      border: 1px solid #475569;
+    }
+
+    .quiz-question p {
+      margin-top: 0;
+      font-weight: 850;
+      color: #e0f2fe;
+    }
+
+    .choices {
+      display: grid;
+      gap: 0.55rem;
+    }
+
+    .choice {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.55rem;
+      align-items: center;
+      padding: 0.72rem;
+      border-radius: 0.75rem;
+      background: var(--choice);
+      border: 1px solid #64748b;
+      color: var(--text);
+      cursor: pointer;
+      font-size: clamp(1rem, 4.8vw, 1.12rem);
+    }
+
+    .choice input {
+      transform: scale(1.25);
+      accent-color: var(--accent-2);
+    }
+
+    .quiz-feedback {
+      margin-top: 0.65rem;
+      font-weight: 900;
+      min-height: 1.4rem;
+    }
+
+    .correct { color: var(--good); }
+    .incorrect { color: var(--danger); }
+
+    .check-button {
+      width: 100%;
+      min-height: 2.6rem;
+      border: none;
+      border-radius: 0.85rem;
+      background: var(--accent-2);
+      color: var(--button-text);
+      font-weight: 950;
+      font-size: clamp(1rem, 5vw, 1.16rem);
+      cursor: pointer;
+      box-shadow: 0 0.6rem 1.2rem rgba(34, 197, 94, 0.22);
+    }
+
+    .final-banner {
+      padding: 1rem;
+      margin-bottom: 0.9rem;
+      text-align: center;
+      border-color: rgba(34, 211, 238, 0.65);
+      background:
+        linear-gradient(135deg, rgba(8, 47, 73, 0.98), rgba(30, 41, 59, 0.98));
+    }
+
+    .final-banner strong {
+      color: #fef08a;
+    }
+
+    .visitor-counter {
+      margin-top: 0.9rem;
+      padding: 0.9rem;
+      border-radius: 0.9rem;
+      border: 1px solid rgba(34, 197, 94, 0.65);
+      background: rgba(20, 83, 45, 0.35);
+      color: #dcfce7;
+      font-weight: 900;
+      text-align: center;
+      font-size: clamp(1.05rem, 5.2vw, 1.25rem);
+    }
+
+    .footer-actions {
+      display: grid;
+      gap: 0.65rem;
+      margin-top: 0.75rem;
+    }
+
+    .footer-actions a {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      padding: 0.75rem;
+      border-radius: 0.85rem;
+      border: 1px solid #16a34a;
+      background: #22c55e;
+      color: #052e16;
+      font-weight: 950;
+      font-size: clamp(1rem, 5vw, 1.12rem);
+    }
+
+    .lesson-nav {
+      position: sticky;
+      bottom: 0;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 0.45rem;
+      align-items: center;
+      padding: 0.55rem 0 0.2rem;
+      background: linear-gradient(to top, var(--bg) 70%, rgba(15, 23, 42, 0));
+      z-index: 20;
+    }
+
+    .nav-btn {
+      min-height: 2.35rem;
+      border: none;
+      border-radius: 0.75rem;
+      padding: 0.42rem 0.5rem;
+      font-weight: 950;
+      font-size: clamp(0.86rem, 4.2vw, 1.02rem);
+      cursor: pointer;
+      color: #052e16;
+      background: var(--accent-2);
+      box-shadow: 0 0.55rem 1.1rem rgba(34, 197, 94, 0.18);
+    }
+
+    .nav-btn.back {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .page-indicator {
+      min-width: 3.2rem;
+      text-align: center;
+      color: #e0f2fe;
+      font-size: clamp(0.78rem, 3.8vw, 0.95rem);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    @media (max-width: 480px) {
+      html { font-size: 21px; }
+      .lesson-shell { padding: 0.55rem; }
+      .card { border-radius: 0.95rem; }
+      .two-col { grid-template-columns: 1fr; }
+      .symbols { grid-template-columns: 1fr; }
+      .nav-btn { min-height: 2.25rem; padding: 0.35rem 0.4rem; }
+      .page-indicator { min-width: 2.8rem; }
+      table { min-width: 24rem; }
     }
   </style>
 </head>
 
 <body>
-  <main class="app">
-    <header class="topbar">
-      <div class="school">ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</div>
-      <div class="prof">Prof. Dănuț Andronie</div>
-      <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
-      <div class="progress-wrap" aria-hidden="true">
-        <div class="progress" id="progress"></div>
+  <main class="lesson-shell" aria-live="polite">
+
+    <section class="lesson-screen active" data-screen="1">
+      <div class="top-banner">
+        <p class="school">Școala Gimnazială „Gala Galaction” Mangalia</p>
+        <p class="prof">Prof. Dănuț Andronie</p>
+        <p class="quote">„Fizica nu este dominată de formule, ci de logică.”</p>
       </div>
-      <div class="page-count" id="pageCount">Pagina 1</div>
-    </header>
 
-    <section class="screen active" data-title="Start">
       <article class="card">
-        <h1>📘 Recapitulare</h1>
-        <p class="subtitle">Magnetism, electrizare, fulger și trăsnet, probleme de viteză și densitate</p>
-
-        <div class="lesson-map">
-          <div class="map-item">
-            <strong>1. Magneți și magnetism</strong>
-            Magneți, poli, câmp magnetic, busolă.
-          </div>
-          <div class="map-item">
-            <strong>2. Electrizarea corpurilor</strong>
-            Sarcină electrică, atom, frecare, contact, influență.
-          </div>
-          <div class="map-item">
-            <strong>3. Descărcări electrice</strong>
-            Fulger, trăsnet, tunet și reguli de protecție.
-          </div>
-          <div class="map-item">
-            <strong>4. Probleme</strong>
-            Viteză: \(v=\frac{d}{t}\). Densitate: \(\rho=\frac{m}{V}\).
-          </div>
-        </div>
-
-        <p class="remember"><strong>Ideea recapitulării:</strong> mergi pas cu pas. Fiecare pagină fixează o parte importantă, apoi treci mai departe.</p>
+        <h1>Recapitulare – Fenomene electrice și magnetice</h1>
+        <p>Recapitulăm ideile importante despre <span class="kw">magneți</span>, <span class="kw">busolă</span>, <span class="kw">atom</span>, <span class="kw">electrizare</span>, <span class="kw">curent electric</span>, <span class="kw">circuite</span>, <span class="kw">conductoare</span>, <span class="kw">izolatoare</span> și <span class="kw">gruparea becurilor</span>.</p>
+        <div class="notice">Ideea de bază: fenomenele electrice și magnetice pot acționa la distanță, dar pot fi înțelese logic prin particule, sarcini, câmpuri și circuite.</div>
       </article>
-
-      <nav class="pager single">
-        <button class="next" type="button" onclick="nextPage()">Mergi mai departe</button>
-      </nav>
     </section>
 
-    <section class="screen" data-title="Magneți">
+    <section class="lesson-screen" data-screen="2">
       <article class="card">
-        <h2>🧲 1. Ce este un magnet?</h2>
-        <p class="lead">Un magnet este un corp care atrage materiale ce conțin <strong>fier</strong>, <strong>nichel</strong> sau <strong>cobalt</strong>.</p>
+        <h2>1. Magneți și poli magnetici</h2>
+        <p>Un <span class="kw">magnet</span> atrage fierul și unele materiale care conțin fier. Efectul lui se observă cel mai puternic la capete.</p>
 
-        <div class="tag-list" aria-label="Materiale atrase de magnet">
-          <span class="tag">fier</span>
-          <span class="tag">nichel</span>
-          <span class="tag">cobalt</span>
+        <div class="visual" aria-label="Magnet cu pol nord și pol sud">
+          <div class="magnet"><div class="n">N</div><div class="s">S</div></div>
+          <p>Fiecare magnet are doi poli: <span class="kw">Nord</span> și <span class="kw">Sud</span>.</p>
         </div>
 
-        <div class="warning-box">
-          <strong>Nu toate corpurile sunt atrase de magnet.</strong><br>
-          Plasticul, lemnul, hârtia și aluminiul nu sunt atrase în mod obișnuit de magnet.
-        </div>
-
-        <h3>Polii magnetului</h3>
         <ul>
-          <li><strong>Nord (N)</strong> – de obicei colorat cu roșu.</li>
-          <li><strong>Sud (S)</strong> – de obicei colorat cu albastru.</li>
+          <li>Polii de același nume se resping.</li>
+          <li>Polii de nume diferit se atrag.</li>
+          <li>Polii magnetici nu pot fi separați.</li>
         </ul>
 
-        <div class="visual" aria-label="Magnet cu doi poli">
-          <svg viewBox="0 0 720 210" role="img">
-            <title>Magnet cu pol Nord și pol Sud</title>
-            <rect x="95" y="62" width="530" height="86" rx="28" fill="#0f172a" stroke="#475569" stroke-width="6"/>
-            <rect x="95" y="62" width="265" height="86" rx="28" fill="#ef4444"/>
-            <rect x="360" y="62" width="265" height="86" rx="28" fill="#2563eb"/>
-            <text x="228" y="117" font-size="44" text-anchor="middle" font-weight="800" fill="#fff">N</text>
-            <text x="492" y="117" font-size="44" text-anchor="middle" font-weight="800" fill="#fff">S</text>
-            <text x="360" y="188" font-size="24" text-anchor="middle" fill="#e2e8f0">Orice magnet are doi poli: Nord și Sud.</text>
-          </svg>
+        <div class="visual">
+          <div class="interaction-row"><span class="pole">N</span><span>se resping</span><span class="pole">N</span></div>
+          <div class="interaction-row"><span class="pole">S</span><span>se resping</span><span class="pole">S</span></div>
+          <div class="interaction-row"><span class="pole">N</span><span>se atrag</span><span class="pole">S</span></div>
         </div>
 
-        <div class="remember">
-          <strong>Polii magnetici nu pot fi separați.</strong><br>
-          Dacă tai un magnet în două, obții doi magneți mai mici. Fiecare va avea tot un pol Nord și un pol Sud.
-        </div>
+        <div class="notice">Regulă: poli identici → respingere; poli diferiți → atracție.</div>
       </article>
-
-      <nav class="pager">
-        <button class="back" type="button" onclick="prevPage()">Înapoi</button>
-        <button class="next" type="button" onclick="nextPage()">Mergi mai departe</button>
-      </nav>
     </section>
 
-    <section class="screen" data-title="Interacțiuni magnetice">
+    <section class="lesson-screen" data-screen="3">
       <article class="card">
-        <h2>↔️ 2. Cum interacționează magneții?</h2>
-        <p class="lead">Polii magnetici se atrag sau se resping în funcție de felul lor.</p>
-
-        <div class="rule">
-          <div class="rule-item">
-            <span class="pole">N</span>
-            <span class="arrow">↔</span>
-            <span class="pole">N</span>
-            <span>Se resping</span>
-          </div>
-          <div class="rule-item">
-            <span class="pole">S</span>
-            <span class="arrow">↔</span>
-            <span class="pole">S</span>
-            <span>Se resping</span>
-          </div>
-          <div class="rule-item">
-            <span class="pole">N</span>
-            <span class="arrow">→ ←</span>
-            <span class="pole">S</span>
-            <span>Se atrag</span>
-          </div>
-        </div>
-
-        <div class="grid two">
-          <div class="info">
-            <h3>Magnet permanent</h3>
-            <p>Își păstrează proprietățile magnetice mult timp.</p>
-          </div>
-          <div class="info">
-            <h3>Magnet temporar</h3>
-            <p>Își păstrează proprietățile magnetice doar o perioadă limitată.</p>
-          </div>
-        </div>
-
-        <div class="remember">
-          <strong>Regulă ușor de reținut:</strong> polii de același fel se resping, polii diferiți se atrag.
-        </div>
-      </article>
-
-      <nav class="pager">
-        <button class="back" type="button" onclick="prevPage()">Înapoi</button>
-        <button class="next" type="button" onclick="nextPage()">Mergi mai departe</button>
-      </nav>
-    </section>
-
-    <section class="screen" data-title="Câmp magnetic">
-      <article class="card">
-        <h2>🧭 3. Câmpul magnetic și busola</h2>
-
-        <h3>Câmpul magnetic</h3>
-        <p>Câmpul magnetic este zona din jurul magnetului unde acesta poate atrage sau respinge.</p>
+        <h2>2. Câmpul magnetic, Pământul și busola</h2>
+        <p><span class="kw">Câmpul magnetic</span> este zona din jurul unui magnet în care apar efecte magnetice.</p>
         <ul>
-          <li>Liniile de câmp merg, convențional, dinspre <strong>Nord</strong> spre <strong>Sud</strong>.</li>
           <li>Pilitura de fier se aliniază după liniile câmpului magnetic.</li>
-          <li>De aceea, în jurul unui magnet apar modele asemănătoare unor „desene”.</li>
+          <li>Pământul se comportă ca un magnet uriaș.</li>
+          <li>Acul busolei este un magnet mic, care se orientează aproximativ nord–sud.</li>
         </ul>
 
-        <div class="visual" aria-label="Linii de câmp magnetic">
-          <svg viewBox="0 0 720 270" role="img">
-            <title>Linii de câmp magnetic între polii magnetului</title>
-            <defs>
-              <marker id="arrowMag" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
-                <path d="M0,0 L0,6 L9,3 z" fill="#fef08a"></path>
-              </marker>
-            </defs>
-            <rect x="230" y="105" width="260" height="64" rx="20" fill="#0f172a" stroke="#64748b" stroke-width="4"/>
-            <rect x="230" y="105" width="130" height="64" rx="20" fill="#ef4444"/>
-            <rect x="360" y="105" width="130" height="64" rx="20" fill="#2563eb"/>
-            <text x="295" y="148" font-size="34" text-anchor="middle" font-weight="800" fill="#fff">N</text>
-            <text x="425" y="148" font-size="34" text-anchor="middle" font-weight="800" fill="#fff">S</text>
-            <path d="M270 95 C210 42, 510 42, 450 95" fill="none" stroke="#fef08a" stroke-width="5" marker-end="url(#arrowMag)"/>
-            <path d="M250 178 C155 245, 565 245, 470 178" fill="none" stroke="#fef08a" stroke-width="5" marker-end="url(#arrowMag)"/>
-            <path d="M260 110 C190 84, 190 190, 260 164" fill="none" stroke="#38bdf8" stroke-width="4"/>
-            <path d="M460 110 C530 84, 530 190, 460 164" fill="none" stroke="#38bdf8" stroke-width="4"/>
-            <text x="360" y="252" font-size="23" text-anchor="middle" fill="#e2e8f0">Liniile de câmp arată orientarea câmpului magnetic.</text>
+        <div class="visual">
+          <svg viewBox="0 0 520 220" role="img" aria-label="Pământul ca magnet și busola">
+            <rect width="520" height="220" rx="22" fill="#111827"/>
+            <circle cx="155" cy="110" r="72" fill="#0ea5e9" stroke="#bfdbfe" stroke-width="4"/>
+            <path d="M112 76 C134 55, 190 60, 209 93 C190 88, 182 111, 154 107 C130 104, 129 84, 112 76Z" fill="#22c55e"/>
+            <path d="M132 142 C158 133, 181 148, 194 164 C170 177, 136 171, 132 142Z" fill="#22c55e"/>
+            <text x="135" y="28" fill="#fef08a" font-size="22" font-weight="800">Nord geografic</text>
+            <text x="135" y="207" fill="#fef08a" font-size="22" font-weight="800">Sud geografic</text>
+            <path d="M262 110 C310 36, 410 36, 458 110" fill="none" stroke="#38bdf8" stroke-width="4"/>
+            <path d="M262 110 C310 184, 410 184, 458 110" fill="none" stroke="#38bdf8" stroke-width="4"/>
+            <circle cx="360" cy="110" r="47" fill="#1e293b" stroke="#f8fafc" stroke-width="4"/>
+            <line x1="335" y1="135" x2="385" y2="85" stroke="#ef4444" stroke-width="8" stroke-linecap="round"/>
+            <line x1="335" y1="135" x2="385" y2="85" stroke="#bfdbfe" stroke-width="2"/>
+            <text x="388" y="80" fill="#fef08a" font-size="24" font-weight="900">N</text>
+            <text x="318" y="152" fill="#bfdbfe" font-size="24" font-weight="900">S</text>
           </svg>
         </div>
 
-        <h3>Busola</h3>
-        <p>Acul busolei este un magnet mic. Polul Nord al acului arată spre Sudul magnetic al Pământului, aflat aproape de Polul Nord geografic.</p>
-        <p>Dacă apropii o agrafă de busolă, acul se poate mișca, deoarece metalul modifică zona câmpului magnetic din jurul acului.</p>
+        <div class="notice">Busola trebuie ținută departe de magneți și obiecte metalice, deoarece acestea pot modifica indicația acului magnetic.</div>
       </article>
-
-      <nav class="pager">
-        <button class="back" type="button" onclick="prevPage()">Înapoi</button>
-        <button class="next" type="button" onclick="nextPage()">Mergi mai departe</button>
-      </nav>
     </section>
 
-    <section class="screen" data-title="Electrizare">
+    <section class="lesson-screen" data-screen="4">
       <article class="card">
-        <h2>⚡ 4. Electrizarea corpurilor</h2>
-        <p class="lead">Electrizarea este procesul prin care un corp capătă <strong>sarcină electrică</strong>.</p>
+        <h2>3. Atomul și sarcina electrică</h2>
+        <p>Materia este alcătuită din <span class="kw">atomi</span>. Pentru electrizare sunt importante particulele cu sarcină electrică.</p>
 
-        <div class="grid two">
-          <div class="info">
-            <h3>Sarcină pozitivă (+)</h3>
-            <p>Un corp se încarcă pozitiv dacă <strong>cedează</strong> sau <strong>pierde electroni</strong>.</p>
-          </div>
-          <div class="info">
-            <h3>Sarcină negativă (−)</h3>
-            <p>Un corp se încarcă negativ dacă <strong>primește electroni</strong>.</p>
+        <div class="visual">
+          <div class="atom" aria-label="Atom simplificat">
+            <div class="nucleus">nucleu<br>p+ n</div>
+            <div class="electron e1">−</div>
+            <div class="electron e2">−</div>
+            <div class="electron e3">−</div>
           </div>
         </div>
 
-        <div class="formula">
-          <strong>Sarcina electrică</strong> se notează cu \(q\).<br>
-          Unitatea de măsură în SI este Coulombul:
-          <span class="math">\([q]_{SI}=C\)</span>
+        <div class="grid two-col">
+          <div class="mini-card"><strong>Protonul</strong><br>are sarcină pozitivă \((+)\) și se află în nucleu.</div>
+          <div class="mini-card"><strong>Electronul</strong><br>are sarcină negativă \((-)\) și se află în jurul nucleului.</div>
+          <div class="mini-card"><strong>Neutronul</strong><br>nu are sarcină electrică.</div>
+          <div class="mini-card"><strong>Atom neutru</strong><br>are număr egal de protoni și electroni.</div>
         </div>
 
-        <h3>Structura atomului, pe scurt</h3>
-        <ul>
-          <li>În nucleu se găsesc <strong>protoni (+)</strong> și <strong>neutroni</strong>, care nu au sarcină electrică.</li>
-          <li>În jurul nucleului se găsesc <strong>electroni (−)</strong>.</li>
-          <li>Atomul este neutru când are același număr de protoni și electroni.</li>
-        </ul>
-
-        <div class="visual" aria-label="Structura atomului">
-          <svg viewBox="0 0 720 260" role="img">
-            <title>Atom neutru cu nucleu și electroni</title>
-            <circle cx="360" cy="130" r="34" fill="#f97316"/>
-            <text x="360" y="137" text-anchor="middle" font-size="24" font-weight="800" fill="#111827">+</text>
-            <ellipse cx="360" cy="130" rx="155" ry="58" fill="none" stroke="#38bdf8" stroke-width="4"/>
-            <ellipse cx="360" cy="130" rx="155" ry="58" fill="none" stroke="#38bdf8" stroke-width="4" transform="rotate(60 360 130)"/>
-            <ellipse cx="360" cy="130" rx="155" ry="58" fill="none" stroke="#38bdf8" stroke-width="4" transform="rotate(-60 360 130)"/>
-            <circle cx="205" cy="130" r="16" fill="#e0f2fe"/>
-            <text x="205" y="137" text-anchor="middle" font-size="22" font-weight="800" fill="#0f172a">−</text>
-            <circle cx="515" cy="130" r="16" fill="#e0f2fe"/>
-            <text x="515" y="137" text-anchor="middle" font-size="22" font-weight="800" fill="#0f172a">−</text>
-            <circle cx="360" cy="36" r="16" fill="#e0f2fe"/>
-            <text x="360" y="43" text-anchor="middle" font-size="22" font-weight="800" fill="#0f172a">−</text>
-            <text x="360" y="238" text-anchor="middle" font-size="23" fill="#e2e8f0">Atom neutru: sarcinile pozitive și negative se compensează.</text>
-          </svg>
-        </div>
+        <div class="notice">La electrizarea obișnuită se transferă electroni. Protonii rămân în nucleu.</div>
       </article>
-
-      <nav class="pager">
-        <button class="back" type="button" onclick="prevPage()">Înapoi</button>
-        <button class="next" type="button" onclick="nextPage()">Mergi mai departe</button>
-      </nav>
     </section>
 
-    <section class="screen" data-title="Metode de electrizare">
+    <section class="lesson-screen" data-screen="5">
       <article class="card">
-        <h2>🔄 5. Cum se electrizează corpurile?</h2>
+        <h2>4. Electrizarea corpurilor</h2>
+        <p><span class="kw">Electrizarea</span> este procesul prin care un corp capătă proprietăți electrice.</p>
 
         <div class="grid">
-          <div class="info">
-            <h3>1) Prin frecare</h3>
-            <p>Două corpuri se freacă între ele, iar electronii se mută de la un corp la altul.</p>
-            <p><strong>Exemplu:</strong> un balon frecat de păr poate atrage firele de păr.</p>
-          </div>
-
-          <div class="info">
-            <h3>2) Prin contact</h3>
-            <p>Un corp electrizat atinge un corp neutru, iar electronii trec de la unul la altul.</p>
-            <p>După contact, corpurile pot ajunge să aibă același tip de sarcină.</p>
-          </div>
-
-          <div class="info">
-            <h3>3) Prin influență, fără atingere</h3>
-            <p>Un corp electrizat este adus aproape de un corp neutru. Electronii din corpul neutru se redistribuie.</p>
-            <p>Nu există atingere, ci doar rearanjarea sarcinilor.</p>
-          </div>
+          <div class="mini-card"><strong>Prin frecare</strong><br>Exemplu: un balon frecat de păr poate atrage firele de păr sau bucăți mici de hârtie.</div>
+          <div class="mini-card"><strong>Prin contact</strong><br>Un corp electrizat atinge un corp neutru și îi poate transmite sarcină electrică.</div>
+          <div class="mini-card"><strong>Prin influență</strong><br>Un corp electrizat este apropiat de un corp neutru, iar sarcinile din corpul neutru se redistribuie.</div>
         </div>
 
-        <div class="remember">
-          <strong>De reținut:</strong> electrizarea este legată de mișcarea electronilor. Protonii rămân în nucleu.
+        <h3>Sarcina electrică</h3>
+        <ul>
+          <li>Corpul pozitiv are lipsă de electroni.</li>
+          <li>Corpul negativ are exces de electroni.</li>
+          <li>Sarcina electrică se notează cu \(q\), iar unitatea este coulombul \((C)\).</li>
+        </ul>
+
+        <div class="visual">
+          <div class="interaction-row"><span class="pole">+</span><span>se resping</span><span class="pole">+</span></div>
+          <div class="interaction-row"><span class="pole">−</span><span>se resping</span><span class="pole">−</span></div>
+          <div class="interaction-row"><span class="pole">+</span><span>se atrag</span><span class="pole">−</span></div>
         </div>
+
+        <div class="notice">Regulă: sarcinile de același semn se resping, iar sarcinile de semn opus se atrag.</div>
       </article>
-
-      <nav class="pager">
-        <button class="back" type="button" onclick="prevPage()">Înapoi</button>
-        <button class="next" type="button" onclick="nextPage()">Mergi mai departe</button>
-      </nav>
     </section>
 
-    <section class="screen" data-title="Interacțiuni electrostatice">
+    <section class="lesson-screen" data-screen="6">
       <article class="card">
-        <h2>➕➖ 6. Interacțiuni electrostatice</h2>
-        <p class="lead">Pentru sarcini electrice folosim expresiile <strong>de același semn</strong> și <strong>de semn opus</strong>.</p>
+        <h2>5. Fulgerul și curentul electric</h2>
+        <p><span class="kw">Fulgerul</span> este o descărcare electrică produsă în atmosferă. Dacă descărcarea ajunge la sol, se numește <span class="kw">trăsnet</span>. Sunetul produs este <span class="kw">tunetul</span>.</p>
 
-        <div class="rule">
-          <div class="rule-item">
-            <span class="charge">+ +</span>
-            <span class="arrow">↔</span>
-            <span class="charge">− −</span>
-            <span>Sarcinile de același semn se resping.</span>
-          </div>
-          <div class="rule-item">
-            <span class="charge">+ −</span>
-            <span class="arrow">→ ←</span>
-            <span class="charge">− +</span>
-            <span>Sarcinile de semn opus se atrag.</span>
-          </div>
-        </div>
+        <div class="warning">În timpul furtunii, nu sta sub copaci, lângă stâlpi izolați sau lângă obiecte metalice.</div>
 
-        <div class="grid two">
-          <div class="info">
-            <h3>Atracția</h3>
-            <p>Apare între două corpuri electrizate cu sarcini opuse: pozitivă cu negativă.</p>
-          </div>
-          <div class="info">
-            <h3>Respingerea</h3>
-            <p>Apare între două corpuri electrizate cu sarcini de același fel: pozitivă cu pozitivă sau negativă cu negativă.</p>
-          </div>
-        </div>
+        <h3>Curentul electric</h3>
+        <p><span class="kw">Curentul electric</span> este deplasarea ordonată a sarcinilor electrice.</p>
+        <div class="formula">\(I=\frac{Q}{t}\)</div>
+        <div class="example">Exemplu: dacă printr-un conductor trece sarcina \(Q=12\,C\) în timpul \(t=3\,s\), atunci \(I=\frac{12}{3}=4\,A\).</div>
 
-        <div class="formula">
-          Corpurile electrizate interacționează la distanță prin <strong>câmpul electrostatic</strong> din jurul lor.
-        </div>
-
-        <p class="remember"><strong>Regulă rapidă:</strong> la fel se resping, diferit se atrag.</p>
+        <ul>
+          <li>În metale, curentul este legat de mișcarea electronilor.</li>
+          <li>Unitatea intensității curentului electric este amperul \((A)\).</li>
+          <li>Curentul electric este util, dar trebuie folosit cu atenție.</li>
+        </ul>
       </article>
-
-      <nav class="pager">
-        <button class="back" type="button" onclick="prevPage()">Înapoi</button>
-        <button class="next" type="button" onclick="nextPage()">Mergi mai departe</button>
-      </nav>
     </section>
 
-    <section class="screen" data-title="Fulger, trăsnet, tunet">
+    <section class="lesson-screen" data-screen="7">
       <article class="card">
-        <h2>⛈️ 7. Fulgerul, trăsnetul și tunetul</h2>
+        <h2>6. Generator, consumator, circuit</h2>
+        <p>Un <span class="kw">circuit electric</span> este alcătuit din elemente conectate astfel încât curentul să poată circula.</p>
 
-        <div class="grid">
-          <div class="info">
-            <h3>Ce este fulgerul?</h3>
-            <p>Fulgerul este o descărcare electrică luminoasă între nori sau în interiorul aceluiași nor.</p>
-          </div>
-
-          <div class="info">
-            <h3>Ce este trăsnetul?</h3>
-            <p>Trăsnetul este o descărcare electrică între nor și pământ.</p>
-          </div>
-
-          <div class="info">
-            <h3>Ce este tunetul?</h3>
-            <p>Tunetul este sunetul produs de încălzirea bruscă a aerului în timpul descărcării electrice.</p>
-          </div>
+        <div class="grid two-col">
+          <div class="mini-card"><strong>Generator</strong><br>Furnizează energia electrică. Exemple: baterie, pilă, acumulator.</div>
+          <div class="mini-card"><strong>Consumator</strong><br>Transformă energia electrică. Exemple: bec, motor, sonerie.</div>
+          <div class="mini-card"><strong>Conductori</strong><br>Leagă elementele circuitului și permit circulația curentului.</div>
+          <div class="mini-card"><strong>Întrerupător</strong><br>Închide sau deschide circuitul.</div>
         </div>
 
-        <h3>De ce se electrizează norii?</h3>
-        <p>Norii se pot electriza prin frecarea maselor de aer care conțin picături foarte fine de apă. În nor se pot forma zone cu sarcini pozitive și negative.</p>
-
-        <div class="visual" aria-label="Nor electrizat și descărcare electrică">
-          <svg viewBox="0 0 720 330" role="img">
-            <title>Nor electrizat și trăsnet</title>
-            <rect x="0" y="255" width="720" height="75" fill="#14532d"/>
-            <ellipse cx="265" cy="105" rx="95" ry="55" fill="#64748b"/>
-            <ellipse cx="350" cy="85" rx="120" ry="62" fill="#94a3b8"/>
-            <ellipse cx="455" cy="108" rx="100" ry="55" fill="#64748b"/>
-            <text x="295" y="70" font-size="28" font-weight="800" fill="#082f49">+</text>
-            <text x="350" y="60" font-size="28" font-weight="800" fill="#082f49">+</text>
-            <text x="405" y="72" font-size="28" font-weight="800" fill="#082f49">+</text>
-            <text x="300" y="145" font-size="32" font-weight="800" fill="#0f172a">−</text>
-            <text x="370" y="150" font-size="32" font-weight="800" fill="#0f172a">−</text>
-            <text x="440" y="145" font-size="32" font-weight="800" fill="#0f172a">−</text>
-            <path d="M375 158 L332 224 L375 214 L318 304 L410 198 L362 209 Z" fill="#facc15" stroke="#fef08a" stroke-width="3"/>
-            <text x="360" y="315" font-size="23" text-anchor="middle" fill="#f8fafc">Trăsnet: descărcare electrică între nor și pământ.</text>
+        <div class="visual circuit">
+          <svg viewBox="0 0 560 270" role="img" aria-label="Circuit simplu închis">
+            <rect width="560" height="270" rx="22" fill="#111827"/>
+            <path d="M130 135 H235 M325 135 H430 M430 135 V210 H130 V135" fill="none" stroke="#e2e8f0" stroke-width="8" stroke-linecap="round"/>
+            <line x1="125" y1="95" x2="125" y2="175" stroke="#fef08a" stroke-width="8"/>
+            <line x1="145" y1="115" x2="145" y2="155" stroke="#fef08a" stroke-width="8"/>
+            <text x="87" y="78" fill="#fef08a" font-size="24" font-weight="800">baterie</text>
+            <circle cx="280" cy="135" r="45" fill="none" stroke="#fef08a" stroke-width="7"/>
+            <path d="M250 105 L310 165 M310 105 L250 165" stroke="#fef08a" stroke-width="6" stroke-linecap="round"/>
+            <text x="250" y="72" fill="#fef08a" font-size="24" font-weight="800">bec</text>
+            <circle cx="430" cy="210" r="8" fill="#22c55e"/>
+            <circle cx="130" cy="210" r="8" fill="#22c55e"/>
+            <text x="365" y="238" fill="#86efac" font-size="22" font-weight="800">circuit închis</text>
           </svg>
         </div>
 
-        <ul>
-          <li>Norii cumulonimbus, mari și de furtună, pot produce trăsnete.</li>
-          <li>Corpurile înalte sunt mai predispuse trăsnirii, deoarece se pot încărca mai ușor prin influență.</li>
-          <li>Temperatura fulgerului poate ajunge la aproximativ <strong>28&nbsp;000°C</strong>.</li>
-          <li>Tensiunea electrică dintre nor și pământ poate fi de ordinul zecilor de milioane de volți.</li>
-        </ul>
+        <div class="notice">Becul luminează numai dacă circuitul este închis, adică drumul curentului este complet.</div>
       </article>
-
-      <nav class="pager">
-        <button class="back" type="button" onclick="prevPage()">Înapoi</button>
-        <button class="next" type="button" onclick="nextPage()">Mergi mai departe</button>
-      </nav>
     </section>
 
-    <section class="screen" data-title="Protecție">
+    <section class="lesson-screen" data-screen="8">
       <article class="card">
-        <h2>🛡️ 8. Protecția în timpul furtunii</h2>
-
-        <div class="warning-box">
-          <strong>Semne că poate urma un trăsnet:</strong> zumzet, părul ridicat, lumini albăstrui. Fenomenul luminos se numește Focul Sfântului Elmo.
-        </div>
-
-        <h3>Reguli importante</h3>
-        <ul>
-          <li>Nu sta sub copaci sau lângă stâlpi izolați.</li>
-          <li>Nu atinge obiecte metalice, deoarece metalele conduc curentul electric.</li>
-          <li>Mașina este un loc mai sigur, deoarece caroseria se comportă ca o cușcă Faraday.</li>
-          <li>În casă, stai departe de țevi, conducte de apă, robinete, prize și pereți prin care trec cabluri electrice.</li>
-          <li>Închide ușile și ferestrele.</li>
-          <li>Dacă ești afară și nu ai adăpost, evită obiectele izolate și stai ghemuit într-un loc cât mai jos.</li>
-        </ul>
-
-        <div class="info">
-          <h3>Paratrăsnetul</h3>
-          <p>Paratrăsnetul este o instalație folosită pentru protecția clădirilor înalte. El conduce descărcarea electrică în pământ.</p>
-        </div>
-
-        <div class="remember">
-          <strong>Cel mai sigur loc în timpul unei furtuni este în interiorul casei.</strong>
-        </div>
-      </article>
-
-      <nav class="pager">
-        <button class="back" type="button" onclick="prevPage()">Înapoi</button>
-        <button class="next" type="button" onclick="nextPage()">Mergi mai departe</button>
-      </nav>
-    </section>
-
-    <section class="screen" data-title="Viteză">
-      <article class="card">
-        <h2>🏃 9. Probleme de viteză</h2>
-        <p class="lead">Viteza arată câtă distanță parcurge un corp într-un anumit timp.</p>
-
-        <div class="formula">
-          Formula vitezei:
-          <span class="math">\(v=\frac{d}{t}\)</span>
-          unde \(v\) este viteza, \(d\) este distanța, iar \(t\) este timpul.
-        </div>
+        <h2>7. Conductoare și izolatoare electrice</h2>
+        <p><span class="kw">Conductoarele</span> permit trecerea curentului electric. <span class="kw">Izolatoarele</span> împiedică trecerea curentului electric sau o reduc foarte mult.</p>
 
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Transformare utilă</th>
-                <th>Ce faci?</th>
+                <th>Tip de material</th>
+                <th>Exemple</th>
+                <th>Rol</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td>1 km = 1000 m</td><td>Înmulțești kilometrii cu 1000.</td></tr>
-              <tr><td>1 h = 3600 s</td><td>Transformi orele în secunde.</td></tr>
-              <tr><td>1 min = 60 s</td><td>Înmulțești minutele cu 60.</td></tr>
-              <tr><td>m/s → km/h</td><td>Înmulțești cu 3,6.</td></tr>
-              <tr><td>km/h → m/s</td><td>Împarți la 3,6.</td></tr>
+              <tr>
+                <td>Conductoare</td>
+                <td>cupru, aluminiu, fier</td>
+                <td>transportă curentul electric</td>
+              </tr>
+              <tr>
+                <td>Izolatoare</td>
+                <td>plastic, cauciuc, sticlă, lemn uscat</td>
+                <td>protejează utilizatorul</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
-        <div class="example">
-          <strong>Exemplu numeric cu fracție:</strong><br>
-          Dacă un corp parcurge 3,6 km în 4 min, atunci:
-          <span class="math">\(d=3600\,m,\quad t=240\,s,\quad v=\frac{3600}{240}=15\,m/s\)</span>
+        <div class="visual">
+          <svg viewBox="0 0 560 170" role="img" aria-label="Fir electric cu conductor și izolator">
+            <rect width="560" height="170" rx="22" fill="#111827"/>
+            <rect x="70" y="64" width="420" height="42" rx="21" fill="#2563eb" stroke="#bfdbfe" stroke-width="5"/>
+            <rect x="105" y="78" width="350" height="14" rx="7" fill="#facc15"/>
+            <text x="95" y="45" fill="#bfdbfe" font-size="24" font-weight="800">izolator exterior</text>
+            <text x="230" y="140" fill="#fef08a" font-size="24" font-weight="800">conductor metalic</text>
+          </svg>
         </div>
 
-        <h3>Exemple explicate rapid</h3>
-        <ul>
-          <li>\(72\,km/h = 20\,m/s\), deoarece \(72:3{,}6=20\).</li>
-          <li>\(5\,m/s\) timp de 12 min înseamnă \(d=v\cdot t=5\cdot720=3600\,m=3{,}6\,km\).</li>
-          <li>\(900\,m\) în 1,5 min înseamnă \(v=\frac{900}{90}=10\,m/s=36\,km/h\).</li>
-          <li>\(54\,km/h\) timp de 25 min înseamnă \(15\,m/s\cdot1500\,s=22500\,m\).</li>
-        </ul>
+        <div class="notice">Firele electrice au conductor metalic la interior și înveliș izolator la exterior.</div>
       </article>
-
-      <nav class="pager">
-        <button class="back" type="button" onclick="prevPage()">Înapoi</button>
-        <button class="next" type="button" onclick="nextPage()">Mergi mai departe</button>
-      </nav>
     </section>
 
-    <section class="screen" data-title="Densitate">
+    <section class="lesson-screen" data-screen="9">
       <article class="card">
-        <h2>⚖️ 10. Probleme de densitate</h2>
-        <p class="lead">Densitatea arată câtă masă se află într-un anumit volum.</p>
+        <h2>8. Circuitul electric simplu și simbolurile</h2>
+        <p>În schemele electrice folosim simboluri, ca să reprezentăm rapid elementele circuitului.</p>
 
-        <div class="formula">
-          Formula densității:
-          <span class="math">\(\rho=\frac{m}{V}\)</span>
-          unde \(\rho\) este densitatea, \(m\) este masa, iar \(V\) este volumul.
+        <div class="symbols">
+          <div class="symbol-card"><span>—| |—</span>baterie / generator</div>
+          <div class="symbol-card"><span>—(×)—</span>bec / lampă</div>
+          <div class="symbol-card"><span>—o/ o—</span>întrerupător deschis</div>
+          <div class="symbol-card"><span>────</span>conductor</div>
         </div>
+
+        <h3>Circuit deschis sau închis?</h3>
+        <ul>
+          <li><span class="kw">Circuit închis</span>: curentul circulă, becul poate lumina.</li>
+          <li><span class="kw">Circuit deschis</span>: drumul este întrerupt, curentul nu circulă.</li>
+        </ul>
+
+        <div class="notice">Într-un circuit simplu, legăturile corecte sunt la fel de importante ca elementele folosite.</div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="10">
+      <article class="card">
+        <h2>9. Gruparea becurilor în serie și în paralel</h2>
 
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Transformare utilă</th>
-                <th>Valoare</th>
+                <th>Caracteristică</th>
+                <th>Serie</th>
+                <th>Paralel</th>
               </tr>
             </thead>
             <tbody>
-              <tr><td>1 g</td><td>0,001 kg</td></tr>
-              <tr><td>1 cm³</td><td>0,000001 m³</td></tr>
-              <tr><td>1 L</td><td>0,001 m³</td></tr>
-              <tr><td>1 m³</td><td>1.000.000 cm³</td></tr>
+              <tr>
+                <td>Drumul curentului</td>
+                <td>un singur drum</td>
+                <td>mai multe ramuri</td>
+              </tr>
+              <tr>
+                <td>Dacă un bec se arde</td>
+                <td>se oprește tot circuitul</td>
+                <td>celelalte becuri pot funcționa</td>
+              </tr>
+              <tr>
+                <td>Utilizare</td>
+                <td>mai rar, în montaje simple</td>
+                <td>foarte des în locuințe</td>
+              </tr>
             </tbody>
           </table>
         </div>
 
-        <div class="example">
-          <strong>Exemplu numeric cu fracție:</strong><br>
-          Pentru \(m=250\,g=0{,}25\,kg\) și \(V=50\,cm^3=0{,}00005\,m^3\):
-          <span class="math">\(\rho=\frac{0{,}25}{0{,}00005}=5000\,kg/m^3\)</span>
+        <div class="visual circuit">
+          <svg viewBox="0 0 560 300" role="img" aria-label="Becuri în serie și în paralel">
+            <rect width="560" height="300" rx="22" fill="#111827"/>
+            <text x="40" y="38" fill="#fef08a" font-size="24" font-weight="900">Serie</text>
+            <path d="M45 80 H160 H280 H400 V130 H45 V80" fill="none" stroke="#e2e8f0" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="160" cy="80" r="24" fill="none" stroke="#fef08a" stroke-width="5"/>
+            <circle cx="280" cy="80" r="24" fill="none" stroke="#fef08a" stroke-width="5"/>
+            <line x1="145" y1="65" x2="175" y2="95" stroke="#fef08a" stroke-width="4"/>
+            <line x1="175" y1="65" x2="145" y2="95" stroke="#fef08a" stroke-width="4"/>
+            <line x1="265" y1="65" x2="295" y2="95" stroke="#fef08a" stroke-width="4"/>
+            <line x1="295" y1="65" x2="265" y2="95" stroke="#fef08a" stroke-width="4"/>
+
+            <text x="40" y="180" fill="#fef08a" font-size="24" font-weight="900">Paralel</text>
+            <path d="M45 215 H120 M420 215 H500 M120 215 V180 H420 V250 H120 V215" fill="none" stroke="#e2e8f0" stroke-width="6" stroke-linecap="round"/>
+            <circle cx="270" cy="180" r="24" fill="none" stroke="#fef08a" stroke-width="5"/>
+            <circle cx="270" cy="250" r="24" fill="none" stroke="#fef08a" stroke-width="5"/>
+            <line x1="255" y1="165" x2="285" y2="195" stroke="#fef08a" stroke-width="4"/>
+            <line x1="285" y1="165" x2="255" y2="195" stroke="#fef08a" stroke-width="4"/>
+            <line x1="255" y1="235" x2="285" y2="265" stroke="#fef08a" stroke-width="4"/>
+            <line x1="285" y1="235" x2="255" y2="265" stroke="#fef08a" stroke-width="4"/>
+          </svg>
         </div>
 
-        <h3>Exemple explicate rapid</h3>
+        <div class="notice">În paralel, fiecare bec are propriul drum. De aceea, dacă unul se defectează, celelalte pot rămâne aprinse.</div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="11">
+      <article class="card">
+        <h2>10. Sinteză logică</h2>
+
+        <div class="grid">
+          <div class="mini-card"><strong>Magnetism</strong><br>magnet → poli N/S → atracție/respingere → câmp magnetic → busolă.</div>
+          <div class="mini-card"><strong>Electrizare</strong><br>atom → electroni → sarcină electrică → corp pozitiv/negativ → atracție/respingere.</div>
+          <div class="mini-card"><strong>Curent electric</strong><br>sarcini în mișcare ordonată → generator → circuit închis → consumator.</div>
+          <div class="mini-card"><strong>Circuite</strong><br>serie: un drum; paralel: mai multe drumuri.</div>
+        </div>
+
+        <h3>Formule și notații utile</h3>
+        <div class="formula">\(q\) – sarcina electrică, \([q]_{SI}=C\)</div>
+        <div class="formula">\(I=\frac{Q}{t}\), \([I]_{SI}=A\)</div>
+
+        <div class="example">Ordine bună într-o problemă: notezi datele → scrii formula → transformi unitățile → înlocuiești numeric → scrii rezultatul cu unitate.</div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="12">
+      <article class="card">
+        <h2>Verificare rapidă</h2>
+        <div class="quiz-block" id="quiz">
+          <div class="quiz-question" data-answer="b">
+            <p>1. Un magnet atrage în mod obișnuit:</p>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q1" value="a"> plastic</label>
+              <label class="choice"><input type="radio" name="q1" value="b"> fier</label>
+              <label class="choice"><input type="radio" name="q1" value="c"> hârtie uscată</label>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-answer="c">
+            <p>2. Polii N și S ai doi magneți:</p>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q2" value="a"> se resping</label>
+              <label class="choice"><input type="radio" name="q2" value="b"> dispar</label>
+              <label class="choice"><input type="radio" name="q2" value="c"> se atrag</label>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-answer="a">
+            <p>3. Electronul are sarcină:</p>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q3" value="a"> negativă</label>
+              <label class="choice"><input type="radio" name="q3" value="b"> pozitivă</label>
+              <label class="choice"><input type="radio" name="q3" value="c"> nulă, mereu</label>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-answer="c">
+            <p>4. Un corp devine negativ dacă:</p>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q4" value="a"> pierde electroni</label>
+              <label class="choice"><input type="radio" name="q4" value="b"> pierde protoni</label>
+              <label class="choice"><input type="radio" name="q4" value="c"> primește electroni</label>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-answer="b">
+            <p>5. Curentul electric este:</p>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q5" value="a"> repausul sarcinilor</label>
+              <label class="choice"><input type="radio" name="q5" value="b"> deplasarea ordonată a sarcinilor</label>
+              <label class="choice"><input type="radio" name="q5" value="c"> o proprietate magnetică a lemnului</label>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-answer="a">
+            <p>6. Becul luminează când circuitul este:</p>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q6" value="a"> închis</label>
+              <label class="choice"><input type="radio" name="q6" value="b"> deschis</label>
+              <label class="choice"><input type="radio" name="q6" value="c"> fără generator</label>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-answer="c">
+            <p>7. Cuprul este:</p>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q7" value="a"> izolator</label>
+              <label class="choice"><input type="radio" name="q7" value="b"> magnet permanent, mereu</label>
+              <label class="choice"><input type="radio" name="q7" value="c"> conductor</label>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <div class="quiz-question" data-answer="b">
+            <p>8. Într-un circuit în paralel, dacă un bec se arde:</p>
+            <div class="choices">
+              <label class="choice"><input type="radio" name="q8" value="a"> se opresc obligatoriu toate becurile</label>
+              <label class="choice"><input type="radio" name="q8" value="b"> celelalte pot rămâne aprinse</label>
+              <label class="choice"><input type="radio" name="q8" value="c"> bateria dispare din circuit</label>
+            </div>
+            <div class="quiz-feedback"></div>
+          </div>
+
+          <button class="check-button" type="button" onclick="checkQuiz()">Verifică răspunsurile</button>
+          <div class="notice" id="quiz-result" aria-live="polite">Alege răspunsurile, apoi apasă pe verificare.</div>
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="13">
+      <div class="final-banner">
+        <h2>Recapitularea este completă</h2>
+        <p><strong>Prof. Dănuț Andronie</strong></p>
+        <p>E-mail: <a href="mailto:danutmg@gmail.com" style="color:#67e8f9; font-weight:900;">danutmg@gmail.com</a></p>
+        <p>Ai revăzut noțiunile esențiale despre fenomene electrice și magnetice.</p>
+      </div>
+
+      <article class="card">
+        <h2>Înainte de test</h2>
         <ul>
-          <li>\(\rho=800\,kg/m^3\) și \(V=250\,cm^3\) dau \(m=200\,g\).</li>
-          <li>\(m=1{,}2\,kg\) și \(\rho=600\,kg/m^3\) dau \(V=2\,L\).</li>
-          <li>\(m=30\,kg\) și \(V=0{,}02\,m^3\) dau \(\rho=1{,}5\,g/cm^3\).</li>
-          <li>\(m=0{,}8\,kg\) și \(V=400\,cm^3\) dau \(\rho=2000\,kg/m^3\).</li>
+          <li>Reține diferența dintre atracție și respingere.</li>
+          <li>Leagă electrizarea de transferul electronilor.</li>
+          <li>Într-un circuit, curentul circulă doar dacă drumul este închis.</li>
+          <li>Compară seria și paralelul prin numărul de drumuri ale curentului.</li>
         </ul>
-      </article>
 
-      <nav class="pager">
-        <button class="back" type="button" onclick="prevPage()">Înapoi</button>
-        <button class="next" type="button" onclick="nextPage()">Mergi mai departe</button>
-      </nav>
-    </section>
-
-    <section class="screen" data-title="Sinteză">
-      <article class="card">
-        <h2>🧠 11. Sinteză logică</h2>
-
-        <div class="grid two">
-          <div class="info">
-            <h3>Magnetism</h3>
-            <ul>
-              <li>Magnetul atrage fier, nichel, cobalt.</li>
-              <li>Are doi poli: Nord și Sud.</li>
-              <li>Polii identici se resping, polii diferiți se atrag.</li>
-              <li>Câmpul magnetic este zona de acțiune din jurul magnetului.</li>
-            </ul>
-          </div>
-
-          <div class="info">
-            <h3>Electrizare</h3>
-            <ul>
-              <li>Corpul capătă sarcină electrică.</li>
-              <li>Pozitiv: pierde electroni.</li>
-              <li>Negativ: primește electroni.</li>
-              <li>Metode: frecare, contact, influență.</li>
-            </ul>
-          </div>
-
-          <div class="info">
-            <h3>Descărcări electrice</h3>
-            <ul>
-              <li>Fulger: între nori sau în nor.</li>
-              <li>Trăsnet: între nor și pământ.</li>
-              <li>Tunet: sunetul produs de încălzirea bruscă a aerului.</li>
-              <li>Paratrăsnetul conduce descărcarea în pământ.</li>
-            </ul>
-          </div>
-
-          <div class="info">
-            <h3>Probleme</h3>
-            <ul>
-              <li>Viteză: \(v=\frac{d}{t}\).</li>
-              <li>Densitate: \(\rho=\frac{m}{V}\).</li>
-              <li>Transformările de unități sunt primul pas.</li>
-              <li>Scrie formula, înlocuiește, calculează și notează unitatea.</li>
-            </ul>
-          </div>
+        <div class="visitor-counter">
+          Vizitatori pe acest dispozitiv: <span id="visitor-count">0</span>
         </div>
 
-        <div class="remember">
-          <strong>Ordinea corectă în probleme:</strong> citești datele → transformi unitățile → alegi formula → înlocuiești numeric → scrii rezultatul cu unitate.
+        <div class="footer-actions">
+          <a href="../index.html">Înapoi la capitol</a>
+          <a href="../test-final/index.html">Mergi la testul final</a>
         </div>
       </article>
-
-      <nav class="pager">
-        <button class="back" type="button" onclick="prevPage()">Înapoi</button>
-        <button class="next" type="button" onclick="nextPage()">Mergi mai departe</button>
-      </nav>
     </section>
 
-    <section class="screen" data-title="Verificare rapidă">
-      <article class="card">
-        <h2>✅ 12. Verificare rapidă</h2>
-        <p class="lead">Alege varianta corectă. Variantele sunt aliniate pentru citire ușoară pe telefon, tabletă sau PC.</p>
-
-        <div class="quiz-card" id="quiz">
-          <h3>Mini-test de recapitulare</h3>
-
-          <div class="question" data-answer="b">
-            <div class="question-title">1. Un magnet atrage în mod obișnuit:</div>
-            <div class="answers">
-              <label><input type="radio" name="q1" value="a"> plastic</label>
-              <label><input type="radio" name="q1" value="b"> fier</label>
-              <label><input type="radio" name="q1" value="c"> hârtie</label>
-            </div>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="question" data-answer="a">
-            <div class="question-title">2. Polii N și S ai doi magneți:</div>
-            <div class="answers">
-              <label><input type="radio" name="q2" value="a"> se atrag</label>
-              <label><input type="radio" name="q2" value="b"> se resping</label>
-              <label><input type="radio" name="q2" value="c"> dispar</label>
-            </div>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="question" data-answer="c">
-            <div class="question-title">3. Un corp devine negativ dacă:</div>
-            <div class="answers">
-              <label><input type="radio" name="q3" value="a"> pierde protoni</label>
-              <label><input type="radio" name="q3" value="b"> pierde electroni</label>
-              <label><input type="radio" name="q3" value="c"> primește electroni</label>
-            </div>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="question" data-answer="b">
-            <div class="question-title">4. Sarcinile de același semn:</div>
-            <div class="answers">
-              <label><input type="radio" name="q4" value="a"> se atrag</label>
-              <label><input type="radio" name="q4" value="b"> se resping</label>
-              <label><input type="radio" name="q4" value="c"> se neutralizează mereu</label>
-            </div>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="question" data-answer="a">
-            <div class="question-title">5. Trăsnetul este descărcarea electrică:</div>
-            <div class="answers">
-              <label><input type="radio" name="q5" value="a"> între nor și pământ</label>
-              <label><input type="radio" name="q5" value="b"> doar în interiorul norului</label>
-              <label><input type="radio" name="q5" value="c"> între doi magneți</label>
-            </div>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="question" data-answer="c">
-            <div class="question-title">6. Formula vitezei este:</div>
-            <div class="answers">
-              <label><input type="radio" name="q6" value="a"> \(v=d\cdot t\)</label>
-              <label><input type="radio" name="q6" value="b"> \(v=\frac{t}{d}\)</label>
-              <label><input type="radio" name="q6" value="c"> \(v=\frac{d}{t}\)</label>
-            </div>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="question" data-answer="b">
-            <div class="question-title">7. Formula densității este:</div>
-            <div class="answers">
-              <label><input type="radio" name="q7" value="a"> \(\rho=m\cdot V\)</label>
-              <label><input type="radio" name="q7" value="b"> \(\rho=\frac{m}{V}\)</label>
-              <label><input type="radio" name="q7" value="c"> \(\rho=\frac{V}{m}\)</label>
-            </div>
-            <div class="feedback"></div>
-          </div>
-
-          <button class="check" type="button" onclick="checkQuiz()">Verifică răspunsurile</button>
-          <div id="quizResult" class="feedback center" aria-live="polite"></div>
-        </div>
-      </article>
-
-      <nav class="pager">
-        <button class="back" type="button" onclick="prevPage()">Înapoi</button>
-        <button class="next" type="button" onclick="nextPage()">Mergi mai departe</button>
-      </nav>
-    </section>
-
-    <section class="screen" data-title="Final">
-      <article class="card">
-        <h2>🎯 Recapitularea este completă</h2>
-        <p class="lead">Ai revăzut noțiunile esențiale despre magneți, câmp magnetic, electrizare, fulger, trăsnet, protecție, viteză și densitate.</p>
-
-        <div class="grid two">
-          <div class="remember">
-            <h3>Înainte de test</h3>
-            <p>Reține regulile scurte: polii diferiți se atrag, sarcinile diferite se atrag, iar unitățile se transformă înainte de calcul.</p>
-          </div>
-          <div class="formula">
-            <h3>Formule-cheie</h3>
-            <span class="math">\(v=\frac{d}{t}\)</span>
-            <span class="math">\(\rho=\frac{m}{V}\)</span>
-          </div>
-        </div>
-
-       <div class="final-actions">
-       <a class="nav-link chapter-btn" href="../index.html">Înapoi la capitol</a>
-       <a class="nav-link test-btn" href="../test-final/index.html">Mergi la testul final</a>
-       </div>
-
-        <p class="small center">Butonul „Mergi mai departe” nu mai apare aici, deoarece recapitularea s-a încheiat.</p>
-      </article>
-
-      <nav class="pager single">
-        <button class="back" type="button" onclick="prevPage()">Înapoi la verificare</button>
-      </nav>
-    </section>
+    <nav class="lesson-nav" aria-label="Navigare recapitulare">
+      <button class="nav-btn back" id="prevBtn" type="button" onclick="changeScreen(-1)">Înapoi</button>
+      <span class="page-indicator" id="pageIndicator">1/13</span>
+      <button class="nav-btn" id="nextBtn" type="button" onclick="changeScreen(1)">Mergi mai departe</button>
+    </nav>
   </main>
 
   <script>
-    const screens = Array.from(document.querySelectorAll(".screen"));
-    const progress = document.getElementById("progress");
-    const pageCount = document.getElementById("pageCount");
-    let currentPage = 0;
+    const screens = Array.from(document.querySelectorAll('.lesson-screen'));
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageIndicator = document.getElementById('pageIndicator');
+    let currentScreen = 0;
 
-    function showPage(index) {
-      currentPage = Math.max(0, Math.min(index, screens.length - 1));
-      screens.forEach((screen, i) => {
-        screen.classList.toggle("active", i === currentPage);
-      });
+    function updateVisitorCounter() {
+      const key = 'fizica-galaction-electrice-magnetice-recapitulare-vizite';
+      const count = Number(localStorage.getItem(key) || '0') + 1;
+      localStorage.setItem(key, String(count));
+      const counter = document.getElementById('visitor-count');
+      if (counter) counter.textContent = count;
+    }
 
-      const percent = ((currentPage + 1) / screens.length) * 100;
-      progress.style.width = percent + "%";
-      pageCount.textContent = `Pagina ${currentPage + 1} din ${screens.length} • ${screens[currentPage].dataset.title}`;
+    function showScreen(index) {
+      if (index < 0 || index >= screens.length) return;
+      screens[currentScreen].classList.remove('active');
+      currentScreen = index;
+      screens[currentScreen].classList.add('active');
 
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      prevBtn.disabled = currentScreen === 0;
+      nextBtn.textContent = currentScreen === screens.length - 1 ? 'Final' : 'Mergi mai departe';
+      nextBtn.disabled = currentScreen === screens.length - 1;
+      pageIndicator.textContent = `${currentScreen + 1}/${screens.length}`;
 
-      if (window.MathJax && MathJax.typesetPromise) {
-        MathJax.typesetPromise([screens[currentPage]]).catch(() => {});
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([screens[currentScreen]]).catch(() => {});
       }
     }
 
-    function nextPage() {
-      showPage(currentPage + 1);
-    }
-
-    function prevPage() {
-      showPage(currentPage - 1);
+    function changeScreen(step) {
+      showScreen(currentScreen + step);
     }
 
     function checkQuiz() {
-      const questions = Array.from(document.querySelectorAll(".question"));
+      const questions = Array.from(document.querySelectorAll('.quiz-question'));
       let score = 0;
 
       questions.forEach((question, index) => {
-        const answer = question.dataset.answer;
-        const selected = question.querySelector("input[type='radio']:checked");
-        const feedback = question.querySelector(".feedback");
+        const correct = question.dataset.answer;
+        const chosen = question.querySelector('input[type="radio"]:checked');
+        const feedback = question.querySelector('.quiz-feedback');
 
-        if (!selected) {
-          feedback.innerHTML = "<span class='bad'>Alege o variantă.</span>";
+        if (!chosen) {
+          feedback.textContent = 'Alege un răspuns.';
+          feedback.className = 'quiz-feedback incorrect';
           return;
         }
 
-        if (selected.value === answer) {
+        if (chosen.value === correct) {
           score++;
-          feedback.innerHTML = "<span class='ok'>Corect!</span>";
+          feedback.textContent = 'Corect!';
+          feedback.className = 'quiz-feedback correct';
         } else {
-          feedback.innerHTML = "<span class='bad'>Mai verifică noțiunea de pe paginile anterioare.</span>";
+          feedback.textContent = 'Mai încearcă.';
+          feedback.className = 'quiz-feedback incorrect';
         }
       });
 
-      const result = document.getElementById("quizResult");
-      const total = questions.length;
-      let message = "";
-      if (score === total) {
-        message = "Excelent! Ești pregătit pentru test.";
-      } else if (score >= Math.ceil(total * 0.7)) {
-        message = "Bine! Mai recitește doar întrebările greșite.";
-      } else {
-        message = "Reia recapitularea și încearcă din nou.";
-      }
-
-      result.innerHTML = `Scor: ${score}/${total}. ${message}`;
+      const result = document.getElementById('quiz-result');
+      result.textContent = `Scor: ${score}/${questions.length}.`;
+      result.style.borderColor = score === questions.length ? 'rgba(34, 197, 94, 0.75)' : 'rgba(251, 191, 36, 0.65)';
     }
 
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "ArrowRight") nextPage();
-      if (event.key === "ArrowLeft") prevPage();
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') changeScreen(1);
+      if (event.key === 'ArrowLeft') changeScreen(-1);
     });
 
-    showPage(0);
+    updateVisitorCounter();
+    showScreen(0);
   </script>
 </body>
 </html>

@@ -1,12 +1,881 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fenomene termice - Recapitulare</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>Recapitulare | Fenomene termice | Fizica Galaction</title>
+  <meta name="description" content="Recapitulare interactivă pentru clasa a VI-a: fenomene termice.">
+  <link rel="stylesheet" href="../../../assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root {
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --text: #f8fafc;
+      --muted: #dbeafe;
+      --accent: #22d3ee;
+      --accent-2: #22c55e;
+      --warning-bg: #422006;
+      --warning-text: #fef3c7;
+      --border: #334155;
+      --button-text: #052e16;
+      --danger: #fca5a5;
+      --good: #86efac;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 20px;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, rgba(34, 211, 238, 0.16), transparent 32rem),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    .lesson-shell {
+      width: min(100%, 900px);
+      margin: 0 auto;
+      padding: 0.8rem;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .lesson-screen {
+      display: none;
+      min-height: calc(100vh - 6.8rem);
+      padding-bottom: 1rem;
+    }
+
+    .lesson-screen.active {
+      display: block;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(0.35rem); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .top-banner,
+    .final-banner,
+    .card {
+      background: rgba(30, 41, 59, 0.96);
+      border: 1px solid var(--border);
+      border-radius: 1.1rem;
+      box-shadow: 0 1rem 2.4rem rgba(0, 0, 0, 0.28);
+    }
+
+    .top-banner {
+      text-align: center;
+      padding: 0.9rem 0.85rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .top-banner p {
+      margin: 0.25rem 0;
+    }
+
+    .school {
+      color: var(--accent);
+      font-weight: 900;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      font-size: clamp(0.95rem, 4vw, 1.05rem);
+    }
+
+    .prof {
+      color: var(--muted);
+      font-size: clamp(0.92rem, 3.8vw, 1rem);
+      font-weight: 700;
+    }
+
+    .quote {
+      display: inline-block;
+      margin-top: 0.45rem !important;
+      padding: 0.45rem 0.6rem;
+      border-left: 0.18rem solid var(--accent);
+      border-radius: 0.55rem;
+      background: rgba(245, 158, 11, 0.12);
+      color: #fef08a;
+      font-style: italic;
+      font-weight: 700;
+      font-size: clamp(0.9rem, 3.9vw, 1rem);
+    }
+
+    .card {
+      padding: clamp(1rem, 4.6vw, 1.35rem);
+      margin: 0 0 0.85rem;
+    }
+
+    h1, h2, h3 {
+      line-height: 1.18;
+      margin-top: 0;
+    }
+
+    h1 {
+      font-size: clamp(1.65rem, 8vw, 2.45rem);
+      color: #e0f2fe;
+      margin-bottom: 0.75rem;
+    }
+
+    h2 {
+      font-size: clamp(1.35rem, 6.6vw, 1.85rem);
+      color: var(--accent);
+      margin-bottom: 0.7rem;
+    }
+
+    h3 {
+      font-size: clamp(1.08rem, 5.2vw, 1.35rem);
+      color: #bfdbfe;
+      margin-bottom: 0.5rem;
+    }
+
+    p, li {
+      font-size: clamp(1.02rem, 5.2vw, 1.22rem);
+    }
+
+    p { margin: 0.55rem 0; }
+
+    ul, ol {
+      padding-left: 1.15rem;
+      margin: 0.55rem 0;
+    }
+
+    li {
+      margin: 0.42rem 0;
+    }
+
+    .kw {
+      color: #fef08a;
+      font-weight: 900;
+    }
+
+    .notice {
+      margin-top: 0.85rem;
+      padding: 0.85rem;
+      border-radius: 0.85rem;
+      background: rgba(14, 116, 144, 0.24);
+      border: 1px solid rgba(34, 211, 238, 0.38);
+      color: #e0f2fe;
+      font-size: clamp(1rem, 5vw, 1.16rem);
+      font-weight: 700;
+    }
+
+    .formula {
+      margin: 0.9rem 0;
+      padding: 0.85rem;
+      border-radius: 0.9rem;
+      background: #0f172a;
+      border: 1px solid #475569;
+      text-align: center;
+      font-size: clamp(1.18rem, 6.2vw, 1.55rem);
+      overflow-x: auto;
+    }
+
+    .example {
+      margin-top: 0.85rem;
+      padding: 0.85rem;
+      border-radius: 0.85rem;
+      background: rgba(66, 32, 6, 0.9);
+      color: var(--warning-text);
+      border: 1px solid rgba(251, 191, 36, 0.5);
+      font-size: clamp(1rem, 5vw, 1.16rem);
+    }
+
+    .grid {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .mini-card {
+      background: #0f172a;
+      border: 1px solid #475569;
+      border-radius: 0.9rem;
+      padding: 0.85rem;
+    }
+
+    .mini-card strong {
+      color: #fef08a;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border-radius: 0.9rem;
+      border: 1px solid #475569;
+      margin-top: 0.8rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #0f172a;
+      min-width: 560px;
+    }
+
+    th, td {
+      border: 1px solid #475569;
+      padding: 0.65rem;
+      text-align: left;
+      vertical-align: top;
+      font-size: clamp(0.9rem, 4.3vw, 1.05rem);
+    }
+
+    th {
+      color: #fef08a;
+      background: rgba(34, 211, 238, 0.12);
+    }
+
+    .graph-box {
+      margin-top: 0.9rem;
+      padding: 0.75rem;
+      border-radius: 0.9rem;
+      background: #0f172a;
+      border: 1px solid #475569;
+      overflow-x: auto;
+    }
+
+    .graph-box svg {
+      width: 100%;
+      min-width: 300px;
+      height: auto;
+      display: block;
+    }
+
+    .quick-check {
+      display: grid;
+      gap: 0.85rem;
+      margin-top: 0.75rem;
+    }
+
+    .question {
+      padding: 0.85rem;
+      border-radius: 0.9rem;
+      background: #0f172a;
+      border: 1px solid #475569;
+    }
+
+    .question p {
+      margin-top: 0;
+      font-weight: 800;
+      color: #e0f2fe;
+    }
+
+    .answers {
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .answers label {
+      display: grid;
+      grid-template-columns: 1.2rem 1fr;
+      gap: 0.5rem;
+      align-items: start;
+      padding: 0.55rem;
+      border-radius: 0.65rem;
+      background: rgba(148, 163, 184, 0.10);
+      font-size: clamp(0.98rem, 4.8vw, 1.1rem);
+    }
+
+    .answers input {
+      width: 1rem;
+      height: 1rem;
+      margin-top: 0.18rem;
+      accent-color: var(--accent-2);
+    }
+
+    .check-button {
+      width: 100%;
+      border: none;
+      border-radius: 0.85rem;
+      padding: 0.85rem;
+      margin-top: 0.85rem;
+      font-size: clamp(1rem, 5vw, 1.12rem);
+      font-weight: 900;
+      cursor: pointer;
+      background: var(--accent);
+      color: #082f49;
+    }
+
+    .feedback {
+      margin-top: 0.8rem;
+      padding: 0.75rem;
+      border-radius: 0.8rem;
+      font-weight: 900;
+      display: none;
+    }
+
+    .feedback.good {
+      display: block;
+      color: #052e16;
+      background: var(--good);
+    }
+
+    .feedback.bad {
+      display: block;
+      color: #450a0a;
+      background: var(--danger);
+    }
+
+    .final-banner {
+      padding: 1rem;
+      margin-top: 0.9rem;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(14, 116, 144, 0.42), rgba(30, 41, 59, 0.96));
+    }
+
+    .final-banner strong {
+      display: block;
+      font-size: clamp(1.12rem, 5.8vw, 1.35rem);
+      color: #fef08a;
+      margin-bottom: 0.3rem;
+    }
+
+    .final-banner a {
+      color: var(--accent);
+      font-weight: 900;
+      text-decoration: none;
+    }
+
+    .visitor-counter {
+      margin-top: 0.85rem;
+      padding: 0.7rem;
+      border-radius: 0.75rem;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid #475569;
+      color: #e0f2fe;
+      font-weight: 800;
+    }
+
+    .end-actions {
+      display: grid;
+      gap: 0.55rem;
+      margin-top: 0.9rem;
+    }
+
+    .end-actions a {
+      display: block;
+      text-align: center;
+      padding: 0.75rem;
+      border-radius: 0.8rem;
+      background: #e2e8f0;
+      color: #0f172a;
+      text-decoration: none;
+      font-weight: 900;
+      font-size: clamp(0.95rem, 4.8vw, 1.06rem);
+    }
+
+    .pager {
+      position: sticky;
+      bottom: 0;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.55rem 0.2rem 0.25rem;
+      margin-top: auto;
+      background: linear-gradient(to top, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.86), rgba(15, 23, 42, 0));
+    }
+
+    .pager button {
+      border: none;
+      border-radius: 0.8rem;
+      padding: 0.74rem 0.35rem;
+      font-size: clamp(0.9rem, 4.2vw, 1.05rem);
+      font-weight: 900;
+      cursor: pointer;
+      min-height: 2.55rem;
+    }
+
+    .pager .back {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .pager .next {
+      background: var(--accent-2);
+      color: var(--button-text);
+    }
+
+    .pager button:disabled {
+      opacity: 0.48;
+      cursor: not-allowed;
+    }
+
+    .page-indicator {
+      color: var(--muted);
+      font-weight: 900;
+      min-width: 3.3rem;
+      text-align: center;
+      font-size: clamp(0.92rem, 4.2vw, 1.05rem);
+    }
+
+    @media (min-width: 720px) {
+      html { font-size: 21px; }
+
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .end-actions {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 430px) {
+      .lesson-shell {
+        padding: 0.55rem;
+      }
+
+      .card {
+        border-radius: 0.95rem;
+      }
+
+      .pager {
+        gap: 0.32rem;
+      }
+
+      .pager button {
+        padding-left: 0.2rem;
+        padding-right: 0.2rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Fenomene termice - Recapitulare</h1>
-  <p>Pagina este în lucru.</p>
+  <main class="lesson-shell">
+    <section class="lesson-screen active" data-screen="1">
+      <div class="top-banner">
+        <p class="school">Școala Gimnazială „Gala Galaction” Mangalia</p>
+        <p class="prof">Prof. Dănuț Andronie</p>
+        <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică”</p>
+      </div>
+
+      <article class="card">
+        <h1>Recapitulare – Fenomene termice</h1>
+        <p>
+          Recapitulezi ideile importante despre <span class="kw">starea termică</span>,
+          <span class="kw">temperatură</span>, <span class="kw">căldură</span>,
+          <span class="kw">dilatare</span> și <span class="kw">transformările de stare</span>.
+        </p>
+        <div class="notice">
+          În acest capitol ai învățat cum se schimbă starea termică a corpurilor și cum se explică
+          fenomene întâlnite zilnic: încălzirea, răcirea, topirea, evaporarea și circuitul apei.
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="2">
+      <article class="card">
+        <h2>1. Starea termică</h2>
+        <p>
+          <span class="kw">Starea termică</span> arată dacă un corp este mai cald sau mai rece.
+          Ea este o parte a stării fizice a unui corp.
+        </p>
+        <p>
+          În viața de zi cu zi spunem „cald”, „rece” sau „călduț”, dar în fizică încercăm
+          să descriem această stare cât mai obiectiv.
+        </p>
+        <div class="example">
+          Exemplu: o cană cu ceai fierbinte are o stare termică diferită de un cub de gheață.
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="3">
+      <article class="card">
+        <h2>2. Contact termic și echilibru termic</h2>
+        <p>
+          Două corpuri sunt în <span class="kw">contact termic</span> atunci când pot schimba
+          căldură între ele.
+        </p>
+        <p>
+          Dacă rămân suficient timp împreună, ele pot ajunge la
+          <span class="kw">echilibru termic</span>, adică la aceeași stare termică.
+        </p>
+        <div class="notice">
+          În echilibru termic, schimbul de căldură nu mai modifică starea termică a corpurilor.
+        </div>
+        <div class="example">
+          Exemplu: o linguriță introdusă într-un ceai fierbinte se încălzește treptat.
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="4">
+      <article class="card">
+        <h2>3. Temperatura</h2>
+        <p>
+          <span class="kw">Temperatura</span> este mărimea fizică folosită pentru a caracteriza
+          starea termică a unui corp.
+        </p>
+        <p>
+          Temperatura se măsoară cu <span class="kw">termometrul</span>.
+        </p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Scară</th>
+                <th>Unitate</th>
+                <th>Exemplu</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Celsius</td>
+                <td>°C</td>
+                <td>20 °C</td>
+              </tr>
+              <tr>
+                <td>Kelvin</td>
+                <td>K</td>
+                <td>293 K</td>
+              </tr>
+              <tr>
+                <td>Fahrenheit</td>
+                <td>°F</td>
+                <td>68 °F</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="5">
+      <article class="card">
+        <h2>4. Conversii de temperatură</h2>
+        <p>Relații utile pentru transformarea temperaturii:</p>
+        <div class="formula">\(T = t + 273\)</div>
+        <div class="formula">\(f = 1,8 \cdot t + 32\)</div>
+        <div class="example">
+          Exemplu numeric:
+          dacă \(t = 20^\circ C\), atunci
+          \(T = 20 + 273 = 293\,K\).
+        </div>
+        <div class="example">
+          Pentru Fahrenheit:
+          \(f = 1,8 \cdot 20 + 32 = 68^\circ F\).
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="6">
+      <article class="card">
+        <h2>5. Încălzire, răcire și transmiterea căldurii</h2>
+        <p>
+          Starea termică a unui corp se modifică atunci când corpul
+          <span class="kw">primește</span> sau <span class="kw">cedează</span> căldură.
+        </p>
+        <ul>
+          <li><span class="kw">Încălzirea</span> – temperatura crește;</li>
+          <li><span class="kw">Răcirea</span> – temperatura scade;</li>
+          <li>De obicei, corpul mai cald cedează căldură corpului mai rece.</li>
+        </ul>
+        <div class="grid">
+          <div class="mini-card"><strong>Conducție</strong><br>mai ales în solide, de exemplu o lingură metalică încălzită.</div>
+          <div class="mini-card"><strong>Convecție</strong><br>în lichide și gaze, de exemplu aerul cald care se ridică.</div>
+          <div class="mini-card"><strong>Radiație</strong><br>fără contact direct, de exemplu încălzirea de la Soare.</div>
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="7">
+      <article class="card">
+        <h2>6. Dilatare și contracție</h2>
+        <p>
+          <span class="kw">Dilatarea</span> este fenomenul prin care dimensiunile unui corp cresc
+          atunci când temperatura lui crește.
+        </p>
+        <p>
+          <span class="kw">Contracția</span> este fenomenul prin care dimensiunile unui corp scad
+          atunci când temperatura lui scade.
+        </p>
+        <div class="grid">
+          <div class="mini-card"><strong>Dilatare liniară</strong><br>se modifică mai ales lungimea.</div>
+          <div class="mini-card"><strong>Dilatare superficială</strong><br>se modifică aria.</div>
+          <div class="mini-card"><strong>Dilatare volumică</strong><br>se modifică volumul.</div>
+        </div>
+        <div class="example">
+          Exemple: șinele de cale ferată, podurile, capacele metalice și termometrele.
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="8">
+      <article class="card">
+        <h2>7. Stări de agregare și transformări</h2>
+        <p>Substanțele pot exista în trei stări de agregare principale:</p>
+        <ul>
+          <li>solidă;</li>
+          <li>lichidă;</li>
+          <li>gazoasă.</li>
+        </ul>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Transformare</th>
+                <th>Schimbare</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Topire</td><td>solid → lichid</td></tr>
+              <tr><td>Solidificare</td><td>lichid → solid</td></tr>
+              <tr><td>Vaporizare</td><td>lichid → gaz</td></tr>
+              <tr><td>Condensare</td><td>gaz → lichid</td></tr>
+              <tr><td>Sublimare</td><td>solid → gaz</td></tr>
+              <tr><td>Desublimare</td><td>gaz → solid</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="9">
+      <article class="card">
+        <h2>8. Anomalia termică a apei</h2>
+        <p>
+          Apa are un comportament special între <span class="kw">0 °C</span> și
+          <span class="kw">4 °C</span>.
+        </p>
+        <p>
+          Densitatea apei crește până la 4 °C, apoi scade când apa îngheață.
+          De aceea, <span class="kw">gheața plutește</span> pe apă.
+        </p>
+        <div class="notice">
+          Lacurile și iazurile îngheață mai întâi la suprafață. Sub stratul de gheață,
+          apa poate rămâne lichidă, iar viețuitoarele acvatice pot supraviețui iarna.
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="10">
+      <article class="card">
+        <h2>9. Circuitul apei în natură</h2>
+        <p>
+          Apa circulă permanent în natură printr-un proces continuu.
+        </p>
+        <ol>
+          <li>Soarele încălzește apa mărilor, lacurilor și râurilor.</li>
+          <li>Apa se evaporă.</li>
+          <li>Vaporii se condensează și formează norii.</li>
+          <li>Apa revine prin precipitații: ploaie, ninsoare, grindină.</li>
+          <li>Apa se scurge la suprafață sau se infiltrează în sol.</li>
+        </ol>
+        <div class="example">
+          Circuitul apei leagă fenomenele termice de vreme, climă și viața de zi cu zi.
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="11">
+      <article class="card">
+        <h2>Sinteză rapidă</h2>
+        <ul>
+          <li>Starea termică arată cât de cald sau rece este un corp.</li>
+          <li>Temperatura măsoară obiectiv starea termică.</li>
+          <li>Căldura se transmite prin conducție, convecție și radiație.</li>
+          <li>Dilatarea apare la încălzire, contracția la răcire.</li>
+          <li>Stările de agregare sunt solidă, lichidă și gazoasă.</li>
+          <li>Transformările de stare explică multe fenomene din natură.</li>
+          <li>Apa are o anomalie termică importantă pentru viață.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="12">
+      <article class="card">
+        <h2>Verificare rapidă</h2>
+        <div class="quick-check">
+          <div class="question">
+            <p>1. Temperatura se măsoară cu:</p>
+            <div class="answers">
+              <label><input type="radio" name="q1" value="0"> dinamometrul</label>
+              <label><input type="radio" name="q1" value="1"> termometrul</label>
+              <label><input type="radio" name="q1" value="0"> rigla</label>
+            </div>
+          </div>
+
+          <div class="question">
+            <p>2. Încălzirea înseamnă:</p>
+            <div class="answers">
+              <label><input type="radio" name="q2" value="1"> creșterea temperaturii</label>
+              <label><input type="radio" name="q2" value="0"> scăderea temperaturii</label>
+              <label><input type="radio" name="q2" value="0"> dispariția căldurii</label>
+            </div>
+          </div>
+
+          <div class="question">
+            <p>3. Convecția se produce mai ales în:</p>
+            <div class="answers">
+              <label><input type="radio" name="q3" value="0"> solide</label>
+              <label><input type="radio" name="q3" value="1"> lichide și gaze</label>
+              <label><input type="radio" name="q3" value="0"> vid absolut</label>
+            </div>
+          </div>
+
+          <div class="question">
+            <p>4. Topirea este transformarea:</p>
+            <div class="answers">
+              <label><input type="radio" name="q4" value="1"> solid → lichid</label>
+              <label><input type="radio" name="q4" value="0"> lichid → solid</label>
+              <label><input type="radio" name="q4" value="0"> gaz → lichid</label>
+            </div>
+          </div>
+
+          <div class="question">
+            <p>5. Dacă \(t = 20^\circ C\), atunci \(T\) este aproximativ:</p>
+            <div class="answers">
+              <label><input type="radio" name="q5" value="0"> \(20\,K\)</label>
+              <label><input type="radio" name="q5" value="1"> \(293\,K\)</label>
+              <label><input type="radio" name="q5" value="0"> \(373\,K\)</label>
+            </div>
+          </div>
+        </div>
+
+        <button class="check-button" type="button" onclick="checkQuickTest()">Verifică răspunsurile</button>
+        <div id="quickFeedback" class="feedback" aria-live="polite"></div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="13">
+      <article class="card">
+        <h2>Final</h2>
+        <p>
+          Ai recapitulat capitolul despre fenomene termice: stare termică, temperatură,
+          căldură, dilatare, transformări de stare, anomalia termică a apei și circuitul apei.
+        </p>
+
+        <div class="final-banner">
+          <strong>Prof. Dănuț Andronie</strong>
+          <span>E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a></span>
+          <div class="visitor-counter">
+            Vizitatori pe acest dispozitiv: <span id="visitorCount">0</span>
+          </div>
+        </div>
+
+        <div class="end-actions">
+          <a href="../lectii/lectia-6.html">Lecția anterioară</a>
+          <a href="../lectii/index.html">Vezi toate lecțiile</a>
+          <a href="../evaluare/index.html">Mergi mai departe</a>
+        </div>
+      </article>
+    </section>
+
+    <nav class="pager" aria-label="Navigare în recapitulare">
+      <button class="back" type="button" onclick="previousScreen()">Înapoi</button>
+      <span class="page-indicator" id="pageIndicator">1/13</span>
+      <button class="next" type="button" onclick="nextScreen()">Mergi mai departe</button>
+    </nav>
+  </main>
+
+  <script>
+    const screens = Array.from(document.querySelectorAll('.lesson-screen'));
+    const pageIndicator = document.getElementById('pageIndicator');
+    const backButton = document.querySelector('.pager .back');
+    const nextButton = document.querySelector('.pager .next');
+    let currentScreen = 0;
+
+    function updateScreen() {
+      screens.forEach((screen, index) => {
+        screen.classList.toggle('active', index === currentScreen);
+      });
+
+      pageIndicator.textContent = `${currentScreen + 1}/${screens.length}`;
+      backButton.disabled = currentScreen === 0;
+      nextButton.disabled = currentScreen === screens.length - 1;
+
+      if (currentScreen === screens.length - 1) {
+        nextButton.textContent = 'Final';
+        updateVisitorCounter();
+      } else {
+        nextButton.textContent = 'Mergi mai departe';
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise();
+      }
+    }
+
+    function nextScreen() {
+      if (currentScreen < screens.length - 1) {
+        currentScreen += 1;
+        updateScreen();
+      }
+    }
+
+    function previousScreen() {
+      if (currentScreen > 0) {
+        currentScreen -= 1;
+        updateScreen();
+      }
+    }
+
+    function checkQuickTest() {
+      const names = ['q1', 'q2', 'q3', 'q4', 'q5'];
+      const selected = names.map(name => document.querySelector(`input[name="${name}"]:checked`));
+      const feedback = document.getElementById('quickFeedback');
+
+      if (selected.some(item => !item)) {
+        feedback.className = 'feedback bad';
+        feedback.textContent = 'Alege câte un răspuns la fiecare întrebare.';
+        return;
+      }
+
+      const score = selected.reduce((sum, item) => sum + Number(item.value), 0);
+
+      if (score === names.length) {
+        feedback.className = 'feedback good';
+        feedback.textContent = 'Corect! Ai recapitulat foarte bine fenomenele termice.';
+      } else {
+        feedback.className = 'feedback bad';
+        feedback.textContent = `Ai ${score} răspunsuri corecte din ${names.length}. Revizuiește: temperatura, transmiterea căldurii, transformările de stare și relația T = t + 273.`;
+      }
+    }
+
+    function updateVisitorCounter() {
+      const key = 'recapitulare-fenomene-termice-vizite';
+      const hasCountedKey = key + '-counted';
+      let count = Number(localStorage.getItem(key) || '0');
+
+      if (!sessionStorage.getItem(hasCountedKey)) {
+        count += 1;
+        localStorage.setItem(key, String(count));
+        sessionStorage.setItem(hasCountedKey, '1');
+      }
+
+      const counter = document.getElementById('visitorCount');
+      if (counter) counter.textContent = count;
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') nextScreen();
+      if (event.key === 'ArrowLeft') previousScreen();
+    });
+
+    updateScreen();
+  </script>
 </body>
 </html>

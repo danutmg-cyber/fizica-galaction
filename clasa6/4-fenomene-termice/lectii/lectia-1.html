@@ -2,138 +2,761 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <title>Lecția 1 | Stare termică. Contact termic. Echilibru termic | Fizica Galaction</title>
-  <meta name="description" content="Ce înseamnă stare termică, cum apare contactul termic și când două corpuri ajung în echilibru termic.">
+  <meta name="description" content="Lecția 1 pentru clasa a VI-a: stare termică, contact termic și echilibru termic.">
   <link rel="stylesheet" href="../../../assets/css/style.css">
 
   <style>
-    .lesson-nav {
+    :root {
+      --bg: #0f172a;
+      --panel: #1e293b;
+      --text: #f8fafc;
+      --muted: #dbeafe;
+      --accent: #22d3ee;
+      --accent-2: #22c55e;
+      --warning-bg: #422006;
+      --warning-text: #fef3c7;
+      --border: #334155;
+      --button-text: #052e16;
+      --danger: #fca5a5;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 20px;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top, rgba(34, 211, 238, 0.16), transparent 32rem),
+        var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+    }
+
+    .lesson-shell {
+      width: min(100%, 860px);
+      margin: 0 auto;
+      padding: 0.8rem;
+      min-height: 100vh;
       display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
-      justify-content: space-between;
+      flex-direction: column;
     }
-    .nav-button {
-      display: inline-block;
-      padding: 12px 18px;
-      border-radius: 12px;
-      text-decoration: none;
+
+    .lesson-screen {
+      display: none;
+      min-height: calc(100vh - 6.8rem);
+      padding-bottom: 1rem;
+    }
+
+    .lesson-screen.active {
+      display: block;
+      animation: fadeIn 0.2s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(0.35rem); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .top-banner,
+    .final-banner,
+    .card {
+      background: rgba(30, 41, 59, 0.96);
+      border: 1px solid var(--border);
+      border-radius: 1.1rem;
+      box-shadow: 0 1rem 2.4rem rgba(0, 0, 0, 0.28);
+    }
+
+    .top-banner {
+      text-align: center;
+      padding: 0.9rem 0.85rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .school {
+      margin: 0 0 0.15rem;
+      color: var(--accent);
+      font-weight: 800;
+      font-size: clamp(1rem, 5vw, 1.35rem);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .prof {
+      margin: 0.15rem 0;
+      color: #e0f2fe;
       font-weight: 700;
-      background: #22d3ee;
-      color: #082f49;
-      border: 2px solid #0891b2;
-      box-shadow: 0 4px 14px rgba(8,145,178,0.18);
+      font-size: clamp(0.95rem, 4.6vw, 1.15rem);
     }
-    .nav-button.secondary {
+
+    .quote {
+      margin: 0.5rem auto 0;
+      padding: 0.65rem;
+      border-left: 0.22rem solid var(--accent);
+      background: rgba(245, 158, 11, 0.12);
+      color: #fef08a;
+      border-radius: 0.7rem;
+      font-size: clamp(1rem, 4.8vw, 1.22rem);
+      font-style: italic;
+      font-weight: 650;
+    }
+
+    .card {
+      padding: clamp(1rem, 4.8vw, 1.45rem);
+      margin: 0.65rem 0;
+    }
+
+    h1, h2, h3 {
+      line-height: 1.15;
+      margin-top: 0;
+      color: #ecfeff;
+    }
+
+    h1 {
+      font-size: clamp(1.65rem, 8vw, 2.65rem);
+      margin-bottom: 0.85rem;
+    }
+
+    h2 {
+      font-size: clamp(1.45rem, 6.8vw, 2.1rem);
+      margin-bottom: 0.75rem;
+    }
+
+    h3 {
+      font-size: clamp(1.18rem, 5.4vw, 1.45rem);
+      margin-bottom: 0.5rem;
+    }
+
+    p, li {
+      font-size: clamp(1.12rem, 5.5vw, 1.38rem);
+    }
+
+    p { margin: 0.75rem 0; }
+
+    ul {
+      padding-left: 1.2rem;
+      margin: 0.6rem 0;
+    }
+
+    li { margin: 0.55rem 0; }
+
+    .kw {
+      color: #67e8f9;
+      font-weight: 800;
+    }
+
+    .notice,
+    .example,
+    .formula-box {
+      border-radius: 0.9rem;
+      padding: 0.85rem;
+      margin: 0.85rem 0;
+    }
+
+    .notice {
+      background: rgba(14, 165, 233, 0.14);
+      border: 1px solid rgba(103, 232, 249, 0.34);
+      color: #e0f2fe;
+      font-weight: 650;
+      font-size: clamp(1.08rem, 5.2vw, 1.3rem);
+    }
+
+    .example {
+      background: rgba(34, 197, 94, 0.12);
+      border: 1px solid rgba(134, 239, 172, 0.34);
+    }
+
+    .formula-box {
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(226, 232, 240, 0.2);
+      text-align: center;
+      overflow-x: auto;
+    }
+
+    .formula {
+      font-size: clamp(1.55rem, 8vw, 2.35rem);
+      color: #f8fafc;
+      font-weight: 800;
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.8rem;
+      margin-top: 0.8rem;
+    }
+
+    .compare-card {
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      border-radius: 0.9rem;
+      padding: 0.85rem;
+    }
+
+    .compare-card strong {
+      display: block;
+      color: #fef08a;
+      font-size: clamp(1.15rem, 5.6vw, 1.38rem);
+      margin-bottom: 0.25rem;
+    }
+
+    .compare-card span {
+      display: block;
+      font-size: clamp(1.05rem, 5vw, 1.25rem);
+      color: #e2e8f0;
+    }
+
+    .visual {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      margin: 0.9rem 0;
+    }
+
+    .mini-planet {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(103, 232, 249, 0.25);
+      border-radius: 1rem;
+      padding: 0.9rem;
+      text-align: center;
+    }
+
+    .planet-circle {
+      width: 7.5rem;
+      height: 7.5rem;
+      margin: 0 auto 0.6rem;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 3rem;
+      background: radial-gradient(circle at 30% 30%, #67e8f9, #0369a1 72%);
+      border: 0.25rem solid rgba(224, 242, 254, 0.8);
+    }
+
+    .moon .planet-circle {
+      background: radial-gradient(circle at 30% 30%, #f8fafc, #64748b 72%);
+    }
+
+    .quick-check {
+      display: grid;
+      gap: 0.65rem;
+      margin: 0.8rem 0;
+    }
+
+    .check-option {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.65rem;
+      align-items: center;
+      padding: 0.85rem;
+      border-radius: 0.9rem;
+      background: rgba(15, 23, 42, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      font-size: clamp(1.08rem, 5.2vw, 1.3rem);
+    }
+
+    .check-option input {
+      width: 1.25rem;
+      height: 1.25rem;
+      accent-color: var(--accent-2);
+    }
+
+    .check-actions {
+      margin-top: 0.9rem;
+    }
+
+    .check-button {
+      width: 100%;
+      border: none;
+      border-radius: 0.9rem;
+      padding: 0.85rem;
+      background: var(--accent);
+      color: #082f49;
+      font-weight: 900;
+      font-size: clamp(1.05rem, 5vw, 1.25rem);
+      cursor: pointer;
+    }
+
+    .feedback {
+      margin-top: 0.85rem;
+      padding: 0.85rem;
+      border-radius: 0.9rem;
+      font-size: clamp(1.05rem, 5vw, 1.25rem);
+      font-weight: 800;
+      display: none;
+    }
+
+    .feedback.good {
+      display: block;
+      background: rgba(34, 197, 94, 0.16);
+      border: 1px solid rgba(134, 239, 172, 0.38);
+      color: #bbf7d0;
+    }
+
+    .feedback.bad {
+      display: block;
+      background: rgba(239, 68, 68, 0.14);
+      border: 1px solid rgba(252, 165, 165, 0.38);
+      color: #fecaca;
+    }
+
+    .final-banner {
+      padding: 1rem;
+      margin: 1rem 0;
+      text-align: center;
+      border-color: rgba(34, 197, 94, 0.38);
+      background: rgba(20, 83, 45, 0.38);
+    }
+
+    .final-banner strong {
+      display: block;
+      font-size: clamp(1.3rem, 6.2vw, 1.65rem);
+      color: #dcfce7;
+      margin-bottom: 0.35rem;
+    }
+
+    .final-banner span,
+    .final-banner a,
+    .visitor-counter {
+      color: #f0fdf4;
+      font-size: clamp(1.05rem, 5vw, 1.25rem);
+    }
+
+    .final-banner a {
+      font-weight: 800;
+      text-decoration: underline;
+    }
+
+    .visitor-counter {
+      margin-top: 0.8rem;
+      padding: 0.65rem;
+      border-radius: 0.75rem;
+      background: rgba(15, 23, 42, 0.42);
+      font-weight: 800;
+    }
+
+    .end-actions {
+      display: grid;
+      gap: 0.6rem;
+      margin-top: 0.9rem;
+    }
+
+    .end-actions a {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+      padding: 0.75rem;
+      border-radius: 0.8rem;
+      background: rgba(34, 211, 238, 0.16);
+      border: 1px solid rgba(103, 232, 249, 0.32);
+      color: #e0f2fe;
+      font-size: clamp(1rem, 4.8vw, 1.2rem);
+      font-weight: 800;
+    }
+
+    .pager {
+      position: sticky;
+      bottom: 0;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.55rem 0.2rem 0.25rem;
+      margin-top: auto;
+      background: linear-gradient(to top, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.86), rgba(15, 23, 42, 0));
+    }
+
+    .pager button {
+      border: none;
+      border-radius: 0.8rem;
+      padding: 0.74rem 0.35rem;
+      font-size: clamp(0.9rem, 4.2vw, 1.05rem);
+      font-weight: 900;
+      cursor: pointer;
+      min-height: 2.55rem;
+    }
+
+    .pager .back {
       background: #e2e8f0;
       color: #0f172a;
-      border-color: #cbd5e1;
     }
-    .nav-button.success {
-      background: #22c55e;
-      color: #052e16;
-      border-color: #16a34a;
+
+    .pager .next {
+      background: var(--accent-2);
+      color: var(--button-text);
     }
-    .nav-button:hover,
-    .nav-button:focus {
-      filter: brightness(1.02);
-      transform: translateY(-1px);
+
+    .pager button:disabled {
+      opacity: 0.48;
+      cursor: not-allowed;
     }
-    .mini-note {
-      font-size: 0.95rem;
-      color: #cbd5e1;
-      margin-top: 8px;
+
+    .page-indicator {
+      color: var(--muted);
+      font-weight: 900;
+      min-width: 3.1rem;
+      text-align: center;
+      font-size: clamp(0.92rem, 4.2vw, 1.05rem);
+    }
+
+    @media (min-width: 720px) {
+      html { font-size: 21px; }
+
+      .compare-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .visual {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .end-actions {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 430px) {
+      .lesson-shell {
+        padding: 0.55rem;
+      }
+
+      .card {
+        border-radius: 0.95rem;
+      }
+
+      .pager {
+        gap: 0.32rem;
+      }
+
+      .pager button {
+        padding-left: 0.2rem;
+        padding-right: 0.2rem;
+      }
+
+      .planet-circle {
+        width: 6.2rem;
+        height: 6.2rem;
+      }
     }
   </style>
 
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
+
 <body>
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction</h1>
-    </div>
-  </header>
+  <main class="lesson-shell">
 
-  <main class="page-content wrapper">
-
-    <section class="card">
-      <h1>Lecția 1 – Stare termică. Contact termic. Echilibru termic</h1>
-      <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică”</p>
-    </section>
-
-    <section class="card" id="stare-termica">
-      <h2>1. Starea termică</h2>
-      <p><span class="kw"><strong>Starea termică</strong></span> arată dacă un corp este mai cald sau mai rece.</p>
-<p>În limbajul obișnuit spunem că un obiect este <strong>cald</strong>, <strong>rece</strong> sau <strong>călduț</strong>, dar în fizică încercăm să descriem această stare cât mai clar și cât mai obiectiv.</p>
-<div class="notice">
-  Starea termică este o parte a stării fizice a unui corp.
-</div>
-    </section>
-
-    <section class="card" id="contact-termic">
-      <h2>2. Contactul termic</h2>
-      <p>Două corpuri se află în <span class="kw"><strong>contact termic</strong></span> atunci când pot schimba căldură între ele.</p>
-<p>De exemplu, o linguriță introdusă într-un ceai fierbinte intră în contact termic cu lichidul și începe să se încălzească.</p>
-<div class="example">
-  Exemple: mâna și o cană cu ceai, cubul de gheață și sucul, aerul din cameră și caloriferul.
-</div>
-    </section>
-
-    <section class="card" id="echilibru-termic">
-      <h2>3. Echilibrul termic</h2>
-      <p>Dacă două corpuri aflate în contact termic stau suficient timp împreună, ele ajung la aceeași stare termică.</p>
-<p>Această situație se numește <span class="kw"><strong>echilibru termic</strong></span>.</p>
-<div class="notice">
-  În echilibru termic, schimbul de căldură dintre corpuri nu mai modifică starea lor termică.
-</div>
-    </section>
-
-    <section class="card" id="exemple">
-      <h2>4. Exemple din viața de zi cu zi</h2>
-      <ul>
-  <li>o sticlă rece lăsată pe masă se încălzește treptat;</li>
-  <li>un ceai fierbinte se răcește dacă este lăsat în cameră;</li>
-  <li>untul scos din frigider se încălzește treptat la temperatura camerei.</li>
-</ul>
-<p>În toate aceste exemple corpurile tind spre echilibru termic cu mediul din jur.</p>
-    </section>
-
-    <section class="card">
-      <h2>Reține</h2>
-      <ul>
-        <li>starea termică arată cât de cald sau cât de rece este un corp;</li>
-        <li>contactul termic permite schimbul de căldură între corpuri;</li>
-        <li>echilibrul termic apare când corpurile ajung la aceeași stare termică.</li>
-      </ul>
-    </section>
-
-    <section class="card">
-      <h2>Navigare</h2>
-      <p class="mini-note">Butonul „Mergi mai departe” te duce direct la lecția următoare.</p>
-      <div class="lesson-nav">
-        <a class="nav-button secondary" href="./index.html">Toate lecțiile</a>
-        <a class="nav-button" href="./index.html">Înapoi la lecții</a>
-        <a class="nav-button success" href="./lectia-2.html">Mergi mai departe</a>
+    <section class="lesson-screen active" data-screen="1">
+      <div class="top-banner">
+        <p class="school">Școala Gimnazială „Gala Galaction” Mangalia</p>
+        <p class="prof">Prof. Dănuț Andronie</p>
+        <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică”</p>
       </div>
+
+      <article class="card">
+        <h1>Lecția 1 – Stare termică. Contact termic. Echilibru termic</h1>
+        <p>
+          În viața de zi cu zi spunem că un obiect este <span class="kw">cald</span>,
+          <span class="kw">rece</span> sau <span class="kw">călduț</span>.
+        </p>
+        <div class="notice">
+          În fizică, descriem această observație prin noțiunea de stare termică.
+        </div>
+      </article>
     </section>
 
+    <section class="lesson-screen" data-screen="2">
+      <article class="card">
+        <h2>1. Starea termică</h2>
+        <p>
+          <span class="kw">Starea termică</span> arată dacă un corp este mai cald sau mai rece.
+        </p>
+        <p>
+          Ea face parte din starea fizică a corpului și ne ajută să comparăm corpurile
+          după felul în care le simțim sau le măsurăm din punct de vedere termic.
+        </p>
+        <div class="example">
+          <h3>Exemple</h3>
+          <ul>
+            <li>un cub de gheață are stare termică rece;</li>
+            <li>o cană cu ceai fierbinte are stare termică mai caldă;</li>
+            <li>aerul dintr-o cameră poate fi rece, plăcut sau cald.</li>
+          </ul>
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="3">
+      <article class="card">
+        <h2>2. Contactul termic</h2>
+        <p>
+          Două corpuri se află în <span class="kw">contact termic</span> atunci când pot
+          schimba căldură între ele.
+        </p>
+        <p>
+          Contactul termic poate apărea prin atingere directă sau prin intermediul mediului
+          din jur.
+        </p>
+        <div class="notice">
+          Când o linguriță este introdusă într-un ceai fierbinte, lingurița se încălzește.
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="4">
+      <article class="card">
+        <h2>3. Schimbul de căldură</h2>
+        <p>
+          Când două corpuri cu stări termice diferite sunt în contact termic, căldura se
+          transferă de la corpul mai cald spre corpul mai rece.
+        </p>
+        <p>
+          Corpul cald se răcește treptat, iar corpul rece se încălzește treptat.
+        </p>
+        <div class="example">
+          <h3>Imaginează-ți</h3>
+          <p>
+            Un cub de gheață pus într-un pahar cu apă se topește, iar apa se răcește.
+            Cele două corpuri își modifică starea termică.
+          </p>
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="5">
+      <article class="card">
+        <h2>4. Echilibrul termic</h2>
+        <p>
+          Dacă două corpuri aflate în contact termic stau suficient timp împreună, ele ajung
+          la aceeași stare termică.
+        </p>
+        <p>
+          Această situație se numește <span class="kw">echilibru termic</span>.
+        </p>
+        <div class="notice">
+          În echilibru termic, schimbul de căldură nu mai modifică starea termică a corpurilor.
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="6">
+      <article class="card">
+        <h2>5. Exemple din viața de zi cu zi</h2>
+        <ul>
+          <li>o sticlă rece lăsată pe masă se încălzește treptat;</li>
+          <li>un ceai fierbinte se răcește dacă este lăsat în cameră;</li>
+          <li>untul scos din frigider se înmoaie la temperatura camerei;</li>
+          <li>mâna rece se încălzește când ținem o cană caldă.</li>
+        </ul>
+        <div class="notice">
+          În toate aceste exemple, corpurile tind spre echilibru termic cu mediul din jur.
+        </div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="7">
+      <article class="card">
+        <h2>Reține</h2>
+        <ul>
+          <li><span class="kw">Starea termică</span> arată cât de cald sau cât de rece este un corp.</li>
+          <li><span class="kw">Contactul termic</span> permite schimbul de căldură între corpuri.</li>
+          <li><span class="kw">Echilibrul termic</span> apare când corpurile ajung la aceeași stare termică.</li>
+        </ul>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="8">
+      <article class="card">
+        <h2>Verificare rapidă</h2>
+
+        <p><strong>1. Starea termică arată:</strong></p>
+        <div class="quick-check" data-check="q1">
+          <label class="check-option">
+            <input type="radio" name="q1" value="1">
+            <span>dacă un corp este mai cald sau mai rece</span>
+          </label>
+          <label class="check-option">
+            <input type="radio" name="q1" value="0">
+            <span>forma unui corp</span>
+          </label>
+          <label class="check-option">
+            <input type="radio" name="q1" value="0">
+            <span>culoarea unui corp</span>
+          </label>
+        </div>
+
+        <p><strong>2. Contactul termic permite:</strong></p>
+        <div class="quick-check" data-check="q2">
+          <label class="check-option">
+            <input type="radio" name="q2" value="0">
+            <span>doar schimbarea formei</span>
+          </label>
+          <label class="check-option">
+            <input type="radio" name="q2" value="1">
+            <span>schimbul de căldură între corpuri</span>
+          </label>
+          <label class="check-option">
+            <input type="radio" name="q2" value="0">
+            <span>doar măsurarea masei</span>
+          </label>
+        </div>
+
+        <p><strong>3. Echilibrul termic apare când:</strong></p>
+        <div class="quick-check" data-check="q3">
+          <label class="check-option">
+            <input type="radio" name="q3" value="0">
+            <span>un corp dispare</span>
+          </label>
+          <label class="check-option">
+            <input type="radio" name="q3" value="1">
+            <span>corpurile ajung la aceeași stare termică</span>
+          </label>
+          <label class="check-option">
+            <input type="radio" name="q3" value="0">
+            <span>corpurile nu se ating niciodată</span>
+          </label>
+        </div>
+
+        <div class="check-actions">
+          <button class="check-button" type="button" onclick="checkQuickTest()">Verifică răspunsurile</button>
+        </div>
+        <div id="quickFeedback" class="feedback" aria-live="polite"></div>
+      </article>
+    </section>
+
+    <section class="lesson-screen" data-screen="9">
+      <article class="card">
+        <h2>Final</h2>
+        <p>
+          Ai parcurs lecția despre starea termică, contactul termic și echilibrul termic.
+        </p>
+        <div class="final-banner">
+          <strong>Prof. Dănuț Andronie</strong>
+          <span>E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a></span>
+          <div class="visitor-counter">
+            Vizitatori pe acest dispozitiv: <span id="visitorCount">0</span>
+          </div>
+        </div>
+
+        <div class="end-actions">
+          <a href="./index.html">Vezi toate lecțiile</a>
+          <a href="../recapitulare/index.html">Recapitulare</a>
+          <a href="./lectia-2.html">Mergi mai departe</a>
+        </div>
+      </article>
+    </section>
+
+    <nav class="pager" aria-label="Navigare în lecție">
+      <button class="back" type="button" onclick="previousScreen()">Înapoi</button>
+      <span class="page-indicator" id="pageIndicator">1/9</span>
+      <button class="next" type="button" onclick="nextScreen()">Mergi mai departe</button>
+    </nav>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrapper">
-      <p>© Fizica Galaction · Prof. DĂNUȚ ANDRONIE</p>
-      <div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 8px;">
-        E-mail:
-        <a href="mailto:danutmg@gmail.com" style="color: #22d3ee; text-decoration: none;">danutmg@gmail.com</a><br>
-        <span style="font-size: 0.85rem; color: #94a3b8;">
-          Pentru observații, propuneri și sugestii privind platforma educațională.
-        </span>
-      </div>
-    </div>
-  </footer>
 
-  <script src="../../../assets/js/main.js"></script>
+  <script>
+    const screens = Array.from(document.querySelectorAll('.lesson-screen'));
+    const pageIndicator = document.getElementById('pageIndicator');
+    const backButton = document.querySelector('.pager .back');
+    const nextButton = document.querySelector('.pager .next');
+    let currentScreen = 0;
+
+    function updateScreen() {
+      screens.forEach((screen, index) => {
+        screen.classList.toggle('active', index === currentScreen);
+      });
+
+      pageIndicator.textContent = `${currentScreen + 1}/${screens.length}`;
+      backButton.disabled = currentScreen === 0;
+      nextButton.disabled = currentScreen === screens.length - 1;
+
+      if (currentScreen === screens.length - 1) {
+        nextButton.textContent = 'Final';
+        updateVisitorCounter();
+      } else {
+        nextButton.textContent = 'Mergi mai departe';
+      }
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise();
+      }
+    }
+
+    function nextScreen() {
+      if (currentScreen < screens.length - 1) {
+        currentScreen += 1;
+        updateScreen();
+      }
+    }
+
+    function previousScreen() {
+      if (currentScreen > 0) {
+        currentScreen -= 1;
+        updateScreen();
+      }
+    }
+
+    function checkQuickTest() {
+      const q1 = document.querySelector('input[name="q1"]:checked');
+      const q2 = document.querySelector('input[name="q2"]:checked');
+      const q3 = document.querySelector('input[name="q3"]:checked');
+      const feedback = document.getElementById('quickFeedback');
+
+      if (!q1 || !q2 || !q3) {
+        feedback.className = 'feedback bad';
+        feedback.textContent = 'Alege câte un răspuns la fiecare întrebare.';
+        return;
+      }
+
+      const score = Number(q1.value) + Number(q2.value) + Number(q3.value);
+
+      if (score === 3) {
+        feedback.className = 'feedback good';
+        feedback.textContent = 'Corect! Starea termică arată cât de cald sau rece este un corp, contactul termic permite schimb de căldură, iar echilibrul termic apare când corpurile ajung la aceeași stare termică.';
+      } else {
+        feedback.className = 'feedback bad';
+        feedback.textContent = 'Mai verifică: corpul cald cedează căldură corpului rece, iar după un timp se poate ajunge la echilibru termic.';
+      }
+    }
+
+    function updateVisitorCounter() {
+      const key = 'termice-lectia-1-stare-termica-vizite';
+      const hasCountedKey = key + '-counted';
+      let count = Number(localStorage.getItem(key) || '0');
+
+      if (!sessionStorage.getItem(hasCountedKey)) {
+        count += 1;
+        localStorage.setItem(key, String(count));
+        sessionStorage.setItem(hasCountedKey, '1');
+      }
+
+      const counter = document.getElementById('visitorCount');
+      if (counter) counter.textContent = count;
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'ArrowRight') nextScreen();
+      if (event.key === 'ArrowLeft') previousScreen();
+    });
+
+    updateScreen();
+  </script>
+
 </body>
 </html>

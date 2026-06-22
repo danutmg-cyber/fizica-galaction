@@ -1,309 +1,605 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lecția 5 | Energia potențială elastică | Fizica Galaction</title>
-  <meta name="description" content="Clasa a VII-a, Energia mecanică, Lecția 5: Energia potențială elastică.">
-  <link rel="stylesheet" href="../../../assets/css/style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Lecția 5 | Conservarea energiei mecanice | Fizica Galaction</title>
+  <meta name="description" content="Lecția 5 pentru clasa a VII-a: Conservarea energiei mecanice." />
 
   <script>
     window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']]
-      },
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']], displayMath: [['\\[','\\]']] },
       svg: { fontCache: 'global' }
     };
   </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-svg.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 
   <style>
     :root{
-      --bg:#0f172a; --panel:#1e293b; --panel-2:#334155; --text:#f8fafc; --muted:#cbd5e1;
-      --accent:#22d3ee; --accent-2:#38bdf8; --ok:#22c55e; --warn:#f59e0b; --danger:#ef4444;
+      --bg:#07111f;
+      --card:#102033;
+      --card2:#14263d;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --accent:#22d3ee;
+      --accent2:#38bdf8;
+      --good:#22c55e;
+      --bad:#fb7185;
+      --warn:#facc15;
+      --line:rgba(148,163,184,.28);
+      --shadow:0 18px 45px rgba(0,0,0,.35);
     }
     *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
-    .wrapper{max-width:1000px;margin:0 auto;padding:20px}
-    .site-header,.site-footer{background:#020617;border-bottom:1px solid #1e293b}
-    .site-footer{border-top:1px solid #1e293b;border-bottom:none;margin-top:32px}
-    .site-title{margin:0;color:var(--accent);font-size:1.9rem}
-    .site-subtitle{margin:6px 0 0;color:var(--muted)}
-    .card{background:var(--panel);border:1px solid var(--panel-2);border-radius:20px;padding:22px;margin:18px 0;box-shadow:0 12px 30px rgba(0,0,0,.25)}
-    h1,h2,h3{margin-top:0}
-    .quote{margin-top:14px;padding:12px 14px;border-left:4px solid var(--accent);background:rgba(34,211,238,.08);border-radius:10px;color:#e0f2fe;font-style:italic}
-    .pillbar{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-    .pill{background:#0f172a;border:1px solid #475569;color:#e2e8f0;padding:7px 12px;border-radius:999px;font-size:.9rem}
-    .page{display:none}
-    .page.active{display:block;animation:fade .25s ease}
+    html,body{min-height:100%}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34,211,238,.18), transparent 30rem),
+        linear-gradient(180deg,#07111f,#0f172a);
+      color:var(--text);
+      font-size:clamp(19px, 4.35vw, 27px);
+      line-height:1.5;
+      overflow-x:hidden;
+    }
+    .app{
+      min-height:100dvh;
+      display:flex;
+      flex-direction:column;
+      width:min(100%, 900px);
+      margin:0 auto;
+      padding:10px;
+      padding-bottom:0;
+    }
+    .top-banner{
+      background:linear-gradient(135deg, rgba(34,211,238,.22), rgba(59,130,246,.12));
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:14px 14px 12px;
+      margin-bottom:10px;
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+    .school{
+      font-size:clamp(16px, 3.5vw, 22px);
+      color:#e0f2fe;
+      font-weight:800;
+      letter-spacing:.02em;
+      text-transform:uppercase;
+    }
+    .prof{
+      margin-top:4px;
+      font-size:clamp(15px, 3.2vw, 19px);
+      color:#bae6fd;
+      font-weight:700;
+    }
+    .motto{
+      margin:10px auto 0;
+      width:fit-content;
+      max-width:100%;
+      border-left:4px solid var(--accent);
+      border-radius:12px;
+      padding:8px 12px;
+      background:rgba(250,204,21,.10);
+      color:#fef9c3;
+      font-size:clamp(15px, 3.3vw, 20px);
+      font-style:italic;
+    }
+    main{
+      flex:1;
+      display:flex;
+      min-height:0;
+      padding-bottom:84px;
+    }
+    .page{display:none;width:100%}
+    .page.active{
+      display:flex;
+      flex-direction:column;
+      animation:fade .22s ease-out;
+    }
     @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-    .status{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
-    .counter{display:inline-block;background:rgba(34,211,238,.12);color:#cffafe;border:1px solid rgba(34,211,238,.24);padding:8px 12px;border-radius:999px;font-weight:700;font-size:.92rem}
-    .progress{height:10px;background:#0f172a;border-radius:999px;overflow:hidden;border:1px solid #334155;margin:10px 0 18px}
-    .progress>div{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent-2));transition:width .25s ease}
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-    .mini{background:#0f172a;border:1px solid #334155;border-radius:16px;padding:16px}
-    .mini h3{font-size:1rem;margin-bottom:8px}
-    .notice{padding:14px 16px;border-radius:14px;border:1px solid rgba(34,197,94,.28);background:rgba(34,197,94,.12);color:#dcfce7;margin:14px 0}
-    .warn{border-color:rgba(245,158,11,.32);background:rgba(245,158,11,.12);color:#fef3c7}
-    .formula{display:block;padding:14px 16px;border-radius:14px;background:#0f172a;border:1px solid #334155;font-size:1.08rem;font-weight:700;margin:10px 0;color:#bae6fd;text-align:center;overflow-x:auto}
-    .question{background:#0f172a;border:1px solid #334155;border-radius:16px;padding:16px;margin-top:14px}
-    .question h3{margin-bottom:8px}
-    .question p{margin:0 0 12px}
-    .question button{margin-top:12px;border:none;background:var(--accent);color:#082f49;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}
-    .feedback{margin-top:10px;font-weight:700}
-    .instruction{display:inline-block;background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.28);color:#dbeafe;padding:8px 12px;border-radius:999px;font-weight:700;font-size:.92rem;margin-bottom:12px}
-    .option-table{width:100%;border-collapse:separate;border-spacing:0 10px;margin-top:8px}
-    .option-table td{padding:0;border:none}
-    .option-row{background:#111827;border:1px solid #334155;border-radius:14px;padding:14px 16px;display:flex;align-items:center;gap:12px;color:var(--text);width:100%;transition:border-color .2s ease,background .2s ease,transform .2s ease;cursor:pointer}
-    .option-row:hover{border-color:var(--accent);background:#172033;transform:translateY(-1px)}
-    .option-row input[type="radio"]{width:22px;height:22px;margin:0;flex:0 0 auto;accent-color:#22d3ee}
-    .example-box{background:#111827;border:1px dashed #475569;border-radius:14px;padding:16px;margin-top:12px}
-    ul,ol{padding-left:22px}
-    table{width:100%;border-collapse:collapse;margin-top:12px;overflow:hidden;border-radius:14px}
-    th,td{padding:12px;border:1px solid #334155;text-align:left;vertical-align:top}
-    th{background:#0f172a;color:#bae6fd}
-    .nav{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;margin-top:18px}
-    .btn{display:inline-block;text-decoration:none;border:none;cursor:pointer;text-align:center;padding:13px 16px;border-radius:12px;font-weight:700;min-width:180px}
-    .btn-primary{background:var(--accent);color:#082f49}
-    .btn-secondary{background:#1d4ed8;color:#eff6ff}
-    .btn-ghost{background:#0f172a;color:#e2e8f0;border:1px solid #475569}
-    @media (max-width:760px){
-      .grid{grid-template-columns:1fr}
-      .nav .btn{width:100%}
-      .site-title{font-size:1.55rem}
-      .status{align-items:flex-start}
-      .option-row{align-items:flex-start}
-      .option-row input[type="radio"]{margin-top:2px}
+    .card{
+      background:linear-gradient(180deg, rgba(16,32,51,.98), rgba(15,23,42,.98));
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      width:100%;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:rgba(34,211,238,.13);
+      border:1px solid rgba(34,211,238,.28);
+      color:#e0f2fe;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:clamp(14px, 3vw, 18px);
+      font-weight:800;
+      margin-bottom:10px;
+    }
+    h1,h2,h3{line-height:1.12;margin:8px 0 14px}
+    h1{font-size:clamp(29px, 7.5vw, 50px);color:#f8fafc}
+    h2{font-size:clamp(25px, 6.2vw, 40px);color:#e0f2fe}
+    h3{font-size:clamp(21px, 5.1vw, 30px);color:#bae6fd}
+    p{margin:12px 0}
+    .lead{font-size:1.05em;color:#e2e8f0}
+    .kw{color:#67e8f9;font-weight:900}
+    .formula{
+      margin:14px 0;
+      padding:14px;
+      border-radius:20px;
+      background:rgba(14,165,233,.10);
+      border:1px solid rgba(56,189,248,.32);
+      text-align:center;
+      font-size:1.02em;
+      overflow-x:auto;
+    }
+    .notice,.warn,.success{
+      margin:14px 0;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:rgba(148,163,184,.10);
+    }
+    .notice{border-left:6px solid var(--accent)}
+    .warn{border-left:6px solid var(--warn);background:rgba(250,204,21,.10)}
+    .success{border-left:6px solid var(--good);background:rgba(34,197,94,.10)}
+    ul,ol{padding-left:1.2em;margin:10px 0}
+    li{margin:8px 0}
+    .two-col{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+    .mini{
+      background:rgba(20,38,61,.92);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:13px;
+    }
+    .svgbox{
+      background:rgba(15,23,42,.55);
+      border:1px solid rgba(148,163,184,.28);
+      border-radius:20px;
+      padding:10px;
+      margin:12px 0;
+      overflow:hidden;
+    }
+    .svgbox svg{width:100%;height:auto;display:block}
+    .q{
+      border:1px solid rgba(148,163,184,.28);
+      background:rgba(20,38,61,.85);
+      border-radius:18px;
+      padding:14px;
+      margin:14px 0;
+    }
+    .answers{
+      display:grid;
+      gap:8px;
+      margin-top:10px;
+    }
+    label.answer{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      border:1px solid rgba(148,163,184,.28);
+      background:rgba(15,23,42,.66);
+      padding:10px;
+      border-radius:14px;
+    }
+    input[type="radio"]{
+      transform:scale(1.18);
+      margin-top:6px;
+      accent-color:#22d3ee;
+    }
+    .check{
+      width:100%;
+      border:none;
+      background:#22d3ee;
+      color:#05202d;
+      font-weight:900;
+      border-radius:16px;
+      padding:12px 14px;
+      margin-top:12px;
+      font-size:clamp(17px, 4vw, 22px);
+      cursor:pointer;
+    }
+    .feedback{
+      min-height:1.2em;
+      margin-top:10px;
+      font-weight:900;
+    }
+    .feedback.good{color:#86efac}
+    .feedback.bad{color:#fda4af}
+    .footer-card{
+      text-align:center;
+      background:linear-gradient(135deg, rgba(34,211,238,.15), rgba(34,197,94,.10));
+      border:1px solid rgba(34,211,238,.30);
+      border-radius:22px;
+      padding:16px;
+      margin-top:14px;
+    }
+    .footer-card a{color:#67e8f9;font-weight:900;text-decoration:none}
+    .nav{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:0;
+      width:min(100%, 900px);
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:8px;
+      padding:10px 10px calc(10px + env(safe-area-inset-bottom));
+      background:linear-gradient(180deg, rgba(7,17,31,0), rgba(7,17,31,.96) 24%, rgba(7,17,31,1));
+      z-index:10;
+    }
+    .nav button{
+      min-height:52px;
+      border:none;
+      border-radius:16px;
+      padding:12px 9px;
+      color:#06121f;
+      font-weight:900;
+      font-size:clamp(16px, 3.8vw, 22px);
+      cursor:pointer;
+      box-shadow:0 10px 22px rgba(0,0,0,.22);
+    }
+    #prevBtn{background:#e2e8f0}
+    #nextBtn{background:#22c55e}
+    .nav button.disabled{
+      opacity:.45;
+      pointer-events:none;
+    }
+    .counter{
+      color:#e2e8f0;
+      font-weight:900;
+      font-size:clamp(14px,3.3vw,18px);
+      padding:0 2px;
+      min-width:48px;
+      text-align:center;
+    }
+    @media (max-width:520px){
+      .app{padding:8px}
+      .card{padding:15px;border-radius:22px}
+      .two-col{grid-template-columns:1fr}
+      ul,ol{padding-left:1.05em}
+      .nav{gap:6px}
+      .nav button{min-height:50px;padding:12px 8px}
     }
   </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction</h1>
-      <p class="site-subtitle">Clasa a VII-a • Energia mecanică • Lecția 5</p>
-    </div>
-  </header>
+  <div class="app">
+    <header class="top-banner" id="topBanner">
+      <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+      <div class="prof">Prof. Dănuț Andronie</div>
+      <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+    </header>
 
-  <main class="wrapper">
-    <section class="card">
-      <h1>Lecția 5 – Energia potențială elastică</h1>
-      <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică.”</p>
-    
-    </section>
-
-    <section class="card">
-      <div class="status">
-        <div class="counter" id="counter">Pagina 1 din 7</div>
-      </div>
-      <div class="progress"><div id="progressBar"></div></div>
-
-      <article class="page active">
-        <h2>1. Ce observăm?</h2>
-        <p>Un resort întins sau comprimat poate pune un corp în mișcare atunci când este lăsat liber.</p>
-        <div class="grid">
-          <div class="mini">
-            <h3>Exemple</h3>
-            <ul>
-              <li>un arc comprimat într-o jucărie;</li>
-              <li>un resort alungit;</li>
-              <li>o praștie întinsă;</li>
-              <li>o trambulină deformată.</li>
-            </ul>
-          </div>
-          <div class="mini">
-            <h3>Concluzie</h3>
-            <p>Un corp elastic deformat are energie datorită deformării sale.</p>
+    <main>
+      <section class="page active">
+        <div class="card">
+          <span class="badge">Clasa a VII-a • Energia mecanică</span>
+          <h1>Lecția 5 – Conservarea energiei mecanice</h1>
+          <p class="lead">
+            În această lecție înveți cum se transformă energia cinetică și energia potențială
+            fără ca energia mecanică totală să se piardă.
+          </p>
+          <div class="notice">
+            Ideea-cheie: într-un sistem fără frecare, energia mecanică rămâne constantă.
           </div>
         </div>
-        <div class="notice">Această energie se numește <strong>energie potențială elastică</strong>. Ea se definește pentru corpuri elastice deformate.</div>
-      </article>
+      </section>
 
-      <article class="page">
-        <h2>2. De ce depinde energia potențială elastică?</h2>
-        <p>Energia potențială elastică depinde de:</p>
-        <ul>
-          <li>constanta elastică a resortului, notată cu $k$;</li>
-          <li>deformarea resortului, notată cu $x$.</li>
-        </ul>
-
-        <div class="grid">
-          <div class="mini">
-            <h3>Dacă resortul este mai rigid</h3>
-            <p>Pentru aceeași deformare, un resort cu constantă elastică mai mare are energie potențială elastică mai mare.</p>
-          </div>
-          <div class="mini">
-            <h3>Dacă deformarea crește</h3>
-            <p>Pentru același resort, o deformare mai mare înseamnă energie potențială elastică mai mare.</p>
-          </div>
-        </div>
-
-        <div class="notice warn">Deformarea apare la pătrat în formulă, deci influențează mult energia potențială elastică.</div>
-      </article>
-
-      <article class="page">
-        <h2>3. Formula energiei potențiale elastice</h2>
-        <p>Energia potențială elastică a unui resort se calculează cu relația:</p>
-        <div class="formula">$$E_{pe} = \frac{kx^2}{2}$$</div>
-
-        <p>unde:</p>
-        <ul>
-          <li>$E_{pe}$ este energia potențială elastică;</li>
-          <li>$k$ este constanta elastică a resortului;</li>
-          <li>$x$ este deformarea resortului.</li>
-        </ul>
-
-        <div class="example-box">
-          <strong>Observă fracția:</strong>
-          <p>Fracția este $\frac{kx^2}{2}$, adică produsul dintre constanta elastică și pătratul deformării, împărțit la 2.</p>
-        </div>
-      </article>
-
-      <article class="page">
-        <h2>4. Starea de referință</h2>
-        <p>Energia potențială elastică se definește în raport cu o stare de referință.</p>
-        <div class="grid">
-          <div class="mini">
-            <h3>Starea de referință</h3>
-            <p>Starea de referință este <strong>starea nedeformată</strong> a corpului elastic.</p>
-          </div>
-          <div class="mini">
-            <h3>Consecință</h3>
-            <p>Dacă resortul nu este nici întins, nici comprimat, atunci $x = 0$ și energia potențială elastică este zero.</p>
+      <section class="page">
+        <div class="card">
+          <span class="badge">Observ</span>
+          <h2>De unde vine viteza?</h2>
+          <p>
+            Când o bilă este lăsată să cadă de la o anumită înălțime, viteza ei crește.
+          </p>
+          <p>
+            La început, bila are energie potențială gravitațională. În timpul căderii,
+            această energie se transformă treptat în energie cinetică.
+          </p>
+          <div class="svgbox" aria-label="Transformarea energiei potențiale în energie cinetică">
+            <svg viewBox="0 0 760 320" role="img">
+              <defs>
+                <marker id="arr" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">
+                  <path d="M0,0 L12,4 L0,8 Z" fill="#22c55e"/>
+                </marker>
+              </defs>
+              <line x1="130" y1="55" x2="130" y2="255" stroke="#64748b" stroke-width="5"/>
+              <line x1="90" y1="255" x2="690" y2="255" stroke="#94a3b8" stroke-width="6"/>
+              <circle cx="130" cy="80" r="24" fill="#38bdf8"/>
+              <circle cx="360" cy="170" r="24" fill="#22d3ee"/>
+              <circle cx="600" cy="235" r="24" fill="#22c55e"/>
+              <line x1="170" y1="95" x2="320" y2="155" stroke="#22c55e" stroke-width="7" marker-end="url(#arr)"/>
+              <line x1="400" y1="183" x2="560" y2="225" stroke="#22c55e" stroke-width="7" marker-end="url(#arr)"/>
+              <text x="168" y="74" fill="#e0f2fe" font-size="26" font-weight="800">Ep mare</text>
+              <text x="420" y="160" fill="#e0f2fe" font-size="26" font-weight="800">Ep scade</text>
+              <text x="520" y="300" fill="#bbf7d0" font-size="26" font-weight="800">Ec mare</text>
+            </svg>
           </div>
         </div>
+      </section>
 
-        <div class="formula">$$x = 0 \Rightarrow E_{pe} = 0$$</div>
-
-        <div class="notice">Un resort alungit cu 2 cm și același resort comprimat cu 2 cm au aceeași energie potențială elastică, deoarece în formulă apare $x^2$.</div>
-      </article>
-
-      <article class="page">
-        <h2>5. Exemplu de calcul</h2>
-        <p>Un resort are constanta elastică $k = 100\,N/m$ și este deformat cu $x = 0{,}2\,m$.</p>
-        <p>Aplicăm formula:</p>
-        <div class="formula">$$E_{pe} = \frac{kx^2}{2} = \frac{100 \cdot 0{,}2^2}{2} = \frac{100 \cdot 0{,}04}{2} = \frac{4}{2} = 2\,J$$</div>
-
-        <div class="notice">Rezultatul este $E_{pe} = 2\,J$.</div>
-      </article>
-
-      <article class="page">
-        <h2>6. Reținem</h2>
-        <ul>
-          <li>energia potențială elastică este energia datorată deformării unui corp elastic;</li>
-          <li>formula este $E_{pe} = \frac{kx^2}{2}$;</li>
-          <li>energia depinde de constanta elastică $k$ și de deformarea $x$;</li>
-          <li>unitatea de măsură este joule (J);</li>
-          <li>în starea nedeformată, $x = 0$ și energia potențială elastică este zero.</li>
-        </ul>
-
-        <div class="question">
-          <div class="instruction">Alege o singură variantă corectă.</div>
-          <h3>Verificare rapidă</h3>
-          <p>Bifează enunțul corect.</p>
-
-          <table class="option-table" role="presentation">
-            <tr>
-              <td>
-                <label class="option-row">
-                  <input type="radio" name="q1" value="0">
-                  <span>Energia potențială elastică nu depinde de deformare.</span>
-                </label>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label class="option-row" style="background:#132033;">
-                  <input type="radio" name="q1" value="1">
-                  <span>Energia potențială elastică a unui resort se calculează cu formula $E_{pe} = \frac{kx^2}{2}$.</span>
-                </label>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <label class="option-row">
-                  <input type="radio" name="q1" value="0">
-                  <span>Energia potențială elastică se măsoară în watt.</span>
-                </label>
-              </td>
-            </tr>
-          </table>
-
-          <button onclick="checkQuiz()">Verifică răspunsul</button>
-          <div id="quizFeedback" class="feedback"></div>
+      <section class="page">
+        <div class="card">
+          <span class="badge">Rețin</span>
+          <h2>Energia mecanică se poate conserva</h2>
+          <p>
+            Energia mecanică a unui corp este suma dintre energia cinetică și energia potențială.
+          </p>
+          <div class="formula">
+            \[
+              E_m = E_c + E_p
+            \]
+          </div>
+          <p>
+            Dacă asupra corpului acționează numai forțe conservative, de exemplu greutatea
+            sau forța elastică, atunci energia mecanică rămâne constantă.
+          </p>
+          <div class="formula">
+            \[
+              E_{m,i}=E_{m,f}
+            \]
+          </div>
+          <div class="success">
+            Aceasta este legea conservării energiei mecanice.
+          </div>
         </div>
-      </article>
+      </section>
 
-      <article class="page">
-        <h2>7. Mergem mai departe</h2>
-        <p>În lecția următoare vei învăța despre <strong>energia mecanică</strong>, adică suma dintre energia cinetică și energia potențială.</p>
-
-        <div class="nav">
-          <a class="btn btn-secondary" href="./lectia-4.html">Lecția anterioară</a>
-          <a class="btn btn-ghost" href="./index.html">Înapoi la lecții</a>
-          <a class="btn btn-primary" href="./lectia-6.html">Mergi la lecția 6</a>
+      <section class="page">
+        <div class="card">
+          <span class="badge">Transformare</span>
+          <h2>Cădere liberă fără frecare</h2>
+          <p>
+            Pentru un corp care cade fără frecare, energia potențială gravitațională se transformă
+            în energie cinetică.
+          </p>
+          <div class="formula">
+            \[
+              E_{pg,\ inițial}+E_{c,\ inițial}
+              =
+              E_{pg,\ final}+E_{c,\ final}
+            \]
+          </div>
+          <p>
+            Dacă pornește din repaus, atunci la început \(E_c=0\).
+          </p>
+          <p>
+            Aproape de sol, energia potențială scade, iar energia cinetică crește.
+          </p>
+          <div class="notice">
+            Energia nu dispare. Ea se transformă dintr-o formă în alta.
+          </div>
         </div>
-      </article>
+      </section>
 
-      <div class="nav">
-        <button class="btn btn-ghost" id="prevBtn" onclick="changePage(-1)">Înapoi</button>
-        <button class="btn btn-primary" id="nextBtn" onclick="changePage(1)">Mergi mai departe</button>
-      </div>
-    </section>
-  </main>
+      <section class="page">
+        <div class="card">
+          <span class="badge">Exemplu numeric</span>
+          <h2>Din înălțime în viteză</h2>
+          <p>
+            Un corp cu masa \(m=0{,}2\,kg\) este lăsat să cadă de la înălțimea \(h=5\,m\).
+            Considerăm \(g\approx 10\,\frac{N}{kg}\) și neglijăm frecarea cu aerul.
+          </p>
+          <div class="formula">
+            \[
+              E_{pg}=mgh
+            \]
+            \[
+              E_{pg}=0{,}2\cdot 10\cdot 5=10\,J
+            \]
+          </div>
+          <p>
+            Dacă energia mecanică se conservă, atunci aproape de sol:
+          </p>
+          <div class="formula">
+            \[
+              E_c \approx 10\,J
+            \]
+          </div>
+          <div class="success">
+            Energia potențială inițială s-a transformat în energie cinetică.
+          </div>
+        </div>
+      </section>
 
-  <footer class="site-footer">
-    <div class="wrapper">Fizica Galaction • Clasa a VII-a • Lecția 5</div>
-  </footer>
+      <section class="page">
+        <div class="card">
+          <span class="badge">Aplic</span>
+          <h2>Calculăm viteza la baza pantei</h2>
+          <p>
+            Un corp pornește din repaus de la înălțimea \(h=2\,m\). Frecarea este neglijabilă.
+          </p>
+          <p>
+            La început, corpul are energie potențială:
+          </p>
+          <div class="formula">
+            \[
+              E_{pg}=mgh
+            \]
+          </div>
+          <p>
+            La bază, această energie devine energie cinetică:
+          </p>
+          <div class="formula">
+            \[
+              mgh=\frac{mv^2}{2}
+            \]
+            \[
+              v=\sqrt{2gh}
+            \]
+            \[
+              v=\sqrt{2\cdot 10\cdot 2}=\sqrt{40}\approx 6{,}3\,\frac{m}{s}
+            \]
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Atenție</span>
+          <h2>Când energia mecanică nu se conservă?</h2>
+          <p>
+            Dacă există frecare, o parte din energia mecanică se transformă în energie internă:
+            corpul și suprafața se pot încălzi.
+          </p>
+          <div class="warn">
+            În prezența frecării, energia mecanică scade, dar energia totală se conservă.
+          </div>
+          <div class="formula">
+            \[
+              E_{m,\ final} < E_{m,\ inițial}
+            \]
+          </div>
+          <p>
+            De exemplu, o minge care cade și ricoșează ajunge de fiecare dată la o înălțime mai mică,
+            deoarece o parte din energie se transformă în căldură și sunet.
+          </p>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Întrebarea 1</h2>
+          <div class="q" data-answer="b">
+            <p><strong>Energia mecanică este:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q1" value="a"> doar energia cinetică</label>
+              <label class="answer"><input type="radio" name="q1" value="b"> suma dintre energia cinetică și energia potențială</label>
+              <label class="answer"><input type="radio" name="q1" value="c"> doar energia termică</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Întrebarea 2</h2>
+          <div class="q" data-answer="c">
+            <p><strong>În cădere liberă fără frecare, energia potențială gravitațională:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q2" value="a"> dispare</label>
+              <label class="answer"><input type="radio" name="q2" value="b"> rămâne mereu aceeași</label>
+              <label class="answer"><input type="radio" name="q2" value="c"> se transformă în energie cinetică</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Întrebarea 3</h2>
+          <div class="q" data-answer="a">
+            <p><strong>Dacă frecarea nu poate fi neglijată, energia mecanică:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q3" value="a"> scade, transformându-se parțial în alte forme de energie</label>
+              <label class="answer"><input type="radio" name="q3" value="b"> crește întotdeauna</label>
+              <label class="answer"><input type="radio" name="q3" value="c"> devine zero instantaneu</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="footer-card">
+            <strong>Prof. Dănuț Andronie</strong><br>
+            E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="nav" aria-label="Navigare lecție">
+      <button id="prevBtn" type="button" onclick="prevPage()">Înapoi</button>
+      <div class="counter" id="pageCounter">1/10</div>
+      <button id="nextBtn" type="button" onclick="nextPage()">Mergi mai departe</button>
+    </nav>
+  </div>
 
   <script>
     const pages = Array.from(document.querySelectorAll('.page'));
-    const counter = document.getElementById('counter');
-    const progressBar = document.getElementById('progressBar');
+    const topBanner = document.getElementById('topBanner');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
-    let currentPage = 0;
+    const pageCounter = document.getElementById('pageCounter');
+    let current = 0;
 
-    function renderPage() {
-      pages.forEach((page, index) => page.classList.toggle('active', index === currentPage));
-      counter.textContent = `Pagina ${currentPage + 1} din ${pages.length}`;
-      progressBar.style.width = `${((currentPage + 1) / pages.length) * 100}%`;
-      prevBtn.style.visibility = currentPage === 0 ? 'hidden' : 'visible';
-      nextBtn.style.display = currentPage === pages.length - 1 ? 'none' : 'inline-block';
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      if (window.MathJax && window.MathJax.typesetPromise) {
+    function updatePage(){
+      pages.forEach((p, i) => p.classList.toggle('active', i === current));
+      topBanner.style.display = current === 0 ? 'block' : 'none';
+      prevBtn.classList.toggle('disabled', current === 0);
+      pageCounter.textContent = (current + 1) + '/' + pages.length;
+
+      if(current === pages.length - 1){
+        nextBtn.textContent = 'Lecția următoare';
+        nextBtn.onclick = () => { window.location.href = './lectia-6.html'; };
+      } else {
+        nextBtn.textContent = 'Mergi mai departe';
+        nextBtn.onclick = nextPage;
+      }
+
+      window.scrollTo({top: 0, behavior: 'smooth'});
+      if(window.MathJax && window.MathJax.typesetPromise){
         window.MathJax.typesetPromise();
       }
     }
 
-    function changePage(direction) {
-      const nextIndex = currentPage + direction;
-      if (nextIndex < 0 || nextIndex >= pages.length) return;
-      currentPage = nextIndex;
-      renderPage();
+    function nextPage(){
+      if(current < pages.length - 1){
+        current++;
+        updatePage();
+      }
     }
 
-    function checkQuiz() {
-      const selected = document.querySelector('input[name="q1"]:checked');
-      const feedback = document.getElementById('quizFeedback');
-      if (!selected) {
-        feedback.textContent = 'Selectează o variantă, apoi apasă pe „Verifică răspunsul”.';
-        feedback.style.color = '#fbbf24';
+    function prevPage(){
+      if(current > 0){
+        current--;
+        updatePage();
+      }
+    }
+
+    function checkAnswer(button){
+      const block = button.closest('.q');
+      const correct = block.dataset.answer;
+      const checked = block.querySelector('input[type="radio"]:checked');
+      const feedback = block.querySelector('.feedback');
+
+      if(!checked){
+        feedback.textContent = 'Alege mai întâi o variantă.';
+        feedback.className = 'feedback bad';
         return;
       }
-      if (selected.value === '1') {
-        feedback.textContent = 'Corect! Energia potențială elastică a unui resort se calculează cu formula Epe = kx²/2.';
-        feedback.style.color = '#4ade80';
+
+      if(checked.value === correct){
+        feedback.textContent = 'Corect!';
+        feedback.className = 'feedback good';
       } else {
-        feedback.textContent = 'Nu este corect. Recitește formula și ideea de stare nedeformată.';
-        feedback.style.color = '#f87171';
+        feedback.textContent = 'Mai încearcă. Recitește explicațiile.';
+        feedback.className = 'feedback bad';
       }
     }
 
-    renderPage();
+    document.addEventListener('keydown', (event) => {
+      if(event.key === 'ArrowRight') nextPage();
+      if(event.key === 'ArrowLeft') prevPage();
+    });
+
+    updatePage();
   </script>
 </body>
 </html>

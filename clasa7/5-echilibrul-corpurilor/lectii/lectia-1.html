@@ -1,857 +1,854 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Lecția 1 | Echilibrul de translație | Fizica Galaction</title>
-  <meta name="description" content="Clasa a VII-a, Echilibrul corpurilor, Lecția 1: Echilibrul de translație. Variantă interactivă pe 6 pagini." />
-
+  <meta name="description" content="Lecție interactivă pentru clasa a VII-a: Echilibrul de translație.">
   <script>
     window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']]
-      },
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']], displayMath: [['\\[','\\]'], ['$$','$$']] },
       svg: { fontCache: 'global' }
     };
   </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-svg.js"></script>
-
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
   <style>
     :root{
-      --bg:#0f172a;
-      --panel:#1e293b;
-      --panel2:#334155;
+      --bg:#07111f;
+      --bg2:#0f172a;
+      --card:#132238;
+      --card2:#1e293b;
       --text:#f8fafc;
       --muted:#cbd5e1;
-      --accent:#22d3ee;
-      --accent2:#38bdf8;
-      --good:#22c55e;
-      --warn:#f59e0b;
-      --bad:#ef4444;
-      --shadow:0 18px 40px rgba(0,0,0,.28);
-      --radius:22px;
+      --cyan:#67e8f9;
+      --cyan2:#22d3ee;
+      --green:#22c55e;
+      --green2:#16a34a;
+      --back:#e2e8f0;
+      --backText:#0f172a;
+      --warn:#fde68a;
+      --bad:#fecaca;
+      --good:#bbf7d0;
+      --line:#334155;
     }
 
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
+    *{ box-sizing:border-box; }
+
+    html, body{ margin:0; min-height:100%; }
+
     body{
-      margin:0;
-      font-family:Arial, Helvetica, sans-serif;
-      background:linear-gradient(180deg, #020617 0%, #0f172a 25%, #0f172a 100%);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34,211,238,.18), transparent 34rem),
+        linear-gradient(135deg, var(--bg), var(--bg2));
       color:var(--text);
-      line-height:1.65;
+      min-height:100dvh;
+      line-height:1.55;
+      font-size: clamp(18px, 2.4vw, 21px);
     }
 
-    .site-header,
-    .site-footer{
-      background:#020617;
-      border-bottom:1px solid #1e293b;
-    }
-
-    .site-footer{
-      border-top:1px solid #1e293b;
-      border-bottom:none;
-      margin-top:28px;
-    }
-
-    .wrapper{
-      max-width:960px;
+    .app{
+      width:min(980px, 100%);
       margin:0 auto;
-      padding:18px;
-    }
-
-    .site-title{
-      margin:0;
-      color:var(--accent);
-      font-size:1.9rem;
-      line-height:1.2;
-    }
-
-    .site-subtitle{
-      margin:6px 0 0;
-      color:var(--muted);
-      font-size:1rem;
-    }
-
-    .card{
-      background:var(--panel);
-      border:1px solid var(--panel2);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:22px;
-      margin:18px 0;
-    }
-
-    .topbar-card{
-      padding:16px 18px;
-      margin-bottom:14px;
-    }
-
-    .topbar-card h1{
-      margin:0;
-      font-size:1.45rem;
-    }
-
-    .quote{
-      margin-top:14px;
-      padding:12px 14px;
-      border-left:4px solid var(--accent);
-      background:rgba(34,211,238,.10);
-      border-radius:12px;
-      color:#e0f2fe;
-      font-style:italic;
-    }
-
-    .pillbar{
+      min-height:100dvh;
+      padding: max(14px, env(safe-area-inset-top)) 14px calc(104px + env(safe-area-inset-bottom));
       display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      margin-top:14px;
-    }
-
-    .pill{
-      padding:7px 12px;
-      border-radius:999px;
-      border:1px solid #475569;
-      background:#0b1220;
-      color:#e2e8f0;
-      font-size:.92rem;
-    }
-
-    .status{
-      display:flex;
-      gap:12px;
-      justify-content:space-between;
-      align-items:center;
-      flex-wrap:wrap;
-      margin-bottom:12px;
-    }
-
-    .counter{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      border-radius:999px;
-      padding:8px 12px;
-      font-weight:700;
-      color:#cffafe;
-      background:rgba(34,211,238,.10);
-      border:1px solid rgba(34,211,238,.25);
-    }
-
-    .progress{
-      height:12px;
-      border-radius:999px;
-      overflow:hidden;
-      background:#0b1220;
-      border:1px solid #334155;
-      margin:10px 0 18px;
-    }
-
-    .progress-bar{
-      height:100%;
-      width:0;
-      background:linear-gradient(90deg, var(--accent), var(--accent2));
-      transition:width .25s ease;
+      flex-direction:column;
+      justify-content:center;
     }
 
     .page{
       display:none;
+      background:rgba(19,34,56,.96);
+      border:1px solid rgba(103,232,249,.22);
+      border-radius:24px;
+      box-shadow:0 22px 60px rgba(0,0,0,.35);
+      padding: clamp(18px, 4vw, 34px);
+      overflow:hidden;
     }
 
-    .page.active{
-      display:block;
-      animation:fade .24s ease;
+    .page.active{ display:block; }
+
+    .school-banner{
+      border:1px solid rgba(103,232,249,.35);
+      border-radius:20px;
+      background:linear-gradient(135deg, rgba(34,211,238,.14), rgba(34,197,94,.08));
+      padding:18px;
+      margin-bottom:18px;
+      text-align:center;
     }
 
-    @keyframes fade{
-      from{opacity:0;transform:translateY(8px)}
-      to{opacity:1;transform:translateY(0)}
+    .school-name{
+      color:var(--cyan);
+      font-weight:900;
+      letter-spacing:.03em;
+      font-size:clamp(1.05rem, 3vw, 1.45rem);
+      text-transform:uppercase;
     }
 
-    h1,h2,h3{margin-top:0}
-    h1{font-size:1.8rem; line-height:1.2}
-    h2{font-size:1.35rem}
-    h3{font-size:1.05rem}
-
-    p, li{font-size:1rem}
-    .lead{font-size:1.06rem}
-
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(2, minmax(0,1fr));
-      gap:14px;
+    .prof-line{
+      color:#e0f2fe;
+      font-weight:700;
+      margin-top:5px;
+      font-size:1rem;
     }
 
-    .mini{
-      background:#0b1220;
-      border:1px solid #334155;
-      border-radius:16px;
-      padding:16px;
-    }
-
-    .mini strong{
-      color:#fef9c3;
-    }
-
-    .notice,
-    .tip,
-    .formula-box,
-    .experiment,
-    .feedback,
-    .result-box{
-      border-radius:16px;
-      padding:14px 16px;
-      margin:12px 0;
-    }
-
-    .notice{
-      background:rgba(34,197,94,.09);
-      border:1px solid rgba(34,197,94,.28);
-      color:#dcfce7;
-    }
-
-    .tip{
-      background:rgba(245,158,11,.10);
-      border:1px solid rgba(245,158,11,.30);
+    .motto{
+      margin:14px auto 0;
+      max-width:760px;
       color:#fef3c7;
+      background:rgba(250,204,21,.10);
+      border-left:5px solid var(--cyan2);
+      border-radius:14px;
+      padding:12px 14px;
+      font-style:italic;
+      font-weight:650;
+    }
+
+    .lesson-meta{
+      color:#bae6fd;
+      font-weight:800;
+      letter-spacing:.02em;
+      margin:0 0 8px;
+      text-transform:uppercase;
+      font-size:.88rem;
+    }
+
+    h1,h2,h3{
+      line-height:1.16;
+      margin:0 0 16px;
+      color:var(--cyan);
+    }
+
+    h1{ font-size:clamp(2rem, 7vw, 3.3rem); }
+    h2{ font-size:clamp(1.55rem, 5vw, 2.25rem); }
+    h3{ font-size:clamp(1.15rem, 3.5vw, 1.45rem); color:#bae6fd; }
+
+    p{ margin:0 0 14px; }
+    strong{ color:#ffffff; }
+
+    .lead{
+      font-size:clamp(1.08rem, 3vw, 1.32rem);
+      color:#e0f2fe;
+      font-weight:650;
+    }
+
+    .idea, .note, .formula-box, .question, .experiment, .final-banner{
+      border-radius:18px;
+      padding:16px;
+      margin:16px 0;
+      border:1px solid rgba(148,163,184,.25);
+    }
+
+    .idea{
+      background:rgba(34,211,238,.10);
+      border-color:rgba(103,232,249,.45);
+    }
+
+    .note{
+      background:rgba(30,41,59,.88);
     }
 
     .formula-box{
-      background:rgba(56,189,248,.08);
-      border:1px solid rgba(56,189,248,.25);
-      color:#e0f2fe;
+      background:rgba(2,6,23,.42);
+      border-color:rgba(34,211,238,.35);
       overflow-x:auto;
     }
 
+    .formula-title{
+      color:#fef3c7;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+
+    .question{
+      background:rgba(250,204,21,.10);
+      border-color:rgba(253,230,138,.45);
+    }
+
     .experiment{
-      background:rgba(168,85,247,.08);
-      border:1px solid rgba(168,85,247,.26);
-      color:#f3e8ff;
+      background:rgba(34,197,94,.10);
+      border-color:rgba(187,247,208,.38);
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+      gap:14px;
+      margin:16px 0;
+    }
+
+    .mini{
+      background:rgba(15,23,42,.62);
+      border:1px solid rgba(148,163,184,.22);
+      border-radius:18px;
+      padding:16px;
+    }
+
+    .clean{
+      margin:10px 0 0;
+      padding-left:1.2rem;
+    }
+
+    .clean li{ margin:8px 0; }
+
+    .pill-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:12px;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      border-radius:999px;
+      padding:8px 12px;
+      background:rgba(103,232,249,.12);
+      border:1px solid rgba(103,232,249,.30);
+      color:#e0f2fe;
+      font-weight:800;
+      font-size:.95rem;
+    }
+
+    .check-list{
+      display:grid;
+      gap:10px;
+      margin:12px 0 0;
+    }
+
+    .check-item{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:10px;
+      align-items:start;
+      padding:12px;
+      border-radius:14px;
+      background:rgba(15,23,42,.55);
+      border:1px solid rgba(148,163,184,.18);
+    }
+
+    .num{
+      width:30px;
+      height:30px;
+      display:inline-grid;
+      place-items:center;
+      border-radius:50%;
+      background:#0e7490;
+      color:white;
+      font-weight:900;
+      flex:0 0 auto;
+    }
+
+    .svgbox{
+      margin:16px auto;
+      max-width:760px;
+      background:#f8fafc;
+      color:#0f172a;
+      border-radius:18px;
+      padding:12px;
+      border:4px solid rgba(103,232,249,.35);
+    }
+
+    .svgbox > svg{
+      width:100%;
+      height:auto;
+      display:block;
+    }
+
+    .svg-caption{
+      color:#cbd5e1;
+      text-align:center;
+      font-size:.92rem;
+      margin-top:-4px;
+    }
+
+    .equation{
+      font-size:1.05rem;
+      text-align:center;
+      margin:8px 0;
+      color:#fff;
+    }
+
+    mjx-container[display="true"]{
+      margin:.35rem 0 !important;
+      overflow-x:auto;
+      overflow-y:hidden;
+      max-width:100%;
+    }
+
+    .variants{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .variant{
+      display:grid;
+      grid-template-columns:28px 1fr;
+      align-items:start;
+      gap:10px;
+      padding:12px;
+      border-radius:14px;
+      background:rgba(15,23,42,.62);
+      border:1px solid rgba(148,163,184,.24);
+      cursor:pointer;
+      color:#f8fafc;
+    }
+
+    .variant input{
+      width:21px;
+      height:21px;
+      margin-top:3px;
+      accent-color:var(--green);
     }
 
     .feedback{
+      margin-top:10px;
+      padding:12px;
+      border-radius:14px;
       display:none;
-      font-weight:700;
+      font-weight:850;
     }
 
     .feedback.ok{
       display:block;
-      background:rgba(34,197,94,.10);
-      border:1px solid rgba(34,197,94,.32);
-      color:#dcfce7;
+      color:#052e16;
+      background:var(--good);
     }
 
-    .feedback.bad{
+    .feedback.no{
       display:block;
-      background:rgba(239,68,68,.10);
-      border:1px solid rgba(239,68,68,.32);
-      color:#fecaca;
+      color:#450a0a;
+      background:var(--bad);
     }
 
-    .result-box{
-      display:none;
-      background:rgba(34,211,238,.10);
-      border:1px solid rgba(34,211,238,.28);
-      color:#e0f2fe;
-      font-weight:700;
+    .feedback.wait{
+      display:block;
+      color:#422006;
+      background:var(--warn);
     }
 
-    ul.clean{
-      margin:0;
-      padding-left:18px;
-    }
-
-    .step-list{
-      counter-reset:item;
-      list-style:none;
-      padding:0;
-      margin:0;
-    }
-
-    .step-list li{
-      counter-increment:item;
-      padding-left:48px;
-      position:relative;
-      margin:14px 0;
-    }
-
-    .step-list li::before{
-      content:counter(item);
-      width:32px;
-      height:32px;
-      border-radius:50%;
-      background:rgba(34,211,238,.12);
-      border:1px solid rgba(34,211,238,.28);
-      color:#cffafe;
-      font-weight:700;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      position:absolute;
-      left:0;
-      top:0;
-    }
-
-    .actions{
+    .quiz-actions{
       display:flex;
       gap:12px;
       flex-wrap:wrap;
-      justify-content:space-between;
-      margin-top:18px;
+      margin-top:16px;
     }
 
-    button,
-    .btn-link{
-      border:none;
-      border-radius:14px;
-      padding:14px 18px;
+    button, .btn-link{
+      appearance:none;
+      border:0;
+      border-radius:16px;
+      padding:13px 16px;
       font-size:1rem;
-      font-weight:700;
+      font-weight:900;
       cursor:pointer;
       text-decoration:none;
-      transition:transform .15s ease, opacity .15s ease, background .15s ease;
+      text-align:center;
+      min-height:52px;
       display:inline-flex;
-      justify-content:center;
       align-items:center;
-      min-height:48px;
+      justify-content:center;
     }
 
-    button:hover,
-    .btn-link:hover{
-      transform:translateY(-1px);
-      opacity:.97;
-    }
-
-    .btn-secondary{
-      background:#334155;
-      color:#f8fafc;
-      border:1px solid #475569;
-    }
-
-    .btn-primary{
-      background:linear-gradient(90deg, var(--accent), var(--accent2));
+    .btn-check{
+      background:var(--cyan2);
       color:#082f49;
+      flex:1 1 180px;
     }
 
-    .btn-success{
-      background:#22c55e;
-      color:#052e16;
+    .btn-reset{
+      background:#e2e8f0;
+      color:#0f172a;
+      flex:1 1 140px;
     }
 
-    .btn-warning{
-      background:#f59e0b;
-      color:#451a03;
+    .final-banner{
+      text-align:center;
+      background:linear-gradient(135deg, rgba(34,211,238,.14), rgba(34,197,94,.10));
+      border-color:rgba(103,232,249,.36);
     }
 
-    .btn-ghost{
-      background:#0b1220;
-      color:#f8fafc;
-      border:1px solid #334155;
+    .final-banner .name{
+      color:var(--cyan);
+      font-weight:950;
+      font-size:1.3rem;
+      margin-bottom:4px;
+    }
+
+    .bottom-nav{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:50;
+      padding:10px 12px max(10px, env(safe-area-inset-bottom));
+      background:rgba(7,17,31,.94);
+      backdrop-filter: blur(10px);
+      border-top:1px solid rgba(103,232,249,.25);
+    }
+
+    .nav-inner{
+      width:min(980px, 100%);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      gap:10px;
+      align-items:center;
     }
 
     .nav-btn{
-      min-width:190px;
-    }
-
-    .question{
-      background:#0b1220;
-      border:1px solid #334155;
-      border-radius:16px;
-      padding:16px;
-      margin:14px 0;
-    }
-
-    .question p{
-      margin-top:0;
-    }
-
-    label.option{
-      display:block;
-      padding:10px 12px;
-      margin:8px 0;
-      border-radius:12px;
-      background:#111827;
-      border:1px solid #374151;
-      cursor:pointer;
-    }
-
-    label.option:hover{
-      border-color:#64748b;
-      background:#172033;
-    }
-
-    input[type="radio"],
-    input[type="text"],
-    select{
-      accent-color:#22d3ee;
-    }
-
-    input[type="text"],
-    select{
       width:100%;
-      background:#020617;
-      color:#f8fafc;
-      border:2px solid #334155;
-      border-radius:12px;
-      padding:12px 14px;
-      font-size:1rem;
-      margin-top:8px;
+      border:2px solid transparent;
+      box-shadow:0 8px 22px rgba(0,0,0,.24);
     }
 
-    .inline-answer{
-      max-width:240px;
-      display:inline-block;
-      vertical-align:middle;
+    .prev{
+      background:var(--back);
+      color:var(--backText);
+      border-color:#cbd5e1;
     }
 
-    .equation{
+    .next{
+      background:var(--green);
+      color:#052e16;
+      border-color:var(--green2);
+    }
+
+    .nav-btn:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+      box-shadow:none;
+    }
+
+    .indicator{
+      min-width:68px;
       text-align:center;
-      font-size:1.08rem;
-      margin:10px 0;
-    }
-
-    .footer-note{
-      color:#94a3b8;
-      font-size:.95rem;
-      text-align:center;
-      margin:0;
-    }
-
-    .tag{
-      display:inline-block;
-      margin:4px 6px 4px 0;
-      padding:6px 10px;
+      font-weight:950;
+      color:#e0f2fe;
+      background:rgba(30,41,59,.95);
+      border:1px solid rgba(103,232,249,.25);
       border-radius:999px;
-      background:rgba(250,204,21,.12);
-      border:1px solid rgba(250,204,21,.28);
-      color:#fef08a;
-      font-size:.9rem;
-      font-weight:700;
+      padding:10px 12px;
     }
 
-    .center{text-align:center}
+    .top-link{
+      color:#bae6fd;
+      font-weight:850;
+    }
+
+    .small{
+      font-size:.94rem;
+      color:var(--muted);
+    }
 
     @media (max-width:720px){
-      .wrapper{padding:14px}
-      .card{padding:18px}
-      .grid{grid-template-columns:1fr}
-      h1{font-size:1.55rem}
-      .site-title{font-size:1.6rem}
-      .actions{flex-direction:column}
-      .nav-btn{width:100%}
-      button,.btn-link{width:100%}
+      body{ font-size:18px; }
+      .app{ padding-left:10px; padding-right:10px; justify-content:flex-start; }
+      .page{ border-radius:20px; padding:18px; margin-top:10px; }
+      .grid{ grid-template-columns:1fr; }
+      .nav-inner{ grid-template-columns:1fr 64px 1fr; gap:8px; }
+      .nav-btn{ padding-left:8px; padding-right:8px; font-size:.96rem; }
+      .indicator{ min-width:60px; padding-left:8px; padding-right:8px; }
     }
   </style>
 </head>
+
 <body>
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction</h1>
-      <p class="site-subtitle">Clasa a VII-a • Echilibrul corpurilor • Lecția 1</p>
-    </div>
-  </header>
-
-  <main class="wrapper">
-    <section class="card topbar-card">
-      <div class="status">
-        <h1>Lecția 1 – Echilibrul de translație</h1>
-        <div class="counter" id="pageCounter">Pagina 1 din 6</div>
-      </div>
-
-      <div class="progress" aria-hidden="true">
-        <div class="progress-bar" id="progressBar"></div>
-      </div>
-    </section>
+  <main class="app" id="lessonApp">
 
     <!-- PAGINA 1 -->
-    <section class="card page active" data-page="1">
-      <h2>1. Observăm o situație familiară</h2>
-      <div class="notice">
-        <strong>Ideea lecției:</strong> un corp poate fi în echilibru nu doar când stă pe loc, ci și când se mișcă rectiliniu uniform.
-      </div>
-      <div class="grid">
-        <div class="mini">
-          <h3>Exemplul 1</h3>
-          <p>Un <strong>ghiozdan</strong> stă pe bancă și nu cade prin ea.</p>
-          <p>Asupra lui acționează:</p>
-          <ul class="clean">
-            <li>greutatea, în jos;</li>
-            <li>reacțiunea băncii, în sus.</li>
-          </ul>
-        </div>
-        <div class="mini">
-          <h3>Exemplul 2</h3>
-          <p>Un <strong>penar</strong> este tras pe bancă și se deplasează aproape uniform.</p>
-          <p>Asupra lui acționează:</p>
-          <ul class="clean">
-            <li>forța de tracțiune, înainte;</li>
-            <li>forța de frecare, înapoi.</li>
-          </ul>
-        </div>
+    <section class="page active" data-page="1">
+      <div class="school-banner">
+        <div class="school-name">Școala Gimnazială „Gala Galaction” Mangalia</div>
+        <div class="prof-line">Prof. Dănuț Andronie</div>
+        <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
       </div>
 
-      <div class="notice">
-        <strong>Ideea de pornire:</strong> dacă mișcarea unui corp nu se schimbă, înseamnă că forțele care acționează asupra lui se compensează.
+      <p class="lesson-meta">Clasa a VII-a • Capitolul: Echilibrul corpurilor • Lecția 1</p>
+      <h1>Echilibrul de translație</h1>
+
+      <div class="idea">
+        <p class="lead"><strong>Ideea-cheie:</strong> un corp este în echilibru de translație când mișcarea lui nu se schimbă: fie stă pe loc, fie se deplasează în linie dreaptă cu viteză constantă.</p>
       </div>
 
-      <div class="question">
-        <p><strong>Gândește-te:</strong> care dintre situațiile de mai jos arată o mișcare care nu se schimbă?</p>
-        <ul class="clean">
-          <li>cartea stă pe masă;</li>
-          <li>bicicleta accelerează;</li>
-          <li>liftul urcă cu viteză constantă.</li>
-        </ul>
-        <div class="tip">Răspuns: prima și a treia situație. În ambele, starea de mișcare se păstrează.</div>
-      </div>
+      <p>În această lecție vom folosi exemple simple: un copil sprijinit, un corp pe plan înclinat și un obiect tras uniform. Vom evita notațiile abstracte cu săgeți deasupra lui zero și vom lucra cu ideea ușor de văzut: <strong>forțele se compensează</strong>.</p>
 
-      <div class="actions">
-        <button class="btn-ghost nav-btn" onclick="goPrev()" disabled>Înapoi</button>
-        <button class="btn-success nav-btn" onclick="goNext()">Mergi mai departe</button>
+      <div class="pill-row">
+        <span class="pill">forțe</span>
+        <span class="pill">repaus</span>
+        <span class="pill">viteză constantă</span>
+        <span class="pill">forțe compensate</span>
       </div>
     </section>
 
     <!-- PAGINA 2 -->
-    <section class="card page" data-page="2">
-      <h2>2. Ce înseamnă echilibru de translație?</h2>
+    <section class="page" data-page="2">
+      <p class="lesson-meta">Observ</p>
+      <h2>De ce nu cade corpul?</h2>
 
-      <p>Un corp este în <strong>echilibru de translație</strong> atunci când <strong>nu își schimbă starea de mișcare de translație</strong>.</p>
+      <p>Imaginează-ți un copil care stă sprijinit pe o bară sau o carte care stă pe bancă. Corpul nu cade, deși Pământul îl atrage în jos.</p>
 
-      <div class="grid">
-        <div class="mini">
-          <h3>Poate fi în repaus</h3>
-          <p>De exemplu, o carte stă nemișcată pe masă.</p>
-        </div>
-        <div class="mini">
-          <h3>Poate fi în mișcare uniformă</h3>
-          <p>De exemplu, un corp se deplasează în linie dreaptă cu viteză constantă.</p>
-        </div>
+      <div class="svgbox" aria-label="Corp sprijinit cu două forțe verticale">
+        <svg viewBox="0 0 760 340" role="img">
+          <defs>
+            <marker id="arrowA" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L0,6 L9,3 z" fill="#0f172a"></path>
+            </marker>
+          </defs>
+          <rect x="90" y="230" width="580" height="36" rx="12" fill="#94a3b8"></rect>
+          <rect x="300" y="120" width="160" height="110" rx="20" fill="#22d3ee" stroke="#0f172a" stroke-width="5"></rect>
+          <line x1="380" y1="120" x2="380" y2="52" stroke="#0f172a" stroke-width="8" marker-end="url(#arrowA)"></line>
+          <text x="405" y="70" font-size="26" font-weight="800" fill="#0f172a">N: reacțiunea suportului</text>
+          <line x1="380" y1="230" x2="380" y2="308" stroke="#0f172a" stroke-width="8" marker-end="url(#arrowA)"></line>
+          <text x="405" y="300" font-size="26" font-weight="800" fill="#0f172a">G: greutatea</text>
+        </svg>
       </div>
+      <p class="svg-caption">Cele două forțe au aceeași direcție, sensuri opuse și se compensează.</p>
 
-      <div class="formula-box">
-        <p><strong>Important:</strong> echilibrul <u>nu</u> înseamnă doar lipsa mișcării.</p>
-        <p>Un corp poate fi în echilibru și când se mișcă <strong>rectiliniu uniform</strong>.</p>
-      </div>
-
-      <div class="question">
-        <p><strong>Exercițiu scurt:</strong> Un parașutist coboară uniform. Este sau nu în echilibru de translație?</p>
-        <div class="tip">Da. Coboară, dar mișcarea lui nu se schimbă, deci rezultanta forțelor este nulă.</div>
-      </div>
-
-      <div class="actions">
-        <button class="btn-secondary nav-btn" onclick="goPrev()">Înapoi</button>
-        <button class="btn-success nav-btn" onclick="goNext()">Mergi mai departe</button>
+      <div class="note">
+        <p><strong>Rețin pe scurt:</strong> greutatea trage în jos, iar suportul împinge în sus. Dacă obiectul rămâne în repaus, cele două efecte se echilibrează.</p>
+        <div class="equation">$$N=G$$</div>
+        <p class="small">Citire: forța suportului are aceeași valoare ca greutatea, dar acționează în sens opus.</p>
       </div>
     </section>
 
     <!-- PAGINA 3 -->
-    <section class="card page" data-page="3">
-      <h2>3. Condiția de echilibru de translație</h2>
+    <section class="page" data-page="3">
+      <p class="lesson-meta">Observ</p>
+      <h2>Ce este mișcarea de translație?</h2>
 
-      <p>Pentru ca un corp să fie în echilibru de translație, <strong>rezultanta tuturor forțelor</strong> care acționează asupra lui trebuie să fie zero.</p>
+      <p>Un corp are <strong>mișcare de translație</strong> când toate punctele lui se deplasează „la fel”: urmează traiectorii paralele și au aceeași viteză la același moment.</p>
 
-      <div class="formula-box">
-        <div class="equation">$$\vec{R}=\vec{0}$$</div>
-        <div class="equation">$$\vec{F_1}+\vec{F_2}+\vec{F_3}+\ldots=\vec{0}$$</div>
+      <div class="svgbox" aria-label="Corp cu puncte care se deplasează pe traiectorii paralele">
+        <svg viewBox="0 0 760 360" role="img">
+          <defs>
+            <marker id="arrowB" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L0,6 L9,3 z" fill="#0f172a"></path>
+            </marker>
+          </defs>
+          <line x1="70" y1="90" x2="690" y2="90" stroke="#64748b" stroke-width="4" stroke-dasharray="10 8" marker-end="url(#arrowB)"></line>
+          <line x1="70" y1="155" x2="690" y2="155" stroke="#64748b" stroke-width="4" stroke-dasharray="10 8" marker-end="url(#arrowB)"></line>
+          <line x1="70" y1="220" x2="690" y2="220" stroke="#64748b" stroke-width="4" stroke-dasharray="10 8" marker-end="url(#arrowB)"></line>
+          <line x1="70" y1="285" x2="690" y2="285" stroke="#64748b" stroke-width="4" stroke-dasharray="10 8" marker-end="url(#arrowB)"></line>
+          <rect x="255" y="110" width="210" height="130" rx="18" fill="#a7f3d0" stroke="#0f172a" stroke-width="5"></rect>
+          <circle cx="300" cy="145" r="12" fill="#0f172a"></circle>
+          <circle cx="420" cy="145" r="12" fill="#0f172a"></circle>
+          <circle cx="300" cy="205" r="12" fill="#0f172a"></circle>
+          <circle cx="420" cy="205" r="12" fill="#0f172a"></circle>
+          <text x="290" y="135" font-size="24" font-weight="800" fill="#0f172a">A</text>
+          <text x="430" y="135" font-size="24" font-weight="800" fill="#0f172a">B</text>
+          <text x="290" y="235" font-size="24" font-weight="800" fill="#0f172a">C</text>
+          <text x="430" y="235" font-size="24" font-weight="800" fill="#0f172a">D</text>
+          <text x="115" y="335" font-size="26" font-weight="900" fill="#0f172a">Toate punctele se deplasează pe direcții paralele.</text>
+        </svg>
       </div>
 
-      <p>Pe limbajul elevului: <strong>forțele se compensează</strong>. Nicio forță nu rămâne „în plus” ca să schimbe mișcarea corpului.</p>
+      <div class="idea">
+        <p><strong>Exemplu:</strong> un corp paralelipipedic care alunecă pe un plan înclinat fără să se rotească are mișcare de translație.</p>
+      </div>
+
+      <p>Pe scurt, corpul se mută dintr-un loc în altul fără să se învârtă. O muchie a corpului rămâne paralelă cu poziția ei inițială.</p>
+    </section>
+
+    <!-- PAGINA 4 -->
+    <section class="page" data-page="4">
+      <p class="lesson-meta">Experimentez</p>
+      <h2>Corp pe plan înclinat</h2>
+
+      <div class="experiment">
+        <h3>Materiale necesare</h3>
+        <p>plan înclinat, corp paralelipipedic din lemn, riglă sau ruletă, cronometru.</p>
+      </div>
+
+      <div class="check-list">
+        <div class="check-item">
+          <span class="num">1</span>
+          <span>Reglează înălțimea planului înclinat astfel încât corpul să alunece cât mai uniform.</span>
+        </div>
+        <div class="check-item">
+          <span class="num">2</span>
+          <span>Marchează patru puncte pe corp, de exemplu A, B, C și D.</span>
+        </div>
+        <div class="check-item">
+          <span class="num">3</span>
+          <span>Observă traiectoriile punctelor în timpul mișcării.</span>
+        </div>
+        <div class="check-item">
+          <span class="num">4</span>
+          <span>Măsoară distanța parcursă și timpul, apoi discută dacă viteza este aproximativ constantă.</span>
+        </div>
+      </div>
+
+      <div class="note">
+        <p><strong>Concluzie experimentală:</strong> dacă punctele corpului au traiectorii paralele și viteze egale, corpul are mișcare de translație.</p>
+      </div>
+    </section>
+
+    <!-- PAGINA 5 -->
+    <section class="page" data-page="5">
+      <p class="lesson-meta">Rețin</p>
+      <h2>Condiția de echilibru</h2>
+
+      <p>Un corp aflat în mișcare de translație este în <strong>echilibru de translație</strong> atunci când forțele care acționează asupra lui se compensează.</p>
+
+      <div class="formula-box">
+        <div class="formula-title">Scriere simplă pentru clasa a VII-a</div>
+        <div class="equation">$$R=0\,\text{N}$$</div>
+        <p>Citire: <strong>rezultanta forțelor are valoarea zero newtoni</strong>. Asta înseamnă că nu rămâne nicio forță „în plus” care să schimbe mișcarea corpului.</p>
+      </div>
 
       <div class="grid">
         <div class="mini">
           <h3>Pe verticală</h3>
-          <p>La o carte pe masă:</p>
+          <p>La un corp sprijinit pe masă:</p>
           <div class="equation">$$N=G$$</div>
-          <p>Reacțiunea suportului compensează greutatea.</p>
+          <p>Forța suportului compensează greutatea.</p>
         </div>
         <div class="mini">
           <h3>Pe orizontală</h3>
           <p>La un corp tras uniform:</p>
           <div class="equation">$$F_{tr}=F_f$$</div>
-          <p>Forța de tracțiune compensează frecarea.</p>
+          <p>Tracțiunea compensează frecarea.</p>
         </div>
       </div>
 
-      <div class="notice">
-        În multe probleme este util să verifici separat:
-        <div class="equation">$$\Sigma F_x=0 \qquad \Sigma F_y=0$$</div>
-      </div>
-
-      <div class="actions">
-        <button class="btn-secondary nav-btn" onclick="goPrev()">Înapoi</button>
-        <button class="btn-success nav-btn" onclick="goNext()">Mergi mai departe</button>
-      </div>
-    </section>
-
-    <!-- PAGINA 4 -->
-    <section class="card page" data-page="4">
-      <h2>4. Experimentez</h2>
-
-      <div class="experiment">
-        <h3>Experiment 1 – Cartea pe bancă</h3>
-        <ol class="step-list">
-          <li>Așază o carte pe bancă.</li>
-          <li>Spune ce forțe acționează asupra ei.</li>
-          <li>Observă că stă în repaus.</li>
-          <li>Concluzionează că forțele se compensează.</li>
-        </ol>
-        <p><strong>Concluzie:</strong> cartea este în echilibru de translație deoarece greutatea și reacțiunea băncii au aceeași direcție, sensuri opuse și module egale.</p>
-      </div>
-
-      <div class="experiment">
-        <h3>Experiment 2 – Penarul tras uniform</h3>
-        <ol class="step-list">
-          <li>Leagă un penar de o ață.</li>
-          <li>Trage foarte ușor, astfel încât să se deplaseze aproape uniform.</li>
-          <li>Observă că mișcarea lui nu se schimbă mult.</li>
-          <li>Concluzionează că, pe orizontală, tracțiunea este compensată de frecare.</li>
-        </ol>
-      </div>
-
-      <div class="tip">
-        <strong>Observație importantă:</strong> în viața reală mișcarea poate fi doar aproape uniformă, fiindcă măsurarea nu este perfectă. Totuși, ideea fizică rămâne aceeași.
-      </div>
-
-      <div class="actions">
-        <button class="btn-secondary nav-btn" onclick="goPrev()">Înapoi</button>
-        <button class="btn-success nav-btn" onclick="goNext()">Mergi mai departe</button>
-      </div>
-    </section>
-
-    <!-- PAGINA 5 -->
-    <section class="card page" data-page="5">
-      <h2>5. Reținem și aplicăm</h2>
-
-      <div class="notice">
-        <strong>Dacă asupra unui corp acționează doar două forțe coliniare</strong>, echilibrul de translație este posibil numai când ele:
-        <ul class="clean">
-          <li>au aceeași direcție;</li>
-          <li>au sensuri opuse;</li>
-          <li>au module egale.</li>
-        </ul>
-      </div>
-
-      <div class="formula-box">
-        <div class="equation">$$F_1 = F_2$$</div>
-      </div>
-
-      <div class="grid">
-        <div class="mini">
-          <h3>Exemplu 1</h3>
-          <p><strong>Corp suspendat de un fir</strong></p>
-          <p>Greutatea trage în jos, tensiunea firului trage în sus.</p>
-          <p>Dacă stă în repaus, atunci:</p>
-          <div class="equation">$$T=G$$</div>
-        </div>
-        <div class="mini">
-          <h3>Exemplu 2</h3>
-          <p><strong>Lift care urcă uniform</strong></p>
-          <p>Cabina se mișcă, dar viteza nu se schimbă.</p>
-          <p>Deci liftul este în echilibru de translație.</p>
-        </div>
-      </div>
-
-      <div class="question">
-        <p><strong>Mini-aplicație:</strong> Un corp este tras cu 6 N spre dreapta și frecarea este 6 N spre stânga. Ce poți spune?</p>
-        <div class="tip">Rezultanta este zero. Corpul poate sta în repaus sau se poate deplasa rectiliniu uniform.</div>
-      </div>
-
-      <p>
-        <span class="tag">rezultantă nulă</span>
-        <span class="tag">repaus</span>
-        <span class="tag">mișcare rectilinie uniformă</span>
-        <span class="tag">forțe care se compensează</span>
-      </p>
-
-      <div class="actions">
-        <button class="btn-secondary nav-btn" onclick="goPrev()">Înapoi</button>
-        <button class="btn-success nav-btn" onclick="goNext()">Mergi mai departe</button>
+      <div class="idea">
+        <p><strong>Important:</strong> echilibrul nu înseamnă obligatoriu repaus. Un corp poate fi în echilibru și când se deplasează rectiliniu uniform.</p>
       </div>
     </section>
 
     <!-- PAGINA 6 -->
-    <section class="card page" data-page="6">
-      <h2>6. Verificare rapidă</h2>
-      <p>Alege răspunsurile și completează unde este cazul, apoi apasă pe <strong>Verifică răspunsurile</strong>.</p>
+    <section class="page" data-page="6">
+      <p class="lesson-meta">Aplic</p>
+      <h2>Forțele pe planul înclinat</h2>
+
+      <p>Când corpul alunecă uniform pe planul înclinat, mișcarea lui nu se schimbă. De aceea verificăm forțele pe două direcții:</p>
+
+      <div class="svgbox" aria-label="Corp pe plan înclinat cu forțe compensate pe două direcții">
+        <svg viewBox="0 0 760 430" role="img">
+          <defs>
+            <marker id="arrowC" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L0,6 L9,3 z" fill="#0f172a"></path>
+            </marker>
+          </defs>
+          <polygon points="120,330 650,330 650,150" fill="#e2e8f0" stroke="#0f172a" stroke-width="5"></polygon>
+          <line x1="120" y1="330" x2="650" y2="150" stroke="#64748b" stroke-width="14"></line>
+          <g transform="translate(325 230) rotate(-18)">
+            <rect x="-70" y="-42" width="140" height="84" rx="14" fill="#22d3ee" stroke="#0f172a" stroke-width="5"></rect>
+          </g>
+          <line x1="360" y1="220" x2="470" y2="183" stroke="#0f172a" stroke-width="8" marker-end="url(#arrowC)"></line>
+          <text x="480" y="180" font-size="25" font-weight="900" fill="#0f172a">Frecarea</text>
+          <line x1="344" y1="228" x2="242" y2="262" stroke="#0f172a" stroke-width="8" marker-end="url(#arrowC)"></line>
+          <text x="110" y="260" font-size="25" font-weight="900" fill="#0f172a">partea din G</text>
+          <line x1="344" y1="228" x2="315" y2="145" stroke="#0f172a" stroke-width="8" marker-end="url(#arrowC)"></line>
+          <text x="220" y="125" font-size="25" font-weight="900" fill="#0f172a">N</text>
+          <line x1="344" y1="228" x2="344" y2="350" stroke="#0f172a" stroke-width="8" marker-end="url(#arrowC)"></line>
+          <text x="360" y="345" font-size="25" font-weight="900" fill="#0f172a">G</text>
+        </svg>
+      </div>
+
+      <div class="grid">
+        <div class="mini">
+          <h3>De-a lungul planului</h3>
+          <p>Partea din greutate care trage corpul la vale este compensată de frecare.</p>
+          <div class="equation">$$G_{\parallel}=F_f$$</div>
+        </div>
+        <div class="mini">
+          <h3>Perpendicular pe plan</h3>
+          <p>Corpul nu intră în plan și nu se desprinde de el, deci forțele se compensează și aici.</p>
+          <div class="equation">$$N=G_{\perp}$$</div>
+        </div>
+      </div>
+
+      <p class="small">Semnul \(G_{\parallel}\) înseamnă „partea din greutate paralelă cu planul”, iar \(G_{\perp}\) înseamnă „partea din greutate perpendiculară pe plan”.</p>
+    </section>
+
+    <!-- PAGINA 7 -->
+    <section class="page" data-page="7">
+      <p class="lesson-meta">Aplic</p>
+      <h2>Exemple numerice simple</h2>
 
       <div class="question">
-        <p><strong>1. Alege varianta corectă:</strong></p>
-        <label class="option"><input type="radio" name="q1" value="0"> Un corp este în echilibru de translație numai dacă este în repaus.</label>
-        <label class="option"><input type="radio" name="q1" value="1"> Un corp este în echilibru de translație dacă rezultanta forțelor care acționează asupra lui este zero.</label>
-        <label class="option"><input type="radio" name="q1" value="0"> Echilibrul de translație apare când toate forțele au același sens.</label>
-        <div id="fb1" class="feedback"></div>
+        <h3>Exemplul 1: carte pe bancă</h3>
+        <p>O carte are greutatea de \(12\,\text{N}\) și stă nemișcată pe bancă. Ce valoare are reacțiunea băncii?</p>
+        <div class="formula-box">
+          <div class="equation">$$N=G$$</div>
+          <div class="equation">$$N=12\,\text{N}$$</div>
+        </div>
+        <p><strong>Răspuns:</strong> banca împinge cartea în sus cu \(12\,\text{N}\).</p>
       </div>
 
       <div class="question">
-        <p><strong>2. Adevărat sau Fals?</strong></p>
-        <p>Un lift care urcă cu viteză constantă poate fi în echilibru de translație.</p>
-        <select id="q2">
-          <option value="">Alege...</option>
-          <option value="A">Adevărat</option>
-          <option value="F">Fals</option>
-        </select>
-        <div id="fb2" class="feedback"></div>
+        <h3>Exemplul 2: penar tras uniform</h3>
+        <p>Un penar este tras cu \(6\,\text{N}\) spre dreapta și se deplasează uniform. Ce valoare are frecarea?</p>
+        <div class="formula-box">
+          <div class="equation">$$F_{tr}=F_f$$</div>
+          <div class="equation">$$F_f=6\,\text{N}$$</div>
+        </div>
+        <p><strong>Răspuns:</strong> frecarea are valoarea \(6\,\text{N}\) și este orientată spre stânga.</p>
+      </div>
+    </section>
+
+    <!-- PAGINA 8 -->
+    <section class="page" data-page="8">
+      <p class="lesson-meta">Verificare rapidă</p>
+      <h2>Alege varianta corectă</h2>
+
+      <div class="question" data-q="q1">
+        <p><strong>1. Un corp este în echilibru de translație când:</strong></p>
+        <div class="variants">
+          <label class="variant"><input type="radio" name="q1" value="a"> se mișcă mereu mai repede</label>
+          <label class="variant"><input type="radio" name="q1" value="b"> forțele se compensează și mișcarea nu se schimbă</label>
+          <label class="variant"><input type="radio" name="q1" value="c"> toate forțele au același sens</label>
+        </div>
+        <div id="fb-q1" class="feedback"></div>
       </div>
 
-      <div class="question">
-        <p><strong>3. Completează:</strong></p>
-        <p>Un corp este în echilibru de translație când <span class="inline-answer"><input type="text" id="q3" placeholder="scrie aici"></span> forțelor este nulă.</p>
-        <div id="fb3" class="feedback"></div>
+      <div class="question" data-q="q2">
+        <p><strong>2. Un lift urcă în linie dreaptă cu viteză constantă. Liftul este:</strong></p>
+        <div class="variants">
+          <label class="variant"><input type="radio" name="q2" value="a"> în echilibru de translație</label>
+          <label class="variant"><input type="radio" name="q2" value="b"> sigur în repaus</label>
+          <label class="variant"><input type="radio" name="q2" value="c"> accelerat</label>
+        </div>
+        <div id="fb-q2" class="feedback"></div>
       </div>
 
-      <div class="question">
-        <p><strong>4. Situație practică:</strong></p>
-        <p>Un penar este tras pe bancă și se deplasează uniform. Forța de tracțiune și frecarea au:</p>
-        <label class="option"><input type="radio" name="q4" value="1"> module egale și sensuri opuse</label>
-        <label class="option"><input type="radio" name="q4" value="0"> același sens</label>
-        <label class="option"><input type="radio" name="q4" value="0"> module foarte diferite</label>
-        <div id="fb4" class="feedback"></div>
+      <div class="quiz-actions">
+        <button class="btn-check" onclick="checkFirstQuiz()">Verifică răspunsurile</button>
+        <button class="btn-reset" onclick="resetQuiz(['q1','q2'])">Resetează</button>
+      </div>
+    </section>
+
+    <!-- PAGINA 9 -->
+    <section class="page" data-page="9">
+      <p class="lesson-meta">Verificare rapidă</p>
+      <h2>Recunoaște echilibrul</h2>
+
+      <div class="question" data-q="q3">
+        <p><strong>3. La o carte în repaus pe masă, forțele principale sunt:</strong></p>
+        <div class="variants">
+          <label class="variant"><input type="radio" name="q3" value="a"> greutatea în jos și reacțiunea mesei în sus</label>
+          <label class="variant"><input type="radio" name="q3" value="b"> două greutăți în jos</label>
+          <label class="variant"><input type="radio" name="q3" value="c"> frecarea și lumina</label>
+        </div>
+        <div id="fb-q3" class="feedback"></div>
       </div>
 
-      <div class="actions">
-        <button class="btn-warning nav-btn" onclick="checkQuiz()">Verifică răspunsurile</button>
-        <button class="btn-ghost nav-btn" onclick="resetQuiz()">Resetează</button>
+      <div class="question" data-q="q4">
+        <p><strong>4. Un corp solid rigid are mișcare de translație când:</strong></p>
+        <div class="variants">
+          <label class="variant"><input type="radio" name="q4" value="a"> fiecare punct se rotește în jurul unui centru</label>
+          <label class="variant"><input type="radio" name="q4" value="b"> punctele lui au traiectorii paralele și viteze egale la același moment</label>
+          <label class="variant"><input type="radio" name="q4" value="c"> corpul se deformează continuu</label>
+        </div>
+        <div id="fb-q4" class="feedback"></div>
       </div>
 
-      <div id="finalResult" class="result-box"></div>
-
-      <div class="notice">
-        <strong>De reținut:</strong> echilibrul de translație înseamnă <u>rezultantă nulă</u>, nu neapărat <u>lipsa mișcării</u>.
+      <div class="quiz-actions">
+        <button class="btn-check" onclick="checkSecondQuiz()">Verifică răspunsurile</button>
+        <button class="btn-reset" onclick="resetQuiz(['q3','q4'])">Resetează</button>
       </div>
 
-      <div class="actions">
-        <button class="btn-secondary nav-btn" onclick="goPrev()">Înapoi</button>
-        <a class="btn-link btn-success nav-btn" href="lectia-2.html">Mergi la lectia următoare</a>
-        <a class="btn-link btn-primary nav-btn" href="../index.html">Înapoi la lecții</a>
+      <div class="final-banner">
+        <div class="name">Prof. Dănuț Andronie</div>
+        <div>email: <strong>danutmg@gmail.com</strong></div>
       </div>
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrapper">
-      <p class="footer-note">Fizica Galaction • Clasa a VII-a • Lecția 1 – Echilibrul de translație</p>
+  <nav class="bottom-nav" aria-label="Navigare lecție">
+    <div class="nav-inner">
+      <button id="prevBtn" class="nav-btn prev" onclick="goPrev()">Înapoi</button>
+      <div id="pageIndicator" class="indicator">1/9</div>
+      <button id="nextBtn" class="nav-btn next" onclick="goNext()">Mergi mai departe</button>
     </div>
-  </footer>
+  </nav>
 
   <script>
     const pages = Array.from(document.querySelectorAll('.page'));
-    const pageCounter = document.getElementById('pageCounter');
-    const progressBar = document.getElementById('progressBar');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageIndicator = document.getElementById('pageIndicator');
     let currentPage = 0;
 
-    function updateView(){
-      pages.forEach((page, index) => {
-        page.classList.toggle('active', index === currentPage);
+    function showPage(index){
+      currentPage = Math.max(0, Math.min(index, pages.length - 1));
+
+      pages.forEach((page, i) => {
+        page.classList.toggle('active', i === currentPage);
       });
-      pageCounter.textContent = `Pagina ${currentPage + 1} din ${pages.length}`;
-      progressBar.style.width = `${((currentPage + 1) / pages.length) * 100}%`;
+
+      prevBtn.disabled = currentPage === 0;
+      pageIndicator.textContent = `${currentPage + 1}/${pages.length}`;
+      nextBtn.textContent = currentPage === pages.length - 1 ? 'Lecția următoare' : 'Mergi mai departe';
+
       window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if(window.MathJax && MathJax.typesetPromise){
+        MathJax.typesetPromise([pages[currentPage]]);
+      }
     }
 
     function goNext(){
-      if(currentPage < pages.length - 1){
-        currentPage++;
-        updateView();
+      if(currentPage === pages.length - 1){
+        window.location.href = './lectia-2.html';
+        return;
       }
+      showPage(currentPage + 1);
     }
 
     function goPrev(){
-      if(currentPage > 0){
-        currentPage--;
-        updateView();
-      }
+      showPage(currentPage - 1);
     }
 
-    function showFeedback(id, ok, goodText, badText){
+    function setFeedback(id, type, text){
       const box = document.getElementById(id);
-      box.className = 'feedback ' + (ok ? 'ok' : 'bad');
-      box.textContent = ok ? goodText : badText;
+      box.className = `feedback ${type}`;
+      box.textContent = text;
     }
 
-    function normalize(text){
-      return text.toLowerCase()
-        .normalize('NFD')
-        .replace(/[\u0300-\u036f]/g, '')
-        .replace(/\s+/g, ' ')
-        .trim();
-    }
-
-    function checkQuiz(){
-      let score = 0;
-
-      const q1 = document.querySelector('input[name="q1"]:checked');
-      const ok1 = q1 && q1.value === '1';
-      if(ok1) score++;
-      showFeedback(
-        'fb1',
-        ok1,
-        'Corect. Condiția de echilibru de translație este rezultanta nulă.',
-        'Nu. Un corp poate fi în echilibru și când se mișcă rectiliniu uniform.'
-      );
-
-      const q2 = document.getElementById('q2').value;
-      const ok2 = q2 === 'A';
-      if(ok2) score++;
-      showFeedback(
-        'fb2',
-        ok2,
-        'Corect. Viteza constantă arată că mișcarea nu se schimbă.',
-        'Greșit. Dacă liftul urcă cu viteză constantă, el poate fi în echilibru de translație.'
-      );
-
-      const q3 = normalize(document.getElementById('q3').value);
-      const ok3 = q3.includes('rezultanta');
-      if(ok3) score++;
-      showFeedback(
-        'fb3',
-        ok3,
-        'Corect. Rezultanta forțelor este nulă.',
-        'Răspunsul așteptat este: „rezultanta”.'
-      );
-
-      const q4 = document.querySelector('input[name="q4"]:checked');
-      const ok4 = q4 && q4.value === '1';
-      if(ok4) score++;
-      showFeedback(
-        'fb4',
-        ok4,
-        'Corect. Pentru mișcare uniformă, cele două forțe se compensează.',
-        'Nu. În această situație, forța de tracțiune și frecarea au module egale și sensuri opuse.'
-      );
-
-      const finalBox = document.getElementById('finalResult');
-      finalBox.style.display = 'block';
-
-      let message = '';
-      if(score === 4){
-        message = 'Bravo! Ai obținut 4/4. Stăpânești foarte bine ideea de echilibru de translație.';
-      }else if(score >= 2){
-        message = `Ai obținut ${score}/4. Ești pe drumul cel bun. Recitește condiția \\(\\vec{R}=\\vec{0}\\).`;
-      }else{
-        message = `Ai obținut ${score}/4. Reia paginile 2 și 3, apoi încearcă din nou.`;
+    function checkRadio(name, correct){
+      const selected = document.querySelector(`input[name="${name}"]:checked`);
+      if(!selected){
+        setFeedback(`fb-${name}`, 'wait', 'Alege mai întâi o variantă.');
+        return false;
       }
-
-      finalBox.innerHTML = message;
-      if(window.MathJax && window.MathJax.typesetPromise){
-        window.MathJax.typesetPromise([finalBox]).catch(() => {});
+      if(selected.value === correct){
+        setFeedback(`fb-${name}`, 'ok', 'Corect!');
+        return true;
       }
+      setFeedback(`fb-${name}`, 'no', 'Mai încearcă. Recitește pagina cu explicația.');
+      return false;
     }
 
-    function resetQuiz(){
-      document.querySelectorAll('input[type="radio"]').forEach(el => el.checked = false);
-      document.getElementById('q2').value = '';
-      document.getElementById('q3').value = '';
-      document.querySelectorAll('.feedback').forEach(box => {
-        box.className = 'feedback';
-        box.textContent = '';
+    function checkFirstQuiz(){
+      checkRadio('q1', 'b');
+      checkRadio('q2', 'a');
+    }
+
+    function checkSecondQuiz(){
+      checkRadio('q3', 'a');
+      checkRadio('q4', 'b');
+    }
+
+    function resetQuiz(names){
+      names.forEach(name => {
+        document.querySelectorAll(`input[name="${name}"]`).forEach(input => input.checked = false);
+        const fb = document.getElementById(`fb-${name}`);
+        fb.className = 'feedback';
+        fb.textContent = '';
       });
-      const finalBox = document.getElementById('finalResult');
-      finalBox.style.display = 'none';
-      finalBox.textContent = '';
     }
 
-    updateView();
+    document.addEventListener('keydown', (event) => {
+      if(event.key === 'ArrowRight') goNext();
+      if(event.key === 'ArrowLeft') goPrev();
+    });
+
+    showPage(0);
   </script>
 </body>
 </html>

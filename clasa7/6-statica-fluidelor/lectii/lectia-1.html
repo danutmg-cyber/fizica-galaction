@@ -1,928 +1,959 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Lecția 1 | Presiunea. Presiunea hidrostatică | Fizica Galaction</title>
-  <meta name="description" content="Lecția 1 pentru clasa a VII-a: Presiunea. Presiunea hidrostatică. Lecție interactivă, pe pagini, adaptată pentru telefon, tabletă și PC." />
+  <meta name="description" content="Lecție interactivă pentru clasa a VII-a: presiunea, unitatea pascal, presiunea hidrostatică și dependența de adâncime și densitatea lichidului.">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[','\\]'], ['$$','$$']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
   <style>
     :root{
-      --bg:#0f172a;
-      --bg-soft:#111c34;
-      --card:#1e293b;
-      --card-2:#243249;
+      --bg:#07111f;
+      --bg2:#0f172a;
+      --card:#132238;
+      --card2:#1e293b;
       --text:#f8fafc;
       --muted:#cbd5e1;
-      --accent:#22d3ee;
-      --accent-2:#38bdf8;
-      --success:#4ade80;
-      --warning:#fbbf24;
-      --danger:#f87171;
-      --border:#334155;
-      --shadow:0 18px 45px rgba(0,0,0,.32);
+      --cyan:#67e8f9;
+      --cyan2:#22d3ee;
+      --green:#22c55e;
+      --green2:#16a34a;
+      --back:#e2e8f0;
+      --backText:#0f172a;
+      --warn:#fde68a;
+      --bad:#fecaca;
+      --good:#bbf7d0;
+      --line:#334155;
+      --orange:#fed7aa;
+      --purple:#ddd6fe;
+      --pink:#fbcfe8;
+      --blue:#bfdbfe;
     }
 
-    *{box-sizing:border-box;}
-    html{scroll-behavior:smooth;}
+    *{ box-sizing:border-box; }
+    html, body{ margin:0; min-height:100%; }
+
     body{
-      margin:0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: linear-gradient(180deg, #0b1220 0%, var(--bg) 100%);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34,211,238,.18), transparent 34rem),
+        linear-gradient(135deg, var(--bg), var(--bg2));
       color:var(--text);
-      min-height:100vh;
-      padding:16px 14px 108px;
+      min-height:100dvh;
+      line-height:1.55;
+      font-size: clamp(18px, 2.4vw, 21px);
     }
 
-    .wrapper{
-      max-width:900px;
+    .app{
+      width:min(980px, 100%);
       margin:0 auto;
-    }
-
-    .site-header{
-      margin-bottom:18px;
-      text-align:center;
-    }
-
-    .brand{
-      font-size:1rem;
-      color:var(--accent);
-      font-weight:800;
-      letter-spacing:.4px;
-      margin-bottom:6px;
-    }
-
-    .subbrand{
-      font-size:.95rem;
-      color:#94a3b8;
-      margin-bottom:12px;
-    }
-
-    .quote{
-      background:rgba(34,211,238,.09);
-      border:1px solid rgba(34,211,238,.18);
-      color:#dffafe;
-      padding:12px 14px;
-      border-radius:16px;
-      font-style:italic;
-      margin:0 auto;
-      max-width:760px;
-    }
-
-    .lesson-shell{
-      background:rgba(15,23,42,.55);
-      border:1px solid var(--border);
-      border-radius:24px;
-      box-shadow:var(--shadow);
-      overflow:hidden;
-      backdrop-filter: blur(8px);
-    }
-
-    .topbar{
-      padding:14px 16px 10px;
-      border-bottom:1px solid rgba(148,163,184,.2);
-      background:rgba(255,255,255,.02);
-      position:sticky;
-      top:0;
-      z-index:10;
-      backdrop-filter: blur(8px);
-    }
-
-    .progress-row{
+      min-height:100dvh;
+      padding: max(14px, env(safe-area-inset-top)) 14px calc(112px + env(safe-area-inset-bottom));
       display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      margin-bottom:10px;
-      flex-wrap:wrap;
-    }
-
-    .page-indicator{
-      font-size:.95rem;
-      color:var(--muted);
-      font-weight:700;
-    }
-
-    .progress-track{
-      width:100%;
-      height:10px;
-      background:#162235;
-      border-radius:999px;
-      overflow:hidden;
-      border:1px solid rgba(148,163,184,.16);
-    }
-
-    .progress-bar{
-      height:100%;
-      width:0%;
-      background:linear-gradient(90deg, var(--accent), var(--accent-2));
-      border-radius:999px;
-      transition:width .3s ease;
+      flex-direction:column;
+      justify-content:center;
     }
 
     .page{
       display:none;
-      padding:20px 16px 22px;
-      animation:fade .22s ease;
+      background:rgba(19,34,56,.96);
+      border:1px solid rgba(103,232,249,.22);
+      border-radius:24px;
+      padding: clamp(18px, 4vw, 34px);
+      box-shadow:0 22px 70px rgba(0,0,0,.36);
+      min-height: min(760px, calc(100dvh - 150px));
+      overflow-wrap:anywhere;
     }
 
-    .page.active{display:block;}
-
-    @keyframes fade{
-      from{opacity:.2; transform:translateY(8px);}
-      to{opacity:1; transform:translateY(0);}
+    .page.active{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:16px;
+      animation: fadeIn .22s ease-out;
     }
 
-    .hero{
-      background:linear-gradient(160deg, rgba(34,211,238,.14), rgba(56,189,248,.06));
-      border:1px solid rgba(34,211,238,.18);
-      border-radius:22px;
+    @keyframes fadeIn{
+      from{ opacity:0; transform:translateY(8px); }
+      to{ opacity:1; transform:translateY(0); }
+    }
+
+    .top-banner{
+      background:linear-gradient(135deg, rgba(8,47,73,.86), rgba(15,23,42,.96));
+      border:1px solid rgba(103,232,249,.32);
+      border-radius:20px;
       padding:18px;
-      margin-bottom:16px;
+      text-align:center;
+      margin-bottom:8px;
     }
 
-    h1,h2,h3{margin:0 0 12px;}
-    h1{font-size:clamp(1.6rem, 4vw, 2.2rem); line-height:1.15;}
-    h2{font-size:clamp(1.25rem, 3vw, 1.6rem); color:#e0f2fe;}
-    h3{font-size:1.05rem; color:#dbeafe;}
-
-    p, li{
-      color:var(--text);
-      line-height:1.65;
-      font-size:1rem;
-      margin:0 0 12px;
+    .school{
+      color:var(--cyan);
+      font-weight:800;
+      letter-spacing:.03em;
+      text-transform:uppercase;
+      font-size:clamp(1rem, 2.2vw, 1.25rem);
     }
 
-    .muted{color:var(--muted);}
-    .small{font-size:.95rem;}
-    .center{text-align:center;}
-
-    .grid{
-      display:grid;
-      gap:14px;
+    .prof{
+      color:var(--muted);
+      font-weight:700;
+      margin-top:4px;
+      font-size:.98em;
     }
 
-    .grid-2{
-      grid-template-columns:repeat(2, minmax(0,1fr));
+    .motto{
+      margin:14px auto 0;
+      width:min(680px, 100%);
+      background:rgba(253,230,138,.10);
+      border-left:4px solid var(--cyan2);
+      border-radius:12px;
+      padding:10px 12px;
+      color:#fef9c3;
+      font-style:italic;
+      font-weight:650;
+    }
+
+    .eyebrow{
+      color:var(--cyan);
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-size:.78em;
+      margin:0;
+    }
+
+    h1,h2,h3,p{ margin-top:0; }
+
+    h1{
+      font-size:clamp(2rem, 7vw, 4rem);
+      line-height:1.04;
+      margin-bottom:8px;
+      color:#e0f2fe;
+    }
+
+    h2{
+      color:var(--cyan);
+      font-size:clamp(1.55rem, 4.8vw, 2.55rem);
+      line-height:1.1;
+      margin-bottom:8px;
+    }
+
+    h3{
+      color:#bae6fd;
+      font-size:clamp(1.18rem, 3.3vw, 1.45rem);
+      margin-bottom:8px;
+    }
+
+    .lead{
+      font-size:clamp(1.05rem, 3vw, 1.35rem);
+      color:#e2e8f0;
+      font-weight:650;
+    }
+
+    .idea{
+      border:1px solid rgba(34,211,238,.28);
+      background:rgba(8,47,73,.42);
+      border-radius:18px;
+      padding:16px;
+      color:#e0f2fe;
+      font-weight:650;
     }
 
     .card{
-      background:linear-gradient(180deg, rgba(30,41,59,.95), rgba(20,30,48,.95));
-      border:1px solid var(--border);
-      border-radius:20px;
+      background:rgba(30,41,59,.78);
+      border:1px solid rgba(148,163,184,.24);
+      border-radius:18px;
       padding:16px;
-      box-shadow:0 10px 28px rgba(0,0,0,.18);
+    }
+
+    .note{
+      background:rgba(253,230,138,.10);
+      border:1px solid rgba(253,230,138,.25);
+      border-radius:16px;
+      padding:14px 16px;
+      color:#fef9c3;
+      font-weight:650;
+    }
+
+    .warning{
+      background:rgba(251,191,36,.12);
+      border:1px solid rgba(251,191,36,.30);
+      border-radius:16px;
+      padding:14px 16px;
+      color:#fef3c7;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:14px;
+    }
+
+    .grid3{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:14px;
+    }
+
+    .mini{
+      background:rgba(15,23,42,.60);
+      border:1px solid rgba(148,163,184,.24);
+      border-radius:16px;
+      padding:14px;
+    }
+
+    .mini strong{
+      color:var(--cyan);
+    }
+
+    .formula{
+      text-align:center;
+      background:rgba(15,23,42,.72);
+      border:1px solid rgba(103,232,249,.24);
+      border-radius:18px;
+      padding:12px 10px;
+      margin:8px 0;
+      color:#f8fafc;
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+    }
+
+    .formula mjx-container[jax="SVG"]{
+      max-width:100%;
+      overflow-x:auto;
+      overflow-y:hidden;
+      font-size:105% !important;
+    }
+
+    ul,ol{
+      padding-left:1.2em;
+      margin:8px 0 0;
+    }
+
+    li{ margin:6px 0; }
+
+    .step-list{
+      list-style:none;
+      padding-left:0;
+      display:grid;
+      gap:10px;
+    }
+
+    .step-list li{
+      background:rgba(15,23,42,.55);
+      border:1px solid rgba(148,163,184,.24);
+      border-radius:14px;
+      padding:12px;
+      margin:0;
     }
 
     .tag{
       display:inline-flex;
       align-items:center;
-      gap:8px;
-      padding:7px 12px;
+      border:1px solid rgba(103,232,249,.35);
+      background:rgba(14,116,144,.23);
+      color:#cffafe;
       border-radius:999px;
-      background:rgba(56,189,248,.12);
-      color:#dffafe;
-      border:1px solid rgba(56,189,248,.2);
-      font-size:.9rem;
-      font-weight:700;
-      margin:0 8px 8px 0;
+      padding:4px 10px;
+      font-size:.82em;
+      font-weight:800;
+      margin-right:6px;
+      margin-bottom:6px;
+      white-space:nowrap;
     }
 
-    .bullet-list{
-      padding-left:18px;
-      margin:0;
-    }
-
-    .visual-row{
-      display:grid;
-      gap:12px;
-      grid-template-columns:repeat(3, minmax(0,1fr));
-      margin-top:6px;
-    }
-
-    .visual-card{
-      background:var(--bg-soft);
-      border:1px solid var(--border);
+    .svgbox{
+      background:rgba(15,23,42,.60);
+      border:1px solid rgba(148,163,184,.22);
       border-radius:18px;
       padding:14px;
-      min-height:130px;
+      margin:6px 0;
     }
 
-    .visual-icon{
-      font-size:2rem;
-      margin-bottom:8px;
+    .svgbox > svg{
+      width:100%;
+      height:auto;
       display:block;
     }
 
-    .formula-box{
-      background:rgba(15,23,42,.8);
-      border:1px solid rgba(56,189,248,.22);
-      border-left:5px solid var(--accent);
-      border-radius:18px;
-      padding:14px;
-      margin:14px 0;
-      overflow-x:auto;
+    .caption{
+      color:var(--muted);
+      font-size:.92em;
+      margin-top:8px;
+      text-align:center;
     }
 
-    .formula-box .mj{
-      font-size:1.08rem;
-    }
-
-    .highlight{
-      color:#67e8f9;
-      font-weight:800;
-    }
-
-    .example{
-      background:rgba(74,222,128,.08);
-      border:1px solid rgba(74,222,128,.2);
-      border-radius:18px;
-      padding:14px;
-      margin-top:12px;
-    }
-
-    .warning{
-      background:rgba(251,191,36,.08);
-      border:1px solid rgba(251,191,36,.22);
-      border-radius:18px;
-      padding:14px;
-      margin-top:12px;
-      color:#fef3c7;
-    }
-
-    .steps{
-      counter-reset:pas;
-      padding-left:0;
-      margin:0;
-      list-style:none;
+    .quiz{
       display:grid;
       gap:12px;
-    }
-
-    .steps li{
-      position:relative;
-      padding:12px 12px 12px 54px;
-      border-radius:18px;
-      background:rgba(15,23,42,.75);
-      border:1px solid rgba(148,163,184,.16);
-      margin:0;
-    }
-
-    .steps li::before{
-      counter-increment:pas;
-      content:counter(pas);
-      position:absolute;
-      left:14px;
-      top:12px;
-      width:28px;
-      height:28px;
-      border-radius:50%;
-      background:var(--accent);
-      color:#082f49;
-      font-weight:800;
-      display:grid;
-      place-items:center;
-    }
-
-    .table-like{
-      display:grid;
-      gap:10px;
       margin-top:8px;
     }
 
-    .row{
-      display:grid;
-      grid-template-columns:1.1fr 1fr;
-      gap:10px;
-      align-items:stretch;
-    }
-
-    .cell{
-      background:rgba(15,23,42,.76);
-      border:1px solid rgba(148,163,184,.18);
-      border-radius:16px;
-      padding:12px;
-    }
-
-    .retain{
+    .answers{
       display:grid;
       gap:10px;
     }
 
-    .retain-item{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      background:rgba(15,23,42,.7);
-      border:1px solid rgba(148,163,184,.16);
-      border-radius:16px;
-      padding:12px;
-    }
-
-    .retain-item .dot{
-      min-width:28px;
-      height:28px;
-      border-radius:50%;
-      background:rgba(74,222,128,.18);
-      border:1px solid rgba(74,222,128,.35);
-      color:#bbf7d0;
+    .answers label{
       display:grid;
-      place-items:center;
-      font-weight:900;
-    }
-
-    .quiz-card{
-      background:linear-gradient(180deg, rgba(30,41,59,.98), rgba(17,24,39,.98));
-      border:1px solid rgba(56,189,248,.18);
-      border-radius:20px;
-      padding:16px;
-      margin-bottom:14px;
-    }
-
-    .quiz-card h3{
-      margin-bottom:10px;
-    }
-
-    .options{
-      display:grid;
+      grid-template-columns:auto 1fr;
       gap:10px;
-      margin-top:10px;
-    }
-
-    .option{
-      display:flex;
-      align-items:flex-start;
-      gap:10px;
-      padding:12px;
+      align-items:start;
+      width:100%;
+      background:rgba(15,23,42,.62);
+      border:1px solid rgba(148,163,184,.28);
       border-radius:14px;
-      background:rgba(15,23,42,.78);
-      border:1px solid rgba(148,163,184,.18);
+      padding:12px;
       cursor:pointer;
-      transition:transform .15s ease, border-color .15s ease, background .15s ease;
+      color:#f8fafc;
     }
 
-    .option:hover{
-      transform:translateY(-1px);
-      border-color:rgba(34,211,238,.35);
-      background:rgba(34,211,238,.06);
+    .answers label:hover{
+      border-color:rgba(103,232,249,.55);
+      background:rgba(8,47,73,.52);
     }
 
-    .option input{
-      margin-top:2px;
-      transform:scale(1.15);
-      accent-color:#22d3ee;
+    input[type="radio"]{
+      width:1.25em;
+      height:1.25em;
+      margin-top:.12em;
+      accent-color:var(--green);
     }
 
-    .quiz-actions{
+    .check-row{
       display:flex;
-      gap:10px;
+      gap:12px;
+      align-items:center;
       flex-wrap:wrap;
       margin-top:8px;
     }
 
-    .button, .link-button{
+    .check-btn{
+      appearance:none;
       border:none;
-      border-radius:16px;
-      padding:14px 16px;
-      font-weight:800;
+      border-radius:14px;
+      background:var(--cyan2);
+      color:#082f49;
+      font-weight:900;
+      padding:13px 16px;
       font-size:1rem;
       cursor:pointer;
-      transition:transform .15s ease, opacity .15s ease, background .15s ease;
-      text-decoration:none;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      min-height:50px;
+      box-shadow:0 10px 22px rgba(34,211,238,.18);
     }
 
-    .button:hover, .link-button:hover{transform:translateY(-1px);}
-    .button-primary{background:linear-gradient(90deg, var(--accent), var(--accent-2)); color:#082f49;}
-    .button-secondary{background:#1f2937; color:var(--text); border:1px solid rgba(148,163,184,.2);}
-    .button-success{background:#16a34a; color:white;}
-    .button-ghost{background:transparent; color:var(--muted); border:1px solid rgba(148,163,184,.2);}
-    .button:disabled{opacity:.45; cursor:not-allowed; transform:none;}
-
-    .result{
-      display:none;
-      margin-top:14px;
-      padding:14px;
-      border-radius:16px;
-      font-weight:700;
-      line-height:1.6;
+    .reset-btn{
+      appearance:none;
+      border:1px solid rgba(226,232,240,.45);
+      border-radius:14px;
+      background:rgba(226,232,240,.10);
+      color:#f8fafc;
+      font-weight:800;
+      padding:13px 16px;
+      font-size:1rem;
+      cursor:pointer;
     }
 
-    .result.good{
-      display:block;
-      background:rgba(74,222,128,.08);
-      border:1px solid rgba(74,222,128,.22);
-      color:#dcfce7;
+    .feedback{
+      min-height:1.8em;
+      font-weight:900;
+      color:#e0f2fe;
     }
 
-    .result.warn{
-      display:block;
-      background:rgba(251,191,36,.09);
-      border:1px solid rgba(251,191,36,.22);
-      color:#fef3c7;
+    .feedback.ok{ color:var(--good); }
+    .feedback.bad{ color:var(--bad); }
+    .feedback.wait{ color:var(--warn); }
+
+    .final-banner{
+      margin-top:10px;
+      background:linear-gradient(135deg, rgba(5,150,105,.22), rgba(8,47,73,.42));
+      border:1px solid rgba(34,197,94,.38);
+      border-radius:20px;
+      padding:18px;
+      text-align:center;
     }
 
-    .sticky-nav{
+    .bottom-nav{
       position:fixed;
       left:0;
       right:0;
       bottom:0;
+      padding:12px 12px calc(12px + env(safe-area-inset-bottom));
+      background:linear-gradient(to top, rgba(2,6,23,.98), rgba(2,6,23,.84));
+      border-top:1px solid rgba(148,163,184,.22);
       z-index:20;
-      padding:10px 12px calc(10px + env(safe-area-inset-bottom));
-      background:linear-gradient(180deg, rgba(15,23,42,0), rgba(15,23,42,.95) 34%, rgba(15,23,42,1) 100%);
-      backdrop-filter:blur(10px);
     }
 
-    .sticky-inner{
-      max-width:900px;
+    .nav-inner{
+      width:min(980px, 100%);
       margin:0 auto;
       display:grid;
-      grid-template-columns:1fr 1.2fr;
+      grid-template-columns:minmax(105px, 1fr) auto minmax(135px, 1fr);
       gap:10px;
+      align-items:center;
     }
 
-    .sticky-inner .button{
-      width:100%;
-    }
-
-    .page-links{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:16px;
-    }
-
-    .footer-note{
+    .nav-btn{
+      appearance:none;
+      border:none;
+      border-radius:16px;
+      padding:14px 14px;
+      font-weight:900;
+      font-size:clamp(.95rem, 2.8vw, 1.08rem);
+      cursor:pointer;
+      min-height:54px;
+      box-shadow:0 10px 24px rgba(0,0,0,.24);
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
       text-align:center;
-      color:#94a3b8;
-      font-size:.95rem;
+    }
+
+    .nav-btn.back{
+      background:var(--back);
+      color:var(--backText);
+    }
+
+    .nav-btn.next{
+      background:var(--green);
+      color:#052e16;
+    }
+
+    .nav-btn.next:hover{ background:var(--green2); color:white; }
+    .nav-btn:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+      box-shadow:none;
+    }
+
+    .counter{
+      color:#f8fafc;
+      font-weight:900;
+      background:rgba(30,41,59,.95);
+      border:1px solid rgba(148,163,184,.24);
+      border-radius:14px;
+      min-width:64px;
+      text-align:center;
+      padding:12px 10px;
+      white-space:nowrap;
+    }
+
+    a{ color:#bae6fd; }
+
+    .crumbs{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
       margin-top:8px;
     }
 
-    @media (max-width: 720px){
-      .grid-2, .visual-row, .row{
-        grid-template-columns:1fr;
-      }
-      .topbar{padding:12px;}
-      .page{padding:16px 12px 20px;}
-      .hero{padding:16px;}
-      .sticky-inner{
-        grid-template-columns:1fr 1.2fr;
-      }
+    .crumbs a{
+      color:#cffafe;
+      text-decoration:none;
+      font-weight:800;
+      background:rgba(8,47,73,.55);
+      border:1px solid rgba(103,232,249,.25);
+      border-radius:999px;
+      padding:7px 11px;
+      font-size:.9em;
     }
 
-    @media (max-width: 420px){
-      body{padding-left:10px; padding-right:10px;}
-      .sticky-inner{
-        grid-template-columns:1fr 1.15fr;
+    @media (max-width: 740px){
+      .app{
+        padding-left:10px;
+        padding-right:10px;
+        justify-content:flex-start;
       }
-      .button, .link-button{
-        font-size:.96rem;
-        padding:13px 14px;
+
+      .page{
+        border-radius:20px;
+        min-height:calc(100dvh - 120px);
+        padding:18px 15px;
+      }
+
+      .grid, .grid3{
+        grid-template-columns:1fr;
+      }
+
+      .nav-inner{
+        grid-template-columns:1fr auto 1fr;
+        gap:8px;
+      }
+
+      .nav-btn{
+        padding:12px 8px;
+        min-height:50px;
+      }
+
+      .counter{
+        min-width:58px;
+        padding:11px 8px;
       }
     }
   </style>
 </head>
-<body>
-  <div class="wrapper">
-    <header class="site-header">
-      <div class="brand">Fizica Galaction • Clasa a VII-a</div>
-      <div class="subbrand">Unitatea 5 — Statica fluidelor</div>
-      <p class="quote">„Fizica nu este dominată de formule, ci de logică.”</p>
-    </header>
 
-    <main class="lesson-shell" aria-live="polite">
-      <div class="topbar">
-        <div class="progress-row">
-          <div class="page-indicator" id="pageIndicator">Pagina 1 / 9</div>
-          <div class="page-indicator" id="pageTitleIndicator">Start</div>
+<body>
+  <main class="app" id="app">
+    <section class="page active">
+      <div class="top-banner">
+        <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+        <div class="prof">Prof. Dănuț Andronie</div>
+        <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+      </div>
+
+      <p class="eyebrow">Fizica Galaction • Clasa a VII-a • Statica fluidelor</p>
+      <h1>Presiunea. Presiunea hidrostatică</h1>
+      <p class="lead">Vom înțelege de ce același corp poate apăsa „tare” sau „blând”, în funcție de suprafața pe care se sprijină.</p>
+
+      <div class="idea">
+        <strong>Ideea-cheie:</strong> presiunea arată cât de concentrată este o forță de apăsare pe o suprafață.
+      </div>
+
+      <div class="crumbs">
+        <a href="./index.html">Înapoi la lecții</a>
+        <a href="../recapitulare/index.html">Recapitulare</a>
+      </div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Observ</p>
+      <h2>De ce uneori ne afundăm, alteori nu?</h2>
+
+      <div class="grid">
+        <div class="mini">
+          <h3>Pas pe zăpadă</h3>
+          <p>Cu încălțăminte obișnuită, greutatea corpului apasă pe o suprafață mică. Zăpada se tasează mai mult.</p>
         </div>
-        <div class="progress-track" aria-hidden="true">
-          <div class="progress-bar" id="progressBar"></div>
+        <div class="mini">
+          <h3>Schiuri sau rachete de zăpadă</h3>
+          <p>Aceeași greutate se distribuie pe o suprafață mai mare. Presiunea este mai mică, deci ne afundăm mai puțin.</p>
         </div>
       </div>
 
-      <section class="page active" data-title="Start">
-        <div class="hero">
-          <div class="tag">Lecția 1</div>
-          <div class="tag">Presiunea</div>
-          <div class="tag">Presiunea hidrostatică</div>
-          <h1>Presiunea. Presiunea hidrostatică</h1>
-         
+      <div class="svgbox" aria-label="Comparație între suprafață mică și suprafață mare">
+        <svg viewBox="0 0 900 320" role="img">
+          <rect x="0" y="0" width="900" height="320" rx="24" fill="#0f172a"/>
+          <rect x="40" y="230" width="330" height="42" rx="12" fill="#e0f2fe"/>
+          <rect x="530" y="230" width="330" height="42" rx="12" fill="#e0f2fe"/>
+          <path d="M178 90 l60 0 l30 140 l-120 0 z" fill="#fbbf24" opacity=".95"/>
+          <path d="M640 95 l110 0 l85 135 l-280 0 z" fill="#22c55e" opacity=".92"/>
+          <line x1="208" y1="40" x2="208" y2="95" stroke="#fef9c3" stroke-width="8" stroke-linecap="round"/>
+          <path d="M208 105 l-18 -25 h36 z" fill="#fef9c3"/>
+          <line x1="695" y1="40" x2="695" y2="95" stroke="#fef9c3" stroke-width="8" stroke-linecap="round"/>
+          <path d="M695 105 l-18 -25 h36 z" fill="#fef9c3"/>
+          <text x="205" y="302" text-anchor="middle" fill="#f8fafc" font-size="28" font-weight="700">suprafață mică → presiune mare</text>
+          <text x="695" y="302" text-anchor="middle" fill="#f8fafc" font-size="28" font-weight="700">suprafață mare → presiune mică</text>
+        </svg>
+      </div>
+
+      <p class="note">Nu contează numai cât de mare este forța, ci și pe ce suprafață este împărțită acea forță.</p>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Rețin</p>
+      <h2>Ce este presiunea?</h2>
+
+      <p><strong>Presiunea</strong> este mărimea fizică ce arată ce forță de apăsare revine fiecărei unități de suprafață.</p>
+
+      <div class="formula">
+        \[
+          p=\frac{F}{S}
+        \]
+      </div>
+
+      <div class="grid3">
+        <div class="mini"><strong>\(p\)</strong><br>presiunea</div>
+        <div class="mini"><strong>\(F\)</strong><br>forța perpendiculară pe suprafață</div>
+        <div class="mini"><strong>\(S\)</strong><br>aria suprafeței de contact</div>
+      </div>
+
+      <div class="card">
+        <h3>Unitatea de măsură</h3>
+        <p>În Sistemul Internațional, presiunea se măsoară în <strong>pascal</strong>, notat <strong>Pa</strong>.</p>
+        <div class="formula">
+          \[
+            1\,Pa=1\,\frac{N}{m^2}
+          \]
         </div>
+      </div>
 
-        <div class="grid grid-2">
-          <div class="card">
-            <h2>Ce vei învăța</h2>
-            <ul class="bullet-list">
-              <li>ce este <span class="highlight">presiunea</span>;</li>
-              <li>de ce o suprafață mică produce o presiune mai mare;</li>
-              <li>formula <strong>presiunii</strong> și unitatea din S.I.;</li>
-              <li>ce este <span class="highlight">presiunea hidrostatică</span>;</li>
-              <li>de ce presiunea din lichide crește cu adâncimea.</li>
-            </ul>
-          </div>
+      <p class="warning"><strong>Atenție:</strong> în formulă, suprafața trebuie exprimată în \(m^2\), nu în \(cm^2\).</p>
+    </section>
 
-          <div class="card">
-            <h2>Știu deja</h2>
-            <ul class="bullet-list">
-              <li>forța este măsura interacțiunii dintre corpuri;</li>
-              <li>aria se exprimă în <strong>m²</strong> în Sistemul Internațional;</li>
-              <li>lichidele curg și iau forma vasului în care se află.</li>
-            </ul>
-          </div>
+    <section class="page">
+      <p class="eyebrow">Exemplu</p>
+      <h2>Calculăm presiunea</h2>
+
+      <p>Un corp apasă pe o suprafață cu forța \(F=200\,N\). Suprafața de contact are aria \(S=0{,}02\,m^2\).</p>
+
+      <div class="formula">
+        \[
+          p=\frac{F}{S}=\frac{200\,N}{0{,}02\,m^2}=10\,000\,Pa
+        \]
+      </div>
+
+      <ol class="step-list">
+        <li><span class="tag">1</span> Scriem datele: \(F=200\,N\), \(S=0{,}02\,m^2\).</li>
+        <li><span class="tag">2</span> Alegem formula: \(p=\frac{F}{S}\).</li>
+        <li><span class="tag">3</span> Calculăm: \(p=10\,000\,Pa\).</li>
+      </ol>
+
+      <div class="idea">
+        <strong>Interpretare:</strong> dacă aceeași forță ar acționa pe o suprafață mai mică, presiunea ar fi mai mare.
+      </div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Observ</p>
+      <h2>Lichidele apasă pe vas</h2>
+
+      <p>Lichidele aflate în repaus apasă pe fundul vasului, pe pereții vasului și pe corpurile introduse în lichid.</p>
+
+      <div class="svgbox" aria-label="Presiunea lichidului crește cu adâncimea">
+        <svg viewBox="0 0 900 430" role="img">
+          <rect x="0" y="0" width="900" height="430" rx="24" fill="#0f172a"/>
+          <path d="M290 70 h320 l-45 300 h-230 z" fill="#1e293b" stroke="#93c5fd" stroke-width="8"/>
+          <path d="M313 150 h274 l-32 210 h-210 z" fill="#0ea5e9" opacity=".58"/>
+          <line x1="340" y1="190" x2="270" y2="190" stroke="#bae6fd" stroke-width="8" stroke-linecap="round"/>
+          <path d="M260 190 l25 -16 v32 z" fill="#bae6fd"/>
+          <line x1="335" y1="260" x2="225" y2="260" stroke="#67e8f9" stroke-width="12" stroke-linecap="round"/>
+          <path d="M212 260 l32 -20 v40 z" fill="#67e8f9"/>
+          <line x1="326" y1="330" x2="165" y2="330" stroke="#22d3ee" stroke-width="16" stroke-linecap="round"/>
+          <path d="M148 330 l42 -26 v52 z" fill="#22d3ee"/>
+          <text x="670" y="190" fill="#f8fafc" font-size="28">sus: presiune mai mică</text>
+          <text x="670" y="265" fill="#f8fafc" font-size="28">mai jos: presiune mai mare</text>
+          <text x="670" y="340" fill="#f8fafc" font-size="28">la fund: presiune maximă</text>
+        </svg>
+      </div>
+
+      <p class="note">De aceea, un baraj este construit mai gros la bază: acolo apa apasă mai puternic.</p>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Rețin</p>
+      <h2>Presiunea hidrostatică</h2>
+
+      <p><strong>Presiunea hidrostatică</strong> este presiunea produsă de un lichid aflat în repaus, datorită greutății lichidului de deasupra punctului analizat.</p>
+
+      <div class="formula">
+        \[
+          p_h=\rho g h
+        \]
+      </div>
+
+      <div class="grid3">
+        <div class="mini"><strong>\(p_h\)</strong><br>presiunea hidrostatică</div>
+        <div class="mini"><strong>\(\rho\)</strong><br>densitatea lichidului</div>
+        <div class="mini"><strong>\(h\)</strong><br>adâncimea față de suprafața lichidului</div>
+      </div>
+
+      <div class="idea">
+        <strong>Pe înțeles simplu:</strong> cu cât cobori mai adânc într-un lichid, cu atât ai mai mult lichid deasupra ta, deci presiunea este mai mare.
+      </div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Experiment</p>
+      <h2>Sticla cu găuri</h2>
+
+      <p>Poți observa presiunea hidrostatică folosind o sticlă de plastic cu apă și trei găuri mici, făcute la înălțimi diferite.</p>
+
+      <div class="svgbox" aria-label="Jeturi de apă prin găuri la adâncimi diferite">
+        <svg viewBox="0 0 900 440" role="img">
+          <rect x="0" y="0" width="900" height="440" rx="24" fill="#0f172a"/>
+          <rect x="310" y="60" width="210" height="310" rx="45" fill="#1e293b" stroke="#bfdbfe" stroke-width="8"/>
+          <rect x="335" y="120" width="160" height="230" rx="18" fill="#38bdf8" opacity=".55"/>
+          <circle cx="520" cy="175" r="8" fill="#f8fafc"/>
+          <circle cx="520" cy="245" r="8" fill="#f8fafc"/>
+          <circle cx="520" cy="315" r="8" fill="#f8fafc"/>
+          <path d="M528 175 C 590 175, 610 180, 650 198" stroke="#67e8f9" stroke-width="8" fill="none" stroke-linecap="round"/>
+          <path d="M528 245 C 630 245, 665 260, 710 305" stroke="#67e8f9" stroke-width="10" fill="none" stroke-linecap="round"/>
+          <path d="M528 315 C 660 315, 720 340, 790 405" stroke="#67e8f9" stroke-width="12" fill="none" stroke-linecap="round"/>
+          <text x="100" y="180" fill="#f8fafc" font-size="28">gaura de sus:</text>
+          <text x="100" y="215" fill="#cbd5e1" font-size="24">jet mai scurt</text>
+          <text x="100" y="320" fill="#f8fafc" font-size="28">gaura de jos:</text>
+          <text x="100" y="355" fill="#cbd5e1" font-size="24">jet mai lung</text>
+        </svg>
+      </div>
+
+      <ul>
+        <li>Prin gaura de sus, jetul iese mai aproape.</li>
+        <li>Prin gaura de jos, jetul iese mai departe.</li>
+      </ul>
+
+      <p class="note"><strong>Concluzie:</strong> presiunea hidrostatică este mai mare la adâncime mai mare.</p>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Aplic</p>
+      <h2>Calculăm presiunea hidrostatică</h2>
+
+      <p>Care este presiunea hidrostatică la adâncimea \(h=0{,}5\,m\) în apă?</p>
+
+      <div class="card">
+        <p><strong>Date:</strong> \(\rho=1000\,\frac{kg}{m^3}\), \(g=10\,\frac{N}{kg}\), \(h=0{,}5\,m\)</p>
+        <div class="formula">
+          \[
+            p_h=\rho g h
+          \]
         </div>
-
-        <div class="warning">
-          <strong>Important:</strong> în exemplele numerice din această lecție vom folosi, de regulă, valoarea
-          <strong>\(g = 10 \, \text{N/kg}\)</strong>.
+        <div class="formula">
+          \[
+            p_h=1000\cdot 10\cdot 0{,}5=5000\,Pa
+          \]
         </div>
-      </section>
+      </div>
 
-      <section class="page" data-title="Observ">
+      <div class="idea">
+        <strong>Răspuns:</strong> presiunea hidrostatică este \(5000\,Pa\).
+      </div>
+
+      <p class="warning">În problemele de gimnaziu se folosește des \(g=10\,\frac{N}{kg}\), pentru calcule mai simple.</p>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Rețin</p>
+      <h2>De ce depinde presiunea hidrostatică?</h2>
+
+      <div class="grid">
+        <div class="mini">
+          <h3>Depinde de adâncime</h3>
+          <p>Dacă \(h\) crește, presiunea hidrostatică crește.</p>
+          <div class="formula">\[p_h=\rho g h\]</div>
+        </div>
+        <div class="mini">
+          <h3>Depinde de densitatea lichidului</h3>
+          <p>Un lichid mai dens produce presiune mai mare la aceeași adâncime.</p>
+          <div class="formula">\[p_h \sim \rho\]</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>La aceeași adâncime</h3>
+        <p>În același lichid, aflat în repaus, presiunea are aceeași valoare în toate punctele aflate la același nivel.</p>
+      </div>
+
+      <div class="note">
+        <strong>Important:</strong> presiunea hidrostatică nu depinde de forma vasului, ci de lichid și de adâncime.
+      </div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Exemplu din viața reală</p>
+      <h2>Unde întâlnim presiunea hidrostatică?</h2>
+
+      <div class="grid3">
+        <div class="mini">
+          <h3>Baraje</h3>
+          <p>Sunt mai groase la bază, deoarece presiunea apei crește cu adâncimea.</p>
+        </div>
+        <div class="mini">
+          <h3>Scafandri</h3>
+          <p>La adâncimi mari, presiunea apei asupra corpului este mai mare.</p>
+        </div>
+        <div class="mini">
+          <h3>Submarine</h3>
+          <p>Au pereți rezistenți pentru a suporta presiunea mare din apă.</p>
+        </div>
+      </div>
+
+      <div class="idea">
+        Fizica nu rămâne în caiet: ea explică de ce obiectele sunt proiectate într-un anumit fel.
+      </div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Verificare rapidă</p>
+      <h2>Alege varianta corectă</h2>
+
+      <div class="quiz">
         <div class="card">
-          <h2>Observă</h2>
-          <p>Privește situațiile de mai jos și gândește-te: unde presiunea este mai mare și de ce?</p>
-
-          <div class="visual-row">
-            <div class="visual-card">
-              <span class="visual-icon">👠</span>
-              <h3>Toc subțire</h3>
-              <p class="small">Aceeași greutate se sprijină pe o <strong>arie foarte mică</strong>.</p>
-            </div>
-
-            <div class="visual-card">
-              <span class="visual-icon">⛷️</span>
-              <h3>Schiuri</h3>
-              <p class="small">Greutatea corpului se distribuie pe o <strong>arie mare</strong>.</p>
-            </div>
-
-            <div class="visual-card">
-              <span class="visual-icon">🏞️</span>
-              <h3>Baraj</h3>
-              <p class="small">Apa apasă mai puternic la <strong>adâncime mai mare</strong>.</p>
-            </div>
+          <h3>1. Formula presiunii este:</h3>
+          <div class="answers" data-quiz="q1" data-answer="b">
+            <label><input type="radio" name="q1" value="a"> A. \(p=F\cdot S\)</label>
+            <label><input type="radio" name="q1" value="b"> B. \(p=\frac{F}{S}\)</label>
+            <label><input type="radio" name="q1" value="c"> C. \(p=\frac{S}{F}\)</label>
           </div>
-
-          <div class="example">
-            <strong>Concluzie intuitivă:</strong> aceeași forță produce efecte diferite dacă se exercită pe suprafețe diferite.
-          </div>
-        </div>
-      </section>
-
-      <section class="page" data-title="Presiunea">
-        <div class="card">
-          <h2>1. Ce este presiunea?</h2>
-          <p>
-            <span class="highlight">Presiunea</span> este mărimea fizică ce arată cât de „concentrată” este
-            forța de apăsare pe o anumită suprafață.
-          </p>
-
-          <div class="formula-box">
-            <div class="mj">\( \displaystyle p = \frac{F}{S} \)</div>
-          </div>
-
-          <div class="table-like">
-            <div class="row">
-              <div class="cell"><strong>\(p\)</strong> = presiunea</div>
-              <div class="cell"><strong>\(F\)</strong> = forța de apăsare</div>
-            </div>
-            <div class="row">
-              <div class="cell"><strong>\(S\)</strong> = aria suprafeței</div>
-              <div class="cell"><strong>Unitatea S.I.</strong>: \(1 \, \text{Pa} = 1 \, \text{N/m}^2\)</div>
-            </div>
-          </div>
-
-          <div class="example">
-            <strong>Ideea-cheie:</strong> la <strong>aceeași forță</strong>, dacă <strong>aria scade</strong>, atunci
-            <strong>presiunea crește</strong>. De aceea, un ac înțeapă ușor, iar schiurile nu se afundă ușor în zăpadă.
-          </div>
-        </div>
-      </section>
-
-      <section class="page" data-title="Formula și exemplu">
-        <div class="card">
-          <h2>2. Formula și un exemplu numeric</h2>
-          <p>Presiunea se calculează împărțind forța la aria suprafeței de contact.</p>
-
-          <div class="formula-box">
-            <div class="mj">
-              \( \displaystyle p = \frac{F}{S} = \frac{200 \, \text{N}}{0{,}02 \, \text{m}^2} = 10\,000 \, \text{Pa} \)
-            </div>
-          </div>
-
-          <ol class="steps">
-            <li><strong>Date:</strong> \(F = 200 \, \text{N}\), \(S = 0{,}02 \, \text{m}^2\)</li>
-            <li><strong>Formula:</strong> \(p = \frac{F}{S}\)</li>
-            <li><strong>Calcul:</strong> \(p = \frac{200}{0{,}02} = 10\,000 \, \text{Pa}\)</li>
-            <li><strong>Răspuns:</strong> presiunea este <strong>10&nbsp;000 Pa</strong>.</li>
-          </ol>
-
-          <div class="warning">
-            <strong>Atenție la unități:</strong> aria trebuie exprimată în <strong>m²</strong>, nu în cm².
-          </div>
-
-          <div class="example">
-            <strong>Exemplu util de transformare:</strong>
-            \( \displaystyle 20 \, \text{cm}^2 = \frac{20}{10\,000} \, \text{m}^2 = 0{,}002 \, \text{m}^2 \)
-          </div>
-        </div>
-      </section>
-
-      <section class="page" data-title="Presiunea hidrostatică">
-        <div class="card">
-          <h2>3. Presiunea hidrostatică</h2>
-          <p>
-            Lichidele exercită presiune asupra fundului vasului și asupra pereților vasului.
-            Presiunea produsă de un lichid aflat în repaus se numește
-            <span class="highlight">presiune hidrostatică</span>.
-          </p>
-
-          <div class="formula-box">
-            <div class="mj">\( \displaystyle p_h = \rho g h \)</div>
-          </div>
-
-          <div class="table-like">
-            <div class="row">
-              <div class="cell"><strong>\(\rho\)</strong> = densitatea lichidului</div>
-              <div class="cell"><strong>\(g\)</strong> = accelerația gravitațională</div>
-            </div>
-            <div class="row">
-              <div class="cell"><strong>\(h\)</strong> = adâncimea</div>
-              <div class="cell"><strong>\(p_h\)</strong> = presiunea hidrostatică</div>
-            </div>
-          </div>
-
-          <div class="example">
-            <strong>De ce depinde?</strong> Presiunea hidrostatică crește:
-            <br>• când <strong>adâncimea \(h\)</strong> este mai mare;
-            <br>• când lichidul are <strong>densitate \(\rho\)</strong> mai mare.
-          </div>
-
-          <div class="warning">
-            <strong>Nu depinde</strong> de forma vasului. La aceeași adâncime, în același lichid,
-            presiunea hidrostatică are aceeași valoare.
-          </div>
-        </div>
-      </section>
-
-      <section class="page" data-title="Aplicăm">
-        <div class="grid grid-2">
-          <div class="card">
-            <h2>4. Aplicăm formula</h2>
-            <p><strong>Problema 1:</strong> Care este presiunea hidrostatică la adâncimea de \(0{,}5 \, \text{m}\) în apă?</p>
-            <p>Date: \(\rho = 1000 \, \text{kg/m}^3\), \(g = 10 \, \text{N/kg}\), \(h = 0{,}5 \, \text{m}\)</p>
-
-            <div class="formula-box">
-              <div class="mj">
-                \( \displaystyle p_h = \rho g h = 1000 \cdot 10 \cdot 0{,}5 = 5000 \, \text{Pa} \)
-              </div>
-            </div>
-
-            <p><strong>Răspuns:</strong> \(p_h = 5000 \, \text{Pa}\)</p>
-          </div>
-
-          <div class="card">
-            <h2>5. Un experiment simplu</h2>
-            <p><strong>Materiale:</strong> o sticlă de plastic, apă, un ac.</p>
-            <p><strong>Observație:</strong> dacă faci găuri la înălțimi diferite, jetul de apă iese mai departe prin gaura aflată mai jos.</p>
-            <p><strong>Concluzie:</strong> la adâncime mai mare, presiunea hidrostatică este mai mare.</p>
-          </div>
+          <div class="feedback" id="fb-q1"></div>
         </div>
 
         <div class="card">
-          <h2>6. Unde vedem asta în viața reală?</h2>
-          <div class="visual-row">
-            <div class="visual-card">
-              <span class="visual-icon">🧱</span>
-              <h3>Barajele</h3>
-              <p class="small">Sunt construite mai groase la bază, unde presiunea apei este mai mare.</p>
-            </div>
-            <div class="visual-card">
-              <span class="visual-icon">🤿</span>
-              <h3>Scafandrii</h3>
-              <p class="small">La adâncimi mari, presiunea apei devine foarte mare.</p>
-            </div>
-            <div class="visual-card">
-              <span class="visual-icon">🚢</span>
-              <h3>Submarinele</h3>
-              <p class="small">Trebuie construite astfel încât să reziste la presiuni foarte mari.</p>
-            </div>
+          <h3>2. Unitatea de măsură pentru presiune este:</h3>
+          <div class="answers" data-quiz="q2" data-answer="c">
+            <label><input type="radio" name="q2" value="a"> A. newton \((N)\)</label>
+            <label><input type="radio" name="q2" value="b"> B. joule \((J)\)</label>
+            <label><input type="radio" name="q2" value="c"> C. pascal \((Pa)\)</label>
           </div>
+          <div class="feedback" id="fb-q2"></div>
         </div>
-      </section>
 
-      <section class="page" data-title="Reține">
+        <div class="check-row">
+          <button class="check-btn" type="button" onclick="checkOnePage(['q1','q2'])">Verifică răspunsurile</button>
+          <button class="reset-btn" type="button" onclick="resetOnePage(['q1','q2'])">Resetează</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Verificare rapidă</p>
+      <h2>Presiunea hidrostatică</h2>
+
+      <div class="quiz">
         <div class="card">
-          <h2>Reține</h2>
-
-          <div class="retain">
-            <div class="retain-item">
-              <div class="dot">1</div>
-              <div>Presiunea este mărimea fizică dată de formula \( \displaystyle p = \frac{F}{S} \).</div>
-            </div>
-
-            <div class="retain-item">
-              <div class="dot">2</div>
-              <div>Unitatea de măsură în S.I. este <strong>pascalul</strong>: \(1 \, \text{Pa} = 1 \, \text{N/m}^2\).</div>
-            </div>
-
-            <div class="retain-item">
-              <div class="dot">3</div>
-              <div>La aceeași forță, o suprafață mai mică înseamnă o presiune mai mare.</div>
-            </div>
-
-            <div class="retain-item">
-              <div class="dot">4</div>
-              <div>Presiunea hidrostatică este dată de formula \( \displaystyle p_h = \rho g h \).</div>
-            </div>
-
-            <div class="retain-item">
-              <div class="dot">5</div>
-              <div>Presiunea hidrostatică crește cu adâncimea și cu densitatea lichidului.</div>
-            </div>
+          <h3>3. Presiunea hidrostatică crește când:</h3>
+          <div class="answers" data-quiz="q3" data-answer="b">
+            <label><input type="radio" name="q3" value="a"> A. vasul este mai colorat</label>
+            <label><input type="radio" name="q3" value="b"> B. adâncimea este mai mare</label>
+            <label><input type="radio" name="q3" value="c"> C. lichidul este agitat</label>
           </div>
+          <div class="feedback" id="fb-q3"></div>
         </div>
-      </section>
 
-      <section class="page" data-title="Verificare rapidă">
         <div class="card">
-          <h2>Verificare rapidă</h2>
-          <p class="muted">Alege câte o variantă corectă la fiecare item, apoi apasă pe <strong>Verifică răspunsurile</strong>.</p>
-
-          <form id="quizForm">
-            <div class="quiz-card">
-              <h3>1. Formula presiunii este:</h3>
-              <div class="options">
-                <label class="option"><input type="radio" name="q1" value="a"> <span>A. \( p = F \cdot S \)</span></label>
-                <label class="option"><input type="radio" name="q1" value="b"> <span>B. \( \displaystyle p = \frac{F}{S} \)</span></label>
-                <label class="option"><input type="radio" name="q1" value="c"> <span>C. \( \displaystyle p = \frac{S}{F} \)</span></label>
-              </div>
-            </div>
-
-            <div class="quiz-card">
-              <h3>2. Unitatea de măsură pentru presiune în S.I. este:</h3>
-              <div class="options">
-                <label class="option"><input type="radio" name="q2" value="a"> <span>A. joule (J)</span></label>
-                <label class="option"><input type="radio" name="q2" value="b"> <span>B. newton (N)</span></label>
-                <label class="option"><input type="radio" name="q2" value="c"> <span>C. pascal (Pa)</span></label>
-              </div>
-            </div>
-
-            <div class="quiz-card">
-              <h3>3. Presiunea hidrostatică depinde direct de:</h3>
-              <div class="options">
-                <label class="option"><input type="radio" name="q3" value="a"> <span>A. culoarea vasului</span></label>
-                <label class="option"><input type="radio" name="q3" value="b"> <span>B. adâncimea lichidului</span></label>
-                <label class="option"><input type="radio" name="q3" value="c"> <span>C. forma vasului</span></label>
-              </div>
-            </div>
-
-            <div class="quiz-card">
-              <h3>4. La aceeași forță, presiunea este mai mare când:</h3>
-              <div class="options">
-                <label class="option"><input type="radio" name="q4" value="a"> <span>A. aria este mai mică</span></label>
-                <label class="option"><input type="radio" name="q4" value="b"> <span>B. aria este mai mare</span></label>
-                <label class="option"><input type="radio" name="q4" value="c"> <span>C. aria rămâne aceeași</span></label>
-              </div>
-            </div>
-
-            <div class="quiz-card">
-              <h3>5. La aceeași adâncime, presiunea este mai mare în:</h3>
-              <div class="options">
-                <label class="option"><input type="radio" name="q5" value="a"> <span>A. ulei, dacă are densitate mai mică</span></label>
-                <label class="option"><input type="radio" name="q5" value="b"> <span>B. apă, dacă are densitate mai mare</span></label>
-                <label class="option"><input type="radio" name="q5" value="c"> <span>C. orice lichid, indiferent de densitate</span></label>
-              </div>
-            </div>
-
-            <div class="quiz-actions">
-              <button type="button" class="button button-primary" onclick="checkQuiz()">Verifică răspunsurile</button>
-              <button type="reset" class="button button-secondary" onclick="resetQuiz()">Resetează</button>
-            </div>
-          </form>
-
-          <div id="quizResult" class="result" role="status"></div>
-
-          <div class="page-links">
-            <a class="link-button button-secondary" href="./index.html">Înapoi la lecții</a>
-            <a class="link-button button-success" href="./lectia-2.html">Lecția următoare</a>
+          <h3>4. La aceeași adâncime, în același lichid, presiunea:</h3>
+          <div class="answers" data-quiz="q4" data-answer="a">
+            <label><input type="radio" name="q4" value="a"> A. este aceeași</label>
+            <label><input type="radio" name="q4" value="b"> B. depinde de forma vasului</label>
+            <label><input type="radio" name="q4" value="c"> C. depinde de culoarea vasului</label>
           </div>
-          <p class="footer-note">După ce verifici răspunsurile, poți continua cu <strong>Presiunea atmosferică</strong>.</p>
+          <div class="feedback" id="fb-q4"></div>
         </div>
-      </section>
-    </main>
-  </div>
 
-  <nav class="sticky-nav" aria-label="Navigare între paginile lecției">
-    <div class="sticky-inner">
-      <button class="button button-secondary" id="prevBtn" onclick="changePage(-1)">◀ Înapoi</button>
-      <button class="button button-primary" id="nextBtn" onclick="changePage(1)">Mergi mai departe ▶</button>
+        <div class="check-row">
+          <button class="check-btn" type="button" onclick="checkOnePage(['q3','q4'])">Verifică răspunsurile</button>
+          <button class="reset-btn" type="button" onclick="resetOnePage(['q3','q4'])">Resetează</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Sinteză</p>
+      <h2>Ce trebuie să rămână clar</h2>
+
+      <ol class="step-list">
+        <li><span class="tag">1</span> Presiunea arată cât de concentrată este forța de apăsare pe o suprafață.</li>
+        <li><span class="tag">2</span> Formula presiunii este \(p=\frac{F}{S}\).</li>
+        <li><span class="tag">3</span> Unitatea de măsură este pascalul: \(1\,Pa=1\,\frac{N}{m^2}\).</li>
+        <li><span class="tag">4</span> Presiunea hidrostatică este produsă de lichidele aflate în repaus.</li>
+        <li><span class="tag">5</span> Formula presiunii hidrostatice este \(p_h=\rho g h\).</li>
+        <li><span class="tag">6</span> La aceeași adâncime, în același lichid, presiunea are aceeași valoare.</li>
+      </ol>
+
+      <div class="final-banner">
+        <strong>Prof. Dănuț Andronie</strong><br>
+        email: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navigare lecție">
+    <div class="nav-inner">
+      <button class="nav-btn back" id="backBtn" type="button">◀ Înapoi</button>
+      <div class="counter" id="pageCounter">1/13</div>
+      <button class="nav-btn next" id="nextBtn" type="button">Mergi mai departe ▶</button>
     </div>
   </nav>
 
   <script>
     const pages = Array.from(document.querySelectorAll('.page'));
-    const pageIndicator = document.getElementById('pageIndicator');
-    const pageTitleIndicator = document.getElementById('pageTitleIndicator');
-    const progressBar = document.getElementById('progressBar');
-    const prevBtn = document.getElementById('prevBtn');
+    const backBtn = document.getElementById('backBtn');
     const nextBtn = document.getElementById('nextBtn');
-    let currentPage = 0;
+    const pageCounter = document.getElementById('pageCounter');
+    const nextLesson = './lectia-2.html';
+    let index = 0;
 
-    function updatePage() {
-      pages.forEach((page, index) => {
-        page.classList.toggle('active', index === currentPage);
-      });
+    const correctAnswers = {
+      q1: 'b',
+      q2: 'c',
+      q3: 'b',
+      q4: 'a'
+    };
 
-      const total = pages.length;
-      const title = pages[currentPage].dataset.title || '';
-      pageIndicator.textContent = `Pagina ${currentPage + 1} / ${total}`;
-      pageTitleIndicator.textContent = title;
-      progressBar.style.width = `${((currentPage + 1) / total) * 100}%`;
-
-      prevBtn.disabled = currentPage === 0;
-
-      if (currentPage === total - 1) {
-        nextBtn.textContent = 'Reia lecția ↺';
-      } else {
-        nextBtn.textContent = 'Mergi mai departe ▶';
+    function renderMath(){
+      if(window.MathJax && window.MathJax.typesetPromise){
+        window.MathJax.typesetPromise([pages[index]]).catch(() => {});
       }
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    function changePage(step) {
-      if (currentPage === pages.length - 1 && step === 1) {
-        currentPage = 0;
-      } else {
-        currentPage = Math.min(Math.max(currentPage + step, 0), pages.length - 1);
-      }
-      updatePage();
+    function updatePage(){
+      pages.forEach((page, i) => page.classList.toggle('active', i === index));
+      pageCounter.textContent = `${index + 1}/${pages.length}`;
+      backBtn.disabled = index === 0;
+      nextBtn.textContent = index === pages.length - 1 ? 'Lecția următoare' : 'Mergi mai departe ▶';
+      nextBtn.setAttribute('aria-label', index === pages.length - 1 ? 'Deschide lecția următoare' : 'Mergi la pagina următoare');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      renderMath();
     }
 
-    function checkQuiz() {
-      const answers = { q1: 'b', q2: 'c', q3: 'b', q4: 'a', q5: 'b' };
-      let score = 0;
-      let answered = 0;
+    function nextPage(){
+      if(index < pages.length - 1){
+        index++;
+        updatePage();
+      }else{
+        window.location.href = nextLesson;
+      }
+    }
 
-      for (const key in answers) {
-        const selected = document.querySelector(`input[name="${key}"]:checked`);
-        if (selected) {
-          answered++;
-          if (selected.value === answers[key]) score++;
+    function prevPage(){
+      if(index > 0){
+        index--;
+        updatePage();
+      }
+    }
+
+    function selectedValue(name){
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      return checked ? checked.value : '';
+    }
+
+    function setFeedback(name, text, cls){
+      const fb = document.getElementById(`fb-${name}`);
+      if(!fb) return;
+      fb.textContent = text;
+      fb.className = `feedback ${cls}`;
+    }
+
+    function checkOnePage(names){
+      names.forEach(name => {
+        const chosen = selectedValue(name);
+        if(!chosen){
+          setFeedback(name, 'Alege mai întâi o variantă.', 'wait');
+        }else if(chosen === correctAnswers[name]){
+          setFeedback(name, 'Corect!', 'ok');
+        }else{
+          setFeedback(name, 'Mai încearcă. Recitește pagina cu explicația.', 'bad');
         }
-      }
-
-      const result = document.getElementById('quizResult');
-
-      if (answered < 5) {
-        result.className = 'result warn';
-        result.innerHTML = `Ai răspuns la <strong>${answered}</strong> din 5 itemi. Completează toate variantele.`;
-        return;
-      }
-
-      let message = '';
-      if (score === 5) {
-        result.className = 'result good';
-        message = 'Excelent! Ai înțeles foarte bine noțiunile despre presiune și presiune hidrostatică.';
-      } else if (score >= 3) {
-        result.className = 'result warn';
-        message = 'Bine! Mai recitește formulele și de ce presiunea hidrostatică depinde de adâncime și densitate.';
-      } else {
-        result.className = 'result warn';
-        message = 'Mai exersează. Reia paginile cu formulele și exemplele numerice.';
-      }
-
-      result.innerHTML =
-        `Scor: <strong>${score} / 5</strong><br>` +
-        `${message}<br><br>` +
-        `Răspunsuri corecte: 1-B, 2-C, 3-B, 4-A, 5-B.`;
+      });
     }
 
-    function resetQuiz() {
-      const result = document.getElementById('quizResult');
-      result.className = 'result';
-      result.innerHTML = '';
+    function resetOnePage(names){
+      names.forEach(name => {
+        document.querySelectorAll(`input[name="${name}"]`).forEach(input => input.checked = false);
+        setFeedback(name, '', '');
+      });
     }
+
+    backBtn.addEventListener('click', prevPage);
+    nextBtn.addEventListener('click', nextPage);
 
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'ArrowRight') changePage(1);
-      if (event.key === 'ArrowLeft') changePage(-1);
+      if(event.key === 'ArrowRight') nextPage();
+      if(event.key === 'ArrowLeft') prevPage();
     });
 
     updatePage();
   </script>
-
-  <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)'], ['$', '$']] },
-      svg: { fontCache: 'global' }
-    };
-  </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </body>
 </html>

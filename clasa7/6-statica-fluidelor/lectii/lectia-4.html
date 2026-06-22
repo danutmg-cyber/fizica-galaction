@@ -3,1285 +3,980 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Lecția 4 | Legea lui Arhimede | Clasa a VII-a</title>
-  <meta name="description" content="Lecție interactivă pentru clasa a VII-a: Legea lui Arhimede. Forța arhimedică, condiția de plutire, aplicații și verificare rapidă.">
+  <title>Lecția 4 | Legea lui Arhimede. Aplicații | Fizica Galaction</title>
+  <meta name="description" content="Lecție interactivă pentru clasa a VII-a: Legea lui Arhimede, forța arhimedică, plutirea corpurilor și aplicații.">
 
   <script>
     window.MathJax = {
       tex: {
         inlineMath: [['\\(', '\\)'], ['$', '$']],
-        displayMath: [['\\[', '\\]']],
-        processEscapes: true
+        displayMath: [['\\[', '\\]']]
       },
-      svg: { fontCache: 'global' }
+      svg: { fontCache: 'global' },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
     };
   </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 
   <style>
-    :root {
-      --bg: #0f172a;
-      --bg-2: #111827;
-      --card: #1e293b;
-      --card-2: #24344d;
-      --text: #f8fafc;
-      --muted: #cbd5e1;
-      --line: #334155;
-      --primary: #22d3ee;
-      --primary-dark: #0891b2;
-      --success: #22c55e;
-      --warning: #facc15;
-      --danger: #fb7185;
-      --purple: #c084fc;
-      --dark-text: #082f49;
-      --shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
-      --radius: 20px;
+    :root{
+      --bg:#07111f;
+      --panel:#102033;
+      --panel2:#152b44;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --cyan:#67e8f9;
+      --cyan2:#22d3ee;
+      --green:#22c55e;
+      --green-dark:#15803d;
+      --back:#e2e8f0;
+      --back-text:#0f172a;
+      --line:rgba(148,163,184,.28);
+      --yellow:#fde68a;
+      --orange:#fb923c;
+      --red:#fecaca;
+      --shadow:0 18px 45px rgba(0,0,0,.38);
+      --radius:22px;
+      --nav-h:82px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, Arial, sans-serif;
+    *{box-sizing:border-box}
+    html{height:100%;scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100dvh;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(34, 211, 238, 0.16), transparent 30rem),
-        radial-gradient(circle at bottom right, rgba(192, 132, 252, 0.12), transparent 26rem),
+        radial-gradient(circle at top left, rgba(34,211,238,.18), transparent 34rem),
+        radial-gradient(circle at bottom right, rgba(34,197,94,.14), transparent 28rem),
         var(--bg);
-      color: var(--text);
-      line-height: 1.55;
-      padding: 14px 14px 112px;
-    }
-
-    .app {
-      width: min(100%, 980px);
-      margin: 0 auto;
-    }
-
-    .site-header {
-      background: rgba(15, 23, 42, 0.92);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      padding: 16px;
-      margin: 8px 0 14px;
-      box-shadow: var(--shadow);
-      text-align: center;
-    }
-
-    .school {
-      color: var(--primary);
-      font-weight: 800;
-      letter-spacing: 0.02em;
-      font-size: clamp(0.95rem, 2.4vw, 1.2rem);
-    }
-
-    .teacher {
-      color: var(--muted);
-      font-size: 0.95rem;
-      margin-top: 4px;
-    }
-
-    .quote {
-      margin: 12px auto 0;
-      padding: 10px 12px;
-      max-width: 720px;
-      border-left: 5px solid var(--primary);
-      border-radius: 12px;
-      background: rgba(34, 211, 238, 0.10);
-      color: #ecfeff;
-      font-weight: 700;
-    }
-
-    .progress-wrap {
-      margin-top: 14px;
-      background: #0b1220;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      height: 14px;
-      overflow: hidden;
-    }
-
-    .progress-bar {
-      width: 0%;
-      height: 100%;
-      background: linear-gradient(90deg, var(--primary), var(--success));
-      border-radius: 999px;
-      transition: width 0.25s ease;
-    }
-
-    .page-counter {
-      margin-top: 8px;
-      color: var(--muted);
-      font-weight: 700;
-      font-size: 0.95rem;
-    }
-
-    main {
-      position: relative;
-    }
-
-    .page {
-      display: none;
-      background: rgba(30, 41, 59, 0.94);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: clamp(16px, 3vw, 30px);
-      min-height: 64vh;
-      animation: fadeUp 0.25s ease-out;
-    }
-
-    .page.active {
-      display: block;
-    }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    h1, h2, h3 {
-      line-height: 1.15;
-      margin: 0 0 14px;
-    }
-
-    h1 {
-      font-size: clamp(2rem, 7vw, 4.2rem);
-      text-align: center;
-      color: #ecfeff;
-    }
-
-    h2 {
-      font-size: clamp(1.55rem, 4vw, 2.4rem);
-      color: #e0f2fe;
-    }
-
-    h3 {
-      font-size: clamp(1.2rem, 3vw, 1.55rem);
-      color: #bae6fd;
-      margin-top: 18px;
-    }
-
-    p, li {
-      font-size: clamp(1rem, 2.5vw, 1.14rem);
-    }
-
-    .lead {
-      font-size: clamp(1.1rem, 3.1vw, 1.45rem);
-      color: #f8fafc;
-      text-align: center;
-      max-width: 820px;
-      margin: 0 auto 16px;
-    }
-
-    .subtitle-pill {
-      display: inline-flex;
-      gap: 8px;
-      align-items: center;
-      justify-content: center;
-      margin: 0 auto 14px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(34, 211, 238, 0.13);
-      border: 1px solid rgba(34, 211, 238, 0.45);
-      color: #ecfeff;
-      font-weight: 800;
-    }
-
-    .center {
-      text-align: center;
-    }
-
-    .grid {
-      display: grid;
-      gap: 14px;
-    }
-
-    .grid.two {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .grid.three {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .info-card {
-      background: rgba(15, 23, 42, 0.72);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px;
-    }
-
-    .info-card.light {
-      background: #e0f2fe;
-      color: #0f172a;
-      border-color: #7dd3fc;
-    }
-
-    .info-card.success {
-      background: rgba(34, 197, 94, 0.12);
-      border-color: rgba(34, 197, 94, 0.55);
-    }
-
-    .info-card.warning {
-      background: rgba(250, 204, 21, 0.12);
-      border-color: rgba(250, 204, 21, 0.55);
-    }
-
-    .info-card.danger {
-      background: rgba(251, 113, 133, 0.12);
-      border-color: rgba(251, 113, 133, 0.55);
-    }
-
-    .formula-box {
-      background: #082f49;
-      color: #f8fafc;
-      border: 2px solid #38bdf8;
-      border-radius: 18px;
-      padding: 16px;
-      margin: 16px 0;
-      text-align: center;
-      overflow-x: auto;
-    }
-
-    .formula-box .MathJax {
-      font-size: 118% !important;
-    }
+      color:var(--text);
+      line-height:1.55;
+      font-size:18px;
+    }
+
+    .app{
+      min-height:100dvh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+    }
+
+    .top-banner{
+      width:min(960px, calc(100% - 28px));
+      margin:14px auto 0;
+      border:1px solid rgba(103,232,249,.35);
+      background:linear-gradient(135deg, rgba(15,23,42,.92), rgba(14,116,144,.24));
+      border-radius:20px;
+      padding:14px 16px;
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+
+    .school{
+      color:var(--cyan);
+      font-weight:800;
+      letter-spacing:.02em;
+      text-transform:uppercase;
+      font-size:clamp(1rem, 3.3vw, 1.25rem);
+    }
+
+    .teacher{
+      color:#e0f2fe;
+      margin-top:3px;
+      font-weight:650;
+    }
+
+    .motto{
+      margin:10px auto 0;
+      display:inline-block;
+      max-width:760px;
+      padding:9px 12px;
+      border-left:4px solid var(--cyan2);
+      background:rgba(253,230,138,.10);
+      color:var(--yellow);
+      border-radius:12px;
+      font-style:italic;
+    }
+
+    main{
+      width:min(960px, calc(100% - 28px));
+      flex:1;
+      padding:14px 0 calc(var(--nav-h) + 28px);
+      display:flex;
+      align-items:stretch;
+    }
 
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-      margin: 14px 0;
+    .page{
+      display:none;
+      width:100%;
+      min-height:calc(100dvh - var(--nav-h) - 38px);
+      background:linear-gradient(180deg, rgba(21,43,68,.97), rgba(13,27,43,.97));
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:clamp(18px, 4vw, 34px);
+      overflow:hidden;
     }
 
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: #0b1220;
-      border: 1px solid var(--line);
-      color: var(--text);
-      font-weight: 800;
+    .page.active{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .eyebrow{
+      color:var(--cyan);
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-size:.9rem;
+      margin-bottom:8px;
+    }
+
+    h1,h2,h3{
+      line-height:1.15;
+      margin:0 0 14px;
+      color:var(--cyan);
     }
+
+    h1{font-size:clamp(2rem, 7vw, 4rem)}
+    h2{font-size:clamp(1.55rem, 5vw, 2.45rem)}
+    h3{font-size:clamp(1.18rem, 4vw, 1.55rem)}
 
-    .arrow-up {
-      color: #fb7185;
-      font-weight: 900;
+    p{margin:0 0 13px}
+    strong{color:#ffffff}
+    .muted{color:var(--muted)}
+    .big{font-size:clamp(1.08rem, 3.8vw, 1.35rem)}
+    .center{text-align:center}
+
+    .hero{
+      display:grid;
+      gap:18px;
+      align-items:center;
     }
 
-    .arrow-down {
-      color: #93c5fd;
-      font-weight: 900;
+    .key{
+      background:rgba(34,211,238,.10);
+      border:1px solid rgba(103,232,249,.30);
+      border-radius:18px;
+      padding:15px;
+      color:#e0f2fe;
+      font-weight:650;
+    }
+
+    .idea{
+      background:rgba(34,197,94,.11);
+      border:1px solid rgba(74,222,128,.30);
+      border-radius:18px;
+      padding:15px;
+    }
+
+    .warn{
+      background:rgba(251,146,60,.12);
+      border:1px solid rgba(251,146,60,.35);
+      border-radius:18px;
+      padding:15px;
+    }
+
+    .formula{
+      margin:16px 0;
+      padding:14px 10px;
+      border-radius:18px;
+      background:rgba(2,6,23,.32);
+      border:1px solid rgba(148,163,184,.24);
+      text-align:center;
+      overflow-x:auto;
+      overflow-y:hidden;
+      -webkit-overflow-scrolling:touch;
+    }
+
+    .formula mjx-container[jax="SVG"]{
+      font-size:112% !important;
+      max-width:100%;
+    }
+
+    .small-formula mjx-container[jax="SVG"]{
+      font-size:100% !important;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:14px;
+      margin-top:10px;
+    }
+
+    .card{
+      background:rgba(15,23,42,.48);
+      border:1px solid rgba(148,163,184,.25);
+      border-radius:18px;
+      padding:15px;
+    }
+
+    .card h3{margin-bottom:8px;color:#a5f3fc}
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(103,232,249,.13);
+      border:1px solid rgba(103,232,249,.24);
+      color:#e0f2fe;
+      font-size:.92rem;
+      font-weight:700;
+      margin:4px 5px 8px 0;
     }
 
-    figure {
-      margin: 18px 0;
-      background: #f8fafc;
-      color: #0f172a;
-      border-radius: 18px;
-      padding: 12px;
-      border: 1px solid #cbd5e1;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+    .list{
+      margin:8px 0 0;
+      padding-left:1.2em;
     }
 
-    figure img {
-      display: block;
-      width: 100%;
-      max-height: 420px;
-      object-fit: contain;
-      border-radius: 12px;
-      background: white;
-    }
-
-    figcaption {
-      color: #0f172a;
-      font-weight: 700;
-      font-size: 0.96rem;
-      text-align: center;
-      margin-top: 8px;
-    }
-
-    .image-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-    }
-
-    .application-card {
-      background: #f8fafc;
-      color: #0f172a;
-      border-radius: 16px;
-      padding: 10px;
-      border: 1px solid #cbd5e1;
-    }
-
-    .application-card img {
-      display: block;
-      width: 100%;
-      aspect-ratio: 16 / 8;
-      object-fit: cover;
-      border-radius: 12px;
-      background: white;
-    }
-
-    .application-card strong {
-      display: block;
-      margin-top: 8px;
-      font-size: 1rem;
-    }
-
-    .force-diagram {
-      width: min(100%, 680px);
-      margin: 18px auto;
-      display: block;
-      border-radius: 18px;
-      background: #e0f2fe;
-      border: 1px solid #7dd3fc;
-      padding: 8px;
-    }
-
-    .mini-table {
-      width: 100%;
-      border-collapse: collapse;
-      overflow: hidden;
-      border-radius: 14px;
-      margin: 14px 0;
-      background: #0b1220;
-    }
-
-    .mini-table th,
-    .mini-table td {
-      border: 1px solid #334155;
-      padding: 10px;
-      text-align: left;
-      vertical-align: top;
-    }
-
-    .mini-table th {
-      background: #164e63;
-      color: white;
-    }
-
-    .mini-table td {
-      color: #f8fafc;
-    }
-
-    .quick-check {
-      display: grid;
-      gap: 16px;
-      margin-top: 16px;
-    }
-
-    .question {
-      background: rgba(15, 23, 42, 0.78);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 14px;
-    }
-
-    .question-title {
-      margin: 0 0 10px;
-      font-weight: 850;
-      color: #f8fafc;
-    }
-
-    .answers {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      align-items: stretch;
-    }
-
-    .answers.two {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+    .list li{margin:7px 0}
 
-    .answer {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-height: 54px;
-      padding: 10px;
-      border-radius: 12px;
-      border: 1px solid #475569;
-      background: #111827;
-      color: #f8fafc;
-      cursor: pointer;
-      font-weight: 700;
+    .steps{
+      counter-reset:step;
+      display:grid;
+      gap:10px;
+      margin-top:8px;
+    }
+
+    .step{
+      counter-increment:step;
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:10px;
+      align-items:start;
+      padding:12px;
+      border:1px solid rgba(148,163,184,.22);
+      border-radius:16px;
+      background:rgba(15,23,42,.42);
     }
 
-    .answer:hover {
-      border-color: var(--primary);
-      background: #0b1220;
+    .step::before{
+      content:counter(step);
+      width:30px;
+      height:30px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:var(--cyan2);
+      color:#082f49;
+      font-weight:900;
+    }
+
+    .svgbox{
+      margin:12px auto;
+      width:min(640px,100%);
+      border-radius:18px;
+      background:rgba(15,23,42,.40);
+      border:1px solid rgba(148,163,184,.24);
+      padding:12px;
+    }
+
+    .svgbox > svg{
+      width:100%;
+      height:auto;
+      display:block;
+    }
+
+    .image-card{
+      margin:12px auto;
+      width:min(690px,100%);
+      padding:10px;
+      border-radius:20px;
+      border:1px solid rgba(103,232,249,.27);
+      background:rgba(15,23,42,.44);
+    }
+
+    .image-card img{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:14px;
+      max-height:48dvh;
+      object-fit:contain;
+      background:#0f172a;
     }
 
-    .answer input {
-      inline-size: 18px;
-      block-size: 18px;
-      accent-color: var(--primary);
-      flex: 0 0 auto;
+    .caption{
+      margin-top:8px;
+      color:var(--muted);
+      font-size:.94rem;
+      text-align:center;
+    }
+
+    .quiz{
+      display:grid;
+      gap:14px;
+      margin-top:10px;
+    }
+
+    .question{
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(148,163,184,.26);
+      background:rgba(15,23,42,.45);
+    }
+
+    .question p{
+      font-weight:750;
+      margin-bottom:10px;
+    }
+
+    .options{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:9px;
+    }
+
+    label.option{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:10px;
+      align-items:start;
+      padding:11px 12px;
+      border-radius:14px;
+      border:1px solid rgba(148,163,184,.26);
+      background:rgba(2,6,23,.24);
+      cursor:pointer;
+    }
+
+    label.option:hover,
+    label.option:focus-within{
+      border-color:rgba(103,232,249,.70);
+      background:rgba(34,211,238,.08);
+    }
+
+    input[type="radio"]{
+      width:1.2em;
+      height:1.2em;
+      margin-top:.15em;
+      accent-color:var(--green);
+    }
+
+    .check{
+      width:100%;
+      border:0;
+      border-radius:16px;
+      padding:14px 16px;
+      font-weight:900;
+      font-size:1rem;
+      background:var(--cyan2);
+      color:#083344;
+      cursor:pointer;
+      margin-top:6px;
+    }
+
+    .feedback{
+      min-height:34px;
+      padding:10px 12px;
+      border-radius:14px;
+      font-weight:800;
+      display:none;
+    }
+
+    .feedback.ok{
+      display:block;
+      color:#dcfce7;
+      background:rgba(34,197,94,.16);
+      border:1px solid rgba(34,197,94,.35);
+    }
+
+    .feedback.bad{
+      display:block;
+      color:#fee2e2;
+      background:rgba(239,68,68,.14);
+      border:1px solid rgba(248,113,113,.34);
+    }
+
+    .feedback.wait{
+      display:block;
+      color:#fef3c7;
+      background:rgba(245,158,11,.14);
+      border:1px solid rgba(245,158,11,.34);
+    }
+
+    .final-banner{
+      margin-top:18px;
+      padding:16px;
+      border-radius:18px;
+      border:1px solid rgba(34,197,94,.35);
+      background:rgba(34,197,94,.12);
+      text-align:center;
+      color:#dcfce7;
+      font-weight:800;
+    }
+
+    .lesson-nav{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      z-index:20;
+      min-height:var(--nav-h);
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+      background:linear-gradient(180deg, rgba(7,17,31,.78), rgba(7,17,31,.98));
+      backdrop-filter:blur(12px);
+      border-top:1px solid rgba(148,163,184,.23);
+    }
+
+    .nav-inner{
+      width:min(960px,100%);
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      gap:10px;
+      align-items:center;
+    }
+
+    .nav-btn{
+      min-height:54px;
+      border:0;
+      border-radius:16px;
+      font-size:clamp(.98rem, 3.3vw, 1.05rem);
+      font-weight:900;
+      padding:12px 14px;
+      cursor:pointer;
+      box-shadow:0 10px 20px rgba(0,0,0,.25);
+      transition:transform .15s ease, opacity .15s ease, filter .15s ease;
+    }
+
+    .nav-btn:hover{transform:translateY(-1px);filter:brightness(1.05)}
+    .nav-btn:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+      transform:none;
+      filter:none;
+    }
+
+    .back-btn{
+      background:var(--back);
+      color:var(--back-text);
+    }
+
+    .next-btn{
+      background:var(--green);
+      color:#052e16;
+    }
+
+    .page-indicator{
+      min-width:62px;
+      text-align:center;
+      color:#e0f2fe;
+      font-weight:900;
+      background:rgba(15,23,42,.82);
+      border:1px solid rgba(148,163,184,.28);
+      border-radius:999px;
+      padding:10px 12px;
+    }
+
+    .print{
+      display:none;
+    }
+
+    @media (max-width:720px){
+      body{font-size:17px}
+      .top-banner{margin-top:10px}
+      main{width:calc(100% - 18px);padding-top:10px}
+      .page{border-radius:18px;min-height:calc(100dvh - var(--nav-h) - 24px)}
+      .grid{grid-template-columns:1fr}
+      .image-card img{max-height:42dvh}
+      .nav-inner{grid-template-columns:1fr auto 1fr;gap:8px}
+      .nav-btn{padding:10px 9px}
+      .page-indicator{min-width:58px;padding:10px 8px}
+    }
+
+    @media (max-width:380px){
+      .nav-btn{font-size:.92rem}
+      .page-indicator{font-size:.92rem;min-width:52px}
+    }
+
+    @media print{
+      body{background:#fff;color:#000;font-size:12pt}
+      .top-banner,.lesson-nav{display:none!important}
+      main{display:block;width:100%;padding:0}
+      .page{display:block!important;min-height:auto;box-shadow:none;border:1px solid #ccc;background:#fff;color:#000;break-after:page}
+      h1,h2,h3,.eyebrow{color:#000}
+      .card,.key,.idea,.warn,.formula,.question{background:#fff;border:1px solid #ccc}
+      .print{display:block}
     }
-
-    .feedback {
-      margin-top: 9px;
-      padding: 10px;
-      border-radius: 12px;
-      font-weight: 800;
-      display: none;
-    }
-
-    .feedback.ok {
-      display: block;
-      background: rgba(34, 197, 94, 0.16);
-      color: #bbf7d0;
-      border: 1px solid rgba(34, 197, 94, 0.55);
-    }
-
-    .feedback.no {
-      display: block;
-      background: rgba(251, 113, 133, 0.16);
-      color: #fecdd3;
-      border: 1px solid rgba(251, 113, 133, 0.55);
-    }
-
-    .score-box {
-      display: none;
-      margin-top: 14px;
-      padding: 14px;
-      border-radius: 16px;
-      background: #052e16;
-      border: 1px solid #22c55e;
-      color: #dcfce7;
-      font-weight: 900;
-      text-align: center;
-    }
-
-    .lesson-controls {
-      position: fixed;
-      left: 50%;
-      bottom: 12px;
-      transform: translateX(-50%);
-      width: min(calc(100% - 24px), 980px);
-      z-index: 50;
-      display: grid;
-      grid-template-columns: 0.75fr 1.25fr;
-      gap: 10px;
-      padding: 10px;
-      border-radius: 18px;
-      background: rgba(15, 23, 42, 0.96);
-      border: 1px solid #475569;
-      box-shadow: 0 14px 40px rgba(0, 0, 0, 0.45);
-      backdrop-filter: blur(10px);
-    }
-
-    button {
-      border: 0;
-      border-radius: 14px;
-      padding: 14px 16px;
-      min-height: 52px;
-      font-size: clamp(1rem, 2.7vw, 1.08rem);
-      font-weight: 900;
-      cursor: pointer;
-      transition: transform 0.15s ease, filter 0.15s ease;
-    }
-
-    button:hover,
-    button:focus {
-      filter: brightness(1.05);
-      transform: translateY(-1px);
-      outline: 3px solid rgba(34, 211, 238, 0.25);
-      outline-offset: 2px;
-    }
-
-    .btn-back {
-      background: #e2e8f0;
-      color: #0f172a;
-    }
-
-    .btn-next {
-      background: linear-gradient(90deg, #22c55e, #22d3ee);
-      color: #052e16;
-      border: 2px solid rgba(255,255,255,0.2);
-    }
-
-    .check-btn {
-      width: 100%;
-      margin-top: 14px;
-      background: var(--primary);
-      color: var(--dark-text);
-      border: 2px solid #67e8f9;
-    }
-
-    .print-btn {
-      background: #c084fc;
-      color: #240b36;
-      width: 100%;
-      margin-top: 12px;
-    }
-
-    .small {
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .kbd-hint {
-      color: var(--muted);
-      text-align: center;
-      font-size: 0.92rem;
-      margin-top: 8px;
-    }
-
-    .summary-list {
-      display: grid;
-      gap: 10px;
-      padding: 0;
-      list-style: none;
-    }
-
-    .summary-list li {
-      background: rgba(15, 23, 42, 0.75);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 12px;
-    }
-
-    @media (max-width: 760px) {
-      body {
-        padding: 10px 10px 106px;
-      }
-
-      .page {
-        min-height: auto;
-      }
-
-      .grid.two,
-      .grid.three,
-      .image-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .answers,
-      .answers.two {
-        grid-template-columns: 1fr;
-      }
-
-      .lesson-controls {
-        grid-template-columns: 1fr;
-      }
-
-      figure img {
-        max-height: 320px;
-      }
-    }
-
-   @media print {
-  @page {
-    size: A4;
-    margin: 12mm;
-  }
-
-  html,
-  body {
-    width: auto !important;
-    height: auto !important;
-    overflow: visible !important;
-    background: white !important;
-    color: black !important;
-    padding: 0 !important;
-  }
-
-  .app,
-  main,
-  #lesson {
-    display: block !important;
-    width: 100% !important;
-    max-width: none !important;
-    height: auto !important;
-    overflow: visible !important;
-  }
-
-  .site-header,
-  .lesson-controls,
-  .progress-wrap,
-  .page-counter,
-  .kbd-hint,
-  .print-btn,
-  button {
-    display: none !important;
-  }
-
-  .page,
-  .page.active {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    position: static !important;
-    width: 100% !important;
-    min-height: auto !important;
-    height: auto !important;
-    overflow: visible !important;
-    box-shadow: none !important;
-    background: white !important;
-    color: black !important;
-    border: 1px solid #999 !important;
-    border-radius: 0 !important;
-    margin: 0 0 12mm 0 !important;
-    padding: 10mm !important;
-    break-after: page;
-    page-break-after: always;
-  }
-
-  .page:last-of-type {
-    break-after: auto;
-    page-break-after: auto;
-  }
-
-  .info-card,
-  .question,
-  .formula-box,
-  .application-card {
-    color: black !important;
-    background: white !important;
-    border: 1px solid #999 !important;
-    box-shadow: none !important;
-  }
-
-  .mini-table th,
-  .mini-table td {
-    color: black !important;
-    background: white !important;
-    border: 1px solid #999 !important;
-  }
-
-  img,
-  svg {
-    max-width: 100% !important;
-    page-break-inside: avoid;
-    break-inside: avoid;
-  }
-}
   </style>
 </head>
 
 <body>
-  <div class="app">
-    <header class="site-header" aria-label="Antet lecție">
-      <div class="school">ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</div>
-      <div class="teacher">Fizică – Clasa a VII-a · Statica fluidelor</div>
-      <div class="quote">„Fizica nu este dominată de formule, ci de logică.”</div>
-      <div class="progress-wrap" aria-hidden="true">
-        <div class="progress-bar" id="progressBar"></div>
+<div class="app">
+  <header class="top-banner" id="topBanner">
+    <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+    <div class="teacher">Prof. Dănuț Andronie</div>
+    <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+  </header>
+
+  <main>
+    <section class="page active" data-title="Start">
+      <div class="hero">
+        <div>
+          <div class="eyebrow">Fizică · Clasa a VII-a · Statica fluidelor</div>
+          <h1>Lecția 4<br>Legea lui Arhimede. Aplicații</h1>
+          <p class="big">Vei înțelege de ce un corp pare mai ușor în apă, de ce plutesc unele corpuri și de ce un balon cu heliu se ridică în aer.</p>
+          <div class="key">
+            Ideea-cheie: un fluid aflat în repaus împinge în sus corpul scufundat în el.
+          </div>
+        </div>
       </div>
-      <div class="page-counter" id="pageCounter" aria-live="polite"></div>
-    </header>
+    </section>
 
-    <main id="lesson" aria-live="polite">
-      <!-- Pagina 1 -->
-      <section class="page active">
-        <div class="center">
-          <span class="subtitle-pill">Lecția 4 · U6 Statica fluidelor</span>
-          <h1>Legea lui Arhimede</h1>
-          <p class="lead">
-            Vei înțelege de ce un corp pare mai ușor în apă, de ce plutește o navă grea
-            și ce forțe acționează asupra unui corp scufundat într-un lichid.
-          </p>
+    <section class="page" data-title="Observ">
+      <div class="eyebrow">Observ</div>
+      <h2>Un corp pare mai ușor în apă</h2>
+      <p>Ține un obiect agățat de un dinamometru. Citește indicația în aer, apoi introdu obiectul în apă.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>În aer</h3>
+          <p>Dinamometrul arată greutatea corpului.</p>
+          <div class="formula small-formula">\[G=4\,N\]</div>
         </div>
-
-        <div class="grid three">
-          <div class="info-card">
-            <h3>Vei observa</h3>
-            <p>Un corp scufundat este împins în sus de lichid.</p>
-          </div>
-          <div class="info-card">
-            <h3>Vei calcula</h3>
-            <p>Forța arhimedică folosind densitatea, volumul dezlocuit și \(g\).</p>
-          </div>
-          <div class="info-card">
-            <h3>Vei aplica</h3>
-            <p>Regula la plutirea navelor, iceberguri, submarine și baloane.</p>
-          </div>
+        <div class="card">
+          <h3>În apă</h3>
+          <p>Dinamometrul arată o valoare mai mică, numită greutate aparentă.</p>
+          <div class="formula small-formula">\[G_a=1\,N\]</div>
         </div>
+      </div>
+      <div class="idea">
+        Diferența apare deoarece apa împinge corpul în sus.
+      </div>
+      <div class="formula small-formula">\[
+        F_A=G-G_a=4\,N-1\,N=3\,N
+      \]</div>
+    </section>
 
-        <div class="formula-box">
-          Ideea centrală: \[
-            \text{lichidul apasă corpul din toate părțile, iar rezultanta este în sus}
-          \]
-        </div>
-      </section>
+    <section class="page" data-title="Imagine">
+      <div class="eyebrow">Imagine</div>
+      <h2>Două forțe principale</h2>
+      <p>Asupra corpului scufundat acționează greutatea, în jos, și forța arhimedică, în sus.</p>
+      <figure class="image-card">
+        <img src="./4-balon-scufundat.png"
+             alt="Corp scufundat într-un lichid, cu forța arhimedică în sus și greutatea în jos"
+             onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/6-statica-fluidelor/lectii/4-balon-scufundat.png';">
+        <figcaption class="caption">Forța arhimedică este orientată de jos în sus.</figcaption>
+      </figure>
+      <div class="warn">
+        Nu spunem „obiectul nu mai are greutate”. Greutatea lui rămâne, dar apa îl împinge în sus.
+      </div>
+    </section>
 
-      <!-- Pagina 2 -->
-      <section class="page">
-        <h2>1. Observăm un experiment</h2>
-        <p>
-          Un corp este cântărit cu dinamometrul în aer, apoi este introdus în apă.
-          În apă, dinamometrul indică o valoare mai mică.
-        </p>
+    <section class="page" data-title="De ce">
+      <div class="eyebrow">Explic</div>
+      <h2>De ce apare împingerea în sus?</h2>
+      <p>Presiunea hidrostatică crește cu adâncimea. De aceea, lichidul apasă mai tare pe partea de jos a corpului decât pe partea de sus.</p>
+      <div class="svgbox" aria-label="Schemă cu presiunea mai mare la adâncime">
+        <svg viewBox="0 0 760 420" role="img">
+          <rect x="90" y="45" width="580" height="320" rx="18" fill="#0e7490" opacity=".22" stroke="#67e8f9" stroke-width="3"/>
+          <line x1="90" y1="100" x2="670" y2="100" stroke="#67e8f9" stroke-width="4" opacity=".55"/>
+          <text x="380" y="84" text-anchor="middle" fill="#e0f2fe" font-size="28" font-weight="700">apă</text>
 
-        <div class="grid two">
-          <div class="info-card">
-            <h3>Date experimentale</h3>
-            <p>Greutatea în aer: \(G = 4\,N\)</p>
-            <p>Greutatea aparentă în apă: \(G_a = 1\,N\)</p>
-            <p>Diferența este:</p>
-            <div class="formula-box">\[
-              F_A = G - G_a = 4\,N - 1\,N = 3\,N
-            \]</div>
-          </div>
-          <figure>
-            <img src="https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/6-statica-fluidelor/lectii/Arhimede-1.png" alt="Corp scufundat într-un lichid, cu forța arhimedică orientată în sus și greutatea orientată în jos">
-            <figcaption>Corpul este împins în sus de forța arhimedică \(F_A\), iar greutatea \(G\) acționează în jos.</figcaption>
-          </figure>
-        </div>
+          <rect x="280" y="155" width="200" height="140" rx="20" fill="#fbbf24" stroke="#fde68a" stroke-width="4"/>
+          <text x="380" y="230" text-anchor="middle" fill="#422006" font-size="25" font-weight="800">corp</text>
 
-        <div class="info-card success">
-          <strong>Concluzie:</strong> în apă, corpul este împins în sus cu o forță egală
-          cu greutatea lichidului dezlocuit.
-        </div>
-      </section>
+          <line x1="380" y1="148" x2="380" y2="95" stroke="#fecaca" stroke-width="9" marker-end="url(#arrowRed)"/>
+          <text x="410" y="120" fill="#fecaca" font-size="22" font-weight="800">apăsare mai mică</text>
 
-      <!-- Pagina 3 -->
-      <section class="page">
-        <h2>2. Enunțul legii lui Arhimede</h2>
+          <line x1="380" y1="302" x2="380" y2="372" stroke="#86efac" stroke-width="13" marker-end="url(#arrowGreen)"/>
+          <text x="410" y="350" fill="#bbf7d0" font-size="24" font-weight="900">apăsare mai mare</text>
 
-        <div class="info-card light">
-          <p>
-            <strong>Legea lui Arhimede:</strong> Un corp scufundat într-un fluid aflat în repaus
-            este împins de jos în sus cu o forță verticală numeric egală cu greutatea fluidului
-            dezlocuit de acel corp.
-          </p>
-        </div>
+          <line x1="230" y1="225" x2="278" y2="225" stroke="#bae6fd" stroke-width="7" marker-end="url(#arrowCyan)"/>
+          <line x1="530" y1="225" x2="482" y2="225" stroke="#bae6fd" stroke-width="7" marker-end="url(#arrowCyanLeft)"/>
 
-        <div class="pill-row">
-          <span class="pill"><span class="arrow-up">↑</span> \(F_A\) – forța arhimedică</span>
-          <span class="pill"><span class="arrow-down">↓</span> \(G\) – greutatea corpului</span>
-          <span class="pill">fluid = lichid sau gaz</span>
-        </div>
+          <text x="380" y="405" text-anchor="middle" fill="#e0f2fe" font-size="23" font-weight="800">Rezultatul: corpul este împins în sus.</text>
 
-        <figure>
-          <img src="https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/6-statica-fluidelor/lectii/Arhimede-2.png" alt="Corp în lichid cu forța arhimedică în sus și greutatea în jos">
-          <figcaption>Dacă \(F_A\) este mai mică decât \(G\), corpul tinde să coboare.</figcaption>
-        </figure>
-      </section>
-
-      <!-- Pagina 4 -->
-      <section class="page">
-        <h2>3. Formula forței arhimedice</h2>
-
-        <div class="formula-box">
-          \[
-            F_A = G_{\text{fluid dezlocuit}} =
-            m_{\text{fluid dezlocuit}} \cdot g =
-            \rho_l \cdot V_{\text{dezloc}} \cdot g
-          \]
-        </div>
-
-        <table class="mini-table">
-          <thead>
-            <tr>
-              <th>Simbol</th>
-              <th>Semnificație</th>
-              <th>Unitate SI</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>\(F_A\)</td>
-              <td>forța arhimedică</td>
-              <td>\(N\)</td>
-            </tr>
-            <tr>
-              <td>\(\rho_l\)</td>
-              <td>densitatea lichidului</td>
-              <td>\(kg/m^3\)</td>
-            </tr>
-            <tr>
-              <td>\(V_{\text{dezloc}}\)</td>
-              <td>volumul de lichid dezlocuit</td>
-              <td>\(m^3\)</td>
-            </tr>
-            <tr>
-              <td>\(g\)</td>
-              <td>accelerația gravitațională</td>
-              <td>\(N/kg\)</td>
-            </tr>
-          </tbody>
-        </table>
-
-        <div class="info-card warning">
-          <strong>Atenție:</strong> dacă un corp este complet scufundat,
-          \(V_{\text{dezloc}} = V_{\text{corp}}\). Dacă plutește parțial,
-          \(V_{\text{dezloc}}\) este doar volumul părții aflate în fluid.
-        </div>
-      </section>
-
-      <!-- Pagina 5 -->
-      <section class="page">
-        <h2>4. Exemplu numeric cu fracții</h2>
-
-        <p>
-          Un corp are masa \(m = 1\,kg\), densitatea \(\rho_c = 2600\,kg/m^3\) și este
-          scufundat complet într-un lichid cu densitatea \(\rho_l = 1300\,kg/m^3\).
-          Considerăm \(g = 10\,N/kg\).
-        </p>
-
-        <div class="formula-box">
-          \[
-            V_c = \frac{m}{\rho_c} = \frac{1}{2600}\,m^3
-          \]
-          \[
-            F_A = \rho_l \cdot V_c \cdot g =
-            1300 \cdot \frac{1}{2600} \cdot 10 = 5\,N
-          \]
-          \[
-            G = m \cdot g = 1 \cdot 10 = 10\,N
-          \]
-          \[
-            G_a = G - F_A = 10\,N - 5\,N = 5\,N
-          \]
-        </div>
-
-        <div class="grid two">
-          <div class="info-card success">
-            <strong>Răspuns:</strong> \(F_A = 5\,N\)
-          </div>
-          <div class="info-card warning">
-            <strong>Greutatea aparentă:</strong> \(G_a = 5\,N\)
-          </div>
-        </div>
-      </section>
-
-      <!-- Pagina 6 -->
-      <section class="page">
-        <h2>5. De ce apare forța arhimedică?</h2>
-        <p>
-          Presiunea hidrostatică crește cu adâncimea. De aceea, lichidul apasă mai puternic
-          pe fața de jos a corpului decât pe fața de sus. Diferența dintre aceste apăsări produce
-          o rezultantă orientată în sus.
-        </p>
-
-        <svg class="force-diagram" viewBox="0 0 760 420" role="img" aria-label="Diagramă cu presiuni pe un corp scufundat în apă">
           <defs>
-            <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
-              <path d="M0,0 L0,6 L8,3 z" fill="#dc2626"></path>
+            <marker id="arrowRed" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+              <path d="M0,0 L10,5 L0,10 Z" fill="#fecaca"/>
             </marker>
-            <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
-              <path d="M0,0 L0,6 L8,3 z" fill="#2563eb"></path>
+            <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+              <path d="M0,0 L10,5 L0,10 Z" fill="#86efac"/>
             </marker>
-            <marker id="arrowBlack" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto">
-              <path d="M0,0 L0,6 L8,3 z" fill="#111827"></path>
+            <marker id="arrowCyan" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+              <path d="M0,0 L10,5 L0,10 Z" fill="#bae6fd"/>
+            </marker>
+            <marker id="arrowCyanLeft" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto">
+              <path d="M10,0 L0,5 L10,10 Z" fill="#bae6fd"/>
             </marker>
           </defs>
-
-          <rect x="80" y="55" width="600" height="310" rx="20" fill="#bfdbfe" stroke="#0f172a" stroke-width="4"></rect>
-          <path d="M80 98 C210 60, 550 60, 680 98 L680 145 C520 110, 240 110, 80 145 Z" fill="#dbeafe" opacity="0.9"></path>
-          <rect x="310" y="150" width="150" height="120" rx="16" fill="#facc15" stroke="#111827" stroke-width="4"></rect>
-
-          <line x1="385" y1="142" x2="385" y2="80" stroke="#dc2626" stroke-width="8" marker-end="url(#arrowRed)"></line>
-          <text x="398" y="105" fill="#dc2626" font-size="34" font-weight="800">F<tspan baseline-shift="sub" font-size="22">A</tspan></text>
-
-          <line x1="385" y1="280" x2="385" y2="350" stroke="#111827" stroke-width="8" marker-end="url(#arrowBlack)"></line>
-          <text x="402" y="336" fill="#111827" font-size="34" font-weight="800">G</text>
-
-          <line x1="260" y1="210" x2="305" y2="210" stroke="#2563eb" stroke-width="6" marker-end="url(#arrowBlue)"></line>
-          <line x1="510" y1="210" x2="465" y2="210" stroke="#2563eb" stroke-width="6" marker-end="url(#arrowBlue)"></line>
-          <line x1="385" y1="126" x2="385" y2="150" stroke="#2563eb" stroke-width="5" marker-end="url(#arrowBlue)"></line>
-          <line x1="385" y1="303" x2="385" y2="270" stroke="#2563eb" stroke-width="10" marker-end="url(#arrowBlue)"></line>
-
-          <text x="105" y="393" fill="#0f172a" font-size="22" font-weight="700">Presiunea de jos este mai mare ⇒ rezultanta forțelor de presiune este în sus.</text>
         </svg>
+      </div>
+      <div class="idea">
+        Pe scurt: jos presiunea este mai mare, deci împingerea totală rămâne orientată în sus.
+      </div>
+    </section>
 
-        <div class="formula-box">
-          \[
-            F_A = F_{\text{jos}} - F_{\text{sus}}
-          \]
+    <section class="page" data-title="Rețin">
+      <div class="eyebrow">Rețin</div>
+      <h2>Legea lui Arhimede</h2>
+      <div class="key big">
+        Un corp scufundat într-un fluid, lichid sau gaz, este împins vertical de jos în sus cu o forță egală cu greutatea fluidului dezlocuit.
+      </div>
+      <div class="formula">\[
+        F_A=G_{\text{fluid dezlocuit}}
+      \]</div>
+      <div class="grid">
+        <div class="card">
+          <h3>Ce este fluidul?</h3>
+          <p>Un lichid sau un gaz. Apa și aerul sunt fluide.</p>
         </div>
-      </section>
-
-      <!-- Pagina 7 -->
-      <section class="page">
-        <h2>6. Caracteristicile forței arhimedice</h2>
-
-        <div class="grid two">
-          <div class="info-card">
-            <h3>Caracteristici</h3>
-            <ul>
-              <li><strong>Direcția:</strong> verticală</li>
-              <li><strong>Sensul:</strong> de jos în sus</li>
-              <li><strong>Modulul:</strong> \(F_A = \rho_l V_{\text{dezloc}} g\)</li>
-              <li><strong>Punctul de aplicație:</strong> centrul de presiune</li>
-            </ul>
-          </div>
-          <figure>
-            <img src="https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/6-statica-fluidelor/lectii/Arhimede-1.png" alt="Forța arhimedică și greutatea pentru un corp aflat în lichid">
-            <figcaption>Săgeata roșie: \(F_A\). Săgeata neagră: \(G\).</figcaption>
-          </figure>
+        <div class="card">
+          <h3>Ce înseamnă „dezlocuit”?</h3>
+          <p>Volumul de fluid dat la o parte de corp.</p>
         </div>
+      </div>
+    </section>
 
-        <div class="info-card light">
-          Pentru un corp omogen și complet scufundat, centrul de presiune coincide cu centrul de greutate al corpului.
+    <section class="page" data-title="Formula">
+      <div class="eyebrow">Formula</div>
+      <h2>Forța arhimedică</h2>
+      <p>Greutatea fluidului dezlocuit se poate calcula folosind densitatea fluidului, volumul dezlocuit și \(g\).</p>
+      <div class="formula">\[
+        F_A=\rho_f \cdot V_{\text{dezlocuit}} \cdot g
+      \]</div>
+      <div class="grid">
+        <div class="card">
+          <span class="tag">\(\rho_f\)</span>
+          <p>densitatea fluidului, în \(\frac{kg}{m^3}\)</p>
         </div>
-      </section>
+        <div class="card">
+          <span class="tag">\(V_{\text{dezlocuit}}\)</span>
+          <p>volumul de fluid dezlocuit, în \(m^3\)</p>
+        </div>
+        <div class="card">
+          <span class="tag">\(g\)</span>
+          <p>aproximativ \(10\,\frac{N}{kg}\)</p>
+        </div>
+        <div class="card">
+          <span class="tag">\(F_A\)</span>
+          <p>forța arhimedică, în newtoni \((N)\)</p>
+        </div>
+      </div>
+    </section>
 
-      <!-- Pagina 8 -->
-      <section class="page">
-        <h2>7. Ce se întâmplă cu un corp în lichid?</h2>
-
-        <div class="grid three">
-          <div class="info-card danger">
-            <h3>\(G > F_A\)</h3>
-            <p>Rezultanta este în jos. Corpul se scufundă.</p>
-            <div class="formula-box">\[
-              G_a = G - F_A
+    <section class="page" data-title="Exemplu">
+      <div class="eyebrow">Exemplu numeric</div>
+      <h2>Calculăm forța arhimedică</h2>
+      <p>Un corp este scufundat complet în apă și dezlocuiește \(200\,cm^3\) de apă. Considerăm:</p>
+      <div class="formula small-formula">\[
+        \rho_{\text{apă}}=1000\,\frac{kg}{m^3},
+        \quad g=10\,\frac{N}{kg}
+      \]</div>
+      <div class="steps">
+        <div class="step">
+          <div>
+            Transformăm volumul:
+            <div class="formula small-formula">\[
+              200\,cm^3=\frac{200}{1\,000\,000}\,m^3=0{,}0002\,m^3
             \]</div>
           </div>
-          <div class="info-card warning">
-            <h3>\(G = F_A\)</h3>
-            <p>Rezultanta este nulă. Corpul este în echilibru.</p>
-            <div class="formula-box">\[
-              R = 0
-            \]</div>
-          </div>
-          <div class="info-card success">
-            <h3>\(G < F_A\)</h3>
-            <p>Rezultanta este în sus. Corpul se ridică spre suprafață.</p>
-            <div class="formula-box">\[
-              F_{\text{asc}} = F_A - G
+        </div>
+        <div class="step">
+          <div>
+            Aplicăm formula:
+            <div class="formula small-formula">\[
+              F_A=\rho_f V_{\text{dezlocuit}}g
+              =1000\cdot 0{,}0002\cdot 10=2\,N
             \]</div>
           </div>
         </div>
+      </div>
+      <div class="idea">
+        Răspuns: apa împinge corpul în sus cu \(2\,N\).
+      </div>
+    </section>
 
-        <figure>
-          <img src="https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/6-statica-fluidelor/lectii/Arhimede-3.png" alt="Corp în lichid cu greutatea aparentă și forța arhimedică">
-          <figcaption>Greutatea aparentă arată cât „mai greu” rămâne corpul în lichid.</figcaption>
+    <section class="page" data-title="Plutire">
+      <div class="eyebrow">Aplic</div>
+      <h2>Când plutește un corp?</h2>
+      <p>Comportarea corpului depinde de comparația dintre greutatea lui \(G\) și forța arhimedică \(F_A\).</p>
+      <div class="grid">
+        <div class="card">
+          <h3>\(G>F_A\)</h3>
+          <p>Greutatea este mai mare. Corpul se scufundă.</p>
+        </div>
+        <div class="card">
+          <h3>\(G=F_A\)</h3>
+          <p>Forțele se compensează. Corpul plutește în echilibru.</p>
+        </div>
+        <div class="card">
+          <h3>\(G<F_A\)</h3>
+          <p>Împingerea în sus este mai mare. Corpul urcă spre suprafață.</p>
+        </div>
+        <div class="card">
+          <h3>Atenție</h3>
+          <p>Nu este nevoie de simboluri complicate: ne uităm care forță este mai mare.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" data-title="Densitate">
+      <div class="eyebrow">Aplic</div>
+      <h2>Densitatea explică plutirea</h2>
+      <p>În multe situații, putem prezice comportarea unui corp comparând densitatea corpului cu densitatea lichidului.</p>
+      <figure class="image-card">
+        <img src="./5-cub-lemn.png"
+             alt="Cub de lemn care plutește parțial scufundat în apă"
+             onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/6-statica-fluidelor/lectii/5-cub-lemn.png';">
+        <figcaption class="caption">Lemnul plutește deoarece are, în general, densitate mai mică decât apa.</figcaption>
+      </figure>
+      <div class="grid">
+        <div class="card">
+          <h3>\(\rho_c<\rho_l\)</h3>
+          <p>Corpul poate pluti la suprafață, parțial scufundat.</p>
+        </div>
+        <div class="card">
+          <h3>\(\rho_c>\rho_l\)</h3>
+          <p>Corpul se scufundă.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" data-title="Aplicații">
+      <div class="eyebrow">Aplicații</div>
+      <h2>Arhimede în viața reală</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Navă</h3>
+          <p>O navă dezlocuiește multă apă, astfel încât împingerea apei poate egala greutatea navei.</p>
+        </div>
+        <div class="card">
+          <h3>Submarin</h3>
+          <p>Își schimbă densitatea medie prin umplerea sau golirea tancurilor cu apă.</p>
+        </div>
+        <div class="card">
+          <h3>Densimetru</h3>
+          <p>Plutește diferit în lichide cu densități diferite și ajută la măsurarea densității.</p>
+        </div>
+        <div class="card">
+          <h3>Balon cu heliu</h3>
+          <p>Aerul împinge balonul în sus, iar heliul are densitate mai mică decât aerul.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" data-title="Imagini">
+      <div class="eyebrow">Imagini din lecție</div>
+      <h2>Plutire în lichide și gaze</h2>
+      <div class="grid">
+        <figure class="image-card">
+          <img src="./2-oul-saramura.png"
+               alt="Ou într-un lichid, exemplu de plutire în saramură"
+               onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/6-statica-fluidelor/lectii/2-oul-saramura.png';">
+          <figcaption class="caption">Oul poate pluti în saramură, deoarece densitatea lichidului crește.</figcaption>
         </figure>
-      </section>
+        <figure class="image-card">
+          <img src="./6-aerostat-heliu.png"
+               alt="Aerostat sau balon cu heliu care se ridică în aer"
+               onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/6-statica-fluidelor/lectii/6-aerostat-heliu.png';">
+          <figcaption class="caption">Legea lui Arhimede se aplică și în gaze, nu doar în lichide.</figcaption>
+        </figure>
+      </div>
+    </section>
 
-      <!-- Pagina 9 -->
-      <section class="page">
-        <h2>8. Condiția de plutire</h2>
+    <section class="page" data-title="Arhimede">
+      <div class="eyebrow">Știai că?</div>
+      <h2>Arhimede și volumul unui corp</h2>
+      <p>Legenda spune că Arhimede a observat că, atunci când un corp intră în apă, acesta dă la o parte un volum de apă. Această idee ajută la determinarea volumului corpurilor cu formă neregulată.</p>
+      <figure class="image-card">
+        <img src="./Arhimede-1.png"
+             alt="Ilustrație despre Arhimede și deplasarea apei"
+             onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/6-statica-fluidelor/lectii/Arhimede-1.png';">
+        <figcaption class="caption">Volumul de apă dezlocuit este legat de volumul părții scufundate.</figcaption>
+      </figure>
+      <div class="idea">
+        Când corpul este complet scufundat, volumul de fluid dezlocuit este egal cu volumul corpului.
+      </div>
+    </section>
 
-        <p>
-          Un corp plutește în echilibru dacă forța arhimedică este egală cu greutatea corpului.
-        </p>
-
-        <div class="formula-box">
-          \[
-            F_A = G
-          \]
-          \[
-            \rho_l \cdot V_{\text{scufundat}} \cdot g =
-            \rho_c \cdot V_{\text{corp}} \cdot g
-          \]
-          \[
-            \frac{V_{\text{scufundat}}}{V_{\text{corp}}}
-            =
-            \frac{\rho_c}{\rho_l}
-          \]
-        </div>
-
-        <div class="grid three">
-          <div class="info-card success">
-            <h3>\(\rho_c < \rho_l\)</h3>
-            <p>Corpul poate pluti parțial scufundat.</p>
-          </div>
-          <div class="info-card warning">
-            <h3>\(\rho_c = \rho_l\)</h3>
-            <p>Corpul poate sta în echilibru în interiorul lichidului.</p>
-          </div>
-          <div class="info-card danger">
-            <h3>\(\rho_c > \rho_l\)</h3>
-            <p>Corpul se scufundă.</p>
+    <section class="page" data-title="Problemă">
+      <div class="eyebrow">Aplic</div>
+      <h2>Problemă rezolvată</h2>
+      <p>Un corp are greutatea în aer \(G=6\,N\). În apă, dinamometrul arată \(G_a=4\,N\). Află forța arhimedică.</p>
+      <div class="steps">
+        <div class="step">
+          <div>
+            Scriem relația:
+            <div class="formula small-formula">\[
+              F_A=G-G_a
+            \]</div>
           </div>
         </div>
-      </section>
-
-      <!-- Pagina 10 -->
-      <section class="page">
-        <h2>9. Aplicații ale legii lui Arhimede</h2>
-        <p>
-          Plutirea și scufundarea controlată apar în multe situații din viața reală.
-          Observă aplicațiile de mai jos.
-        </p>
-
-        <div class="image-grid">
-          <div class="application-card">
-            <img src="https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/6-statica-fluidelor/lectii/Arhimede-5.png" alt="Navă care plutește pe mare">
-            <strong>Navele</strong>
-            <p>Dezlocuiesc un volum mare de apă, astfel încât \(F_A\) poate egala greutatea navei.</p>
-          </div>
-          <div class="application-card">
-            <img src="https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/6-statica-fluidelor/lectii/Arhimede-4.png" alt="Iceberg plutind pe mare">
-            <strong>Icebergurile</strong>
-            <p>Gheața are densitate mai mică decât apa de mare, deci plutește parțial scufundată.</p>
-          </div>
-          <div class="application-card">
-            <img src="https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/6-statica-fluidelor/lectii/Arhimede-6.png" alt="Submarin sub apă">
-            <strong>Submarinele</strong>
-            <p>Își schimbă densitatea medie prin umplerea sau golirea tancurilor cu apă.</p>
-          </div>
-          <div class="application-card">
-            <img src="https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/6-statica-fluidelor/lectii/Arhimede-7.png" alt="Balon cu aer cald">
-            <strong>Baloanele cu aer cald</strong>
-            <p>În aer apare tot o forță arhimedică: aerul cald din balon are densitate mai mică.</p>
+        <div class="step">
+          <div>
+            Înlocuim datele:
+            <div class="formula small-formula">\[
+              F_A=6\,N-4\,N=2\,N
+            \]</div>
           </div>
         </div>
-      </section>
-
-      <!-- Pagina 11 -->
-      <section class="page">
-        <h2>10. Problemă rezolvată: iceberg</h2>
-
-        <p>
-          Volumul părții aflate deasupra apei este \(V_1 = 500\,m^3\).
-          Densitatea gheții este \(\rho_g = 920\,kg/m^3\), iar densitatea apei de mare este
-          \(\rho_a = 1013\,kg/m^3\). Află volumul total \(V\) al icebergului.
-        </p>
-
-        <div class="formula-box">
-          \[
-            V_{\text{scufundat}} = V - V_1
-          \]
-          \[
-            F_A = G
-          \]
-          \[
-            \rho_a \cdot (V - V_1) \cdot g =
-            \rho_g \cdot V \cdot g
-          \]
-          \[
-            \rho_a V - \rho_a V_1 = \rho_g V
-          \]
-          \[
-            V(\rho_a - \rho_g) = \rho_a V_1
-          \]
-          \[
-            V = \frac{\rho_a V_1}{\rho_a - \rho_g}
-            =
-            \frac{1013 \cdot 500}{1013 - 920}
-            \approx 5446{,}24\,m^3
-          \]
-        </div>
-
-        <div class="info-card warning">
-          <strong>Interpretare:</strong> cea mai mare parte a icebergului se află sub apă.
-        </div>
-      </section>
-
-      <!-- Pagina 12 -->
-      <section class="page">
-        <h2>11. Verificare rapidă</h2>
-        <p class="small">Alege varianta corectă. Variantele sunt aliniate pentru citire ușoară pe telefon, tabletă și laptop.</p>
-
-        <div class="quick-check">
-          <div class="question" data-correct="b">
-            <p class="question-title">1. Forța arhimedică are sensul:</p>
-            <div class="answers">
-              <label class="answer"><input type="radio" name="q1" value="a"> A. de sus în jos</label>
-              <label class="answer"><input type="radio" name="q1" value="b"> B. de jos în sus</label>
-              <label class="answer"><input type="radio" name="q1" value="c"> C. orizontal</label>
-            </div>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="question" data-correct="c">
-            <p class="question-title">2. Formula forței arhimedice este:</p>
-            <div class="answers">
-              <label class="answer"><input type="radio" name="q2" value="a"> A. \(G = m \cdot g\)</label>
-              <label class="answer"><input type="radio" name="q2" value="b"> B. \(p = \frac{F}{S}\)</label>
-              <label class="answer"><input type="radio" name="q2" value="c"> C. \(F_A = \rho_l V_{\text{dezloc}} g\)</label>
-            </div>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="question" data-correct="a">
-            <p class="question-title">3. Dacă \(G > F_A\), corpul:</p>
-            <div class="answers">
-              <label class="answer"><input type="radio" name="q3" value="a"> A. se scufundă</label>
-              <label class="answer"><input type="radio" name="q3" value="b"> B. se ridică</label>
-              <label class="answer"><input type="radio" name="q3" value="c"> C. rămâne sigur la suprafață</label>
-            </div>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="question" data-correct="b">
-            <p class="question-title">4. Corpul plutește în echilibru când:</p>
-            <div class="answers">
-              <label class="answer"><input type="radio" name="q4" value="a"> A. \(G > F_A\)</label>
-              <label class="answer"><input type="radio" name="q4" value="b"> B. \(G = F_A\)</label>
-              <label class="answer"><input type="radio" name="q4" value="c"> C. \(G < 0\)</label>
-            </div>
-            <div class="feedback"></div>
-          </div>
-
-          <div class="question" data-correct="c">
-            <p class="question-title">5. Pentru \(G=4\,N\) și \(G_a=1\,N\), forța arhimedică este:</p>
-            <div class="answers">
-              <label class="answer"><input type="radio" name="q5" value="a"> A. \(1\,N\)</label>
-              <label class="answer"><input type="radio" name="q5" value="b"> B. \(4\,N\)</label>
-              <label class="answer"><input type="radio" name="q5" value="c"> C. \(3\,N\)</label>
-            </div>
-            <div class="feedback"></div>
+        <div class="step">
+          <div>
+            Interpretăm:
+            <p>Apa împinge corpul în sus cu \(2\,N\), de aceea dinamometrul indică mai puțin.</p>
           </div>
         </div>
+      </div>
+    </section>
 
-        <button class="check-btn" type="button" onclick="checkQuiz()">Verifică răspunsurile</button>
-        <div class="score-box" id="scoreBox"></div>
-      </section>
-
-      <!-- Pagina 13 -->
-      <section class="page">
-        <h2>12. Rețin</h2>
-
-        <ul class="summary-list">
-          <li>Forța arhimedică este forța cu care un fluid împinge în sus un corp scufundat.</li>
-          <li>Legea lui Arhimede: \(F_A\) este egală cu greutatea fluidului dezlocuit.</li>
-          <li>Formula: \(F_A = \rho_l \cdot V_{\text{dezloc}} \cdot g\).</li>
-          <li>Dacă \(G > F_A\), corpul se scufundă; dacă \(G = F_A\), plutește în echilibru; dacă \(G < F_A\), urcă spre suprafață.</li>
-          <li>Aplicații: nave, submarine, iceberguri, densimetre, baloane cu aer cald.</li>
-        </ul>
-
-        <div class="info-card light">
-          <h3>Temă scurtă</h3>
-          <p>
-            Realizează un desen cu un corp care plutește și marchează prin săgeți
-            cele două forțe principale: \(F_A\) și \(G\). Scrie sub desen condiția de plutire.
-          </p>
+    <section class="page" data-title="Verificare 1">
+      <div class="eyebrow">Verificare rapidă</div>
+      <h2>Alege varianta corectă</h2>
+      <div class="quiz" data-quiz="q1" data-answer="b">
+        <div class="question">
+          <p>1. Forța arhimedică are sensul:</p>
+          <div class="options">
+            <label class="option"><input type="radio" name="q1" value="a"> <span>A. de sus în jos</span></label>
+            <label class="option"><input type="radio" name="q1" value="b"> <span>B. de jos în sus</span></label>
+            <label class="option"><input type="radio" name="q1" value="c"> <span>C. spre stânga</span></label>
+          </div>
         </div>
+        <button class="check" type="button" onclick="checkQuiz('q1')">Verifică</button>
+        <div class="feedback" id="fb-q1"></div>
+      </div>
+    </section>
 
-       <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-<script>
-function savePDF() {
-  const element = document.querySelector('#continut-lectie');
-  html2pdf().from(element).save('Lectia-4.pdf');
-}
-</script>
+    <section class="page" data-title="Verificare 2">
+      <div class="eyebrow">Verificare rapidă</div>
+      <h2>Formula și plutirea</h2>
+      <div class="quiz" data-quiz="q2" data-answer="c">
+        <div class="question">
+          <p>2. Formula forței arhimedice este:</p>
+          <div class="options">
+            <label class="option"><input type="radio" name="q2" value="a"> <span>A. \(p=\frac{F}{S}\)</span></label>
+            <label class="option"><input type="radio" name="q2" value="b"> <span>B. \(G=m\cdot g\)</span></label>
+            <label class="option"><input type="radio" name="q2" value="c"> <span>C. \(F_A=\rho_f\cdot V_{\text{dezlocuit}}\cdot g\)</span></label>
+          </div>
+        </div>
+        <button class="check" type="button" onclick="checkQuiz('q2')">Verifică</button>
+        <div class="feedback" id="fb-q2"></div>
+      </div>
 
-  <button class="print-btn" type="button" onclick="printLessonPDF()">
-  Tipărește lecția PDF
-  </button>
+      <div class="quiz" data-quiz="q3" data-answer="b">
+        <div class="question">
+          <p>3. Un corp plutește în echilibru când:</p>
+          <div class="options">
+            <label class="option"><input type="radio" name="q3" value="a"> <span>A. \(G>F_A\)</span></label>
+            <label class="option"><input type="radio" name="q3" value="b"> <span>B. \(G=F_A\)</span></label>
+            <label class="option"><input type="radio" name="q3" value="c"> <span>C. \(G<0\)</span></label>
+          </div>
+        </div>
+        <button class="check" type="button" onclick="checkQuiz('q3')">Verifică</button>
+        <div class="feedback" id="fb-q3"></div>
+      </div>
+    </section>
 
-      </section>
-    </main>
-  </div>
+    <section class="page" data-title="Final">
+      <div class="eyebrow">Rețin</div>
+      <h2>Ce trebuie să rămână clar</h2>
+      <ul class="list big">
+        <li>Forța arhimedică împinge corpul vertical de jos în sus.</li>
+        <li>Valoarea ei este egală cu greutatea fluidului dezlocuit.</li>
+        <li>Formula este \(F_A=\rho_f V_{\text{dezlocuit}}g\).</li>
+        <li>Dacă \(G>F_A\), corpul se scufundă.</li>
+        <li>Dacă \(G=F_A\), forțele se compensează și corpul plutește în echilibru.</li>
+        <li>Dacă \(G<F_A\), corpul urcă spre suprafață.</li>
+      </ul>
 
-  <nav class="lesson-controls" aria-label="Navigare lecție">
-    <button class="btn-back" type="button" id="backBtn" onclick="prevPage()">Înapoi</button>
-    <button class="btn-next" type="button" id="nextBtn" onclick="nextPage()">Mergi mai departe</button>
+      <div class="final-banner">
+        Prof. Dănuț Andronie<br>
+        email: danutmg@gmail.com
+      </div>
+    </section>
+  </main>
+
+  <nav class="lesson-nav" aria-label="Navigare lecție">
+    <div class="nav-inner">
+      <button class="nav-btn back-btn" id="prevBtn" type="button" onclick="prevPage()">Înapoi</button>
+      <div class="page-indicator" id="pageIndicator">1/15</div>
+      <button class="nav-btn next-btn" id="nextBtn" type="button" onclick="nextPage()">Mergi mai departe</button>
+    </div>
   </nav>
+</div>
 
-  <script>
-    const pages = Array.from(document.querySelectorAll('.page'));
-    const progressBar = document.getElementById('progressBar');
-    const pageCounter = document.getElementById('pageCounter');
-    const backBtn = document.getElementById('backBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    let current = 0;
+<script>
+  const pages = Array.from(document.querySelectorAll('.page'));
+  const topBanner = document.getElementById('topBanner');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const pageIndicator = document.getElementById('pageIndicator');
 
-    function typesetMath() {
-      if (window.MathJax && window.MathJax.typesetPromise) {
-        window.MathJax.typesetPromise([pages[current]]).catch(() => {});
-      }
-    }
+  let current = 0;
+  const nextLesson = './lectia-5.html';
 
-    function showPage(index) {
-      current = Math.max(0, Math.min(index, pages.length - 1));
-      pages.forEach((page, i) => {
-        page.classList.toggle('active', i === current);
-      });
-
-      const progress = ((current + 1) / pages.length) * 100;
-      progressBar.style.width = progress + '%';
-      pageCounter.textContent = `Pagina ${current + 1} din ${pages.length}`;
-      backBtn.disabled = current === 0;
-      backBtn.style.opacity = current === 0 ? '0.55' : '1';
-      nextBtn.textContent = current === pages.length - 1 ? 'Reia lecția' : 'Mergi mai departe';
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      typesetMath();
-    }
-
-    function nextPage() {
-      if (current === pages.length - 1) {
-        showPage(0);
-      } else {
-        showPage(current + 1);
-      }
-    }
-
-    function prevPage() {
-      showPage(current - 1);
-    }
-
-    function checkQuiz() {
-      const questions = Array.from(document.querySelectorAll('.question'));
-      let score = 0;
-
-      questions.forEach((question, index) => {
-        const correct = question.dataset.correct;
-        const selected = question.querySelector('input[type="radio"]:checked');
-        const feedback = question.querySelector('.feedback');
-
-        feedback.className = 'feedback';
-
-        if (!selected) {
-          feedback.textContent = 'Alege un răspuns pentru acest item.';
-          feedback.classList.add('no');
-          return;
-        }
-
-        if (selected.value === correct) {
-          score++;
-          feedback.textContent = 'Corect!';
-          feedback.classList.add('ok');
-        } else {
-          feedback.textContent = 'Mai încearcă. Recitește pagina cu legea și condițiile de plutire.';
-          feedback.classList.add('no');
-        }
-      });
-
-      const scoreBox = document.getElementById('scoreBox');
-      scoreBox.style.display = 'block';
-      scoreBox.textContent = `Scor: ${score} din ${questions.length}. ${score === questions.length ? 'Excelent!' : 'Revizuiește itemii marcați.'}`;
-      typesetMath();
-    }
-
-    document.addEventListener('keydown', (event) => {
-      if (event.key === 'ArrowRight') nextPage();
-      if (event.key === 'ArrowLeft') prevPage();
-    });
-
-    showPage(0);
-  </script>
-              <script>
-  function printLessonPDF() {
-    const pages = document.querySelectorAll(".page");
-
-    // Facem toate paginile vizibile înainte de print/PDF.
-    pages.forEach(page => page.classList.add("active"));
-
-    // Așteptăm randarea formulelor MathJax, apoi deschidem print.
-    const doPrint = () => {
-      setTimeout(() => {
-        window.print();
-      }, 300);
-    };
-
-    if (window.MathJax && MathJax.typesetPromise) {
-      MathJax.typesetPromise().then(doPrint).catch(doPrint);
-    } else {
-      doPrint();
+  function renderMath(){
+    if(window.MathJax && window.MathJax.typesetPromise){
+      window.MathJax.typesetPromise([pages[current]]).catch(() => {});
     }
   }
+
+  function showPage(index){
+    current = Math.max(0, Math.min(index, pages.length - 1));
+    pages.forEach((page, i) => page.classList.toggle('active', i === current));
+
+    topBanner.style.display = current === 0 ? 'block' : 'none';
+    prevBtn.disabled = current === 0;
+    pageIndicator.textContent = `${current + 1}/${pages.length}`;
+
+    if(current === pages.length - 1){
+      nextBtn.textContent = 'Lecția următoare';
+    } else {
+      nextBtn.textContent = 'Mergi mai departe';
+    }
+
+    window.scrollTo({ top: 0, behavior: 'instant' });
+    renderMath();
+  }
+
+  function nextPage(){
+    if(current === pages.length - 1){
+      window.location.href = nextLesson;
+      return;
+    }
+    showPage(current + 1);
+  }
+
+  function prevPage(){
+    showPage(current - 1);
+  }
+
+  function checkQuiz(name){
+    const quiz = document.querySelector(`[data-quiz="${name}"]`);
+    const answer = quiz.dataset.answer;
+    const checked = quiz.querySelector(`input[name="${name}"]:checked`);
+    const fb = document.getElementById(`fb-${name}`);
+
+    fb.className = 'feedback';
+
+    if(!checked){
+      fb.textContent = 'Alege mai întâi o variantă.';
+      fb.classList.add('wait');
+      return;
+    }
+
+    if(checked.value === answer){
+      fb.textContent = 'Corect!';
+      fb.classList.add('ok');
+    } else {
+      fb.textContent = 'Mai încearcă. Recitește pagina cu explicația.';
+      fb.classList.add('bad');
+    }
+  }
+
+  document.addEventListener('keydown', (event) => {
+    if(event.key === 'ArrowRight') nextPage();
+    if(event.key === 'ArrowLeft') prevPage();
+  });
+
+  showPage(0);
 </script>
 </body>
 </html>

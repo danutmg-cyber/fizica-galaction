@@ -1,1127 +1,953 @@
-from pathlib import Path
-
-html = r'''<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>Lecția 5 | Probleme rezolvate | Statica fluidelor | Fizica Galaction</title>
-  <meta name="description" content="Lecția 5 – Probleme rezolvate pas cu pas la statica fluidelor, clasa a VII-a.">
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Lecția 5 | Probleme rezolvate pas cu pas | Statica fluidelor | Fizica Galaction</title>
+  <meta name="description" content="Lecție interactivă pentru clasa a VII-a: probleme rezolvate din statica fluidelor, cu imagini, formule MathJax și verificare rapidă.">
   <script>
     window.MathJax = {
-      tex: {
-        inlineMath: [['\\(', '\\)'], ['$', '$']],
-        displayMath: [['\\[', '\\]']]
-      },
-      svg: { fontCache: 'global' }
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']], displayMath: [['\\[','\\]']] },
+      svg: { fontCache: 'global', scale: 0.95 }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
-
   <style>
-    :root {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --card-2: #111827;
-      --text: #f8fafc;
-      --muted: #cbd5e1;
-      --accent: #22d3ee;
-      --accent-2: #38bdf8;
-      --green: #22c55e;
-      --yellow: #facc15;
-      --red: #fb7185;
-      --border: rgba(148, 163, 184, .28);
-      --shadow: 0 18px 45px rgba(0, 0, 0, .32);
+    :root{
+      --bg:#07111f;
+      --panel:#0f1e33;
+      --card:#12233b;
+      --card2:#182c49;
+      --text:#f4f7fb;
+      --muted:#cbd5e1;
+      --title:#67e8f9;
+      --accent:#38bdf8;
+      --good:#22c55e;
+      --good2:#16a34a;
+      --back:#e2e8f0;
+      --backText:#0f172a;
+      --warn:#facc15;
+      --danger:#fb7185;
+      --border:rgba(148,163,184,.32);
+      --shadow: 0 18px 50px rgba(0,0,0,.35);
     }
-
-    * {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{
+      min-height:100dvh;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(34, 211, 238, .18), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(34, 197, 94, .12), transparent 35%),
-        var(--bg);
-      color: var(--text);
-      line-height: 1.6;
+        radial-gradient(circle at 12% 10%, rgba(56,189,248,.18), transparent 32%),
+        radial-gradient(circle at 88% 15%, rgba(34,197,94,.14), transparent 30%),
+        linear-gradient(180deg, #07111f 0%, #0b1424 100%);
+      color:var(--text);
+      font-size:clamp(18px, 2.8vw, 21px);
+      line-height:1.55;
+      overflow:hidden;
     }
-
-    .site-header {
-      width: 100%;
-      padding: 16px 14px 10px;
-      text-align: center;
+    .app{
+      width:100%;
+      min-height:100dvh;
+      display:flex;
+      justify-content:center;
+      align-items:stretch;
+      padding:env(safe-area-inset-top) 10px env(safe-area-inset-bottom);
     }
-
-    .school {
-      color: var(--accent);
-      font-weight: 800;
-      letter-spacing: .02em;
-      font-size: clamp(.95rem, 2.6vw, 1.15rem);
+    .lesson{
+      width:min(980px, 100%);
+      min-height:100dvh;
+      display:flex;
+      flex-direction:column;
+      position:relative;
     }
-
-    .subtitle {
-      margin-top: 4px;
-      color: var(--muted);
-      font-size: .95rem;
+    .page{
+      display:none;
+      flex:1;
+      overflow-y:auto;
+      -webkit-overflow-scrolling:touch;
+      padding:18px 12px 118px;
+      scroll-behavior:smooth;
     }
-
-    .motto {
-      max-width: 880px;
-      margin: 12px auto 0;
-      padding: 10px 14px;
-      border-left: 4px solid var(--accent);
-      border-radius: 12px;
-      background: rgba(250, 204, 21, .10);
-      color: #fef9c3;
-      font-weight: 700;
+    .page.active{display:block}
+    .hero{
+      background:linear-gradient(135deg, rgba(56,189,248,.18), rgba(34,197,94,.12));
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      margin-bottom:16px;
     }
-
-    .app {
-      width: min(980px, 100%);
-      margin: 0 auto;
-      padding: 10px 14px 24px;
+    .school{
+      text-align:center;
+      color:var(--title);
+      font-weight:900;
+      letter-spacing:.02em;
+      font-size:clamp(18px, 3.2vw, 26px);
+      margin-bottom:6px;
     }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 12px;
-      align-items: center;
-      margin: 0 auto 12px;
-      padding: 10px;
-      background: rgba(15, 23, 42, .92);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      backdrop-filter: blur(12px);
-      box-shadow: var(--shadow);
+    .prof{
+      text-align:center;
+      color:#dbeafe;
+      font-weight:700;
+      font-size:clamp(15px, 2.5vw, 18px);
     }
-
-    .progress-wrap {
-      min-width: 0;
+    .motto{
+      margin:14px auto 0;
+      padding:10px 12px;
+      border-left:5px solid var(--title);
+      background:rgba(250,204,21,.10);
+      border-radius:12px;
+      color:#fef9c3;
+      font-style:italic;
+      max-width:760px;
+      text-align:center;
     }
-
-    .page-counter {
-      color: var(--muted);
-      font-size: .92rem;
-      margin-bottom: 6px;
+    .card{
+      background:rgba(18,35,59,.94);
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:clamp(16px, 3vw, 28px);
+      box-shadow:var(--shadow);
+      margin:0 auto 16px;
+      max-width:920px;
     }
-
-    .progress {
-      width: 100%;
-      height: 10px;
-      overflow: hidden;
-      background: rgba(148, 163, 184, .18);
-      border-radius: 999px;
+    .card.soft{background:rgba(15,30,51,.90)}
+    .final-card{
+      background:linear-gradient(135deg, rgba(8,145,178,.24), rgba(21,128,61,.20));
+      border:1px solid rgba(103,232,249,.35);
     }
-
-    .progress-bar {
-      width: 10%;
-      height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--green));
-      border-radius: 999px;
-      transition: width .25s ease;
+    h1,h2,h3{line-height:1.15;margin:0 0 14px}
+    h1{
+      font-size:clamp(30px, 7vw, 50px);
+      color:var(--title);
+      text-align:center;
+      letter-spacing:-.03em;
     }
-
-    .top-actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: flex-end;
+    h2{
+      font-size:clamp(25px, 5vw, 38px);
+      color:var(--title);
     }
-
-    button,
-    .nav-link {
-      appearance: none;
-      border: 0;
-      border-radius: 14px;
-      padding: 12px 14px;
-      font-weight: 800;
-      font-size: .95rem;
-      cursor: pointer;
-      text-decoration: none;
-      transition: transform .15s ease, filter .15s ease, opacity .15s ease;
+    h3{
+      font-size:clamp(21px, 4vw, 28px);
+      color:#bfdbfe;
     }
-
-    button:hover,
-    .nav-link:hover {
-      transform: translateY(-1px);
-      filter: brightness(1.05);
+    p{margin:10px 0}
+    .lead{
+      font-size:clamp(20px, 3.7vw, 27px);
+      text-align:center;
+      color:#e0f2fe;
+      font-weight:750;
     }
-
-    button:disabled {
-      opacity: .45;
-      cursor: not-allowed;
-      transform: none;
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      border:1px solid rgba(103,232,249,.38);
+      background:rgba(8,145,178,.16);
+      color:#e0f2fe;
+      padding:7px 11px;
+      border-radius:999px;
+      font-size:.92em;
+      font-weight:800;
+      margin:4px 6px 4px 0;
     }
-
-    .btn-primary {
-      background: var(--accent);
-      color: #082f49;
-      border: 2px solid #0891b2;
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:12px;
+      margin-top:12px;
     }
-
-    .btn-success {
-      background: var(--green);
-      color: #052e16;
-      border: 2px solid #16a34a;
+    @media (max-width:720px){.grid{grid-template-columns:1fr}}
+    .mini{
+      background:rgba(15,23,42,.50);
+      border:1px solid var(--border);
+      border-radius:18px;
+      padding:14px;
     }
-
-    .btn-secondary {
-      background: #e2e8f0;
-      color: #0f172a;
-      border: 2px solid #cbd5e1;
+    .mini strong{color:#fef3c7}
+    .remember{
+      border-left:6px solid var(--good);
+      background:rgba(34,197,94,.11);
+      padding:12px 14px;
+      border-radius:14px;
+      margin:12px 0;
     }
-
-    .btn-print {
-      background: #facc15;
-      color: #422006;
-      border: 2px solid #eab308;
+    .observe{
+      border-left:6px solid var(--accent);
+      background:rgba(56,189,248,.12);
+      padding:12px 14px;
+      border-radius:14px;
+      margin:12px 0;
     }
-
-    .lesson-shell {
-      display: block;
+    .warning{
+      border-left:6px solid var(--warn);
+      background:rgba(250,204,21,.11);
+      padding:12px 14px;
+      border-radius:14px;
+      margin:12px 0;
+      color:#fff7ed;
     }
-
-    .page {
-      display: none;
-      width: 100%;
-      min-height: 58vh;
-      padding: clamp(18px, 4vw, 34px);
-      background: rgba(30, 41, 59, .96);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      box-shadow: var(--shadow);
+    .formula{
+      overflow-x:auto;
+      background:rgba(2,6,23,.48);
+      border:1px solid rgba(148,163,184,.28);
+      border-radius:18px;
+      padding:12px;
+      margin:12px 0;
+      font-size:.97em;
     }
-
-    .page.active {
-      display: block;
-      animation: fadeIn .22s ease;
+    .formula mjx-container[jax="SVG"]{
+      max-width:100%;
+      overflow-x:auto;
+      overflow-y:hidden;
     }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(8px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
+    .steps{
+      counter-reset:step;
+      list-style:none;
+      padding:0;
+      margin:10px 0;
     }
-
-    h1,
-    h2,
-    h3 {
-      line-height: 1.22;
-      margin: 0 0 12px;
+    .steps li{
+      counter-increment:step;
+      display:grid;
+      grid-template-columns:38px 1fr;
+      gap:10px;
+      align-items:start;
+      background:rgba(255,255,255,.045);
+      border:1px solid rgba(148,163,184,.18);
+      border-radius:16px;
+      padding:12px;
+      margin:10px 0;
     }
-
-    h1 {
-      font-size: clamp(1.65rem, 6vw, 2.5rem);
-      color: #ecfeff;
+    .steps li::before{
+      content:counter(step);
+      width:32px;height:32px;border-radius:50%;
+      display:grid;place-items:center;
+      background:#38bdf8;color:#082f49;font-weight:900;
     }
-
-    h2 {
-      font-size: clamp(1.35rem, 4.8vw, 2rem);
-      color: #bae6fd;
+    .image-card{
+      background:#eaf6ff;
+      color:#102033;
+      border-radius:22px;
+      padding:10px;
+      margin:14px auto;
+      max-width:720px;
+      box-shadow:0 14px 30px rgba(0,0,0,.25);
     }
-
-    h3 {
-      font-size: clamp(1.1rem, 3.8vw, 1.35rem);
-      color: #fef9c3;
+    .image-card img{
+      width:100%;
+      height:auto;
+      display:block;
+      border-radius:16px;
+      background:white;
+      object-fit:contain;
+      max-height:55dvh;
     }
-
-    p {
-      margin: 10px 0;
+    .caption{
+      font-size:.88em;
+      color:#1e3a5f;
+      text-align:center;
+      margin:8px 4px 2px;
+      font-weight:700;
     }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      margin-bottom: 10px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      background: rgba(34, 211, 238, .14);
-      color: #cffafe;
-      border: 1px solid rgba(34, 211, 238, .32);
-      font-weight: 800;
-      font-size: .9rem;
+    .svgbox{
+      background:#eaf6ff;
+      color:#102033;
+      border-radius:22px;
+      padding:10px;
+      margin:14px auto;
+      max-width:720px;
+      box-shadow:0 14px 30px rgba(0,0,0,.25);
     }
-
-    .lead {
-      font-size: clamp(1rem, 3vw, 1.12rem);
-      color: #e2e8f0;
+    .svgbox > svg{width:100%;height:auto;display:block;border-radius:16px}
+    .table-wrap{overflow-x:auto;margin:12px 0}
+    table{
+      width:100%;
+      border-collapse:collapse;
+      min-width:640px;
+      background:rgba(15,23,42,.35);
+      border-radius:16px;
+      overflow:hidden;
     }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
-      margin: 14px 0;
+    th,td{
+      border:1px solid rgba(148,163,184,.25);
+      padding:10px;
+      vertical-align:top;
+      text-align:left;
     }
-
-    .info-card,
-    .formula-box,
-    .answer-box,
-    .step,
-    .question-box {
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 14px;
-      background: rgba(15, 23, 42, .46);
+    th{background:rgba(56,189,248,.18); color:#e0f2fe}
+    .quiz .question{
+      margin:14px 0;
+      padding:14px;
+      border:1px solid rgba(148,163,184,.25);
+      background:rgba(15,23,42,.45);
+      border-radius:18px;
     }
-
-    .formula-box {
-      color: #f8fafc;
-      background: rgba(8, 47, 73, .55);
-      border-color: rgba(34, 211, 238, .32);
-      overflow-x: auto;
+    .answers{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:8px;
+      margin-top:10px;
     }
-
-    .answer-box {
-      background: rgba(34, 197, 94, .12);
-      border-color: rgba(34, 197, 94, .38);
-      color: #dcfce7;
-      font-weight: 750;
+    .answers label{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding:11px 12px;
+      border:1px solid rgba(148,163,184,.25);
+      border-radius:14px;
+      background:rgba(255,255,255,.05);
+      cursor:pointer;
     }
-
-    .warning-box {
-      margin: 14px 0;
-      padding: 14px;
-      border-radius: 18px;
-      background: rgba(250, 204, 21, .12);
-      border: 1px solid rgba(250, 204, 21, .38);
-      color: #fef9c3;
+    .answers input{margin-top:5px; transform:scale(1.15)}
+    .feedback{
+      min-height:28px;
+      margin-top:10px;
+      font-weight:900;
+      color:#fef9c3;
     }
-
-    .step {
-      margin: 12px 0;
+    .feedback.ok{color:#86efac}
+    .feedback.no{color:#fecdd3}
+    .actions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-top:12px;
     }
-
-    .step-number {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 30px;
-      height: 30px;
-      margin-right: 8px;
-      border-radius: 50%;
-      background: var(--accent);
-      color: #082f49;
-      font-weight: 900;
+    .check{
+      border:none;
+      border-radius:14px;
+      padding:13px 16px;
+      font-size:1rem;
+      font-weight:900;
+      color:#052e16;
+      background:#22c55e;
+      cursor:pointer;
     }
-
-    .lesson-figure {
-      margin: 16px 0 10px;
-      padding: 12px;
-      border-radius: 18px;
-      background: rgba(15, 23, 42, .48);
-      border: 1px solid rgba(148, 163, 184, .22);
-      text-align: center;
+    .reset{
+      border:none;
+      border-radius:14px;
+      padding:13px 16px;
+      font-size:1rem;
+      font-weight:900;
+      color:#0f172a;
+      background:#e2e8f0;
+      cursor:pointer;
     }
-
-    .lesson-figure img {
-      display: block;
-      width: 100%;
-      max-width: 580px;
-      max-height: 340px;
-      object-fit: contain;
-      margin: 0 auto;
-      border-radius: 14px;
-      background: #ffffff;
-      border: 1px solid rgba(226, 232, 240, .5);
+    .bottom-nav{
+      position:sticky;
+      bottom:0;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      gap:10px;
+      align-items:center;
+      padding:10px max(10px, env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-right));
+      background:linear-gradient(180deg, rgba(7,17,31,.58), rgba(7,17,31,.97) 22%);
+      border-top:1px solid rgba(148,163,184,.25);
+      backdrop-filter:blur(10px);
+      z-index:10;
     }
-
-    .lesson-figure figcaption {
-      margin-top: 8px;
-      color: #cbd5e1;
-      font-size: .92rem;
-      line-height: 1.4;
+    .nav-btn{
+      border:none;
+      border-radius:18px;
+      padding:14px 12px;
+      min-height:54px;
+      font-size:clamp(15px, 3.4vw, 18px);
+      font-weight:950;
+      cursor:pointer;
+      box-shadow:0 10px 22px rgba(0,0,0,.22);
+      width:100%;
     }
-
-    .mini-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 14px 0;
-      overflow: hidden;
-      border-radius: 14px;
+    .prev{background:var(--back); color:var(--backText)}
+    .next{background:var(--good); color:#052e16}
+    .next:hover{background:var(--good2); color:white}
+    .prev:disabled{
+      opacity:.45;
+      cursor:not-allowed;
     }
-
-    .mini-table th,
-    .mini-table td {
-      border: 1px solid rgba(148, 163, 184, .28);
-      padding: 10px;
-      vertical-align: top;
-      text-align: left;
+    .counter{
+      color:#e0f2fe;
+      font-weight:950;
+      text-align:center;
+      min-width:58px;
+      padding:8px 10px;
+      border-radius:999px;
+      background:rgba(56,189,248,.14);
+      border:1px solid rgba(103,232,249,.28);
+      white-space:nowrap;
     }
-
-    .mini-table th {
-      background: rgba(34, 211, 238, .16);
-      color: #e0f2fe;
+    a.inline{
+      color:#7dd3fc;
+      font-weight:800;
+      text-decoration:none;
     }
-
-    .mini-table td {
-      background: rgba(15, 23, 42, .40);
-      color: #f8fafc;
+    .footer-banner{
+      text-align:center;
+      padding:16px;
+      border-radius:20px;
+      background:rgba(2,6,23,.42);
+      border:1px solid rgba(103,232,249,.25);
+      margin-top:16px;
     }
-
-    .quiz {
-      display: grid;
-      gap: 14px;
-      margin-top: 16px;
+    @media (max-width:520px){
+      .page{padding-left:8px;padding-right:8px;padding-bottom:120px}
+      .card{border-radius:20px}
+      .bottom-nav{gap:6px}
+      .nav-btn{padding:12px 8px}
+      .counter{min-width:52px}
+      .steps li{grid-template-columns:32px 1fr;gap:8px;padding:10px}
+      .steps li::before{width:28px;height:28px}
     }
-
-    .question-box p {
-      font-weight: 800;
-      color: #f8fafc;
-      margin-top: 0;
-    }
-
-    .choices {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-    }
-
-    .choice {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      min-height: 48px;
-      padding: 10px;
-      border-radius: 14px;
-      background: rgba(15, 23, 42, .55);
-      border: 1px solid rgba(148, 163, 184, .28);
-      color: #f8fafc;
-      cursor: pointer;
-    }
-
-    .choice input {
-      transform: scale(1.12);
-      accent-color: var(--accent);
-    }
-
-    .feedback {
-      min-height: 28px;
-      margin-top: 10px;
-      font-weight: 800;
-    }
-
-    .ok {
-      color: #86efac;
-    }
-
-    .bad {
-      color: #fda4af;
-    }
-
-    .bottom-nav {
-      position: sticky;
-      bottom: 0;
-      z-index: 25;
-      display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 10px;
-      margin-top: 12px;
-      padding: 10px;
-      background: rgba(15, 23, 42, .94);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      backdrop-filter: blur(12px);
-      box-shadow: var(--shadow);
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: center;
-      margin: 16px 0 0;
-    }
-
-    .nav-link {
-      display: inline-block;
-      background: rgba(226, 232, 240, .95);
-      color: #0f172a;
-    }
-
-    .print-only-title {
-      display: none;
-    }
-
-    @media (max-width: 780px) {
-      .topbar {
-        grid-template-columns: 1fr;
-      }
-
-      .top-actions {
-        justify-content: stretch;
-      }
-
-      .top-actions button {
-        flex: 1 1 140px;
-      }
-
-      .grid-2 {
-        grid-template-columns: 1fr;
-      }
-
-      .choices {
-        grid-template-columns: 1fr;
-      }
-
-      .bottom-nav {
-        grid-template-columns: 1fr;
-      }
-
-      .page {
-        border-radius: 20px;
-      }
-    }
-
-    @media (max-width: 520px) {
-      .app {
-        padding: 8px 10px 18px;
-      }
-
-      .site-header {
-        padding-left: 10px;
-        padding-right: 10px;
-      }
-
-      button,
-      .nav-link {
-        width: 100%;
-      }
-
-      .lesson-figure {
-        padding: 8px;
-      }
-
-      .lesson-figure img {
-        max-height: 260px;
-      }
-
-      .lesson-figure figcaption {
-        font-size: .85rem;
-      }
-
-      .mini-table {
-        display: block;
-        overflow-x: auto;
-      }
-    }
-
-    @media print {
-      @page {
-        size: A4;
-        margin: 12mm;
-      }
-
-      html,
-      body {
-        width: auto !important;
-        height: auto !important;
-        overflow: visible !important;
-        background: white !important;
-        color: black !important;
-        padding: 0 !important;
-      }
-
-      .site-header,
-      .topbar,
-      .bottom-nav,
-      .footer-links,
-      button,
-      .nav-link {
-        display: none !important;
-      }
-
-      .app,
-      .lesson-shell {
-        display: block !important;
-        width: 100% !important;
-        max-width: none !important;
-        height: auto !important;
-        overflow: visible !important;
-        padding: 0 !important;
-        margin: 0 !important;
-      }
-
-      .page,
-      .page.active {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        position: static !important;
-        width: 100% !important;
-        min-height: auto !important;
-        height: auto !important;
-        overflow: visible !important;
-        box-shadow: none !important;
-        background: white !important;
-        color: black !important;
-        border: 1px solid #999 !important;
-        border-radius: 0 !important;
-        margin: 0 0 12mm 0 !important;
-        padding: 10mm !important;
-        break-after: page;
-        page-break-after: always;
-      }
-
-      .page:last-of-type {
-        break-after: auto;
-        page-break-after: auto;
-      }
-
-      .print-only-title {
-        display: block !important;
-        font-weight: 900;
-        margin-bottom: 10px;
-      }
-
-      h1,
-      h2,
-      h3,
-      p,
-      li,
-      td,
-      th,
-      figcaption,
-      .lead,
-      .badge {
-        color: black !important;
-      }
-
-      .info-card,
-      .formula-box,
-      .answer-box,
-      .warning-box,
-      .step,
-      .question-box,
-      .lesson-figure,
-      .mini-table th,
-      .mini-table td,
-      .choice {
-        color: black !important;
-        background: white !important;
-        border: 1px solid #999 !important;
-        box-shadow: none !important;
-      }
-
-      img,
-      svg {
-        max-width: 100% !important;
-        page-break-inside: avoid;
-        break-inside: avoid;
-      }
+    @media (prefers-reduced-motion: reduce){
+      *{scroll-behavior:auto!important}
     }
   </style>
 </head>
-
 <body>
-  <header class="site-header">
-    <div class="school">ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</div>
-    <div class="subtitle">Fizica Galaction · Clasa a VII-a</div>
-    <div class="motto">„Fizica nu este o materie dominată de formule, ci de logică.”</div>
-  </header>
+<div class="app">
+  <main class="lesson" aria-label="Lecție interactivă">
 
-  <main class="app">
-    <section class="topbar" aria-label="Comenzi lecție">
-      <div class="progress-wrap">
-        <div class="page-counter" id="pageCounter">Pagina 1 / 10</div>
-        <div class="progress" aria-hidden="true">
-          <div class="progress-bar" id="progressBar"></div>
+    <section class="page active" data-title="Start">
+      <div class="hero">
+        <div class="school">ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</div>
+        <div class="prof">Fizica Galaction · Clasa a VII-a · Prof. Dănuț Andronie</div>
+        <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+      </div>
+      <div class="card">
+        <h1>Lecția 5 – Probleme rezolvate pas cu pas</h1>
+        <p class="lead">Statica fluidelor devine mai clară când pornești de la imagine, identifici formula potrivită și rezolvi pe pași mici.</p>
+        <div class="observe">
+          <strong>Ideea-cheie:</strong> nu învățăm problemele pe de rost. Învățăm să recunoaștem situația fizică: presiune, presă hidraulică, plutire sau forță arhimedică.
+        </div>
+        <div>
+          <span class="tag">presiune</span>
+          <span class="tag">presiune hidrostatică</span>
+          <span class="tag">legea lui Pascal</span>
+          <span class="tag">legea lui Arhimede</span>
+          <span class="tag">plutire</span>
         </div>
       </div>
-
-      <div class="top-actions">
-        <button class="btn-secondary" type="button" onclick="goToPage(0)">Start</button>
-        <button class="btn-print" type="button" onclick="printLessonPDF()">Tipărește lecția PDF</button>
+      <div class="card soft">
+        <h2>Formule folosite</h2>
+        <div class="grid">
+          <div class="mini"><strong>Presiunea</strong><div class="formula">\(p=\frac{F}{S}\)</div></div>
+          <div class="mini"><strong>Presiunea hidrostatică</strong><div class="formula">\(p_h=\rho g h\)</div></div>
+          <div class="mini"><strong>Presa hidraulică</strong><div class="formula">\(\frac{F_1}{S_1}=\frac{F_2}{S_2}\)</div></div>
+          <div class="mini"><strong>Forța arhimedică</strong><div class="formula">\(F_A=\rho_f g V_{\text{dezlocuit}}\)</div></div>
+        </div>
       </div>
     </section>
 
-    <section class="lesson-shell" id="lesson">
-      <article class="page active" data-title="Introducere">
-        <div class="print-only-title">Lecția 5 – Probleme rezolvate pas cu pas</div>
-        <span class="badge">Unitatea 5 · Statica fluidelor</span>
-        <h1>Lecția 5 – Probleme rezolvate pas cu pas</h1>
-        <p class="lead">Această lecție adună, în format interactiv, problemele de la finalul capitolului despre presiune, legea lui Pascal și legea lui Arhimede.</p>
-
-        <div class="grid-2">
-          <div class="info-card">
-            <h3>Ce găsești aici</h3>
-            <ul>
-              <li>probleme rezolvate pe pași mici;</li>
-              <li>formule scrise cu MathJax;</li>
-              <li>rezultate numerice clare;</li>
-              <li>explicații scurte, bune pentru telefon și tabletă;</li>
-              <li>o verificare rapidă la final.</li>
-            </ul>
-          </div>
-
-          <div class="formula-box">
-            <h3>Idei-cheie folosite</h3>
-            <p>\(p = \frac{F}{S}\)</p>
-            <p>\(p_h = \rho g h\)</p>
-            <p>\(\frac{F_1}{S_1} = \frac{F_2}{S_2}\)</p>
-            <p>\(F_A = \rho g V\)</p>
-            <p>\(\rho = \frac{m}{V}\)</p>
-          </div>
+    <section class="page" data-title="Balanța">
+      <div class="card">
+        <h2>Problema 1 – Balanța cu două pahare</h2>
+        <div class="image-card">
+          <img src="./1-balanta-echilibru.png"
+               alt="Balanță cu două pahare identice, în unul plutește o bucată de lemn."
+               onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/6-statica-fluidelor/lectii/1-balanta-echilibru.png';">
+          <div class="caption">Balanța rămâne în echilibru dacă lemnul plutește și înlocuiește apă de aceeași greutate.</div>
         </div>
-
-        <div class="warning-box">
-          <strong>Cuprins rapid:</strong> balanța cu pahare, oul în saramură, presa hidraulică, balonul scufundat, cubul de lemn care plutește, aerostatul cu heliu, apă și ulei într-un vas cilindric, cub legat pe fundul bazinului.
+        <h3>Observ</h3>
+        <p>În paharul B plutește o bucată de lemn. Întrebarea este: se schimbă masa totală de pe taler?</p>
+        <ol class="steps">
+          <li>Când lemnul plutește, el este susținut de apa din pahar.</li>
+          <li>Apa împinge lemnul în sus cu o forță egală cu greutatea lemnului.</li>
+          <li>Lemnul dezlocuiește apă cu greutate egală cu greutatea lui.</li>
+          <li>De aceea balanța nu se înclină.</li>
+        </ol>
+        <div class="remember">
+          <strong>Răspuns:</strong> balanța rămâne în echilibru. Niciun pahar nu are masă mai mare.
         </div>
-      </article>
+      </div>
+    </section>
 
-      <article class="page" data-title="Problema 1">
-        <span class="badge">Problema 1</span>
-        <h2>Balanța cu două pahare</h2>
-        <p><strong>Situația:</strong> avem două pahare identice cu apă. În paharul B plutește o bucățică de lemn. Se cere ce se întâmplă după deblocarea balanței.</p>
+    <section class="page" data-title="Saramura">
+      <div class="card">
+        <h2>Problema 2 – Densitatea saramurii</h2>
+        <div class="image-card">
+          <img src="./2-oul-saramura.png"
+               alt="Ou care plutește parțial scufundat în saramură."
+               onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/6-statica-fluidelor/lectii/2-oul-saramura.png';">
+          <div class="caption">Oul plutește: partea scufundată dezlocuiește saramură.</div>
+        </div>
+        <p><strong>Date:</strong> \(m=52{,}5\,g\), \(V=50\,cm^3\), iar \(10\%\) din ou rămâne deasupra lichidului.</p>
+        <ol class="steps">
+          <li>Dacă \(10\%\) este deasupra, atunci \(90\%\) este scufundat.</li>
+          <li>Volumul scufundat este \(V_s=0{,}9\cdot 50=45\,cm^3\).</li>
+          <li>La plutire, greutatea oului este compensată de forța arhimedică.</li>
+          <li>Densitatea saramurii se află din masa oului împărțită la volumul scufundat.</li>
+        </ol>
+        <div class="formula">
+          \[
+          \rho_s=\frac{m}{V_s}=\frac{52{,}5\,g}{45\,cm^3}\approx 1{,}17\,g/cm^3
+          \]
+        </div>
+        <div class="remember">
+          <strong>Răspuns:</strong> densitatea saramurii este aproximativ \(1{,}17\,g/cm^3\), adică \(1170\,kg/m^3\).
+        </div>
+      </div>
+    </section>
 
-        <figure class="lesson-figure">
-          <img src="1-balanta-echilibru.png" alt="Balanță cu două pahare identice, dintre care unul conține o bucățică de lemn plutitoare." loading="lazy">
-          <figcaption>Balanța rămâne în echilibru deoarece lemnul plutitor dezlocuiește apă cu greutate egală cu greutatea lui.</figcaption>
-        </figure>
+    <section class="page" data-title="Presa">
+      <div class="card">
+        <h2>Problema 3 – Presa hidraulică</h2>
+        <div class="image-card">
+          <img src="./3-presa-hidraulica.png"
+               alt="Presă hidraulică cu piston mic și piston mare."
+               onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/6-statica-fluidelor/lectii/3-presa-hidraulica.png';">
+          <div class="caption">Presa hidraulică mărește forța, dar pistonul mare se deplasează mai puțin.</div>
+        </div>
+        <p><strong>Date:</strong> \(F_2=2000\,N\), \(F_1=100\,N\), iar pistonul mic coboară \(h_1=2\,cm\).</p>
+        <h3>Aplic legea lui Pascal</h3>
+        <div class="formula">
+          \[
+          \frac{F_1}{S_1}=\frac{F_2}{S_2}
+          \qquad\Rightarrow\qquad
+          \frac{S_2}{S_1}=\frac{F_2}{F_1}=\frac{2000}{100}=20
+          \]
+        </div>
+        <p>Pistonul mare are aria de \(20\) de ori mai mare decât pistonul mic.</p>
+        <h3>Aplic ideea de volum</h3>
+        <p>Lichidul aproape nu se comprimă. Volumul împins de pistonul mic este egal cu volumul primit de pistonul mare.</p>
+        <div class="formula">
+          \[
+          S_1h_1=S_2h_2
+          \qquad\Rightarrow\qquad
+          h_2=\frac{S_1}{S_2}\cdot h_1=\frac{1}{20}\cdot 2\,cm=0{,}1\,cm
+          \]
+        </div>
+        <div class="remember">
+          <strong>Răspuns:</strong> \(\frac{S_2}{S_1}=20\), iar pistonul mare urcă \(0{,}1\,cm=1\,mm\).
+        </div>
+      </div>
+    </section>
 
-        <h3>Rezolvare pas cu pas</h3>
-        <div class="step"><span class="step-number">1</span>Când lemnul plutește, el este susținut de o forță arhimedică egală cu greutatea sa.</div>
-        <div class="formula-box">\[F_A = G_{lemn}\]</div>
+    <section class="page" data-title="Balonul">
+      <div class="card">
+        <h2>Problema 4 – Balon umplut cu apă</h2>
+        <div class="image-card">
+          <img src="./4-balon-scufundat.png"
+               alt="Balon umplut cu apă, scufundat în apă și legat de un dinamometru."
+               onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/6-statica-fluidelor/lectii/4-balon-scufundat.png';">
+          <div class="caption">Balonul conține apă și este scufundat tot în apă.</div>
+        </div>
+        <p><strong>Date:</strong> balonul are masă neglijabilă și este umplut cu \(50\,cm^3\) de apă.</p>
+        <ol class="steps">
+          <li>Greutatea balonului este, practic, greutatea apei din interior.</li>
+          <li>Forța arhimedică este egală cu greutatea apei dezlocuite.</li>
+          <li>Apa din interior are același volum și aceeași densitate ca apa dezlocuită.</li>
+          <li>Cele două forțe se compensează.</li>
+        </ol>
+        <div class="formula">
+          \[
+          G=\rho_{\text{apă}}gV
+          \qquad
+          F_A=\rho_{\text{apă}}gV
+          \qquad
+          \Rightarrow
+          F_A=G
+          \]
+        </div>
+        <div class="remember">
+          <strong>Răspuns:</strong> dinamometrul indică \(0\,N\). Balonul nu „trage” de dinamometru.
+        </div>
+      </div>
+    </section>
 
-        <div class="step"><span class="step-number">2</span>Asta înseamnă că lemnul deplasează o cantitate de apă care are aceeași greutate ca lemnul.</div>
+    <section class="page" data-title="Cubul I">
+      <div class="card">
+        <h2>Problema 5 – Cubul de lemn care plutește</h2>
+        <div class="image-card">
+          <img src="./5-cub-lemn.png"
+               alt="Cub de lemn care plutește în apă, cu o parte deasupra apei."
+               onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/6-statica-fluidelor/lectii/5-cub-lemn.png';">
+          <div class="caption">Densitatea corpului se leagă de partea care rămâne scufundată.</div>
+        </div>
+        <p><strong>Date:</strong> latura cubului este \(l=36\,cm\). Deasupra apei rămân \(a=6\,cm\).</p>
+        <ol class="steps">
+          <li>Înălțimea scufundată este \(h_s=36-6=30\,cm\).</li>
+          <li>La plutire, raportul densităților este raportul volumelor.</li>
+          <li>Cum baza cubului este aceeași, raportul volumelor devine raportul înălțimilor.</li>
+        </ol>
+        <div class="formula">
+          \[
+          \rho_{cub}=\rho_{apă}\cdot\frac{V_s}{V}
+          =1\,\frac{g}{cm^3}\cdot\frac{30}{36}
+          =\frac{5}{6}\,\frac{g}{cm^3}
+          \approx 0{,}833\,g/cm^3
+          \]
+        </div>
+        <div class="remember">
+          <strong>Răspuns a):</strong> densitatea cubului este aproximativ \(0{,}833\,g/cm^3\).
+        </div>
+      </div>
+    </section>
 
-        <div class="step"><span class="step-number">3</span>Dacă paharul este plin până aproape de margine, apa dezlocuită poate ieși din pahar. Greutatea apei ieșite este egală cu greutatea lemnului.</div>
+    <section class="page" data-title="Cubul II">
+      <div class="card">
+        <h2>Continuare – Cum se schimbă presiunea?</h2>
+        <p>Prin scoaterea cubului, apa revine la un nivel mai mic. Presiunea pe fund scade, deoarece scade înălțimea coloanei de apă.</p>
+        <p><strong>Date:</strong> aria bazei vasului este \(S=400\,cm^2\), iar volumul de apă dezlocuit este volumul părții scufundate a cubului.</p>
+        <ol class="steps">
+          <li>Volumul dezlocuit este \(V_d=l^2\cdot h_s\).</li>
+          <li>Scăderea nivelului apei este \(\Delta h=\frac{V_d}{S}\).</li>
+          <li>Scăderea presiunii este \(\Delta p=\rho g\Delta h\).</li>
+        </ol>
+        <div class="formula">
+          \[
+          V_d=36^2\cdot 30=38880\,cm^3
+          \]
+          \[
+          \Delta h=\frac{38880}{400}=97{,}2\,cm=0{,}972\,m
+          \]
+          \[
+          \Delta p=1000\cdot 10\cdot 0{,}972=9720\,Pa
+          \]
+        </div>
+        <div class="warning">
+          <strong>Atenție:</strong> în calcule folosim datele din problemă. În realitate, forma vasului trebuie să permită introducerea cubului.
+        </div>
+        <div class="remember">
+          <strong>Răspuns b):</strong> presiunea hidrostatică pe fundul vasului scade cu \(9720\,Pa\).
+        </div>
+      </div>
+    </section>
 
-        <div class="step"><span class="step-number">4</span>Prin urmare, masa totală de pe talerul B rămâne aceeași ca înainte.</div>
+    <section class="page" data-title="Aerostat">
+      <div class="card">
+        <h2>Problema 6 – Aerostatul cu heliu</h2>
+        <div class="image-card">
+          <img src="./6-aerostat-heliu.png"
+               alt="Aerostat umplut cu heliu care se ridică în aer."
+               onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/6-statica-fluidelor/lectii/6-aerostat-heliu.png';">
+          <div class="caption">În aer există tot forță arhimedică: balonul dezlocuiește aer.</div>
+        </div>
+        <p><strong>Date:</strong> \(M=200\,kg\), \(\rho_{aer}=1{,}2928\,kg/m^3\), \(\rho_{He}=0{,}1785\,kg/m^3\).</p>
+        <p>Forța arhimedică dată de aer trebuie să susțină masa ridicată și heliul din balon.</p>
+        <div class="formula">
+          \[
+          \rho_{aer}gV = Mg+\rho_{He}gV
+          \]
+          \[
+          (\rho_{aer}-\rho_{He})V=M
+          \qquad\Rightarrow\qquad
+          V=\frac{M}{\rho_{aer}-\rho_{He}}
+          \]
+          \[
+          V=\frac{200}{1{,}2928-0{,}1785}
+          =\frac{200}{1{,}1143}
+          \approx 179{,}5\,m^3
+          \]
+        </div>
+        <div class="remember">
+          <strong>Răspuns:</strong> volumul minim este aproximativ \(179{,}5\,m^3\). Când balonul urcă, presiunea aerului scade, iar heliul se destinde.
+        </div>
+      </div>
+    </section>
 
-        <div class="answer-box">Concluzie: masele sunt egale, iar balanța rămâne în echilibru.</div>
-      </article>
+    <section class="page" data-title="Apă și ulei">
+      <div class="card">
+        <h2>Problema 7 – Apă și ulei în același vas</h2>
+        <div class="svgbox" aria-label="Vas cu apă și ulei">
+          <svg viewBox="0 0 640 360" role="img">
+            <rect width="640" height="360" fill="#eaf6ff"/>
+            <rect x="170" y="55" width="300" height="250" rx="18" fill="#ffffff" stroke="#1e3a8a" stroke-width="6"/>
+            <rect x="188" y="170" width="264" height="118" fill="#60a5fa" opacity=".80"/>
+            <rect x="188" y="90" width="264" height="80" fill="#fde68a" opacity=".95"/>
+            <line x1="188" y1="170" x2="452" y2="170" stroke="#92400e" stroke-width="4" stroke-dasharray="10 8"/>
+            <text x="320" y="130" text-anchor="middle" font-size="30" fill="#92400e" font-weight="700">ulei</text>
+            <text x="320" y="238" text-anchor="middle" font-size="30" fill="#0f3e86" font-weight="700">apă</text>
+            <line x1="500" y1="90" x2="500" y2="170" stroke="#92400e" stroke-width="5"/>
+            <line x1="500" y1="170" x2="500" y2="288" stroke="#0f3e86" stroke-width="5"/>
+            <text x="526" y="137" font-size="24" fill="#92400e">h₂</text>
+            <text x="526" y="236" font-size="24" fill="#0f3e86">h₁</text>
+          </svg>
+          <div class="caption">Presiunea pe fund este suma presiunilor produse de fiecare strat.</div>
+        </div>
+        <p><strong>Date:</strong> \(p=1500\,Pa\), \(\rho_{apă}=1000\,kg/m^3\), \(\rho_{ulei}=800\,kg/m^3\), \(g=10\,N/kg\).</p>
+        <ol class="steps">
+          <li>Mai întâi aflăm înălțimea apei.</li>
+          <li>Volume egale într-un vas cilindric înseamnă înălțimi egale.</li>
+          <li>Presiunea totală este presiunea apei plus presiunea uleiului.</li>
+        </ol>
+        <div class="formula">
+          \[
+          h_1=\frac{p}{\rho_{apă}g}=\frac{1500}{1000\cdot 10}=0{,}15\,m
+          \]
+          \[
+          h_2=h_1=0{,}15\,m
+          \]
+          \[
+          p_{total}=1000\cdot10\cdot0{,}15+800\cdot10\cdot0{,}15=2700\,Pa
+          \]
+        </div>
+        <div class="remember">
+          <strong>Răspuns:</strong> \(h_{apă}=0{,}15\,m\), \(h_{ulei}=0{,}15\,m\), \(p_{total}=2700\,Pa\).
+        </div>
+      </div>
+    </section>
 
-      <article class="page" data-title="Problema 2">
-        <span class="badge">Problema 2</span>
-        <h2>Densitatea saramurii</h2>
-        <p><strong>Date:</strong> oul are masa \(m = 52{,}5\,\text{g}\) și volumul \(V = 50\,\text{cm}^3\). Din volum, 10% rămâne deasupra lichidului.</p>
+    <section class="page" data-title="Cub legat">
+      <div class="card">
+        <h2>Problema 8 – Cub de lemn legat de fund</h2>
+        <div class="svgbox" aria-label="Cub scufundat și legat cu fir de fundul bazinului">
+          <svg viewBox="0 0 640 380" role="img">
+            <rect width="640" height="380" fill="#eaf6ff"/>
+            <rect x="105" y="48" width="430" height="278" rx="16" fill="#dbeafe" stroke="#1e40af" stroke-width="6"/>
+            <rect x="118" y="72" width="404" height="236" fill="#60a5fa" opacity=".55"/>
+            <rect x="260" y="130" width="120" height="120" rx="8" fill="#b45309" stroke="#78350f" stroke-width="5"/>
+            <line x1="320" y1="250" x2="320" y2="306" stroke="#0f172a" stroke-width="5"/>
+            <circle cx="320" cy="309" r="8" fill="#0f172a"/>
+            <line x1="320" y1="120" x2="320" y2="72" stroke="#16a34a" stroke-width="6" marker-end="url(#arrow)"/>
+            <line x1="250" y1="190" x2="205" y2="190" stroke="#ef4444" stroke-width="6" marker-end="url(#arrow2)"/>
+            <line x1="390" y1="190" x2="435" y2="190" stroke="#ef4444" stroke-width="6" marker-end="url(#arrow3)"/>
+            <text x="333" y="100" font-size="24" fill="#166534" font-weight="800">F<tspan baseline-shift="sub" font-size="16">A</tspan></text>
+            <text x="330" y="286" font-size="24" fill="#0f172a" font-weight="800">T</text>
+            <text x="318" y="197" text-anchor="middle" font-size="28" fill="#fff7ed" font-weight="900">cub</text>
+            <defs>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#16a34a"/></marker>
+              <marker id="arrow2" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef4444"/></marker>
+              <marker id="arrow3" markerWidth="10" markerHeight="10" refX="5" refY="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#ef4444"/></marker>
+            </defs>
+          </svg>
+          <div class="caption">Forța arhimedică trage cubul în sus, iar firul îl ține jos.</div>
+        </div>
+        <p><strong>Date:</strong> \(\rho_{cub}=600\,kg/m^3\), \(\rho_{lichid}=1200\,kg/m^3\), \(l=0{,}2\,m\), \(g=10\,N/kg\).</p>
+        <div class="formula">
+          \[
+          V=l^3=0{,}2^3=0{,}008\,m^3
+          \]
+          \[
+          F_A=\rho_{lichid}gV=1200\cdot10\cdot0{,}008=96\,N
+          \]
+          \[
+          G=\rho_{cub}gV=600\cdot10\cdot0{,}008=48\,N
+          \]
+          \[
+          T=F_A-G=96-48=48\,N
+          \]
+        </div>
+        <p>Dacă presiunea pe fața de sus este \(p_1=5\,kPa=5000\,Pa\), atunci diferența de presiune între sus și jos este:</p>
+        <div class="formula">
+          \[
+          \Delta p=\rho g l=1200\cdot10\cdot0{,}2=2400\,Pa
+          \]
+        </div>
+        <div class="remember">
+          <strong>Răspuns:</strong> \(F_A=96\,N\), \(T=48\,N\), iar diferența de presiune este \(2400\,Pa\).
+        </div>
+      </div>
+    </section>
 
-        <figure class="lesson-figure">
-          <img src="2-oul-saramura.png" alt="Ou care plutește parțial scufundat în saramură." loading="lazy">
-          <figcaption>Oul plutește când forța arhimedică devine egală cu greutatea lui.</figcaption>
-        </figure>
-
-        <h3>Pasul 1 – volumul scufundat</h3>
-        <p>Dacă 10% este deasupra, atunci 90% este scufundat.</p>
-        <div class="formula-box">\[V_s = 0{,}9 \cdot 50 = 45\,\text{cm}^3\]</div>
-
-        <h3>Pasul 2 – condiția de plutire</h3>
-        <p>La plutire, forța arhimedică este egală cu greutatea oului.</p>
-        <div class="formula-box">\[\rho_s \cdot g \cdot V_s = m \cdot g\] \[\rho_s = \frac{m}{V_s}\]</div>
-
-        <h3>Pasul 3 – calculul densității</h3>
-        <div class="formula-box">\[\rho_s = \frac{52{,}5}{45} \approx 1{,}1667\,\text{g/cm}^3\]</div>
-
-        <div class="answer-box">Răspuns: densitatea saramurii este aproximativ \(\rho_s \approx 1{,}17\,\text{g/cm}^3\), adică aproximativ \(1167\,\text{kg/m}^3\).</div>
-      </article>
-
-      <article class="page" data-title="Problema 3">
-        <span class="badge">Problema 3</span>
-        <h2>Presa hidraulică</h2>
-        <p><strong>Date:</strong> asupra pistonului mare acționează \(F_2 = 2000\,\text{N}\). Pe pistonul mic se apasă cu \(F_1 = 100\,\text{N}\), iar acesta coboară \(h_1 = 2\,\text{cm}\).</p>
-
-        <figure class="lesson-figure">
-          <img src="3-presa-hidraulica.png" alt="Presă hidraulică cu piston mic și piston mare." loading="lazy">
-          <figcaption>Presa hidraulică mărește forța, dar pistonul mare se deplasează mai puțin.</figcaption>
-        </figure>
-
-        <h3>Pasul 1 – raportul ariilor</h3>
-        <p>Aplicăm legea lui Pascal:</p>
-        <div class="formula-box">\[\frac{F_1}{S_1} = \frac{F_2}{S_2}\] \[\frac{S_2}{S_1} = \frac{F_2}{F_1} = \frac{2000}{100} = 20\]</div>
-
-        <h3>Pasul 2 – conservarea volumului</h3>
-        <p>Lichidul este practic incompresibil, deci volumele deplasate sunt egale:</p>
-        <div class="formula-box">\[S_1 h_1 = S_2 h_2\] \[h_2 = \frac{S_1}{S_2} \cdot h_1 = \frac{1}{20}\cdot 2\,\text{cm}\] \[h_2 = 0{,}1\,\text{cm}\]</div>
-
-        <div class="answer-box">Răspuns: raportul ariilor este \(\frac{S_2}{S_1}=20\), iar pistonul mare urcă \(h_2=0{,}1\,\text{cm}=1\,\text{mm}\).</div>
-      </article>
-
-      <article class="page" data-title="Problema 4">
-        <span class="badge">Problema 4</span>
-        <h2>Balonul umplut cu apă</h2>
-        <p><strong>Date:</strong> un balon subțire, cu masă neglijabilă, este umplut complet cu \(50\,\text{cm}^3\) de apă și scufundat în apă. Se cere indicația dinamometrului.</p>
-
-        <figure class="lesson-figure">
-          <img src="4-balon-scufundat.png" alt="Balon umplut cu apă, complet scufundat în apă." loading="lazy">
-          <figcaption>Balonul cu apă este în echilibru indiferent, deoarece greutatea apei din balon este compensată de forța arhimedică.</figcaption>
-        </figure>
-
-        <h3>Ideea-cheie</h3>
-        <p>Balonul conține apă și este introdus tot în apă. Volumul de apă din interior este egal cu volumul de apă dezlocuit în exterior.</p>
-
-        <div class="formula-box">\[F_A = \rho_{apă} g V\] \[G = \rho_{apă} g V\]</div>
-
-        <p>Observăm că cele două valori sunt egale:</p>
-        <div class="formula-box">\[F_A = G\]</div>
-
-        <div class="answer-box">Răspuns: dinamometrul indică \(0\,\text{N}\), deoarece balonul este în echilibru indiferent.</div>
-      </article>
-
-      <article class="page" data-title="Problema 5">
-        <span class="badge">Problema 5</span>
-        <h2>Cubul de lemn care plutește</h2>
-        <p><strong>Date:</strong> \(l = 36\,\text{cm}\), deasupra apei rămân \(a = 6\,\text{cm}\), aria bazei vasului este \(S = 400\,\text{cm}^2\), iar apa are densitatea \(\rho_0 = 1\,\text{g/cm}^3\).</p>
-
-        <figure class="lesson-figure">
-          <img src="5-cub-lemn.png" alt="Cub de lemn care plutește în apă, cu o parte deasupra lichidului." loading="lazy">
-          <figcaption>Densitatea cubului se află din raportul dintre volumul scufundat și volumul total.</figcaption>
-        </figure>
-
-        <h3>a) Densitatea cubului</h3>
-        <p>Înălțimea scufundată este:</p>
-        <div class="formula-box">\[h_s = 36 - 6 = 30\,\text{cm}\]</div>
-
-        <p>La plutire:</p>
-        <div class="formula-box">\[\rho_{cub} = \rho_{apă}\cdot \frac{V_{scufundat}}{V_{total}} = 1 \cdot \frac{30}{36} = \frac{5}{6}\,\text{g/cm}^3\] \[\rho_{cub} \approx 0{,}833\,\text{g/cm}^3\]</div>
-
-        <h3>b) Modificarea presiunii pe fundul vasului</h3>
-        <p>Volumul de apă dezlocuit este:</p>
-        <div class="formula-box">\[V_d = l^2 \cdot h_s = 36^2 \cdot 30 = 38880\,\text{cm}^3\]</div>
-
-        <p>Scăderea nivelului apei după scoaterea cubului:</p>
-        <div class="formula-box">\[\Delta h = \frac{V_d}{S} = \frac{38880}{400} = 97{,}2\,\text{cm}\] \[\Delta h = 0{,}972\,\text{m}\]</div>
-
-        <p>Scăderea presiunii hidrostatice:</p>
-        <div class="formula-box">\[\Delta p = \rho g \Delta h = 1000 \cdot 10 \cdot 0{,}972 = 9720\,\text{Pa}\]</div>
-
-        <div class="answer-box">Răspuns: \(\rho_{cub} \approx 0{,}833\,\text{g/cm}^3\), iar presiunea hidrostatică pe fundul vasului scade cu \(9720\,\text{Pa}\).</div>
-      </article>
-
-      <article class="page" data-title="Problema 6">
-        <span class="badge">Problema 6</span>
-        <h2>Aerostatul cu heliu</h2>
-        <p><strong>Date:</strong> aerostatul trebuie să ridice masa totală \(M = 200\,\text{kg}\). Densitatea heliului este \(\rho_{He}=178{,}5\,\text{g/m}^3 = 0{,}1785\,\text{kg/m}^3\), iar densitatea aerului este \(\rho_{aer}=1{,}2928\,\text{kg/m}^3\).</p>
-
-        <figure class="lesson-figure">
-          <img src="6-aerostat-heliu.png" alt="Aerostat umplut cu heliu care se ridică în aer." loading="lazy">
-          <figcaption>Aerostatul se ridică atunci când forța arhimedică produsă de aer depășește greutatea totală.</figcaption>
-        </figure>
-
-        <h3>a) Volumul minim al balonului</h3>
-        <p>Forța arhimedică trebuie să echilibreze greutatea masei ridicate și greutatea heliului din balon.</p>
-        <div class="formula-box">\[\rho_{aer} g V = M g + \rho_{He} g V\] \[(\rho_{aer} - \rho_{He})V = M\] \[V = \frac{M}{\rho_{aer} - \rho_{He}}\]</div>
-
-        <div class="formula-box">\[V = \frac{200}{1{,}2928 - 0{,}1785} = \frac{200}{1{,}1143} \approx 179{,}5\,\text{m}^3\]</div>
-
-        <h3>b) Ce se întâmplă când balonul urcă?</h3>
-        <ul>
-          <li>presiunea exterioară scade;</li>
-          <li>heliul se destinde;</li>
-          <li>volumul balonului crește.</li>
-        </ul>
-
-        <div class="answer-box">Răspuns: volumul minim este aproximativ \(179{,}5\,\text{m}^3\), iar pe măsură ce balonul urcă, volumul crește.</div>
-      </article>
-
-      <article class="page" data-title="Problema 7">
-        <span class="badge">Problema 7</span>
-        <h2>Apă și ulei în același vas</h2>
-        <p><strong>Date:</strong> pentru apă, \(\rho_1 = 1\,\text{g/cm}^3 = 1000\,\text{kg/m}^3\), iar presiunea inițială pe fund este \(p = 1500\,\text{Pa}\). Se mai adaugă ulei cu \(\rho_2 = 0{,}8\,\text{g/cm}^3 = 800\,\text{kg/m}^3\), având același volum ca apa.</p>
-
-        <h3>a) Înălțimea apei</h3>
-        <div class="formula-box">\[p = \rho_1 g h_1\] \[h_1 = \frac{p}{\rho_1 g} = \frac{1500}{1000\cdot 10} = 0{,}15\,\text{m}\]</div>
-
-        <h3>b) Înălțimea uleiului</h3>
-        <p>Vasul este cilindric, deci volume egale înseamnă înălțimi egale.</p>
-        <div class="formula-box">\[h_2 = h_1 = 0{,}15\,\text{m}\]</div>
-
-        <h3>c) Presiunea totală pe fund</h3>
-        <div class="formula-box">\[p_{tot} = \rho_1 g h_1 + \rho_2 g h_2\] \[p_{tot} = 1000\cdot 10\cdot 0{,}15 + 800\cdot 10\cdot 0{,}15\] \[p_{tot} = 1500 + 1200 = 2700\,\text{Pa}\]</div>
-
-        <div class="answer-box">Răspuns: \(h_{apă}=0{,}15\,\text{m}\), \(h_{ulei}=0{,}15\,\text{m}\), \(p_{tot}=2700\,\text{Pa}\).</div>
-      </article>
-
-      <article class="page" data-title="Problema 8">
-        <span class="badge">Problema 8</span>
-        <h2>Cub legat de fundul bazinului</h2>
-        <p><strong>Date:</strong> cub de lemn cu \(\rho = 600\,\text{kg/m}^3\), latura \(l = 20\,\text{cm} = 0{,}2\,\text{m}\), apă sărată cu \(\rho_a = 1200\,\text{kg/m}^3\), iar pe fața superioară presiunea este \(p_1 = 5\,\text{kPa}\).</p>
-
-        <h3>Pasul 1 – volumul cubului</h3>
-        <div class="formula-box">\[V = l^3 = 0{,}2^3 = 0{,}008\,\text{m}^3\]</div>
-
-        <h3>a) Forța arhimedică</h3>
-        <div class="formula-box">\[F_A = \rho_a g V = 1200\cdot 10 \cdot 0{,}008 = 96\,\text{N}\]</div>
-
-        <h3>b) Tensiunea din fir</h3>
-        <p>Greutatea cubului este:</p>
-        <div class="formula-box">\[G = \rho g V = 600\cdot 10\cdot 0{,}008 = 48\,\text{N}\]</div>
-        <p>La echilibru:</p>
-        <div class="formula-box">\[F_A = G + T\] \[T = F_A - G = 96 - 48 = 48\,\text{N}\]</div>
-
-        <h3>c) Diferența de presiune între fețele de sus și de jos</h3>
-        <div class="formula-box">\[\Delta p = \rho_a g l = 1200\cdot 10 \cdot 0{,}2 = 2400\,\text{Pa}\]</div>
-
-        <h3>d) Forța pe o față laterală</h3>
-        <p>Presiunea pe fața de jos este:</p>
-        <div class="formula-box">\[p_2 = p_1 + \Delta p = 5000 + 2400 = 7400\,\text{Pa}\]</div>
-
-        <p>Presiunea medie pe fața laterală este:</p>
-        <div class="formula-box">\[p_{med} = \frac{p_1 + p_2}{2} = \frac{5000+7400}{2} = 6200\,\text{Pa}\]</div>
-
-        <p>Aria feței laterale:</p>
-        <div class="formula-box">\[S = l^2 = 0{,}2^2 = 0{,}04\,\text{m}^2\]</div>
-
-        <p>Forța cerută:</p>
-        <div class="formula-box">\[F = p_{med} \cdot S = 6200 \cdot 0{,}04 = 248\,\text{N}\]</div>
-
-        <div class="answer-box">Răspuns: \(F_A = 96\,\text{N}\), \(T = 48\,\text{N}\), \(\Delta p = 2400\,\text{Pa}\), \(F = 248\,\text{N}\).</div>
-      </article>
-
-      <article class="page" data-title="Recapitulare">
-        <span class="badge">Final</span>
+    <section class="page" data-title="Sinteză">
+      <div class="card">
         <h2>Recapitulare rapidă</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Problemă</th>
+                <th>Indiciu de recunoaștere</th>
+                <th>Ideea de rezolvare</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Balanța cu lemn</td>
+                <td>corp care plutește</td>
+                <td>apa dezlocuită are greutatea lemnului</td>
+              </tr>
+              <tr>
+                <td>Oul în saramură</td>
+                <td>o parte este deasupra lichidului</td>
+                <td>folosesc volumul scufundat</td>
+              </tr>
+              <tr>
+                <td>Presa hidraulică</td>
+                <td>două pistoane cu arii diferite</td>
+                <td>presiunea se transmite în lichid</td>
+              </tr>
+              <tr>
+                <td>Balon cu apă în apă</td>
+                <td>același lichid în interior și exterior</td>
+                <td>\(F_A\) și \(G\) se compensează</td>
+              </tr>
+              <tr>
+                <td>Cubul plutitor</td>
+                <td>se cunoaște partea scufundată</td>
+                <td>compar densitatea cu fracția scufundată</td>
+              </tr>
+              <tr>
+                <td>Aerostatul</td>
+                <td>plutire în aer</td>
+                <td>forța arhimedică este greutatea aerului dezlocuit</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="remember">
+          <strong>Metodă sigură:</strong> notezi datele, alegi formula, transformi unitățile și verifici dacă răspunsul are sens fizic.
+        </div>
+      </div>
+    </section>
 
-        <table class="mini-table">
-          <thead>
-            <tr>
-              <th>Problemă</th>
-              <th>Ideea principală</th>
-              <th>Rezultat final</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>Lemnul plutitor deplasează apă de aceeași greutate.</td>
-              <td>Balanța rămâne în echilibru.</td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>La plutire: \(F_A = G\).</td>
-              <td>\(\rho_s \approx 1{,}17\,\text{g/cm}^3\)</td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Legea lui Pascal + conservarea volumului.</td>
-              <td>\(\frac{S_2}{S_1}=20,\; h_2=0{,}1\,\text{cm}\)</td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td>Apă în apă.</td>
-              <td>\(0\,\text{N}\)</td>
-            </tr>
-            <tr>
-              <td>5</td>
-              <td>Raport între volumul scufundat și volumul total.</td>
-              <td>\(\rho_{cub}\approx 0{,}833\,\text{g/cm}^3\)</td>
-            </tr>
-            <tr>
-              <td>6</td>
-              <td>Ridicare cu heliu în aer.</td>
-              <td>\(V_{min}\approx 179{,}5\,\text{m}^3\)</td>
-            </tr>
-            <tr>
-              <td>7</td>
-              <td>Presiunea totală este suma presiunilor.</td>
-              <td>\(2700\,\text{Pa}\)</td>
-            </tr>
-            <tr>
-              <td>8</td>
-              <td>Arhimede + presiune hidrostatică.</td>
-              <td>\(F_A=96\,\text{N}\), \(T=48\,\text{N}\)</td>
-            </tr>
-          </tbody>
-        </table>
-
+    <section class="page" data-title="Verificare">
+      <div class="card final-card">
         <h2>Verificare rapidă</h2>
+        <p>Alege varianta corectă. Variantele sunt aliniate pentru a fi ușor de citit pe telefon.</p>
         <div class="quiz" id="quiz">
-          <div class="question-box">
-            <p>1. La plutire, forța arhimedică este:</p>
-            <div class="choices">
-              <label class="choice"><input type="radio" name="q1" value="0"> mai mică decât greutatea</label>
-              <label class="choice"><input type="radio" name="q1" value="1"> egală cu greutatea</label>
-              <label class="choice"><input type="radio" name="q1" value="0"> zero</label>
+          <div class="question" data-correct="b">
+            <strong>1. La plutire, forța arhimedică este:</strong>
+            <div class="answers">
+              <label><input type="radio" name="q1" value="a"> mai mică decât greutatea corpului</label>
+              <label><input type="radio" name="q1" value="b"> egală cu greutatea corpului</label>
+              <label><input type="radio" name="q1" value="c"> mereu zero</label>
             </div>
-            <div class="feedback" id="fb1"></div>
+            <div class="feedback" id="fb-q1"></div>
           </div>
 
-          <div class="question-box">
-            <p>2. Într-o presă hidraulică, dacă forța crește de 20 de ori, deplasarea pistonului mare este:</p>
-            <div class="choices">
-              <label class="choice"><input type="radio" name="q2" value="0"> de 20 de ori mai mare</label>
-              <label class="choice"><input type="radio" name="q2" value="1"> de 20 de ori mai mică</label>
-              <label class="choice"><input type="radio" name="q2" value="0"> egală</label>
+          <div class="question" data-correct="b">
+            <strong>2. Dacă pistonul mare are aria de 20 de ori mai mare, atunci deplasarea lui este:</strong>
+            <div class="answers">
+              <label><input type="radio" name="q2" value="a"> de 20 de ori mai mare</label>
+              <label><input type="radio" name="q2" value="b"> de 20 de ori mai mică</label>
+              <label><input type="radio" name="q2" value="c"> aceeași</label>
             </div>
-            <div class="feedback" id="fb2"></div>
+            <div class="feedback" id="fb-q2"></div>
           </div>
 
-          <div class="question-box">
-            <p>3. Presiunea hidrostatică depinde de:</p>
-            <div class="choices">
-              <label class="choice"><input type="radio" name="q3" value="1"> densitate și adâncime</label>
-              <label class="choice"><input type="radio" name="q3" value="0"> doar suprafață</label>
-              <label class="choice"><input type="radio" name="q3" value="0"> doar timp</label>
+          <div class="question" data-correct="c">
+            <strong>3. Presiunea hidrostatică depinde de:</strong>
+            <div class="answers">
+              <label><input type="radio" name="q3" value="a"> numai de suprafața vasului</label>
+              <label><input type="radio" name="q3" value="b"> numai de timp</label>
+              <label><input type="radio" name="q3" value="c"> densitatea lichidului, \(g\) și adâncime</label>
             </div>
-            <div class="feedback" id="fb3"></div>
+            <div class="feedback" id="fb-q3"></div>
           </div>
 
-          <div class="question-box">
-            <p>4. Dacă un cub este complet scufundat într-un lichid, forța arhimedică depinde de:</p>
-            <div class="choices">
-              <label class="choice"><input type="radio" name="q4" value="0"> culoarea cubului</label>
-              <label class="choice"><input type="radio" name="q4" value="1"> densitatea lichidului și volumul scufundat</label>
-              <label class="choice"><input type="radio" name="q4" value="0"> doar masa cubului</label>
+          <div class="question" data-correct="a">
+            <strong>4. Un ou are 10% din volum deasupra lichidului. Volumul scufundat este:</strong>
+            <div class="answers">
+              <label><input type="radio" name="q4" value="a"> 90% din volumul oului</label>
+              <label><input type="radio" name="q4" value="b"> 10% din volumul oului</label>
+              <label><input type="radio" name="q4" value="c"> 100% din volumul oului</label>
             </div>
-            <div class="feedback" id="fb4"></div>
+            <div class="feedback" id="fb-q4"></div>
           </div>
 
-          <div class="grid-2">
-            <button class="btn-success" type="button" onclick="checkQuiz()">Verifică</button>
-            <button class="btn-secondary" type="button" onclick="resetQuiz()">Resetează</button>
+          <div class="question" data-correct="b">
+            <strong>5. Un balon cu heliu se ridică deoarece:</strong>
+            <div class="answers">
+              <label><input type="radio" name="q5" value="a"> heliul nu are masă</label>
+              <label><input type="radio" name="q5" value="b"> forța arhimedică produsă de aer poate fi mai mare decât greutatea totală</label>
+              <label><input type="radio" name="q5" value="c"> presiunea atmosferică este zero</label>
+            </div>
+            <div class="feedback" id="fb-q5"></div>
           </div>
 
-          <div class="answer-box" id="quizResult" style="display:none;"></div>
+          <div class="actions">
+            <button class="check" type="button" onclick="checkQuiz()">Verifică</button>
+            <button class="reset" type="button" onclick="resetQuiz()">Resetează</button>
+          </div>
         </div>
 
-        <div class="footer-links">
-          <a class="nav-link" href="lectia-4.html">◀ Lecția anterioară</a>
-          <a class="nav-link" href="../index.html">Înapoi la capitol</a>
+        <div class="footer-banner">
+          <strong>Prof. Dănuț Andronie</strong><br>
+          email: <a class="inline" href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
         </div>
-      </article>
+      </div>
     </section>
 
     <nav class="bottom-nav" aria-label="Navigare lecție">
-      <button class="btn-secondary" id="prevBtn" type="button" onclick="prevPage()">◀ Înapoi</button>
-      <button class="btn-success" id="nextBtn" type="button" onclick="nextPage()">Mergi mai departe ▶</button>
+      <button class="nav-btn prev" id="prevBtn" type="button" onclick="prevPage()">Înapoi</button>
+      <div class="counter" id="counter">1/12</div>
+      <button class="nav-btn next" id="nextBtn" type="button" onclick="nextPage()">Mergi mai departe</button>
     </nav>
   </main>
+</div>
 
-  <script>
-    const pages = Array.from(document.querySelectorAll(".page"));
-    const pageCounter = document.getElementById("pageCounter");
-    const progressBar = document.getElementById("progressBar");
-    const prevBtn = document.getElementById("prevBtn");
-    const nextBtn = document.getElementById("nextBtn");
+<script>
+  const pages = Array.from(document.querySelectorAll('.page'));
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const finalLink = '../recapitulare/index.html';
+  let index = 0;
 
-    let currentPage = 0;
+  function updateMath(){
+    if (window.MathJax && window.MathJax.typesetPromise) {
+      window.MathJax.typesetPromise([pages[index]]).catch(() => {});
+    }
+  }
 
-    function updatePage() {
-      pages.forEach((page, index) => {
-        page.classList.toggle("active", index === currentPage);
-      });
+  function showPage(i){
+    index = Math.max(0, Math.min(i, pages.length - 1));
+    pages.forEach((page, idx) => page.classList.toggle('active', idx === index));
+    counter.textContent = `${index + 1}/${pages.length}`;
+    prevBtn.disabled = index === 0;
 
-      const total = pages.length;
-      pageCounter.textContent = `Pagina ${currentPage + 1} / ${total}`;
-      progressBar.style.width = `${((currentPage + 1) / total) * 100}%`;
+    if(index === pages.length - 1){
+      nextBtn.textContent = 'Recapitulare';
+      nextBtn.setAttribute('aria-label', 'Mergi la recapitulare');
+    } else {
+      nextBtn.textContent = 'Mergi mai departe';
+      nextBtn.setAttribute('aria-label', 'Pagina următoare');
+    }
 
-      prevBtn.disabled = currentPage === 0;
-      nextBtn.textContent = currentPage === total - 1 ? "Finalul lecției ✓" : "Mergi mai departe ▶";
-      nextBtn.disabled = currentPage === total - 1;
+    pages[index].scrollTo({top:0, behavior:'smooth'});
+    window.scrollTo({top:0, behavior:'smooth'});
+    updateMath();
+  }
 
-      window.scrollTo({ top: 0, behavior: "smooth" });
+  function nextPage(){
+    if(index === pages.length - 1){
+      window.location.href = finalLink;
+      return;
+    }
+    showPage(index + 1);
+  }
 
-      if (window.MathJax && MathJax.typesetPromise) {
-        MathJax.typesetPromise([pages[currentPage]]).catch(() => {});
+  function prevPage(){
+    showPage(index - 1);
+  }
+
+  document.addEventListener('keydown', (event) => {
+    if(event.key === 'ArrowRight') nextPage();
+    if(event.key === 'ArrowLeft') prevPage();
+  });
+
+  function checkQuiz(){
+    const questions = Array.from(document.querySelectorAll('.quiz .question'));
+    questions.forEach((q, idx) => {
+      const name = `q${idx+1}`;
+      const selected = q.querySelector(`input[name="${name}"]:checked`);
+      const feedback = document.getElementById(`fb-${name}`);
+      feedback.className = 'feedback';
+      if(!selected){
+        feedback.textContent = 'Alege mai întâi o variantă.';
+        feedback.classList.add('no');
+        return;
       }
-    }
-
-    function goToPage(index) {
-      currentPage = Math.max(0, Math.min(index, pages.length - 1));
-      updatePage();
-    }
-
-    function nextPage() {
-      if (currentPage < pages.length - 1) {
-        currentPage++;
-        updatePage();
-      }
-    }
-
-    function prevPage() {
-      if (currentPage > 0) {
-        currentPage--;
-        updatePage();
-      }
-    }
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "ArrowRight") nextPage();
-      if (event.key === "ArrowLeft") prevPage();
-    });
-
-    function checkQuiz() {
-      let score = 0;
-      const total = 4;
-
-      for (let i = 1; i <= total; i++) {
-        const selected = document.querySelector(`input[name="q${i}"]:checked`);
-        const fb = document.getElementById(`fb${i}`);
-
-        if (!selected) {
-          fb.innerHTML = "<span class='bad'>Alege o variantă.</span>";
-          continue;
-        }
-
-        if (selected.value === "1") {
-          score++;
-          fb.innerHTML = "<span class='ok'>Corect!</span>";
-        } else {
-          fb.innerHTML = "<span class='bad'>Mai încearcă. Revizuiește explicația din lecție.</span>";
-        }
-      }
-
-      const result = document.getElementById("quizResult");
-      result.style.display = "block";
-      result.innerHTML = `Scor: ${score}/${total}. ${score === total ? "Foarte bine!" : "Recitește paginile cu formulele-cheie."}`;
-    }
-
-    function resetQuiz() {
-      document.querySelectorAll("#quiz input[type='radio']").forEach(input => input.checked = false);
-      document.querySelectorAll(".feedback").forEach(fb => fb.textContent = "");
-      const result = document.getElementById("quizResult");
-      result.style.display = "none";
-      result.textContent = "";
-    }
-
-    function printLessonPDF() {
-      const oldPage = currentPage;
-
-      pages.forEach(page => page.classList.add("active"));
-
-      const doPrint = () => {
-        setTimeout(() => {
-          window.print();
-          pages.forEach((page, index) => {
-            page.classList.toggle("active", index === oldPage);
-          });
-          currentPage = oldPage;
-          updatePage();
-        }, 300);
-      };
-
-      if (window.MathJax && MathJax.typesetPromise) {
-        MathJax.typesetPromise().then(doPrint).catch(doPrint);
+      if(selected.value === q.dataset.correct){
+        feedback.textContent = 'Corect!';
+        feedback.classList.add('ok');
       } else {
-        doPrint();
+        feedback.textContent = 'Mai încearcă. Recitește pagina cu explicația.';
+        feedback.classList.add('no');
       }
-    }
+    });
+  }
 
-    updatePage();
-  </script>
+  function resetQuiz(){
+    document.querySelectorAll('.quiz input[type="radio"]').forEach(input => input.checked = false);
+    document.querySelectorAll('.quiz .feedback').forEach(fb => {
+      fb.textContent = '';
+      fb.className = 'feedback';
+    });
+  }
+
+  showPage(0);
+</script>
 </body>
 </html>
-'''
-
-path = Path('/mnt/data/index.html')
-path.write_text(html, encoding='utf-8')
-print(f"Am generat fișierul: {path}")

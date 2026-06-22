@@ -1,1065 +1,974 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Lecția 2 | Presiunea atmosferică | Fizica Galaction</title>
-  <meta name="description" content="Lecția 2 pentru clasa a VII-a: Presiunea atmosferică, cu abordare interdisciplinară – geografie. Lecție interactivă, pe pagini, adaptată pentru telefon, tabletă și PC." />
+  <meta name="description" content="Lecție interactivă pentru clasa a VII-a: presiunea atmosferică, barometrul, manometrul, variația cu altitudinea, temperatura și umiditatea.">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[','\\]'], ['$$','$$']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
   <style>
     :root{
-      --bg:#0f172a;
-      --bg-soft:#111c34;
-      --card:#1e293b;
-      --card-2:#243249;
+      --bg:#07111f;
+      --bg2:#0f172a;
+      --card:#132238;
+      --card2:#1e293b;
       --text:#f8fafc;
       --muted:#cbd5e1;
-      --accent:#22d3ee;
-      --accent-2:#38bdf8;
-      --success:#4ade80;
-      --warning:#fbbf24;
-      --danger:#f87171;
-      --border:#334155;
-      --shadow:0 18px 45px rgba(0,0,0,.32);
+      --cyan:#67e8f9;
+      --cyan2:#22d3ee;
+      --green:#22c55e;
+      --green2:#16a34a;
+      --back:#e2e8f0;
+      --backText:#0f172a;
+      --warn:#fde68a;
+      --bad:#fecaca;
+      --good:#bbf7d0;
+      --line:#334155;
+      --orange:#fed7aa;
+      --purple:#ddd6fe;
+      --pink:#fbcfe8;
+      --blue:#bfdbfe;
     }
 
-    *{box-sizing:border-box;}
-    html{scroll-behavior:smooth;}
+    *{ box-sizing:border-box; }
+    html, body{ margin:0; min-height:100%; }
+
     body{
-      margin:0;
-      font-family: "Segoe UI", Arial, sans-serif;
-      background: linear-gradient(180deg, #0b1220 0%, var(--bg) 100%);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34,211,238,.18), transparent 34rem),
+        linear-gradient(135deg, var(--bg), var(--bg2));
       color:var(--text);
-      min-height:100vh;
-      padding:16px 14px 108px;
+      min-height:100dvh;
+      line-height:1.55;
+      font-size: clamp(18px, 2.4vw, 21px);
     }
 
-    .wrapper{
-      max-width:900px;
+    .app{
+      width:min(980px, 100%);
       margin:0 auto;
-    }
-
-    .site-header{
-      margin-bottom:18px;
-      text-align:center;
-    }
-
-    .brand{
-      font-size:1rem;
-      color:var(--accent);
-      font-weight:800;
-      letter-spacing:.4px;
-      margin-bottom:6px;
-    }
-
-    .subbrand{
-      font-size:.95rem;
-      color:#94a3b8;
-      margin-bottom:12px;
-    }
-
-    .quote{
-      background:rgba(34,211,238,.09);
-      border:1px solid rgba(34,211,238,.18);
-      color:#dffafe;
-      padding:12px 14px;
-      border-radius:16px;
-      font-style:italic;
-      margin:0 auto;
-      max-width:760px;
-    }
-
-    .lesson-shell{
-      background:rgba(15,23,42,.55);
-      border:1px solid var(--border);
-      border-radius:24px;
-      box-shadow:var(--shadow);
-      overflow:hidden;
-      backdrop-filter: blur(8px);
-    }
-
-    .topbar{
-      padding:14px 16px 10px;
-      border-bottom:1px solid rgba(148,163,184,.2);
-      background:rgba(255,255,255,.02);
-      position:sticky;
-      top:0;
-      z-index:10;
-      backdrop-filter: blur(8px);
-    }
-
-    .progress-row{
+      min-height:100dvh;
+      padding: max(14px, env(safe-area-inset-top)) 14px calc(112px + env(safe-area-inset-bottom));
       display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:12px;
-      margin-bottom:10px;
-      flex-wrap:wrap;
-    }
-
-    .page-indicator{
-      font-size:.95rem;
-      color:var(--muted);
-      font-weight:700;
-    }
-
-    .progress-track{
-      width:100%;
-      height:10px;
-      background:#162235;
-      border-radius:999px;
-      overflow:hidden;
-      border:1px solid rgba(148,163,184,.16);
-    }
-
-    .progress-bar{
-      height:100%;
-      width:0%;
-      background:linear-gradient(90deg, var(--accent), var(--accent-2));
-      border-radius:999px;
-      transition:width .3s ease;
+      flex-direction:column;
+      justify-content:center;
     }
 
     .page{
       display:none;
-      padding:20px 16px 22px;
-      animation:fade .22s ease;
+      background:rgba(19,34,56,.96);
+      border:1px solid rgba(103,232,249,.22);
+      border-radius:24px;
+      padding: clamp(18px, 4vw, 34px);
+      box-shadow:0 22px 70px rgba(0,0,0,.36);
+      min-height: min(760px, calc(100dvh - 150px));
+      overflow-wrap:anywhere;
     }
 
-    .page.active{display:block;}
-
-    @keyframes fade{
-      from{opacity:.2; transform:translateY(8px);}
-      to{opacity:1; transform:translateY(0);}
+    .page.active{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      gap:16px;
+      animation: fadeIn .22s ease-out;
     }
 
-    .hero{
-      background:linear-gradient(160deg, rgba(34,211,238,.14), rgba(56,189,248,.06));
-      border:1px solid rgba(34,211,238,.18);
-      border-radius:22px;
+    @keyframes fadeIn{
+      from{ opacity:0; transform:translateY(8px); }
+      to{ opacity:1; transform:translateY(0); }
+    }
+
+    .top-banner{
+      background:linear-gradient(135deg, rgba(8,47,73,.86), rgba(15,23,42,.96));
+      border:1px solid rgba(103,232,249,.32);
+      border-radius:20px;
       padding:18px;
-      margin-bottom:16px;
+      text-align:center;
+      margin-bottom:8px;
     }
 
-    h1,h2,h3{margin:0 0 12px;}
-    h1{font-size:clamp(1.6rem, 4vw, 2.2rem); line-height:1.15;}
-    h2{font-size:clamp(1.25rem, 3vw, 1.6rem); color:#e0f2fe;}
-    h3{font-size:1.05rem; color:#dbeafe;}
-
-    p, li{
-      color:var(--text);
-      line-height:1.65;
-      font-size:1rem;
-      margin:0 0 12px;
+    .school{
+      color:var(--cyan);
+      font-weight:800;
+      letter-spacing:.03em;
+      text-transform:uppercase;
+      font-size:clamp(1rem, 2.2vw, 1.25rem);
     }
 
-    .muted{color:var(--muted);}
-    .small{font-size:.95rem;}
-    .center{text-align:center;}
-
-    .grid{
-      display:grid;
-      gap:14px;
+    .prof{
+      color:var(--muted);
+      font-weight:700;
+      margin-top:4px;
+      font-size:.98em;
     }
 
-    .grid-2{
-      grid-template-columns:repeat(2, minmax(0,1fr));
+    .motto{
+      margin:14px auto 0;
+      width:min(680px, 100%);
+      background:rgba(253,230,138,.10);
+      border-left:4px solid var(--cyan2);
+      border-radius:12px;
+      padding:10px 12px;
+      color:#fef9c3;
+      font-style:italic;
+      font-weight:650;
+    }
+
+    .eyebrow{
+      color:var(--cyan);
+      font-weight:800;
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-size:.78em;
+      margin:0;
+    }
+
+    h1,h2,h3,p{ margin-top:0; }
+
+    h1{
+      font-size:clamp(2rem, 7vw, 4rem);
+      line-height:1.04;
+      margin-bottom:8px;
+      color:#e0f2fe;
+    }
+
+    h2{
+      color:var(--cyan);
+      font-size:clamp(1.55rem, 4.8vw, 2.55rem);
+      line-height:1.1;
+      margin-bottom:8px;
+    }
+
+    h3{
+      color:#bae6fd;
+      font-size:clamp(1.18rem, 3.3vw, 1.45rem);
+      margin-bottom:8px;
+    }
+
+    .lead{
+      font-size:clamp(1.05rem, 3vw, 1.35rem);
+      color:#e2e8f0;
+      font-weight:650;
+    }
+
+    .idea{
+      border:1px solid rgba(34,211,238,.28);
+      background:rgba(8,47,73,.42);
+      border-radius:18px;
+      padding:16px;
+      color:#e0f2fe;
+      font-weight:650;
     }
 
     .card{
-      background:linear-gradient(180deg, rgba(30,41,59,.95), rgba(20,30,48,.95));
-      border:1px solid var(--border);
-      border-radius:20px;
+      background:rgba(30,41,59,.78);
+      border:1px solid rgba(148,163,184,.24);
+      border-radius:18px;
       padding:16px;
-      box-shadow:0 10px 28px rgba(0,0,0,.18);
     }
 
-    .tag{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:7px 12px;
-      border-radius:999px;
-      background:rgba(56,189,248,.12);
-      color:#dffafe;
-      border:1px solid rgba(56,189,248,.2);
-      font-size:.9rem;
-      font-weight:700;
-      margin:0 8px 8px 0;
-    }
-
-    .bullet-list{
-      padding-left:18px;
-      margin:0;
-    }
-
-    .visual-row{
-      display:grid;
-      gap:12px;
-      grid-template-columns:repeat(3, minmax(0,1fr));
-      margin-top:6px;
-    }
-
-    .visual-card{
-      background:var(--bg-soft);
-      border:1px solid var(--border);
-      border-radius:18px;
-      padding:14px;
-      min-height:130px;
-    }
-
-    .visual-icon{
-      font-size:2rem;
-      margin-bottom:8px;
-      display:block;
-    }
-
-    .formula-box{
-      background:rgba(15,23,42,.8);
-      border:1px solid rgba(56,189,248,.22);
-      border-left:5px solid var(--accent);
-      border-radius:18px;
-      padding:14px;
-      margin:14px 0;
-      overflow-x:auto;
-    }
-
-    .formula-box .mj{
-      font-size:1.08rem;
-    }
-
-    .highlight{
-      color:#67e8f9;
-      font-weight:800;
-    }
-
-    .example{
-      background:rgba(74,222,128,.08);
-      border:1px solid rgba(74,222,128,.2);
-      border-radius:18px;
-      padding:14px;
-      margin-top:12px;
+    .note{
+      background:rgba(253,230,138,.10);
+      border:1px solid rgba(253,230,138,.25);
+      border-radius:16px;
+      padding:14px 16px;
+      color:#fef9c3;
+      font-weight:650;
     }
 
     .warning{
-      background:rgba(251,191,36,.08);
-      border:1px solid rgba(251,191,36,.22);
-      border-radius:18px;
-      padding:14px;
-      margin-top:12px;
+      background:rgba(251,191,36,.12);
+      border:1px solid rgba(251,191,36,.30);
+      border-radius:16px;
+      padding:14px 16px;
       color:#fef3c7;
     }
 
-    .steps{
-      counter-reset:pas;
-      padding-left:0;
-      margin:0;
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:14px;
+    }
+
+    .grid3{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:14px;
+    }
+
+    .mini{
+      background:rgba(15,23,42,.60);
+      border:1px solid rgba(148,163,184,.20);
+      border-radius:16px;
+      padding:14px;
+    }
+
+    .mini strong{ color:#e0f2fe; }
+
+    .formula{
+      overflow-x:auto;
+      max-width:100%;
+      padding:14px 12px;
+      background:rgba(15,23,42,.62);
+      border:1px solid rgba(103,232,249,.22);
+      border-radius:16px;
+      color:#ffffff;
+      font-size:clamp(1rem, 2.4vw, 1.15rem);
+      text-align:center;
+    }
+
+    mjx-container{
+      max-width:100%;
+      overflow-x:auto;
+      overflow-y:hidden;
+      padding:1px 0;
+    }
+
+    ul,ol{ padding-left:1.25em; margin-bottom:0; }
+    li{ margin:.35rem 0; }
+
+    .step-list{
       list-style:none;
+      padding:0;
       display:grid;
       gap:12px;
     }
 
-    .steps li{
-      position:relative;
-      padding:12px 12px 12px 54px;
-      border-radius:18px;
-      background:rgba(15,23,42,.75);
-      border:1px solid rgba(148,163,184,.16);
-      margin:0;
-    }
-
-    .steps li::before{
-      counter-increment:pas;
-      content:counter(pas);
-      position:absolute;
-      left:14px;
-      top:12px;
-      width:28px;
-      height:28px;
-      border-radius:50%;
-      background:var(--accent);
-      color:#082f49;
-      font-weight:800;
+    .step-list li{
       display:grid;
-      place-items:center;
-    }
-
-    .table-like{
-      display:grid;
-      gap:10px;
-      margin-top:8px;
-    }
-
-    .row{
-      display:grid;
-      grid-template-columns:1.1fr 1fr;
-      gap:10px;
-      align-items:stretch;
-    }
-
-    .cell{
-      background:rgba(15,23,42,.76);
-      border:1px solid rgba(148,163,184,.18);
+      grid-template-columns:auto 1fr;
+      gap:12px;
+      align-items:start;
+      background:rgba(15,23,42,.55);
+      border:1px solid rgba(148,163,184,.22);
       border-radius:16px;
-      padding:12px;
+      padding:14px;
     }
 
-    .retain{
-      display:grid;
-      gap:10px;
-    }
-
-    .retain-item{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      background:rgba(15,23,42,.7);
-      border:1px solid rgba(148,163,184,.16);
-      border-radius:16px;
-      padding:12px;
-    }
-
-    .retain-item .dot{
-      min-width:28px;
-      height:28px;
-      border-radius:50%;
-      background:rgba(74,222,128,.18);
-      border:1px solid rgba(74,222,128,.35);
-      color:#bbf7d0;
-      display:grid;
+    .tag{
+      min-width:2rem;
+      height:2rem;
+      display:inline-grid;
       place-items:center;
+      border-radius:999px;
+      background:rgba(34,211,238,.18);
+      border:1px solid rgba(34,211,238,.38);
+      color:#e0f2fe;
       font-weight:900;
     }
 
-    .quiz-card{
-      background:linear-gradient(180deg, rgba(30,41,59,.98), rgba(17,24,39,.98));
-      border:1px solid rgba(56,189,248,.18);
-      border-radius:20px;
-      padding:16px;
-      margin-bottom:14px;
+    .svgbox{
+      width:min(680px, 100%);
+      margin:0 auto;
+      background:rgba(15,23,42,.48);
+      border:1px solid rgba(103,232,249,.20);
+      border-radius:18px;
+      padding:12px;
+      overflow:hidden;
     }
 
-    .quiz-card h3{
-      margin-bottom:10px;
+    .svgbox > svg{
+      width:100%;
+      height:auto;
+      display:block;
     }
 
-    .options{
+    .caption{
+      color:var(--muted);
+      text-align:center;
+      font-size:.92em;
+      margin:8px 0 0;
+    }
+
+    .answers{
       display:grid;
       gap:10px;
       margin-top:10px;
     }
 
-    .option{
+    .answers label{
       display:flex;
       align-items:flex-start;
       gap:10px;
-      padding:12px;
+      background:rgba(15,23,42,.62);
+      border:1px solid rgba(148,163,184,.24);
       border-radius:14px;
-      background:rgba(15,23,42,.78);
-      border:1px solid rgba(148,163,184,.18);
+      padding:12px;
       cursor:pointer;
-      transition:transform .15s ease, border-color .15s ease, background .15s ease;
     }
 
-    .option:hover{
-      transform:translateY(-1px);
-      border-color:rgba(34,211,238,.35);
-      background:rgba(34,211,238,.06);
+    .answers input{
+      transform:scale(1.25);
+      margin-top:.25em;
+      accent-color:var(--green);
     }
 
-    .option input{
-      margin-top:2px;
-      transform:scale(1.15);
-      accent-color:#22d3ee;
-    }
-
-    .quiz-actions{
+    .check-row{
       display:flex;
-      gap:10px;
+      gap:12px;
       flex-wrap:wrap;
-      margin-top:8px;
+      margin-top:12px;
     }
 
-    .button, .link-button{
-      border:none;
-      border-radius:16px;
-      padding:14px 16px;
+    .check-btn,
+    .reset-btn{
+      border:0;
+      border-radius:14px;
+      padding:13px 16px;
       font-weight:800;
       font-size:1rem;
       cursor:pointer;
-      transition:transform .15s ease, opacity .15s ease, background .15s ease;
+    }
+
+    .check-btn{
+      background:var(--cyan2);
+      color:#06202a;
+      flex:1 1 230px;
+    }
+
+    .reset-btn{
+      background:#e2e8f0;
+      color:#0f172a;
+      flex:1 1 130px;
+    }
+
+    .feedback{
+      min-height:1.5em;
+      margin-top:8px;
+      font-weight:800;
+    }
+
+    .feedback.ok{ color:var(--good); }
+    .feedback.bad{ color:var(--bad); }
+    .feedback.wait{ color:var(--warn); }
+
+    .final-banner{
+      margin-top:8px;
+      padding:16px;
+      border-radius:18px;
+      text-align:center;
+      background:linear-gradient(135deg, rgba(34,197,94,.18), rgba(34,211,238,.14));
+      border:1px solid rgba(187,247,208,.38);
+      color:#ecfdf5;
+      font-weight:750;
+    }
+
+    .final-banner a{
+      color:#a7f3d0;
       text-decoration:none;
+      font-weight:900;
+    }
+
+    .lesson-links{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      justify-content:center;
+      margin-top:8px;
+    }
+
+    .lesson-links a{
       display:inline-flex;
       align-items:center;
       justify-content:center;
-      gap:8px;
-      min-height:50px;
+      min-height:44px;
+      padding:10px 14px;
+      border-radius:14px;
+      text-decoration:none;
+      font-weight:850;
+      background:rgba(226,232,240,.96);
+      color:#0f172a;
+      border:1px solid rgba(255,255,255,.30);
     }
 
-    .button:hover, .link-button:hover{transform:translateY(-1px);}
-    .button-primary{background:linear-gradient(90deg, var(--accent), var(--accent-2)); color:#082f49;}
-    .button-secondary{background:#1f2937; color:var(--text); border:1px solid rgba(148,163,184,.2);}
-    .button-success{background:#16a34a; color:white;}
-    .button-ghost{background:transparent; color:var(--muted); border:1px solid rgba(148,163,184,.2);}
-    .button:disabled{opacity:.45; cursor:not-allowed; transform:none;}
-
-    .result{
-      display:none;
-      margin-top:14px;
-      padding:14px;
-      border-radius:16px;
-      font-weight:700;
-      line-height:1.6;
+    .lesson-links a.nextlink{
+      background:var(--green);
+      color:#052e16;
     }
 
-    .result.good{
-      display:block;
-      background:rgba(74,222,128,.08);
-      border:1px solid rgba(74,222,128,.22);
-      color:#dcfce7;
-    }
-
-    .result.warn{
-      display:block;
-      background:rgba(251,191,36,.09);
-      border:1px solid rgba(251,191,36,.22);
-      color:#fef3c7;
-    }
-
-    .sticky-nav{
+    .bottom-nav{
       position:fixed;
       left:0;
       right:0;
       bottom:0;
-      z-index:20;
+      z-index:50;
       padding:10px 12px calc(10px + env(safe-area-inset-bottom));
-      background:linear-gradient(180deg, rgba(15,23,42,0), rgba(15,23,42,.95) 34%, rgba(15,23,42,1) 100%);
-      backdrop-filter:blur(10px);
+      background:linear-gradient(180deg, rgba(7,17,31,0), rgba(7,17,31,.96) 24%, rgba(7,17,31,1));
+      backdrop-filter:blur(8px);
     }
 
-    .sticky-inner{
-      max-width:900px;
+    .nav-inner{
+      width:min(980px, 100%);
       margin:0 auto;
       display:grid;
-      grid-template-columns:1fr 1.2fr;
+      grid-template-columns:1fr auto 1fr;
       gap:10px;
+      align-items:center;
     }
 
-    .sticky-inner .button{
-      width:100%;
+    .nav-btn{
+      min-height:54px;
+      border:0;
+      border-radius:16px;
+      padding:12px 14px;
+      font-size:clamp(.95rem, 2.5vw, 1.05rem);
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 10px 25px rgba(0,0,0,.28);
     }
 
-    .page-links{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:16px;
+    .nav-btn.back{
+      background:var(--back);
+      color:var(--backText);
     }
 
-    .footer-note{
+    .nav-btn.next{
+      background:linear-gradient(135deg, var(--green), var(--green2));
+      color:#052e16;
+    }
+
+    .nav-btn:disabled{
+      opacity:.48;
+      cursor:not-allowed;
+    }
+
+    .counter{
+      min-width:4.8rem;
       text-align:center;
-      color:#94a3b8;
-      font-size:.95rem;
-      margin-top:8px;
+      font-weight:900;
+      color:#f8fafc;
+      background:rgba(15,23,42,.90);
+      border:1px solid rgba(148,163,184,.25);
+      border-radius:999px;
+      padding:10px 12px;
+      box-shadow:0 10px 25px rgba(0,0,0,.20);
     }
 
-    @media (max-width: 720px){
-      .grid-2, .visual-row, .row{
+    @media (max-width:720px){
+      .app{
+        justify-content:flex-start;
+        padding-left:10px;
+        padding-right:10px;
+      }
+
+      .page{
+        min-height: calc(100dvh - 128px);
+        border-radius:20px;
+      }
+
+      .grid,
+      .grid3{
         grid-template-columns:1fr;
       }
-      .topbar{padding:12px;}
-      .page{padding:16px 12px 20px;}
-      .hero{padding:16px;}
-      .sticky-inner{
-        grid-template-columns:1fr 1.2fr;
+
+      .nav-inner{
+        grid-template-columns:1fr auto 1fr;
+        gap:8px;
+      }
+
+      .nav-btn{
+        min-height:52px;
+        padding:10px 9px;
+      }
+
+      .counter{
+        min-width:4.2rem;
+        padding:9px 8px;
       }
     }
 
-    @media (max-width: 420px){
-      body{padding-left:10px; padding-right:10px;}
-      .sticky-inner{
-        grid-template-columns:1fr 1.15fr;
-      }
-      .button, .link-button{
-        font-size:.96rem;
-        padding:13px 14px;
-      }
+    @media (prefers-reduced-motion: reduce){
+      .page.active{ animation:none; }
+      *{ scroll-behavior:auto !important; }
     }
-
-    .mini-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-      gap:14px;
-      margin-top:14px;
-    }
-
-    .stat-card{
-      background:linear-gradient(180deg, rgba(56,189,248,.10), rgba(30,41,59,.85));
-      border:1px solid rgba(56,189,248,.18);
-      border-radius:18px;
-      padding:14px;
-    }
-
-    .stat-card h3{
-      margin:0 0 8px;
-      font-size:1.02rem;
-    }
-
-    .pill{
-      display:inline-block;
-      padding:6px 10px;
-      border-radius:999px;
-      background:rgba(74,222,128,.12);
-      border:1px solid rgba(74,222,128,.22);
-      color:#dcfce7;
-      font-size:.9rem;
-      font-weight:700;
-      margin:4px 6px 0 0;
-    }
-
-    .warning-box{
-      background:rgba(251,191,36,.10);
-      border:1px solid rgba(251,191,36,.22);
-      color:#fef3c7;
-      padding:12px 14px;
-      border-radius:16px;
-      margin-top:14px;
-    }
-
-    .map-box{
-      background:linear-gradient(180deg, rgba(34,211,238,.08), rgba(15,23,42,.6));
-      border:1px solid rgba(148,163,184,.16);
-      border-radius:18px;
-      padding:14px;
-      margin-top:14px;
-    }
-
-    .map-row{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
-      gap:12px;
-      margin-top:12px;
-    }
-
-    .map-item{
-      background:rgba(30,41,59,.85);
-      border:1px solid rgba(148,163,184,.16);
-      border-radius:16px;
-      padding:12px;
-      text-align:center;
-    }
-
-    .big-icon{
-      font-size:2rem;
-      display:block;
-      margin-bottom:6px;
-    }
-
-    .comparison{
-      display:grid;
-      grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-      gap:12px;
-      margin-top:12px;
-    }
-
-    .comparison .card h3{
-      margin-top:0;
-    }
-
   </style>
 </head>
-<body>
-  <div class="wrapper">
-    <header class="site-header">
-      <div class="brand">ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</div>
-      <div class="subbrand">Prof. DĂNUȚ ANDRONIE · Fizica Galaction</div>
-      <p class="quote">„Fizica nu este dominată de formule, ci de logică.”</p>
-    </header>
 
-    <main class="lesson-shell" aria-live="polite">
-      <div class="topbar">
-        <div class="progress-row">
-          <div class="page-indicator" id="pageIndicator">Pagina 1 / 8</div>
-          <div class="page-indicator" id="pageTitleIndicator">Start</div>
+<body>
+  <main class="app" id="app">
+    <section class="page active">
+      <div class="top-banner">
+        <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+        <div class="prof">Prof. Dănuț Andronie · Fizica Galaction</div>
+        <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+      </div>
+
+      <p class="eyebrow">Clasa a VII-a · Capitolul 6 · Lecția 2</p>
+      <h1>Presiunea atmosferică</h1>
+      <p class="lead">Aerul nu se vede, dar are masă, greutate și apasă asupra corpurilor.</p>
+
+      <div class="idea">
+        Ideea-cheie: presiunea atmosferică este apăsarea exercitată de aerul din jurul Pământului.
+      </div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Observ</p>
+      <h2>De unde știm că aerul apasă?</h2>
+
+      <div class="grid">
+        <div class="mini">
+          <h3>🥛 Pahar cu apă și carton</h3>
+          <p>Dacă acoperim paharul plin cu o folie/carton și îl răsturnăm, apa nu cade imediat.</p>
         </div>
-        <div class="progress-track" aria-hidden="true">
-          <div class="progress-bar" id="progressBar"></div>
+        <div class="mini">
+          <h3>🧴 PET deformat</h3>
+          <p>Un recipient poate fi strivit când presiunea din interior devine mai mică decât cea din exterior.</p>
         </div>
       </div>
 
-      <section class="page active" data-title="Start">
-        <div class="hero">
-          <div class="tag">Lecția 2</div>
-         
+      <div class="svgbox" aria-label="Aerul apasă asupra unei folii">
+        <svg viewBox="0 0 760 280" role="img">
+          <defs>
+            <marker id="arrowAir" markerWidth="10" markerHeight="10" refX="6" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L0,6 L7,3 z" fill="#67e8f9"/>
+            </marker>
+          </defs>
+          <rect x="260" y="70" width="240" height="145" rx="22" fill="#1e293b" stroke="#93c5fd" stroke-width="5"/>
+          <rect x="245" y="210" width="270" height="20" rx="10" fill="#fde68a"/>
+          <path d="M280 85 C310 125 340 105 370 145 C400 175 435 145 480 195 L480 205 L280 205 Z" fill="#38bdf8" opacity=".65"/>
+          <text x="380" y="255" text-anchor="middle" fill="#f8fafc" font-size="25" font-weight="700">folia/cartonul</text>
+          <line x1="110" y1="220" x2="232" y2="220" stroke="#67e8f9" stroke-width="8" marker-end="url(#arrowAir)"/>
+          <line x1="650" y1="220" x2="528" y2="220" stroke="#67e8f9" stroke-width="8" marker-end="url(#arrowAir)"/>
+          <line x1="380" y1="275" x2="380" y2="236" stroke="#67e8f9" stroke-width="8" marker-end="url(#arrowAir)"/>
+          <text x="110" y="190" fill="#67e8f9" font-size="23" font-weight="700">aerul apasă</text>
+          <text x="525" y="190" fill="#67e8f9" font-size="23" font-weight="700">aerul apasă</text>
+        </svg>
+      </div>
+
+      <div class="note">Explicația nu este „magie”: aerul din exterior exercită presiune.</div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Rețin</p>
+      <h2>Ce este presiunea atmosferică?</h2>
+
+      <div class="card">
+        <p><strong>Atmosfera</strong> este învelișul de aer care înconjoară Pământul.</p>
+        <p><strong>Presiunea atmosferică</strong> este presiunea exercitată de aer asupra corpurilor cu care se află în contact.</p>
+      </div>
+
+      <div class="grid">
+        <div class="mini">
+          <strong>Aerul are masă</strong>
+          <p>Deasupra noastră există o coloană de aer.</p>
         </div>
-
-        <div class="grid grid-2">
-          <div class="card">
-            <h2>Ce vei învăța</h2>
-            <ul class="bullet-list">
-              <li>ce este <span class="highlight">presiunea atmosferică</span>;</li>
-              <li>de ce aerul apasă asupra corpurilor, chiar dacă nu îl vedem;</li>
-              <li>de ce presiunea atmosferică <span class="highlight">scade cu altitudinea</span>;</li>
-              <li>cum este legată de <span class="highlight">vreme</span> și de geografie;</li>
-              <li>ce instrumente folosim: <strong>barometrul</strong> și <strong>manometrul</strong>.</li>
-            </ul>
-          </div>
-
-          <div class="card">
-            <h2>Știi deja</h2>
-            <p>Din lecția anterioară ai aflat că presiunea arată cât de mare este forța de apăsare pe unitatea de suprafață.</p>
-            <div class="formula-box">
-              <div class="mj">\( \displaystyle p = \frac{F}{S} \)</div>
-            </div>
-            <p>Acum aplicăm aceeași idee pentru <strong>aerul atmosferic</strong>.</p>
-            <div class="notice">Aerul are masă, greutate și poate exercita presiune.</div>
-          </div>
+        <div class="mini">
+          <strong>Aerul are particule</strong>
+          <p>Particulele de aer se mișcă și se ciocnesc de suprafețe.</p>
         </div>
-      </section>
+      </div>
 
-      <section class="page" data-title="Observ">
+      <div class="formula">
+        \[
+          p_{atm} = \text{presiunea atmosferică}
+        \]
+      </div>
+
+      <div class="idea">Nu o simțim ca pe o apăsare puternică deoarece presiunea din interiorul corpului nostru se echilibrează cu cea din exterior.</div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Observ</p>
+      <h2>Experimentul lui Torricelli</h2>
+
+      <p>Torricelli a arătat că presiunea aerului poate susține o coloană de mercur într-un tub închis la un capăt.</p>
+
+      <div class="svgbox" aria-label="Barometrul cu mercur al lui Torricelli">
+        <svg viewBox="0 0 760 360" role="img">
+          <defs>
+            <marker id="arr" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0,0 L0,6 L8,3 z" fill="#67e8f9"/>
+            </marker>
+          </defs>
+          <rect x="315" y="30" width="90" height="250" rx="38" fill="#0f172a" stroke="#bae6fd" stroke-width="5"/>
+          <rect x="327" y="80" width="66" height="195" rx="28" fill="#94a3b8"/>
+          <rect x="230" y="250" width="260" height="70" rx="28" fill="#94a3b8" stroke="#cbd5e1" stroke-width="4"/>
+          <line x1="428" y1="83" x2="428" y2="275" stroke="#fde68a" stroke-width="4"/>
+          <text x="446" y="185" fill="#fde68a" font-size="27" font-weight="800">h = 0,76 m</text>
+          <line x1="160" y1="285" x2="215" y2="285" stroke="#67e8f9" stroke-width="8" marker-end="url(#arr)"/>
+          <line x1="600" y1="285" x2="505" y2="285" stroke="#67e8f9" stroke-width="8" marker-end="url(#arr)"/>
+          <text x="80" y="278" fill="#67e8f9" font-size="23" font-weight="800">aerul apasă</text>
+          <text x="548" y="240" fill="#f8fafc" font-size="23" font-weight="700">mercur</text>
+          <text x="380" y="345" text-anchor="middle" fill="#cbd5e1" font-size="21">model simplificat</text>
+        </svg>
+      </div>
+
+      <div class="warning">
+        Nu se face experiment cu mercur în clasă. Mercurul este toxic. Folosim doar schema și ideea fizică.
+      </div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Rețin</p>
+      <h2>O atmosferă normală</h2>
+
+      <p>La nivelul mării, presiunea atmosferică normală se notează adesea cu \(p_0\).</p>
+
+      <div class="formula">
+        \[
+          p_0=\rho g h
+        \]
+      </div>
+
+      <div class="grid3">
+        <div class="mini"><strong>\(\rho\)</strong><br>densitatea mercurului</div>
+        <div class="mini"><strong>\(g\)</strong><br>accelerația gravitațională</div>
+        <div class="mini"><strong>\(h\)</strong><br>înălțimea coloanei</div>
+      </div>
+
+      <div class="formula">
+        \[
+          1\,atm \approx 101\,325\,Pa \approx 760\,mmHg
+        \]
+      </div>
+
+      <div class="note">În practică, pentru presiunea atmosferică se mai folosesc unități precum \(atm\), \(mmHg\) sau \(torr\).</div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Exemplu</p>
+      <h2>Calcul simplu pentru presiune</h2>
+
+      <p>Presiunea arată forța de apăsare pe o anumită suprafață.</p>
+
+      <div class="formula">
+        \[
+          p=\frac{F}{S}
+        \]
+      </div>
+
+      <div class="card">
+        <p><strong>Date:</strong> \(F=500\,N\), \(S=0{,}05\,m^2\)</p>
+        <p><strong>Calcul:</strong></p>
+        <div class="formula">
+          \[
+            p=\frac{500\,N}{0{,}05\,m^2}=10\,000\,Pa
+          \]
+        </div>
+        <p><strong>Răspuns:</strong> presiunea este \(10\,000\,Pa\).</p>
+      </div>
+
+      <div class="note">Fracția se citește: „forța împărțită la suprafață”.</div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Instrumente</p>
+      <h2>Barometru și manometru</h2>
+
+      <div class="grid">
+        <div class="mini">
+          <h3>Barometrul</h3>
+          <p>Măsoară presiunea atmosferică.</p>
+          <p>Este folosit în meteorologie pentru urmărirea vremii.</p>
+        </div>
+        <div class="mini">
+          <h3>Manometrul</h3>
+          <p>Măsoară presiunea unui gaz sau a unui lichid într-un recipient ori într-o instalație.</p>
+          <p>Îl întâlnim la pompe, centrale, butelii sau instalații tehnice.</p>
+        </div>
+      </div>
+
+      <div class="svgbox" aria-label="Barometru și manometru">
+        <svg viewBox="0 0 760 290" role="img">
+          <circle cx="210" cy="145" r="92" fill="#0f172a" stroke="#67e8f9" stroke-width="8"/>
+          <path d="M160 150 Q210 75 260 150" fill="none" stroke="#e2e8f0" stroke-width="7"/>
+          <line x1="210" y1="145" x2="250" y2="110" stroke="#22c55e" stroke-width="7" stroke-linecap="round"/>
+          <text x="210" y="260" text-anchor="middle" fill="#f8fafc" font-size="26" font-weight="800">barometru</text>
+
+          <circle cx="550" cy="145" r="92" fill="#0f172a" stroke="#fde68a" stroke-width="8"/>
+          <path d="M500 155 Q550 70 600 155" fill="none" stroke="#e2e8f0" stroke-width="7"/>
+          <line x1="550" y1="145" x2="600" y2="160" stroke="#f97316" stroke-width="7" stroke-linecap="round"/>
+          <rect x="525" y="235" width="50" height="30" rx="8" fill="#475569"/>
+          <text x="550" y="260" text-anchor="middle" fill="#f8fafc" font-size="26" font-weight="800">manometru</text>
+        </svg>
+      </div>
+
+      <div class="idea">Pe scurt: barometrul este pentru atmosferă; manometrul este pentru fluide din recipiente sau instalații.</div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Aplic</p>
+      <h2>Presiunea scade cu altitudinea</h2>
+
+      <p>La nivelul mării avem mai mult aer deasupra noastră. Pe munte, coloana de aer de deasupra este mai mică.</p>
+
+      <div class="svgbox" aria-label="Presiunea atmosferică scade cu altitudinea">
+        <svg viewBox="0 0 760 360" role="img">
+          <defs>
+            <linearGradient id="sky" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#0ea5e9" stop-opacity=".25"/>
+              <stop offset="1" stop-color="#0f172a" stop-opacity=".1"/>
+            </linearGradient>
+          </defs>
+          <rect x="0" y="0" width="760" height="360" fill="url(#sky)"/>
+          <path d="M80 315 L300 110 L420 315 Z" fill="#334155" stroke="#94a3b8" stroke-width="3"/>
+          <path d="M300 110 L340 165 L260 165 Z" fill="#e2e8f0"/>
+          <rect x="70" y="300" width="620" height="35" fill="#065f46"/>
+          <text x="125" y="285" fill="#e0f2fe" font-size="24" font-weight="800">nivelul mării: presiune mai mare</text>
+          <text x="395" y="116" fill="#e0f2fe" font-size="24" font-weight="800">munte: presiune mai mică</text>
+          <circle cx="610" cy="90" r="18" fill="#fde68a"/>
+          <text x="610" y="145" text-anchor="middle" fill="#fde68a" font-size="19" font-weight="700">aer mai rarefiat</text>
+        </svg>
+      </div>
+
+      <div class="idea">Concluzie: presiunea atmosferică scade odată cu creșterea altitudinii.</div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Legătură cu geografia</p>
+      <h2>Presiunea, temperatura și briza</h2>
+
+      <p>Aerul se deplasează, în general, din zone cu presiune mai mare spre zone cu presiune mai mică.</p>
+
+      <div class="grid">
+        <div class="mini">
+          <h3>Ziua</h3>
+          <p>Uscatul se încălzește mai repede. Aerul de deasupra lui devine mai cald, mai puțin dens și presiunea scade.</p>
+          <p><strong>Briza bate dinspre apă spre uscat.</strong></p>
+        </div>
+        <div class="mini">
+          <h3>Noaptea</h3>
+          <p>Uscatul se răcește mai repede decât apa. Aerul de deasupra uscatului devine mai dens și presiunea crește.</p>
+          <p><strong>Briza bate dinspre uscat spre apă.</strong></p>
+        </div>
+      </div>
+
+      <div class="note">Presiunea atmosferică depinde de temperatură, de altitudine și de umiditatea aerului.</div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Vremea</p>
+      <h2>Presiune mare sau presiune mică?</h2>
+
+      <div class="grid">
+        <div class="mini">
+          <h3>H · presiune mare</h3>
+          <p>Este asociată adesea cu vreme mai stabilă și cer mai senin.</p>
+        </div>
+        <div class="mini">
+          <h3>L · presiune mică</h3>
+          <p>Este asociată adesea cu vreme instabilă, nori și precipitații.</p>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Umiditatea contează</h3>
+        <p>În manual se observă pe barometru că presiunea este mai mică pentru atmosferă umedă.</p>
+      </div>
+
+      <div class="idea">Barometrul nu „prezice singur” vremea, dar variațiile presiunii sunt informații importante pentru meteorologi.</div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Verificare rapidă</p>
+      <h2>Alege varianta corectă</h2>
+
+      <div class="grid">
         <div class="card">
-          <h2>Observă</h2>
-          <p>Privește situațiile de mai jos și încearcă să explici ce au în comun.</p>
-
-          <div class="visual-row">
-            <div class="visual-card">
-              <span class="visual-icon">🥤</span>
-              <h3>Paharul răsturnat</h3>
-              <p class="small">Apa nu cade imediat dacă paharul este acoperit cu o foaie rigidă.</p>
-            </div>
-
-            <div class="visual-card">
-              <span class="visual-icon">🧴</span>
-              <h3>PET deformat</h3>
-              <p class="small">Un recipient golit sau răcit se poate strivi.</p>
-            </div>
-
-            <div class="visual-card">
-              <span class="visual-icon">⛰️</span>
-              <h3>Pe munte</h3>
-              <p class="small">La altitudine mare, aerul este mai rarefiat și presiunea scade.</p>
-            </div>
+          <h3>1. Presiunea atmosferică este exercitată de:</h3>
+          <div class="answers" data-quiz="q1" data-answer="b">
+            <label><input type="radio" name="q1" value="a"> A. apa din oceane</label>
+            <label><input type="radio" name="q1" value="b"> B. aerul atmosferic</label>
+            <label><input type="radio" name="q1" value="c"> C. numai corpurile solide</label>
           </div>
-
-          <div class="warning-box">
-            <strong>Întrebare:</strong> dacă aerul este „invizibil”, cum poate el să apese asupra unui pahar, unui PET sau corpului nostru?
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>Concluzie de pornire</h2>
-          <p>În jurul Pământului există un înveliș de aer numit <span class="highlight">atmosferă</span>. Acest aer are greutate și apasă asupra tuturor corpurilor.</p>
-          <p>Presiunea produsă de aerul atmosferic se numește <span class="highlight">presiune atmosferică</span>.</p>
-        </div>
-      </section>
-
-      <section class="page" data-title="Definiția">
-        <div class="card">
-          <h2>1. Ce este presiunea atmosferică?</h2>
-          <p>
-            <span class="highlight">Presiunea atmosferică</span> este presiunea exercitată de
-            <strong>aerul din atmosferă</strong> asupra corpurilor aflate pe Pământ.
-          </p>
-
-          <div class="formula-box">
-            <div class="mj">\( \displaystyle p_{atm} \)</div>
-          </div>
-
-          <div class="table-like">
-            <div class="row">
-              <div class="cell"><strong>Atmosfera</strong> = învelișul de aer al Pământului</div>
-              <div class="cell"><strong>p<sub>atm</sub></strong> = presiunea atmosferică</div>
-            </div>
-            <div class="row">
-              <div class="cell">Aerul are <strong>masă</strong> și <strong>greutate</strong></div>
-              <div class="cell">De aceea apasă în <strong>toate direcțiile</strong></div>
-            </div>
-          </div>
-
-          <div class="notice">
-            La nivelul mării, presiunea atmosferică normală se notează adesea cu
-            <strong>\(p_0\)</strong>.
-          </div>
-        </div>
-
-        <div class="mini-grid">
-          <div class="stat-card">
-            <h3>Unde o simțim?</h3>
-            <p>Pe piele nu o observăm direct, deoarece presiunea din interiorul corpului și cea din exterior se echilibrează în mare parte.</p>
-          </div>
-          <div class="stat-card">
-            <h3>De ce nu ne strivește?</h3>
-            <p>Presiunea aerului din jur este compensată de presiunea fluidelor și gazelor din interiorul corpului nostru.</p>
-          </div>
-        </div>
-      </section>
-
-      <section class="page" data-title="Geografie">
-        <div class="card">
-          <h2>2. Legătura cu geografia</h2>
-          <p>Presiunea atmosferică este foarte importantă în geografie, pentru că ea influențează <strong>altitudinea</strong>, <strong>circulația aerului</strong> și <strong>starea vremii</strong>.</p>
-
-          <div class="map-box">
-            <h3 style="margin-top:0;">Idei esențiale</h3>
-            <div class="map-row">
-              <div class="map-item">
-                <span class="big-icon">🌍</span>
-                <strong>Atmosfera</strong>
-                <p class="small">Învelișul de aer al Pământului.</p>
-              </div>
-              <div class="map-item">
-                <span class="big-icon">📍</span>
-                <strong>Altitudine</strong>
-                <p class="small">Cu cât urcăm, cu atât rămâne mai puțin aer deasupra noastră.</p>
-              </div>
-              <div class="map-item">
-                <span class="big-icon">🌦️</span>
-                <strong>Vreme</strong>
-                <p class="small">Zonele cu presiune mare și mică influențează vremea.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="comparison">
-            <div class="card">
-              <h3>La nivelul mării</h3>
-              <p>Deasupra noastră se află o coloană mai mare de aer, deci presiunea este mai mare.</p>
-            </div>
-            <div class="card">
-              <h3>Pe un munte înalt</h3>
-              <p>Coloana de aer de deasupra este mai mică, deci presiunea este mai mică.</p>
-            </div>
-          </div>
-
-          <div class="warning-box">
-            <strong>Concluzie:</strong> presiunea atmosferică <strong>scade cu altitudinea</strong>.
-          </div>
-        </div>
-      </section>
-
-      <section class="page" data-title="Vremea și instrumentele">
-        <div class="grid grid-2">
-          <div class="card">
-            <h2>3. Presiunea și vremea</h2>
-            <p>Pe hărțile meteorologice apar zone de <strong>presiune ridicată</strong> și de <strong>presiune scăzută</strong>.</p>
-            <span class="pill">H = presiune mare</span>
-            <span class="pill">L = presiune mică</span>
-
-            <ul class="bullet-list" style="margin-top:14px;">
-              <li>presiunea mare este asociată adesea cu vreme mai stabilă și cer mai senin;</li>
-              <li>presiunea mică este asociată adesea cu vreme instabilă, nori și precipitații.</li>
-            </ul>
-          </div>
-
-          <div class="card">
-            <h2>4. Cu ce se măsoară?</h2>
-            <p><strong>Barometrul</strong> măsoară presiunea atmosferică.</p>
-            <p><strong>Manometrul</strong> măsoară presiunea unui gaz într-un recipient sau într-o instalație.</p>
-
-            <div class="formula-box">
-              <div class="mj">\( \displaystyle 1\,\text{atm} \approx 101\,325\,\text{Pa} \approx 760\,\text{mmHg} \)</div>
-            </div>
-
-            <p class="small">În practică, pentru presiunea atmosferică se folosesc și unitățile <strong>atm</strong>, <strong>mmHg</strong> sau <strong>torr</strong>.</p>
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>Un nume important</h2>
-          <p><strong>Evangelista Torricelli</strong> a realizat primul barometru cu mercur. De aici vine și legătura dintre presiune și unitatea <strong>mmHg</strong>.</p>
-        </div>
-      </section>
-
-      <section class="page" data-title="Exemplu numeric">
-        <div class="card">
-          <h2>5. Exemplu numeric</h2>
-          <p>Presiunea este forță pe unitatea de suprafață. Din această idee putem calcula și forța cu care apasă atmosfera pe o suprafață cunoscută.</p>
-
-          <div class="formula-box">
-            <div class="mj">\( \displaystyle F = p \cdot S \)</div>
-          </div>
-
-          <ol class="steps">
-            <li><strong>Date:</strong> \(p = 101\,325\,\text{Pa}\), \(S = 0{,}02\,\text{m}^2\)</li>
-            <li><strong>Formula:</strong> \(F = p \cdot S\)</li>
-            <li><strong>Calcul:</strong> \( \displaystyle F = 101\,325 \cdot 0{,}02 = 2\,026{,}5\,\text{N} \)</li>
-            <li><strong>Răspuns:</strong> atmosfera apasă cu aproximativ \(2026{,}5\,\text{N}\) pe acea suprafață.</li>
-          </ol>
-
-          <div class="notice">
-            Forța este foarte mare, dar ea este compensată de presiunea din interiorul obiectelor și al corpului nostru.
-          </div>
-        </div>
-
-        <div class="grid grid-2">
-          <div class="card">
-            <h2>Exemplu scurt cu fracție</h2>
-            <div class="formula-box">
-              <div class="mj">\( \displaystyle p = \frac{300\,\text{N}}{0{,}03\,\text{m}^2} = 10\,000\,\text{Pa} \)</div>
-            </div>
-          </div>
-
-          <div class="card">
-            <h2>Aplică tu</h2>
-            <p>Dacă la altitudine presiunea scade la \(80\,000\,\text{Pa}\), atunci pe o suprafață de \(0{,}01\,\text{m}^2\) forța este:</p>
-            <div class="formula-box">
-              <div class="mj">\( \displaystyle F = 80\,000 \cdot 0{,}01 = 800\,\text{N} \)</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="page" data-title="Experimentez">
-        <div class="card">
-          <h2>6. Experimentează</h2>
-          <div class="grid grid-2">
-            <div class="card">
-              <h3>Experiment 1: paharul cu apă și carton</h3>
-              <ul class="bullet-list">
-                <li>umple un pahar cu apă;</li>
-                <li>acoperă-l cu o foaie rigidă sau un carton subțire;</li>
-                <li>ține bine foaia și răstoarnă paharul;</li>
-                <li>îndepărtează ușor mâna.</li>
-              </ul>
-              <p><strong>Observație:</strong> foaia rămâne lipită, iar apa nu cade imediat.</p>
-              <p><strong>Explicație:</strong> aerul atmosferic apasă din exterior asupra foii.</p>
-            </div>
-
-            <div class="card">
-              <h3>Experiment 2: PET-ul care se deformează</h3>
-              <ul class="bullet-list">
-                <li>folosește un PET gol și cu capac;</li>
-                <li>apasă ușor pe el și observă deformarea;</li>
-                <li>deschide capacul și compară.</li>
-              </ul>
-              <p><strong>Ideea principală:</strong> diferența dintre presiunea din interior și cea din exterior poate deforma recipientul.</p>
-            </div>
-          </div>
-
-          <div class="warning-box">
-            <strong>Atenție:</strong> fă experimentele simplu și în siguranță. Nu încălzi recipiente închise și nu folosi sticlă subțire fără supravegherea unui adult.
-          </div>
-        </div>
-      </section>
-
-      <section class="page" data-title="Reține">
-        <div class="card">
-          <h2>Reține</h2>
-
-          <div class="retain">
-            <div class="retain-item">
-              <div class="dot">1</div>
-              <div>Atmosfera este învelișul de aer care înconjoară Pământul.</div>
-            </div>
-
-            <div class="retain-item">
-              <div class="dot">2</div>
-              <div>Presiunea exercitată de aerul atmosferic se numește <strong>presiune atmosferică</strong>.</div>
-            </div>
-
-            <div class="retain-item">
-              <div class="dot">3</div>
-              <div>La nivelul mării, presiunea normală este aproximativ <strong>\(1\,\text{atm} = 101\,325\,\text{Pa}\)</strong>.</div>
-            </div>
-
-            <div class="retain-item">
-              <div class="dot">4</div>
-              <div>Presiunea atmosferică <strong>scade cu altitudinea</strong>.</div>
-            </div>
-
-            <div class="retain-item">
-              <div class="dot">5</div>
-              <div><strong>Barometrul</strong> măsoară presiunea atmosferică, iar <strong>manometrul</strong> măsoară presiunea din instalații și recipiente.</div>
-            </div>
-
-            <div class="retain-item">
-              <div class="dot">6</div>
-              <div>Presiunea atmosferică influențează <strong>vremea</strong> și este importantă în geografie și meteorologie.</div>
-            </div>
-          </div>
+          <div class="feedback" id="fb-q1"></div>
         </div>
 
         <div class="card">
-          <h2>Știai că?</h2>
-          <ul class="bullet-list">
-            <li>barograful înregistrează continuu variațiile presiunii atmosferice;</li>
-            <li>la munte, apa poate fierbe la temperaturi mai mici deoarece presiunea atmosferică este mai mică;</li>
-            <li>schimbările rapide de presiune pot influența starea vremii și uneori confortul oamenilor.</li>
-          </ul>
-        </div>
-      </section>
-
-      <section class="page" data-title="Verificare rapidă">
-        <div class="card">
-          <h2>Verificare rapidă</h2>
-          <p class="muted">Alege câte o variantă corectă la fiecare item, apoi apasă pe <strong>Verifică răspunsurile</strong>.</p>
-
-          <form id="quizForm">
-            <div class="quiz-card">
-              <h3>1. Presiunea atmosferică este exercitată de:</h3>
-              <div class="options">
-                <label class="option"><input type="radio" name="q1" value="a"> <span>A. numai apă</span></label>
-                <label class="option"><input type="radio" name="q1" value="b"> <span>B. aerul atmosferic</span></label>
-                <label class="option"><input type="radio" name="q1" value="c"> <span>C. numai corpurile solide</span></label>
-              </div>
-            </div>
-
-            <div class="quiz-card">
-              <h3>2. Instrumentul pentru măsurarea presiunii atmosferice este:</h3>
-              <div class="options">
-                <label class="option"><input type="radio" name="q2" value="a"> <span>A. barometrul</span></label>
-                <label class="option"><input type="radio" name="q2" value="b"> <span>B. dinamometrul</span></label>
-                <label class="option"><input type="radio" name="q2" value="c"> <span>C. ampermetrul</span></label>
-              </div>
-            </div>
-
-            <div class="quiz-card">
-              <h3>3. Când altitudinea crește, presiunea atmosferică:</h3>
-              <div class="options">
-                <label class="option"><input type="radio" name="q3" value="a"> <span>A. crește mereu</span></label>
-                <label class="option"><input type="radio" name="q3" value="b"> <span>B. rămâne aceeași</span></label>
-                <label class="option"><input type="radio" name="q3" value="c"> <span>C. scade</span></label>
-              </div>
-            </div>
-
-            <div class="quiz-card">
-              <h3>4. Valoarea aproximativă a unei atmosfere normale este:</h3>
-              <div class="options">
-                <label class="option"><input type="radio" name="q4" value="a"> <span>A. \(10\,\text{Pa}\)</span></label>
-                <label class="option"><input type="radio" name="q4" value="b"> <span>B. \(101\,325\,\text{Pa}\)</span></label>
-                <label class="option"><input type="radio" name="q4" value="c"> <span>C. \(1\,\text{N}\)</span></label>
-              </div>
-            </div>
-
-            <div class="quiz-card">
-              <h3>5. Pe hărțile meteorologice, presiunea mare este notată de obicei cu:</h3>
-              <div class="options">
-                <label class="option"><input type="radio" name="q5" value="a"> <span>A. H</span></label>
-                <label class="option"><input type="radio" name="q5" value="b"> <span>B. L</span></label>
-                <label class="option"><input type="radio" name="q5" value="c"> <span>C. M</span></label>
-              </div>
-            </div>
-
-            <div class="quiz-actions">
-              <button type="button" class="button button-primary" onclick="checkQuiz()">Verifică răspunsurile</button>
-              <button type="reset" class="button button-secondary" onclick="resetQuiz()">Resetează</button>
-            </div>
-          </form>
-
-          <div id="quizResult" class="result" role="status"></div>
-
-          <div class="page-links">
-            <a class="link-button button-secondary" href="./index.html">Înapoi la lecții</a>
-            <a class="link-button button-secondary" href="./lectia-1.html">Lecția anterioară</a>
-            <a class="link-button button-success" href="./lectia-3.html">Lecția următoare</a>
+          <h3>2. Instrumentul care măsoară presiunea atmosferică este:</h3>
+          <div class="answers" data-quiz="q2" data-answer="a">
+            <label><input type="radio" name="q2" value="a"> A. barometrul</label>
+            <label><input type="radio" name="q2" value="b"> B. dinamometrul</label>
+            <label><input type="radio" name="q2" value="c"> C. ampermetrul</label>
           </div>
-          <p class="footer-note">După această lecție, poți continua cu <strong>Legea lui Pascal. Aplicații</strong>.</p>
+          <div class="feedback" id="fb-q2"></div>
         </div>
-      </section>
-    </main>
-  </div>
+      </div>
 
-  <nav class="sticky-nav" aria-label="Navigare între paginile lecției">
-    <div class="sticky-inner">
-      <button class="button button-secondary" id="prevBtn" onclick="changePage(-1)">◀ Înapoi</button>
-      <button class="button button-primary" id="nextBtn" onclick="changePage(1)">Mergi mai departe ▶</button>
+      <div class="check-row">
+        <button class="check-btn" type="button" onclick="checkOnePage(['q1','q2'])">Verifică răspunsurile</button>
+        <button class="reset-btn" type="button" onclick="resetOnePage(['q1','q2'])">Resetează</button>
+      </div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Verificare rapidă</p>
+      <h2>Continuă verificarea</h2>
+
+      <div class="grid">
+        <div class="card">
+          <h3>3. Când altitudinea crește, presiunea atmosferică:</h3>
+          <div class="answers" data-quiz="q3" data-answer="c">
+            <label><input type="radio" name="q3" value="a"> A. crește mereu</label>
+            <label><input type="radio" name="q3" value="b"> B. rămâne întotdeauna aceeași</label>
+            <label><input type="radio" name="q3" value="c"> C. scade</label>
+          </div>
+          <div class="feedback" id="fb-q3"></div>
+        </div>
+
+        <div class="card">
+          <h3>4. Valoarea aproximativă a unei atmosfere normale este:</h3>
+          <div class="answers" data-quiz="q4" data-answer="b">
+            <label><input type="radio" name="q4" value="a"> A. \(10\,Pa\)</label>
+            <label><input type="radio" name="q4" value="b"> B. \(101\,325\,Pa\)</label>
+            <label><input type="radio" name="q4" value="c"> C. \(1\,N\)</label>
+          </div>
+          <div class="feedback" id="fb-q4"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>5. Aerul se deplasează în general:</h3>
+        <div class="answers" data-quiz="q5" data-answer="a">
+          <label><input type="radio" name="q5" value="a"> A. din zone cu presiune mare spre zone cu presiune mică</label>
+          <label><input type="radio" name="q5" value="b"> B. numai de jos în sus</label>
+          <label><input type="radio" name="q5" value="c"> C. numai dinspre uscat spre apă</label>
+        </div>
+        <div class="feedback" id="fb-q5"></div>
+      </div>
+
+      <div class="check-row">
+        <button class="check-btn" type="button" onclick="checkOnePage(['q3','q4','q5'])">Verifică răspunsurile</button>
+        <button class="reset-btn" type="button" onclick="resetOnePage(['q3','q4','q5'])">Resetează</button>
+      </div>
+    </section>
+
+    <section class="page">
+      <p class="eyebrow">Sinteză</p>
+      <h2>Ce trebuie să rămână clar</h2>
+
+      <ol class="step-list">
+        <li><span class="tag">1</span> Atmosfera este învelișul de aer al Pământului.</li>
+        <li><span class="tag">2</span> Presiunea atmosferică este apăsarea exercitată de aer asupra corpurilor.</li>
+        <li><span class="tag">3</span> La nivelul mării: \(1\,atm \approx 101\,325\,Pa \approx 760\,mmHg\).</li>
+        <li><span class="tag">4</span> Barometrul măsoară presiunea atmosferică.</li>
+        <li><span class="tag">5</span> Manometrul măsoară presiunea altor fluide, de obicei în recipiente sau instalații.</li>
+        <li><span class="tag">6</span> Presiunea atmosferică scade cu altitudinea și depinde de temperatură și umiditate.</li>
+        <li><span class="tag">7</span> Aerul se deplasează, în general, din zone cu presiune mare spre zone cu presiune mică.</li>
+      </ol>
+
+      <div class="lesson-links">
+        <a href="./lectia-1.html">Lecția anterioară</a>
+        <a class="nextlink" href="./lectia-3.html">Lecția următoare</a>
+        <a href="./index.html">Înapoi la lecții</a>
+      </div>
+
+      <div class="final-banner">
+        <strong>Prof. Dănuț Andronie</strong><br>
+        email: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navigare lecție">
+    <div class="nav-inner">
+      <button class="nav-btn back" id="backBtn" type="button">◀ Înapoi</button>
+      <div class="counter" id="pageCounter">1/13</div>
+      <button class="nav-btn next" id="nextBtn" type="button">Mergi mai departe ▶</button>
     </div>
   </nav>
 
   <script>
-
     const pages = Array.from(document.querySelectorAll('.page'));
-    const pageIndicator = document.getElementById('pageIndicator');
-    const pageTitleIndicator = document.getElementById('pageTitleIndicator');
-    const progressBar = document.getElementById('progressBar');
-    const prevBtn = document.getElementById('prevBtn');
+    const backBtn = document.getElementById('backBtn');
     const nextBtn = document.getElementById('nextBtn');
-    let currentPage = 0;
+    const pageCounter = document.getElementById('pageCounter');
+    const nextLesson = './lectia-3.html';
+    let index = 0;
 
-    function updatePage() {
-      pages.forEach((page, index) => page.classList.toggle('active', index === currentPage));
-      const total = pages.length;
-      const title = pages[currentPage].dataset.title || `Pagina ${currentPage + 1}`;
+    const correctAnswers = {
+      q1: 'b',
+      q2: 'a',
+      q3: 'c',
+      q4: 'b',
+      q5: 'a'
+    };
 
-      pageIndicator.textContent = `Pagina ${currentPage + 1} / ${total}`;
-      pageTitleIndicator.textContent = title;
-      progressBar.style.width = `${((currentPage + 1) / total) * 100}%`;
-
-      prevBtn.disabled = currentPage === 0;
-      nextBtn.textContent = currentPage === total - 1 ? 'Reia lecția ↺' : 'Mergi mai departe ▶';
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    function changePage(step) {
-      if (currentPage === pages.length - 1 && step === 1) {
-        currentPage = 0;
-      } else {
-        currentPage = Math.min(Math.max(currentPage + step, 0), pages.length - 1);
+    function renderMath(){
+      if(window.MathJax && window.MathJax.typesetPromise){
+        window.MathJax.typesetPromise([pages[index]]).catch(() => {});
       }
-      updatePage();
     }
 
-    function checkQuiz() {
-      const answers = { q1: 'b', q2: 'a', q3: 'c', q4: 'b', q5: 'a' };
-      let score = 0;
-      let answered = 0;
+    function updatePage(){
+      pages.forEach((page, i) => page.classList.toggle('active', i === index));
+      pageCounter.textContent = `${index + 1}/${pages.length}`;
+      backBtn.disabled = index === 0;
+      nextBtn.textContent = index === pages.length - 1 ? 'Lecția următoare' : 'Mergi mai departe ▶';
+      nextBtn.setAttribute('aria-label', index === pages.length - 1 ? 'Deschide lecția următoare' : 'Mergi la pagina următoare');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      renderMath();
+    }
 
-      for (const key in answers) {
-        const selected = document.querySelector(`input[name="${key}"]:checked`);
-        if (selected) {
-          answered++;
-          if (selected.value === answers[key]) score++;
+    function nextPage(){
+      if(index < pages.length - 1){
+        index++;
+        updatePage();
+      }else{
+        window.location.href = nextLesson;
+      }
+    }
+
+    function prevPage(){
+      if(index > 0){
+        index--;
+        updatePage();
+      }
+    }
+
+    function selectedValue(name){
+      const checked = document.querySelector(`input[name="${name}"]:checked`);
+      return checked ? checked.value : '';
+    }
+
+    function setFeedback(name, text, cls){
+      const fb = document.getElementById(`fb-${name}`);
+      if(!fb) return;
+      fb.textContent = text;
+      fb.className = `feedback ${cls}`;
+    }
+
+    function checkOnePage(names){
+      names.forEach(name => {
+        const chosen = selectedValue(name);
+        if(!chosen){
+          setFeedback(name, 'Alege mai întâi o variantă.', 'wait');
+        }else if(chosen === correctAnswers[name]){
+          setFeedback(name, 'Corect!', 'ok');
+        }else{
+          setFeedback(name, 'Mai încearcă. Recitește pagina cu explicația.', 'bad');
         }
-      }
-
-      const result = document.getElementById('quizResult');
-
-      if (answered < 5) {
-        result.className = 'result warn';
-        result.innerHTML = `Ai răspuns la <strong>${answered}</strong> din 5 itemi. Completează toate variantele.`;
-        return;
-      }
-
-      let message = '';
-      if (score === 5) {
-        result.className = 'result good';
-        message = 'Excelent! Stăpânești foarte bine noțiunile despre presiunea atmosferică.';
-      } else if (score >= 3) {
-        result.className = 'result warn';
-        message = 'Bine! Mai recitește paginile despre altitudine, barometru și vreme.';
-      } else {
-        result.className = 'result warn';
-        message = 'Mai exersează. Reia lecția și urmărește mai ales paginile cu definiții și aplicații.';
-      }
-
-      result.innerHTML =
-        `Scor: <strong>${score} / 5</strong><br>` +
-        `${message}<br><br>` +
-        `Răspunsuri corecte: 1-B, 2-A, 3-C, 4-B, 5-A.`;
+      });
     }
 
-    function resetQuiz() {
-      const result = document.getElementById('quizResult');
-      result.className = 'result';
-      result.innerHTML = '';
+    function resetOnePage(names){
+      names.forEach(name => {
+        document.querySelectorAll(`input[name="${name}"]`).forEach(input => input.checked = false);
+        setFeedback(name, '', '');
+      });
     }
+
+    backBtn.addEventListener('click', prevPage);
+    nextBtn.addEventListener('click', nextPage);
 
     document.addEventListener('keydown', (event) => {
-      if (event.key === 'ArrowRight') changePage(1);
-      if (event.key === 'ArrowLeft') changePage(-1);
+      if(event.key === 'ArrowRight') nextPage();
+      if(event.key === 'ArrowLeft') prevPage();
     });
 
     updatePage();
-
   </script>
-
-  <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)'], ['$', '$']] },
-      svg: { fontCache: 'global' }
-    };
-  </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </body>
 </html>

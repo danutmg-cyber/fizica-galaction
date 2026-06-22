@@ -1,12 +1,1217 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Statica fluidelor - Recapitulare</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Recapitulare | Statica fluidelor | Fizica Galaction</title>
+  <meta name="description" content="Recapitulare interactivă pentru capitolul Statica fluidelor, clasa a VII-a.">
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global', scale: 0.95 }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root{
+      --bg:#07111f;
+      --bg2:#0f172a;
+      --card:#122033;
+      --card2:#172a42;
+      --line:#2b4a66;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --title:#67e8f9;
+      --accent:#38bdf8;
+      --good:#22c55e;
+      --good2:#16a34a;
+      --goodText:#052e16;
+      --back:#e2e8f0;
+      --backText:#0f172a;
+      --warn:#fde68a;
+      --bad:#fecaca;
+      --badText:#7f1d1d;
+      --shadow:0 18px 45px rgba(0,0,0,.38);
+      --purple:#ddd6fe;
+      --orange:#fed7aa;
+      --blue:#bfdbfe;
+      --pink:#fbcfe8;
+    }
+
+    *{box-sizing:border-box}
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      background:
+        radial-gradient(circle at top left, rgba(56,189,248,.16), transparent 32rem),
+        radial-gradient(circle at bottom right, rgba(34,197,94,.11), transparent 28rem),
+        linear-gradient(160deg, var(--bg), var(--bg2));
+      color:var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      font-size:18px;
+      line-height:1.55;
+    }
+
+    body{
+      min-height:100dvh;
+      overflow-x:hidden;
+    }
+
+    .app{
+      width:min(980px, 100%);
+      margin:0 auto;
+      min-height:100dvh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .screen{
+      display:none;
+      flex:1;
+      padding: clamp(14px, 3vw, 28px);
+      padding-bottom: 122px;
+    }
+
+    .screen.active{
+      display:block;
+      animation: fade .22s ease-out;
+    }
+
+    @keyframes fade{
+      from{opacity:0; transform: translateY(8px)}
+      to{opacity:1; transform: translateY(0)}
+    }
+
+    .card{
+      background:rgba(18,32,51,.96);
+      border:1px solid rgba(103,232,249,.22);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding: clamp(18px, 4vw, 34px);
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .school-banner{
+      text-align:center;
+      border:1px solid rgba(103,232,249,.30);
+      background:linear-gradient(135deg, rgba(34,211,238,.12), rgba(34,197,94,.08));
+      border-radius:22px;
+      padding:18px;
+      margin-bottom:18px;
+    }
+
+    .school-banner .school{
+      color:var(--title);
+      font-size:clamp(1.05rem, 3.2vw, 1.35rem);
+      font-weight:900;
+      letter-spacing:.03em;
+      text-transform:uppercase;
+    }
+
+    .school-banner .teacher{
+      color:#e0f2fe;
+      margin-top:6px;
+      font-weight:750;
+    }
+
+    .motto{
+      margin-top:12px;
+      color:#fef3c7;
+      background:rgba(250,204,21,.10);
+      border-left:4px solid var(--title);
+      border-radius:14px;
+      padding:10px 12px;
+      font-style:italic;
+    }
+
+    .eyebrow{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:#dbeafe;
+      background:rgba(59,130,246,.14);
+      border:1px solid rgba(147,197,253,.28);
+      border-radius:999px;
+      padding:6px 12px;
+      font-size:.92rem;
+      font-weight:800;
+      margin-bottom:12px;
+    }
+
+    h1,h2,h3{
+      line-height:1.15;
+      margin:0 0 14px;
+    }
+
+    h1{
+      color:var(--title);
+      font-size: clamp(2rem, 7vw, 4rem);
+      letter-spacing:-.04em;
+    }
+
+    h2{
+      color:var(--title);
+      font-size: clamp(1.55rem, 5vw, 2.55rem);
+      letter-spacing:-.025em;
+    }
+
+    h3{
+      color:#e0f2fe;
+      font-size: clamp(1.18rem, 3.6vw, 1.55rem);
+      margin-top:18px;
+    }
+
+    p{margin:0 0 12px}
+    .lead{
+      font-size:clamp(1.05rem, 3vw, 1.28rem);
+      color:#e2e8f0;
+    }
+    .muted{color:var(--muted)}
+    .accent{color:var(--title); font-weight:800}
+    .small{font-size:.95rem; color:var(--muted)}
+    .center{text-align:center}
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap:14px;
+      margin:16px 0;
+    }
+
+    .grid.three{
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .mini-card{
+      background:rgba(15,23,42,.72);
+      border:1px solid rgba(148,163,184,.22);
+      border-radius:18px;
+      padding:14px;
+    }
+
+    .mini-card strong{
+      color:#e0f2fe;
+      display:block;
+      margin-bottom:5px;
+    }
+
+    .formula{
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      border:1px solid rgba(103,232,249,.20);
+      background:rgba(3,7,18,.38);
+      border-radius:18px;
+      padding:14px;
+      margin:14px 0;
+      text-align:center;
+    }
+
+    mjx-container{
+      max-width:100%;
+      overflow-x:auto;
+      overflow-y:hidden;
+      padding:2px 0;
+      font-size:100% !important;
+    }
+
+    .note{
+      border-left:5px solid var(--accent);
+      background:rgba(56,189,248,.10);
+      border-radius:16px;
+      padding:13px 15px;
+      margin:14px 0;
+    }
+
+    .remember{
+      border-left:5px solid var(--good);
+      background:rgba(34,197,94,.10);
+      border-radius:16px;
+      padding:13px 15px;
+      margin:14px 0;
+    }
+
+    .warning{
+      border-left:5px solid #f59e0b;
+      background:rgba(245,158,11,.11);
+      border-radius:16px;
+      padding:13px 15px;
+      margin:14px 0;
+      color:#fff7ed;
+    }
+
+    .steps{
+      display:grid;
+      gap:10px;
+      margin:14px 0;
+    }
+
+    .step{
+      display:flex;
+      align-items:flex-start;
+      gap:12px;
+      background:rgba(15,23,42,.70);
+      border:1px solid rgba(148,163,184,.20);
+      border-radius:16px;
+      padding:12px;
+    }
+
+    .badge{
+      width:34px;
+      height:34px;
+      flex:0 0 34px;
+      border-radius:999px;
+      display:grid;
+      place-items:center;
+      background:rgba(103,232,249,.18);
+      color:#cffafe;
+      font-weight:900;
+      border:1px solid rgba(103,232,249,.35);
+    }
+
+    .pill-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin:14px 0;
+    }
+
+    .pill{
+      border:1px solid rgba(103,232,249,.30);
+      background:rgba(103,232,249,.10);
+      color:#ecfeff;
+      border-radius:999px;
+      padding:7px 10px;
+      font-weight:750;
+      font-size:.95rem;
+    }
+
+    .svgbox{
+      border:1px solid rgba(103,232,249,.18);
+      background:rgba(15,23,42,.58);
+      border-radius:20px;
+      padding:14px;
+      margin:16px 0;
+      overflow:hidden;
+    }
+
+    .svgbox > svg{
+      width:100%;
+      height:auto;
+      display:block;
+    }
+
+    .quiz{
+      display:grid;
+      gap:14px;
+      margin-top:16px;
+    }
+
+    .quiz-item{
+      background:rgba(15,23,42,.76);
+      border:1px solid rgba(148,163,184,.23);
+      border-radius:18px;
+      padding:14px;
+    }
+
+    .quiz-item .q{
+      font-weight:850;
+      color:#e0f2fe;
+      margin-bottom:10px;
+    }
+
+    .options{
+      display:grid;
+      gap:8px;
+    }
+
+    .option{
+      display:grid;
+      grid-template-columns: 26px 1fr;
+      gap:10px;
+      align-items:start;
+      padding:10px 11px;
+      border:1px solid rgba(148,163,184,.22);
+      border-radius:14px;
+      background:rgba(2,6,23,.26);
+      cursor:pointer;
+    }
+
+    .option:hover{
+      border-color:rgba(103,232,249,.55);
+    }
+
+    .option input{
+      transform:scale(1.15);
+      margin-top:4px;
+      accent-color:var(--good);
+    }
+
+    .check-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .check{
+      border:0;
+      border-radius:14px;
+      padding:11px 14px;
+      background:#38bdf8;
+      color:#082f49;
+      font-weight:900;
+      cursor:pointer;
+      font-size:1rem;
+    }
+
+    .reset{
+      border:1px solid rgba(226,232,240,.7);
+      border-radius:14px;
+      padding:11px 14px;
+      background:#e2e8f0;
+      color:#0f172a;
+      font-weight:900;
+      cursor:pointer;
+      font-size:1rem;
+    }
+
+    .feedback{
+      margin-top:10px;
+      border-radius:14px;
+      padding:10px 12px;
+      display:none;
+      font-weight:850;
+    }
+
+    .feedback.ok{
+      display:block;
+      background:rgba(34,197,94,.16);
+      color:#bbf7d0;
+      border:1px solid rgba(34,197,94,.35);
+    }
+
+    .feedback.no{
+      display:block;
+      background:rgba(248,113,113,.13);
+      color:#fecaca;
+      border:1px solid rgba(248,113,113,.33);
+    }
+
+    .feedback.choose{
+      display:block;
+      background:rgba(250,204,21,.13);
+      color:#fef3c7;
+      border:1px solid rgba(250,204,21,.33);
+    }
+
+    .final-banner{
+      margin-top:18px;
+      text-align:center;
+      border:1px solid rgba(34,197,94,.34);
+      background:linear-gradient(135deg, rgba(34,197,94,.15), rgba(56,189,248,.10));
+      border-radius:22px;
+      padding:18px;
+    }
+
+    .final-banner strong{
+      color:#bbf7d0;
+      font-size:1.12rem;
+    }
+
+    .bottom-nav{
+      position:sticky;
+      bottom:0;
+      z-index:50;
+      padding:10px clamp(10px, 3vw, 22px) calc(10px + env(safe-area-inset-bottom));
+      background:linear-gradient(180deg, rgba(7,17,31,0), rgba(7,17,31,.95) 30%, rgba(7,17,31,.98));
+      backdrop-filter:blur(10px);
+    }
+
+    .nav-inner{
+      max-width:900px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns: minmax(90px, 1fr) auto minmax(120px, 1fr);
+      align-items:center;
+      gap:10px;
+    }
+
+    .nav-btn{
+      min-height:52px;
+      border:0;
+      border-radius:16px;
+      font-size:clamp(.96rem, 3.6vw, 1.05rem);
+      font-weight:950;
+      cursor:pointer;
+      padding:12px 14px;
+      box-shadow:0 10px 25px rgba(0,0,0,.28);
+    }
+
+    .nav-btn.back{
+      background:var(--back);
+      color:var(--backText);
+    }
+
+    .nav-btn.next{
+      background:linear-gradient(135deg, var(--good), var(--good2));
+      color:var(--goodText);
+    }
+
+    .nav-btn:disabled{
+      opacity:.48;
+      cursor:not-allowed;
+      box-shadow:none;
+    }
+
+    .counter{
+      color:#e0f2fe;
+      font-weight:900;
+      border:1px solid rgba(226,232,240,.22);
+      background:rgba(15,23,42,.75);
+      border-radius:999px;
+      padding:10px 12px;
+      min-width:64px;
+      text-align:center;
+    }
+
+    a.inline-link{
+      color:#bae6fd;
+      font-weight:850;
+    }
+
+    @media (max-width:720px){
+      html,body{font-size:17px}
+      .grid,.grid.three{grid-template-columns:1fr}
+      .card{border-radius:20px}
+      .nav-inner{
+        grid-template-columns: 1fr auto 1fr;
+        gap:8px;
+      }
+      .nav-btn{
+        padding:10px 11px;
+      }
+    }
+
+    @media (max-width:390px){
+      html,body{font-size:16px}
+      .counter{padding:9px 10px; min-width:58px}
+      .nav-btn{font-size:.92rem}
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Statica fluidelor - Recapitulare</h1>
-  <p>Pagina este în lucru.</p>
+  <main class="app" id="app">
+    <section class="screen active" data-title="Start">
+      <div class="card">
+        <div class="school-banner">
+          <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+          <div class="teacher">Prof. Dănuț Andronie · Fizica Galaction</div>
+          <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+        </div>
+
+        <div class="eyebrow">Clasa a VII-a · Capitolul 6</div>
+        <h1>Recapitulare: Statica fluidelor</h1>
+        <p class="lead">În acest capitol ai studiat fluidele aflate în echilibru: lichide și gaze care apasă asupra corpurilor, dar nu curg în mod dezordonat.</p>
+
+        <div class="grid">
+          <div class="mini-card">
+            <strong>Ideea-cheie</strong>
+            Presiunea arată cât de concentrată este apăsarea pe o suprafață.
+          </div>
+          <div class="mini-card">
+            <strong>Legile importante</strong>
+            Pascal explică transmiterea presiunii, iar Arhimede explică plutirea.
+          </div>
+        </div>
+
+        <div class="pill-row">
+          <span class="pill">presiune</span>
+          <span class="pill">hidrostatică</span>
+          <span class="pill">atmosferică</span>
+          <span class="pill">Pascal</span>
+          <span class="pill">Arhimede</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-title="Harta capitolului">
+      <div class="card">
+        <div class="eyebrow">Observ</div>
+        <h2>Ce înseamnă „statica fluidelor”?</h2>
+        <p>Statica fluidelor studiază lichidele și gazele aflate în echilibru. În lecțiile acestui capitol ai întâlnit apă, aer, seringi, prese hidraulice, submarine și vapoare.</p>
+
+        <div class="grid three">
+          <div class="mini-card">
+            <strong>1. Apăsare</strong>
+            Forța distribuită pe o suprafață produce presiune.
+          </div>
+          <div class="mini-card">
+            <strong>2. Adâncime</strong>
+            În lichide, presiunea crește când coborâm mai jos.
+          </div>
+          <div class="mini-card">
+            <strong>3. Plutire</strong>
+            Fluidul împinge corpul de jos în sus.
+          </div>
+        </div>
+
+        <div class="note">
+          Reține traseul logic: întâi înțelegi presiunea, apoi presiunea hidrostatică, apoi presiunea atmosferică, iar la final legile Pascal și Arhimede.
+        </div>
+
+        <div class="svgbox" aria-label="Hartă vizuală a capitolului">
+          <svg viewBox="0 0 760 220" role="img">
+            <defs>
+              <linearGradient id="g1" x1="0" x2="1">
+                <stop offset="0" stop-color="#38bdf8" stop-opacity=".30"/>
+                <stop offset="1" stop-color="#22c55e" stop-opacity=".22"/>
+              </linearGradient>
+            </defs>
+            <rect x="20" y="35" width="720" height="150" rx="30" fill="url(#g1)" stroke="#67e8f9" opacity=".85"/>
+            <circle cx="120" cy="110" r="45" fill="#0f172a" stroke="#67e8f9" stroke-width="3"/>
+            <text x="120" y="105" text-anchor="middle" font-size="18" fill="#e0f2fe" font-weight="700">presiune</text>
+            <text x="120" y="130" text-anchor="middle" font-size="16" fill="#cbd5e1">p = F/S</text>
+            <path d="M170 110 H265" stroke="#e0f2fe" stroke-width="4" marker-end="url(#arrow)"/>
+            <circle cx="340" cy="110" r="45" fill="#0f172a" stroke="#67e8f9" stroke-width="3"/>
+            <text x="340" y="105" text-anchor="middle" font-size="17" fill="#e0f2fe" font-weight="700">lichide</text>
+            <text x="340" y="130" text-anchor="middle" font-size="16" fill="#cbd5e1">ρgh</text>
+            <path d="M390 110 H485" stroke="#e0f2fe" stroke-width="4"/>
+            <circle cx="560" cy="110" r="45" fill="#0f172a" stroke="#67e8f9" stroke-width="3"/>
+            <text x="560" y="103" text-anchor="middle" font-size="17" fill="#e0f2fe" font-weight="700">aplicații</text>
+            <text x="560" y="128" text-anchor="middle" font-size="15" fill="#cbd5e1">Pascal · Arhimede</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-title="Presiunea">
+      <div class="card">
+        <div class="eyebrow">Rețin</div>
+        <h2>1. Presiunea</h2>
+        <p>Presiunea arată câtă forță de apăsare revine unei unități de suprafață. Cu aceeași forță, o suprafață mică produce o presiune mai mare.</p>
+
+        <div class="formula">
+          \[
+            p=\frac{F}{S}
+          \]
+        </div>
+
+        <div class="grid">
+          <div class="mini-card">
+            <strong>$p$</strong>
+            presiunea, măsurată în pascali: $\text{Pa}$
+          </div>
+          <div class="mini-card">
+            <strong>$F$ și $S$</strong>
+            $F$ = forța perpendiculară; $S$ = aria suprafeței
+          </div>
+        </div>
+
+        <div class="formula">
+          \[
+            1\,\text{Pa}=1\,\frac{\text{N}}{\text{m}^2}
+          \]
+        </div>
+
+        <div class="remember">
+          Exemple: acul înțeapă deoarece are vârful foarte mic; schiurile nu se afundă ușor deoarece măresc suprafața de sprijin.
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-title="Exemplu p=F/S">
+      <div class="card">
+        <div class="eyebrow">Exemplu</div>
+        <h2>Calcul rapid cu presiunea</h2>
+        <p>O cutie apasă pe podea cu forța de $120\,\text{N}$. Suprafața de contact este $0{,}04\,\text{m}^2$. Care este presiunea?</p>
+
+        <div class="steps">
+          <div class="step">
+            <div class="badge">1</div>
+            <div>Datele problemei: $F=120\,\text{N}$, $S=0{,}04\,\text{m}^2$.</div>
+          </div>
+          <div class="step">
+            <div class="badge">2</div>
+            <div>Folosim formula presiunii.</div>
+          </div>
+        </div>
+
+        <div class="formula">
+          \[
+            p=\frac{F}{S}=\frac{120\,\text{N}}{0{,}04\,\text{m}^2}=3000\,\text{Pa}
+          \]
+        </div>
+
+        <p class="lead">Răspuns: presiunea este $3000\,\text{Pa}$.</p>
+
+        <div class="warning">
+          Ai grijă la unități: aria trebuie exprimată în $\text{m}^2$, nu în $\text{cm}^2$, când vrei rezultatul în pascali.
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-title="Presiunea hidrostatică">
+      <div class="card">
+        <div class="eyebrow">Rețin</div>
+        <h2>2. Presiunea hidrostatică</h2>
+        <p>Un lichid aflat în repaus apasă pe fundul vasului, pe pereții vasului și pe corpurile introduse în el.</p>
+
+        <div class="formula">
+          \[
+            p_h=\rho g h
+          \]
+        </div>
+
+        <div class="grid three">
+          <div class="mini-card">
+            <strong>$\rho$</strong>
+            densitatea lichidului
+          </div>
+          <div class="mini-card">
+            <strong>$g$</strong>
+            accelerația gravitațională
+          </div>
+          <div class="mini-card">
+            <strong>$h$</strong>
+            adâncimea sau înălțimea coloanei de lichid
+          </div>
+        </div>
+
+        <div class="remember">
+          La aceeași adâncime, în același lichid, presiunea hidrostatică are aceeași valoare. Forma vasului nu schimbă această idee.
+        </div>
+
+        <div class="svgbox" aria-label="Presiunea crește cu adâncimea">
+          <svg viewBox="0 0 720 290" role="img">
+            <rect x="140" y="40" width="440" height="220" rx="20" fill="#0f172a" stroke="#67e8f9" stroke-width="3"/>
+            <rect x="145" y="95" width="430" height="160" rx="15" fill="#38bdf8" opacity=".28"/>
+            <line x1="145" y1="95" x2="575" y2="95" stroke="#7dd3fc" stroke-width="3"/>
+            <text x="590" y="103" fill="#e0f2fe" font-size="18">suprafață</text>
+            <circle cx="360" cy="140" r="10" fill="#bbf7d0"/>
+            <circle cx="360" cy="205" r="16" fill="#22c55e"/>
+            <text x="388" y="146" fill="#e0f2fe" font-size="18">presiune mai mică</text>
+            <text x="388" y="212" fill="#e0f2fe" font-size="18">presiune mai mare</text>
+            <path d="M115 95 V205" stroke="#fef3c7" stroke-width="4"/>
+            <path d="M105 205 H125" stroke="#fef3c7" stroke-width="4"/>
+            <path d="M105 95 H125" stroke="#fef3c7" stroke-width="4"/>
+            <text x="75" y="155" fill="#fef3c7" font-size="22" font-weight="700">h</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-title="Exemplu hidrostatică">
+      <div class="card">
+        <div class="eyebrow">Aplic</div>
+        <h2>Exemplu: presiunea la adâncime</h2>
+        <p>Calculăm presiunea hidrostatică la adâncimea $h=0{,}8\,\text{m}$ în apă. Folosim aproximativ $\rho=1000\,\text{kg/m}^3$ și $g=10\,\text{N/kg}$.</p>
+
+        <div class="formula">
+          \[
+            p_h=\rho g h
+          \]
+          \[
+            p_h=1000\cdot 10\cdot 0{,}8=8000\,\text{Pa}
+          \]
+        </div>
+
+        <p class="lead">Răspuns: presiunea hidrostatică este $8000\,\text{Pa}$.</p>
+
+        <div class="note">
+          De aceea jetul de apă dintr-o gaură aflată jos într-o sticlă iese mai puternic decât jetul dintr-o gaură aflată mai sus.
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-title="Presiunea atmosferică">
+      <div class="card">
+        <div class="eyebrow">Rețin</div>
+        <h2>3. Presiunea atmosferică</h2>
+        <p>Aerul are masă și greutate. De aceea, atmosfera apasă asupra corpurilor de pe Pământ.</p>
+
+        <div class="formula">
+          \[
+            p_0 \approx 101\,325\,\text{Pa}
+          \]
+        </div>
+
+        <div class="grid">
+          <div class="mini-card">
+            <strong>La nivelul mării</strong>
+            Presiunea atmosferică este mai mare, deoarece deasupra noastră se află o coloană mai mare de aer.
+          </div>
+          <div class="mini-card">
+            <strong>La munte</strong>
+            Presiunea atmosferică scade, deoarece deasupra rămâne mai puțin aer.
+          </div>
+        </div>
+
+        <div class="remember">
+          Barometrul măsoară presiunea atmosferică. Manometrul măsoară presiunea unui gaz sau a unui lichid dintr-un recipient ori instalație.
+        </div>
+
+        <div class="note">
+          Aerul se deplasează, în general, din zone cu presiune mai mare către zone cu presiune mai mică. Această idee ajută la explicarea vântului și a brizei.
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-title="Pascal">
+      <div class="card">
+        <div class="eyebrow">Rețin</div>
+        <h2>4. Legea lui Pascal</h2>
+        <p>Dacă apăsăm într-un punct al unui lichid aflat în echilibru, modificarea de presiune se transmite în tot lichidul.</p>
+
+        <div class="remember">
+          Legea lui Pascal: variația de presiune produsă într-un punct al unui lichid aflat în echilibru se transmite integral în orice punct din volumul lichidului.
+        </div>
+
+        <div class="formula">
+          \[
+            \frac{F_1}{S_1}=\frac{F_2}{S_2}
+          \]
+        </div>
+
+        <p>Formula se folosește pentru dispozitive hidraulice, de exemplu: presă hidraulică, frână hidraulică, cric hidraulic, elevator hidraulic.</p>
+
+        <div class="svgbox" aria-label="Presă hidraulică">
+          <svg viewBox="0 0 760 300" role="img">
+            <rect x="110" y="90" width="130" height="150" rx="16" fill="#0f172a" stroke="#67e8f9" stroke-width="3"/>
+            <rect x="500" y="40" width="180" height="200" rx="16" fill="#0f172a" stroke="#67e8f9" stroke-width="3"/>
+            <rect x="110" y="155" width="570" height="85" fill="#38bdf8" opacity=".27"/>
+            <rect x="128" y="105" width="94" height="35" rx="8" fill="#e2e8f0"/>
+            <rect x="520" y="58" width="140" height="35" rx="8" fill="#e2e8f0"/>
+            <path d="M175 80 V105" stroke="#22c55e" stroke-width="6"/>
+            <path d="M175 80 l-15 22 M175 80 l15 22" stroke="#22c55e" stroke-width="6" fill="none"/>
+            <path d="M590 130 V93" stroke="#22c55e" stroke-width="8"/>
+            <path d="M590 130 l-18 -24 M590 130 l18 -24" stroke="#22c55e" stroke-width="8" fill="none"/>
+            <text x="137" y="65" fill="#bbf7d0" font-size="22" font-weight="700">F₁ mică</text>
+            <text x="540" y="25" fill="#bbf7d0" font-size="22" font-weight="700">F₂ mare</text>
+            <text x="318" y="215" fill="#e0f2fe" font-size="22">lichid incompresibil</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-title="Exemplu Pascal">
+      <div class="card">
+        <div class="eyebrow">Exemplu</div>
+        <h2>Calcul cu presa hidraulică</h2>
+        <p>Pe pistonul mic se apasă cu $F_1=100\,\text{N}$. Aria pistonului mic este $S_1=0{,}01\,\text{m}^2$, iar aria pistonului mare este $S_2=0{,}20\,\text{m}^2$.</p>
+
+        <div class="formula">
+          \[
+            \frac{F_1}{S_1}=\frac{F_2}{S_2}
+          \]
+          \[
+            F_2=\frac{F_1\cdot S_2}{S_1}
+          \]
+          \[
+            F_2=\frac{100\,\text{N}\cdot 0{,}20\,\text{m}^2}{0{,}01\,\text{m}^2}=2000\,\text{N}
+          \]
+        </div>
+
+        <div class="remember">
+          Observație: forța crește de 20 de ori, deoarece aria pistonului mare este de 20 de ori mai mare decât aria pistonului mic.
+        </div>
+
+        <p class="small">În realitate apar frecări și pierderi, dar ideea de bază rămâne aceeași: lichidul transmite presiunea.</p>
+      </div>
+    </section>
+
+    <section class="screen" data-title="Arhimede">
+      <div class="card">
+        <div class="eyebrow">Rețin</div>
+        <h2>5. Legea lui Arhimede</h2>
+        <p>Un corp scufundat într-un fluid este împins de jos în sus de o forță numită forță arhimedică.</p>
+
+        <div class="remember">
+          Forța arhimedică este egală cu greutatea fluidului dezlocuit de corp.
+        </div>
+
+        <div class="formula">
+          \[
+            F_A=\rho_{fluid}\,g\,V_{dezlocuit}
+          \]
+        </div>
+
+        <div class="grid three">
+          <div class="mini-card">
+            <strong>$F_A$</strong>
+            forța arhimedică
+          </div>
+          <div class="mini-card">
+            <strong>$\rho_{fluid}$</strong>
+            densitatea fluidului
+          </div>
+          <div class="mini-card">
+            <strong>$V_{dezlocuit}$</strong>
+            volumul de fluid împins de corp
+          </div>
+        </div>
+
+        <div class="note">
+          Când intri în apă, apa te „ușurează” aparent deoarece asupra corpului tău acționează o forță în sus.
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-title="Plutire">
+      <div class="card">
+        <div class="eyebrow">Aplic</div>
+        <h2>Plutește, se scufundă sau stă în echilibru?</h2>
+        <p>Comportarea unui corp în lichid depinde de comparația dintre greutatea corpului $G$ și forța arhimedică $F_A$.</p>
+
+        <div class="grid">
+          <div class="mini-card">
+            <strong>$F_A>G$</strong>
+            Corpul urcă spre suprafață.
+          </div>
+          <div class="mini-card">
+            <strong>$F_A<G$</strong>
+            Corpul se scufundă.
+          </div>
+          <div class="mini-card">
+            <strong>$F_A=G$</strong>
+            Corpul plutește în echilibru.
+          </div>
+          <div class="mini-card">
+            <strong>Densitate medie</strong>
+            Submarinul își schimbă densitatea medie introducând sau eliminând apă din tancurile de balast.
+          </div>
+        </div>
+
+        <div class="svgbox" aria-label="Forța arhimedică și greutatea">
+          <svg viewBox="0 0 720 300" role="img">
+            <rect x="80" y="60" width="560" height="190" rx="22" fill="#0f172a" stroke="#67e8f9" stroke-width="3"/>
+            <rect x="85" y="120" width="550" height="125" rx="18" fill="#38bdf8" opacity=".28"/>
+            <circle cx="360" cy="175" r="42" fill="#fbbf24" opacity=".9" stroke="#fde68a" stroke-width="3"/>
+            <path d="M360 168 V90" stroke="#22c55e" stroke-width="7"/>
+            <path d="M360 90 l-18 25 M360 90 l18 25" stroke="#22c55e" stroke-width="7" fill="none"/>
+            <path d="M360 184 V260" stroke="#f87171" stroke-width="7"/>
+            <path d="M360 260 l-18 -25 M360 260 l18 -25" stroke="#f87171" stroke-width="7" fill="none"/>
+            <text x="390" y="105" fill="#bbf7d0" font-size="24" font-weight="700">F_A</text>
+            <text x="390" y="250" fill="#fecaca" font-size="24" font-weight="700">G</text>
+            <text x="118" y="105" fill="#e0f2fe" font-size="18">fluid</text>
+          </svg>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-title="Exemplu Arhimede">
+      <div class="card">
+        <div class="eyebrow">Exemplu</div>
+        <h2>Calcul cu forța arhimedică</h2>
+        <p>Un corp dezlocuiește $0{,}002\,\text{m}^3$ de apă. Calculăm forța arhimedică. Folosim $\rho_{apă}=1000\,\text{kg/m}^3$ și $g=10\,\text{N/kg}$.</p>
+
+        <div class="formula">
+          \[
+            F_A=\rho g V
+          \]
+          \[
+            F_A=1000\cdot 10\cdot 0{,}002=20\,\text{N}
+          \]
+        </div>
+
+        <p class="lead">Răspuns: apa împinge corpul în sus cu $20\,\text{N}$.</p>
+
+        <div class="note">
+          Dacă greutatea corpului este mai mică decât $20\,\text{N}$, corpul are tendința să urce. Dacă greutatea este mai mare, corpul are tendința să coboare.
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-title="Sinteză formule">
+      <div class="card">
+        <div class="eyebrow">Sinteză</div>
+        <h2>Formule-cheie din capitol</h2>
+
+        <div class="grid">
+          <div class="mini-card">
+            <strong>Presiunea</strong>
+            \[
+              p=\frac{F}{S}
+            \]
+          </div>
+          <div class="mini-card">
+            <strong>Presiunea hidrostatică</strong>
+            \[
+              p_h=\rho g h
+            \]
+          </div>
+          <div class="mini-card">
+            <strong>Presa hidraulică</strong>
+            \[
+              \frac{F_1}{S_1}=\frac{F_2}{S_2}
+            \]
+          </div>
+          <div class="mini-card">
+            <strong>Forța arhimedică</strong>
+            \[
+              F_A=\rho g V
+            \]
+          </div>
+        </div>
+
+        <div class="remember">
+          O formulă nu se învață singură. Întreabă-te mereu: „Ce mărime caut?”, „Ce date am?”, „În ce unități sunt datele?”
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-title="Problemă recapitulativă">
+      <div class="card">
+        <div class="eyebrow">Aplic</div>
+        <h2>Problemă recapitulativă</h2>
+        <p>Un scafandru se află la adâncimea $h=2\,\text{m}$ în apă. Apoi ține în apă un corp care dezlocuiește $V=0{,}004\,\text{m}^3$ de apă.</p>
+
+        <div class="steps">
+          <div class="step">
+            <div class="badge">A</div>
+            <div>Presiunea hidrostatică la adâncimea de $2\,\text{m}$:</div>
+          </div>
+        </div>
+
+        <div class="formula">
+          \[
+            p_h=\rho g h=1000\cdot 10\cdot 2=20\,000\,\text{Pa}
+          \]
+        </div>
+
+        <div class="steps">
+          <div class="step">
+            <div class="badge">B</div>
+            <div>Forța arhimedică pentru corpul introdus în apă:</div>
+          </div>
+        </div>
+
+        <div class="formula">
+          \[
+            F_A=\rho g V=1000\cdot 10\cdot 0{,}004=40\,\text{N}
+          \]
+        </div>
+
+        <div class="remember">
+          Rezultate: presiunea hidrostatică este $20\,000\,\text{Pa}$, iar apa împinge corpul în sus cu $40\,\text{N}$.
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-title="Verificare rapidă 1">
+      <div class="card">
+        <div class="eyebrow">Verificare rapidă</div>
+        <h2>Partea I</h2>
+        <p class="muted">Alege câte o variantă. Variantele sunt aliniate pentru a fi citite ușor.</p>
+
+        <div class="quiz" data-quiz="qz1">
+          <div class="quiz-item" data-answer="b">
+            <div class="q">1. Formula presiunii este:</div>
+            <div class="options">
+              <label class="option"><input type="radio" name="q1" value="a"><span>A. $p=F\cdot S$</span></label>
+              <label class="option"><input type="radio" name="q1" value="b"><span>B. $p=\frac{F}{S}$</span></label>
+              <label class="option"><input type="radio" name="q1" value="c"><span>C. $p=\frac{S}{F}$</span></label>
+            </div>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz-item" data-answer="c">
+            <div class="q">2. Unitatea de măsură pentru presiune în S.I. este:</div>
+            <div class="options">
+              <label class="option"><input type="radio" name="q2" value="a"><span>A. newton</span></label>
+              <label class="option"><input type="radio" name="q2" value="b"><span>B. joule</span></label>
+              <label class="option"><input type="radio" name="q2" value="c"><span>C. pascal</span></label>
+            </div>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz-item" data-answer="b">
+            <div class="q">3. Presiunea hidrostatică crește când:</div>
+            <div class="options">
+              <label class="option"><input type="radio" name="q3" value="a"><span>A. vasul este mai colorat</span></label>
+              <label class="option"><input type="radio" name="q3" value="b"><span>B. adâncimea crește</span></label>
+              <label class="option"><input type="radio" name="q3" value="c"><span>C. lichidul nu mai este transparent</span></label>
+            </div>
+            <div class="feedback"></div>
+          </div>
+        </div>
+
+        <div class="check-row">
+          <button class="check" type="button" onclick="checkQuiz('qz1')">Verifică răspunsurile</button>
+          <button class="reset" type="button" onclick="resetQuiz('qz1')">Resetează</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-title="Verificare rapidă 2">
+      <div class="card">
+        <div class="eyebrow">Verificare rapidă</div>
+        <h2>Partea a II-a</h2>
+
+        <div class="quiz" data-quiz="qz2">
+          <div class="quiz-item" data-answer="a">
+            <div class="q">4. Presiunea atmosferică scade când:</div>
+            <div class="options">
+              <label class="option"><input type="radio" name="q4" value="a"><span>A. altitudinea crește</span></label>
+              <label class="option"><input type="radio" name="q4" value="b"><span>B. aria scade</span></label>
+              <label class="option"><input type="radio" name="q4" value="c"><span>C. forța crește</span></label>
+            </div>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz-item" data-answer="b">
+            <div class="q">5. Legea lui Pascal explică funcționarea:</div>
+            <div class="options">
+              <label class="option"><input type="radio" name="q5" value="a"><span>A. termometrului</span></label>
+              <label class="option"><input type="radio" name="q5" value="b"><span>B. presei hidraulice</span></label>
+              <label class="option"><input type="radio" name="q5" value="c"><span>C. busolei</span></label>
+            </div>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz-item" data-answer="c">
+            <div class="q">6. Forța arhimedică este orientată:</div>
+            <div class="options">
+              <label class="option"><input type="radio" name="q6" value="a"><span>A. orizontal</span></label>
+              <label class="option"><input type="radio" name="q6" value="b"><span>B. de sus în jos</span></label>
+              <label class="option"><input type="radio" name="q6" value="c"><span>C. de jos în sus</span></label>
+            </div>
+            <div class="feedback"></div>
+          </div>
+        </div>
+
+        <div class="check-row">
+          <button class="check" type="button" onclick="checkQuiz('qz2')">Verifică răspunsurile</button>
+          <button class="reset" type="button" onclick="resetQuiz('qz2')">Resetează</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" data-title="Final">
+      <div class="card">
+        <div class="eyebrow">Final</div>
+        <h2>Ai recapitulat Statica fluidelor</h2>
+
+        <div class="grid">
+          <div class="mini-card">
+            <strong>Știi să explici</strong>
+            de ce presiunea depinde de forță și de suprafață.
+          </div>
+          <div class="mini-card">
+            <strong>Știi să aplici</strong>
+            formulele $p=\frac{F}{S}$, $p_h=\rho gh$ și $F_A=\rho gV$.
+          </div>
+          <div class="mini-card">
+            <strong>Știi să recunoști</strong>
+            aplicații: barometru, manometru, presă hidraulică, cric, submarin, vapor.
+          </div>
+          <div class="mini-card">
+            <strong>Știi să decizi</strong>
+            dacă un corp plutește, se scufundă sau rămâne în echilibru.
+          </div>
+        </div>
+
+        <div class="final-banner">
+          <strong>Prof. Dănuț Andronie</strong><br>
+          email: <a class="inline-link" href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+        </div>
+
+        <p class="small center" style="margin-top:14px;">Apasă pe butonul verde pentru a continua cu testul final al capitolului.</p>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navigare lecție">
+    <div class="nav-inner">
+      <button class="nav-btn back" id="backBtn" type="button">◀ Înapoi</button>
+      <div class="counter" id="counter">1/16</div>
+      <button class="nav-btn next" id="nextBtn" type="button">Mergi mai departe ▶</button>
+    </div>
+  </nav>
+
+  <script>
+    const screens = Array.from(document.querySelectorAll('.screen'));
+    const backBtn = document.getElementById('backBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const counter = document.getElementById('counter');
+    const finalLink = '../test-final/index.html';
+    let current = 0;
+
+    function showScreen(index){
+      current = Math.max(0, Math.min(index, screens.length - 1));
+      screens.forEach((screen, i) => screen.classList.toggle('active', i === current));
+      counter.textContent = `${current + 1}/${screens.length}`;
+      backBtn.disabled = current === 0;
+      nextBtn.textContent = current === screens.length - 1 ? 'Test final ▶' : 'Mergi mai departe ▶';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if(window.MathJax && window.MathJax.typesetPromise){
+        window.MathJax.typesetPromise([screens[current]]).catch(() => {});
+      }
+    }
+
+    backBtn.addEventListener('click', () => showScreen(current - 1));
+
+    nextBtn.addEventListener('click', () => {
+      if(current === screens.length - 1){
+        window.location.href = finalLink;
+      } else {
+        showScreen(current + 1);
+      }
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if(event.key === 'ArrowRight'){
+        if(current < screens.length - 1) showScreen(current + 1);
+      }
+      if(event.key === 'ArrowLeft'){
+        if(current > 0) showScreen(current - 1);
+      }
+    });
+
+    function checkQuiz(quizId){
+      const quiz = document.querySelector(`[data-quiz="${quizId}"]`);
+      const items = Array.from(quiz.querySelectorAll('.quiz-item'));
+
+      items.forEach((item) => {
+        const correct = item.dataset.answer;
+        const checked = item.querySelector('input[type="radio"]:checked');
+        const feedback = item.querySelector('.feedback');
+
+        feedback.className = 'feedback';
+
+        if(!checked){
+          feedback.textContent = 'Alege mai întâi o variantă.';
+          feedback.classList.add('choose');
+          return;
+        }
+
+        if(checked.value === correct){
+          feedback.textContent = 'Corect!';
+          feedback.classList.add('ok');
+        } else {
+          feedback.textContent = 'Mai încearcă. Recitește pagina cu explicația.';
+          feedback.classList.add('no');
+        }
+      });
+    }
+
+    function resetQuiz(quizId){
+      const quiz = document.querySelector(`[data-quiz="${quizId}"]`);
+      quiz.querySelectorAll('input[type="radio"]').forEach(input => input.checked = false);
+      quiz.querySelectorAll('.feedback').forEach(feedback => {
+        feedback.textContent = '';
+        feedback.className = 'feedback';
+      });
+    }
+
+    showScreen(0);
+  </script>
 </body>
 </html>

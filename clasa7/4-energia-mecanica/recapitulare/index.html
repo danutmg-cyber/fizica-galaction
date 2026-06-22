@@ -2,288 +2,1031 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Recapitulare | Energia mecanică | Fizica Galaction</title>
-  <meta name="description" content="Recapitulare pentru capitolul Energia mecanică, clasa a VII-a.">
-  <link rel="stylesheet" href="../../../assets/css/style.css">
-
+  <meta name="description" content="Recapitulare interactivă pentru capitolul Energia mecanică, clasa a VII-a.">
   <script>
     window.MathJax = {
-      tex: {
-        inlineMath: [['$', '$'], ['\\(', '\\)']],
-        displayMath: [['$$', '$$'], ['\\[', '\\]']]
-      },
-      svg: { fontCache: 'global' }
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global', scale: 0.95 }
     };
   </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-svg.js"></script>
-
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
   <style>
     :root{
-      --bg:#0f172a; --panel:#1e293b; --panel-2:#334155; --text:#f8fafc; --muted:#cbd5e1;
-      --accent:#22d3ee; --accent-2:#38bdf8; --ok:#22c55e; --warn:#f59e0b; --danger:#ef4444;
+      --bg:#07111f;
+      --bg2:#0f172a;
+      --card:#122033;
+      --card2:#172a42;
+      --line:#2b4a66;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --title:#67e8f9;
+      --accent:#38bdf8;
+      --good:#22c55e;
+      --goodText:#052e16;
+      --back:#e2e8f0;
+      --backText:#0f172a;
+      --warn:#fde68a;
+      --bad:#fecaca;
+      --badText:#7f1d1d;
+      --shadow:0 18px 45px rgba(0,0,0,.38);
     }
+
     *{box-sizing:border-box}
-    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.65}
-    .wrapper{max-width:1080px;margin:0 auto;padding:20px}
-    .site-header,.site-footer{background:#020617;border-bottom:1px solid #1e293b}
-    .site-footer{border-top:1px solid #1e293b;border-bottom:none;margin-top:32px}
-    .site-title{margin:0;color:var(--accent);font-size:1.9rem}
-    .site-subtitle{margin:6px 0 0;color:var(--muted)}
-    .card{background:var(--panel);border:1px solid var(--panel-2);border-radius:20px;padding:22px;margin:18px 0;box-shadow:0 12px 30px rgba(0,0,0,.25)}
-    h1,h2,h3{margin-top:0}
-    .quote{margin-top:14px;padding:12px 14px;border-left:4px solid var(--accent);background:rgba(34,211,238,.08);border-radius:10px;color:#e0f2fe;font-style:italic}
-    .formula{
-      display:block;padding:14px 16px;border-radius:14px;background:#0f172a;border:1px solid #334155;
-      font-size:1.08rem;font-weight:700;margin:10px 0;color:#bae6fd;text-align:center;overflow-x:auto
+
+    html,body{
+      margin:0;
+      min-height:100%;
+      background:
+        radial-gradient(circle at top left, rgba(56,189,248,.16), transparent 32rem),
+        linear-gradient(160deg, var(--bg), var(--bg2));
+      color:var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      font-size:18px;
+      line-height:1.55;
     }
-    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
-    .mini{background:#0f172a;border:1px solid #334155;border-radius:16px;padding:16px}
-    .mini h3{font-size:1rem;margin-bottom:8px}
-    .notice{padding:14px 16px;border-radius:14px;border:1px solid rgba(34,197,94,.28);background:rgba(34,197,94,.12);color:#dcfce7;margin:14px 0}
-    .warn{border-color:rgba(245,158,11,.32);background:rgba(245,158,11,.12);color:#fef3c7}
-    .section-title{
-      display:inline-block;
-      padding:7px 12px;
+
+    body{
+      min-height:100dvh;
+      overflow-x:hidden;
+    }
+
+    .app{
+      width:min(980px, 100%);
+      margin:0 auto;
+      min-height:100dvh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .screen{
+      display:none;
+      flex:1;
+      padding: clamp(14px, 3vw, 28px);
+      padding-bottom: 112px;
+    }
+
+    .screen.active{
+      display:block;
+      animation: fade .22s ease-out;
+    }
+
+    @keyframes fade{
+      from{opacity:0; transform: translateY(8px)}
+      to{opacity:1; transform: translateY(0)}
+    }
+
+    .hero{
+      border:1px solid rgba(103,232,249,.38);
+      background:linear-gradient(135deg, rgba(14,165,233,.18), rgba(34,197,94,.08));
+      box-shadow:var(--shadow);
+      border-radius:24px;
+      padding: clamp(18px, 4vw, 32px);
+      margin-bottom:18px;
+    }
+
+    .school{
+      font-weight:800;
+      letter-spacing:.03em;
+      color:var(--title);
+      text-align:center;
+      text-transform:uppercase;
+      font-size: clamp(1rem, 3.4vw, 1.22rem);
+    }
+
+    .prof{
+      text-align:center;
+      color:var(--muted);
+      margin-top:4px;
+      font-size:.98rem;
+    }
+
+    .motto{
+      margin:14px auto 0;
+      max-width:760px;
+      color:#fff7c2;
+      background:rgba(253,230,138,.10);
+      border-left:4px solid var(--title);
+      border-radius:14px;
+      padding:10px 14px;
+      font-style:italic;
+      text-align:center;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(23,42,66,.98), rgba(18,32,51,.98));
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding: clamp(18px, 4vw, 30px);
+      box-shadow: var(--shadow);
+    }
+
+    .mini-card{
+      background:rgba(15,23,42,.72);
+      border:1px solid rgba(148,163,184,.22);
+      border-radius:18px;
+      padding:14px;
+      margin:14px 0;
+    }
+
+    h1,h2,h3{
+      line-height:1.18;
+      margin:0 0 14px;
+    }
+
+    h1{
+      font-size: clamp(1.85rem, 6.8vw, 3.2rem);
+      color:var(--title);
+      text-align:center;
+    }
+
+    h2{
+      font-size: clamp(1.55rem, 5.4vw, 2.35rem);
+      color:var(--title);
+    }
+
+    h3{
+      color:#bae6fd;
+      font-size: clamp(1.15rem, 4.3vw, 1.45rem);
+      margin-top:10px;
+    }
+
+    p{margin:10px 0}
+
+    .lead{
+      font-size: clamp(1.05rem, 3.9vw, 1.28rem);
+      color:#e0f2fe;
+      text-align:center;
+      max-width:780px;
+      margin:0 auto 12px;
+    }
+
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:#d9f99d;
+      background:rgba(34,197,94,.10);
+      border:1px solid rgba(34,197,94,.35);
       border-radius:999px;
-      background:rgba(56,189,248,.12);
-      border:1px solid rgba(56,189,248,.28);
-      color:#dbeafe;
-      font-weight:700;
+      padding:6px 12px;
+      font-weight:800;
+      font-size:.92rem;
       margin-bottom:10px;
     }
-    .check-list{margin:0;padding-left:22px}
-    .check-list li{margin:6px 0}
-    .summary-box{background:#111827;border:1px dashed #475569;border-radius:16px;padding:16px}
-    .nav{display:flex;gap:12px;flex-wrap:wrap;justify-content:space-between;margin-top:18px}
-    .btn{
-      display:inline-block;text-decoration:none;border:none;cursor:pointer;text-align:center;
-      padding:13px 16px;border-radius:12px;font-weight:700;min-width:180px
+
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap:14px;
+      margin-top:16px;
     }
-    .btn-primary{background:var(--accent);color:#082f49}
-    .btn-secondary{background:#1d4ed8;color:#eff6ff}
-    .btn-ghost{background:#0f172a;color:#e2e8f0;border:1px solid #475569}
-    @media (max-width:760px){
-      .grid{grid-template-columns:1fr}
-      .nav .btn{width:100%}
-      .site-title{font-size:1.55rem}
+
+    .grid.three{
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .tile{
+      background:rgba(15,23,42,.72);
+      border:1px solid rgba(103,232,249,.24);
+      border-radius:18px;
+      padding:14px;
+      min-height:100px;
+    }
+
+    .tile strong{
+      color:#a7f3d0;
+    }
+
+    .formula{
+      overflow-x:auto;
+      max-width:100%;
+      background:rgba(2,6,23,.55);
+      border:1px solid rgba(148,163,184,.26);
+      border-radius:18px;
+      padding:12px 10px;
+      margin:14px 0;
+      text-align:center;
+    }
+
+    .formula mjx-container[jax="SVG"]{
+      max-width:100%;
+      overflow-x:auto;
+      overflow-y:hidden;
+      font-size:112% !important;
+    }
+
+    .note{
+      color:#dbeafe;
+      background:rgba(59,130,246,.12);
+      border-left:4px solid var(--accent);
+      border-radius:14px;
+      padding:10px 12px;
+      margin:14px 0;
+    }
+
+    .warning{
+      color:#fff7ed;
+      background:rgba(251,146,60,.12);
+      border-left:4px solid #fb923c;
+      border-radius:14px;
+      padding:10px 12px;
+      margin:14px 0;
+    }
+
+    .steps{
+      display:grid;
+      gap:10px;
+      margin:12px 0;
+      padding:0;
+      list-style:none;
+    }
+
+    .steps li{
+      display:grid;
+      grid-template-columns:34px 1fr;
+      gap:10px;
+      align-items:start;
+      background:rgba(15,23,42,.70);
+      border:1px solid rgba(148,163,184,.20);
+      border-radius:16px;
+      padding:10px;
+    }
+
+    .num{
+      width:34px;
+      height:34px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      background:rgba(103,232,249,.16);
+      color:var(--title);
+      font-weight:900;
+    }
+
+    .svgbox{
+      width:min(620px, 100%);
+      margin:16px auto;
+      background:rgba(2,6,23,.38);
+      border:1px solid rgba(103,232,249,.25);
+      border-radius:20px;
+      padding:12px;
+      overflow:hidden;
+    }
+
+    .svgbox > svg{
+      width:100%;
+      height:auto;
+      display:block;
+    }
+
+    .check{
+      margin-top:14px;
+      border:1px solid rgba(103,232,249,.28);
+      border-radius:20px;
+      background:rgba(15,23,42,.68);
+      padding:16px;
+    }
+
+    .answers{
+      display:grid;
+      gap:10px;
+      margin:12px 0;
+    }
+
+    .answers label{
+      display:grid;
+      grid-template-columns:28px 1fr;
+      gap:10px;
+      align-items:start;
+      padding:12px;
+      border:1px solid rgba(148,163,184,.28);
+      border-radius:14px;
+      background:rgba(30,41,59,.70);
+      cursor:pointer;
+    }
+
+    .answers label:hover{
+      border-color:rgba(103,232,249,.55);
+      background:rgba(30,41,59,.95);
+    }
+
+    input[type="radio"]{
+      width:20px;
+      height:20px;
+      accent-color:#22c55e;
+      margin-top:3px;
+    }
+
+    .quiz-btn{
+      width:100%;
+      border:0;
+      border-radius:14px;
+      padding:13px 16px;
+      background:#38bdf8;
+      color:#082f49;
+      font-weight:900;
+      font-size:1rem;
+      cursor:pointer;
+      margin-top:8px;
+    }
+
+    .feedback{
+      min-height:34px;
+      margin-top:10px;
+      border-radius:14px;
+      padding:9px 12px;
+      display:none;
+      font-weight:800;
+      text-align:center;
+    }
+
+    .feedback.ok{
+      display:block;
+      background:rgba(34,197,94,.16);
+      color:#bbf7d0;
+      border:1px solid rgba(34,197,94,.40);
+    }
+
+    .feedback.no{
+      display:block;
+      background:rgba(248,113,113,.14);
+      color:var(--bad);
+      border:1px solid rgba(248,113,113,.38);
+    }
+
+    .feedback.wait{
+      display:block;
+      background:rgba(253,230,138,.14);
+      color:var(--warn);
+      border:1px solid rgba(253,230,138,.38);
+    }
+
+    .summary-list{
+      display:grid;
+      gap:10px;
+      margin:14px 0;
+    }
+
+    .summary-row{
+      display:grid;
+      grid-template-columns:minmax(120px, .8fr) minmax(0, 1.2fr);
+      gap:10px;
+      border-bottom:1px solid rgba(148,163,184,.18);
+      padding-bottom:9px;
+    }
+
+    .summary-row strong{
+      color:#a7f3d0;
+    }
+
+    .final-banner{
+      margin-top:18px;
+      background:linear-gradient(135deg, rgba(34,197,94,.17), rgba(14,165,233,.14));
+      border:1px solid rgba(103,232,249,.35);
+      border-radius:22px;
+      padding:18px;
+      text-align:center;
+    }
+
+    .final-banner strong{
+      color:#bbf7d0;
+      display:block;
+      font-size:1.2rem;
+      margin-bottom:4px;
+    }
+
+    .nav{
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      padding:10px max(10px, env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-right));
+      background:linear-gradient(180deg, rgba(7,17,31,.40), rgba(7,17,31,.98) 32%);
+      backdrop-filter: blur(10px);
+      border-top:1px solid rgba(148,163,184,.22);
+      z-index:10;
+    }
+
+    .nav-inner{
+      width:min(980px, 100%);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:minmax(0, 1fr) auto minmax(0, 1fr);
+      gap:10px;
+      align-items:center;
+    }
+
+    .nav button{
+      min-height:52px;
+      border:0;
+      border-radius:16px;
+      padding:12px 14px;
+      font-size:1rem;
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(0,0,0,.24);
+    }
+
+    #backBtn{
+      background:var(--back);
+      color:var(--backText);
+    }
+
+    #nextBtn{
+      background:var(--good);
+      color:var(--goodText);
+    }
+
+    #backBtn:disabled{
+      opacity:.45;
+      cursor:not-allowed;
+      box-shadow:none;
+    }
+
+    .indicator{
+      min-width:62px;
+      text-align:center;
+      color:#e0f2fe;
+      font-weight:900;
+      border:1px solid rgba(103,232,249,.25);
+      background:rgba(15,23,42,.82);
+      border-radius:999px;
+      padding:9px 12px;
+    }
+
+    a.inline-link{
+      color:#93c5fd;
+      font-weight:800;
+    }
+
+    @media (max-width:720px){
+      html,body{font-size:17px}
+      .grid, .grid.three{
+        grid-template-columns:1fr;
+      }
+      .screen{
+        padding:12px;
+        padding-bottom:112px;
+      }
+      .card,.hero{
+        border-radius:20px;
+      }
+      .summary-row{
+        grid-template-columns:1fr;
+      }
+      .nav-inner{
+        grid-template-columns:minmax(0, 1fr) 58px minmax(0, 1fr);
+        gap:8px;
+      }
+      .nav button{
+        min-height:50px;
+        padding:10px 8px;
+        font-size:.94rem;
+      }
+      .indicator{
+        min-width:58px;
+        padding:8px 7px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .screen.active{animation:none}
     }
   </style>
 </head>
+
 <body>
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction</h1>
-      <p class="site-subtitle">Clasa a VII-a • Capitolul 4 • Recapitulare</p>
-    </div>
-  </header>
+  <main class="app" id="app">
 
-  <main class="wrapper">
-    <section class="card">
-      <h1>Recapitulare – Energia mecanică</h1>
-      <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică.”</p>
-      <p>
-        În această recapitulare găsești, în formă sintetică, ideile esențiale din unitatea despre
-        lucrul mecanic, puterea mecanică, energiile mecanice și conservarea energiei mecanice.
-      </p>
-      <div class="notice">
-        Reține în special definițiile, formulele, unitățile de măsură și sensul fizic al fiecărei mărimi.
+    <section class="screen active" data-title="Start">
+      <div class="hero">
+        <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+        <div class="prof">Prof. Dănuț Andronie</div>
+        <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
       </div>
+
+      <article class="card">
+        <span class="tag">Clasa a VII-a • Capitolul: Energia mecanică</span>
+        <h1>Recapitulare interactivă</h1>
+        <p class="lead">
+          Lucrul mecanic, puterea, randamentul și energia ne ajută să răspundem la o întrebare simplă:
+          <strong>ce poate face un corp datorită mișcării sau poziției sale?</strong>
+        </p>
+
+        <div class="svgbox" aria-label="Schemă despre energia mecanică">
+          <svg viewBox="0 0 780 310" role="img" aria-labelledby="t1 d1">
+            <title id="t1">Energia mecanică</title>
+            <desc id="d1">Un trenuleț coboară și urcă, ilustrând transformarea energiei potențiale în energie cinetică.</desc>
+            <defs>
+              <linearGradient id="track" x1="0" x2="1">
+                <stop offset="0" stop-color="#67e8f9"/>
+                <stop offset="1" stop-color="#22c55e"/>
+              </linearGradient>
+            </defs>
+            <rect width="780" height="310" rx="24" fill="#0f172a"/>
+            <path d="M60 230 C170 60 260 60 350 220 S560 290 720 80" fill="none" stroke="url(#track)" stroke-width="12" stroke-linecap="round"/>
+            <circle cx="145" cy="119" r="24" fill="#fbbf24"/>
+            <rect x="120" y="93" width="74" height="34" rx="10" fill="#38bdf8"/>
+            <circle cx="138" cy="134" r="8" fill="#020617"/>
+            <circle cx="176" cy="134" r="8" fill="#020617"/>
+            <text x="70" y="42" fill="#e0f2fe" font-size="24" font-weight="700">sus: energie potențială mare</text>
+            <text x="412" y="268" fill="#e0f2fe" font-size="24" font-weight="700">jos: energie cinetică mare</text>
+            <path d="M392 126 l72 0" stroke="#f8fafc" stroke-width="4" marker-end="url(#arrow)"/>
+            <defs>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L9,3 z" fill="#f8fafc"/>
+              </marker>
+            </defs>
+          </svg>
+        </div>
+
+        <p class="note">
+          Ideea-cheie: energia nu se pierde „în neant”; ea se poate transfera sau transforma.
+          În multe probleme de gimnaziu urmărim <strong>cum se schimbă energia mecanică</strong>.
+        </p>
+      </article>
     </section>
 
-    <section class="card">
-      <span class="section-title">Formule esențiale</span>
-      <div class="grid">
-        <div class="mini">
-          <h3>Lucrul mecanic</h3>
-          <div class="formula">$$L = F_x \cdot d = F \cdot \cos\alpha \cdot d$$</div>
+    <section class="screen" data-title="Harta capitolului">
+      <article class="card">
+        <span class="tag">Observ</span>
+        <h2>Harta capitolului</h2>
+        <p>
+          În acest capitol, mărimile fizice sunt legate între ele printr-un fir logic: o forță poate face
+          lucru mecanic, lucrul mecanic poate modifica energia, iar puterea arată cât de repede se produce această modificare.
+        </p>
+
+        <div class="grid three">
+          <div class="tile"><strong>Lucru mecanic</strong><br>apare când o forță produce deplasare.</div>
+          <div class="tile"><strong>Putere</strong><br>arată cât lucru mecanic se face într-un timp.</div>
+          <div class="tile"><strong>Randament</strong><br>compară efectul util cu efortul consumat.</div>
+          <div class="tile"><strong>Energie cinetică</strong><br>depinde de masa corpului și de viteza sa.</div>
+          <div class="tile"><strong>Energie potențială</strong><br>depinde de poziție sau deformare.</div>
+          <div class="tile"><strong>Conservare</strong><br>energia mecanică rămâne constantă când acționează numai forțe conservative.</div>
         </div>
-        <div class="mini">
-          <h3>Puterea mecanică</h3>
-          <div class="formula">$$P = \frac{L}{t}$$</div>
+
+        <p class="warning">
+          Pentru probleme: citește datele, transformă unitățile în SI, alege formula și verifică dacă rezultatul are sens.
+        </p>
+      </article>
+    </section>
+
+    <section class="screen" data-title="Lucrul mecanic">
+      <article class="card">
+        <span class="tag">Rețin</span>
+        <h2>Lucrul mecanic</h2>
+        <p>
+          Lucrul mecanic măsoară efortul depus de o forță pentru deplasarea unui corp.
+          Dacă forța este constantă:
+        </p>
+
+        <div class="formula">
+          \[
+            L = F \cdot d \cdot \cos \alpha
+          \]
         </div>
-        <div class="mini">
+
+        <div class="summary-list">
+          <div class="summary-row"><strong>$F$</strong><span>modulul forței, măsurat în newtoni: $N$</span></div>
+          <div class="summary-row"><strong>$d$</strong><span>distanța parcursă, măsurată în metri: $m$</span></div>
+          <div class="summary-row"><strong>$\alpha$</strong><span>unghiul dintre forță și direcția deplasării</span></div>
+          <div class="summary-row"><strong>$L$</strong><span>lucrul mecanic, măsurat în jouli: $J$</span></div>
+        </div>
+
+        <div class="mini-card">
+          <h3>Semnul lucrului mecanic</h3>
+          <p><strong>Pozitiv:</strong> forța ajută mișcarea.</p>
+          <p><strong>Negativ:</strong> forța se opune mișcării, ca frecarea.</p>
+          <p><strong>Nul:</strong> forța este perpendiculară pe deplasare.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="screen" data-title="Exemplu lucru">
+      <article class="card">
+        <span class="tag">Exemplu</span>
+        <h2>Exemplu numeric: lucru mecanic</h2>
+        <p>
+          Un elev împinge o cutie cu o forță orizontală de $12\,N$, pe distanța de $3\,m$.
+          Forța are același sens cu deplasarea, deci $\alpha=0^\circ$ și $\cos 0^\circ = 1$.
+        </p>
+
+        <div class="formula">
+          \[
+            L = F \cdot d \cdot \cos \alpha
+            = 12\,N \cdot 3\,m \cdot 1
+            = 36\,J
+          \]
+        </div>
+
+        <p class="note">
+          Interpretare: forța elevului a efectuat un lucru mecanic de $36\,J$ asupra cutiei.
+        </p>
+
+        <div class="check" data-quiz="q1">
+          <h3>Verificare rapidă</h3>
+          <p>O forță de frecare acționează în sens opus deplasării. Lucrul mecanic al frecării este:</p>
+          <div class="answers">
+            <label><input type="radio" name="q1" value="0"><span>pozitiv</span></label>
+            <label><input type="radio" name="q1" value="1"><span>negativ</span></label>
+            <label><input type="radio" name="q1" value="2"><span>mereu egal cu energia potențială</span></label>
+          </div>
+          <button class="quiz-btn" type="button" onclick="checkQuiz('q1','1')">Verifică</button>
+          <div class="feedback" id="fb-q1" aria-live="polite"></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="screen" data-title="Putere și randament">
+      <article class="card">
+        <span class="tag">Rețin</span>
+        <h2>Puterea mecanică și randamentul</h2>
+        <p>
+          Puterea arată cât de repede se efectuează lucrul mecanic.
+        </p>
+
+        <div class="formula">
+          \[
+            P=\frac{L}{\Delta t}
+          \]
+        </div>
+
+        <p>
+          Dacă un motor efectuează $600\,J$ în $20\,s$, atunci:
+        </p>
+
+        <div class="formula">
+          \[
+            P=\frac{600\,J}{20\,s}=30\,W
+          \]
+        </div>
+
+        <div class="mini-card">
           <h3>Randamentul</h3>
-          <div class="formula">$$\eta = \frac{L_{util}}{L_{consumat}} = \frac{P_{utilă}}{P_{consumată}}$$</div>
+          <p>
+            Randamentul arată cât din efortul consumat devine efect util:
+          </p>
+          <div class="formula">
+            \[
+              \eta = \frac{L_{util}}{L_{consumat}}
+              \quad \text{sau} \quad
+              \eta = \frac{P_{util}}{P_{consumat}}
+            \]
+          </div>
+          <p>Randamentul nu are unitate de măsură și este mai mic decât $1$ în situațiile reale.</p>
         </div>
-        <div class="mini">
-          <h3>Energia cinetică</h3>
-          <div class="formula">$$E_c = \frac{mv^2}{2}$$</div>
-        </div>
-        <div class="mini">
-          <h3>Energia potențială gravitațională</h3>
-          <div class="formula">$$E_{pg} = mgh$$</div>
-        </div>
-        <div class="mini">
-          <h3>Energia potențială elastică</h3>
-          <div class="formula">$$E_{pe} = \frac{kx^2}{2}$$</div>
-        </div>
-        <div class="mini">
-          <h3>Energia mecanică</h3>
-          <div class="formula">$$E_m = E_c + E_p$$</div>
-        </div>
-        <div class="mini">
-          <h3>Variații importante</h3>
-          <div class="formula">$$\Delta E_{pg} = -L_G$$</div>
-          <div class="formula">$$\Delta E_m = L_{forțelor\ neconservative}$$</div>
-        </div>
-      </div>
+      </article>
     </section>
 
-    <section class="card">
-      <span class="section-title">1. Lucrul mecanic</span>
-      <div class="summary-box">
-        <p>Lucrul mecanic caracterizează efortul depus de o forță pentru deplasarea unui corp.</p>
-        <ul class="check-list">
-          <li>unitatea de măsură este <strong>joule (J)</strong>;</li>
-          <li>$1\,J = 1\,N \cdot 1\,m$;</li>
-          <li>lucrul mecanic este <strong>pozitiv</strong> dacă forța ajută la deplasare;</li>
-          <li>este <strong>negativ</strong> dacă forța se opune deplasării;</li>
-          <li>este <strong>nul</strong> dacă forța este perpendiculară pe direcția mișcării.</li>
+    <section class="screen" data-title="Energia cinetică">
+      <article class="card">
+        <span class="tag">Rețin</span>
+        <h2>Energia cinetică</h2>
+        <p>
+          Un corp aflat în mișcare poate efectua lucru mecanic. Energia lui datorată mișcării se numește
+          <strong>energie cinetică</strong>.
+        </p>
+
+        <div class="formula">
+          \[
+            E_c=\frac{m v^2}{2}
+          \]
+        </div>
+
+        <p>
+          Exemplu: o minge de masă $m=2\,kg$ se mișcă având viteza $v=4\,m/s$.
+        </p>
+
+        <div class="formula">
+          \[
+            E_c=\frac{2\,kg \cdot (4\,m/s)^2}{2}
+            =\frac{2 \cdot 16}{2}\,J
+            =16\,J
+          \]
+        </div>
+
+        <p class="warning">
+          Atenție: dacă viteza se dublează, energia cinetică devine de patru ori mai mare, deoarece viteza este la pătrat.
+        </p>
+      </article>
+    </section>
+
+    <section class="screen" data-title="Energii potențiale">
+      <article class="card">
+        <span class="tag">Rețin</span>
+        <h2>Energia potențială</h2>
+        <p>
+          Energia potențială apare când un corp poate efectua lucru mecanic datorită poziției sale sau datorită deformării.
+        </p>
+
+        <div class="grid">
+          <div class="tile">
+            <strong>Gravitațională</strong>
+            <div class="formula">
+              \[
+                E_{pg}=mgh
+              \]
+            </div>
+            <p>Depinde de masă, accelerația gravitațională și înălțime.</p>
+          </div>
+
+          <div class="tile">
+            <strong>Elastică</strong>
+            <div class="formula">
+              \[
+                E_{pe}=\frac{kx^2}{2}
+              \]
+            </div>
+            <p>Depinde de constanta elastică și de deformare.</p>
+          </div>
+        </div>
+
+        <div class="mini-card">
+          <h3>Exemplu numeric</h3>
+          <p>Un resort cu $k=100\,N/m$ este comprimat cu $x=0{,}20\,m$.</p>
+          <div class="formula">
+            \[
+              E_{pe}=\frac{100\cdot(0{,}20)^2}{2}
+              =\frac{100\cdot0{,}04}{2}
+              =2\,J
+            \]
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="screen" data-title="Energia mecanică">
+      <article class="card">
+        <span class="tag">Rețin</span>
+        <h2>Energia mecanică</h2>
+        <p>
+          Energia mecanică este suma dintre energia cinetică și energia potențială.
+        </p>
+
+        <div class="formula">
+          \[
+            E = E_c + E_p
+          \]
+        </div>
+
+        <div class="svgbox" aria-label="Transformarea energiei pe un tobogan">
+          <svg viewBox="0 0 760 310" role="img" aria-labelledby="t2 d2">
+            <title id="t2">Tobogan și energie mecanică</title>
+            <desc id="d2">O bilă coboară pe un tobogan: sus predomină energia potențială, jos energia cinetică.</desc>
+            <rect width="760" height="310" rx="24" fill="#0f172a"/>
+            <path d="M90 70 C210 62 210 240 360 238 C520 238 560 120 680 120" fill="none" stroke="#67e8f9" stroke-width="13" stroke-linecap="round"/>
+            <circle cx="112" cy="68" r="22" fill="#facc15"/>
+            <circle cx="365" cy="238" r="22" fill="#22c55e"/>
+            <line x1="90" y1="260" x2="705" y2="260" stroke="#64748b" stroke-width="3"/>
+            <line x1="112" y1="90" x2="112" y2="260" stroke="#facc15" stroke-dasharray="8 8" stroke-width="3"/>
+            <text x="145" y="116" fill="#fde68a" font-size="24" font-weight="700">h mare → $E_p$ mare</text>
+            <text x="300" y="292" fill="#bbf7d0" font-size="24" font-weight="700">v mare → $E_c$ mare</text>
+          </svg>
+        </div>
+
+        <p>
+          Dacă frecările sunt neglijabile, energia se transformă între formele ei, dar suma rămâne aceeași.
+        </p>
+      </article>
+    </section>
+
+    <section class="screen" data-title="Conservare">
+      <article class="card">
+        <span class="tag">Aplic</span>
+        <h2>Conservarea energiei mecanice</h2>
+        <p>
+          Energia mecanică se conservă dacă asupra corpului acționează numai forțe conservative,
+          precum greutatea sau forța elastică.
+        </p>
+
+        <div class="formula">
+          \[
+            E_{initial}=E_{final}
+          \]
+        </div>
+
+        <p>
+          Exemplu: o carte de $1\,kg$ cade de la înălțimea $h=2\,m$, fără frecare. Considerăm $g=10\,N/kg$.
+        </p>
+
+        <div class="formula">
+          \[
+            E_{p,initial}=mgh=1\cdot10\cdot2=20\,J
+          \]
+        </div>
+
+        <p>
+          Chiar înainte de atingerea solului, energia potențială a devenit aproape zero, iar energia cinetică este:
+        </p>
+
+        <div class="formula">
+          \[
+            E_c=20\,J
+          \]
+        </div>
+
+        <p class="note">
+          Pe scurt: în cădere, energia potențială gravitațională se transformă în energie cinetică.
+        </p>
+      </article>
+    </section>
+
+    <section class="screen" data-title="Problemă recapitulativă">
+      <article class="card">
+        <span class="tag">Aplic</span>
+        <h2>Problemă recapitulativă</h2>
+        <p>
+          Un corp de masă $m=4\,kg$ se află la înălțimea $h=5\,m$ față de sol.
+          Considerăm $g=10\,N/kg$ și frecările neglijabile.
+        </p>
+
+        <ul class="steps">
+          <li><span class="num">1</span><span>Energia potențială inițială este: $E_{pg}=mgh$.</span></li>
+          <li><span class="num">2</span><span>Calcul: $E_{pg}=4\cdot10\cdot5=200\,J$.</span></li>
+          <li><span class="num">3</span><span>Dacă obiectul cade liber, energia mecanică se conservă.</span></li>
+          <li><span class="num">4</span><span>La sol, energia cinetică va fi $E_c=200\,J$, dacă nu există pierderi prin frecare.</span></li>
         </ul>
-      </div>
+
+        <div class="formula">
+          \[
+            E_{initial}=E_{final}
+            \Rightarrow
+            mgh=\frac{mv^2}{2}
+          \]
+        </div>
+
+        <p class="note">
+          Observă că aceeași energie poate fi „văzută” sub formă de poziție la început și sub formă de mișcare la final.
+        </p>
+      </article>
     </section>
 
-    <section class="card">
-      <span class="section-title">2. Puterea mecanică și randamentul</span>
-      <div class="grid">
-        <div class="mini">
-          <h3>Puterea mecanică</h3>
-          <p>Reprezintă lucrul mecanic efectuat în unitatea de timp.</p>
-          <ul class="check-list">
-            <li>unitatea de măsură este <strong>watt (W)</strong>;</li>
-            <li>$1\,W = \frac{1\,J}{1\,s}$;</li>
-            <li>o putere mai mare înseamnă realizarea aceluiași lucru mecanic într-un timp mai mic.</li>
-          </ul>
+    <section class="screen" data-title="Verificare 1">
+      <article class="card">
+        <span class="tag">Verificare rapidă</span>
+        <h2>Verificare rapidă I</h2>
+
+        <div class="check" data-quiz="q2">
+          <h3>1. Care este formula energiei cinetice?</h3>
+          <div class="answers">
+            <label><input type="radio" name="q2" value="0"><span>$E_c=mgh$</span></label>
+            <label><input type="radio" name="q2" value="1"><span>$E_c=\frac{mv^2}{2}$</span></label>
+            <label><input type="radio" name="q2" value="2"><span>$E_c=\frac{kx^2}{2}$</span></label>
+          </div>
+          <button class="quiz-btn" type="button" onclick="checkQuiz('q2','1')">Verifică</button>
+          <div class="feedback" id="fb-q2" aria-live="polite"></div>
         </div>
-        <div class="mini">
-          <h3>Randamentul</h3>
-          <p>Arată ce parte din lucrul mecanic sau din putere este utilă.</p>
-          <ul class="check-list">
-            <li>nu are unitate de măsură;</li>
-            <li>este o mărime <strong>adimensională</strong>;</li>
-            <li>pentru un dispozitiv real: $0 &lt; \eta &lt; 1$.</li>
-          </ul>
+
+        <div class="check" data-quiz="q3">
+          <h3>2. Unitatea de măsură pentru lucru mecanic și energie este:</h3>
+          <div class="answers">
+            <label><input type="radio" name="q3" value="0"><span>wattul, $W$</span></label>
+            <label><input type="radio" name="q3" value="1"><span>newtonul, $N$</span></label>
+            <label><input type="radio" name="q3" value="2"><span>joulul, $J$</span></label>
+          </div>
+          <button class="quiz-btn" type="button" onclick="checkQuiz('q3','2')">Verifică</button>
+          <div class="feedback" id="fb-q3" aria-live="polite"></div>
         </div>
-      </div>
+      </article>
     </section>
 
-    <section class="card">
-      <span class="section-title">3. Energia cinetică</span>
-      <div class="summary-box">
-        <p>Energia cinetică măsoară capacitatea unui corp de a efectua lucru mecanic datorită mișcării.</p>
-        <ul class="check-list">
-          <li>depinde de <strong>masă</strong> și de <strong>viteză</strong>;</li>
-          <li>se măsoară în <strong>joule</strong>;</li>
-          <li>dacă viteza este zero, atunci și energia cinetică este zero.</li>
-        </ul>
-      </div>
+    <section class="screen" data-title="Verificare 2">
+      <article class="card">
+        <span class="tag">Verificare rapidă</span>
+        <h2>Verificare rapidă II</h2>
+
+        <div class="check" data-quiz="q4">
+          <h3>1. Dacă asupra unui sistem acționează numai greutatea și frecările sunt neglijabile, energia mecanică:</h3>
+          <div class="answers">
+            <label><input type="radio" name="q4" value="0"><span>se conservă</span></label>
+            <label><input type="radio" name="q4" value="1"><span>devine mereu zero</span></label>
+            <label><input type="radio" name="q4" value="2"><span>este egală cu puterea</span></label>
+          </div>
+          <button class="quiz-btn" type="button" onclick="checkQuiz('q4','0')">Verifică</button>
+          <div class="feedback" id="fb-q4" aria-live="polite"></div>
+        </div>
+
+        <div class="check" data-quiz="q5">
+          <h3>2. Randamentul unui dispozitiv real este:</h3>
+          <div class="answers">
+            <label><input type="radio" name="q5" value="0"><span>mai mare decât $1$, pentru că dispozitivul produce energie</span></label>
+            <label><input type="radio" name="q5" value="1"><span>între $0$ și $1$</span></label>
+            <label><input type="radio" name="q5" value="2"><span>măsurat în jouli</span></label>
+          </div>
+          <button class="quiz-btn" type="button" onclick="checkQuiz('q5','1')">Verifică</button>
+          <div class="feedback" id="fb-q5" aria-live="polite"></div>
+        </div>
+      </article>
     </section>
 
-    <section class="card">
-      <span class="section-title">4. Energia potențială gravitațională</span>
-      <div class="summary-box">
-        <p>Caracterizează capacitatea unui corp de a efectua lucru mecanic sub acțiunea greutății sale.</p>
-        <ul class="check-list">
-          <li>depinde de masă, accelerația gravitațională și înălțime;</li>
-          <li>se definește față de un <strong>nivel de referință</strong>;</li>
-          <li>dacă $h = 0$, atunci $E_{pg} = 0$ pentru nivelul ales;</li>
-          <li>pe măsură ce corpul coboară, energia potențială gravitațională scade.</li>
-        </ul>
-        <div class="notice warn">
-          Variația energiei potențiale gravitaționale este egală cu lucrul mecanic al greutății, luat cu semnul minus.
+    <section class="screen" data-title="Final">
+      <article class="card">
+        <span class="tag">Rețin</span>
+        <h2>Sinteză finală</h2>
+
+        <div class="summary-list">
+          <div class="summary-row"><strong>Lucru mecanic</strong><span>$L=F\cdot d\cdot \cos\alpha$</span></div>
+          <div class="summary-row"><strong>Putere</strong><span>$P=\frac{L}{\Delta t}$</span></div>
+          <div class="summary-row"><strong>Randament</strong><span>$\eta=\frac{L_{util}}{L_{consumat}}$</span></div>
+          <div class="summary-row"><strong>Energie cinetică</strong><span>$E_c=\frac{mv^2}{2}$</span></div>
+          <div class="summary-row"><strong>Energie potențială gravitațională</strong><span>$E_{pg}=mgh$</span></div>
+          <div class="summary-row"><strong>Energie potențială elastică</strong><span>$E_{pe}=\frac{kx^2}{2}$</span></div>
+          <div class="summary-row"><strong>Energie mecanică</strong><span>$E=E_c+E_p$</span></div>
         </div>
-      </div>
+
+        <p class="note">
+          Când ai de rezolvat o problemă, întreabă-te: există forță și deplasare? există mișcare?
+          există înălțime? există deformare? se pot neglija frecările?
+        </p>
+
+        <div class="final-banner">
+          <strong>Prof. Dănuț Andronie</strong>
+          <div>email: <a class="inline-link" href="mailto:danutmg@gmail.com">danutmg@gmail.com</a></div>
+        </div>
+      </article>
     </section>
 
-    <section class="card">
-      <span class="section-title">5. Energia potențială elastică</span>
-      <div class="summary-box">
-        <p>Energia potențială elastică este energia pe care o are un corp elastic deformat.</p>
-        <ul class="check-list">
-          <li>depinde de constanta elastică $k$ și de deformarea $x$;</li>
-          <li>starea de referință este <strong>starea nedeformată</strong>;</li>
-          <li>dacă $x = 0$, atunci $E_{pe} = 0$;</li>
-          <li>un corp elastic deformat poate efectua lucru mecanic când revine spre starea inițială.</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="card">
-      <span class="section-title">6. Energia mecanică</span>
-      <div class="summary-box">
-        <p>Energia mecanică a unui corp este suma dintre energia cinetică și energia potențială.</p>
-        <div class="formula">$$E_m = E_c + E_p$$</div>
-        <ul class="check-list">
-          <li>într-un câmp gravitațional: $E_m = E_c + E_{pg}$;</li>
-          <li>în cazul unui resort deformat: $E_m = E_c + E_{pe}$;</li>
-          <li>energia mecanică se măsoară în <strong>joule</strong>.</li>
-        </ul>
-      </div>
-    </section>
-
-    <section class="card">
-      <span class="section-title">7. Conservarea și variația energiei mecanice</span>
-      <div class="grid">
-        <div class="mini">
-          <h3>Fără frecare</h3>
-          <p>Dacă asupra corpului acționează numai forțe conservative, energia mecanică se conservă.</p>
-          <div class="formula">$$E_{m1} = E_{m2}$$</div>
-        </div>
-        <div class="mini">
-          <h3>Cu frecare</h3>
-          <p>Dacă acționează forțe neconservative, cum este frecarea, energia mecanică se poate modifica.</p>
-          <div class="formula">$$\Delta E_m = L_{forțelor\ neconservative}$$</div>
-        </div>
-      </div>
-      <div class="notice">
-        În prezența frecării, energia mecanică scade deoarece o parte se transformă în alte forme de energie, în special energie termică.
-      </div>
-    </section>
-
-    <section class="card">
-      <span class="section-title">8. Conversii de energie mecanică</span>
-      <div class="grid">
-        <div class="mini">
-          <h3>Energie mecanică → energie electrică</h3>
-          <p>Se realizează prin <strong>generator electric</strong>: dinam sau alternator.</p>
-        </div>
-        <div class="mini">
-          <h3>Energie electrică → energie mecanică</h3>
-          <p>Se realizează prin <strong>motor electric</strong>.</p>
-        </div>
-        <div class="mini">
-          <h3>Energie mecanică → energie termică</h3>
-          <p>Apare, de exemplu, prin frecare sau la deplasarea rapidă prin aer.</p>
-        </div>
-        <div class="mini">
-          <h3>Energie termică → energie mecanică</h3>
-          <p>Se realizează în <strong>motoarele termice</strong>.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="card">
-      <span class="section-title">Ce trebuie să știi sigur</span>
-      <ul class="check-list">
-        <li>să scrii și să recunoști formulele pentru $L$, $P$, $E_c$, $E_{pg}$, $E_{pe}$ și $E_m$;</li>
-        <li>să știi unitățile de măsură: $J$, $W$, $N$;</li>
-        <li>să explici când lucrul mecanic este pozitiv, negativ sau nul;</li>
-        <li>să explici diferența dintre energie cinetică și energie potențială;</li>
-        <li>să aplici conservarea energiei mecanice în absența frecării;</li>
-        <li>să explici de ce energia mecanică scade atunci când există frecare.</li>
-      </ul>
-
-      <div class="nav">
-        <a class="btn btn-secondary" href="../lectii/index.html">Înapoi la lecții</a>
-        <a class="btn btn-ghost" href="../fise-de-lucru/index.html">Vezi fișele de lucru</a>
-        <a class="btn btn-primary" href="../test-final/index.html">Mergi la testul final</a>
-      </div>
-    </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="wrapper">Fizica Galaction • Clasa a VII-a • Recapitulare – Energia mecanică</div>
-  </footer>
+  <nav class="nav" aria-label="Navigare lecție">
+    <div class="nav-inner">
+      <button id="backBtn" type="button" onclick="goBack()">Înapoi</button>
+      <div class="indicator" id="indicator">1/13</div>
+      <button id="nextBtn" type="button" onclick="goNext()">Mergi mai departe</button>
+    </div>
+  </nav>
+
+  <script>
+    const pages = Array.from(document.querySelectorAll('.screen'));
+    const backBtn = document.getElementById('backBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const indicator = document.getElementById('indicator');
+    const finalHref = '../test-final/index.html';
+    const finalLabel = 'Test final';
+    let current = 0;
+
+    function renderMathInCurrentPage(){
+      if(window.MathJax && MathJax.typesetPromise){
+        MathJax.typesetPromise([pages[current]]).catch(() => {});
+      }
+    }
+
+    function showPage(index){
+      current = Math.max(0, Math.min(index, pages.length - 1));
+      pages.forEach((page, i) => page.classList.toggle('active', i === current));
+      indicator.textContent = `${current + 1}/${pages.length}`;
+      backBtn.disabled = current === 0;
+      nextBtn.textContent = current === pages.length - 1 ? finalLabel : 'Mergi mai departe';
+      window.scrollTo({top:0, behavior:'smooth'});
+      renderMathInCurrentPage();
+    }
+
+    function goBack(){
+      if(current > 0){
+        showPage(current - 1);
+      }
+    }
+
+    function goNext(){
+      if(current === pages.length - 1){
+        window.location.href = finalHref;
+      } else {
+        showPage(current + 1);
+      }
+    }
+
+    function checkQuiz(name, correctValue){
+      const selected = document.querySelector(`input[name="${name}"]:checked`);
+      const fb = document.getElementById(`fb-${name}`);
+      fb.className = 'feedback';
+
+      if(!selected){
+        fb.textContent = 'Alege mai întâi o variantă.';
+        fb.classList.add('wait');
+        return;
+      }
+
+      if(selected.value === correctValue){
+        fb.textContent = 'Corect!';
+        fb.classList.add('ok');
+      } else {
+        fb.textContent = 'Mai încearcă. Recitește pagina cu explicația.';
+        fb.classList.add('no');
+      }
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if(event.key === 'ArrowRight'){
+        goNext();
+      }
+      if(event.key === 'ArrowLeft'){
+        goBack();
+      }
+    });
+
+    window.addEventListener('load', () => showPage(0));
+  </script>
 </body>
 </html>

@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Lecția 3 | Randamentul | Fizica Galaction</title>
+  <meta name="description" content="Lecția 3 pentru clasa a VII-a: Randamentul. Lucrul mecanic util, lucrul mecanic consumat, puterea utilă și puterea consumată." />
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']], displayMath: [['\\[','\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root{
+      --bg:#07111f;
+      --card:#102033;
+      --card2:#14263d;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --accent:#22d3ee;
+      --accent2:#38bdf8;
+      --good:#22c55e;
+      --bad:#fb7185;
+      --warn:#facc15;
+      --line:rgba(148,163,184,.28);
+      --shadow:0 18px 45px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{min-height:100%}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34,211,238,.16), transparent 28rem),
+        linear-gradient(180deg,#07111f,#0f172a);
+      color:var(--text);
+      font-size:clamp(18px, 4.5vw, 27px);
+      line-height:1.52;
+      overflow-x:hidden;
+    }
+    .app{
+      min-height:100dvh;
+      display:flex;
+      flex-direction:column;
+      width:min(100%, 900px);
+      margin:0 auto;
+      padding:10px;
+      padding-bottom:0;
+    }
+    .top-banner{
+      background:linear-gradient(135deg, rgba(34,211,238,.22), rgba(59,130,246,.12));
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:14px 14px 12px;
+      margin-bottom:10px;
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+    .school{
+      font-size:clamp(15px, 3.7vw, 22px);
+      color:#e0f2fe;
+      font-weight:800;
+      letter-spacing:.02em;
+      text-transform:uppercase;
+    }
+    .prof{
+      margin-top:4px;
+      font-size:clamp(14px, 3.3vw, 19px);
+      color:#bae6fd;
+      font-weight:700;
+    }
+    .motto{
+      margin:10px auto 0;
+      width:fit-content;
+      max-width:100%;
+      border-left:4px solid var(--accent);
+      border-radius:12px;
+      padding:8px 12px;
+      background:rgba(250,204,21,.10);
+      color:#fef9c3;
+      font-size:clamp(14px, 3.3vw, 19px);
+      font-style:italic;
+    }
+    main{
+      flex:1;
+      display:flex;
+      min-height:0;
+      padding-bottom:86px;
+    }
+    .page{display:none;width:100%}
+    .page.active{display:flex;flex-direction:column;animation:fade .2s ease-out}
+    @keyframes fade{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+    .card{
+      background:linear-gradient(180deg, rgba(16,32,51,.98), rgba(15,23,42,.98));
+      border:1px solid var(--line);
+      border-radius:24px;
+      padding:16px;
+      box-shadow:var(--shadow);
+      width:100%;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:rgba(34,211,238,.13);
+      border:1px solid rgba(34,211,238,.28);
+      color:#e0f2fe;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:clamp(13px, 3.2vw, 18px);
+      font-weight:800;
+      margin-bottom:10px;
+    }
+    h1,h2,h3{line-height:1.12;margin:8px 0 14px}
+    h1{font-size:clamp(28px, 7.6vw, 52px);color:#f8fafc}
+    h2{font-size:clamp(24px, 6.4vw, 40px);color:#e0f2fe}
+    h3{font-size:clamp(21px, 5.3vw, 31px);color:#bae6fd}
+    p{margin:11px 0}
+    .lead{font-size:1.06em;color:#e2e8f0}
+    .kw{color:#67e8f9;font-weight:900}
+    .formula{
+      margin:13px 0;
+      padding:14px;
+      border-radius:18px;
+      background:rgba(14,165,233,.10);
+      border:1px solid rgba(56,189,248,.32);
+      text-align:center;
+      font-size:1.02em;
+      overflow-x:auto;
+      max-width:100%;
+    }
+    .formula mjx-container{
+      max-width:100%;
+      overflow-x:auto;
+      overflow-y:hidden;
+    }
+    .notice,.warn,.success{
+      margin:13px 0;
+      padding:13px;
+      border-radius:18px;
+      border:1px solid var(--line);
+      background:rgba(148,163,184,.10);
+    }
+    .notice{border-left:6px solid var(--accent)}
+    .warn{border-left:6px solid var(--warn);background:rgba(250,204,21,.10)}
+    .success{border-left:6px solid var(--good);background:rgba(34,197,94,.10)}
+    ul,ol{padding-left:1.15em;margin:10px 0}
+    li{margin:8px 0}
+    .two-col{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:12px;
+    }
+    .mini{
+      background:rgba(20,38,61,.92);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:13px;
+    }
+    .svgbox{
+      background:rgba(15,23,42,.55);
+      border:1px solid rgba(148,163,184,.28);
+      border-radius:20px;
+      padding:10px;
+      margin:12px 0;
+      overflow:hidden;
+    }
+    .svgbox > svg{width:100%;height:auto;display:block}
+    .q{
+      border:1px solid rgba(148,163,184,.28);
+      background:rgba(20,38,61,.85);
+      border-radius:18px;
+      padding:14px;
+      margin:14px 0;
+    }
+    .answers{
+      display:grid;
+      gap:8px;
+      margin-top:10px;
+    }
+    label.answer{
+      display:flex;
+      align-items:flex-start;
+      gap:10px;
+      border:1px solid rgba(148,163,184,.28);
+      background:rgba(15,23,42,.66);
+      padding:10px;
+      border-radius:14px;
+      cursor:pointer;
+    }
+    input[type="radio"]{
+      transform:scale(1.18);
+      margin-top:6px;
+      accent-color:#22d3ee;
+      flex:0 0 auto;
+    }
+    .check{
+      width:100%;
+      border:none;
+      background:#22d3ee;
+      color:#05202d;
+      font-weight:900;
+      border-radius:16px;
+      padding:12px 14px;
+      margin-top:12px;
+      font-size:clamp(16px, 4.1vw, 22px);
+      cursor:pointer;
+    }
+    .feedback{
+      min-height:1.2em;
+      margin-top:10px;
+      font-weight:900;
+    }
+    .feedback.good{color:#86efac}
+    .feedback.bad{color:#fda4af}
+    .footer-card{
+      text-align:center;
+      background:linear-gradient(135deg, rgba(34,211,238,.15), rgba(34,197,94,.10));
+      border:1px solid rgba(34,211,238,.30);
+      border-radius:22px;
+      padding:16px;
+      margin-top:14px;
+    }
+    .footer-card a{color:#67e8f9;font-weight:900;text-decoration:none}
+    .nav{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:0;
+      width:min(100%, 900px);
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:8px;
+      padding:10px 10px calc(10px + env(safe-area-inset-bottom));
+      background:linear-gradient(180deg, rgba(7,17,31,0), rgba(7,17,31,.96) 25%, rgba(7,17,31,1));
+      z-index:10;
+    }
+    .nav button{
+      min-height:50px;
+      border:none;
+      border-radius:16px;
+      padding:11px 10px;
+      color:#06121f;
+      font-weight:900;
+      font-size:clamp(15px, 3.8vw, 21px);
+      cursor:pointer;
+      box-shadow:0 10px 22px rgba(0,0,0,.22);
+    }
+    #prevBtn{background:#e2e8f0}
+    #nextBtn{background:#22c55e}
+    .nav button.disabled{
+      opacity:.45;
+      pointer-events:none;
+    }
+    .counter{
+      color:#e2e8f0;
+      font-weight:900;
+      font-size:clamp(13px,3.4vw,18px);
+      padding:0 2px;
+      min-width:42px;
+      text-align:center;
+    }
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border-radius:16px;
+      margin:12px 0;
+      font-size:.95em;
+    }
+    th,td{
+      border:1px solid rgba(148,163,184,.3);
+      padding:10px;
+      text-align:left;
+      vertical-align:top;
+    }
+    th{background:rgba(34,211,238,.14);color:#e0f2fe}
+    td{background:rgba(15,23,42,.55)}
+    @media (max-width:560px){
+      .app{padding:8px}
+      .card{padding:15px;border-radius:22px}
+      .two-col{grid-template-columns:1fr}
+      ul,ol{padding-left:1.05em}
+      .nav{gap:6px;padding-left:8px;padding-right:8px}
+      .nav button{min-height:48px;padding:10px 8px}
+      .formula{font-size:.98em;padding:12px}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="top-banner" id="topBanner">
+      <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+      <div class="prof">Prof. Dănuț Andronie</div>
+      <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+    </header>
+
+    <main>
+      <section class="page active">
+        <div class="card">
+          <span class="badge">Clasa a VII-a • Lucrul mecanic – puterea mecanică</span>
+          <h1>Lecția 3 – Randamentul</h1>
+          <p class="lead">
+            În această lecție înveți să compari <span class="kw">efectul util</span> obținut
+            cu <span class="kw">efortul consumat</span> pentru funcționarea unui dispozitiv.
+          </p>
+          <div class="notice">
+            Ideea-cheie: niciun dispozitiv real nu transformă tot efortul consumat în rezultat util.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Observ</span>
+          <h2>De ce folosim planul înclinat?</h2>
+          <p>
+            Planul înclinat este folosit pentru a urca mai ușor corpuri grele:
+            în camion, pe rampe, în mine sau la intrarea în clădiri.
+          </p>
+          <p>
+            Pe plan înclinat, forța necesară poate fi mai mică decât greutatea corpului,
+            dar deplasarea este mai lungă.
+          </p>
+          <div class="svgbox" aria-label="Corp urcat pe plan înclinat">
+            <svg viewBox="0 0 760 340" role="img">
+              <defs>
+                <marker id="arrowGreen" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">
+                  <path d="M0,0 L12,4 L0,8 Z" fill="#22c55e"></path>
+                </marker>
+                <marker id="arrowCyan" markerWidth="12" markerHeight="12" refX="10" refY="4" orient="auto">
+                  <path d="M0,0 L12,4 L0,8 Z" fill="#22d3ee"></path>
+                </marker>
+              </defs>
+              <polygon points="80,270 680,270 680,100" fill="#334155" opacity="0.95"/>
+              <line x1="80" y1="270" x2="680" y2="100" stroke="#e0f2fe" stroke-width="8"/>
+              <rect x="360" y="170" width="105" height="70" rx="12" fill="#38bdf8" stroke="#e0f2fe" stroke-width="4" transform="rotate(-16 412 205)"/>
+              <line x1="425" y1="205" x2="605" y2="155" stroke="#22c55e" stroke-width="9" marker-end="url(#arrowGreen)"/>
+              <line x1="412" y1="210" x2="412" y2="300" stroke="#22d3ee" stroke-width="9" marker-end="url(#arrowCyan)"/>
+              <text x="525" y="135" fill="#bbf7d0" font-size="30" font-weight="900">F</text>
+              <text x="424" y="300" fill="#bae6fd" font-size="30" font-weight="900">G</text>
+              <text x="270" y="315" fill="#e0f2fe" font-size="26" font-weight="800">deplasare mai lungă</text>
+            </svg>
+          </div>
+          <div class="notice">
+            Un dispozitiv este avantajos dacă ajută la realizarea acțiunii utile, dar el consumă totuși lucru mecanic.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Rețin</span>
+          <h2>Ce este randamentul?</h2>
+          <p>
+            <span class="kw">Randamentul</span> unui dispozitiv arată cât din lucrul mecanic consumat
+            se transformă în lucru mecanic util.
+          </p>
+          <div class="formula">
+            \[
+              \eta=\frac{L_{util}}{L_{consumat}}
+            \]
+          </div>
+          <p>
+            Aceeași idee se poate exprima și cu puterile:
+          </p>
+          <div class="formula">
+            \[
+              \eta=\frac{P_{utilă}}{P_{consumată}}
+            \]
+          </div>
+          <div class="warn">
+            Randamentul nu are unitate de măsură. Este o mărime adimensională.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Interpretare</span>
+          <h2>Ce înseamnă valoarea randamentului?</h2>
+          <p>
+            Pentru un dispozitiv real, randamentul este pozitiv și mai mic decât 1:
+          </p>
+          <div class="formula">
+            \[
+              0 < \eta < 1
+            \]
+          </div>
+          <p>
+            Deseori îl scriem în procente:
+          </p>
+          <div class="formula">
+            \[
+              \eta\%=\eta \cdot 100\%
+            \]
+          </div>
+          <table>
+            <tr>
+              <th>Valoare</th>
+              <th>Interpretare</th>
+            </tr>
+            <tr>
+              <td>\(\eta=0{,}75\)</td>
+              <td>75% din efortul consumat devine efect util.</td>
+            </tr>
+            <tr>
+              <td>\(\eta=0{,}90\)</td>
+              <td>Dispozitivul are pierderi mai mici decât la 75%.</td>
+            </tr>
+          </table>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Plan înclinat</span>
+          <h2>Randamentul la urcarea unui corp</h2>
+          <p>
+            Pentru ridicarea uniformă a unui corp pe verticală, lucrul mecanic util este:
+          </p>
+          <div class="formula">
+            \[
+              L_{util}=G\cdot h
+            \]
+          </div>
+          <p>
+            Pe planul înclinat, lucrul mecanic consumat este:
+          </p>
+          <div class="formula">
+            \[
+              L_{consumat}=F\cdot l
+            \]
+          </div>
+          <p>
+            De aceea:
+          </p>
+          <div class="formula">
+            \[
+              \eta=\frac{G\cdot h}{F\cdot l}
+            \]
+          </div>
+          <div class="notice">
+            \(G\) este greutatea corpului, \(h\) este înălțimea, \(F\) este forța de tracțiune, iar \(l\) este lungimea planului înclinat.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Exemplu numeric</span>
+          <h2>Calculăm randamentul</h2>
+          <p>
+            Pentru un dispozitiv, lucrul mecanic util este \(L_{util}=800\,J\), iar lucrul mecanic
+            consumat este \(L_{consumat}=1000\,J\).
+          </p>
+          <div class="formula">
+            \[
+              \eta=\frac{L_{util}}{L_{consumat}}
+            \]
+            \[
+              \eta=\frac{800\,J}{1000\,J}=0{,}8
+            \]
+            \[
+              \eta\%=0{,}8\cdot 100\%=80\%
+            \]
+          </div>
+          <div class="success">
+            Răspuns: randamentul dispozitivului este \(0{,}8\), adică \(80\%\).
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Exemplu pe plan înclinat</span>
+          <h2>Aplicăm formula</h2>
+          <p>
+            Un corp cu greutatea \(G=200\,N\) este ridicat la înălțimea \(h=1\,m\).
+            Pe planul înclinat se aplică forța \(F=80\,N\), pe distanța \(l=3\,m\).
+          </p>
+          <div class="formula">
+            \[
+              L_{util}=G\cdot h=200\,N\cdot 1\,m=200\,J
+            \]
+            \[
+              L_{consumat}=F\cdot l=80\,N\cdot 3\,m=240\,J
+            \]
+            \[
+              \eta=\frac{200\,J}{240\,J}\approx 0{,}83 \approx 83\%
+            \]
+          </div>
+          <div class="notice">
+            Randamentul nu este 100%, deoarece apar pierderi, de exemplu prin frecare.
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Reține</span>
+          <h2>Sinteză</h2>
+          <ul>
+            <li>Randamentul se notează cu \(\eta\).</li>
+            <li>Formula de bază este \(\eta=\frac{L_{util}}{L_{consumat}}\).</li>
+            <li>Se poate calcula și cu puterile: \(\eta=\frac{P_{utilă}}{P_{consumată}}\).</li>
+            <li>Randamentul nu are unitate de măsură.</li>
+            <li>În practică, randamentul este mai mic decât 1.</li>
+          </ul>
+          <div class="warn">
+            Când transformi în procente, înmulțești valoarea lui \(\eta\) cu \(100\%\).
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Întrebarea 1</h2>
+          <div class="q" data-answer="b">
+            <p><strong>Randamentul unui dispozitiv se poate calcula cu relația:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q1" value="a"> \(\eta=L_{util}\cdot L_{consumat}\)</label>
+              <label class="answer"><input type="radio" name="q1" value="b"> \(\eta=\frac{L_{util}}{L_{consumat}}\)</label>
+              <label class="answer"><input type="radio" name="q1" value="c"> \(\eta=\frac{s}{t}\)</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Întrebarea 2</h2>
+          <div class="q" data-answer="c">
+            <p><strong>Randamentul este:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q2" value="a"> o mărime vectorială</label>
+              <label class="answer"><input type="radio" name="q2" value="b"> o unitate de măsură pentru forță</label>
+              <label class="answer"><input type="radio" name="q2" value="c"> o mărime adimensională</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="page">
+        <div class="card">
+          <span class="badge">Verificare rapidă</span>
+          <h2>Întrebarea 3</h2>
+          <div class="q" data-answer="a">
+            <p><strong>Dacă \(L_{util}=300\,J\) și \(L_{consumat}=600\,J\), randamentul este:</strong></p>
+            <div class="answers">
+              <label class="answer"><input type="radio" name="q3" value="a"> \(0{,}5=50\%\)</label>
+              <label class="answer"><input type="radio" name="q3" value="b"> \(2=200\%\)</label>
+              <label class="answer"><input type="radio" name="q3" value="c"> \(900\,J\)</label>
+            </div>
+            <button class="check" onclick="checkAnswer(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="footer-card">
+            <strong>Prof. Dănuț Andronie</strong><br>
+            E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="nav" aria-label="Navigare lecție">
+      <button id="prevBtn" type="button" onclick="prevPage()">Înapoi</button>
+      <div class="counter" id="pageCounter">1/11</div>
+      <button id="nextBtn" type="button" onclick="nextPage()">Mergi mai departe</button>
+    </nav>
+  </div>
+
+  <script>
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const topBanner = document.getElementById('topBanner');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageCounter = document.getElementById('pageCounter');
+    let current = 0;
+
+    function updatePage(){
+      pages.forEach((p, i) => p.classList.toggle('active', i === current));
+      topBanner.style.display = current === 0 ? 'block' : 'none';
+      prevBtn.classList.toggle('disabled', current === 0);
+      pageCounter.textContent = (current + 1) + '/' + pages.length;
+
+      if(current === pages.length - 1){
+        nextBtn.textContent = 'Recapitulare';
+        nextBtn.onclick = () => { window.location.href = '../recapitulare/index.html'; };
+      } else {
+        nextBtn.textContent = 'Mergi mai departe';
+        nextBtn.onclick = nextPage;
+      }
+
+      window.scrollTo({top: 0, behavior: 'smooth'});
+      if(window.MathJax && window.MathJax.typesetPromise){
+        window.MathJax.typesetPromise();
+      }
+    }
+
+    function nextPage(){
+      if(current < pages.length - 1){
+        current++;
+        updatePage();
+      }
+    }
+
+    function prevPage(){
+      if(current > 0){
+        current--;
+        updatePage();
+      }
+    }
+
+    function checkAnswer(button){
+      const block = button.closest('.q');
+      const correct = block.dataset.answer;
+      const checked = block.querySelector('input[type="radio"]:checked');
+      const feedback = block.querySelector('.feedback');
+
+      if(!checked){
+        feedback.textContent = 'Alege mai întâi o variantă.';
+        feedback.className = 'feedback bad';
+        return;
+      }
+
+      if(checked.value === correct){
+        feedback.textContent = 'Corect!';
+        feedback.className = 'feedback good';
+      } else {
+        feedback.textContent = 'Mai încearcă. Recitește pagina cu explicația.';
+        feedback.className = 'feedback bad';
+      }
+    }
+
+    document.addEventListener('keydown', (event) => {
+      if(event.key === 'ArrowRight') nextPage();
+      if(event.key === 'ArrowLeft') prevPage();
+    });
+
+    updatePage();
+  </script>
+</body>
+</html>

@@ -1,12 +1,977 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fenomene termice - Recapitulare</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Recapitulare | Fenomene termice | Fizica Galaction</title>
+  <meta name="description" content="Recapitulare interactivă pentru capitolul Fenomene termice, clasa a VIII-a.">
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
+      svg: { fontCache: 'global' },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    :root{
+      --bg:#07111f;
+      --bg2:#0f172a;
+      --card:#162238;
+      --card2:#1e293b;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --line:#334155;
+      --cyan:#67e8f9;
+      --blue:#93c5fd;
+      --green:#22c55e;
+      --green2:#16a34a;
+      --back:#e2e8f0;
+      --backText:#0f172a;
+      --warn:#fde68a;
+      --bad:#fecaca;
+      --good:#bbf7d0;
+      --shadow:0 20px 55px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      min-height:100dvh;
+      background:
+        radial-gradient(circle at top left, rgba(103,232,249,.18), transparent 32rem),
+        radial-gradient(circle at bottom right, rgba(34,197,94,.10), transparent 28rem),
+        linear-gradient(180deg, var(--bg), var(--bg2));
+      color:var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      font-size:18px;
+      line-height:1.55;
+      overflow-x:hidden;
+    }
+    .app{
+      width:min(980px, 100%);
+      min-height:100dvh;
+      margin:0 auto;
+      display:flex;
+      flex-direction:column;
+      padding:clamp(10px, 2vw, 18px);
+    }
+    .lesson{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      min-height:0;
+    }
+    .top-banner{
+      border:1px solid rgba(103,232,249,.35);
+      background:linear-gradient(135deg, rgba(14,165,233,.20), rgba(34,197,94,.10));
+      border-radius:22px;
+      padding:16px;
+      margin:0 0 14px;
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+    .school{
+      font-weight:900;
+      color:var(--cyan);
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      font-size:clamp(1rem, 3vw, 1.3rem);
+    }
+    .teacher{
+      margin-top:4px;
+      color:var(--muted);
+      font-weight:700;
+    }
+    .motto{
+      margin:12px auto 0;
+      max-width:720px;
+      padding:10px 12px;
+      border-left:4px solid var(--cyan);
+      border-radius:12px;
+      background:rgba(253,230,138,.10);
+      color:#fef3c7;
+      font-style:italic;
+      font-weight:650;
+    }
+    .screen{
+      display:none;
+      flex:1;
+      overflow:auto;
+      padding:0 0 100px;
+      scroll-behavior:smooth;
+    }
+    .screen.active{display:block}
+    .card{
+      background:linear-gradient(180deg, rgba(30,41,59,.96), rgba(15,23,42,.96));
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:clamp(18px, 4vw, 30px);
+      box-shadow:var(--shadow);
+      margin:0 auto 16px;
+    }
+    .card.compact{padding:18px}
+    h1,h2,h3{line-height:1.15; margin:0 0 14px}
+    h1{
+      font-size:clamp(2rem, 7vw, 3.8rem);
+      color:var(--cyan);
+      letter-spacing:-.03em;
+    }
+    h2{
+      font-size:clamp(1.55rem, 5vw, 2.35rem);
+      color:var(--cyan);
+    }
+    h3{
+      color:var(--blue);
+      font-size:clamp(1.15rem, 4vw, 1.5rem);
+    }
+    p{margin:10px 0}
+    .lead{
+      font-size:clamp(1.12rem, 3.8vw, 1.35rem);
+      color:#e0f2fe;
+      font-weight:650;
+    }
+    .idea{
+      border-left:5px solid var(--green);
+      padding:12px 14px;
+      border-radius:14px;
+      background:rgba(34,197,94,.12);
+      margin:14px 0;
+    }
+    .note{
+      border-left:5px solid var(--cyan);
+      padding:12px 14px;
+      border-radius:14px;
+      background:rgba(103,232,249,.10);
+      margin:14px 0;
+    }
+    .warning{
+      border-left:5px solid #f59e0b;
+      background:rgba(245,158,11,.13);
+      color:#fffbeb;
+      border-radius:14px;
+      padding:12px 14px;
+      margin:14px 0;
+    }
+    .grid{
+      display:grid;
+      gap:14px;
+      grid-template-columns:repeat(2, minmax(0, 1fr));
+    }
+    .grid.three{grid-template-columns:repeat(3, minmax(0,1fr))}
+    .mini{
+      padding:14px;
+      border:1px solid rgba(148,163,184,.35);
+      border-radius:16px;
+      background:rgba(15,23,42,.55);
+    }
+    .mini strong{color:var(--cyan)}
+    .formula{
+      overflow-x:auto;
+      margin:14px 0;
+      padding:12px;
+      border-radius:16px;
+      border:1px solid rgba(103,232,249,.24);
+      background:rgba(2,6,23,.55);
+      text-align:center;
+    }
+    mjx-container{
+      font-size:1.02em !important;
+      overflow-x:auto;
+      overflow-y:hidden;
+      max-width:100%;
+    }
+    .table-wrap{overflow-x:auto; margin:12px 0}
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border-radius:15px;
+      border:1px solid var(--line);
+      background:rgba(15,23,42,.45);
+    }
+    th,td{
+      padding:12px 10px;
+      border-bottom:1px solid var(--line);
+      text-align:left;
+      vertical-align:top;
+    }
+    th{
+      color:#ecfeff;
+      background:rgba(14,165,233,.18);
+    }
+    tr:last-child td{border-bottom:none}
+    .tag{
+      display:inline-block;
+      padding:5px 10px;
+      border-radius:999px;
+      background:rgba(103,232,249,.14);
+      border:1px solid rgba(103,232,249,.30);
+      color:#cffafe;
+      font-size:.95rem;
+      font-weight:800;
+      margin:4px 4px 4px 0;
+    }
+    .svgbox{
+      margin:16px auto;
+      max-width:680px;
+      padding:14px;
+      border:1px solid rgba(103,232,249,.20);
+      border-radius:18px;
+      background:rgba(2,6,23,.35);
+    }
+    .svgbox > svg{width:100%; height:auto; display:block}
+    .caption{font-size:.95rem; color:var(--muted); text-align:center; margin-top:8px}
+    .quiz{
+      border:1px solid rgba(103,232,249,.24);
+      background:rgba(15,23,42,.62);
+      border-radius:18px;
+      padding:16px;
+      margin:14px 0;
+    }
+    .quiz-title{
+      color:var(--cyan);
+      font-weight:900;
+      margin-bottom:10px;
+      font-size:1.12rem;
+    }
+    .options{
+      display:grid;
+      gap:10px;
+      margin:12px 0;
+    }
+    .option{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      align-items:start;
+      gap:10px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(148,163,184,.35);
+      background:rgba(30,41,59,.7);
+      cursor:pointer;
+    }
+    .option input{margin-top:5px; transform:scale(1.15)}
+    .check{
+      display:inline-flex;
+      justify-content:center;
+      align-items:center;
+      min-height:46px;
+      border:0;
+      border-radius:14px;
+      padding:12px 16px;
+      background:#38bdf8;
+      color:#082f49;
+      font-weight:900;
+      font-size:1rem;
+      cursor:pointer;
+      box-shadow:0 8px 20px rgba(56,189,248,.20);
+    }
+    .feedback{
+      display:none;
+      margin-top:12px;
+      padding:12px 14px;
+      border-radius:14px;
+      font-weight:900;
+    }
+    .feedback.ok{display:block;background:rgba(34,197,94,.18);color:var(--good);border:1px solid rgba(34,197,94,.35)}
+    .feedback.no{display:block;background:rgba(239,68,68,.16);color:var(--bad);border:1px solid rgba(239,68,68,.35)}
+    .feedback.pick{display:block;background:rgba(245,158,11,.16);color:var(--warn);border:1px solid rgba(245,158,11,.35)}
+    .nav{
+      position:sticky;
+      bottom:0;
+      z-index:10;
+      margin-top:auto;
+      padding:10px max(10px, env(safe-area-inset-left)) calc(10px + env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-right));
+      background:linear-gradient(180deg, rgba(7,17,31,0), rgba(7,17,31,.96) 25%, rgba(7,17,31,.98));
+      backdrop-filter: blur(8px);
+    }
+    .nav-inner{
+      width:min(980px, 100%);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:10px;
+      background:rgba(15,23,42,.85);
+      border:1px solid rgba(148,163,184,.35);
+      border-radius:20px;
+      padding:10px;
+      box-shadow:0 18px 38px rgba(0,0,0,.38);
+    }
+    .nav button{
+      min-height:52px;
+      border:0;
+      border-radius:16px;
+      padding:12px 14px;
+      font-size:clamp(.98rem, 3.5vw, 1.05rem);
+      font-weight:950;
+      cursor:pointer;
+    }
+    #prevBtn{background:var(--back); color:var(--backText)}
+    #nextBtn{background:var(--green); color:#052e16}
+    #prevBtn:disabled{opacity:.45; cursor:not-allowed}
+    .indicator{
+      color:#e2e8f0;
+      font-weight:950;
+      min-width:58px;
+      text-align:center;
+      background:rgba(2,6,23,.70);
+      border-radius:999px;
+      padding:9px 10px;
+      border:1px solid rgba(148,163,184,.25);
+    }
+    .final-banner{
+      margin-top:18px;
+      padding:16px;
+      border-radius:18px;
+      background:linear-gradient(135deg, rgba(34,197,94,.16), rgba(14,165,233,.14));
+      border:1px solid rgba(103,232,249,.32);
+      text-align:center;
+    }
+    .final-banner strong{color:var(--cyan)}
+    a{color:var(--cyan)}
+    @media (max-width:720px){
+      body{font-size:17px}
+      .app{padding:10px}
+      .grid,.grid.three{grid-template-columns:1fr}
+      .card{border-radius:18px}
+      th,td{padding:10px 8px}
+      .nav-inner{grid-template-columns:1fr 64px 1fr; gap:7px; padding:8px}
+      .nav button{padding:10px 8px}
+    }
+  </style>
 </head>
 <body>
-  <h1>Fenomene termice - Recapitulare</h1>
-  <p>Pagina este în lucru.</p>
+  <div class="app">
+    <main class="lesson" id="lesson">
+
+      <section class="screen active" data-title="Start">
+        <div class="top-banner">
+          <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+          <div class="teacher">Prof. Dănuț Andronie</div>
+          <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+        </div>
+        <div class="card">
+          <h1>Recapitulare</h1>
+          <h2>Fenomene termice</h2>
+          <p class="lead">În acest capitol ai învățat cum se explică încălzirea, răcirea, schimbarea stării de agregare și folosirea căldurii în tehnologie.</p>
+          <div class="idea">
+            <strong>Ideea-cheie:</strong> căldura apare ca transfer de energie atunci când corpurile au temperaturi diferite sau își schimbă starea de agregare.
+          </div>
+          <div class="svgbox" aria-label="Diagramă termică">
+            <svg viewBox="0 0 760 250" role="img">
+              <defs>
+                <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L9,3 z" fill="#67e8f9"/>
+                </marker>
+              </defs>
+              <rect x="35" y="75" width="175" height="95" rx="22" fill="#ef4444" opacity=".75"/>
+              <text x="122" y="118" text-anchor="middle" fill="#fff" font-size="24" font-weight="800">corp cald</text>
+              <text x="122" y="147" text-anchor="middle" fill="#fff" font-size="18">temperatură mai mare</text>
+              <line x1="230" y1="122" x2="520" y2="122" stroke="#67e8f9" stroke-width="8" marker-end="url(#arr)"/>
+              <text x="375" y="94" text-anchor="middle" fill="#fef3c7" font-size="24" font-weight="800">căldură Q</text>
+              <rect x="550" y="75" width="175" height="95" rx="22" fill="#3b82f6" opacity=".8"/>
+              <text x="638" y="118" text-anchor="middle" fill="#fff" font-size="24" font-weight="800">corp rece</text>
+              <text x="638" y="147" text-anchor="middle" fill="#fff" font-size="18">temperatură mai mică</text>
+              <text x="380" y="205" text-anchor="middle" fill="#cbd5e1" font-size="20">transfer spontan până la echilibru termic</text>
+            </svg>
+            <div class="caption">Căldura se transferă spontan de la corpul mai cald spre corpul mai rece.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-title="Harta capitolului">
+        <div class="card">
+          <h2>1. Harta capitolului</h2>
+          <p>Capitolul poate fi înțeles ca un lanț logic.</p>
+          <div class="grid">
+            <div class="mini"><strong>Particule</strong><br>agitație termică, difuzie, mișcare browniană</div>
+            <div class="mini"><strong>Temperatură</strong><br>stare de încălzire, echilibru termic, termometru</div>
+            <div class="mini"><strong>Căldură</strong><br>conducție, convecție, radiație</div>
+            <div class="mini"><strong>Calcule</strong><br>$Q=mc\Delta T$, calorimetrie, bilanț termic</div>
+            <div class="mini"><strong>Transformări</strong><br>topire, solidificare, vaporizare, condensare</div>
+            <div class="mini"><strong>Tehnologie</strong><br>motoare termice, combustibili, randament</div>
+          </div>
+          <div class="note">
+            La recapitulare nu memorăm liste izolate. Căutăm legătura: <strong>particulele se mișcă</strong>, iar această mișcare explică temperatura, căldura și schimbările de stare.
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-title="Particule">
+        <div class="card">
+          <h2>2. Agitație termică, mișcare browniană, difuzie</h2>
+          <p><strong>Agitația termică</strong> este mișcarea continuă și dezordonată a particulelor unui corp.</p>
+          <p><strong>Mișcarea browniană</strong> este mișcarea dezordonată observată la particule mici, de exemplu praf sau fum, lovite de moleculele aerului.</p>
+          <p><strong>Difuzia</strong> este pătrunderea particulelor unui corp printre particulele altui corp, fără amestecare mecanică.</p>
+          <div class="svgbox" aria-label="Difuzie">
+            <svg viewBox="0 0 760 250" role="img">
+              <rect x="45" y="55" width="290" height="150" rx="18" fill="#0f172a" stroke="#67e8f9" stroke-width="3"/>
+              <rect x="425" y="55" width="290" height="150" rx="18" fill="#0f172a" stroke="#67e8f9" stroke-width="3"/>
+              <g fill="#22c55e">
+                <circle cx="95" cy="90" r="9"/><circle cx="120" cy="135" r="9"/><circle cx="150" cy="170" r="9"/>
+                <circle cx="185" cy="110" r="9"/><circle cx="230" cy="150" r="9"/><circle cx="280" cy="90" r="9"/>
+              </g>
+              <g fill="#f472b6">
+                <circle cx="525" cy="88" r="9"/><circle cx="485" cy="130" r="9"/><circle cx="585" cy="160" r="9"/>
+                <circle cx="650" cy="100" r="9"/><circle cx="625" cy="185" r="9"/><circle cx="560" cy="120" r="9"/>
+              </g>
+              <line x1="360" y1="130" x2="400" y2="130" stroke="#fef3c7" stroke-width="5"/>
+              <text x="190" y="230" text-anchor="middle" fill="#cbd5e1" font-size="20">înainte: particule grupate</text>
+              <text x="570" y="230" text-anchor="middle" fill="#cbd5e1" font-size="20">după: particule amestecate</text>
+            </svg>
+            <div class="caption">În difuzie, particulele se răspândesc treptat datorită agitației termice.</div>
+          </div>
+          <div class="idea"><strong>Rețin:</strong> cu cât temperatura este mai mare, cu atât agitația particulelor este mai intensă.</div>
+        </div>
+      </section>
+
+      <section class="screen" data-title="Temperatură">
+        <div class="card">
+          <h2>3. Stare de încălzire și echilibru termic</h2>
+          <p><strong>Starea de încălzire</strong> ne spune dacă un corp este mai cald sau mai rece.</p>
+          <p>Simțurile pot greși. De aceea, starea de încălzire se evaluează obiectiv cu <strong>termometrul</strong>.</p>
+          <div class="idea">
+            Două corpuri puse în contact termic ajung, după un timp, la aceeași temperatură. Atunci spunem că sunt în <strong>echilibru termic</strong>.
+          </div>
+          <div class="formula">
+            \[
+              T(K)=t({}^{\circ}C)+273
+            \]
+          </div>
+          <div class="formula">
+            \[
+              20^{\circ}C \Rightarrow T=20+273=293\,K
+            \]
+          </div>
+          <p><strong>Căldura</strong> nu este „ceva aflat în corp”, ci energia transferată din cauza diferenței de temperatură sau a schimbării stării de agregare.</p>
+        </div>
+      </section>
+
+      <section class="screen" data-title="Transmiterea căldurii">
+        <div class="card">
+          <h2>4. Cum se transmite căldura?</h2>
+          <div class="grid three">
+            <div class="mini"><strong>Conducție</strong><br>în special în solide; căldura trece din aproape în aproape, fără transport de substanță.</div>
+            <div class="mini"><strong>Convecție</strong><br>în lichide și gaze; căldura se transmite prin curenți, cu transport de substanță.</div>
+            <div class="mini"><strong>Radiație</strong><br>prin radiație termică; nu are nevoie neapărat de un mediu material.</div>
+          </div>
+          <div class="svgbox" aria-label="Transmiterea căldurii">
+            <svg viewBox="0 0 760 285" role="img">
+              <rect x="60" y="95" width="170" height="40" rx="10" fill="#94a3b8"/>
+              <circle cx="70" cy="115" r="24" fill="#ef4444"/>
+              <circle cx="220" cy="115" r="20" fill="#f97316"/>
+              <text x="145" y="178" text-anchor="middle" fill="#cbd5e1" font-size="19">conducție</text>
+              <path d="M360 210 C305 150 330 95 380 65 C430 95 455 150 400 210 Z" fill="#38bdf8" opacity=".35" stroke="#67e8f9" stroke-width="4"/>
+              <path d="M372 190 C340 145 358 100 385 85" fill="none" stroke="#fef3c7" stroke-width="5"/>
+              <path d="M410 190 C442 145 424 100 397 85" fill="none" stroke="#fef3c7" stroke-width="5"/>
+              <text x="380" y="248" text-anchor="middle" fill="#cbd5e1" font-size="19">convecție</text>
+              <circle cx="610" cy="120" r="38" fill="#f59e0b"/>
+              <path d="M550 120 H500 M670 120 H720 M610 60 V20 M610 180 V220 M575 85 L535 45 M645 85 L685 45 M575 155 L535 195 M645 155 L685 195" stroke="#fde68a" stroke-width="5" stroke-linecap="round"/>
+              <text x="610" y="248" text-anchor="middle" fill="#cbd5e1" font-size="19">radiație</text>
+            </svg>
+          </div>
+          <div class="note">
+            În realitate, cele trei moduri pot acționa simultan. De exemplu, la un ceainic: flacăra încălzește prin radiație, metalul prin conducție, apa prin convecție.
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-title="Motorul termic">
+        <div class="card">
+          <h2>5. Motorul termic</h2>
+          <p>Un motor termic folosește căldura produsă prin arderea unui combustibil pentru a produce <strong>lucru mecanic</strong>.</p>
+          <div class="idea">
+            Un motor nu transformă toată căldura primită în lucru mecanic. O parte se pierde către mediul exterior sau către sistemul de răcire.
+          </div>
+          <div class="formula">
+            \[
+              L=Q_1-\left|Q_2\right|
+            \]
+          </div>
+          <div class="formula">
+            \[
+              \eta=\frac{L}{Q_1}\cdot 100\%
+            \]
+          </div>
+          <div class="formula">
+            \[
+              \eta=\frac{300\,J}{1000\,J}\cdot 100\%=30\%
+            \]
+          </div>
+          <p><strong>Interpretare:</strong> din 1000 J primiți sub formă de căldură, motorul a transformat 300 J în lucru mecanic util.</p>
+        </div>
+      </section>
+
+      <section class="screen" data-title="Coeficienți calorici">
+        <div class="card">
+          <h2>6. Coeficienți calorici</h2>
+          <p>Când un corp se încălzește sau se răcește fără să își schimbe starea de agregare, căldura schimbată depinde de masă, substanță și variația temperaturii.</p>
+          <div class="formula">
+            \[
+              Q=m\,c\,\Delta T
+            \]
+          </div>
+          <div class="grid">
+            <div class="mini">
+              <strong>Căldura specifică</strong>
+              <div class="formula">\[
+                c=\frac{Q}{m\Delta T}
+              \]</div>
+              Este o proprietate a substanței.
+            </div>
+            <div class="mini">
+              <strong>Capacitatea calorică</strong>
+              <div class="formula">\[
+                C=\frac{Q}{\Delta T}
+              \]</div>
+              Este o proprietate a corpului.
+            </div>
+          </div>
+          <div class="warning">
+            Nu confunda \(c\) cu \(C\). Litera mică \(c\) se referă la substanță, iar litera mare \(C\) se referă la corp.
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-title="Calorimetrie">
+        <div class="card">
+          <h2>7. Calorimetrie și bilanț termic</h2>
+          <p><strong>Calorimetrul</strong> este un vas izolat termic, folosit pentru a studia schimbul de căldură dintre corpuri.</p>
+          <div class="idea">
+            Într-un sistem bine izolat, căldura cedată de corpurile calde este egală cu căldura primită de corpurile reci.
+          </div>
+          <div class="formula">
+            \[
+              Q_{\text{cedată}}=Q_{\text{primită}}
+            \]
+          </div>
+          <div class="svgbox" aria-label="Calorimetru">
+            <svg viewBox="0 0 760 300" role="img">
+              <rect x="210" y="70" width="340" height="175" rx="28" fill="#1e293b" stroke="#67e8f9" stroke-width="5"/>
+              <rect x="260" y="105" width="240" height="120" rx="20" fill="#0f172a" stroke="#93c5fd" stroke-width="4"/>
+              <rect x="290" y="150" width="180" height="60" rx="8" fill="#38bdf8" opacity=".55"/>
+              <line x1="410" y1="35" x2="410" y2="165" stroke="#fde68a" stroke-width="8" stroke-linecap="round"/>
+              <circle cx="410" cy="180" r="18" fill="#fde68a"/>
+              <text x="380" y="270" text-anchor="middle" fill="#cbd5e1" font-size="20">vas izolat + termometru + amestec</text>
+            </svg>
+          </div>
+          <p>În probleme, scriem separat ce pierde corpul cald și ce primește corpul rece, apoi egalăm cele două cantități de căldură.</p>
+        </div>
+      </section>
+
+      <section class="screen" data-title="Stări de agregare">
+        <div class="card">
+          <h2>8. Stări de agregare</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Stare</th>
+                  <th>Formă</th>
+                  <th>Volum</th>
+                  <th>Particule</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Solidă</td>
+                  <td>proprie</td>
+                  <td>propriu</td>
+                  <td>aproape fixe, oscilează în jurul pozițiilor de echilibru</td>
+                </tr>
+                <tr>
+                  <td>Lichidă</td>
+                  <td>ia forma vasului</td>
+                  <td>propriu</td>
+                  <td>apropiate, dar pot aluneca unele pe lângă altele</td>
+                </tr>
+                <tr>
+                  <td>Gazoasă</td>
+                  <td>nu are formă proprie</td>
+                  <td>nu are volum propriu</td>
+                  <td>depărtate, se mișcă dezordonat</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note">
+            Plasma este considerată a patra stare de agregare și apare în condiții de temperatură foarte mare sau ionizare puternică.
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-title="Transformări de stare">
+        <div class="card">
+          <h2>9. Transformări de stare</h2>
+          <p>O substanță poate trece dintr-o stare de agregare în alta atunci când schimbă căldură cu mediul.</p>
+          <div class="grid">
+            <div class="mini"><strong>Primește căldură</strong><br><span class="tag">topire</span><span class="tag">vaporizare</span><span class="tag">sublimare</span></div>
+            <div class="mini"><strong>Cedează căldură</strong><br><span class="tag">solidificare</span><span class="tag">condensare</span><span class="tag">desublimare</span></div>
+          </div>
+          <div class="svgbox" aria-label="Transformări de stare">
+            <svg viewBox="0 0 760 300" role="img">
+              <defs>
+                <marker id="arrow2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L9,3 z" fill="#67e8f9"/>
+                </marker>
+              </defs>
+              <circle cx="170" cy="150" r="65" fill="#94a3b8"/>
+              <circle cx="380" cy="150" r="65" fill="#38bdf8"/>
+              <circle cx="590" cy="150" r="65" fill="#f59e0b" opacity=".82"/>
+              <text x="170" y="158" text-anchor="middle" fill="#0f172a" font-size="24" font-weight="900">solid</text>
+              <text x="380" y="158" text-anchor="middle" fill="#082f49" font-size="24" font-weight="900">lichid</text>
+              <text x="590" y="158" text-anchor="middle" fill="#431407" font-size="24" font-weight="900">gaz</text>
+              <path d="M238 125 C275 95 315 95 350 125" fill="none" stroke="#67e8f9" stroke-width="5" marker-end="url(#arrow2)"/>
+              <text x="295" y="82" text-anchor="middle" fill="#e0f2fe" font-size="18">topire</text>
+              <path d="M448 125 C485 95 525 95 560 125" fill="none" stroke="#67e8f9" stroke-width="5" marker-end="url(#arrow2)"/>
+              <text x="505" y="82" text-anchor="middle" fill="#e0f2fe" font-size="18">vaporizare</text>
+              <path d="M350 180 C315 210 275 210 238 180" fill="none" stroke="#fde68a" stroke-width="5" marker-end="url(#arrow2)"/>
+              <text x="295" y="245" text-anchor="middle" fill="#fef3c7" font-size="18">solidificare</text>
+              <path d="M560 180 C525 210 485 210 448 180" fill="none" stroke="#fde68a" stroke-width="5" marker-end="url(#arrow2)"/>
+              <text x="505" y="245" text-anchor="middle" fill="#fef3c7" font-size="18">condensare</text>
+            </svg>
+          </div>
+          <p><strong>Observație:</strong> în timpul transformării de stare, temperatura poate rămâne constantă, deși corpul primește sau cedează căldură.</p>
+        </div>
+      </section>
+
+      <section class="screen" data-title="Călduri latente">
+        <div class="card">
+          <h2>10. Căldura latentă</h2>
+          <p>În timpul topirii gheții, sistemul primește căldură, dar temperatura rămâne la \(0^{\circ}C\) până când toată gheața se transformă în apă.</p>
+          <div class="idea">
+            Acea căldură nu crește temperatura, ci modifică starea de agregare. Se numește <strong>căldură latentă</strong>.
+          </div>
+          <div class="formula">
+            \[
+              Q=m\lambda
+            \]
+          </div>
+          <p>\(\lambda\) este căldura latentă specifică. Ea arată câtă căldură trebuie schimbată pentru \(1\,kg\) de substanță care își schimbă starea de agregare.</p>
+          <div class="formula">
+            \[
+              Q=0{,}10\,kg\cdot 334\,000\,\frac{J}{kg}=33\,400\,J
+            \]
+          </div>
+          <p>Exemplul arată că pentru a topi \(0{,}10\,kg\) de gheață la \(0^{\circ}C\) este nevoie de \(33\,400\,J\).</p>
+        </div>
+      </section>
+
+      <section class="screen" data-title="Sisteme neomogene">
+        <div class="card">
+          <h2>11. Temperatura de echilibru în sisteme neomogene</h2>
+          <p>Un sistem este <strong>neomogen</strong> dacă are corpuri diferite sau porțiuni cu temperaturi diferite.</p>
+          <p>Exemplu: apă caldă amestecată cu apă rece, metal cald introdus în apă rece, cub de gheață pus într-un pahar cu apă.</p>
+          <div class="formula">
+            \[
+              Q_{\text{cedată}}=Q_{\text{primită}}
+            \]
+          </div>
+          <div class="formula">
+            \[
+              T_e=\frac{m_1c_1T_1+m_2c_2T_2}{m_1c_1+m_2c_2}
+            \]
+          </div>
+          <p>Formula de mai sus este utilă când nu există pierderi de căldură și când nu apare schimbare de stare.</p>
+          <div class="formula">
+            \[
+              T_e=\frac{1\cdot 4200\cdot 80+1\cdot 4200\cdot 20}{1\cdot 4200+1\cdot 4200}=50^{\circ}C
+            \]
+          </div>
+          <p>Dacă amestecăm mase egale de apă la \(80^{\circ}C\) și \(20^{\circ}C\), temperatura de echilibru este media: \(50^{\circ}C\).</p>
+        </div>
+      </section>
+
+      <section class="screen" data-title="Combustibili">
+        <div class="card">
+          <h2>12. Combustibili și putere calorică</h2>
+          <p><strong>Combustibilii</strong> sunt substanțe care prin ardere degajă căldură.</p>
+          <div class="grid">
+            <div class="mini"><strong>Solizi</strong><br>lemn, cărbune, cocs</div>
+            <div class="mini"><strong>Lichizi</strong><br>benzină, motorină, petrol lampant</div>
+            <div class="mini"><strong>Gazoși</strong><br>gaz natural, metan, hidrogen</div>
+            <div class="mini"><strong>După proveniență</strong><br>naturali sau artificiali</div>
+          </div>
+          <div class="formula">
+            \[
+              Q=q\cdot m
+            \]
+          </div>
+          <p>\(q\) este <strong>puterea calorică</strong> a combustibilului, adică energia degajată prin arderea unui kilogram.</p>
+          <div class="formula">
+            \[
+              Q=46\,\frac{MJ}{kg}\cdot 0{,}20\,kg=9{,}2\,MJ
+            \]
+          </div>
+          <div class="warning">
+            Arderea combustibililor este utilă, dar poate polua. De aceea este important randamentul ridicat și consumul responsabil.
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-title="Formular">
+        <div class="card">
+          <h2>13. Formular de recapitulare</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Idee</th><th>Formulă</th><th>Unități</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Kelvin și Celsius</td><td>\(T=t+273\)</td><td>\(K,\ ^{\circ}C\)</td></tr>
+                <tr><td>Căldură sensibilă</td><td>\(Q=mc\Delta T\)</td><td>\(J\)</td></tr>
+                <tr><td>Capacitate calorică</td><td>\(C=\frac{Q}{\Delta T}\)</td><td>\(J/K\)</td></tr>
+                <tr><td>Căldură specifică</td><td>\(c=\frac{Q}{m\Delta T}\)</td><td>\(J/(kg\cdot K)\)</td></tr>
+                <tr><td>Căldură latentă</td><td>\(Q=m\lambda\)</td><td>\(J\)</td></tr>
+                <tr><td>Combustibil</td><td>\(Q=q m\)</td><td>\(J\) sau \(MJ\)</td></tr>
+                <tr><td>Randament motor</td><td>\(\eta=\frac{L}{Q_1}\cdot100\%\)</td><td>\(\%\)</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="note">
+            În calcule, ai grijă la unități: \(g\) se transformă în \(kg\), iar \(MJ\) se poate transforma în \(J\) dacă este nevoie.
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-title="Exemplu 1">
+        <div class="card">
+          <h2>14. Exemplu numeric: încălzirea apei</h2>
+          <p><strong>Problemă:</strong> O masă de apă \(m=0{,}50\,kg\) se încălzește de la \(20^{\circ}C\) la \(40^{\circ}C\). Se consideră \(c=4200\,\frac{J}{kg\cdot K}\). Ce căldură primește apa?</p>
+          <h3>Rezolvare</h3>
+          <div class="formula">
+            \[
+              \Delta T=40^{\circ}C-20^{\circ}C=20\,K
+            \]
+          </div>
+          <div class="formula">
+            \[
+              Q=m c \Delta T
+            \]
+          </div>
+          <div class="formula">
+            \[
+              Q=0{,}50\,kg\cdot 4200\,\frac{J}{kg\cdot K}\cdot 20\,K=42\,000\,J
+            \]
+          </div>
+          <div class="idea">
+            Apa primește \(42\,000\,J\), adică \(42\,kJ\).
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-title="Exemplu 2">
+        <div class="card">
+          <h2>15. Exemplu numeric: combustibil</h2>
+          <p><strong>Problemă:</strong> Câtă benzină trebuie să ardă pentru a degaja \(Q=23\,MJ\), dacă puterea calorică este \(q=46\,\frac{MJ}{kg}\)?</p>
+          <h3>Rezolvare</h3>
+          <div class="formula">
+            \[
+              Q=q\cdot m
+            \]
+          </div>
+          <div class="formula">
+            \[
+              m=\frac{Q}{q}
+            \]
+          </div>
+          <div class="formula">
+            \[
+              m=\frac{23\,MJ}{46\,\frac{MJ}{kg}}=0{,}50\,kg
+            \]
+          </div>
+          <div class="idea">
+            Trebuie să ardă aproximativ \(0{,}50\,kg\) de benzină.
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-title="Verificare 1">
+        <div class="card">
+          <h2>16. Verificare rapidă I</h2>
+
+          <div class="quiz" data-correct="b" id="q1">
+            <div class="quiz-title">1. Difuzia este:</div>
+            <div class="options">
+              <label class="option"><input type="radio" name="q1" value="a"> A. trecerea căldurii printr-un metal</label>
+              <label class="option"><input type="radio" name="q1" value="b"> B. pătrunderea particulelor unui corp printre particulele altui corp</label>
+              <label class="option"><input type="radio" name="q1" value="c"> C. măsurarea temperaturii cu termometrul</label>
+            </div>
+            <button class="check" onclick="checkQuiz('q1')">Verifică</button>
+            <div class="feedback" id="fb-q1"></div>
+          </div>
+
+          <div class="quiz" data-correct="c" id="q2">
+            <div class="quiz-title">2. Transferul căldurii prin curenți are loc mai ales prin:</div>
+            <div class="options">
+              <label class="option"><input type="radio" name="q2" value="a"> A. conducție</label>
+              <label class="option"><input type="radio" name="q2" value="b"> B. radiație</label>
+              <label class="option"><input type="radio" name="q2" value="c"> C. convecție</label>
+            </div>
+            <button class="check" onclick="checkQuiz('q2')">Verifică</button>
+            <div class="feedback" id="fb-q2"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-title="Verificare 2">
+        <div class="card">
+          <h2>17. Verificare rapidă II</h2>
+
+          <div class="quiz" data-correct="a" id="q3">
+            <div class="quiz-title">3. Formula pentru căldura schimbată la încălzire sau răcire este:</div>
+            <div class="options">
+              <label class="option"><input type="radio" name="q3" value="a"> A. \(Q=m c \Delta T\)</label>
+              <label class="option"><input type="radio" name="q3" value="b"> B. \(Q=q\cdot m\)</label>
+              <label class="option"><input type="radio" name="q3" value="c"> C. \(T=t+273\)</label>
+            </div>
+            <button class="check" onclick="checkQuiz('q3')">Verifică</button>
+            <div class="feedback" id="fb-q3"></div>
+          </div>
+
+          <div class="quiz" data-correct="b" id="q4">
+            <div class="quiz-title">4. În timpul topirii gheții la \(0^{\circ}C\), temperatura:</div>
+            <div class="options">
+              <label class="option"><input type="radio" name="q4" value="a"> A. crește continuu</label>
+              <label class="option"><input type="radio" name="q4" value="b"> B. rămâne constantă până se topește toată gheața</label>
+              <label class="option"><input type="radio" name="q4" value="c"> C. scade sub \(0^{\circ}C\)</label>
+            </div>
+            <button class="check" onclick="checkQuiz('q4')">Verifică</button>
+            <div class="feedback" id="fb-q4"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-title="Verificare 3">
+        <div class="card">
+          <h2>18. Verificare rapidă III</h2>
+
+          <div class="quiz" data-correct="c" id="q5">
+            <div class="quiz-title">5. Puterea calorică a unui combustibil arată:</div>
+            <div class="options">
+              <label class="option"><input type="radio" name="q5" value="a"> A. temperatura flăcării</label>
+              <label class="option"><input type="radio" name="q5" value="b"> B. masa combustibilului</label>
+              <label class="option"><input type="radio" name="q5" value="c"> C. căldura degajată la arderea unui kilogram de combustibil</label>
+            </div>
+            <button class="check" onclick="checkQuiz('q5')">Verifică</button>
+            <div class="feedback" id="fb-q5"></div>
+          </div>
+
+          <div class="quiz" data-correct="a" id="q6">
+            <div class="quiz-title">6. Într-un sistem izolat, la amestecarea unui corp cald cu unul rece:</div>
+            <div class="options">
+              <label class="option"><input type="radio" name="q6" value="a"> A. căldura cedată este egală cu cea primită</label>
+              <label class="option"><input type="radio" name="q6" value="b"> B. căldura dispare</label>
+              <label class="option"><input type="radio" name="q6" value="c"> C. temperatura corpului cald crește</label>
+            </div>
+            <button class="check" onclick="checkQuiz('q6')">Verifică</button>
+            <div class="feedback" id="fb-q6"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen" data-title="Final">
+        <div class="card">
+          <h2>19. Ai recapitulat capitolul</h2>
+          <p class="lead">Acum ar trebui să poți explica și calcula situații simple despre fenomene termice.</p>
+          <div class="grid">
+            <div class="mini"><strong>Explic</strong><br>difuzia, agitația termică, echilibrul termic și transmiterea căldurii</div>
+            <div class="mini"><strong>Aplic</strong><br>\(Q=mc\Delta T\), \(Q=m\lambda\), \(Q=qm\), bilanțul termic</div>
+            <div class="mini"><strong>Compar</strong><br>solid, lichid, gaz și transformările de stare</div>
+            <div class="mini"><strong>Gândesc critic</strong><br>randamentul motoarelor și folosirea responsabilă a combustibililor</div>
+          </div>
+          <div class="final-banner">
+            <p><strong>Prof. Dănuț Andronie</strong></p>
+            <p>email: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a></p>
+          </div>
+          <div class="note">
+            Apasă pe butonul verde pentru a merge la testul final al capitolului.
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <nav class="nav" aria-label="Navigare lecție">
+      <div class="nav-inner">
+        <button id="prevBtn" type="button" onclick="prevPage()">Înapoi</button>
+        <div class="indicator" id="pageIndicator">1/19</div>
+        <button id="nextBtn" type="button" onclick="nextPage()">Mergi mai departe</button>
+      </div>
+    </nav>
+  </div>
+
+  <script>
+    const screens = Array.from(document.querySelectorAll('.screen'));
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const indicator = document.getElementById('pageIndicator');
+    const finalLink = '../test-final/index.html';
+    let current = Number(localStorage.getItem('fg_c8_u1_recap_page') || 0);
+    if (!Number.isFinite(current) || current < 0 || current >= screens.length) current = 0;
+
+    function renderMath(){
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([screens[current]]).catch(() => {});
+      }
+    }
+
+    function showPage(index){
+      current = Math.max(0, Math.min(index, screens.length - 1));
+      screens.forEach((s, i) => s.classList.toggle('active', i === current));
+      prevBtn.disabled = current === 0;
+      indicator.textContent = `${current + 1}/${screens.length}`;
+      nextBtn.textContent = current === screens.length - 1 ? 'Test final' : 'Mergi mai departe';
+      localStorage.setItem('fg_c8_u1_recap_page', current);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const active = screens[current];
+      if (active) active.scrollTop = 0;
+      renderMath();
+    }
+
+    function nextPage(){
+      if (current === screens.length - 1) {
+        window.location.href = finalLink;
+        return;
+      }
+      showPage(current + 1);
+    }
+
+    function prevPage(){
+      showPage(current - 1);
+    }
+
+    document.addEventListener('keydown', (event) => {
+      const tag = (event.target && event.target.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+      if (event.key === 'ArrowRight') nextPage();
+      if (event.key === 'ArrowLeft') prevPage();
+    });
+
+    function checkQuiz(id){
+      const box = document.getElementById(id);
+      const correct = box.dataset.correct;
+      const selected = box.querySelector(`input[name="${id}"]:checked`);
+      const feedback = document.getElementById(`fb-${id}`);
+      feedback.className = 'feedback';
+      if (!selected) {
+        feedback.textContent = 'Alege mai întâi o variantă.';
+        feedback.classList.add('pick');
+        return;
+      }
+      if (selected.value === correct) {
+        feedback.textContent = 'Corect!';
+        feedback.classList.add('ok');
+      } else {
+        feedback.textContent = 'Mai încearcă. Recitește pagina cu explicația.';
+        feedback.classList.add('no');
+      }
+    }
+
+    showPage(current);
+  </script>
 </body>
 </html>

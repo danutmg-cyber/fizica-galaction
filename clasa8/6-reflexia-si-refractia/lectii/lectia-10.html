@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Lecția 10 | Reflexia totală | Fizica Galaction</title>
+  <meta name="description" content="Lecție interactivă pentru clasa a VIII-a: Reflexia totală a luminii.">
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']], displayMath: [['\\[','\\]']] },
+      svg: { fontCache: 'global' },
+      options: { renderActions: { addMenu: [] } }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root{
+      --bg:#071827;
+      --bg2:#0f2742;
+      --card:#10243a;
+      --card2:#153552;
+      --text:#f4f9ff;
+      --muted:#cbd5e1;
+      --cyan:#67e8f9;
+      --blue:#93c5fd;
+      --green:#22c55e;
+      --green-dark:#15803d;
+      --light:#e2e8f0;
+      --light-text:#0f172a;
+      --amber:#fbbf24;
+      --danger:#fb7185;
+      --border:rgba(148,163,184,.35);
+      --shadow:0 18px 45px rgba(0,0,0,.35);
+    }
+
+    *{box-sizing:border-box}
+    html{height:100%}
+    body{
+      margin:0;
+      min-height:100dvh;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(103,232,249,.18), transparent 32rem),
+        radial-gradient(circle at bottom right, rgba(34,197,94,.12), transparent 30rem),
+        linear-gradient(135deg,var(--bg),#020617);
+      color:var(--text);
+      line-height:1.58;
+      font-size:clamp(18px,2.7vw,21px);
+    }
+
+    .app{min-height:100dvh; display:flex; flex-direction:column;}
+
+    .top-banner{
+      padding:18px 16px 12px;
+      text-align:center;
+      background:linear-gradient(135deg, rgba(14,116,144,.42), rgba(30,64,175,.2));
+      border-bottom:1px solid var(--border);
+    }
+    .school{
+      color:var(--cyan);
+      font-weight:800;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      font-size:clamp(16px,2.5vw,22px);
+    }
+    .prof{color:var(--muted); font-size:.95rem; margin-top:4px;}
+    .motto{
+      max-width:820px;
+      margin:12px auto 0;
+      color:#fef3c7;
+      background:rgba(251,191,36,.10);
+      border-left:4px solid var(--amber);
+      border-radius:12px;
+      padding:10px 12px;
+      font-style:italic;
+      font-size:.98rem;
+    }
+
+    .lesson-shell{
+      width:min(980px,100%);
+      margin:0 auto;
+      padding:18px 14px 96px;
+      flex:1;
+      display:flex;
+      align-items:stretch;
+    }
+
+    .page{
+      display:none;
+      width:100%;
+      min-height:calc(100dvh - 132px);
+      background:rgba(16,36,58,.92);
+      border:1px solid var(--border);
+      border-radius:22px;
+      box-shadow:var(--shadow);
+      padding:clamp(18px,4vw,34px);
+      overflow:auto;
+    }
+    .page.active{display:block; animation:fadeIn .18s ease-out;}
+    @keyframes fadeIn{
+      from{opacity:.25; transform:translateY(5px)}
+      to{opacity:1; transform:translateY(0)}
+    }
+
+    h1,h2,h3{line-height:1.18; margin:0 0 14px}
+    h1{color:var(--cyan); font-size:clamp(30px,6vw,48px); letter-spacing:-.03em;}
+    h2{color:var(--cyan); font-size:clamp(25px,4.8vw,38px);}
+    h3{color:var(--blue); font-size:clamp(20px,3.8vw,28px);}
+    p{margin:12px 0}
+    strong{color:#fff}
+    .lead{font-size:clamp(20px,3.2vw,25px); color:#e0f2fe;}
+    .idea{
+      margin-top:18px;
+      padding:16px;
+      border-radius:18px;
+      background:rgba(103,232,249,.10);
+      border:1px solid rgba(103,232,249,.28);
+    }
+    .note{
+      padding:14px 16px;
+      border-radius:16px;
+      background:rgba(251,191,36,.12);
+      border:1px solid rgba(251,191,36,.35);
+      color:#fef3c7;
+    }
+    .retin{
+      padding:16px;
+      border-radius:18px;
+      background:rgba(34,197,94,.12);
+      border:1px solid rgba(34,197,94,.35);
+    }
+    .warnbox{
+      padding:14px 16px;
+      border-radius:16px;
+      background:rgba(251,113,133,.12);
+      border:1px solid rgba(251,113,133,.35);
+      color:#ffe4e6;
+    }
+    .formula{
+      overflow-x:auto;
+      padding:14px 10px;
+      margin:14px 0;
+      border-radius:18px;
+      background:rgba(15,23,42,.45);
+      border:1px solid rgba(148,163,184,.25);
+      font-size:.98em;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+      margin-top:14px;
+    }
+    .mini-card{
+      background:rgba(21,53,82,.72);
+      border:1px solid rgba(147,197,253,.25);
+      border-radius:18px;
+      padding:14px;
+    }
+    .tag{
+      display:inline-block;
+      padding:4px 9px;
+      border-radius:999px;
+      background:rgba(103,232,249,.14);
+      color:var(--cyan);
+      font-weight:800;
+      font-size:.82rem;
+      margin-bottom:8px;
+    }
+    .steps{
+      display:grid;
+      gap:12px;
+      margin-top:12px;
+    }
+    .step{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      padding:12px;
+      border-radius:16px;
+      background:rgba(15,23,42,.35);
+      border:1px solid rgba(148,163,184,.20);
+    }
+    .step b{
+      display:inline-flex;
+      min-width:34px;
+      height:34px;
+      align-items:center;
+      justify-content:center;
+      border-radius:50%;
+      background:rgba(103,232,249,.16);
+      color:var(--cyan);
+      border:1px solid rgba(103,232,249,.30);
+    }
+    .svgbox{
+      margin:18px auto;
+      max-width:720px;
+      padding:14px;
+      border-radius:22px;
+      background:rgba(15,23,42,.35);
+      border:1px solid rgba(148,163,184,.26);
+    }
+    .svgbox > svg{width:100%; height:auto; display:block;}
+    .caption{color:var(--muted); font-size:.92rem; text-align:center; margin-top:8px;}
+    .table-wrap{
+      overflow-x:auto;
+      margin:16px 0;
+      border-radius:18px;
+      border:1px solid rgba(148,163,184,.28);
+    }
+    table{width:100%; border-collapse:collapse; min-width:620px; background:rgba(15,23,42,.35);}
+    th,td{padding:12px; border-bottom:1px solid rgba(148,163,184,.20); text-align:left;}
+    th{color:var(--cyan); background:rgba(103,232,249,.08);}
+    tr:last-child td{border-bottom:0}
+    .check{
+      padding:16px;
+      border-radius:18px;
+      background:rgba(15,23,42,.35);
+      border:1px solid rgba(148,163,184,.26);
+      margin:16px 0;
+    }
+    .choices{display:grid; gap:10px; margin:12px 0;}
+    .choice{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:10px;
+      align-items:start;
+      padding:12px;
+      border-radius:14px;
+      background:rgba(21,53,82,.72);
+      border:1px solid rgba(147,197,253,.22);
+      cursor:pointer;
+    }
+    .choice input{margin-top:6px; transform:scale(1.25);}
+    .check-btn{
+      border:0;
+      border-radius:14px;
+      padding:12px 16px;
+      font-weight:800;
+      font-size:1rem;
+      background:var(--cyan);
+      color:#083344;
+      cursor:pointer;
+    }
+    .feedback{
+      margin-top:12px;
+      padding:12px;
+      border-radius:14px;
+      display:none;
+      font-weight:800;
+    }
+    .feedback.ok{display:block; background:rgba(34,197,94,.14); color:#bbf7d0; border:1px solid rgba(34,197,94,.45);}
+    .feedback.no{display:block; background:rgba(251,113,133,.14); color:#fecdd3; border:1px solid rgba(251,113,133,.45);}
+    .feedback.warn{display:block; background:rgba(251,191,36,.14); color:#fef3c7; border:1px solid rgba(251,191,36,.45);}
+    .final-banner{
+      margin-top:20px;
+      text-align:center;
+      padding:18px;
+      border-radius:20px;
+      background:linear-gradient(135deg,rgba(103,232,249,.16),rgba(34,197,94,.12));
+      border:1px solid rgba(103,232,249,.35);
+    }
+
+    .nav{
+      position:fixed;
+      left:0; right:0; bottom:0;
+      padding:10px 10px max(10px, env(safe-area-inset-bottom));
+      background:rgba(2,6,23,.88);
+      backdrop-filter:blur(12px);
+      border-top:1px solid rgba(148,163,184,.28);
+      z-index:50;
+    }
+    .nav-inner{
+      width:min(980px,100%);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      gap:10px;
+      align-items:center;
+    }
+    .nav button,.nav a{
+      min-height:48px;
+      border:0;
+      border-radius:14px;
+      padding:12px 14px;
+      font-weight:900;
+      font-size:clamp(14px,2.8vw,18px);
+      cursor:pointer;
+      text-decoration:none;
+      text-align:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .back{background:var(--light); color:var(--light-text);}
+    .next{background:var(--green); color:#052e16;}
+    .next:hover{background:#16a34a}
+    .back:disabled{opacity:.45; cursor:not-allowed;}
+    .counter{
+      color:#e0f2fe;
+      font-weight:900;
+      padding:8px 10px;
+      border-radius:999px;
+      background:rgba(15,23,42,.7);
+      border:1px solid rgba(148,163,184,.26);
+      min-width:64px;
+      text-align:center;
+    }
+    .hidden{display:none!important;}
+
+    mjx-container{font-size:110%!important; overflow-x:auto; overflow-y:hidden; max-width:100%;}
+
+    @media (max-width:640px){
+      .grid{grid-template-columns:1fr}
+      .lesson-shell{padding-left:10px; padding-right:10px;}
+      .page{border-radius:18px; min-height:calc(100dvh - 112px);}
+      .nav-inner{grid-template-columns:1fr auto 1fr; gap:7px;}
+      .nav button,.nav a{padding:11px 8px;}
+    }
+  </style>
+</head>
+
+<body>
+<div class="app">
+  <header class="top-banner" id="topBanner">
+    <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+    <div class="prof">Prof. Dănuț Andronie • Fizica Galaction</div>
+    <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+  </header>
+
+  <main class="lesson-shell">
+    <section class="page active" data-page="1">
+      <h1>Lecția 10</h1>
+      <h2>Reflexia totală</h2>
+      <p class="lead">Uneori, lumina ajunge la suprafața dintre două medii și <strong>nu mai iese</strong> în al doilea mediu. Se întoarce complet în mediul din care a venit.</p>
+      <div class="idea">
+        <h3>Ideea-cheie</h3>
+        <p><strong>Reflexia totală</strong> este o reflexie „completă”, produsă în condiții speciale. Ea apare când lumina încearcă să treacă dintr-un mediu în care merge mai încet într-un mediu în care ar merge mai repede, dar ajunge la suprafață sub un unghi prea mare.</p>
+      </div>
+    </section>
+
+    <section class="page" data-page="2">
+      <h2>Observ</h2>
+      <p>Imaginează-ți că trimiți o rază laser prin apă, spre suprafața apă–aer.</p>
+      <p>Pentru unele direcții, o parte din lumină iese în aer: apare <strong>refracția</strong>. Pentru alte direcții, lumina se întoarce în apă ca într-o oglindă: apare <strong>reflexia totală</strong>.</p>
+      <div class="svgbox" aria-label="Rază în apă care se refractă sau se reflectă total">
+        <svg viewBox="0 0 760 430" role="img">
+          <defs>
+            <marker id="arr1" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L9,3 z" fill="#fbbf24"></path>
+            </marker>
+            <marker id="arr2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L9,3 z" fill="#67e8f9"></path>
+            </marker>
+          </defs>
+          <rect x="0" y="0" width="760" height="180" rx="22" fill="#1e293b"></rect>
+          <rect x="0" y="180" width="760" height="250" rx="22" fill="#0e7490" opacity=".45"></rect>
+          <line x1="0" y1="180" x2="760" y2="180" stroke="#e2e8f0" stroke-width="4"></line>
+          <text x="32" y="70" fill="#e2e8f0" font-size="28" font-weight="700">Aer</text>
+          <text x="32" y="260" fill="#cffafe" font-size="28" font-weight="700">Apă</text>
+          <line x1="380" y1="55" x2="380" y2="340" stroke="#94a3b8" stroke-dasharray="10 10" stroke-width="3"></line>
+          <text x="395" y="120" fill="#cbd5e1" font-size="18">normală</text>
+          <line x1="160" y1="355" x2="380" y2="180" stroke="#fbbf24" stroke-width="7" marker-end="url(#arr1)"></line>
+          <line x1="380" y1="180" x2="525" y2="80" stroke="#fbbf24" stroke-width="7" marker-end="url(#arr1)"></line>
+          <line x1="520" y1="350" x2="380" y2="180" stroke="#67e8f9" stroke-width="7" marker-end="url(#arr2)"></line>
+          <line x1="380" y1="180" x2="650" y2="310" stroke="#67e8f9" stroke-width="7" marker-end="url(#arr2)"></line>
+          <text x="410" y="52" fill="#fef3c7" font-size="18">iese în aer: refracție</text>
+          <text x="488" y="374" fill="#cffafe" font-size="18">se întoarce: reflexie totală</text>
+        </svg>
+        <div class="caption">La aceeași suprafață apă–aer pot apărea situații diferite, în funcție de unghi.</div>
+      </div>
+    </section>
+
+    <section class="page" data-page="3">
+      <h2>Reamintire: ce se întâmplă la refracție?</h2>
+      <p>La trecerea dintr-un mediu transparent în altul, lumina își poate schimba direcția. Acesta este fenomenul de <strong>refracție</strong>.</p>
+      <div class="grid">
+        <div class="mini-card">
+          <span class="tag">Aer → apă</span>
+          <p>Raza se apropie de normală, deoarece în apă lumina se propagă mai încet decât în aer.</p>
+        </div>
+        <div class="mini-card">
+          <span class="tag">Apă → aer</span>
+          <p>Raza se depărtează de normală, deoarece în aer lumina se propagă mai repede decât în apă.</p>
+        </div>
+      </div>
+      <div class="note">
+        <strong>Observație:</strong> reflexia totală poate apărea doar în cazul al doilea: când lumina vine din apă, sticlă sau alt mediu cu indice de refracție mai mare și încearcă să iasă spre un mediu cu indice mai mic.
+      </div>
+    </section>
+
+    <section class="page" data-page="4">
+      <h2>Când poate apărea reflexia totală?</h2>
+      <p>Pentru reflexie totală sunt necesare două condiții.</p>
+      <div class="steps">
+        <div class="step">
+          <b>1</b>
+          <div>
+            <strong>Lumina vine dintr-un mediu cu indice de refracție mai mare.</strong>
+            <p>Exemple: apă → aer, sticlă → aer, diamant → aer.</p>
+          </div>
+        </div>
+        <div class="step">
+          <b>2</b>
+          <div>
+            <strong>Unghiul de incidență este mai mare decât unghiul limită.</strong>
+            <p>Altfel spus, raza ajunge „prea oblic” pe suprafața de separație.</p>
+          </div>
+        </div>
+      </div>
+      <div class="formula">
+        \[
+          n_1 > n_2
+          \qquad \text{și} \qquad
+          i > l
+        \]
+      </div>
+      <p>În această lecție, \(l\) se citește <strong>unghi limită</strong>.</p>
+    </section>
+
+    <section class="page" data-page="5">
+      <h2>Unghiul limită</h2>
+      <p><strong>Unghiul limită</strong> este unghiul de incidență pentru care raza refractată iese exact pe suprafața de separație.</p>
+      <p>În acel moment, unghiul de refracție este:</p>
+      <div class="formula">
+        \[
+          r = 90^\circ
+        \]
+      </div>
+      <div class="svgbox" aria-label="Unghiul limită">
+        <svg viewBox="0 0 760 430" role="img">
+          <defs>
+            <marker id="arr3" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L9,3 z" fill="#fbbf24"></path>
+            </marker>
+          </defs>
+          <rect x="0" y="0" width="760" height="195" rx="22" fill="#1e293b"></rect>
+          <rect x="0" y="195" width="760" height="235" rx="22" fill="#0e7490" opacity=".45"></rect>
+          <line x1="0" y1="195" x2="760" y2="195" stroke="#e2e8f0" stroke-width="4"></line>
+          <line x1="380" y1="65" x2="380" y2="360" stroke="#94a3b8" stroke-dasharray="10 10" stroke-width="3"></line>
+          <line x1="160" y1="360" x2="380" y2="195" stroke="#fbbf24" stroke-width="7" marker-end="url(#arr3)"></line>
+          <line x1="380" y1="195" x2="655" y2="195" stroke="#fbbf24" stroke-width="7" marker-end="url(#arr3)"></line>
+          <path d="M380 260 A65 65 0 0 0 430 218" fill="none" stroke="#fef3c7" stroke-width="4"></path>
+          <text x="420" y="255" fill="#fef3c7" font-size="24">l</text>
+          <text x="510" y="178" fill="#fef3c7" font-size="22">raza refractată merge pe suprafață</text>
+          <text x="398" y="112" fill="#cbd5e1" font-size="18">normală</text>
+          <text x="32" y="86" fill="#e2e8f0" font-size="27" font-weight="700">Aer</text>
+          <text x="32" y="285" fill="#cffafe" font-size="27" font-weight="700">Apă</text>
+        </svg>
+        <div class="caption">La unghiul limită, raza refractată este aproape „lipită” de suprafața de separație.</div>
+      </div>
+    </section>
+
+    <section class="page" data-page="6">
+      <h2>Ce se întâmplă înainte și după unghiul limită?</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Situația</th>
+              <th>Ce se observă?</th>
+              <th>Fenomenul principal</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>\(i < l\)</td>
+              <td>Raza trece în al doilea mediu.</td>
+              <td>Refracție</td>
+            </tr>
+            <tr>
+              <td>\(i = l\)</td>
+              <td>Raza refractată merge pe suprafață.</td>
+              <td>Refracție limită</td>
+            </tr>
+            <tr>
+              <td>\(i > l\)</td>
+              <td>Raza nu mai iese, se întoarce complet.</td>
+              <td>Reflexie totală</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="retin">
+        <strong>Rețin:</strong> după depășirea unghiului limită, lumina nu mai are rază refractată vizibilă. Ea este reflectată total în mediul din care a venit.
+      </div>
+    </section>
+
+    <section class="page" data-page="7">
+      <h2>Experiment simplu</h2>
+      <h3>Reflexia totală în apă</h3>
+      <p>Poți observa fenomenul cu un vas transparent cu apă și o lanternă îngustă sau un laser folosit doar sub supravegherea profesorului.</p>
+      <div class="steps">
+        <div class="step"><b>1</b><div>Trimite lumina prin apă spre suprafața apă–aer.</div></div>
+        <div class="step"><b>2</b><div>Schimbă treptat direcția razei.</div></div>
+        <div class="step"><b>3</b><div>Observă când raza nu mai iese în aer, ci se întoarce în apă.</div></div>
+      </div>
+      <div class="warnbox">
+        <strong>Atenție:</strong> nu îndrepta niciodată laserul spre ochi sau spre fețe reflectante. Pentru lecție este suficientă o lanternă cu fascicul îngust.
+      </div>
+    </section>
+
+    <section class="page" data-page="8">
+      <h2>Rețin</h2>
+      <div class="retin">
+        <p><strong>Reflexia totală</strong> este fenomenul prin care lumina se reflectă complet la suprafața de separație dintre două medii transparente.</p>
+        <p>Fenomenul apare când lumina vine dintr-un mediu cu indice de refracție mai mare spre un mediu cu indice mai mic și unghiul de incidență este mai mare decât unghiul limită.</p>
+      </div>
+      <div class="formula">
+        \[
+          \text{Condiții:}\quad n_1>n_2,\quad i>l
+        \]
+      </div>
+      <p>În cazul reflexiei totale se respectă și legea reflexiei:</p>
+      <div class="formula">
+        \[
+          i=r_{\text{reflexie}}
+        \]
+      </div>
+    </section>
+
+    <section class="page" data-page="9">
+      <h2>De ce se numește „totală”?</h2>
+      <p>La o suprafață apă–aer sau sticlă–aer, de obicei lumina se împarte: o parte se reflectă, o parte se refractă.</p>
+      <p>În reflexia totală, partea refractată nu mai apare. Lumina se întoarce în același mediu.</p>
+      <div class="grid">
+        <div class="mini-card">
+          <span class="tag">Reflexie obișnuită</span>
+          <p>O parte din lumină se întoarce.</p>
+        </div>
+        <div class="mini-card">
+          <span class="tag">Reflexie totală</span>
+          <p>Practic toată lumina se întoarce.</p>
+        </div>
+      </div>
+      <div class="idea">
+        <strong>Imagine mentală:</strong> suprafața apă–aer se comportă ca o oglindă, dar numai pentru anumite direcții ale razei.
+      </div>
+    </section>
+
+    <section class="page" data-page="10">
+      <h2>Exemplu: apă → aer</h2>
+      <p>În apă, indicele de refracție este aproximativ:</p>
+      <div class="formula">
+        \[
+          n_{\text{apă}} \approx 1{,}33
+        \]
+      </div>
+      <p>În aer, indicele este aproximativ:</p>
+      <div class="formula">
+        \[
+          n_{\text{aer}} \approx 1
+        \]
+      </div>
+      <p>De aceea, reflexia totală poate apărea la trecerea <strong>din apă spre aer</strong>, nu la trecerea obișnuită din aer spre apă.</p>
+      <div class="note">
+        În lecția următoare vei folosi mai riguros legea refracției pentru a calcula unghiuri.
+      </div>
+    </section>
+
+    <section class="page" data-page="11">
+      <h2>Exemplu numeric</h2>
+      <p>Pentru elevii curioși, unghiul limită se poate estima cu relația:</p>
+      <div class="formula">
+        \[
+          \sin l=\frac{n_2}{n_1}
+        \]
+      </div>
+      <p>Pentru lumină care trece din apă în aer:</p>
+      <div class="formula">
+        \[
+          \sin l=\frac{n_{\text{aer}}}{n_{\text{apă}}}
+          =\frac{1}{1{,}33}\approx 0{,}75
+        \]
+      </div>
+      <p>Rezultă aproximativ:</p>
+      <div class="formula">
+        \[
+          l \approx 49^\circ
+        \]
+      </div>
+      <p>Dacă \(i>49^\circ\), poate apărea reflexia totală la suprafața apă–aer.</p>
+    </section>
+
+    <section class="page" data-page="12">
+      <h2>Aplic: decide fenomenul</h2>
+      <p>O rază de lumină merge din apă spre aer. Pentru această pereche de medii, considerăm aproximativ:</p>
+      <div class="formula">
+        \[
+          l \approx 49^\circ
+        \]
+      </div>
+      <div class="grid">
+        <div class="mini-card">
+          <span class="tag">Cazul A</span>
+          <p>\(i=35^\circ\)</p>
+          <p>Deoarece \(35^\circ<49^\circ\), are loc refracție.</p>
+        </div>
+        <div class="mini-card">
+          <span class="tag">Cazul B</span>
+          <p>\(i=60^\circ\)</p>
+          <p>Deoarece \(60^\circ>49^\circ\), apare reflexie totală.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" data-page="13">
+      <h2>Aplicație: fibra optică</h2>
+      <p>Într-o fibră optică, lumina este ghidată prin reflexii totale repetate.</p>
+      <p>Raza intră într-un capăt al fibrei și este „ținută” în interior, chiar dacă fibra este curbată ușor.</p>
+      <div class="svgbox" aria-label="Fibră optică cu reflexii totale repetate">
+        <svg viewBox="0 0 760 320" role="img">
+          <defs>
+            <marker id="arr4" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L9,3 z" fill="#fbbf24"></path>
+            </marker>
+          </defs>
+          <path d="M70 150 C180 70, 300 250, 420 150 S620 70, 700 165" fill="none" stroke="#67e8f9" stroke-width="70" stroke-linecap="round" opacity=".25"></path>
+          <path d="M70 150 C180 70, 300 250, 420 150 S620 70, 700 165" fill="none" stroke="#93c5fd" stroke-width="42" stroke-linecap="round" opacity=".65"></path>
+          <polyline points="75,160 160,115 245,200 330,112 420,180 515,105 610,190 694,160" fill="none" stroke="#fbbf24" stroke-width="7" marker-end="url(#arr4)"></polyline>
+          <text x="65" y="62" fill="#e0f2fe" font-size="22" font-weight="700">miez</text>
+          <text x="595" y="260" fill="#fef3c7" font-size="21">reflexii totale repetate</text>
+        </svg>
+        <div class="caption">Fibra optică va fi detaliată în lecția despre aplicații practice.</div>
+      </div>
+    </section>
+
+    <section class="page" data-page="14">
+      <h2>Aplicație: prisma cu reflexie totală</h2>
+      <p>În unele instrumente optice, prisma schimbă direcția luminii prin reflexie totală.</p>
+      <p>Avantajul: pierderile de lumină pot fi foarte mici, iar imaginea rămâne clară.</p>
+      <div class="svgbox" aria-label="Prismă cu reflexie totală">
+        <svg viewBox="0 0 760 390" role="img">
+          <defs>
+            <marker id="arr5" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L9,3 z" fill="#fbbf24"></path>
+            </marker>
+          </defs>
+          <polygon points="230,320 530,320 230,80" fill="#38bdf8" opacity=".22" stroke="#67e8f9" stroke-width="4"></polygon>
+          <line x1="90" y1="220" x2="305" y2="220" stroke="#fbbf24" stroke-width="8" marker-end="url(#arr5)"></line>
+          <line x1="305" y1="220" x2="420" y2="110" stroke="#fbbf24" stroke-width="8" marker-end="url(#arr5)"></line>
+          <line x1="420" y1="110" x2="420" y2="300" stroke="#fbbf24" stroke-width="8" marker-end="url(#arr5)"></line>
+          <text x="110" y="195" fill="#fef3c7" font-size="22">rază incidentă</text>
+          <text x="445" y="220" fill="#fef3c7" font-size="22">rază deviată</text>
+          <text x="292" y="350" fill="#e0f2fe" font-size="22">prismă</text>
+        </svg>
+        <div class="caption">O prismă poate devia lumina fără oglindă metalică, folosind reflexia totală.</div>
+      </div>
+    </section>
+
+    <section class="page" data-page="15">
+      <h2>Greșeli frecvente</h2>
+      <div class="steps">
+        <div class="step">
+          <b>!</b>
+          <div>
+            <strong>„Reflexia totală apare la orice suprafață lucioasă.”</strong>
+            <p>Nu. Aceea este reflexie obișnuită. Reflexia totală apare doar între medii transparente și în condiții speciale.</p>
+          </div>
+        </div>
+        <div class="step">
+          <b>!</b>
+          <div>
+            <strong>„Reflexia totală apare la trecerea aer → apă.”</strong>
+            <p>Nu. Pentru apă și aer, apare la încercarea luminii de a trece din apă spre aer, dacă unghiul este suficient de mare.</p>
+          </div>
+        </div>
+        <div class="step">
+          <b>!</b>
+          <div>
+            <strong>„Unghiul se măsoară față de suprafață.”</strong>
+            <p>În optică, unghiurile \(i\), \(r\) și \(l\) se măsoară față de normală, adică față de perpendiculara pe suprafață.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" data-page="16">
+      <h2>Verificare rapidă 1</h2>
+      <div class="check" data-answer="b">
+        <p><strong>1. Reflexia totală poate apărea când lumina trece:</strong></p>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="q1" value="a"><span>din aer în apă, pentru orice unghi;</span></label>
+          <label class="choice"><input type="radio" name="q1" value="b"><span>dintr-un mediu cu indice mai mare spre unul cu indice mai mic, la unghi suficient de mare;</span></label>
+          <label class="choice"><input type="radio" name="q1" value="c"><span>doar prin corpuri opace.</span></label>
+        </div>
+        <button class="check-btn" type="button">Verifică</button>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="check" data-answer="c">
+        <p><strong>2. Unghiul limită este unghiul de incidență pentru care raza refractată:</strong></p>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="q2" value="a"><span>se apropie foarte mult de normală;</span></label>
+          <label class="choice"><input type="radio" name="q2" value="b"><span>se întoarce în sursa de lumină;</span></label>
+          <label class="choice"><input type="radio" name="q2" value="c"><span>merge de-a lungul suprafeței de separație.</span></label>
+        </div>
+        <button class="check-btn" type="button">Verifică</button>
+        <div class="feedback"></div>
+      </div>
+    </section>
+
+    <section class="page" data-page="17">
+      <h2>Verificare rapidă 2</h2>
+      <div class="check" data-answer="a">
+        <p><strong>3. Pentru apă → aer, dacă \(l\approx49^\circ\) și \(i=60^\circ\), fenomenul este:</strong></p>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="q3" value="a"><span>reflexie totală;</span></label>
+          <label class="choice"><input type="radio" name="q3" value="b"><span>doar absorbție;</span></label>
+          <label class="choice"><input type="radio" name="q3" value="c"><span>dispersie a luminii.</span></label>
+        </div>
+        <button class="check-btn" type="button">Verifică</button>
+        <div class="feedback"></div>
+      </div>
+
+      <div class="check" data-answer="b">
+        <p><strong>4. În fibra optică, lumina este ghidată mai ales prin:</strong></p>
+        <div class="choices">
+          <label class="choice"><input type="radio" name="q4" value="a"><span>absorbții repetate;</span></label>
+          <label class="choice"><input type="radio" name="q4" value="b"><span>reflexii totale repetate;</span></label>
+          <label class="choice"><input type="radio" name="q4" value="c"><span>transformarea luminii în sunet.</span></label>
+        </div>
+        <button class="check-btn" type="button">Verifică</button>
+        <div class="feedback"></div>
+      </div>
+    </section>
+
+    <section class="page" data-page="18">
+      <h2>Recapitulare scurtă</h2>
+      <div class="grid">
+        <div class="mini-card">
+          <span class="tag">Reflexia totală</span>
+          <p>Lumina se întoarce complet în mediul din care a venit.</p>
+        </div>
+        <div class="mini-card">
+          <span class="tag">Condiția 1</span>
+          <p>Lumina vine din mediul cu indice de refracție mai mare.</p>
+        </div>
+        <div class="mini-card">
+          <span class="tag">Condiția 2</span>
+          <p>Unghiul de incidență este mai mare decât unghiul limită.</p>
+        </div>
+        <div class="mini-card">
+          <span class="tag">Aplicații</span>
+          <p>Fibră optică, prismă cu reflexie totală, jet de apă luminat.</p>
+        </div>
+      </div>
+      <div class="final-banner">
+        <h3>Prof. Dănuț Andronie</h3>
+        <p>email: <strong>danutmg@gmail.com</strong></p>
+      </div>
+    </section>
+  </main>
+
+  <nav class="nav" aria-label="Navigare lecție">
+    <div class="nav-inner">
+      <button class="back" id="backBtn" type="button">Înapoi</button>
+      <div class="counter" id="counter">1/18</div>
+      <button class="next" id="nextBtn" type="button">Mergi mai departe</button>
+      <a class="next hidden" id="finalLink" href="./lectia-11.html">Lecția următoare</a>
+    </div>
+  </nav>
+</div>
+
+<script>
+  const pages = Array.from(document.querySelectorAll('.page'));
+  const backBtn = document.getElementById('backBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const finalLink = document.getElementById('finalLink');
+  const counter = document.getElementById('counter');
+  const topBanner = document.getElementById('topBanner');
+  let current = 0;
+
+  function showPage(index){
+    current = Math.max(0, Math.min(index, pages.length - 1));
+    pages.forEach((p,i)=>p.classList.toggle('active', i === current));
+    counter.textContent = `${current + 1}/${pages.length}`;
+    backBtn.disabled = current === 0;
+
+    if(current === pages.length - 1){
+      nextBtn.classList.add('hidden');
+      finalLink.classList.remove('hidden');
+    } else {
+      nextBtn.classList.remove('hidden');
+      finalLink.classList.add('hidden');
+    }
+
+    topBanner.style.display = current === 0 ? 'block' : 'none';
+    window.scrollTo({top:0, behavior:'smooth'});
+
+    if(window.MathJax && MathJax.typesetPromise){
+      MathJax.typesetPromise([pages[current]]).catch(()=>{});
+    }
+  }
+
+  backBtn.addEventListener('click', () => showPage(current - 1));
+  nextBtn.addEventListener('click', () => showPage(current + 1));
+
+  document.addEventListener('keydown', (event) => {
+    if(event.key === 'ArrowRight' && current < pages.length - 1) showPage(current + 1);
+    if(event.key === 'ArrowLeft' && current > 0) showPage(current - 1);
+  });
+
+  document.querySelectorAll('.check').forEach((box) => {
+    const btn = box.querySelector('.check-btn');
+    const fb = box.querySelector('.feedback');
+    btn.addEventListener('click', () => {
+      const selected = box.querySelector('input[type="radio"]:checked');
+      fb.className = 'feedback';
+      if(!selected){
+        fb.textContent = 'Alege mai întâi o variantă.';
+        fb.classList.add('warn');
+        return;
+      }
+      if(selected.value === box.dataset.answer){
+        fb.textContent = 'Corect!';
+        fb.classList.add('ok');
+      } else {
+        fb.textContent = 'Mai încearcă. Recitește pagina cu explicația.';
+        fb.classList.add('no');
+      }
+    });
+  });
+
+  showPage(0);
+</script>
+</body>
+</html>

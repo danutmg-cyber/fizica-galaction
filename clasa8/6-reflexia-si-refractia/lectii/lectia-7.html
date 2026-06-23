@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Lecția 7 | Aplicații ale legilor reflexiei în tehnologie | Fizica Galaction</title>
+  <meta name="description" content="Lecție interactivă de fizică pentru clasa a VIII-a: aplicații ale legilor reflexiei în tehnologie.">
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' },
+      options: { renderActions: { addMenu: [] } }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    :root{
+      --bg:#07111f;
+      --panel:#0f1f34;
+      --panel2:#132943;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --cyan:#67e8f9;
+      --cyan2:#22d3ee;
+      --green:#22c55e;
+      --green2:#16a34a;
+      --back:#e2e8f0;
+      --backText:#0f172a;
+      --yellow:#fde68a;
+      --orange:#fed7aa;
+      --red:#fecaca;
+      --shadow:0 20px 55px rgba(0,0,0,.35);
+      --border:rgba(148,163,184,.28);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      min-height:100dvh;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(34,211,238,.18), transparent 32rem),
+        linear-gradient(135deg,#07111f 0%, #0f172a 55%, #111827 100%);
+      color:var(--text);
+      font-size:18px;
+      line-height:1.55;
+    }
+    .app{
+      width:min(980px,100%);
+      margin:0 auto;
+      min-height:100dvh;
+      display:flex;
+      flex-direction:column;
+    }
+    .top-banner{
+      margin:14px 12px 0;
+      padding:14px 16px;
+      border:1px solid rgba(103,232,249,.35);
+      border-radius:22px;
+      background:rgba(15,31,52,.88);
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+    .school{font-weight:900;color:var(--cyan);letter-spacing:.02em}
+    .prof{color:var(--muted);font-weight:700;margin-top:2px}
+    .motto{
+      margin:10px auto 0;
+      max-width:780px;
+      color:#fff7ed;
+      background:rgba(245,158,11,.14);
+      border-left:4px solid var(--cyan2);
+      border-radius:12px;
+      padding:8px 10px;
+      font-style:italic;
+    }
+    main{
+      flex:1;
+      padding:12px;
+      padding-bottom:96px;
+      display:flex;
+      align-items:stretch;
+    }
+    .page{
+      width:100%;
+      display:none;
+      animation:fade .18s ease-out;
+    }
+    .page.active{
+      display:flex;
+      flex-direction:column;
+    }
+    @keyframes fade{
+      from{opacity:.3; transform:translateY(4px)}
+      to{opacity:1; transform:translateY(0)}
+    }
+    .card{
+      background:rgba(15,31,52,.94);
+      border:1px solid var(--border);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:clamp(18px,3vw,32px);
+      width:100%;
+      min-height:calc(100dvh - 128px);
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+    .card.compact{justify-content:flex-start}
+    h1,h2,h3{line-height:1.15;margin:0 0 14px}
+    h1{font-size:clamp(2rem,6vw,3.4rem); color:var(--cyan)}
+    h2{font-size:clamp(1.55rem,4.5vw,2.4rem); color:var(--cyan)}
+    h3{font-size:clamp(1.2rem,3.5vw,1.5rem); color:#bfdbfe}
+    p{margin:10px 0}
+    .lead{font-size:clamp(1.08rem,3.5vw,1.35rem); color:#e0f2fe}
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      align-self:flex-start;
+      padding:7px 11px;
+      border-radius:999px;
+      background:rgba(34,211,238,.12);
+      color:var(--cyan);
+      font-weight:900;
+      border:1px solid rgba(34,211,238,.32);
+      margin-bottom:12px;
+      font-size:.95rem;
+    }
+    .idea{
+      border-left:5px solid var(--green);
+      background:rgba(34,197,94,.12);
+      border-radius:16px;
+      padding:13px 15px;
+      margin:14px 0;
+    }
+    .note{
+      border-left:5px solid var(--cyan2);
+      background:rgba(34,211,238,.10);
+      border-radius:16px;
+      padding:13px 15px;
+      margin:14px 0;
+    }
+    .warn{
+      border-left:5px solid #fb7185;
+      background:rgba(251,113,133,.12);
+      border-radius:16px;
+      padding:13px 15px;
+      margin:14px 0;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:12px;
+      margin-top:12px;
+    }
+    .mini{
+      background:rgba(19,41,67,.92);
+      border:1px solid rgba(148,163,184,.25);
+      border-radius:18px;
+      padding:14px;
+    }
+    .mini strong{color:#fef3c7}
+    .formula{
+      margin:14px 0;
+      padding:14px;
+      border-radius:18px;
+      background:rgba(2,6,23,.46);
+      border:1px solid rgba(103,232,249,.25);
+      overflow-x:auto;
+    }
+    mjx-container{font-size:105% !important; max-width:100%; overflow-x:auto; overflow-y:hidden}
+    .svgbox{
+      margin:16px auto;
+      width:min(100%,760px);
+      background:rgba(2,6,23,.35);
+      border:1px solid rgba(148,163,184,.25);
+      border-radius:20px;
+      padding:10px;
+      overflow:hidden;
+    }
+    .svgbox > svg{width:100%; height:auto; display:block}
+    .caption{font-size:.92rem;color:var(--muted);text-align:center;margin-top:6px}
+    .quiz{
+      margin-top:14px;
+      padding:14px;
+      border-radius:18px;
+      background:rgba(2,6,23,.42);
+      border:1px solid rgba(103,232,249,.22);
+    }
+    .quiz .q{font-weight:900;color:#e0f2fe;margin-bottom:10px}
+    .options{
+      display:grid;
+      gap:10px;
+      margin:10px 0;
+    }
+    .options label{
+      display:grid;
+      grid-template-columns:28px 1fr;
+      align-items:start;
+      gap:8px;
+      padding:10px 12px;
+      border-radius:14px;
+      background:rgba(15,23,42,.62);
+      border:1px solid rgba(148,163,184,.22);
+      cursor:pointer;
+    }
+    input[type="radio"]{transform:translateY(4px) scale(1.15)}
+    .check{
+      width:100%;
+      border:none;
+      border-radius:14px;
+      padding:12px 14px;
+      background:var(--cyan2);
+      color:#06202b;
+      font-weight:900;
+      font-size:1rem;
+      cursor:pointer;
+    }
+    .feedback{
+      margin-top:10px;
+      padding:10px 12px;
+      border-radius:12px;
+      display:none;
+      font-weight:900;
+    }
+    .feedback.ok{display:block;background:rgba(34,197,94,.18);color:#bbf7d0}
+    .feedback.bad{display:block;background:rgba(248,113,113,.18);color:#fecaca}
+    .final-banner{
+      margin-top:auto;
+      padding:16px;
+      border-radius:20px;
+      background:rgba(34,211,238,.12);
+      border:1px solid rgba(103,232,249,.35);
+      text-align:center;
+    }
+    .final-banner strong{color:var(--cyan)}
+    .nav{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:0;
+      width:min(980px,100%);
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      gap:10px;
+      align-items:center;
+      padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+      background:rgba(7,17,31,.92);
+      backdrop-filter:blur(10px);
+      border-top:1px solid rgba(148,163,184,.25);
+      z-index:50;
+    }
+    .backbtn,.nextbtn{
+      border:none;
+      border-radius:16px;
+      padding:13px 12px;
+      font-size:1rem;
+      font-weight:900;
+      cursor:pointer;
+      min-height:52px;
+    }
+    .backbtn{background:var(--back);color:var(--backText)}
+    .nextbtn{background:var(--green);color:#052e16}
+    .nextbtn:hover{background:var(--green2)}
+    .backbtn:disabled{opacity:.45;cursor:not-allowed}
+    .pageNo{
+      min-width:58px;
+      text-align:center;
+      color:#e0f2fe;
+      font-weight:900;
+      background:rgba(15,31,52,.96);
+      border:1px solid rgba(148,163,184,.28);
+      padding:10px 12px;
+      border-radius:999px;
+    }
+    @media (max-width:720px){
+      body{font-size:17px}
+      .grid{grid-template-columns:1fr}
+      main{padding:10px;padding-bottom:92px}
+      .card{min-height:calc(100dvh - 112px);border-radius:20px}
+      .nav{gap:8px}
+      .backbtn,.nextbtn{font-size:.95rem;padding:12px 8px}
+      .pageNo{min-width:54px;padding:9px 10px}
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="top-banner" id="topBanner">
+      <div class="school">ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</div>
+      <div class="prof">Prof. Dănuț Andronie</div>
+      <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+    </header>
+
+    <main>
+      <section class="page active">
+        <article class="card">
+          <span class="tag">Clasa a VIII-a • Fenomene optice • Lecția 7</span>
+          <h1>Aplicații ale legilor reflexiei în tehnologie</h1>
+          <p class="lead">Folosim legile reflexiei pentru a direcționa lumina exact acolo unde avem nevoie: spre ochi, spre un ecran, spre un receptor solar sau spre un detector.</p>
+          <div class="idea">
+            <strong>Ideea-cheie:</strong> o oglindă nu „creează” lumină; ea schimbă direcția luminii după o regulă simplă: unghiul de incidență este egal cu unghiul de reflexie.
+          </div>
+        </article>
+      </section>
+
+      <section class="page">
+        <article class="card">
+          <span class="tag">Observ</span>
+          <h2>Unde apar oglinzile în tehnologie?</h2>
+          <p>Oglinzile sunt folosite în multe aparate: proiectoare, periscoape, telescoape, faruri, oglinzi retrovizoare și centrale solare.</p>
+          <div class="svgbox" aria-label="Obiecte care folosesc reflexia luminii">
+            <svg viewBox="0 0 760 310" role="img">
+              <rect x="25" y="35" width="150" height="90" rx="14" fill="#0f172a" stroke="#67e8f9" stroke-width="3"/>
+              <text x="100" y="86" text-anchor="middle" fill="#e0f2fe" font-size="23" font-weight="700">proiector</text>
+              <polygon points="175,80 300,45 300,115" fill="rgba(253,230,138,.35)" stroke="#fde68a" stroke-width="2"/>
+              <rect x="315" y="30" width="90" height="105" rx="8" fill="#1e293b" stroke="#cbd5e1" stroke-width="3"/>
+              <text x="360" y="156" text-anchor="middle" fill="#cbd5e1" font-size="18">ecran</text>
+
+              <line x1="455" y1="70" x2="560" y2="70" stroke="#fde68a" stroke-width="5"/>
+              <line x1="560" y1="70" x2="620" y2="25" stroke="#fde68a" stroke-width="5"/>
+              <line x1="560" y1="70" x2="620" y2="115" stroke="#fde68a" stroke-width="5"/>
+              <rect x="535" y="42" width="55" height="55" transform="rotate(45 562.5 69.5)" fill="#94a3b8" opacity=".8"/>
+              <text x="590" y="156" text-anchor="middle" fill="#cbd5e1" font-size="18">oglindă</text>
+
+              <circle cx="165" cy="235" r="42" fill="#22d3ee" opacity=".22" stroke="#67e8f9" stroke-width="3"/>
+              <path d="M 115 235 C 145 200, 185 200, 215 235 C 185 270, 145 270, 115 235 Z" fill="#0f172a" stroke="#e0f2fe" stroke-width="3"/>
+              <circle cx="165" cy="235" r="11" fill="#67e8f9"/>
+              <text x="165" y="300" text-anchor="middle" fill="#cbd5e1" font-size="18">ochiul primește lumină</text>
+
+              <rect x="390" y="210" width="210" height="40" rx="8" fill="#334155" stroke="#94a3b8"/>
+              <line x1="410" y1="210" x2="515" y2="130" stroke="#fde68a" stroke-width="4"/>
+              <line x1="455" y1="210" x2="540" y2="140" stroke="#fde68a" stroke-width="4"/>
+              <line x1="500" y1="210" x2="565" y2="155" stroke="#fde68a" stroke-width="4"/>
+              <text x="495" y="278" text-anchor="middle" fill="#cbd5e1" font-size="18">oglinzi spre receptor</text>
+            </svg>
+          </div>
+          <p class="caption">În toate cazurile, lumina este ghidată prin reflexie.</p>
+        </article>
+      </section>
+
+      <section class="page">
+        <article class="card">
+          <span class="tag">Rețin</span>
+          <h2>Regula de bază: legile reflexiei</h2>
+          <p>Ca să folosim reflexia în tehnologie, avem nevoie de cele două legi:</p>
+          <div class="grid">
+            <div class="mini">
+              <strong>Legea 1</strong>
+              <p>Raza incidentă, normala și raza reflectată sunt în același plan.</p>
+            </div>
+            <div class="mini">
+              <strong>Legea 2</strong>
+              <p>Unghiul de incidență este egal cu unghiul de reflexie.</p>
+            </div>
+          </div>
+          <div class="formula">
+            \[
+              i=r
+            \]
+          </div>
+          <div class="note">
+            <strong>Pe scurt:</strong> dacă lumina lovește oglinda „dintr-o parte”, ea pleacă „simetric” față de normală.
+          </div>
+        </article>
+      </section>
+
+      <section class="page">
+        <article class="card">
+          <span class="tag">Exemplu</span>
+          <h2>Periscopul: vezi fără să privești direct</h2>
+          <p>Un periscop simplu are două oglinzi plane înclinate la aproximativ \(45^\circ\). Lumina se reflectă pe prima oglindă, apoi pe a doua, ajungând la ochiul observatorului.</p>
+          <div class="svgbox" aria-label="Periscop cu două oglinzi plane">
+            <svg viewBox="0 0 760 360" role="img">
+              <rect x="280" y="30" width="190" height="300" rx="12" fill="#0f172a" stroke="#67e8f9" stroke-width="3"/>
+              <rect x="302" y="62" width="95" height="10" transform="rotate(-35 349 67)" fill="#94a3b8"/>
+              <rect x="354" y="284" width="95" height="10" transform="rotate(-35 401 289)" fill="#94a3b8"/>
+              <line x1="100" y1="75" x2="335" y2="75" stroke="#fde68a" stroke-width="5"/>
+              <line x1="335" y1="75" x2="405" y2="280" stroke="#fde68a" stroke-width="5"/>
+              <line x1="405" y1="280" x2="640" y2="280" stroke="#fde68a" stroke-width="5"/>
+              <polygon points="632,270 658,280 632,290" fill="#fde68a"/>
+              <text x="120" y="55" fill="#e0f2fe" font-size="20">obiect</text>
+              <text x="612" y="260" fill="#e0f2fe" font-size="20">ochi</text>
+              <text x="378" y="185" fill="#cbd5e1" font-size="20" text-anchor="middle">2 reflexii</text>
+            </svg>
+          </div>
+          <div class="idea">
+            Periscopul este util când observatorul nu poate privi direct: de exemplu, peste un obstacol sau dintr-un vehicul.
+          </div>
+        </article>
+      </section>
+
+      <section class="page">
+        <article class="card compact">
+          <span class="tag">Aplic</span>
+          <h2>Oglinzi convexe: vedere mai largă</h2>
+          <p>Oglinzile convexe sunt bombate spre exterior. Ele formează imagini micșorate, dar permit observarea unei zone mai mari.</p>
+          <div class="svgbox" aria-label="Oglindă convexă care oferă un câmp vizual larg">
+            <svg viewBox="0 0 760 330" role="img">
+              <path d="M 380 55 C 455 110, 455 220, 380 275" fill="none" stroke="#94a3b8" stroke-width="12"/>
+              <circle cx="165" cy="165" r="28" fill="#22d3ee" opacity=".85"/>
+              <circle cx="120" cy="105" r="22" fill="#fde68a" opacity=".85"/>
+              <circle cx="110" cy="230" r="24" fill="#fb7185" opacity=".85"/>
+              <line x1="165" y1="165" x2="380" y2="115" stroke="#fde68a" stroke-width="4"/>
+              <line x1="120" y1="105" x2="380" y2="155" stroke="#fde68a" stroke-width="4"/>
+              <line x1="110" y1="230" x2="380" y2="205" stroke="#fde68a" stroke-width="4"/>
+              <line x1="380" y1="115" x2="615" y2="75" stroke="#fef3c7" stroke-width="3" stroke-dasharray="8 8"/>
+              <line x1="380" y1="155" x2="615" y2="165" stroke="#fef3c7" stroke-width="3" stroke-dasharray="8 8"/>
+              <line x1="380" y1="205" x2="615" y2="255" stroke="#fef3c7" stroke-width="3" stroke-dasharray="8 8"/>
+              <text x="140" y="295" text-anchor="middle" fill="#cbd5e1" font-size="18">mai multe obiecte</text>
+              <text x="515" y="295" text-anchor="middle" fill="#cbd5e1" font-size="18">direcții reflectate</text>
+            </svg>
+          </div>
+          <div class="note">
+            De aceea sunt folosite la oglinzi retrovizoare, oglinzi de supraveghere în magazine și oglinzi rutiere în intersecții cu vizibilitate redusă.
+          </div>
+        </article>
+      </section>
+
+      <section class="page">
+        <article class="card compact">
+          <span class="tag">Aplic</span>
+          <h2>Oglinzi concave: concentrează lumina</h2>
+          <p>Oglinzile concave sunt adâncite. Ele pot aduna razele de lumină într-o zonă mică, numită focar.</p>
+          <div class="svgbox" aria-label="Oglindă concavă care concentrează razele în focar">
+            <svg viewBox="0 0 760 330" role="img">
+              <path d="M 560 55 C 470 110, 470 220, 560 275" fill="none" stroke="#94a3b8" stroke-width="12"/>
+              <line x1="80" y1="90" x2="560" y2="90" stroke="#fde68a" stroke-width="4"/>
+              <line x1="80" y1="165" x2="560" y2="165" stroke="#fde68a" stroke-width="4"/>
+              <line x1="80" y1="240" x2="560" y2="240" stroke="#fde68a" stroke-width="4"/>
+              <line x1="560" y1="90" x2="360" y2="165" stroke="#fef3c7" stroke-width="4"/>
+              <line x1="560" y1="165" x2="360" y2="165" stroke="#fef3c7" stroke-width="4"/>
+              <line x1="560" y1="240" x2="360" y2="165" stroke="#fef3c7" stroke-width="4"/>
+              <circle cx="360" cy="165" r="10" fill="#fb7185"/>
+              <text x="360" y="148" text-anchor="middle" fill="#fecaca" font-size="20" font-weight="700">focar</text>
+              <text x="260" y="296" text-anchor="middle" fill="#cbd5e1" font-size="18">razele se adună</text>
+            </svg>
+          </div>
+          <div class="idea">
+            Aplicații: faruri, lanterne, cuptoare solare, antene parabolice pentru unde radio și telescoape reflectoare.
+          </div>
+        </article>
+      </section>
+
+      <section class="page">
+        <article class="card">
+          <span class="tag">Tehnologie</span>
+          <h2>Proiectorul DLP: milioane de oglinzi mici</h2>
+          <p>Într-un proiector DLP există un cip cu foarte multe micro-oglinzi. Fiecare oglindă microscopică se poate înclina rapid.</p>
+          <div class="grid">
+            <div class="mini">
+              <strong>Poziția ON</strong>
+              <p>Micro-oglinda trimite lumina spre ecran: apare un punct luminos.</p>
+            </div>
+            <div class="mini">
+              <strong>Poziția OFF</strong>
+              <p>Micro-oglinda trimite lumina în altă parte: punctul devine întunecat.</p>
+            </div>
+          </div>
+          <div class="svgbox" aria-label="Micro-oglinzi într-un proiector DLP">
+            <svg viewBox="0 0 760 320" role="img">
+              <rect x="80" y="70" width="170" height="170" rx="18" fill="#0f172a" stroke="#67e8f9" stroke-width="3"/>
+              <g stroke="#94a3b8" stroke-width="3">
+                <rect x="105" y="95" width="35" height="35" transform="rotate(-15 122.5 112.5)" fill="#64748b"/>
+                <rect x="155" y="95" width="35" height="35" transform="rotate(15 172.5 112.5)" fill="#64748b"/>
+                <rect x="105" y="150" width="35" height="35" transform="rotate(15 122.5 167.5)" fill="#64748b"/>
+                <rect x="155" y="150" width="35" height="35" transform="rotate(-15 172.5 167.5)" fill="#64748b"/>
+                <rect x="205" y="125" width="35" height="35" transform="rotate(-15 222.5 142.5)" fill="#64748b"/>
+              </g>
+              <text x="165" y="272" text-anchor="middle" fill="#cbd5e1" font-size="18">cip DMD</text>
+
+              <circle cx="400" cy="155" r="40" fill="#fde68a" opacity=".25" stroke="#fde68a" stroke-width="3"/>
+              <text x="400" y="162" text-anchor="middle" fill="#fff7ed" font-size="18" font-weight="700">lampă</text>
+              <line x1="440" y1="155" x2="535" y2="110" stroke="#fde68a" stroke-width="5"/>
+              <line x1="440" y1="155" x2="535" y2="200" stroke="#fde68a" stroke-width="5"/>
+              <rect x="580" y="60" width="90" height="200" rx="10" fill="#1e293b" stroke="#cbd5e1" stroke-width="3"/>
+              <text x="625" y="290" text-anchor="middle" fill="#cbd5e1" font-size="18">ecran</text>
+            </svg>
+          </div>
+        </article>
+      </section>
+
+      <section class="page">
+        <article class="card">
+          <span class="tag">Tehnologie</span>
+          <h2>Telescopul reflector: oglinzi pentru lumină slabă</h2>
+          <p>Un telescop reflector folosește o oglindă principală mare, de obicei concavă. Ea adună lumina de la obiecte foarte îndepărtate.</p>
+          <div class="svgbox" aria-label="Telescop reflector cu oglindă principală și oglindă secundară">
+            <svg viewBox="0 0 760 350" role="img">
+              <line x1="60" y1="95" x2="560" y2="95" stroke="#fde68a" stroke-width="4"/>
+              <line x1="60" y1="165" x2="560" y2="165" stroke="#fde68a" stroke-width="4"/>
+              <line x1="60" y1="235" x2="560" y2="235" stroke="#fde68a" stroke-width="4"/>
+              <path d="M 585 55 C 500 115, 500 235, 585 295" fill="none" stroke="#94a3b8" stroke-width="12"/>
+              <rect x="340" y="130" width="70" height="12" transform="rotate(-45 375 136)" fill="#cbd5e1"/>
+              <line x1="560" y1="95" x2="375" y2="165" stroke="#fef3c7" stroke-width="4"/>
+              <line x1="560" y1="165" x2="375" y2="165" stroke="#fef3c7" stroke-width="4"/>
+              <line x1="560" y1="235" x2="375" y2="165" stroke="#fef3c7" stroke-width="4"/>
+              <line x1="375" y1="165" x2="375" y2="55" stroke="#fef3c7" stroke-width="4"/>
+              <circle cx="375" cy="55" r="12" fill="#22d3ee"/>
+              <text x="375" y="35" text-anchor="middle" fill="#e0f2fe" font-size="18">detector</text>
+              <text x="590" y="322" text-anchor="middle" fill="#cbd5e1" font-size="18">oglindă principală</text>
+              <text x="325" y="212" text-anchor="middle" fill="#cbd5e1" font-size="18">oglindă secundară</text>
+            </svg>
+          </div>
+          <div class="note">
+            Telescopul Hubble, ca multe telescoape mari, folosește oglinzi pentru a ghida lumina spre instrumentele de observare.
+          </div>
+        </article>
+      </section>
+
+      <section class="page">
+        <article class="card">
+          <span class="tag">Tehnologie</span>
+          <h2>Centrala solară cu turn</h2>
+          <p>Într-o centrală solară cu turn, multe oglinzi urmăresc poziția Soarelui și reflectă lumina spre un receptor aflat în vârful turnului.</p>
+          <div class="svgbox" aria-label="Centrală solară cu oglinzi orientate spre un turn">
+            <svg viewBox="0 0 760 360" role="img">
+              <circle cx="92" cy="70" r="36" fill="#fde68a" opacity=".9"/>
+              <rect x="555" y="75" width="55" height="210" fill="#334155" stroke="#94a3b8" stroke-width="3"/>
+              <rect x="535" y="55" width="95" height="35" rx="8" fill="#fb7185" opacity=".85"/>
+              <text x="582" y="48" text-anchor="middle" fill="#fecaca" font-size="18">receptor</text>
+              <g stroke="#67e8f9" stroke-width="3" fill="#1e293b">
+                <rect x="95" y="280" width="70" height="20" transform="rotate(-10 130 290)"/>
+                <rect x="210" y="270" width="70" height="20" transform="rotate(-7 245 280)"/>
+                <rect x="325" y="283" width="70" height="20" transform="rotate(-14 360 293)"/>
+                <rect x="438" y="268" width="70" height="20" transform="rotate(-18 473 278)"/>
+              </g>
+              <line x1="130" y1="285" x2="580" y2="75" stroke="#fde68a" stroke-width="3"/>
+              <line x1="245" y1="275" x2="580" y2="75" stroke="#fde68a" stroke-width="3"/>
+              <line x1="360" y1="290" x2="580" y2="75" stroke="#fde68a" stroke-width="3"/>
+              <line x1="473" y1="275" x2="580" y2="75" stroke="#fde68a" stroke-width="3"/>
+              <text x="270" y="330" text-anchor="middle" fill="#cbd5e1" font-size="18">oglinzi orientate automat</text>
+            </svg>
+          </div>
+          <div class="idea">
+            Aici reflexia este folosită pentru a concentra energie luminoasă într-un punct, unde se obțin temperaturi mari.
+          </div>
+        </article>
+      </section>
+
+      <section class="page">
+        <article class="card">
+          <span class="tag">Tehnologie</span>
+          <h2>Retroreflectorul: lumina se întoarce spre sursă</h2>
+          <p>Catadioptrii de pe biciclete și indicatoarele rutiere folosesc suprafețe reflectătoare speciale. Ele trimit o mare parte din lumină înapoi spre farul mașinii.</p>
+          <div class="svgbox" aria-label="Retroreflector care trimite lumina înapoi spre sursă">
+            <svg viewBox="0 0 760 300" role="img">
+              <rect x="80" y="120" width="120" height="60" rx="15" fill="#0f172a" stroke="#67e8f9" stroke-width="3"/>
+              <circle cx="200" cy="150" r="15" fill="#fde68a"/>
+              <text x="140" y="215" text-anchor="middle" fill="#cbd5e1" font-size="18">far</text>
+              <polygon points="520,80 660,150 520,220" fill="#7f1d1d" stroke="#fecaca" stroke-width="3"/>
+              <polyline points="520,80 575,150 520,220" fill="none" stroke="#fecaca" stroke-width="3"/>
+              <polyline points="660,150 575,150" fill="none" stroke="#fecaca" stroke-width="3"/>
+              <line x1="215" y1="145" x2="535" y2="120" stroke="#fde68a" stroke-width="4"/>
+              <line x1="535" y1="120" x2="215" y2="155" stroke="#fff7ed" stroke-width="4" stroke-dasharray="8 8"/>
+              <text x="590" y="252" text-anchor="middle" fill="#fecaca" font-size="18">catadioptru</text>
+            </svg>
+          </div>
+          <div class="note">
+            Nu este o oglindă plană simplă, dar folosește tot reflexii ale luminii pentru siguranță.
+          </div>
+        </article>
+      </section>
+
+      <section class="page">
+        <article class="card">
+          <span class="tag">Rețin</span>
+          <h2>Oglinzi diferite, efecte diferite</h2>
+          <div class="grid">
+            <div class="mini">
+              <strong>Oglindă plană</strong>
+              <p>Schimbă direcția luminii. Imaginea este virtuală, dreaptă și egală cu obiectul.</p>
+            </div>
+            <div class="mini">
+              <strong>Oglindă convexă</strong>
+              <p>Oferă câmp vizual larg. Imaginea este micșorată.</p>
+            </div>
+            <div class="mini">
+              <strong>Oglindă concavă</strong>
+              <p>Poate concentra lumina în focar.</p>
+            </div>
+            <div class="mini">
+              <strong>Micro-oglinzi</strong>
+              <p>Controlează punctele luminoase într-un proiector.</p>
+            </div>
+          </div>
+          <div class="idea">
+            Alegerea oglinzii depinde de scop: observare, concentrare, siguranță sau formarea unei imagini.
+          </div>
+        </article>
+      </section>
+
+      <section class="page">
+        <article class="card compact">
+          <span class="tag">Exemplu numeric</span>
+          <h2>Câtă putere ajunge la receptor?</h2>
+          <p>O centrală solară are \(1000\) de oglinzi. Pe fiecare oglindă ajunge lumină cu puterea de \(800\,\frac{W}{m^2}\), iar aria unei oglinzi este \(2\,m^2\).</p>
+          <div class="formula">
+            \[
+              P_{\text{o oglindă}} = E\cdot S
+              =800\,\frac{W}{m^2}\cdot 2\,m^2=1600\,W
+            \]
+            \[
+              P_{\text{total}}=1000\cdot 1600\,W=1\,600\,000\,W=1{,}6\,MW
+            \]
+          </div>
+          <p>Dacă doar \(85\%\) ajunge util la receptor:</p>
+          <div class="formula">
+            \[
+              P_{\text{util}}=\frac{85}{100}\cdot1{,}6\,MW=1{,}36\,MW
+            \]
+          </div>
+          <div class="note">
+            Exemplul arată de ce multe oglinzi pot concentra o cantitate mare de energie luminoasă.
+          </div>
+        </article>
+      </section>
+
+      <section class="page">
+        <article class="card compact">
+          <span class="tag">Aplic</span>
+          <h2>Alege oglinda potrivită</h2>
+          <div class="grid">
+            <div class="mini">
+              <strong>Vrei să vezi după un colț?</strong>
+              <p>Folosești două oglinzi plane, ca într-un periscop.</p>
+            </div>
+            <div class="mini">
+              <strong>Vrei să vezi o zonă mai largă?</strong>
+              <p>Folosești o oglindă convexă.</p>
+            </div>
+            <div class="mini">
+              <strong>Vrei să aduni razele într-un focar?</strong>
+              <p>Folosești o oglindă concavă.</p>
+            </div>
+            <div class="mini">
+              <strong>Vrei să creezi imagini digitale?</strong>
+              <p>Folosești multe micro-oglinzi controlate electronic.</p>
+            </div>
+          </div>
+          <div class="warn">
+            <strong>Atenție:</strong> nu îndrepta niciodată laserul sau lumina concentrată de o oglindă spre ochi.
+          </div>
+        </article>
+      </section>
+
+      <section class="page">
+        <article class="card">
+          <span class="tag">Verificare rapidă</span>
+          <h2>1. Ce lege folosește orice oglindă?</h2>
+          <div class="quiz" data-answer="b">
+            <div class="q">În reflexia pe o oglindă plană, relația corectă este:</div>
+            <div class="options">
+              <label><input type="radio" name="q1" value="a"> <span>Unghiul de reflexie este mereu \(0^\circ\).</span></label>
+              <label><input type="radio" name="q1" value="b"> <span>Unghiul de incidență este egal cu unghiul de reflexie: \(i=r\).</span></label>
+              <label><input type="radio" name="q1" value="c"> <span>Raza reflectată merge întotdeauna vertical.</span></label>
+            </div>
+            <button class="check" type="button" onclick="checkQuiz(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="page">
+        <article class="card compact">
+          <span class="tag">Verificare rapidă</span>
+          <h2>2. Aplicații ale reflexiei</h2>
+          <div class="quiz" data-answer="a">
+            <div class="q">De ce se folosesc oglinzi convexe la intersecții sau în magazine?</div>
+            <div class="options">
+              <label><input type="radio" name="q2" value="a"> <span>Pentru că oferă un câmp vizual mai larg.</span></label>
+              <label><input type="radio" name="q2" value="b"> <span>Pentru că absorb toată lumina.</span></label>
+              <label><input type="radio" name="q2" value="c"> <span>Pentru că formează mereu imagini mărite.</span></label>
+            </div>
+            <button class="check" type="button" onclick="checkQuiz(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+
+          <div class="quiz" data-answer="c">
+            <div class="q">Ce rol au oglinzile într-o centrală solară cu turn?</div>
+            <div class="options">
+              <label><input type="radio" name="q3" value="a"> <span>Să blocheze lumina Soarelui.</span></label>
+              <label><input type="radio" name="q3" value="b"> <span>Să schimbe culoarea luminii în albastru.</span></label>
+              <label><input type="radio" name="q3" value="c"> <span>Să reflecte lumina spre un receptor central.</span></label>
+            </div>
+            <button class="check" type="button" onclick="checkQuiz(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+        </article>
+      </section>
+
+      <section class="page">
+        <article class="card">
+          <span class="tag">Final</span>
+          <h2>Ce trebuie să rămână?</h2>
+          <div class="idea">
+            <p><strong>1.</strong> Reflexia nu este doar un fenomen observat în oglindă; este folosită în tehnologie pentru a ghida lumina.</p>
+            <p><strong>2.</strong> Legea simplă \(i=r\) permite proiectarea oglinzilor, periscoapelor, telescoapelor și proiectoarelor.</p>
+            <p><strong>3.</strong> Oglinzile plane, convexe, concave și micro-oglinzile au roluri diferite.</p>
+          </div>
+          <div class="final-banner">
+            <strong>Prof. Dănuț Andronie</strong><br>
+            email: <strong>danutmg@gmail.com</strong>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <nav class="nav" aria-label="Navigare lecție">
+      <button class="backbtn" id="prevBtn" type="button" onclick="prevPage()">Înapoi</button>
+      <div class="pageNo" id="pageNo">1/16</div>
+      <button class="nextbtn" id="nextBtn" type="button" onclick="nextPage()">Mergi mai departe</button>
+    </nav>
+  </div>
+
+  <script>
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const pageNo = document.getElementById('pageNo');
+    const topBanner = document.getElementById('topBanner');
+    let index = 0;
+
+    function renderMath(){
+      if(window.MathJax && window.MathJax.typesetPromise){
+        MathJax.typesetPromise([pages[index]]).catch(() => {});
+      }
+    }
+
+    function update(){
+      pages.forEach((p, i) => p.classList.toggle('active', i === index));
+      prevBtn.disabled = index === 0;
+      pageNo.textContent = `${index + 1}/${pages.length}`;
+      topBanner.style.display = index === 0 ? 'block' : 'none';
+
+      if(index === pages.length - 1){
+        nextBtn.textContent = 'Lecția următoare';
+      }else{
+        nextBtn.textContent = 'Mergi mai departe';
+      }
+
+      window.scrollTo({top:0, behavior:'smooth'});
+      renderMath();
+    }
+
+    function nextPage(){
+      if(index < pages.length - 1){
+        index++;
+        update();
+      }else{
+        window.location.href = './lectia-8.html';
+      }
+    }
+
+    function prevPage(){
+      if(index > 0){
+        index--;
+        update();
+      }
+    }
+
+    function checkQuiz(button){
+      const quiz = button.closest('.quiz');
+      const answer = quiz.dataset.answer;
+      const checked = quiz.querySelector('input[type="radio"]:checked');
+      const fb = quiz.querySelector('.feedback');
+
+      if(!checked){
+        fb.className = 'feedback bad';
+        fb.textContent = 'Alege mai întâi o variantă.';
+        return;
+      }
+      if(checked.value === answer){
+        fb.className = 'feedback ok';
+        fb.textContent = 'Corect!';
+      }else{
+        fb.className = 'feedback bad';
+        fb.textContent = 'Mai încearcă. Recitește pagina cu explicația.';
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if(e.key === 'ArrowRight') nextPage();
+      if(e.key === 'ArrowLeft') prevPage();
+    });
+
+    update();
+  </script>
+</body>
+</html>

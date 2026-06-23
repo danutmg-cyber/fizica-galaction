@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Lecția 12 | Aplicații practice: fibra optică, prisma cu reflexie totală | Fizica Galaction</title>
+  <meta name="description" content="Lecție interactivă de fizică pentru clasa a VIII-a: fibra optică și prisma cu reflexie totală.">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' },
+      options: { renderActions: { addMenu: [] } }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root{
+      --bg:#07111f;
+      --bg2:#0f172a;
+      --card:#132238;
+      --card2:#1e293b;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --cyan:#38bdf8;
+      --cyan2:#67e8f9;
+      --green:#22c55e;
+      --green-dark:#15803d;
+      --back:#e2e8f0;
+      --back-text:#0f172a;
+      --yellow:#fde68a;
+      --orange:#fb923c;
+      --red:#f87171;
+      --line:#334155;
+      --shadow:0 18px 48px rgba(0,0,0,.35);
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100dvh;
+      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(56,189,248,.18), transparent 32rem),
+        radial-gradient(circle at bottom right, rgba(34,197,94,.13), transparent 32rem),
+        linear-gradient(135deg, var(--bg), var(--bg2));
+      color:var(--text);
+      font-size:18px;
+      line-height:1.55;
+    }
+
+    .app{
+      width:min(980px,100%);
+      min-height:100dvh;
+      margin:0 auto;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .slides{
+      flex:1;
+      padding:18px 14px 120px;
+    }
+
+    .slide{
+      display:none;
+      min-height:calc(100dvh - 132px);
+      animation:fade .22s ease-out;
+    }
+
+    .slide.active{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    @keyframes fade{
+      from{opacity:.35; transform:translateY(8px)}
+      to{opacity:1; transform:translateY(0)}
+    }
+
+    .card{
+      background:rgba(19,34,56,.94);
+      border:1px solid rgba(148,163,184,.22);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      padding:clamp(18px,4vw,36px);
+      overflow:hidden;
+    }
+
+    .top-banner{
+      border:1px solid rgba(103,232,249,.35);
+      background:linear-gradient(135deg,rgba(14,116,144,.25),rgba(15,23,42,.78));
+      border-radius:22px;
+      padding:16px;
+      margin-bottom:18px;
+      text-align:center;
+    }
+
+    .school{
+      font-weight:900;
+      letter-spacing:.04em;
+      color:var(--cyan2);
+      text-transform:uppercase;
+      font-size:clamp(1rem,2.8vw,1.25rem);
+    }
+
+    .prof{
+      color:#e0f2fe;
+      font-weight:700;
+      margin-top:4px;
+    }
+
+    .motto{
+      margin:12px auto 0;
+      display:inline-block;
+      border-left:4px solid var(--cyan2);
+      background:rgba(253,230,138,.10);
+      color:#fef3c7;
+      padding:9px 12px;
+      border-radius:12px;
+      font-style:italic;
+      font-weight:650;
+    }
+
+    .kicker{
+      color:var(--cyan2);
+      text-transform:uppercase;
+      letter-spacing:.08em;
+      font-size:.83rem;
+      font-weight:900;
+      margin-bottom:8px;
+    }
+
+    h1,h2,h3,p{margin-top:0}
+    h1{
+      font-size:clamp(2rem,7vw,3.5rem);
+      line-height:1.05;
+      color:#e0faff;
+      margin-bottom:16px;
+    }
+    h2{
+      font-size:clamp(1.55rem,5.4vw,2.55rem);
+      line-height:1.15;
+      color:var(--cyan);
+      margin-bottom:16px;
+    }
+    h3{
+      color:var(--cyan2);
+      font-size:1.25rem;
+      margin-bottom:10px;
+    }
+
+    p,li{font-size:clamp(1.03rem,3.4vw,1.22rem)}
+    .lead{
+      font-size:clamp(1.15rem,4.5vw,1.45rem);
+      color:#e2e8f0;
+      font-weight:650;
+    }
+
+    .idea{
+      border-left:5px solid var(--green);
+      background:rgba(34,197,94,.10);
+      padding:14px 16px;
+      border-radius:16px;
+      margin:16px 0;
+    }
+
+    .note{
+      border-left:5px solid var(--cyan);
+      background:rgba(56,189,248,.10);
+      padding:14px 16px;
+      border-radius:16px;
+      margin:16px 0;
+    }
+
+    .warn{
+      border-left:5px solid var(--orange);
+      background:rgba(251,146,60,.12);
+      color:#ffedd5;
+      padding:14px 16px;
+      border-radius:16px;
+      margin:16px 0;
+    }
+
+    .formula{
+      background:#0b1628;
+      border:1px solid rgba(103,232,249,.25);
+      border-radius:18px;
+      padding:14px;
+      margin:16px 0;
+      overflow-x:auto;
+    }
+
+    mjx-container[display="true"]{
+      overflow-x:auto;
+      overflow-y:hidden;
+      max-width:100%;
+      padding:.15rem 0;
+      font-size:1.04em;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+      margin:16px 0;
+    }
+
+    .mini{
+      background:rgba(30,41,59,.92);
+      border:1px solid rgba(148,163,184,.20);
+      border-radius:18px;
+      padding:14px;
+    }
+
+    .mini strong{color:#fef3c7}
+
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background:rgba(103,232,249,.12);
+      border:1px solid rgba(103,232,249,.28);
+      color:#cffafe;
+      border-radius:999px;
+      padding:7px 10px;
+      font-size:.95rem;
+      font-weight:800;
+      margin:4px 4px 8px 0;
+    }
+
+    .svgbox{
+      background:linear-gradient(180deg,#0b1628,#111827);
+      border:1px solid rgba(148,163,184,.24);
+      border-radius:22px;
+      padding:12px;
+      margin:18px 0;
+      overflow:hidden;
+    }
+
+    .svgbox > svg{
+      width:100%;
+      height:auto;
+      display:block;
+    }
+
+    .caption{
+      color:var(--muted);
+      font-size:.95rem;
+      text-align:center;
+      margin-top:8px;
+    }
+
+    .quiz{
+      display:grid;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .option{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:12px;
+      align-items:start;
+      background:rgba(15,23,42,.72);
+      border:1px solid rgba(148,163,184,.25);
+      border-radius:16px;
+      padding:12px 14px;
+      cursor:pointer;
+    }
+
+    .option input{
+      transform:scale(1.25);
+      margin-top:4px;
+      accent-color:#22c55e;
+    }
+
+    .check{
+      width:100%;
+      border:0;
+      border-radius:16px;
+      padding:14px 16px;
+      font-size:1.05rem;
+      font-weight:900;
+      cursor:pointer;
+      color:#052e16;
+      background:var(--green);
+      margin-top:12px;
+    }
+
+    .feedback{
+      min-height:28px;
+      font-weight:900;
+      margin-top:10px;
+      border-radius:14px;
+      padding:10px 12px;
+      display:none;
+    }
+    .feedback.good{
+      display:block;
+      color:#dcfce7;
+      background:rgba(34,197,94,.16);
+      border:1px solid rgba(34,197,94,.35);
+    }
+    .feedback.bad{
+      display:block;
+      color:#fee2e2;
+      background:rgba(248,113,113,.14);
+      border:1px solid rgba(248,113,113,.35);
+    }
+    .feedback.neutral{
+      display:block;
+      color:#fef3c7;
+      background:rgba(253,230,138,.12);
+      border:1px solid rgba(253,230,138,.35);
+    }
+
+    .final-banner{
+      background:linear-gradient(135deg,rgba(34,197,94,.16),rgba(56,189,248,.15));
+      border:1px solid rgba(103,232,249,.35);
+      border-radius:22px;
+      padding:18px;
+      margin-top:16px;
+      text-align:center;
+    }
+
+    .nav{
+      position:sticky;
+      bottom:0;
+      z-index:10;
+      padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+      background:linear-gradient(180deg,rgba(7,17,31,0),rgba(7,17,31,.92) 20%,rgba(7,17,31,.98));
+      backdrop-filter:blur(10px);
+    }
+
+    .nav-inner{
+      width:min(980px,100%);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      gap:10px;
+      align-items:center;
+    }
+
+    .nav button{
+      border:0;
+      border-radius:16px;
+      padding:14px 12px;
+      font-size:clamp(.95rem,3vw,1.05rem);
+      font-weight:900;
+      cursor:pointer;
+      box-shadow:0 10px 26px rgba(0,0,0,.24);
+      min-height:52px;
+    }
+
+    #prevBtn{
+      background:var(--back);
+      color:var(--back-text);
+    }
+
+    #nextBtn{
+      background:var(--green);
+      color:#052e16;
+    }
+
+    #nextBtn.final{
+      background:#86efac;
+      color:#052e16;
+    }
+
+    .counter{
+      min-width:68px;
+      text-align:center;
+      font-weight:900;
+      color:#e0f2fe;
+      background:rgba(15,23,42,.86);
+      border:1px solid rgba(148,163,184,.24);
+      border-radius:999px;
+      padding:12px 10px;
+    }
+
+    .muted{color:var(--muted)}
+    .highlight{color:#fef3c7;font-weight:900}
+    .math-small{font-size:.95em}
+
+    @media (max-width:720px){
+      .grid{grid-template-columns:1fr}
+      .slides{padding:12px 10px 112px}
+      .card{border-radius:20px}
+      .nav-inner{grid-template-columns:1fr 62px 1fr}
+      .nav button{padding:13px 8px}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <main class="slides" id="slides">
+
+      <section class="slide active">
+        <div class="card">
+          <div class="top-banner">
+            <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+            <div class="prof">Prof. Dănuț Andronie</div>
+            <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+          </div>
+
+          <div class="kicker">Clasa a VIII-a • Fenomene optice • Lecția 12</div>
+          <h1>Aplicații practice: fibra optică, prisma cu reflexie totală</h1>
+          <p class="lead">În această lecție vedem cum un fenomen învățat la reflexia totală este folosit în tehnologie: internet, medicină, periscoape, binocluri și instrumente optice.</p>
+
+          <div class="idea">
+            <strong>Ideea-cheie:</strong> lumina poate fi „ghidată” prin reflexii totale repetate, fără să iasă ușor din material.
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="card">
+          <div class="kicker">Observ</div>
+          <h2>Poate lumina să meargă pe un drum curbat?</h2>
+          <p>În mod obișnuit, într-un mediu omogen, lumina se propagă în linie dreaptă.</p>
+          <p>Totuși, într-o <span class="highlight">fibră optică</span>, lumina poate ajunge de la un capăt la altul chiar dacă fibra este curbată.</p>
+
+          <div class="svgbox">
+            <svg viewBox="0 0 760 280" role="img" aria-label="Lumina ghidată într-o fibră optică curbată">
+              <defs>
+                <linearGradient id="fiberGrad" x1="0" x2="1">
+                  <stop offset="0" stop-color="#0ea5e9"/>
+                  <stop offset="1" stop-color="#22c55e"/>
+                </linearGradient>
+                <filter id="glow">
+                  <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                  <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                  </feMerge>
+                </filter>
+                <marker id="arrowY" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                  <path d="M0,0 L10,3 L0,6 Z" fill="#fde68a"/>
+                </marker>
+              </defs>
+              <rect x="12" y="12" width="736" height="256" rx="24" fill="#07111f" stroke="#334155"/>
+              <path d="M80 150 C190 40, 300 260, 415 135 S615 70, 690 150" fill="none" stroke="rgba(148,163,184,.55)" stroke-width="62" stroke-linecap="round"/>
+              <path d="M80 150 C190 40, 300 260, 415 135 S615 70, 690 150" fill="none" stroke="url(#fiberGrad)" stroke-width="42" stroke-linecap="round" opacity=".72"/>
+              <path d="M88 150 L150 94 L225 193 L300 100 L378 184 L455 104 L535 176 L612 118 L685 150" fill="none" stroke="#fde68a" stroke-width="5" stroke-linejoin="round" marker-end="url(#arrowY)" filter="url(#glow)"/>
+              <text x="78" y="226" fill="#e0f2fe" font-size="22" font-weight="700">intrare lumină</text>
+              <text x="574" y="226" fill="#e0f2fe" font-size="22" font-weight="700">ieșire lumină</text>
+            </svg>
+            <div class="caption">Lumina rămâne în fibră datorită reflexiilor totale repetate.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="card">
+          <div class="kicker">Reamintesc</div>
+          <h2>Ce este reflexia totală?</h2>
+          <p>Reflexia totală apare când lumina nu mai iese în al doilea mediu, ci se întoarce complet în primul mediu.</p>
+
+          <div class="note">
+            Condițiile sunt:
+            <br>1. lumina trece dintr-un mediu cu indice mai mare spre unul cu indice mai mic;
+            <br>2. unghiul de incidență este mai mare decât unghiul limită.
+          </div>
+
+          <div class="formula">
+            \[
+              \sin l=\frac{n_2}{n_1}, \qquad n_1>n_2
+            \]
+          </div>
+
+          <p class="muted">Aici \(l\) este unghiul limită. Dacă \(i>l\), apare reflexia totală.</p>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="card">
+          <div class="kicker">Rețin</div>
+          <h2>Cum este construită fibra optică?</h2>
+          <p>O fibră optică are trei părți importante:</p>
+
+          <div class="grid">
+            <div class="mini"><strong>Miezul</strong><br>Partea centrală prin care se propagă lumina.</div>
+            <div class="mini"><strong>Teaca</strong><br>Stratul transparent care înconjoară miezul.</div>
+            <div class="mini"><strong>Învelișul</strong><br>Protejează fibra de zgârieturi, îndoiri și lovituri.</div>
+            <div class="mini"><strong>Condiția importantă</strong><br>Indicele miezului este mai mare decât indicele tecii.</div>
+          </div>
+
+          <div class="svgbox">
+            <svg viewBox="0 0 760 250" role="img" aria-label="Structura unei fibre optice">
+              <defs>
+                <marker id="arrBlue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                  <path d="M0,0 L10,3 L0,6 Z" fill="#67e8f9"/>
+                </marker>
+              </defs>
+              <rect x="20" y="25" width="720" height="200" rx="22" fill="#07111f" stroke="#334155"/>
+              <rect x="70" y="78" width="620" height="94" rx="47" fill="#1e293b" stroke="#94a3b8" stroke-width="3"/>
+              <rect x="100" y="98" width="560" height="54" rx="27" fill="#0ea5e9" opacity=".35" stroke="#67e8f9" stroke-width="3"/>
+              <line x1="120" y1="125" x2="640" y2="125" stroke="#fde68a" stroke-width="6" marker-end="url(#arrBlue)"/>
+              <text x="330" y="135" fill="#fef3c7" font-size="21" font-weight="800">miez</text>
+              <text x="335" y="70" fill="#cbd5e1" font-size="20" font-weight="700">teacă</text>
+              <text x="318" y="205" fill="#cbd5e1" font-size="20" font-weight="700">înveliș protector</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="card">
+          <div class="kicker">Observ</div>
+          <h2>De ce nu iese lumina prin lateral?</h2>
+          <p>Când raza ajunge la limita dintre miez și teacă, ea întâlnește un mediu cu indice de refracție mai mic.</p>
+          <p>Dacă unghiul este suficient de mare, raza nu se refractă în teacă, ci se reflectă total înapoi în miez.</p>
+
+          <div class="idea">
+            Fibra optică funcționează ca un „tunel de lumină”: raza înaintează prin multe reflexii totale.
+          </div>
+
+          <div class="formula">
+            \[
+              n_{\text{miez}}>n_{\text{teacă}}
+            \]
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="card">
+          <div class="kicker">Exemplu numeric</div>
+          <h2>Unghiul limită într-o fibră</h2>
+          <p>Presupunem că fibra are:</p>
+          <p>\(n_{\text{miez}}=1{,}50\) și \(n_{\text{teacă}}=1{,}45\).</p>
+
+          <div class="formula math-small">
+            \[
+              \sin l=\frac{n_{\text{teacă}}}{n_{\text{miez}}}
+              =\frac{1{,}45}{1{,}50}\approx 0{,}967
+            \]
+            \[
+              l\approx 75^\circ
+            \]
+          </div>
+
+          <div class="idea">
+            Dacă raza ajunge pe limita miez–teacă sub un unghi mai mare decât aproximativ \(75^\circ\), se produce reflexie totală.
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="card">
+          <div class="kicker">Aplic</div>
+          <h2>Unde se folosesc fibrele optice?</h2>
+
+          <div class="grid">
+            <div class="mini"><strong>Telecomunicații</strong><br>Internet rapid, cabluri submarine, transmiterea datelor.</div>
+            <div class="mini"><strong>Medicină</strong><br>Endoscopul permite observarea interiorului corpului.</div>
+            <div class="mini"><strong>Iluminat</strong><br>Decoruri luminoase, sisteme de iluminat speciale.</div>
+            <div class="mini"><strong>Senzori</strong><br>Măsurări în locuri greu accesibile sau periculoase.</div>
+          </div>
+
+          <div class="note">
+            În loc să transporte electroni, fibra optică transportă informație sub formă de impulsuri luminoase.
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="card">
+          <div class="kicker">Important</div>
+          <h2>Fibra nu trebuie îndoită prea tare</h2>
+          <p>Dacă fibra este curbată ușor, lumina se poate propaga în continuare prin reflexii totale.</p>
+          <p>Dacă fibra este îndoită foarte puternic, raza poate ajunge la limită sub un unghi nepotrivit și o parte din lumină se pierde.</p>
+
+          <div class="svgbox">
+            <svg viewBox="0 0 760 300" role="img" aria-label="Fibra curbată ușor și fibra îndoită prea tare">
+              <defs>
+                <marker id="arrGood" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                  <path d="M0,0 L10,3 L0,6 Z" fill="#bbf7d0"/>
+                </marker>
+                <marker id="arrBad" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                  <path d="M0,0 L10,3 L0,6 Z" fill="#fecaca"/>
+                </marker>
+              </defs>
+              <rect x="16" y="16" width="728" height="268" rx="24" fill="#07111f" stroke="#334155"/>
+              <text x="95" y="52" fill="#bbf7d0" font-size="22" font-weight="900">curbare potrivită</text>
+              <text x="455" y="52" fill="#fecaca" font-size="22" font-weight="900">îndoire prea mare</text>
+              <path d="M80 130 C170 70, 250 185, 340 125" fill="none" stroke="#38bdf8" stroke-width="42" stroke-linecap="round" opacity=".65"/>
+              <path d="M88 130 L145 100 L203 156 L262 107 L333 125" fill="none" stroke="#bbf7d0" stroke-width="5" marker-end="url(#arrGood)"/>
+              <path d="M440 130 C520 65, 575 72, 555 155 C540 215, 620 220, 680 150" fill="none" stroke="#38bdf8" stroke-width="42" stroke-linecap="round" opacity=".65"/>
+              <path d="M445 130 L510 95 L555 154 L588 218" fill="none" stroke="#fecaca" stroke-width="5" marker-end="url(#arrBad)"/>
+              <line x1="588" y1="218" x2="630" y2="252" stroke="#fecaca" stroke-width="4" stroke-dasharray="8 7"/>
+              <text x="585" y="276" fill="#fecaca" font-size="18" font-weight="700">pierdere de lumină</text>
+            </svg>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="card">
+          <div class="kicker">Observ</div>
+          <h2>Prisma cu reflexie totală</h2>
+          <p>O prismă optică este un corp transparent, de obicei din sticlă sau plastic, cu fețe plane.</p>
+          <p>În anumite condiții, o rază de lumină intră în prismă și se reflectă total pe o față interioară.</p>
+
+          <div class="note">
+            O prismă cu reflexie totală poate schimba direcția luminii fără să folosească o oglindă metalică.
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="card">
+          <div class="kicker">Exemplu</div>
+          <h2>Deviație cu \(90^\circ\)</h2>
+          <p>Într-o prismă dreaptă, raza poate intra perpendicular pe o față, se reflectă total pe fața înclinată și iese pe altă față.</p>
+
+          <div class="svgbox">
+            <svg viewBox="0 0 760 360" role="img" aria-label="Prismă cu reflexie totală care deviază lumina cu 90 de grade">
+              <defs>
+                <marker id="arrPrism" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                  <path d="M0,0 L10,3 L0,6 Z" fill="#fde68a"/>
+                </marker>
+              </defs>
+              <rect x="16" y="16" width="728" height="328" rx="24" fill="#07111f" stroke="#334155"/>
+              <path d="M250 290 L250 70 L470 290 Z" fill="rgba(56,189,248,.22)" stroke="#67e8f9" stroke-width="4"/>
+              <line x1="110" y1="180" x2="250" y2="180" stroke="#fde68a" stroke-width="6" marker-end="url(#arrPrism)"/>
+              <line x1="250" y1="180" x2="360" y2="290" stroke="#fde68a" stroke-width="6"/>
+              <line x1="360" y1="290" x2="360" y2="330" stroke="#fde68a" stroke-width="6" marker-end="url(#arrPrism)"/>
+              <line x1="250" y1="180" x2="470" y2="180" stroke="#94a3b8" stroke-width="2" stroke-dasharray="8 8"/>
+              <text x="112" y="160" fill="#fef3c7" font-size="20" font-weight="800">rază incidentă</text>
+              <text x="390" y="326" fill="#fef3c7" font-size="20" font-weight="800">rază emergentă</text>
+              <text x="302" y="66" fill="#e0f2fe" font-size="20" font-weight="800">prismă</text>
+              <text x="430" y="200" fill="#cbd5e1" font-size="18">reflexie totală</text>
+            </svg>
+            <div class="caption">Prisma poate devia raza cu \(90^\circ\).</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="card">
+          <div class="kicker">Exemplu numeric</div>
+          <h2>De ce funcționează o prismă de sticlă?</h2>
+          <p>Pentru sticlă în aer luăm aproximativ:</p>
+          <p>\(n_1=1{,}50\), \(n_2=1{,}00\).</p>
+
+          <div class="formula math-small">
+            \[
+              \sin l=\frac{n_2}{n_1}=\frac{1{,}00}{1{,}50}=0{,}667
+            \]
+            \[
+              l\approx 42^\circ
+            \]
+          </div>
+
+          <p>Dacă raza întâlnește fața prismei la \(45^\circ\), atunci \(45^\circ>42^\circ\), deci se poate produce reflexie totală.</p>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="card">
+          <div class="kicker">Aplic</div>
+          <h2>Prisma poate întoarce raza cu \(180^\circ\)</h2>
+          <p>În unele instrumente, raza suferă două reflexii totale în prismă. Astfel, direcția luminii poate fi întoarsă aproape complet.</p>
+
+          <div class="grid">
+            <div class="mini"><strong>Binoclu</strong><br>Prismele ajută la întoarcerea și compactarea traseului luminii.</div>
+            <div class="mini"><strong>Periscop</strong><br>Schimbă direcția luminii pentru a vedea peste un obstacol.</div>
+            <div class="mini"><strong>Instrumente optice</strong><br>Raza este deviată controlat în interiorul aparatului.</div>
+            <div class="mini"><strong>Avantaj</strong><br>Reflexia totală are pierderi foarte mici față de o oglindă obișnuită.</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="card">
+          <div class="kicker">Investighez</div>
+          <h2>Experiment cu prismă optică</h2>
+          <p><strong>Materiale:</strong> prismă optică, laser didactic, coală albă, creion, riglă, raportor.</p>
+
+          <div class="idea">
+            <strong>Mod de lucru:</strong>
+            <br>1. Așază prisma pe coală și trasează conturul.
+            <br>2. Trimite raza laser spre o față a prismei.
+            <br>3. Marchează raza incidentă și raza emergentă.
+            <br>4. Compară direcțiile razelor și observă deviația.
+          </div>
+
+          <div class="warn">
+            Nu îndrepta niciodată laserul spre ochii unei persoane.
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="card">
+          <div class="kicker">Compar</div>
+          <h2>Oglindă sau prismă?</h2>
+
+          <div class="grid">
+            <div class="mini">
+              <strong>Oglinda plană</strong><br>
+              Reflectă lumina pe suprafața sa. Poate pierde o parte din lumină.
+            </div>
+            <div class="mini">
+              <strong>Prisma cu reflexie totală</strong><br>
+              Reflectă lumina în interior, prin reflexie totală. Pierderile pot fi foarte mici.
+            </div>
+            <div class="mini">
+              <strong>Fibra optică</strong><br>
+              Ghidează lumina pe distanțe mari prin multe reflexii totale.
+            </div>
+            <div class="mini">
+              <strong>Ideea comună</strong><br>
+              Lumina este controlată prin direcție, unghi și mediu transparent.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="card">
+          <div class="kicker">Rețin</div>
+          <h2>Harta formulelor și ideilor</h2>
+
+          <div class="formula">
+            \[
+              n=\frac{c}{v}
+            \]
+            \[
+              \sin l=\frac{n_2}{n_1},\qquad n_1>n_2
+            \]
+            \[
+              n_{\text{miez}}>n_{\text{teacă}}
+            \]
+          </div>
+
+          <div class="idea">
+            <strong>Fibra optică:</strong> lumina se propagă prin reflexii totale repetate.
+            <br><strong>Prisma cu reflexie totală:</strong> deviază raza prin reflexie totală în interiorul prismei.
+          </div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="card">
+          <div class="kicker">Verificare rapidă</div>
+          <h2>1. Ce fenomen stă la baza fibrei optice?</h2>
+
+          <div class="quiz" role="radiogroup" aria-label="Întrebarea 1">
+            <label class="option"><input type="radio" name="q1" value="a"><span>Doar absorbția luminii în miez.</span></label>
+            <label class="option"><input type="radio" name="q1" value="b"><span>Reflexii totale repetate în interiorul fibrei.</span></label>
+            <label class="option"><input type="radio" name="q1" value="c"><span>Transformarea luminii în sunet.</span></label>
+          </div>
+          <button class="check" onclick="checkQuiz('q1','b','fb1')">Verifică</button>
+          <div id="fb1" class="feedback" aria-live="polite"></div>
+
+          <h2 style="margin-top:24px">2. Ce condiție trebuie îndeplinită?</h2>
+          <div class="quiz" role="radiogroup" aria-label="Întrebarea 2">
+            <label class="option"><input type="radio" name="q2" value="a"><span>\(n_{\text{miez}}>n_{\text{teacă}}\)</span></label>
+            <label class="option"><input type="radio" name="q2" value="b"><span>\(n_{\text{miez}}=0\)</span></label>
+            <label class="option"><input type="radio" name="q2" value="c"><span>teaca să fie opacă.</span></label>
+          </div>
+          <button class="check" onclick="checkQuiz('q2','a','fb2')">Verifică</button>
+          <div id="fb2" class="feedback" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="card">
+          <div class="kicker">Verificare rapidă</div>
+          <h2>3. Pentru sticlă în aer, \(l\approx42^\circ\). Ce se întâmplă la \(i=45^\circ\)?</h2>
+
+          <div class="quiz" role="radiogroup" aria-label="Întrebarea 3">
+            <label class="option"><input type="radio" name="q3" value="a"><span>Apare reflexia totală, deoarece \(45^\circ>42^\circ\).</span></label>
+            <label class="option"><input type="radio" name="q3" value="b"><span>Raza dispare.</span></label>
+            <label class="option"><input type="radio" name="q3" value="c"><span>Nu se poate produce reflexie totală, deoarece \(45^\circ<42^\circ\).</span></label>
+          </div>
+          <button class="check" onclick="checkQuiz('q3','a','fb3')">Verifică</button>
+          <div id="fb3" class="feedback" aria-live="polite"></div>
+
+          <h2 style="margin-top:24px">4. Unde întâlnim fibre optice?</h2>
+          <div class="quiz" role="radiogroup" aria-label="Întrebarea 4">
+            <label class="option"><input type="radio" name="q4" value="a"><span>În telecomunicații și medicină.</span></label>
+            <label class="option"><input type="radio" name="q4" value="b"><span>Numai în oglinzi plane.</span></label>
+            <label class="option"><input type="radio" name="q4" value="c"><span>Numai în corpuri opace.</span></label>
+          </div>
+          <button class="check" onclick="checkQuiz('q4','a','fb4')">Verifică</button>
+          <div id="fb4" class="feedback" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <div class="card">
+          <div class="kicker">Aplic acasă / la clasă</div>
+          <h2>Mini-proiect: lumina ghidată</h2>
+
+          <div class="idea">
+            Alege un dispozitiv care folosește fibre optice sau prisme optice:
+            <br>• cablu de internet;
+            <br>• endoscop medical;
+            <br>• binoclu;
+            <br>• periscop;
+            <br>• sistem de iluminat decorativ.
+          </div>
+
+          <p>Prezintă în 5–6 rânduri:</p>
+          <p>1. ce fenomen optic folosește;<br>
+             2. ce rol are fibra sau prisma;<br>
+             3. de ce este util dispozitivul.</p>
+
+          <div class="final-banner">
+            <strong>Prof. Dănuț Andronie</strong><br>
+            email: <strong>danutmg@gmail.com</strong>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <nav class="nav" aria-label="Navigare lecție">
+      <div class="nav-inner">
+        <button id="prevBtn" type="button" onclick="prevSlide()">Înapoi</button>
+        <div class="counter" id="counter">1/18</div>
+        <button id="nextBtn" type="button" onclick="nextSlide()">Mergi mai departe</button>
+      </div>
+    </nav>
+  </div>
+
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const counter = document.getElementById('counter');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const finalLink = '../recapitulare/index.html';
+    let index = 0;
+
+    function updateSlide(){
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+      });
+
+      counter.textContent = `${index + 1}/${slides.length}`;
+      prevBtn.disabled = index === 0;
+      prevBtn.style.opacity = index === 0 ? '.55' : '1';
+      prevBtn.style.cursor = index === 0 ? 'not-allowed' : 'pointer';
+
+      if(index === slides.length - 1){
+        nextBtn.textContent = 'Recapitulare';
+        nextBtn.classList.add('final');
+      } else {
+        nextBtn.textContent = 'Mergi mai departe';
+        nextBtn.classList.remove('final');
+      }
+
+      window.scrollTo({top:0, behavior:'smooth'});
+
+      if(window.MathJax && MathJax.typesetPromise){
+        MathJax.typesetPromise([slides[index]]).catch(() => {});
+      }
+    }
+
+    function nextSlide(){
+      if(index < slides.length - 1){
+        index++;
+        updateSlide();
+      } else {
+        window.location.href = finalLink;
+      }
+    }
+
+    function prevSlide(){
+      if(index > 0){
+        index--;
+        updateSlide();
+      }
+    }
+
+    function checkQuiz(name, correct, feedbackId){
+      const selected = document.querySelector(`input[name="${name}"]:checked`);
+      const fb = document.getElementById(feedbackId);
+      fb.className = 'feedback';
+
+      if(!selected){
+        fb.textContent = 'Alege mai întâi o variantă.';
+        fb.classList.add('neutral');
+        return;
+      }
+
+      if(selected.value === correct){
+        fb.textContent = 'Corect!';
+        fb.classList.add('good');
+      } else {
+        fb.textContent = 'Mai încearcă. Recitește pagina cu explicația.';
+        fb.classList.add('bad');
+      }
+    }
+
+    document.addEventListener('keydown', (event) => {
+      const tag = document.activeElement && document.activeElement.tagName;
+      if(tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+      if(event.key === 'ArrowRight') nextSlide();
+      if(event.key === 'ArrowLeft') prevSlide();
+    });
+
+    updateSlide();
+  </script>
+</body>
+</html>

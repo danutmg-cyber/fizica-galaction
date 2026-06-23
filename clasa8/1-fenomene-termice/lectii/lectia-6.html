@@ -1,828 +1,821 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Lecția 6 | Stări de agregare, caracteristici | Fizica Galaction</title>
-  <meta name="description" content="Lecția 6 pentru clasa a VIII-a: Stări de agregare, caracteristici. Lecție interactivă pe pagini, cu buton Mergi mai departe, MathJax și verificare rapidă.">
-  <style>
-
-    *{box-sizing:border-box;}
-    :root{
-      --bg:#0f172a;
-      --surface:#1e293b;
-      --surface-2:#162033;
-      --surface-3:#0b1220;
-      --text:#f8fafc;
-      --muted:#cbd5e1;
-      --accent:#22c55e;
-      --accent-2:#38bdf8;
-      --accent-3:#f59e0b;
-      --accent-4:#a78bfa;
-      --danger:#ef4444;
-      --ok:#22c55e;
-      --border:rgba(255,255,255,.12);
-      --shadow:0 10px 26px rgba(0,0,0,.24);
-      --radius:18px;
-    }
-
-    html{
-      scroll-behavior:smooth;
-      font-size:clamp(16px, 0.35vw + 15px, 19px);
-    }
-
-    body{
-      margin:0;
-      font-family: Arial, sans-serif;
-      background:
-        radial-gradient(circle at top right, rgba(56,189,248,.12), transparent 26%),
-        radial-gradient(circle at top left, rgba(34,197,94,.10), transparent 22%),
-        linear-gradient(180deg, #0f172a 0%, #111827 100%);
-      color:var(--text);
-      line-height:1.65;
-      min-height:100vh;
-    }
-
-    .wrapper{
-      width:min(100%, 980px);
-      margin:0 auto;
-      padding-inline:clamp(12px, 2vw, 24px);
-    }
-
-    .site-header{
-      background:rgba(30, 41, 59, .92);
-      border-bottom:3px solid var(--accent);
-      position:sticky;
-      top:0;
-      z-index:30;
-      backdrop-filter: blur(8px);
-    }
-
-    .site-header .wrapper{
-      padding-block:14px;
-    }
-
-    .site-title{
-      margin:0;
-      font-size:clamp(1.2rem, 2vw, 1.9rem);
-      line-height:1.2;
-    }
-
-    .site-subtitle{
-      margin:.35rem 0 0;
-      color:var(--muted);
-      font-size:.98rem;
-    }
-
-    .hero{
-      padding:24px 0 10px;
-    }
-
-    .hero-card,
-    .lesson-page{
-      background:linear-gradient(180deg, rgba(30,41,59,.98), rgba(15,23,42,.98));
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-    }
-
-    .hero-card{
-      padding:22px;
-    }
-
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      border-radius:999px;
-      padding:6px 12px;
-      background:rgba(56,189,248,.12);
-      color:#dbeafe;
-      font-size:.92rem;
-      font-weight:700;
-      margin-bottom:12px;
-    }
-
-    .hero h1{
-      margin:.1rem 0 .7rem;
-      font-size:clamp(1.5rem, 4vw, 2.4rem);
-      line-height:1.18;
-    }
-
-    .quote{
-      margin:0 0 1rem;
-      color:#fde68a;
-      font-style:italic;
-      border-left:4px solid var(--accent-3);
-      padding-left:12px;
-    }
-
-    .hero-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
-      gap:12px;
-      margin-top:14px;
-    }
-
-    .pill{
-      background:rgba(15,23,42,.8);
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:12px 14px;
-    }
-
-    .pill strong{
-      display:block;
-      color:#e2e8f0;
-      margin-bottom:4px;
-      font-size:.95rem;
-    }
-
-    .top-tools{
-      position:sticky;
-      top:86px;
-      z-index:20;
-      padding-bottom:10px;
-      background:linear-gradient(180deg, rgba(15,23,42,.96), rgba(15,23,42,.78), rgba(15,23,42,0));
-    }
-
-    .progress-wrap{
-      height:10px;
-      background:rgba(255,255,255,.08);
-      border-radius:999px;
-      overflow:hidden;
-      margin:4px 0 12px;
-    }
-
-    .progress-bar{
-      height:100%;
-      width:0%;
-      background:linear-gradient(90deg, var(--accent), var(--accent-2));
-      transition:width .25s ease;
-    }
-
-    .tabs{
-      display:flex;
-      gap:8px;
-      overflow:auto;
-      padding-bottom:4px;
-      scrollbar-width:thin;
-    }
-
-    .tab-btn{
-      white-space:nowrap;
-      border:1px solid var(--border);
-      background:rgba(30,41,59,.95);
-      color:var(--text);
-      border-radius:999px;
-      padding:10px 14px;
-      cursor:pointer;
-      font-weight:700;
-      font-size:.92rem;
-    }
-
-    .tab-btn.active{
-      background:linear-gradient(90deg, rgba(34,197,94,.18), rgba(56,189,248,.18));
-      border-color:rgba(56,189,248,.55);
-    }
-
-    .lesson-shell{
-      padding:4px 0 110px;
-    }
-
-    .lesson-page{
-      display:none;
-      padding:22px;
-      margin-bottom:14px;
-    }
-
-    .lesson-page.active{
-      display:block;
-      animation:fadeIn .25s ease;
-    }
-
-    @keyframes fadeIn{
-      from{opacity:.45; transform:translateY(8px);}
-      to{opacity:1; transform:translateY(0);}
-    }
-
-    .section-title{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin-bottom:14px;
-      color:#dbeafe;
-      font-size:1.05rem;
-    }
-
-    .dot{
-      width:12px;
-      height:12px;
-      border-radius:50%;
-      background:linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow:0 0 0 4px rgba(56,189,248,.14);
-      flex:0 0 auto;
-    }
-
-    h2,h3,h4{
-      line-height:1.25;
-      margin-top:0;
-    }
-
-    p, li{
-      color:#f8fafc;
-    }
-
-    .lead{
-      font-size:1.06rem;
-      color:#e2e8f0;
-    }
-
-    .muted{color:var(--muted);}
-
-    .split,
-    .grid-2,
-    .grid-3{
-      display:grid;
-      gap:14px;
-    }
-
-    .split,
-    .grid-2{
-      grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
-    }
-
-    .grid-3{
-      grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));
-    }
-
-    .mini-card,
-    .formula-card,
-    .note,
-    .quiz-card,
-    .example,
-    .diagram,
-    .table-card{
-      background:rgba(15,23,42,.72);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:16px;
-    }
-
-    .mini-card h4,
-    .formula-card h4,
-    .quiz-card h4,
-    .example h4{
-      margin-bottom:10px;
-    }
-
-    .accent{
-      color:#93c5fd;
-      font-weight:700;
-    }
-
-    .check-list,
-    .plain-list{
-      margin:0;
-      padding-left:20px;
-    }
-
-    .check-list li{margin:.42rem 0;}
-    .check-list li::marker{color:var(--accent);}
-
-    .note{
-      border-left:4px solid var(--accent-3);
-      color:#fef3c7;
-      background:rgba(245,158,11,.09);
-    }
-
-    .ok-box{
-      border-left:4px solid var(--accent);
-      color:#dcfce7;
-      background:rgba(34,197,94,.10);
-      padding:12px 14px;
-      border-radius:14px;
-    }
-
-    .blue-box{
-      border-left:4px solid var(--accent-2);
-      color:#dbeafe;
-      background:rgba(56,189,248,.10);
-      padding:12px 14px;
-      border-radius:14px;
-    }
-
-    .formula{
-      font-size:1.04rem;
-      overflow:auto hidden;
-    }
-
-    .formula-card{
-      background:linear-gradient(180deg, rgba(56,189,248,.09), rgba(15,23,42,.76));
-    }
-
-    .diagram-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .chip{
-      background:rgba(30,41,59,.95);
-      border:1px solid var(--border);
-      border-radius:999px;
-      padding:8px 12px;
-      font-weight:700;
-      font-size:.94rem;
-    }
-
-    .arrow{
-      font-size:1.4rem;
-      color:#93c5fd;
-      font-weight:700;
-    }
-
-    .table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:.96rem;
-    }
-
-    .table th,
-    .table td{
-      border:1px solid rgba(255,255,255,.10);
-      padding:10px;
-      vertical-align:top;
-      text-align:left;
-    }
-
-    .table th{
-      background:rgba(56,189,248,.11);
-      color:#e0f2fe;
-    }
-
-    .quiz-card{
-      margin-bottom:14px;
-    }
-
-    .quiz-card p{
-      margin-top:0;
-    }
-
-    .choice-grid{
-      display:grid;
-      gap:10px;
-      margin-top:10px;
-    }
-
-    .choice-grid label{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      background:rgba(30,41,59,.72);
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:12px 14px;
-      cursor:pointer;
-    }
-
-    .choice-grid input,
-    .choice-grid select{
-      margin-top:2px;
-      accent-color:#22c55e;
-    }
-
-    .inline-input,
-    input[type="text"],
-    input[type="number"],
-    select{
-      width:100%;
-      padding:12px 14px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.16);
-      background:#0b1220;
-      color:#f8fafc;
-      font-size:1rem;
-    }
-
-    .btn{
-      border:none;
-      border-radius:14px;
-      padding:13px 18px;
-      font-size:1rem;
-      font-weight:800;
-      cursor:pointer;
-      transition:transform .12s ease, opacity .12s ease;
-    }
-
-    .btn:hover{transform:translateY(-1px);}
-    .btn:disabled{opacity:.55; cursor:not-allowed; transform:none;}
-
-    .btn-primary{
-      background:linear-gradient(90deg, var(--accent), #16a34a);
-      color:#04130a;
-    }
-
-    .btn-secondary{
-      background:rgba(148,163,184,.16);
-      color:var(--text);
-      border:1px solid var(--border);
-    }
-
-    .btn-accent{
-      background:linear-gradient(90deg, var(--accent-2), #2563eb);
-      color:white;
-    }
-
-    .feedback{
-      margin-top:10px;
-      font-weight:700;
-      min-height:24px;
-    }
-
-    .feedback.ok{color:#86efac;}
-    .feedback.bad{color:#fca5a5;}
-
-    .score-box{
-      display:none;
-      margin-top:14px;
-      background:rgba(34,197,94,.10);
-      border:1px solid rgba(34,197,94,.28);
-      border-radius:14px;
-      padding:14px;
-    }
-
-    .bottom-nav{
-      position:fixed;
-      left:0;
-      right:0;
-      bottom:0;
-      z-index:40;
-      background:rgba(11,18,32,.96);
-      border-top:1px solid rgba(255,255,255,.10);
-      backdrop-filter: blur(12px);
-      box-shadow:0 -10px 28px rgba(0,0,0,.28);
-    }
-
-    .bottom-nav .wrapper{
-      display:grid;
-      grid-template-columns:auto 1fr auto;
-      gap:12px;
-      align-items:center;
-      padding-block:10px calc(10px + env(safe-area-inset-bottom));
-    }
-
-    .page-counter{
-      text-align:center;
-      color:#cbd5e1;
-      font-weight:700;
-      font-size:.96rem;
-    }
-
-    .footer-links{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
-
-    .footer-links a{
-      color:#93c5fd;
-      font-weight:700;
-    }
-
-    @media (max-width: 720px){
-      .bottom-nav .wrapper{
-        grid-template-columns:1fr 1fr;
-      }
-      .page-counter{
-        grid-column:1 / -1;
-        order:-1;
-      }
-      .btn{
-        width:100%;
-      }
-      .lesson-page{padding:18px;}
-      .hero-card{padding:18px;}
-    }
-
-  </style>
-  <script>
-    window.MathJax = {
-      tex: {
-        inlineMath: [['\\(', '\\)'], ['$', '$']],
-        displayMath: [['\\[', '\\]']]
-      },
-      options: {
-        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-      }
-    };
-  </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Lecția 6 | Stări de agregare, caracteristici</title>
+<meta name="description" content="Fizica Galaction - lecție interactivă clasa a VIII-a despre stările de agregare: solid, lichid, gaz și plasma.">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)'], ['$','$']],
+    displayMath: [['\\[','\\]']]
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+:root{
+  --bg:#08111f;
+  --card:#12263f;
+  --card2:#0f2137;
+  --text:#f4f9ff;
+  --muted:#cbd5e1;
+  --cyan:#67e8f9;
+  --blue:#38bdf8;
+  --green:#22c55e;
+  --green2:#16a34a;
+  --back:#e2e8f0;
+  --dark:#0f172a;
+  --border:rgba(148,163,184,.28);
+  --warn:#fde68a;
+  --bad:#fecaca;
+  --good:#bbf7d0;
+  --orange:#fdba74;
+}
+*{box-sizing:border-box}
+html{height:100%;scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100dvh;
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(103,232,249,.16), transparent 32rem),
+    radial-gradient(circle at bottom right, rgba(34,197,94,.10), transparent 30rem),
+    linear-gradient(180deg,#08111f 0%,#0b1729 50%,#08111f 100%);
+  color:var(--text);
+  font-size:18px;
+  line-height:1.58;
+}
+.app{
+  width:min(980px,100%);
+  margin:0 auto;
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+}
+.banner{
+  margin:14px 14px 0;
+  padding:14px 16px;
+  border:1px solid rgba(103,232,249,.35);
+  border-radius:22px;
+  background:rgba(15,33,55,.88);
+  box-shadow:0 18px 42px rgba(0,0,0,.22);
+  text-align:center;
+}
+.school{
+  color:var(--cyan);
+  font-weight:900;
+  letter-spacing:.02em;
+  font-size:1.05rem;
+}
+.teacher{
+  color:#dbeafe;
+  font-weight:700;
+  margin-top:4px;
+  font-size:.98rem;
+}
+.motto{
+  margin:10px auto 0;
+  display:inline-block;
+  padding:8px 12px;
+  color:#fef3c7;
+  border-left:4px solid var(--cyan);
+  background:rgba(251,191,36,.10);
+  border-radius:10px;
+  font-style:italic;
+}
+main{
+  flex:1;
+  padding:14px 14px 100px;
+}
+.page{
+  display:none;
+  animation:fade .22s ease-out;
+}
+.page.active{display:block}
+@keyframes fade{
+  from{opacity:.4;transform:translateY(4px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.card{
+  background:linear-gradient(180deg,rgba(18,38,63,.96),rgba(15,33,55,.96));
+  border:1px solid var(--border);
+  border-radius:24px;
+  box-shadow:0 18px 48px rgba(0,0,0,.24);
+  padding:clamp(18px,4vw,34px);
+}
+h1,h2,h3{line-height:1.18;margin:0 0 14px}
+h1{
+  color:var(--cyan);
+  font-size:clamp(2rem,7vw,3.6rem);
+  letter-spacing:-.03em;
+}
+h2{
+  color:var(--cyan);
+  font-size:clamp(1.55rem,5vw,2.25rem);
+}
+h3{
+  color:#bfdbfe;
+  font-size:clamp(1.15rem,4vw,1.55rem);
+}
+p{margin:0 0 14px}
+ul{margin:8px 0 0;padding-left:1.25rem}
+li{margin:.42rem 0}
+a{color:var(--cyan)}
+.badge{
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+  padding:7px 11px;
+  border:1px solid rgba(103,232,249,.35);
+  background:rgba(103,232,249,.10);
+  color:#dffbff;
+  border-radius:999px;
+  font-weight:800;
+  font-size:.92rem;
+  margin-bottom:12px;
+}
+.idea{
+  margin:18px 0;
+  padding:16px;
+  border-radius:18px;
+  background:rgba(34,197,94,.10);
+  border:1px solid rgba(34,197,94,.28);
+}
+.idea strong{color:#bbf7d0}
+.note{
+  margin:16px 0 0;
+  padding:14px 15px;
+  border-left:4px solid var(--orange);
+  border-radius:14px;
+  background:rgba(251,146,60,.11);
+  color:#ffedd5;
+}
+.warning{
+  margin:14px 0 0;
+  padding:13px 14px;
+  border-radius:14px;
+  background:rgba(253,230,138,.10);
+  border:1px solid rgba(253,230,138,.30);
+  color:#fff7ed;
+}
+.grid{
+  display:grid;
+  gap:14px;
+}
+.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.mini{
+  padding:14px;
+  border-radius:18px;
+  background:rgba(15,23,42,.46);
+  border:1px solid var(--border);
+}
+.mini h3{margin-bottom:8px;color:#e0f2fe}
+.k{
+  color:#cffafe;
+  font-weight:900;
+}
+.table-wrap{
+  overflow-x:auto;
+  margin-top:14px;
+  border-radius:18px;
+  border:1px solid var(--border);
+}
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:620px;
+  background:rgba(15,23,42,.35);
+}
+th,td{
+  border-bottom:1px solid rgba(148,163,184,.20);
+  padding:12px;
+  vertical-align:top;
+  text-align:left;
+}
+th{
+  color:#cffafe;
+  background:rgba(56,189,248,.12);
+}
+tr:last-child td{border-bottom:none}
+.formula{
+  margin:14px 0;
+  padding:13px 12px;
+  border-radius:16px;
+  background:rgba(15,23,42,.55);
+  border:1px solid rgba(103,232,249,.22);
+  overflow-x:auto;
+}
+.formula mjx-container{
+  font-size:105% !important;
+}
+.svgbox{
+  margin:16px auto;
+  padding:14px;
+  border-radius:20px;
+  background:rgba(15,23,42,.45);
+  border:1px solid rgba(148,163,184,.22);
+  max-width:760px;
+}
+.svgbox > svg{
+  width:100%;
+  height:auto;
+  display:block;
+}
+.caption{
+  margin-top:8px;
+  color:#dbeafe;
+  font-size:.95rem;
+  text-align:center;
+}
+.quiz{
+  margin-top:16px;
+  padding:15px;
+  border-radius:18px;
+  background:rgba(15,23,42,.48);
+  border:1px solid rgba(103,232,249,.22);
+}
+.answers{
+  display:grid;
+  gap:10px;
+  margin:12px 0;
+}
+.answers label{
+  display:grid;
+  grid-template-columns:28px 1fr;
+  align-items:start;
+  gap:10px;
+  padding:12px;
+  border:1px solid rgba(148,163,184,.26);
+  border-radius:14px;
+  background:rgba(15,23,42,.42);
+  cursor:pointer;
+}
+.answers input{
+  width:20px;
+  height:20px;
+  margin-top:2px;
+  accent-color:var(--green);
+}
+.check{
+  border:0;
+  border-radius:14px;
+  padding:12px 16px;
+  background:#22d3ee;
+  color:#082f49;
+  font-weight:900;
+  cursor:pointer;
+}
+.feedback{
+  min-height:28px;
+  margin-top:10px;
+  font-weight:900;
+}
+.feedback.ok{color:var(--good)}
+.feedback.no{color:var(--bad)}
+.feedback.warn{color:var(--warn)}
+.final-banner{
+  margin-top:18px;
+  padding:18px;
+  text-align:center;
+  border-radius:22px;
+  background:rgba(103,232,249,.10);
+  border:1px solid rgba(103,232,249,.35);
+}
+.final-banner strong{color:#cffafe}
+.footer-nav{
+  position:sticky;
+  bottom:0;
+  z-index:20;
+  width:100%;
+  padding:10px 12px calc(10px + env(safe-area-inset-bottom));
+  background:linear-gradient(180deg,rgba(8,17,31,0),rgba(8,17,31,.92) 24%,rgba(8,17,31,.98));
+  backdrop-filter:blur(10px);
+}
+.navbar{
+  width:min(980px,100%);
+  margin:0 auto;
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  gap:10px;
+  align-items:center;
+}
+.navbtn{
+  border:0;
+  border-radius:16px;
+  padding:14px 12px;
+  font-size:1rem;
+  font-weight:900;
+  cursor:pointer;
+  min-height:52px;
+  box-shadow:0 10px 24px rgba(0,0,0,.22);
+}
+.navbtn.back{
+  background:var(--back);
+  color:var(--dark);
+}
+.navbtn.next{
+  background:linear-gradient(180deg,var(--green),var(--green2));
+  color:#052e16;
+}
+.navbtn:disabled{
+  opacity:.45;
+  cursor:not-allowed;
+  box-shadow:none;
+}
+.counter{
+  color:#e0f2fe;
+  font-weight:900;
+  padding:0 8px;
+  white-space:nowrap;
+}
+@media (max-width:720px){
+  body{font-size:17px}
+  main{padding-left:10px;padding-right:10px}
+  .grid.two,.grid.three{grid-template-columns:1fr}
+  .card{border-radius:20px}
+  .banner{margin-left:10px;margin-right:10px}
+  .navbtn{font-size:.96rem;padding:12px 8px}
+  .counter{font-size:.95rem}
+  table{min-width:560px}
+}
+@media (max-width:380px){
+  .navbar{grid-template-columns:1fr;gap:8px}
+  .counter{order:-1;text-align:center}
+  .navbtn{width:100%}
+}
+</style>
 </head>
-<body data-next-lesson="lectia-7.html">
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction – Clasa a VIII-a</h1>
-      <p class="site-subtitle">Unitatea 1: Fenomene termice</p>
-    </div>
-  </header>
+<body>
+<div class="app">
+  <main id="top">
 
-  <main class="wrapper">
-    <section class="hero">
-      <div class="hero-card">
-        <div class="eyebrow">Lecția 6</div>
-        <h1>Stări de agregare, caracteristici</h1>
-        <p class="quote">„Fizica nu este dominată de formule, ci de logică.”</p>
-        <p class="lead">Solid, lichid, gaz</p>
+    <section class="page active">
+      <div class="banner">
+        <div class="school">ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</div>
+        <div class="teacher">Prof. Dănuț Andronie</div>
+        <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+      </div>
 
-        <div class="hero-grid">
-          <div class="pill">
-            <strong>Format</strong>
-            pagini scurte, ușor de parcurs
+      <article class="card" style="margin-top:14px">
+        <span class="badge">Clasa a VIII-a • Unitatea 1</span>
+        <h1>Lecția 6: Stări de agregare, caracteristici</h1>
+        <p><strong>Ideea-cheie:</strong> aceeași substanță poate arăta și se poate comporta diferit, în funcție de cât de legate sunt particulele ei și cât de intens se mișcă.</p>
+        <div class="idea">
+          <strong>Astăzi înțelegi:</strong> de ce gheața își păstrează forma, apa curge, iar vaporii ocupă tot spațiul disponibil.
+        </div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="badge">Observ</span>
+        <h2>Aceeași substanță, forme diferite</h2>
+        <p>Gândește-te la apă:</p>
+        <div class="grid three">
+          <div class="mini">
+            <h3>Gheață</h3>
+            <p>Este <span class="k">solidă</span>. Are formă și volum propriu.</p>
           </div>
-          <div class="pill">
-            <strong>Conține</strong>
-            noțiuni, exemple, verificare rapidă
+          <div class="mini">
+            <h3>Apă lichidă</h3>
+            <p>Este <span class="k">lichidă</span>. Curgând, ia forma vasului.</p>
           </div>
-          <div class="pill">
-            <strong>Compatibil</strong>
-            telefon, tabletă, PC
+          <div class="mini">
+            <h3>Vapori</h3>
+            <p>Sunt în stare <span class="k">gazoasă</span>. Se răspândesc în spațiul disponibil.</p>
           </div>
         </div>
-      </div>
+        <div class="svgbox" aria-label="Cele trei stări ale apei">
+          <svg viewBox="0 0 760 260" role="img">
+            <rect x="20" y="35" width="200" height="185" rx="20" fill="#0f2137" stroke="#67e8f9" stroke-width="3"/>
+            <rect x="55" y="95" width="130" height="85" rx="10" fill="#bfdbfe" opacity=".95"/>
+            <path d="M55 95 L185 95 L165 75 L75 75 Z" fill="#e0f2fe"/>
+            <text x="120" y="230" text-anchor="middle" fill="#f4f9ff" font-size="22" font-weight="700">solid</text>
+
+            <rect x="280" y="35" width="200" height="185" rx="20" fill="#0f2137" stroke="#67e8f9" stroke-width="3"/>
+            <path d="M330 90 L430 90 L410 195 L350 195 Z" fill="none" stroke="#dbeafe" stroke-width="5"/>
+            <path d="M337 145 C370 132 390 160 423 145 L410 195 L350 195 Z" fill="#38bdf8" opacity=".75"/>
+            <text x="380" y="230" text-anchor="middle" fill="#f4f9ff" font-size="22" font-weight="700">lichid</text>
+
+            <rect x="540" y="35" width="200" height="185" rx="20" fill="#0f2137" stroke="#67e8f9" stroke-width="3"/>
+            <g fill="#fdba74" opacity=".95">
+              <circle cx="590" cy="78" r="7"/><circle cx="690" cy="88" r="6"/><circle cx="626" cy="128" r="8"/>
+              <circle cx="712" cy="145" r="7"/><circle cx="575" cy="168" r="6"/><circle cx="650" cy="182" r="7"/>
+            </g>
+            <path d="M585 92 C560 125 560 150 590 181" fill="none" stroke="#fdba74" stroke-width="3" opacity=".5"/>
+            <path d="M695 100 C720 125 720 150 700 175" fill="none" stroke="#fdba74" stroke-width="3" opacity=".5"/>
+            <text x="640" y="230" text-anchor="middle" fill="#f4f9ff" font-size="22" font-weight="700">gaz</text>
+          </svg>
+          <div class="caption">Model simplificat: nu vedem particulele cu ochiul liber, dar modelul ne ajută să explicăm proprietățile.</div>
+        </div>
+        <div class="note">Manualul amintește și <strong>plasma</strong>, o a patra stare de agregare, întâlnită în fulgere, lămpi speciale și în stele.</div>
+      </article>
     </section>
 
-    <section class="top-tools">
-      <div class="progress-wrap" aria-hidden="true">
-        <div class="progress-bar" id="progressBar"></div>
-      </div>
-      <div class="tabs" role="tablist" aria-label="Pagini lecție">
-        <button class="tab-btn active" type="button">1. Observ</button>
-<button class="tab-btn" type="button">2. Rețin</button>
-<button class="tab-btn" type="button">3. Mai departe</button>
-<button class="tab-btn" type="button">4. Aplic</button>
-<button class="tab-btn" type="button">5. Verificare</button>
-<button class="tab-btn" type="button">6. Rețin</button>
-      </div>
+    <section class="page">
+      <article class="card">
+        <span class="badge">Experimentez</span>
+        <h2>Dilatarea ne arată că particulele contează</h2>
+        <p>În manual apare experimentul cu <strong>bila metalică și inelul metalic</strong>. Bila rece trece prin inel. După încălzire, bila se dilată și poate să nu mai treacă.</p>
+        <div class="svgbox" aria-label="Experiment cu bilă și inel">
+          <svg viewBox="0 0 760 280" role="img">
+            <rect x="20" y="25" width="330" height="220" rx="20" fill="#0f2137" stroke="#334155" stroke-width="2"/>
+            <circle cx="190" cy="130" r="52" fill="#94a3b8" stroke="#e2e8f0" stroke-width="3"/>
+            <circle cx="190" cy="130" r="70" fill="none" stroke="#67e8f9" stroke-width="9"/>
+            <text x="185" y="232" text-anchor="middle" fill="#dbeafe" font-size="21" font-weight="700">rece: trece</text>
+
+            <rect x="410" y="25" width="330" height="220" rx="20" fill="#0f2137" stroke="#334155" stroke-width="2"/>
+            <circle cx="580" cy="130" r="77" fill="#fca5a5" stroke="#fecaca" stroke-width="3"/>
+            <circle cx="580" cy="130" r="70" fill="none" stroke="#67e8f9" stroke-width="9"/>
+            <path d="M520 205 C540 235 620 235 640 205" fill="none" stroke="#fdba74" stroke-width="6"/>
+            <text x="580" y="232" text-anchor="middle" fill="#dbeafe" font-size="21" font-weight="700">încălzită: se dilată</text>
+          </svg>
+          <div class="caption">Când un corp se încălzește, de obicei își mărește volumul.</div>
+        </div>
+        <div class="idea">
+          <strong>Rețin:</strong> la dilatare se măresc spațiile dintre particule; la contractare spațiile se micșorează.
+        </div>
+        <div class="warning">Experimentul cu flacără se face numai sub supravegherea profesorului.</div>
+      </article>
     </section>
 
-    <section class="lesson-shell">
-      <section class="lesson-page active" data-page="1">
-          <div class="section-title"><span class="dot"></span><strong>Observ</strong></div>
-          
-<p class="lead">Substanțele pot exista în <strong>stare solidă</strong>, <strong>lichidă</strong> sau <strong>gazoasă</strong>. Diferențele dintre aceste stări se explică prin modul în care sunt așezate și se mișcă particulele.</p>
-<div class="grid-3">
-  <div class="mini-card"><h4>Solid</h4><p>Formă proprie, volum propriu, particule apropiate.</p></div>
-  <div class="mini-card"><h4>Lichid</h4><p>Nu are formă proprie, dar are volum propriu.</p></div>
-  <div class="mini-card"><h4>Gaz</h4><p>Nu are nici formă proprie, nici volum propriu.</p></div>
-</div>
-
-        </section>
-<section class="lesson-page" data-page="2">
-          <div class="section-title"><span class="dot"></span><strong>Rețin</strong></div>
-          
-<div class="table-card">
-  <h4>Comparație rapidă</h4>
-  <table class="table">
-    <tr><th>Stare</th><th>Formă</th><th>Volum</th><th>Particule</th></tr>
-    <tr><td>Solidă</td><td>proprie</td><td>propriu</td><td>foarte apropiate, ordonate</td></tr>
-    <tr><td>Lichidă</td><td>ia forma vasului</td><td>propriu</td><td>apropiate, se pot deplasa</td></tr>
-    <tr><td>Gazoasă</td><td>ia forma vasului</td><td>ocupă tot vasul</td><td>foarte depărtate, mișcare intensă</td></tr>
-  </table>
-</div>
-
-        </section>
-<section class="lesson-page" data-page="3">
-          <div class="section-title"><span class="dot"></span><strong>Mai departe</strong></div>
-          
-<div class="split">
-  <div class="mini-card">
-    <h4>Starea solidă</h4>
-    <ul class="check-list">
-      <li>particulele oscilează în jurul unor poziții aproape fixe;</li>
-      <li>solidele se comprimă foarte greu;</li>
-      <li>au rigiditate mai mare.</li>
-    </ul>
-  </div>
-  <div class="mini-card">
-    <h4>Starea lichidă</h4>
-    <ul class="check-list">
-      <li>lichidele curg;</li>
-      <li>au suprafață liberă în vas;</li>
-      <li>sunt aproape incomprimabile.</li>
-    </ul>
-  </div>
-  <div class="mini-card">
-    <h4>Starea gazoasă</h4>
-    <ul class="check-list">
-      <li>gazele se comprimă ușor;</li>
-      <li>se difuzează repede;</li>
-      <li>ocupă întregul volum disponibil.</li>
-    </ul>
-  </div>
-</div>
-
-        </section>
-<section class="lesson-page" data-page="4">
-          <div class="section-title"><span class="dot"></span><strong>Aplic</strong></div>
-          
-<div class="split">
-  <div class="example">
-    <h4>Exemple</h4>
-    <ul class="check-list">
-      <li>gheața – stare solidă;</li>
-      <li>apa – stare lichidă;</li>
-      <li>vaporii de apă – stare gazoasă.</li>
-    </ul>
-  </div>
-  <div class="example">
-    <h4>Model particulat</h4>
-    <p>Cu cât particulele au energie de agitație termică mai mare, cu atât se pot depărta mai mult unele de altele și substanța poate trece spre stări mai puțin ordonate.</p>
-  </div>
-</div>
-<div class="note"><strong>Atenție:</strong> aceeași substanță poate exista în mai multe stări de agregare, în funcție de temperatură și presiune.</div>
-
-        </section>
-<section class="lesson-page" data-page="5">
-          <div class="section-title"><span class="dot"></span><strong>Verificare</strong></div>
-          
-<div class="quiz-card">
-  <h4>1. Ce stare are formă și volum propriu?</h4>
-  <div class="choice-grid">
-    <label><input type="radio" name="q1" value="a"> solidă</label>
-    <label><input type="radio" name="q1" value="b"> lichidă</label>
-    <label><input type="radio" name="q1" value="c"> gazoasă</label>
-  </div>
-  <div id="fb1" class="feedback"></div>
-</div>
-
-<div class="quiz-card">
-  <h4>2. Gazul ocupă:</h4>
-  <div class="choice-grid">
-    <label><input type="radio" name="q2" value="a"> doar jumătate din vas</label>
-    <label><input type="radio" name="q2" value="b"> întregul volum al vasului</label>
-    <label><input type="radio" name="q2" value="c"> numai fundul vasului</label>
-  </div>
-  <div id="fb2" class="feedback"></div>
-</div>
-
-<div class="quiz-card">
-  <h4>3. Completează: lichidul are volum ...</h4>
-  <input id="q3" type="text" placeholder="Scrie un cuvânt">
-  <div id="fb3" class="feedback"></div>
-</div>
-
-<div class="quiz-card">
-  <h4>4. Alege corect:</h4>
-  <select id="q4">
-    <option value="">Alege...</option>
-    <option value="solid-compresibil">solidul se comprimă ușor</option>
-    <option value="gaz-compresibil">gazul se comprimă ușor</option>
-    <option value="lichid-forma-proprie">lichidul are formă proprie</option>
-  </select>
-  <div id="fb4" class="feedback"></div>
-</div>
-
-<button class="btn btn-accent" onclick='verifyQuiz({
-  scoreBoxId:"rezultatBox", scoreTextId:"rezultatText", scoreMsgId:"rezultatMesaj",
-  items:[
-    {type:"radio", name:"q1", answer:"a", feedbackId:"fb1", showAnswer:"solidă"},
-    {type:"radio", name:"q2", answer:"b", feedbackId:"fb2", showAnswer:"întregul volum al vasului"},
-    {type:"text", id:"q3", answers:["propriu"], feedbackId:"fb3", showAnswer:"propriu"},
-    {type:"select", id:"q4", answer:"gaz-compresibil", feedbackId:"fb4", showAnswer:"gazul se comprimă ușor"}
-  ]
-})'>Verifică răspunsurile</button>
-
-<div id="rezultatBox" class="score-box">
-  <div id="rezultatText"></div>
-  <div id="rezultatMesaj" class="muted"></div>
-</div>
-
-        </section>
-<section class="lesson-page" data-page="6">
-          <div class="section-title"><span class="dot"></span><strong>Rețin</strong></div>
-          
-<div class="mini-card">
-  <h4>Rezumat</h4>
-  <ul class="check-list">
-    <li>solidul: formă și volum propriu;</li>
-    <li>lichidul: volum propriu, fără formă proprie;</li>
-    <li>gazul: fără formă și fără volum propriu.</li>
-  </ul>
-</div>
-
-        </section>
+    <section class="page">
+      <article class="card">
+        <span class="badge">Rețin</span>
+        <h2>Comparație rapidă: solid, lichid, gaz</h2>
+        <p>Starea de agregare se recunoaște după <strong>formă</strong>, <strong>volum</strong> și comportarea particulelor.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Stare</th>
+                <th>Formă</th>
+                <th>Volum</th>
+                <th>Particule</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Solidă</strong></td>
+                <td>formă proprie</td>
+                <td>volum propriu</td>
+                <td>foarte apropiate; oscilează în jurul unor poziții aproape fixe</td>
+              </tr>
+              <tr>
+                <td><strong>Lichidă</strong></td>
+                <td>ia forma vasului</td>
+                <td>volum propriu</td>
+                <td>apropiate; pot aluneca unele printre altele</td>
+              </tr>
+              <tr>
+                <td><strong>Gazoasă</strong></td>
+                <td>nu are formă proprie</td>
+                <td>ocupă tot volumul disponibil</td>
+                <td>depărtate; se mișcă dezordonat și rapid</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note">Important: nu starea de agregare schimbă substanța. Apa rămâne apă, indiferent că este gheață, lichid sau vapori.</div>
+      </article>
     </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="badge">Model</span>
+        <h2>Modelul particulelor</h2>
+        <p>Particulele unei substanțe sunt foarte mici: atomi, molecule sau ioni. Nu le vedem direct, dar putem explica multe fenomene dacă ne imaginăm cum sunt așezate și cum se mișcă.</p>
+        <div class="svgbox" aria-label="Model particulat pentru solid, lichid și gaz">
+          <svg viewBox="0 0 800 300" role="img">
+            <defs>
+              <g id="dot"><circle r="9" fill="#67e8f9"/></g>
+              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 Z" fill="#fdba74"/>
+              </marker>
+            </defs>
+            <rect x="18" y="25" width="238" height="220" rx="18" fill="#0f2137" stroke="#67e8f9" stroke-width="2"/>
+            <g transform="translate(70,75)">
+              <use href="#dot" x="0" y="0"/><use href="#dot" x="42" y="0"/><use href="#dot" x="84" y="0"/><use href="#dot" x="126" y="0"/>
+              <use href="#dot" x="0" y="42"/><use href="#dot" x="42" y="42"/><use href="#dot" x="84" y="42"/><use href="#dot" x="126" y="42"/>
+              <use href="#dot" x="0" y="84"/><use href="#dot" x="42" y="84"/><use href="#dot" x="84" y="84"/><use href="#dot" x="126" y="84"/>
+            </g>
+            <text x="137" y="270" text-anchor="middle" fill="#e0f2fe" font-size="22" font-weight="800">solid</text>
+
+            <rect x="282" y="25" width="238" height="220" rx="18" fill="#0f2137" stroke="#67e8f9" stroke-width="2"/>
+            <g fill="#67e8f9">
+              <circle cx="342" cy="92" r="9"/><circle cx="377" cy="110" r="9"/><circle cx="415" cy="87" r="9"/>
+              <circle cx="455" cy="120" r="9"/><circle cx="360" cy="154" r="9"/><circle cx="408" cy="164" r="9"/>
+              <circle cx="467" cy="168" r="9"/><circle cx="332" cy="190" r="9"/><circle cx="392" cy="205" r="9"/>
+            </g>
+            <path d="M348 82 q18 -10 33 4" fill="none" stroke="#fdba74" stroke-width="3" marker-end="url(#arrow)"/>
+            <path d="M432 170 q25 12 44 -4" fill="none" stroke="#fdba74" stroke-width="3" marker-end="url(#arrow)"/>
+            <text x="401" y="270" text-anchor="middle" fill="#e0f2fe" font-size="22" font-weight="800">lichid</text>
+
+            <rect x="546" y="25" width="238" height="220" rx="18" fill="#0f2137" stroke="#67e8f9" stroke-width="2"/>
+            <g fill="#67e8f9">
+              <circle cx="595" cy="73" r="9"/><circle cx="720" cy="88" r="9"/><circle cx="640" cy="135" r="9"/>
+              <circle cx="755" cy="170" r="9"/><circle cx="586" cy="200" r="9"/><circle cx="690" cy="210" r="9"/>
+            </g>
+            <path d="M595 73 L615 103" stroke="#fdba74" stroke-width="4" marker-end="url(#arrow)"/>
+            <path d="M720 88 L690 120" stroke="#fdba74" stroke-width="4" marker-end="url(#arrow)"/>
+            <path d="M640 135 L682 145" stroke="#fdba74" stroke-width="4" marker-end="url(#arrow)"/>
+            <path d="M586 200 L620 180" stroke="#fdba74" stroke-width="4" marker-end="url(#arrow)"/>
+            <text x="665" y="270" text-anchor="middle" fill="#e0f2fe" font-size="22" font-weight="800">gaz</text>
+          </svg>
+          <div class="caption">Modelul este schematizat: particulele reale sunt mult mai mici și mult mai numeroase.</div>
+        </div>
+        <div class="idea">
+          <strong>Regulă simplă:</strong> particule mai apropiate și mai ordonate → comportare mai „solidă”; particule mai depărtate și mai libere → comportare mai „gazoasă”.
+        </div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="badge">Rețin</span>
+        <h2>Starea solidă</h2>
+        <p>Un corp solid are <strong>formă proprie</strong> și <strong>volum propriu</strong>. De aceea o piatră, o carte sau o bucată de metal nu iau forma vasului în care sunt puse.</p>
+        <div class="grid two">
+          <div class="mini">
+            <h3>Solide cristaline</h3>
+            <p>Au o aranjare ordonată a particulelor. Exemple: sarea de bucătărie, cuarțul, metalele.</p>
+          </div>
+          <div class="mini">
+            <h3>Solide amorfe</h3>
+            <p>Nu au aceeași ordine clară pe distanțe mari. Exemple: sticla, ceara.</p>
+          </div>
+        </div>
+        <div class="note">
+          În solide, particulele nu „stau perfect nemișcate”. Ele oscilează în jurul unor poziții aproape fixe.
+        </div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="badge">Rețin</span>
+        <h2>Starea lichidă</h2>
+        <p>Un lichid are <strong>volum propriu</strong>, dar <strong>nu are formă proprie</strong>. El ia forma vasului în care se află.</p>
+        <div class="grid two">
+          <div class="mini">
+            <h3>Curge</h3>
+            <p>Particulele sunt apropiate, dar pot aluneca unele pe lângă altele.</p>
+          </div>
+          <div class="mini">
+            <h3>Se comprimă greu</h3>
+            <p>Fiindcă particulele sunt deja apropiate, volumul unui lichid se micșorează foarte puțin la apăsare.</p>
+          </div>
+        </div>
+        <div class="idea">
+          <strong>Exemplu:</strong> dacă torni 200 ml de apă dintr-un pahar într-o sticlă, apa își schimbă forma, dar volumul rămâne 200 ml.
+        </div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="badge">Rețin</span>
+        <h2>Starea gazoasă</h2>
+        <p>Un gaz <strong>nu are formă proprie</strong> și <strong>nu are volum propriu</strong>. El ocupă tot spațiul disponibil.</p>
+        <div class="grid two">
+          <div class="mini">
+            <h3>Este expansibil</h3>
+            <p>Se poate răspândi în tot vasul sau în toată camera.</p>
+          </div>
+          <div class="mini">
+            <h3>Este compresibil</h3>
+            <p>Volumul lui se poate micșora ușor, de exemplu când apeși pistonul unei seringi astupate.</p>
+          </div>
+        </div>
+        <div class="note">
+          Presiunea unui gaz apare deoarece particulele lui se lovesc continuu de pereții vasului.
+        </div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="badge">Explic</span>
+        <h2>Forțe intermoleculare și agitație termică</h2>
+        <p>Între particulele unei substanțe există <strong>forțe intermoleculare</strong>. Ele pot atrage particulele sau le pot împiedica să se apropie prea mult.</p>
+        <div class="grid two">
+          <div class="mini">
+            <h3>Forțe mai puternice</h3>
+            <p>Particulele rămân mai apropiate și mai ordonate. Corpul se comportă mai mult ca un solid.</p>
+          </div>
+          <div class="mini">
+            <h3>Agitație termică mai intensă</h3>
+            <p>Particulele se mișcă mai mult. Substanța poate ajunge spre stare lichidă sau gazoasă.</p>
+          </div>
+        </div>
+        <div class="idea">
+          <strong>Pe scurt:</strong> starea de agregare depinde de echilibrul dintre atracția dintre particule și mișcarea lor termică.
+        </div>
+        <p>La temperaturi mai mari, agitația termică devine mai intensă. De aceea, încălzirea poate favoriza transformarea unei substanțe din solid în lichid sau din lichid în gaz.</p>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="badge">Exemplu numeric</span>
+        <h2>Cât de mult s-a dilatat un corp?</h2>
+        <p>Presupunem că un corp avea inițial volumul \(V_i=100\,cm^3\). După încălzire, volumul lui devine \(V_f=102\,cm^3\).</p>
+        <div class="formula">
+          \[
+            \Delta V=V_f-V_i=102\,cm^3-100\,cm^3=2\,cm^3
+          \]
+        </div>
+        <p>Partea din volumul inițial cu care a crescut volumul este:</p>
+        <div class="formula">
+          \[
+            \frac{\Delta V}{V_i}=\frac{2\,cm^3}{100\,cm^3}=0{,}02=2\%
+          \]
+        </div>
+        <div class="idea">
+          <strong>Interpretare:</strong> volumul a crescut cu 2% față de volumul inițial.
+        </div>
+        <p>Aceasta nu înseamnă că particulele au devenit mai mari, ci că spațiile dintre ele au crescut.</p>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="badge">Aplic</span>
+        <h2>Clasifică rapid</h2>
+        <p>Completează mental tabelul cu exemple din jurul tău:</p>
+        <div class="grid three">
+          <div class="mini">
+            <h3>Solid</h3>
+            <p>creion, bancă, sare, gheață</p>
+          </div>
+          <div class="mini">
+            <h3>Lichid</h3>
+            <p>apă, lapte, ulei, alcool</p>
+          </div>
+          <div class="mini">
+            <h3>Gaz</h3>
+            <p>aer, vapori de apă, dioxid de carbon</p>
+          </div>
+        </div>
+
+        <div class="quiz">
+          <h3>Verificare rapidă 1</h3>
+          <p>Care afirmație descrie corect un lichid?</p>
+          <div class="answers">
+            <label><input type="radio" name="q1" value="a"> Are formă proprie și volum propriu.</label>
+            <label><input type="radio" name="q1" value="b"> Are volum propriu, dar ia forma vasului.</label>
+            <label><input type="radio" name="q1" value="c"> Nu are nici formă, nici volum propriu.</label>
+          </div>
+          <button class="check" type="button" onclick="checkQuestion('q1','b','fb1')">Verifică</button>
+          <div id="fb1" class="feedback" aria-live="polite"></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="badge">Verificare rapidă</span>
+        <h2>Alege varianta corectă</h2>
+
+        <div class="quiz">
+          <h3>1. Ce stare are formă și volum propriu?</h3>
+          <div class="answers">
+            <label><input type="radio" name="q2" value="a"> starea solidă</label>
+            <label><input type="radio" name="q2" value="b"> starea lichidă</label>
+            <label><input type="radio" name="q2" value="c"> starea gazoasă</label>
+          </div>
+          <button class="check" type="button" onclick="checkQuestion('q2','a','fb2')">Verifică</button>
+          <div id="fb2" class="feedback" aria-live="polite"></div>
+        </div>
+
+        <div class="quiz">
+          <h3>2. Gazul dintr-un vas închis exercită presiune deoarece:</h3>
+          <div class="answers">
+            <label><input type="radio" name="q3" value="a"> particulele lui se lovesc de pereții vasului</label>
+            <label><input type="radio" name="q3" value="b"> are întotdeauna formă proprie</label>
+            <label><input type="radio" name="q3" value="c"> particulele lui sunt fixe</label>
+          </div>
+          <button class="check" type="button" onclick="checkQuestion('q3','a','fb3')">Verifică</button>
+          <div id="fb3" class="feedback" aria-live="polite"></div>
+        </div>
+
+        <div class="quiz">
+          <h3>3. La încălzire, în dilatarea obișnuită:</h3>
+          <div class="answers">
+            <label><input type="radio" name="q4" value="a"> spațiile dintre particule cresc</label>
+            <label><input type="radio" name="q4" value="b"> particulele dispar</label>
+            <label><input type="radio" name="q4" value="c"> corpul nu își poate schimba volumul</label>
+          </div>
+          <button class="check" type="button" onclick="checkQuestion('q4','a','fb4')">Verifică</button>
+          <div id="fb4" class="feedback" aria-live="polite"></div>
+        </div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="badge">Rețin</span>
+        <h2>Rezumatul lecției</h2>
+        <ul>
+          <li><strong>Solidele</strong> au formă și volum propriu.</li>
+          <li><strong>Lichidele</strong> au volum propriu, dar iau forma vasului.</li>
+          <li><strong>Gazele</strong> nu au formă și volum propriu; ocupă tot spațiul disponibil.</li>
+          <li>Starea de agregare se explică prin așezarea particulelor, mișcarea lor și forțele dintre ele.</li>
+          <li>Prin încălzire, agitația termică se intensifică, iar multe corpuri se dilată.</li>
+          <li><strong>Plasma</strong> este o stare de agregare întâlnită în fenomene precum fulgerele și în stele.</li>
+        </ul>
+        <div class="idea">
+          <strong>Gândire fizică:</strong> nu memorăm doar tabelul; explicăm proprietățile prin modelul particulelor.
+        </div>
+
+        <div class="final-banner">
+          <p><strong>Prof. Dănuț Andronie</strong></p>
+          <p>email: <strong>danutmg@gmail.com</strong></p>
+        </div>
+      </article>
+    </section>
+
   </main>
 
-  <nav class="bottom-nav" aria-label="Navigare între pagini">
-    <div class="wrapper">
-      <button class="btn btn-secondary" id="prevBtn" type="button">◀ Înapoi</button>
-      <div class="page-counter" id="pageCounter">Pagina 1 / 6</div>
-      <button class="btn btn-primary" id="nextBtn" type="button">Mergi mai departe ➜</button>
+  <footer class="footer-nav">
+    <div class="navbar">
+      <button id="prevBtn" class="navbtn back" type="button" onclick="prevPage()">Înapoi</button>
+      <div id="counter" class="counter">1/12</div>
+      <button id="nextBtn" class="navbtn next" type="button" onclick="nextPage()">Mergi mai departe</button>
     </div>
-  </nav>
+  </footer>
+</div>
 
+<script>
+const pages = Array.from(document.querySelectorAll('.page'));
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const counter = document.getElementById('counter');
+const nextHref = './lectia-7.html';
+let current = 0;
 
-  <script>
-    const pages = Array.from(document.querySelectorAll('.lesson-page'));
-    const tabs = Array.from(document.querySelectorAll('.tab-btn'));
-    const pageCounter = document.getElementById('pageCounter');
-    const progressBar = document.getElementById('progressBar');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const nextLesson = document.body.dataset.nextLesson || '';
+function showPage(index){
+  if(index < 0 || index >= pages.length) return;
+  pages[current].classList.remove('active');
+  current = index;
+  pages[current].classList.add('active');
 
-    let currentPage = 0;
+  prevBtn.disabled = current === 0;
+  counter.textContent = `${current + 1}/${pages.length}`;
 
-    function updateLessonPage(index){
-      currentPage = index;
+  if(current === pages.length - 1){
+    nextBtn.textContent = 'Lecția următoare';
+  } else {
+    nextBtn.textContent = 'Mergi mai departe';
+  }
 
-      pages.forEach((page, i) => page.classList.toggle('active', i === index));
-      tabs.forEach((tab, i) => tab.classList.toggle('active', i === index));
+  window.scrollTo({top:0, behavior:'smooth'});
 
-      pageCounter.textContent = `Pagina ${index + 1} / ${pages.length}`;
-      progressBar.style.width = `${((index + 1) / pages.length) * 100}%`;
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([pages[current]]).catch(() => {});
+  }
+}
 
-      prevBtn.disabled = index === 0;
+function nextPage(){
+  if(current === pages.length - 1){
+    window.location.href = nextHref;
+    return;
+  }
+  showPage(current + 1);
+}
 
-      if(index === pages.length - 1){
-        nextBtn.textContent = nextLesson ? 'Lecția următoare ➜' : 'Sfârșit de lecție';
-      } else {
-        nextBtn.textContent = 'Mergi mai departe ➜';
-      }
+function prevPage(){
+  showPage(current - 1);
+}
 
-      window.scrollTo({top:0, behavior:'smooth'});
-    }
+function checkQuestion(name, correct, feedbackId){
+  const checked = document.querySelector(`input[name="${name}"]:checked`);
+  const fb = document.getElementById(feedbackId);
+  fb.className = 'feedback';
+  if(!checked){
+    fb.textContent = 'Alege mai întâi o variantă.';
+    fb.classList.add('warn');
+    return;
+  }
+  if(checked.value === correct){
+    fb.textContent = 'Corect!';
+    fb.classList.add('ok');
+  } else {
+    fb.textContent = 'Mai încearcă. Recitește pagina cu explicația.';
+    fb.classList.add('no');
+  }
+}
 
-    prevBtn.addEventListener('click', () => {
-      if(currentPage > 0){ updateLessonPage(currentPage - 1); }
-    });
+document.addEventListener('keydown', (event) => {
+  if(event.key === 'ArrowRight') nextPage();
+  if(event.key === 'ArrowLeft') prevPage();
+});
 
-    nextBtn.addEventListener('click', () => {
-      if(currentPage < pages.length - 1){
-        updateLessonPage(currentPage + 1);
-      } else if(nextLesson){
-        window.location.href = nextLesson;
-      }
-    });
-
-    tabs.forEach((tab, index) => {
-      tab.addEventListener('click', () => updateLessonPage(index));
-    });
-
-    function verifyQuiz(config){
-      let score = 0;
-      config.items.forEach((item, idx) => {
-        const box = document.getElementById(item.feedbackId);
-        let ok = false;
-        let value = '';
-
-        if(item.type === 'radio'){
-          const checked = document.querySelector(`input[name="${item.name}"]:checked`);
-          value = checked ? checked.value : '';
-          ok = value === item.answer;
-        } else if(item.type === 'select'){
-          const el = document.getElementById(item.id);
-          value = (el.value || '').trim();
-          ok = value === item.answer;
-        } else {
-          const el = document.getElementById(item.id);
-          value = (el.value || '').trim().toLowerCase();
-          ok = item.answers.includes(value);
-        }
-
-        if(ok){
-          score++;
-          box.textContent = 'Corect.';
-          box.className = 'feedback ok';
-        } else {
-          box.textContent = `Răspuns corect: ${item.showAnswer}`;
-          box.className = 'feedback bad';
-        }
-      });
-
-      const scoreBox = document.getElementById(config.scoreBoxId);
-      const scoreText = document.getElementById(config.scoreTextId);
-      const scoreMsg = document.getElementById(config.scoreMsgId);
-
-      scoreBox.style.display = 'block';
-      scoreText.textContent = `Ai obținut ${score} din ${config.items.length}.`;
-
-      if(score === config.items.length){
-        scoreMsg.textContent = 'Foarte bine! Poți merge la lecția următoare.';
-      } else if(score >= Math.ceil(config.items.length * 0.6)){
-        scoreMsg.textContent = 'Bine! Recitește pe scurt ideile-cheie și încearcă din nou.';
-      } else {
-        scoreMsg.textContent = 'Mai exersează puțin. Reia paginile cu noțiuni și exemple.';
-      }
-    }
-
-    updateLessonPage(0);
-  </script>
-
+showPage(0);
+</script>
 </body>
 </html>

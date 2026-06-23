@@ -1,835 +1,695 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Lecția 4 | Extindere în tehnologie: Motorul termic (calitativ) | Fizica Galaction</title>
-  <meta name="description" content="Lecția 4 pentru clasa a VIII-a: Extindere în tehnologie: Motorul termic (calitativ). Lecție interactivă pe pagini, cu buton Mergi mai departe, MathJax și verificare rapidă.">
-  <style>
-
-    *{box-sizing:border-box;}
-    :root{
-      --bg:#0f172a;
-      --surface:#1e293b;
-      --surface-2:#162033;
-      --surface-3:#0b1220;
-      --text:#f8fafc;
-      --muted:#cbd5e1;
-      --accent:#22c55e;
-      --accent-2:#38bdf8;
-      --accent-3:#f59e0b;
-      --accent-4:#a78bfa;
-      --danger:#ef4444;
-      --ok:#22c55e;
-      --border:rgba(255,255,255,.12);
-      --shadow:0 10px 26px rgba(0,0,0,.24);
-      --radius:18px;
-    }
-
-    html{
-      scroll-behavior:smooth;
-      font-size:clamp(16px, 0.35vw + 15px, 19px);
-    }
-
-    body{
-      margin:0;
-      font-family: Arial, sans-serif;
-      background:
-        radial-gradient(circle at top right, rgba(56,189,248,.12), transparent 26%),
-        radial-gradient(circle at top left, rgba(34,197,94,.10), transparent 22%),
-        linear-gradient(180deg, #0f172a 0%, #111827 100%);
-      color:var(--text);
-      line-height:1.65;
-      min-height:100vh;
-    }
-
-    .wrapper{
-      width:min(100%, 980px);
-      margin:0 auto;
-      padding-inline:clamp(12px, 2vw, 24px);
-    }
-
-    .site-header{
-      background:rgba(30, 41, 59, .92);
-      border-bottom:3px solid var(--accent);
-      position:sticky;
-      top:0;
-      z-index:30;
-      backdrop-filter: blur(8px);
-    }
-
-    .site-header .wrapper{
-      padding-block:14px;
-    }
-
-    .site-title{
-      margin:0;
-      font-size:clamp(1.2rem, 2vw, 1.9rem);
-      line-height:1.2;
-    }
-
-    .site-subtitle{
-      margin:.35rem 0 0;
-      color:var(--muted);
-      font-size:.98rem;
-    }
-
-    .hero{
-      padding:24px 0 10px;
-    }
-
-    .hero-card,
-    .lesson-page{
-      background:linear-gradient(180deg, rgba(30,41,59,.98), rgba(15,23,42,.98));
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-    }
-
-    .hero-card{
-      padding:22px;
-    }
-
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      border-radius:999px;
-      padding:6px 12px;
-      background:rgba(56,189,248,.12);
-      color:#dbeafe;
-      font-size:.92rem;
-      font-weight:700;
-      margin-bottom:12px;
-    }
-
-    .hero h1{
-      margin:.1rem 0 .7rem;
-      font-size:clamp(1.5rem, 4vw, 2.4rem);
-      line-height:1.18;
-    }
-
-    .quote{
-      margin:0 0 1rem;
-      color:#fde68a;
-      font-style:italic;
-      border-left:4px solid var(--accent-3);
-      padding-left:12px;
-    }
-
-    .hero-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
-      gap:12px;
-      margin-top:14px;
-    }
-
-    .pill{
-      background:rgba(15,23,42,.8);
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:12px 14px;
-    }
-
-    .pill strong{
-      display:block;
-      color:#e2e8f0;
-      margin-bottom:4px;
-      font-size:.95rem;
-    }
-
-    .top-tools{
-      position:sticky;
-      top:86px;
-      z-index:20;
-      padding-bottom:10px;
-      background:linear-gradient(180deg, rgba(15,23,42,.96), rgba(15,23,42,.78), rgba(15,23,42,0));
-    }
-
-    .progress-wrap{
-      height:10px;
-      background:rgba(255,255,255,.08);
-      border-radius:999px;
-      overflow:hidden;
-      margin:4px 0 12px;
-    }
-
-    .progress-bar{
-      height:100%;
-      width:0%;
-      background:linear-gradient(90deg, var(--accent), var(--accent-2));
-      transition:width .25s ease;
-    }
-
-    .tabs{
-      display:flex;
-      gap:8px;
-      overflow:auto;
-      padding-bottom:4px;
-      scrollbar-width:thin;
-    }
-
-    .tab-btn{
-      white-space:nowrap;
-      border:1px solid var(--border);
-      background:rgba(30,41,59,.95);
-      color:var(--text);
-      border-radius:999px;
-      padding:10px 14px;
-      cursor:pointer;
-      font-weight:700;
-      font-size:.92rem;
-    }
-
-    .tab-btn.active{
-      background:linear-gradient(90deg, rgba(34,197,94,.18), rgba(56,189,248,.18));
-      border-color:rgba(56,189,248,.55);
-    }
-
-    .lesson-shell{
-      padding:4px 0 110px;
-    }
-
-    .lesson-page{
-      display:none;
-      padding:22px;
-      margin-bottom:14px;
-    }
-
-    .lesson-page.active{
-      display:block;
-      animation:fadeIn .25s ease;
-    }
-
-    @keyframes fadeIn{
-      from{opacity:.45; transform:translateY(8px);}
-      to{opacity:1; transform:translateY(0);}
-    }
-
-    .section-title{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin-bottom:14px;
-      color:#dbeafe;
-      font-size:1.05rem;
-    }
-
-    .dot{
-      width:12px;
-      height:12px;
-      border-radius:50%;
-      background:linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow:0 0 0 4px rgba(56,189,248,.14);
-      flex:0 0 auto;
-    }
-
-    h2,h3,h4{
-      line-height:1.25;
-      margin-top:0;
-    }
-
-    p, li{
-      color:#f8fafc;
-    }
-
-    .lead{
-      font-size:1.06rem;
-      color:#e2e8f0;
-    }
-
-    .muted{color:var(--muted);}
-
-    .split,
-    .grid-2,
-    .grid-3{
-      display:grid;
-      gap:14px;
-    }
-
-    .split,
-    .grid-2{
-      grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
-    }
-
-    .grid-3{
-      grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));
-    }
-
-    .mini-card,
-    .formula-card,
-    .note,
-    .quiz-card,
-    .example,
-    .diagram,
-    .table-card{
-      background:rgba(15,23,42,.72);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:16px;
-    }
-
-    .mini-card h4,
-    .formula-card h4,
-    .quiz-card h4,
-    .example h4{
-      margin-bottom:10px;
-    }
-
-    .accent{
-      color:#93c5fd;
-      font-weight:700;
-    }
-
-    .check-list,
-    .plain-list{
-      margin:0;
-      padding-left:20px;
-    }
-
-    .check-list li{margin:.42rem 0;}
-    .check-list li::marker{color:var(--accent);}
-
-    .note{
-      border-left:4px solid var(--accent-3);
-      color:#fef3c7;
-      background:rgba(245,158,11,.09);
-    }
-
-    .ok-box{
-      border-left:4px solid var(--accent);
-      color:#dcfce7;
-      background:rgba(34,197,94,.10);
-      padding:12px 14px;
-      border-radius:14px;
-    }
-
-    .blue-box{
-      border-left:4px solid var(--accent-2);
-      color:#dbeafe;
-      background:rgba(56,189,248,.10);
-      padding:12px 14px;
-      border-radius:14px;
-    }
-
-    .formula{
-      font-size:1.04rem;
-      overflow:auto hidden;
-    }
-
-    .formula-card{
-      background:linear-gradient(180deg, rgba(56,189,248,.09), rgba(15,23,42,.76));
-    }
-
-    .diagram-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .chip{
-      background:rgba(30,41,59,.95);
-      border:1px solid var(--border);
-      border-radius:999px;
-      padding:8px 12px;
-      font-weight:700;
-      font-size:.94rem;
-    }
-
-    .arrow{
-      font-size:1.4rem;
-      color:#93c5fd;
-      font-weight:700;
-    }
-
-    .table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:.96rem;
-    }
-
-    .table th,
-    .table td{
-      border:1px solid rgba(255,255,255,.10);
-      padding:10px;
-      vertical-align:top;
-      text-align:left;
-    }
-
-    .table th{
-      background:rgba(56,189,248,.11);
-      color:#e0f2fe;
-    }
-
-    .quiz-card{
-      margin-bottom:14px;
-    }
-
-    .quiz-card p{
-      margin-top:0;
-    }
-
-    .choice-grid{
-      display:grid;
-      gap:10px;
-      margin-top:10px;
-    }
-
-    .choice-grid label{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      background:rgba(30,41,59,.72);
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:12px 14px;
-      cursor:pointer;
-    }
-
-    .choice-grid input,
-    .choice-grid select{
-      margin-top:2px;
-      accent-color:#22c55e;
-    }
-
-    .inline-input,
-    input[type="text"],
-    input[type="number"],
-    select{
-      width:100%;
-      padding:12px 14px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.16);
-      background:#0b1220;
-      color:#f8fafc;
-      font-size:1rem;
-    }
-
-    .btn{
-      border:none;
-      border-radius:14px;
-      padding:13px 18px;
-      font-size:1rem;
-      font-weight:800;
-      cursor:pointer;
-      transition:transform .12s ease, opacity .12s ease;
-    }
-
-    .btn:hover{transform:translateY(-1px);}
-    .btn:disabled{opacity:.55; cursor:not-allowed; transform:none;}
-
-    .btn-primary{
-      background:linear-gradient(90deg, var(--accent), #16a34a);
-      color:#04130a;
-    }
-
-    .btn-secondary{
-      background:rgba(148,163,184,.16);
-      color:var(--text);
-      border:1px solid var(--border);
-    }
-
-    .btn-accent{
-      background:linear-gradient(90deg, var(--accent-2), #2563eb);
-      color:white;
-    }
-
-    .feedback{
-      margin-top:10px;
-      font-weight:700;
-      min-height:24px;
-    }
-
-    .feedback.ok{color:#86efac;}
-    .feedback.bad{color:#fca5a5;}
-
-    .score-box{
-      display:none;
-      margin-top:14px;
-      background:rgba(34,197,94,.10);
-      border:1px solid rgba(34,197,94,.28);
-      border-radius:14px;
-      padding:14px;
-    }
-
-    .bottom-nav{
-      position:fixed;
-      left:0;
-      right:0;
-      bottom:0;
-      z-index:40;
-      background:rgba(11,18,32,.96);
-      border-top:1px solid rgba(255,255,255,.10);
-      backdrop-filter: blur(12px);
-      box-shadow:0 -10px 28px rgba(0,0,0,.28);
-    }
-
-    .bottom-nav .wrapper{
-      display:grid;
-      grid-template-columns:auto 1fr auto;
-      gap:12px;
-      align-items:center;
-      padding-block:10px calc(10px + env(safe-area-inset-bottom));
-    }
-
-    .page-counter{
-      text-align:center;
-      color:#cbd5e1;
-      font-weight:700;
-      font-size:.96rem;
-    }
-
-    .footer-links{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
-
-    .footer-links a{
-      color:#93c5fd;
-      font-weight:700;
-    }
-
-    @media (max-width: 720px){
-      .bottom-nav .wrapper{
-        grid-template-columns:1fr 1fr;
-      }
-      .page-counter{
-        grid-column:1 / -1;
-        order:-1;
-      }
-      .btn{
-        width:100%;
-      }
-      .lesson-page{padding:18px;}
-      .hero-card{padding:18px;}
-    }
-
-  </style>
-  <script>
-    window.MathJax = {
-      tex: {
-        inlineMath: [['\\(', '\\)'], ['$', '$']],
-        displayMath: [['\\[', '\\]']]
-      },
-      options: {
-        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-      }
-    };
-  </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Lecția 4 | Motorul termic (calitativ)</title>
+<meta name="description" content="Fizica Galaction - lecție interactivă clasa a VIII-a despre motorul termic, ardere internă/externă și randament.">
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(','\\)'], ['$','$']],
+    displayMath: [['\\[','\\]']]
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+:root{
+  --bg:#08111f;
+  --card:#12263f;
+  --card2:#0f2137;
+  --text:#f4f9ff;
+  --muted:#cbd5e1;
+  --cyan:#67e8f9;
+  --blue:#38bdf8;
+  --green:#22c55e;
+  --green2:#16a34a;
+  --back:#e2e8f0;
+  --dark:#0f172a;
+  --border:rgba(148,163,184,.28);
+  --warn:#fde68a;
+  --bad:#fecaca;
+  --good:#bbf7d0;
+}
+*{box-sizing:border-box}
+html{height:100%;scroll-behavior:smooth}
+body{
+  margin:0;
+  min-height:100dvh;
+  background:
+    radial-gradient(circle at top left,rgba(56,189,248,.18),transparent 36%),
+    radial-gradient(circle at bottom right,rgba(249,115,22,.16),transparent 30%),
+    var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  font-size:clamp(18px,2.45vw,21px);
+  line-height:1.55;
+}
+.app{
+  width:min(100%,980px);
+  margin:auto;
+  min-height:100dvh;
+  padding:14px 12px calc(104px + env(safe-area-inset-bottom));
+  display:flex;
+  flex-direction:column;
+}
+.banner{
+  border:1px solid rgba(103,232,249,.36);
+  border-radius:22px;
+  padding:16px;
+  margin:8px 0 14px;
+  text-align:center;
+  background:linear-gradient(135deg,rgba(14,116,144,.94),rgba(15,23,42,.96));
+  box-shadow:0 16px 40px rgba(0,0,0,.35);
+}
+.school{font-weight:900;text-transform:uppercase;letter-spacing:.03em}
+.teacher{margin-top:4px;color:#dbeafe;font-weight:750}
+.motto{
+  margin:12px auto 0;
+  padding:10px 12px;
+  max-width:760px;
+  border-left:4px solid var(--cyan);
+  border-radius:14px;
+  background:rgba(15,23,42,.48);
+  color:#fef9c3;
+  font-style:italic;
+}
+.lesson{display:none;flex:1}
+.lesson.active{display:block}
+.card{
+  background:linear-gradient(180deg,rgba(18,38,63,.96),rgba(15,33,55,.98));
+  border:1px solid var(--border);
+  border-radius:24px;
+  padding:clamp(18px,4vw,30px);
+  box-shadow:0 18px 48px rgba(0,0,0,.32);
+  overflow:hidden;
+}
+h1,h2,h3{line-height:1.15;margin:0 0 14px}
+h1{font-size:clamp(2rem,6.5vw,3.7rem);color:var(--cyan);text-align:center}
+h2{font-size:clamp(1.55rem,5vw,2.5rem);color:var(--cyan)}
+h3{font-size:clamp(1.22rem,3.4vw,1.55rem);color:#bfdbfe}
+p{margin:12px 0}
+ul,ol{padding-left:1.25rem}
+li{margin:8px 0}
+strong{color:#fff}
+.kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  padding:6px 10px;
+  border-radius:999px;
+  background:rgba(103,232,249,.12);
+  color:var(--cyan);
+  border:1px solid rgba(103,232,249,.28);
+  font-weight:800;
+  margin-bottom:12px;
+}
+.key{
+  font-size:clamp(1.08rem,3vw,1.35rem);
+  background:rgba(34,197,94,.12);
+  border:1px solid rgba(34,197,94,.35);
+  border-radius:18px;
+  padding:14px;
+  margin-top:14px;
+}
+.note{
+  background:rgba(59,130,246,.12);
+  border:1px solid rgba(96,165,250,.32);
+  border-radius:18px;
+  padding:14px;
+  color:#dbeafe;
+}
+.warn{
+  background:rgba(245,158,11,.13);
+  border:1px solid rgba(253,230,138,.38);
+  border-radius:18px;
+  padding:14px;
+  color:#fef9c3;
+}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:14px;
+  margin:14px 0;
+}
+.mini{
+  background:rgba(15,23,42,.5);
+  border:1px solid rgba(148,163,184,.22);
+  border-radius:18px;
+  padding:14px;
+}
+.badge{
+  display:inline-block;
+  padding:4px 9px;
+  border-radius:999px;
+  background:rgba(103,232,249,.14);
+  color:#a5f3fc;
+  border:1px solid rgba(103,232,249,.26);
+  font-weight:800;
+  font-size:.92em;
+}
+.formula{
+  margin:16px 0;
+  padding:12px;
+  border-radius:18px;
+  background:#071827;
+  border:1px solid rgba(103,232,249,.22);
+  overflow-x:auto;
+}
+.mjx-container{
+  font-size:105% !important;
+  max-width:100%;
+  overflow-x:auto;
+  overflow-y:hidden;
+}
+.svgbox{
+  margin:16px auto;
+  max-width:760px;
+  padding:12px;
+  border-radius:20px;
+  background:rgba(15,23,42,.45);
+  border:1px solid rgba(148,163,184,.22);
+}
+.svgbox > svg{width:100%;height:auto;display:block}
+.caption{
+  color:var(--muted);
+  font-size:.94rem;
+  text-align:center;
+  margin-top:8px;
+}
+.steps{
+  counter-reset:step;
+  list-style:none;
+  padding:0;
+}
+.steps li{
+  counter-increment:step;
+  display:flex;
+  gap:10px;
+  align-items:flex-start;
+  background:rgba(15,23,42,.42);
+  border:1px solid rgba(148,163,184,.2);
+  border-radius:16px;
+  padding:12px;
+}
+.steps li::before{
+  content:counter(step);
+  display:inline-grid;
+  place-items:center;
+  min-width:32px;
+  height:32px;
+  border-radius:50%;
+  background:var(--cyan);
+  color:#082f49;
+  font-weight:900;
+}
+.quiz{
+  display:grid;
+  gap:10px;
+  margin-top:14px;
+}
+.option{
+  display:grid;
+  grid-template-columns:28px 1fr;
+  align-items:center;
+  gap:10px;
+  padding:12px;
+  border-radius:16px;
+  background:rgba(15,23,42,.55);
+  border:1px solid rgba(148,163,184,.24);
+  cursor:pointer;
+}
+.option:hover,.option:focus-within{border-color:rgba(103,232,249,.68)}
+.option input{width:22px;height:22px;accent-color:var(--green)}
+.check{
+  border:0;
+  border-radius:16px;
+  padding:14px 18px;
+  margin-top:14px;
+  width:100%;
+  background:#22d3ee;
+  color:#082f49;
+  font-weight:900;
+  font-size:1rem;
+  cursor:pointer;
+}
+.feedback{
+  display:none;
+  margin-top:12px;
+  padding:12px;
+  border-radius:16px;
+  font-weight:850;
+}
+.feedback.ok{display:block;background:rgba(187,247,208,.16);border:1px solid rgba(187,247,208,.55);color:var(--good)}
+.feedback.no{display:block;background:rgba(254,202,202,.12);border:1px solid rgba(254,202,202,.5);color:var(--bad)}
+.feedback.wait{display:block;background:rgba(253,230,138,.12);border:1px solid rgba(253,230,138,.5);color:var(--warn)}
+.final-banner{
+  margin-top:18px;
+  border-radius:22px;
+  padding:18px;
+  text-align:center;
+  background:linear-gradient(135deg,rgba(34,197,94,.16),rgba(14,116,144,.25));
+  border:1px solid rgba(103,232,249,.34);
+}
+.navbar{
+  position:fixed;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index:20;
+  padding:10px 10px calc(10px + env(safe-area-inset-bottom));
+  background:rgba(8,17,31,.92);
+  backdrop-filter:blur(14px);
+  border-top:1px solid rgba(148,163,184,.22);
+}
+.nav-inner{
+  width:min(100%,980px);
+  margin:auto;
+  display:grid;
+  grid-template-columns:1fr auto 1fr;
+  align-items:center;
+  gap:10px;
+}
+.navbtn{
+  min-height:52px;
+  border:0;
+  border-radius:16px;
+  padding:12px 14px;
+  font-weight:900;
+  font-size:clamp(.95rem,2.5vw,1.05rem);
+  cursor:pointer;
+}
+.backbtn{background:var(--back);color:var(--dark)}
+.nextbtn{background:var(--green);color:#052e16}
+.nextbtn:hover{background:var(--green2);color:white}
+.backbtn:disabled{opacity:.42;cursor:not-allowed}
+.page-indicator{
+  min-width:74px;
+  text-align:center;
+  color:#f8fafc;
+  font-weight:900;
+  padding:10px 8px;
+  border-radius:14px;
+  background:rgba(15,23,42,.86);
+  border:1px solid rgba(148,163,184,.26);
+}
+@media (max-width:720px){
+  .grid{grid-template-columns:1fr}
+  .app{padding-left:10px;padding-right:10px}
+  .card{border-radius:20px}
+}
+@media (max-width:430px){
+  .nav-inner{gap:6px}
+  .navbtn{padding:10px 9px}
+  .page-indicator{min-width:64px}
+}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+}
+</style>
 </head>
-<body data-next-lesson="lectia-5.html">
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction – Clasa a VIII-a</h1>
-      <p class="site-subtitle">Unitatea 1: Fenomene termice</p>
-    </div>
+<body>
+<div class="app">
+  <header class="banner" id="topBanner">
+    <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+    <div class="teacher">Prof. Dănuț Andronie • Fizica Galaction</div>
+    <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
   </header>
 
-  <main class="wrapper">
-    <section class="hero">
-      <div class="hero-card">
-        <div class="eyebrow">Lecția 4</div>
-        <h1>Extindere în tehnologie: Motorul termic (calitativ)</h1>
-        <p class="quote">„Fizica nu este dominată de formule, ci de logică.”</p>
-        <p class="lead">Cum transformă motorul căldura în lucru mecanic</p>
+  <main>
+    <section class="lesson active">
+      <div class="card">
+        <div class="kicker">🔥 Clasa a VIII-a • Unitatea 1 • Lecția 4</div>
+        <h1>Motorul termic<br><span style="font-size:.62em;color:#bfdbfe">(calitativ)</span></h1>
+        <p class="key"><strong>Ideea-cheie:</strong> un motor termic folosește energia obținută prin arderea unui combustibil și transformă o parte din ea în <strong>lucru mecanic util</strong>.</p>
+        <div class="svgbox" aria-label="Schemă simplă a motorului termic">
+          <svg viewBox="0 0 900 300" role="img">
+            <defs>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#67e8f9"></path>
+              </marker>
+            </defs>
+            <rect x="40" y="72" width="170" height="110" rx="24" fill="#7c2d12" stroke="#fdba74" stroke-width="4"/>
+            <text x="125" y="118" text-anchor="middle" fill="#fff7ed" font-size="30" font-weight="800">Combustibil</text>
+            <text x="125" y="154" text-anchor="middle" fill="#fed7aa" font-size="22">ardere</text>
 
-        <div class="hero-grid">
-          <div class="pill">
-            <strong>Format</strong>
-            pagini scurte, ușor de parcurs
-          </div>
-          <div class="pill">
-            <strong>Conține</strong>
-            noțiuni, exemple, verificare rapidă
-          </div>
-          <div class="pill">
-            <strong>Compatibil</strong>
-            telefon, tabletă, PC
-          </div>
+            <path d="M230 128 H350" stroke="#67e8f9" stroke-width="8" marker-end="url(#arrow)" fill="none"/>
+            <text x="290" y="105" text-anchor="middle" fill="#a5f3fc" font-size="24">căldură</text>
+
+            <rect x="370" y="46" width="180" height="165" rx="28" fill="#0e7490" stroke="#67e8f9" stroke-width="4"/>
+            <circle cx="460" cy="128" r="47" fill="#12263f" stroke="#e0f2fe" stroke-width="5"/>
+            <rect x="455" y="69" width="10" height="118" rx="5" fill="#e0f2fe"/>
+            <text x="460" y="250" text-anchor="middle" fill="#e0f2fe" font-size="30" font-weight="800">Motor</text>
+
+            <path d="M570 128 H700" stroke="#22c55e" stroke-width="8" marker-end="url(#arrow)" fill="none"/>
+            <text x="635" y="105" text-anchor="middle" fill="#bbf7d0" font-size="24">mișcare utilă</text>
+
+            <rect x="725" y="72" width="135" height="110" rx="24" fill="#14532d" stroke="#86efac" stroke-width="4"/>
+            <text x="792" y="120" text-anchor="middle" fill="#dcfce7" font-size="30" font-weight="800">Lucru</text>
+            <text x="792" y="154" text-anchor="middle" fill="#bbf7d0" font-size="22">mecanic</text>
+          </svg>
+          <div class="caption">Schema de bază: combustibilul arde, se obține căldură, iar motorul produce mișcare.</div>
         </div>
       </div>
     </section>
 
-    <section class="top-tools">
-      <div class="progress-wrap" aria-hidden="true">
-        <div class="progress-bar" id="progressBar"></div>
-      </div>
-      <div class="tabs" role="tablist" aria-label="Pagini lecție">
-        <button class="tab-btn active" type="button">1. Observ</button>
-<button class="tab-btn" type="button">2. Rețin</button>
-<button class="tab-btn" type="button">3. Mai departe</button>
-<button class="tab-btn" type="button">4. Aplic</button>
-<button class="tab-btn" type="button">5. Verificare</button>
-<button class="tab-btn" type="button">6. Rețin</button>
+    <section class="lesson">
+      <div class="card">
+        <div class="kicker">👀 Observ</div>
+        <h2>Unde întâlnim motoare termice?</h2>
+        <p>Ai întâlnit motoare termice în multe situații:</p>
+        <div class="grid">
+          <div class="mini"><span class="badge">locomotivă cu abur</span><p>Combustibilul arde în exteriorul cilindrului. Aburul pune în mișcare pistonul.</p></div>
+          <div class="mini"><span class="badge">automobil</span><p>Benzina sau motorina arde în interiorul motorului și împinge pistonul.</p></div>
+          <div class="mini"><span class="badge">avion cu reacție</span><p>Gazele fierbinți sunt evacuate rapid și produc mișcarea avionului.</p></div>
+          <div class="mini"><span class="badge">centrală electrică</span><p>Aburul sau gazele fierbinți pun în mișcare turbine.</p></div>
+        </div>
+        <p class="note">Toate au aceeași idee fizică: <strong>energia termică</strong> ajută la obținerea unei <strong>mișcări utile</strong>.</p>
       </div>
     </section>
 
-    <section class="lesson-shell">
-      <section class="lesson-page active" data-page="1">
-          <div class="section-title"><span class="dot"></span><strong>Observ</strong></div>
-          
-<p class="lead">Un <strong>motor termic</strong> transformă o parte din energia primită sub formă de căldură în <strong>lucru mecanic</strong>. Exemple: motorul automobilului, motorul locomotivei cu abur, turbina cu gaz.</p>
-<div class="diagram">
-  <h4>Schemă simplă</h4>
-  <div class="diagram-row">
-    <span class="chip">sursă caldă</span>
-    <span class="arrow">→</span>
-    <span class="chip">motor termic</span>
-    <span class="arrow">→</span>
-    <span class="chip">lucru mecanic util</span>
-    <span class="arrow">+</span>
-    <span class="chip">căldură cedată</span>
-  </div>
-</div>
-<div class="note"><strong>Important:</strong> un motor termic nu poate transforma toată căldura primită în lucru mecanic.</div>
+    <section class="lesson">
+      <div class="card">
+        <div class="kicker">🧠 Rețin</div>
+        <h2>Ce este un motor termic?</h2>
+        <p>Un <strong>motor termic</strong> este un sistem care funcționează datorită încălzirii unui gaz sau a unui agent termic.</p>
+        <p>Mai simplu spus:</p>
+        <ol class="steps">
+          <li><div>se arde un combustibil;</div></li>
+          <li><div>se produce căldură;</div></li>
+          <li><div>un gaz se încălzește, se dilată și apasă;</div></li>
+          <li><div>apăsarea produce mișcare, adică lucru mecanic.</div></li>
+        </ol>
+        <div class="warn"><strong>Important:</strong> motorul nu transformă toată căldura primită în lucru mecanic. O parte se pierde către mediul exterior.</div>
+      </div>
+    </section>
 
-        </section>
-<section class="lesson-page" data-page="2">
-          <div class="section-title"><span class="dot"></span><strong>Rețin</strong></div>
-          
-<div class="split">
-  <div class="mini-card">
-    <h4>Părțile ideii fizice</h4>
-    <ul class="check-list">
-      <li>o <strong>sursă caldă</strong> furnizează energie;</li>
-      <li>un <strong>agent termic</strong> primește, cedează și transportă energie;</li>
-      <li>o parte din energie devine <strong>lucru mecanic</strong>;</li>
-      <li>o altă parte se pierde spre mediul exterior.</li>
-    </ul>
-  </div>
-  <div class="mini-card">
-    <h4>Exemple de motoare termice</h4>
-    <ul class="check-list">
-      <li>motorul cu ardere internă;</li>
-      <li>mașina cu abur;</li>
-      <li>turbina cu abur sau cu gaz.</li>
-    </ul>
-  </div>
-</div>
+    <section class="lesson">
+      <div class="card">
+        <div class="kicker">🧪 Experimentez</div>
+        <h2>Model simplu: seringa încălzită</h2>
+        <p>Imaginează-ți o seringă închisă, cu puțin aer în interior. Dacă seringa este pusă în apă caldă, aerul din ea se încălzește.</p>
+        <div class="svgbox" aria-label="Schemă cu aer încălzit care împinge pistonul">
+          <svg viewBox="0 0 900 350" role="img">
+            <defs>
+              <marker id="arr2" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#22c55e"></path>
+              </marker>
+            </defs>
+            <rect x="110" y="110" width="500" height="110" rx="18" fill="#0f2137" stroke="#cbd5e1" stroke-width="5"/>
+            <rect x="520" y="104" width="42" height="122" rx="8" fill="#e2e8f0"/>
+            <line x1="562" y1="165" x2="740" y2="165" stroke="#e2e8f0" stroke-width="16" stroke-linecap="round"/>
+            <path d="M575 165 H680" stroke="#22c55e" stroke-width="9" marker-end="url(#arr2)"/>
+            <g fill="#f97316" opacity=".9">
+              <circle cx="190" cy="152" r="9"/><circle cx="240" cy="185" r="8"/><circle cx="305" cy="145" r="10"/><circle cx="365" cy="186" r="8"/><circle cx="430" cy="155" r="9"/>
+            </g>
+            <path d="M140 280 C190 240,220 310,275 265 S370 285,435 250 S540 275,590 245" fill="none" stroke="#fb923c" stroke-width="8"/>
+            <text x="360" y="85" text-anchor="middle" fill="#a5f3fc" font-size="28" font-weight="800">Aer încălzit → presiune mai mare</text>
+            <text x="690" y="130" text-anchor="middle" fill="#bbf7d0" font-size="26" font-weight="800">piston împins</text>
+            <text x="360" y="320" text-anchor="middle" fill="#fed7aa" font-size="25">apă caldă / sursă de căldură</text>
+          </svg>
+          <div class="caption">Când gazul se încălzește, împinge pistonul. Într-un motor real, mișcarea pistonului este folosită pentru a roti un arbore.</div>
+        </div>
+        <p class="note">Aceasta este ideea de bază a multor motoare: <strong>gazele fierbinți apasă pe piston</strong>.</p>
+      </div>
+    </section>
 
-        </section>
-<section class="lesson-page" data-page="3">
-          <div class="section-title"><span class="dot"></span><strong>Mai departe</strong></div>
-          
-<div class="formula-card">
-  <h4>Randamentul, exprimat cu fracție</h4>
-  <p class="formula">\[
-    \eta = \frac{L_{u}}{Q_{primit}} \cdot 100\%
-  \]</p>
-  <p>unde \(L_u\) este lucrul mecanic util, iar \(Q_{primit}\) este căldura primită de motor.</p>
-</div>
-<div class="example">
-  <h4>Exemplu numeric</h4>
-  <p>Dacă un motor primește \(Q_{primit}=5000\,\text{J}\) și produce \(L_u=1500\,\text{J}\), atunci:</p>
-  <p class="formula">\[
-    \eta = \frac{1500}{5000}\cdot 100\% = 30\%
-  \]</p>
-  <p>Deci restul energiei nu se transformă în lucru mecanic util.</p>
-</div>
+    <section class="lesson">
+      <div class="card">
+        <div class="kicker">🔁 Rețin</div>
+        <h2>Tipuri de motoare termice</h2>
+        <div class="grid">
+          <div class="mini">
+            <h3>1. Ardere externă</h3>
+            <p>Combustibilul arde <strong>în afara</strong> locului unde se produce mișcarea principală.</p>
+            <p><strong>Exemple:</strong> motorul cu abur, motorul Stirling.</p>
+          </div>
+          <div class="mini">
+            <h3>2. Ardere internă</h3>
+            <p>Combustibilul arde <strong>în interiorul</strong> motorului, în spațiul unde gazele apasă și produc mișcare.</p>
+            <p><strong>Exemple:</strong> motor Otto, motor Diesel, motor cu reacție.</p>
+          </div>
+        </div>
+        <p class="warn">Nu este nevoie să memorezi multe tipuri. Reține diferența principală: <strong>unde are loc arderea combustibilului</strong>.</p>
+      </div>
+    </section>
 
-        </section>
-<section class="lesson-page" data-page="4">
-          <div class="section-title"><span class="dot"></span><strong>Aplic</strong></div>
-          
-<div class="split">
-  <div class="mini-card">
-    <h4>Unde apare motorul termic?</h4>
-    <ul class="check-list">
-      <li>autoturisme și motociclete;</li>
-      <li>unele nave și locomotive;</li>
-      <li>centrale electrice cu turbine.</li>
-    </ul>
-  </div>
-  <div class="mini-card">
-    <h4>De ce se încălzește motorul?</h4>
-    <p>Fiindcă o parte din energia primită nu devine lucru mecanic, ci se transformă în căldură cedată pieselor și mediului.</p>
-  </div>
-</div>
-<div class="blue-box"><strong>Legătură cu viața reală:</strong> sistemul de răcire al motorului este necesar tocmai pentru evacuarea unei părți din căldura nedorită.</div>
+    <section class="lesson">
+      <div class="card">
+        <div class="kicker">⚙️ Rețin</div>
+        <h2>Bilanț energetic simplificat</h2>
+        <p>Motorul primește căldură prin arderea combustibilului. O parte devine lucru mecanic util, iar restul este cedată sistemului de răcire și mediului.</p>
+        <div class="formula">
+          \[
+            L = Q_1 - |Q_2|
+          \]
+        </div>
+        <ul>
+          <li>\(Q_1\) = căldura primită de motor;</li>
+          <li>\(L\) = lucrul mecanic obținut;</li>
+          <li>\(|Q_2|\) = căldura cedată către exterior.</li>
+        </ul>
+        <div class="svgbox" aria-label="Bilanț energetic motor termic">
+          <svg viewBox="0 0 900 300" role="img">
+            <defs>
+              <marker id="arr3" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#67e8f9"></path>
+              </marker>
+              <marker id="arr4" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#fb7185"></path>
+              </marker>
+              <marker id="arr5" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+                <path d="M0,0 L0,6 L9,3 z" fill="#22c55e"></path>
+              </marker>
+            </defs>
+            <rect x="350" y="80" width="200" height="140" rx="26" fill="#0e7490" stroke="#67e8f9" stroke-width="4"/>
+            <text x="450" y="143" text-anchor="middle" fill="#ecfeff" font-size="34" font-weight="900">MOTOR</text>
+            <text x="450" y="176" text-anchor="middle" fill="#a5f3fc" font-size="24">termic</text>
 
-        </section>
-<section class="lesson-page" data-page="5">
-          <div class="section-title"><span class="dot"></span><strong>Verificare</strong></div>
-          
-<div class="quiz-card">
-  <h4>1. Motorul termic transformă o parte din căldură în:</h4>
-  <div class="choice-grid">
-    <label><input type="radio" name="q1" value="a"> lucru mecanic</label>
-    <label><input type="radio" name="q1" value="b"> masă</label>
-    <label><input type="radio" name="q1" value="c"> lumină numai</label>
-  </div>
-  <div id="fb1" class="feedback"></div>
-</div>
+            <path d="M90 150 H330" stroke="#67e8f9" stroke-width="9" marker-end="url(#arr3)"/>
+            <text x="210" y="115" text-anchor="middle" fill="#a5f3fc" font-size="28" font-weight="800">Q₁</text>
+            <text x="210" y="190" text-anchor="middle" fill="#dbeafe" font-size="22">căldură primită</text>
 
-<div class="quiz-card">
-  <h4>2. Randamentul unui motor termic este:</h4>
-  <div class="choice-grid">
-    <label><input type="radio" name="q2" value="a"> întotdeauna 100%</label>
-    <label><input type="radio" name="q2" value="b"> mai mic de 100%</label>
-    <label><input type="radio" name="q2" value="c"> egal cu 0%</label>
-  </div>
-  <div id="fb2" class="feedback"></div>
-</div>
+            <path d="M570 130 H810" stroke="#22c55e" stroke-width="9" marker-end="url(#arr5)"/>
+            <text x="690" y="95" text-anchor="middle" fill="#bbf7d0" font-size="28" font-weight="800">L</text>
+            <text x="690" y="170" text-anchor="middle" fill="#dcfce7" font-size="22">lucru mecanic util</text>
 
-<div class="quiz-card">
-  <h4>3. Completează: căldura furnizată motorului vine de la sursa ...</h4>
-  <input id="q3" type="text" placeholder="Scrie un cuvânt">
-  <div id="fb3" class="feedback"></div>
-</div>
+            <path d="M500 222 C570 270,650 270,730 238" stroke="#fb7185" stroke-width="8" fill="none" marker-end="url(#arr4)"/>
+            <text x="625" y="285" text-anchor="middle" fill="#fecaca" font-size="24" font-weight="800">|Q₂| căldură cedată</text>
+          </svg>
+        </div>
+      </div>
+    </section>
 
-<div class="quiz-card">
-  <h4>4. Dacă \(\eta = \frac{L_u}{Q_{primit}}\cdot 100\%\), randamentul este raportul dintre:</h4>
-  <select id="q4">
-    <option value="">Alege...</option>
-    <option value="util-si-primit">lucrul util și căldura primită</option>
-    <option value="masa-si-volum">masă și volum</option>
-    <option value="temperaturi">două temperaturi</option>
-  </select>
-  <div id="fb4" class="feedback"></div>
-</div>
+    <section class="lesson">
+      <div class="card">
+        <div class="kicker">📐 Exemplu</div>
+        <h2>Randamentul motorului</h2>
+        <p><strong>Randamentul</strong> arată cât de mare este partea utilă din energia primită.</p>
+        <div class="formula">
+          \[
+            \eta=\frac{L}{Q_1}
+          \]
+        </div>
+        <p>Dacă vrem randamentul în procente, înmulțim cu \(100\%\):</p>
+        <div class="formula">
+          \[
+            \eta=\frac{L}{Q_1}\cdot 100\%
+          \]
+        </div>
+        <div class="note">
+          <strong>Interpretare:</strong> un randament de \(25\%\) înseamnă că doar un sfert din căldura primită devine lucru mecanic util.
+        </div>
+      </div>
+    </section>
 
-<button class="btn btn-accent" onclick='verifyQuiz({
-  scoreBoxId:"rezultatBox", scoreTextId:"rezultatText", scoreMsgId:"rezultatMesaj",
-  items:[
-    {type:"radio", name:"q1", answer:"a", feedbackId:"fb1", showAnswer:"lucru mecanic"},
-    {type:"radio", name:"q2", answer:"b", feedbackId:"fb2", showAnswer:"mai mic de 100%"},
-    {type:"text", id:"q3", answers:["caldă","calda"], feedbackId:"fb3", showAnswer:"caldă"},
-    {type:"select", id:"q4", answer:"util-si-primit", feedbackId:"fb4", showAnswer:"lucrul util și căldura primită"}
-  ]
-})'>Verifică răspunsurile</button>
+    <section class="lesson">
+      <div class="card">
+        <div class="kicker">🔢 Exemplu numeric</div>
+        <h2>Calcul simplu de randament</h2>
+        <p>Un motor primește prin arderea combustibilului:</p>
+        <p>\(Q_1=4000\,J\)</p>
+        <p>și produce lucru mecanic util:</p>
+        <p>\(L=1000\,J\)</p>
+        <p>Randamentul este:</p>
+        <div class="formula">
+          \[
+            \eta=\frac{1000\,J}{4000\,J}\cdot 100\%
+            =\frac{1}{4}\cdot 100\%
+            =25\%
+          \]
+        </div>
+        <p class="key">Deci motorul a transformat în lucru mecanic util doar \(25\%\) din energia primită sub formă de căldură.</p>
+      </div>
+    </section>
 
-<div id="rezultatBox" class="score-box">
-  <div id="rezultatText"></div>
-  <div id="rezultatMesaj" class="muted"></div>
-</div>
+    <section class="lesson">
+      <div class="card">
+        <div class="kicker">💡 Aplic</div>
+        <h2>De ce randamentul nu este 100%?</h2>
+        <p>Într-un motor real, o parte din energie se pierde inevitabil:</p>
+        <ul>
+          <li>gazele fierbinți ies din motor și duc energie cu ele;</li>
+          <li>piesele se freacă și se încălzesc;</li>
+          <li>motorul are nevoie de răcire;</li>
+          <li>sunetul și vibrațiile consumă o parte din energie.</li>
+        </ul>
+        <p class="warn"><strong>Concluzie:</strong> motorul termic este util, dar nu este perfect. De aceea se caută motoare mai eficiente și mai puțin poluante.</p>
+      </div>
+    </section>
 
-        </section>
-<section class="lesson-page" data-page="6">
-          <div class="section-title"><span class="dot"></span><strong>Rețin</strong></div>
-          
-<div class="mini-card">
-  <h4>Ideile-cheie ale lecției</h4>
-  <ul class="check-list">
-    <li>motorul termic folosește căldura pentru a produce lucru mecanic;</li>
-    <li>există sursă caldă, agent termic și căldură cedată mediului;</li>
-    <li>randamentul unui motor termic este întotdeauna sub 100%.</li>
-  </ul>
-</div>
+    <section class="lesson">
+      <div class="card">
+        <div class="kicker">✅ Verificare rapidă</div>
+        <h2>Alege varianta corectă</h2>
+        <p><strong>1. Motorul termic transformă o parte din energia termică în:</strong></p>
+        <div class="quiz" data-answer="b">
+          <label class="option"><input type="radio" name="q1" value="a"><span>masă</span></label>
+          <label class="option"><input type="radio" name="q1" value="b"><span>lucru mecanic</span></label>
+          <label class="option"><input type="radio" name="q1" value="c"><span>volum constant</span></label>
+        </div>
+        <button class="check" type="button" onclick="checkQuiz('q1','b','fb1')">Verifică răspunsul</button>
+        <div class="feedback" id="fb1"></div>
 
-        </section>
+        <p style="margin-top:24px"><strong>2. La motorul cu ardere internă, combustibilul arde:</strong></p>
+        <div class="quiz" data-answer="c">
+          <label class="option"><input type="radio" name="q2" value="a"><span>doar în coșul de fum</span></label>
+          <label class="option"><input type="radio" name="q2" value="b"><span>în afara motorului</span></label>
+          <label class="option"><input type="radio" name="q2" value="c"><span>în interiorul motorului</span></label>
+        </div>
+        <button class="check" type="button" onclick="checkQuiz('q2','c','fb2')">Verifică răspunsul</button>
+        <div class="feedback" id="fb2"></div>
+      </div>
+    </section>
+
+    <section class="lesson">
+      <div class="card">
+        <div class="kicker">✅ Verificare rapidă</div>
+        <h2>Randament și energie pierdută</h2>
+        <p><strong>3. Randamentul unui motor termic real este, de obicei:</strong></p>
+        <div class="quiz" data-answer="a">
+          <label class="option"><input type="radio" name="q3" value="a"><span>mai mic de \(100\%\)</span></label>
+          <label class="option"><input type="radio" name="q3" value="b"><span>exact \(100\%\)</span></label>
+          <label class="option"><input type="radio" name="q3" value="c"><span>mai mare de \(100\%\)</span></label>
+        </div>
+        <button class="check" type="button" onclick="checkQuiz('q3','a','fb3')">Verifică răspunsul</button>
+        <div class="feedback" id="fb3"></div>
+
+        <p style="margin-top:24px"><strong>4. Formula randamentului în procente este:</strong></p>
+        <div class="quiz" data-answer="b">
+          <label class="option"><input type="radio" name="q4" value="a"><span>\(\eta=\frac{Q_1}{L}\cdot100\%\)</span></label>
+          <label class="option"><input type="radio" name="q4" value="b"><span>\(\eta=\frac{L}{Q_1}\cdot100\%\)</span></label>
+          <label class="option"><input type="radio" name="q4" value="c"><span>\(\eta=L+Q_1\)</span></label>
+        </div>
+        <button class="check" type="button" onclick="checkQuiz('q4','b','fb4')">Verifică răspunsul</button>
+        <div class="feedback" id="fb4"></div>
+      </div>
+    </section>
+
+    <section class="lesson">
+      <div class="card">
+        <div class="kicker">🧩 Rețin final</div>
+        <h2>Ideile-cheie ale lecției</h2>
+        <ul>
+          <li>Motorul termic produce lucru mecanic folosind energia obținută prin arderea unui combustibil.</li>
+          <li>Gazele fierbinți pot împinge un piston sau pot pune în mișcare o turbină.</li>
+          <li>Există motoare cu ardere externă și motoare cu ardere internă.</li>
+          <li>Motorul transformă doar o parte din căldura primită în lucru mecanic util.</li>
+          <li>Randamentul arată cât din energia primită devine energie utilă.</li>
+        </ul>
+        <div class="formula">
+          \[
+            L=Q_1-|Q_2|,
+            \qquad
+            \eta=\frac{L}{Q_1}\cdot100\%
+          \]
+        </div>
+        <div class="final-banner">
+          <strong>Prof. Dănuț Andronie</strong><br>
+          email: <a href="mailto:danutmg@gmail.com" style="color:#a5f3fc;font-weight:800">danutmg@gmail.com</a>
+        </div>
+      </div>
     </section>
   </main>
+</div>
 
-  <nav class="bottom-nav" aria-label="Navigare între pagini">
-    <div class="wrapper">
-      <button class="btn btn-secondary" id="prevBtn" type="button">◀ Înapoi</button>
-      <div class="page-counter" id="pageCounter">Pagina 1 / 6</div>
-      <button class="btn btn-primary" id="nextBtn" type="button">Mergi mai departe ➜</button>
-    </div>
-  </nav>
+<nav class="navbar" aria-label="Navigare lecție">
+  <div class="nav-inner">
+    <button class="navbtn backbtn" id="backBtn" type="button" onclick="prevPage()">Înapoi</button>
+    <div class="page-indicator" id="pageIndicator">1/12</div>
+    <button class="navbtn nextbtn" id="nextBtn" type="button" onclick="nextPage()">Mergi mai departe</button>
+  </div>
+</nav>
 
+<script>
+const pages = Array.from(document.querySelectorAll('.lesson'));
+const banner = document.getElementById('topBanner');
+const pageIndicator = document.getElementById('pageIndicator');
+const backBtn = document.getElementById('backBtn');
+const nextBtn = document.getElementById('nextBtn');
+let current = 0;
+const nextLesson = './lectia-5.html';
 
-  <script>
-    const pages = Array.from(document.querySelectorAll('.lesson-page'));
-    const tabs = Array.from(document.querySelectorAll('.tab-btn'));
-    const pageCounter = document.getElementById('pageCounter');
-    const progressBar = document.getElementById('progressBar');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const nextLesson = document.body.dataset.nextLesson || '';
+function renderPage(){
+  pages.forEach((page, index) => page.classList.toggle('active', index === current));
+  pageIndicator.textContent = `${current + 1}/${pages.length}`;
+  backBtn.disabled = current === 0;
+  banner.style.display = current === 0 ? 'block' : 'none';
 
-    let currentPage = 0;
+  if(current === pages.length - 1){
+    nextBtn.textContent = 'Lecția următoare';
+  }else{
+    nextBtn.textContent = 'Mergi mai departe';
+  }
 
-    function updateLessonPage(index){
-      currentPage = index;
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(window.MathJax && MathJax.typesetPromise){
+    MathJax.typesetPromise([pages[current]]).catch(() => {});
+  }
+}
 
-      pages.forEach((page, i) => page.classList.toggle('active', i === index));
-      tabs.forEach((tab, i) => tab.classList.toggle('active', i === index));
+function nextPage(){
+  if(current < pages.length - 1){
+    current++;
+    renderPage();
+  }else{
+    window.location.href = nextLesson;
+  }
+}
 
-      pageCounter.textContent = `Pagina ${index + 1} / ${pages.length}`;
-      progressBar.style.width = `${((index + 1) / pages.length) * 100}%`;
+function prevPage(){
+  if(current > 0){
+    current--;
+    renderPage();
+  }
+}
 
-      prevBtn.disabled = index === 0;
+function checkQuiz(name, correct, feedbackId){
+  const feedback = document.getElementById(feedbackId);
+  const selected = document.querySelector(`input[name="${name}"]:checked`);
+  feedback.className = 'feedback';
+  if(!selected){
+    feedback.textContent = 'Alege mai întâi o variantă.';
+    feedback.classList.add('wait');
+    return;
+  }
+  if(selected.value === correct){
+    feedback.textContent = 'Corect!';
+    feedback.classList.add('ok');
+  }else{
+    feedback.textContent = 'Mai încearcă. Recitește pagina cu explicația.';
+    feedback.classList.add('no');
+  }
+}
 
-      if(index === pages.length - 1){
-        nextBtn.textContent = nextLesson ? 'Lecția următoare ➜' : 'Sfârșit de lecție';
-      } else {
-        nextBtn.textContent = 'Mergi mai departe ➜';
-      }
+document.addEventListener('keydown', (event) => {
+  if(event.key === 'ArrowRight') nextPage();
+  if(event.key === 'ArrowLeft') prevPage();
+});
 
-      window.scrollTo({top:0, behavior:'smooth'});
-    }
-
-    prevBtn.addEventListener('click', () => {
-      if(currentPage > 0){ updateLessonPage(currentPage - 1); }
-    });
-
-    nextBtn.addEventListener('click', () => {
-      if(currentPage < pages.length - 1){
-        updateLessonPage(currentPage + 1);
-      } else if(nextLesson){
-        window.location.href = nextLesson;
-      }
-    });
-
-    tabs.forEach((tab, index) => {
-      tab.addEventListener('click', () => updateLessonPage(index));
-    });
-
-    function verifyQuiz(config){
-      let score = 0;
-      config.items.forEach((item, idx) => {
-        const box = document.getElementById(item.feedbackId);
-        let ok = false;
-        let value = '';
-
-        if(item.type === 'radio'){
-          const checked = document.querySelector(`input[name="${item.name}"]:checked`);
-          value = checked ? checked.value : '';
-          ok = value === item.answer;
-        } else if(item.type === 'select'){
-          const el = document.getElementById(item.id);
-          value = (el.value || '').trim();
-          ok = value === item.answer;
-        } else {
-          const el = document.getElementById(item.id);
-          value = (el.value || '').trim().toLowerCase();
-          ok = item.answers.includes(value);
-        }
-
-        if(ok){
-          score++;
-          box.textContent = 'Corect.';
-          box.className = 'feedback ok';
-        } else {
-          box.textContent = `Răspuns corect: ${item.showAnswer}`;
-          box.className = 'feedback bad';
-        }
-      });
-
-      const scoreBox = document.getElementById(config.scoreBoxId);
-      const scoreText = document.getElementById(config.scoreTextId);
-      const scoreMsg = document.getElementById(config.scoreMsgId);
-
-      scoreBox.style.display = 'block';
-      scoreText.textContent = `Ai obținut ${score} din ${config.items.length}.`;
-
-      if(score === config.items.length){
-        scoreMsg.textContent = 'Foarte bine! Poți merge la lecția următoare.';
-      } else if(score >= Math.ceil(config.items.length * 0.6)){
-        scoreMsg.textContent = 'Bine! Recitește pe scurt ideile-cheie și încearcă din nou.';
-      } else {
-        scoreMsg.textContent = 'Mai exersează puțin. Reia paginile cu noțiuni și exemple.';
-      }
-    }
-
-    updateLessonPage(0);
-  </script>
-
+renderPage();
+</script>
 </body>
 </html>

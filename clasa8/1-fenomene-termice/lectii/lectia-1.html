@@ -1,1219 +1,195 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Lecția 1 | Mișcarea browniană. Agitația termică. Difuzia | Fizica Galaction</title>
-  <meta name="description" content="Lecția 1 pentru clasa a VIII-a: Mișcarea browniană, agitația termică și difuzia. Lecție interactivă pe pagini, cu buton Mergi mai departe, MathJax și verificare rapidă.">
-  <style>
-    * { box-sizing: border-box; }
-
-    :root{
-      --bg:#0f172a;
-      --surface:#1e293b;
-      --surface-2:#162033;
-      --surface-3:#0b1220;
-      --text:#f8fafc;
-      --muted:#cbd5e1;
-      --accent:#22c55e;
-      --accent-2:#38bdf8;
-      --accent-3:#f59e0b;
-      --danger:#ef4444;
-      --border:rgba(255,255,255,.12);
-      --shadow:0 10px 26px rgba(0,0,0,.24);
-      --radius:18px;
-    }
-
-    html{
-      scroll-behavior:smooth;
-      font-size:clamp(16px, 0.35vw + 15px, 19px);
-    }
-
-    body{
-      margin:0;
-      font-family: Arial, sans-serif;
-      background:linear-gradient(180deg, #0f172a 0%, #111827 100%);
-      color:var(--text);
-      line-height:1.65;
-    }
-
-    .wrapper{
-      width:min(100%, 980px);
-      margin:0 auto;
-      padding-inline:clamp(12px, 2vw, 24px);
-    }
-
-    .site-header{
-      background:rgba(30, 41, 59, .92);
-      border-bottom:3px solid var(--accent);
-      position:sticky;
-      top:0;
-      z-index:20;
-      backdrop-filter: blur(8px);
-    }
-
-    .site-header .wrapper{
-      padding-block:14px;
-    }
-
-    .site-title{
-      margin:0;
-      font-size:clamp(1.4rem, 2vw, 2rem);
-      line-height:1.2;
-    }
-
-    .site-subtitle{
-      margin:.35rem 0 0;
-      color:var(--muted);
-      font-size:1rem;
-    }
-
-    .page-content{
-      padding:18px 0 118px;
-    }
-
-    .page-hero,
-    .card,
-    .lesson-shell{
-      background:var(--surface);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-    }
-
-    .page-hero,
-    .card{
-      padding:18px;
-      margin-bottom:16px;
-    }
-
-    .page-hero h2,
-    .card h2,
-    .card h3,
-    .card h4{
-      margin-top:0;
-      line-height:1.25;
-    }
-
-    .page-hero h2{
-      font-size:clamp(1.35rem, 1.5vw, 1.9rem);
-      margin-bottom:10px;
-    }
-
-    .quote{
-      margin-top:14px;
-      padding:12px 14px;
-      background:#10243f;
-      border-left:4px solid var(--accent-2);
-      border-radius:12px;
-      color:#e2e8f0;
-      font-style:italic;
-    }
-
-    .notice{
-      background:#122033;
-      border-left:4px solid var(--accent);
-      padding:12px 14px;
-      border-radius:12px;
-      color:var(--muted);
-      margin:12px 0;
-    }
-
-    .hint{
-      background:rgba(56,189,248,.12);
-      color:#dbeafe;
-      border:1px solid rgba(56,189,248,.25);
-      padding:10px 12px;
-      border-radius:12px;
-      margin:12px 0 0;
-    }
-
-    .lesson-shell{
-      overflow:hidden;
-      position:relative;
-    }
-
-    .lesson-top{
-      padding:16px 16px 10px;
-      border-bottom:1px solid var(--border);
-      background:linear-gradient(180deg, rgba(15,23,42,.8), rgba(30,41,59,.95));
-    }
-
-    .lesson-meta{
-      display:flex;
-      justify-content:space-between;
-      gap:10px;
-      align-items:center;
-      margin-bottom:10px;
-      flex-wrap:wrap;
-    }
-
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      background:rgba(34,197,94,.12);
-      color:#dcfce7;
-      border:1px solid rgba(34,197,94,.22);
-      padding:8px 12px;
-      border-radius:999px;
-      font-weight:700;
-      font-size:.96rem;
-    }
-
-    .page-counter{
-      color:var(--muted);
-      font-weight:700;
-    }
-
-    .progress{
-      width:100%;
-      height:10px;
-      border-radius:999px;
-      background:rgba(255,255,255,.08);
-      overflow:hidden;
-    }
-
-    .progress-bar{
-      height:100%;
-      width:12.5%;
-      background:linear-gradient(90deg, var(--accent-2), var(--accent));
-      transition:width .25s ease;
-    }
-
-    .tab-strip{
-      margin-top:14px;
-      display:flex;
-      gap:8px;
-      overflow:auto;
-      padding-bottom:2px;
-      scrollbar-width:thin;
-    }
-
-    .tab-btn{
-      white-space:nowrap;
-      border:none;
-      border-radius:999px;
-      padding:10px 14px;
-      cursor:pointer;
-      background:rgba(255,255,255,.08);
-      color:var(--text);
-      font-weight:700;
-      transition:background .18s ease, transform .18s ease;
-    }
-
-    .tab-btn.active{
-      background:linear-gradient(90deg, var(--accent-2), #60a5fa);
-      color:#081221;
-    }
-
-    .tab-btn:hover{
-      transform:translateY(-1px);
-    }
-
-    .page-stage{
-      padding:18px 18px 28px;
-    }
-
-    .lesson-page{
-      display:none;
-      animation:fadeIn .25s ease;
-    }
-
-    .lesson-page.active{
-      display:block;
-    }
-
-    @keyframes fadeIn{
-      from{ opacity:.25; transform:translateY(4px); }
-      to{ opacity:1; transform:translateY(0); }
-    }
-
-    .section-title{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin:0 0 12px;
-      font-size:1.12rem;
-    }
-
-    .dot{
-      width:12px;
-      height:12px;
-      border-radius:50%;
-      background:var(--accent);
-      box-shadow:0 0 0 4px rgba(34,197,94,.18);
-      flex:0 0 auto;
-    }
-
-    .grid{
-      display:grid;
-      gap:14px;
-    }
-
-    .grid-2{
-      grid-template-columns:repeat(2, minmax(0,1fr));
-    }
-
-    .grid-3{
-      grid-template-columns:repeat(3, minmax(0,1fr));
-    }
-
-    .split{
-      display:grid;
-      grid-template-columns:1.1fr .9fr;
-      gap:14px;
-    }
-
-    .mini-card{
-      background:var(--surface-2);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:14px;
-      min-height:100%;
-    }
-
-    .mini-card h4{
-      margin:0 0 8px;
-      font-size:1.02rem;
-    }
-
-    .tag{
-      display:inline-block;
-      margin-top:8px;
-      background:rgba(245,158,11,.14);
-      color:#fde68a;
-      border:1px solid rgba(245,158,11,.28);
-      padding:5px 9px;
-      border-radius:999px;
-      font-size:.88rem;
-      font-weight:700;
-    }
-
-    .summary-list,
-    .check-list{
-      margin:0;
-      padding-left:1.15rem;
-    }
-
-    .summary-list li,
-    .check-list li{
-      margin:8px 0;
-    }
-
-    .formula-box{
-      background:#0b1628;
-      border:1px solid rgba(56,189,248,.2);
-      border-radius:16px;
-      padding:14px;
-      margin:14px 0;
-      overflow-x:auto;
-    }
-
-    .figure-panel{
-      background:linear-gradient(180deg, #0d1728, #101b2f);
-      border:1px solid rgba(255,255,255,.1);
-      border-radius:16px;
-      padding:14px;
-      margin:14px 0;
-    }
-
-    .figure-title{
-      margin:0 0 10px;
-      font-size:1rem;
-      color:#dbeafe;
-    }
-
-    .svg-wrap{
-      width:100%;
-      overflow:hidden;
-      border-radius:14px;
-      background:#08101e;
-      border:1px solid rgba(255,255,255,.08);
-      padding:8px;
-    }
-
-    svg{
-      display:block;
-      width:100%;
-      height:auto;
-    }
-
-    .compare{
-      display:grid;
-      grid-template-columns:repeat(2, minmax(0,1fr));
-      gap:12px;
-      margin-top:14px;
-    }
-
-    .compare .box{
-      background:#122033;
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:14px;
-    }
-
-    .compare h4{
-      margin:0 0 8px;
-    }
-
-    .state-row{
-      display:grid;
-      grid-template-columns:repeat(3, minmax(0,1fr));
-      gap:12px;
-      margin-top:12px;
-    }
-
-    .state-card{
-      background:#122033;
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:12px;
-    }
-
-    .state-card h4{
-      margin:0 0 10px;
-      font-size:1rem;
-    }
-
-    .particle-scene{
-      position:relative;
-      height:108px;
-      border-radius:14px;
-      background:#091120;
-      border:1px solid rgba(255,255,255,.08);
-      overflow:hidden;
-      margin-bottom:10px;
-    }
-
-    .particle{
-      position:absolute;
-      width:12px;
-      height:12px;
-      border-radius:50%;
-      background:#60a5fa;
-      box-shadow:0 0 0 2px rgba(96,165,250,.16);
-    }
-
-    .particle.hot{
-      background:#f59e0b;
-      box-shadow:0 0 0 2px rgba(245,158,11,.16);
-    }
-
-    .arrow{
-      position:absolute;
-      color:#fbbf24;
-      font-weight:700;
-      font-size:18px;
-      line-height:1;
-    }
-
-    .table-like{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-      margin-top:14px;
-    }
-
-    .table-like .cell{
-      background:#122033;
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:14px;
-    }
-
-    .quiz-item{
-      background:var(--surface-2);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:14px;
-      margin-bottom:14px;
-    }
-
-    .quiz-item h4{
-      margin:0 0 10px;
-      font-size:1rem;
-    }
-
-    .options{
-      display:grid;
-      gap:10px;
-    }
-
-    .option{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      background:#0f1b2d;
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:14px;
-      padding:11px 12px;
-      cursor:pointer;
-    }
-
-    .option input{
-      margin-top:4px;
-      transform:scale(1.08);
-      accent-color:#38bdf8;
-      flex:0 0 auto;
-    }
-
-    .feedback{
-      margin-top:8px;
-      min-height:24px;
-      font-weight:700;
-    }
-
-    .feedback.ok{
-      color:#86efac;
-    }
-
-    .feedback.bad{
-      color:#fca5a5;
-    }
-
-    .button,
-    .nav-btn{
-      border:none;
-      border-radius:14px;
-      padding:13px 16px;
-      font-size:1rem;
-      font-weight:700;
-      cursor:pointer;
-      transition:transform .18s ease, opacity .18s ease, box-shadow .18s ease;
-      min-height:48px;
-    }
-
-    .button:hover,
-    .nav-btn:hover{
-      transform:translateY(-1px);
-    }
-
-    .button{
-      background:linear-gradient(90deg, var(--accent-2), #60a5fa);
-      color:#081221;
-      box-shadow:0 10px 20px rgba(56,189,248,.18);
-    }
-
-    .button.secondary{
-      background:#1f2937;
-      color:#e5e7eb;
-      box-shadow:none;
-      border:1px solid rgba(255,255,255,.12);
-    }
-
-    .actions{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:18px;
-    }
-
-    .result-box{
-      margin-top:14px;
-      padding:14px;
-      border-radius:16px;
-      background:#10243f;
-      border:1px solid rgba(56,189,248,.2);
-    }
-
-    .lesson-nav{
-      position:fixed;
-      left:50%;
-      transform:translateX(-50%);
-      bottom:max(10px, env(safe-area-inset-bottom));
-      z-index:50;
-      display:flex;
-      gap:10px;
-      width:min(calc(100% - 20px), 940px);
-      padding:10px;
-      background:rgba(15,23,42,.96);
-      border:1px solid var(--border);
-      border-radius:18px;
-      backdrop-filter:blur(10px);
-      box-shadow:0 12px 30px rgba(0,0,0,.35);
-    }
-
-    .nav-btn{
-      flex:1 1 0;
-    }
-
-    .nav-btn.prev{
-      background:#1f2937;
-      color:#e5e7eb;
-      border:1px solid rgba(255,255,255,.12);
-    }
-
-    .nav-btn.next{
-      background:linear-gradient(90deg, var(--accent), #16a34a);
-      color:#05210c;
-      box-shadow:0 10px 20px rgba(34,197,94,.22);
-    }
-
-    .nav-btn[disabled]{
-      opacity:.45;
-      cursor:not-allowed;
-      transform:none;
-    }
-
-    .site-footer{
-      background:var(--surface);
-      padding:14px 0;
-      text-align:center;
-      color:var(--muted);
-      border-top:1px solid var(--border);
-      font-size:.95rem;
-      margin-top:20px;
-    }
-
-    .small{
-      color:var(--muted);
-      font-size:.95rem;
-    }
-
-    .highlight{
-      color:#bfdbfe;
-      font-weight:700;
-    }
-
-    @media (max-width: 860px){
-      .grid-2,
-      .grid-3,
-      .split,
-      .compare,
-      .state-row,
-      .table-like{
-        grid-template-columns:1fr;
-      }
-
-      .page-stage{
-        padding:14px 14px 26px;
-      }
-
-      .page-hero,
-      .card{
-        padding:16px;
-      }
-    }
-
-    @media (max-width: 560px){
-      html{
-        font-size:16px;
-      }
-
-      .lesson-meta{
-        align-items:flex-start;
-      }
-
-      .lesson-nav{
-        gap:8px;
-        padding:8px;
-      }
-
-      .button,
-      .nav-btn,
-      .tab-btn{
-        font-size:.98rem;
-      }
-    }
-  </style>
-  <script>
-    window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)'], ['$', '$']] },
-      svg: { fontCache: 'global' }
-    };
-  </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Lecția 1 | Mișcarea browniană. Agitația termică. Difuzia</title>
+<meta name="description" content="Fizica Galaction - lecție interactivă clasa a VIII-a despre mișcarea browniană, agitația termică și difuzia.">
+<script>
+window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]']]},svg:{fontCache:'global'}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+:root{--bg:#08111f;--card:#12263f;--card2:#0f2137;--text:#f4f9ff;--muted:#cbd5e1;--cyan:#67e8f9;--blue:#38bdf8;--green:#22c55e;--green2:#16a34a;--back:#e2e8f0;--dark:#0f172a;--border:rgba(148,163,184,.28);--warn:#fde68a;--bad:#fecaca;--good:#bbf7d0}
+*{box-sizing:border-box}html{height:100%;scroll-behavior:smooth}body{margin:0;min-height:100dvh;background:radial-gradient(circle at top left,rgba(56,189,248,.18),transparent 36%),radial-gradient(circle at bottom right,rgba(34,197,94,.12),transparent 28%),var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;font-size:clamp(18px,2.45vw,21px);line-height:1.55}
+.app{width:min(100%,980px);margin:auto;min-height:100dvh;padding:14px 12px calc(96px + env(safe-area-inset-bottom));display:flex;flex-direction:column}
+.banner{border:1px solid rgba(103,232,249,.36);border-radius:22px;padding:16px;margin:8px 0 14px;text-align:center;background:linear-gradient(135deg,rgba(14,116,144,.94),rgba(15,23,42,.96));box-shadow:0 16px 40px rgba(0,0,0,.35)}
+.school{font-weight:900;text-transform:uppercase;letter-spacing:.03em}.teacher{margin-top:4px;color:#dbeafe;font-weight:750}.motto{margin:12px auto 0;max-width:760px;background:rgba(2,6,23,.32);border-left:4px solid var(--cyan);border-radius:12px;padding:10px;color:#fef9c3;font-style:italic;font-weight:700}
+.page{display:none;animation:fade .18s ease-out}.page.active{display:block}@keyframes fade{from{opacity:.4;transform:translateY(7px)}to{opacity:1;transform:none}}
+.card{min-height:calc(100dvh - 126px);border:1px solid var(--border);border-radius:24px;background:linear-gradient(180deg,rgba(18,38,63,.98),rgba(12,28,47,.98));padding:clamp(18px,4vw,34px);box-shadow:0 18px 45px rgba(0,0,0,.35)}.page:not(:first-child) .card{min-height:calc(100dvh - 112px)}
+.badge{display:inline-flex;border:1px solid rgba(103,232,249,.3);border-radius:999px;background:rgba(103,232,249,.1);color:#cffafe;padding:6px 10px;font-weight:850;font-size:.88rem;margin-bottom:12px}
+h1,h2,h3{line-height:1.15;margin:0 0 14px}h1{font-size:clamp(1.65rem,5vw,3rem);letter-spacing:-.03em;color:#e0fbff}h2{font-size:clamp(1.42rem,4vw,2.35rem);color:var(--cyan)}h3{font-size:clamp(1.1rem,3vw,1.45rem);color:#bfdbfe;margin-top:18px}
+.lead{font-size:clamp(1.05rem,2.8vw,1.28rem);font-weight:650;color:#e5f6ff}.idea,.note{border-radius:18px;padding:14px 15px;margin:14px 0}.idea{border:1px solid rgba(34,197,94,.36);background:rgba(34,197,94,.12);font-weight:750}.note{border:1px solid rgba(251,191,36,.38);background:rgba(251,191,36,.1);color:#fff7d6}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:16px 0}.mini{background:rgba(15,23,42,.42);border:1px solid rgba(148,163,184,.24);border-radius:18px;padding:14px}.mini strong{color:#a7f3d0}.tag,.pill{display:inline-block;margin-top:7px;border-radius:999px;background:rgba(56,189,248,.13);border:1px solid rgba(56,189,248,.26);color:#dff9ff;padding:4px 10px;font-weight:850;font-size:.88rem}
+ul,ol{padding-left:1.25rem}li{margin:8px 0}.formula{overflow-x:auto;text-align:center;background:rgba(2,6,23,.35);border:1px solid rgba(103,232,249,.2);border-radius:18px;padding:12px;margin:14px 0;font-size:1rem}mjx-container[jax="SVG"][display="true"]{font-size:108%!important}mjx-container[jax="SVG"]{max-width:100%;overflow-x:auto;overflow-y:hidden}
+.svgbox{background:rgba(2,6,23,.36);border:1px solid rgba(103,232,249,.2);border-radius:20px;padding:12px;margin:16px 0;overflow:hidden}.svgbox>svg{width:100%;height:auto;display:block}.caption{color:#cbd5e1;font-size:.92rem;text-align:center;margin-top:8px}
+.states{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}.state{text-align:center;background:rgba(15,23,42,.38);border:1px solid rgba(148,163,184,.24);border-radius:18px;padding:12px}.atoms{font-size:1.55rem;letter-spacing:.12em;color:#fef08a}.state strong{display:block;color:#bfdbfe}
+.quiz{display:grid;gap:14px;margin-top:16px}.q{background:rgba(15,23,42,.42);border:1px solid rgba(148,163,184,.24);border-radius:18px;padding:14px}.q p{font-weight:850;margin-top:0}.choices{display:grid;gap:8px}.choice{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;border:1px solid rgba(226,232,240,.22);background:rgba(15,23,42,.35);border-radius:14px;padding:10px;cursor:pointer}.choice:hover{border-color:rgba(103,232,249,.55)}input[type=radio]{width:1.15em;height:1.15em;accent-color:var(--green)}
+.check{border:0;border-radius:14px;padding:12px 16px;background:#06b6d4;color:#082f49;font-weight:950;font-size:1rem;cursor:pointer;margin-top:12px}.feedback{min-height:1.6em;font-weight:850;margin-top:10px}.feedback.good{color:var(--good)}.feedback.bad{color:var(--bad)}.feedback.warn{color:var(--warn)}
+.final{margin-top:18px;border:1px solid rgba(103,232,249,.35);background:linear-gradient(135deg,rgba(8,47,73,.95),rgba(15,23,42,.95));border-radius:20px;padding:15px;text-align:center;font-weight:800}.final .email{color:#fef08a}
+.home{display:inline-block;margin-top:14px;color:#bae6fd;text-decoration:none;font-weight:850}.home:hover{text-decoration:underline}
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:50;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(8,17,31,0),rgba(8,17,31,.96) 28%,rgba(8,17,31,.99));backdrop-filter:blur(8px)}.nav-inner{width:min(100%,980px);margin:auto;display:grid;grid-template-columns:minmax(100px,1fr) auto minmax(140px,1fr);gap:10px;align-items:center;background:rgba(15,35,58,.96);border:1px solid rgba(148,163,184,.3);border-radius:18px;padding:10px;box-shadow:0 18px 38px rgba(0,0,0,.35)}
+.nav button{min-height:48px;border:0;border-radius:14px;font-size:clamp(.95rem,2.6vw,1.05rem);font-weight:950;cursor:pointer;padding:10px 12px}.back{background:var(--back);color:var(--dark)}.next{background:linear-gradient(135deg,var(--green),var(--green2));color:#052e16}.nav button:disabled{opacity:.45;cursor:not-allowed}.counter{min-width:64px;text-align:center;border-radius:12px;padding:9px 10px;background:rgba(2,6,23,.36);border:1px solid rgba(148,163,184,.22);font-weight:950}.kbd{text-align:center;color:#cbd5e1;font-size:.88rem;margin-top:8px}
+@media(max-width:720px){.grid,.states{grid-template-columns:1fr}.card{border-radius:20px}.nav-inner{grid-template-columns:1fr auto 1fr;gap:8px;padding:8px}.counter{min-width:56px}.nav button{padding:9px 8px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.page{animation:none}}
+</style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction</h1>
-      <p class="site-subtitle">Clasa a VIII-a · Unitatea 1 · Lecția 1 · Mișcarea browniană. Agitația termică. Difuzia</p>
-    </div>
-  </header>
-
-  <main class="page-content wrapper">
-    <section class="page-hero">
-      <h2>Lecția 1 – Mișcarea browniană. Agitația termică. Difuzia</h2>
-      <p class="quote">„Fizica nu este dominată de formule, ci de logică.”</p>
-      <p>
-        În această lecție observi că particulele foarte mici nu stau pe loc: ele se mișcă
-        haotic, se amestecă de la sine și ne ajută să înțelegem de ce apar fenomene precum
-        <strong>mișcarea browniană</strong>, <strong>agitația termică</strong> și <strong>difuzia</strong>.
-      </p>
-      <div class="hint">
-        Exemple din viața de zi cu zi: mirosul unui parfum se răspândește în cameră, iar o
-        picătură de cerneală se împrăștie singură în apă.
-      </div>
-    </section>
-
-    <section class="lesson-shell" aria-label="Lecție interactivă">
-      <div class="lesson-top">
-        <div class="lesson-meta">
-          <div class="badge">📘 Lecție interactivă</div>
-          <div class="page-counter" id="pageCounter">Pagina 1 / 8</div>
-        </div>
-        <div class="progress" aria-hidden="true">
-          <div class="progress-bar" id="progressBar"></div>
-        </div>
-
-        <div class="tab-strip" aria-label="Paginile lecției">
-          <button class="tab-btn active" data-go="0">1. Observ</button>
-          <button class="tab-btn" data-go="1">2. Experimentez</button>
-          <button class="tab-btn" data-go="2">3. Browniană</button>
-          <button class="tab-btn" data-go="3">4. Difuzia</button>
-          <button class="tab-btn" data-go="4">5. Agitația termică</button>
-          <button class="tab-btn" data-go="5">6. Aplic</button>
-          <button class="tab-btn" data-go="6">7. Rețin</button>
-          <button class="tab-btn" data-go="7">8. Verificare</button>
-        </div>
-      </div>
-
-      <div class="page-stage">
-        <section class="lesson-page active" data-page="0">
-          <div class="section-title"><span class="dot"></span><strong>Observ</strong></div>
-          <p>
-            Analizează situațiile de mai jos. În toate, ceva se răspândește sau se mișcă fără
-            să fie amestecat direct de mâna noastră.
-          </p>
-
-          <div class="grid grid-2">
-            <article class="mini-card">
-              <h4>🌸 Parfum într-o cameră</h4>
-              <p>Mirosul ajunge repede și la persoanele aflate mai departe de sursă.</p>
-              <span class="tag">răspândire în aer</span>
-            </article>
-
-            <article class="mini-card">
-              <h4>🖋️ Cerneală în apă</h4>
-              <p>Picătura colorată se împrăștie treptat chiar dacă apa pare liniștită.</p>
-              <span class="tag">amestec spontan</span>
-            </article>
-
-            <article class="mini-card">
-              <h4>☕ Ceai sau plante în apă fierbinte</h4>
-              <p>Culoarea și mirosul apar mai repede când lichidul este mai cald.</p>
-              <span class="tag">temperatura contează</span>
-            </article>
-
-            <article class="mini-card">
-              <h4>🌫️ Particule foarte fine de fum</h4>
-              <p>Privite cu atenție, ele au o mișcare neregulată, continuă și imprevizibilă.</p>
-              <span class="tag">mişcare haotică</span>
-            </article>
-          </div>
-
-          <div class="notice">
-            <strong>Ideea-cheie:</strong> materia este alcătuită din particule foarte mici, iar aceste
-            particule sunt în mișcare. De aici pornesc explicațiile pentru fenomenele studiate în lecție.
-          </div>
-        </section>
-
-        <section class="lesson-page" data-page="1">
-          <div class="section-title"><span class="dot"></span><strong>Experimentez</strong></div>
-
-          <div class="split">
-            <div class="mini-card">
-              <h4>Experiment 1: particule de fum</h4>
-              <p><strong>Materiale:</strong> un bol din sticlă, o bucățică mică de hârtie, o lupă.</p>
-              <ul class="check-list">
-                <li>aprinde pentru scurt timp hârtia și observă particulele de fum;</li>
-                <li>urmărește la lupă cum se mișcă;</li>
-                <li>vei vedea o mișcare <strong>continuă</strong>, <strong>neregulată</strong> și <strong>haotică</strong>.</li>
-              </ul>
-            </div>
-
-            <div class="mini-card">
-              <h4>Experiment 2: fragmente vegetale în apă fierbinte</h4>
-              <p><strong>Materiale:</strong> pahar Berzelius sau pahar obișnuit, apă fierbinte, fragmente de plante.</p>
-              <ul class="check-list">
-                <li>pune plantele în apă fierbinte;</li>
-                <li>observă mișcarea fragmentelor;</li>
-                <li>mișcarea este produsă de ciocnirile dintre particule.</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="figure-panel">
-            <h3 class="figure-title">Ce observi?</h3>
-            <div class="compare">
-              <div class="box">
-                <h4>La temperatură mai mică</h4>
-                <p>amestecul se face mai lent, iar răspândirea este mai înceată.</p>
-              </div>
-              <div class="box">
-                <h4>La temperatură mai mare</h4>
-                <p>amestecul se face mai repede, pentru că mișcarea particulelor este mai intensă.</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="notice">
-            Din experimente rezultă că particulele nu sunt în repaus. Ele se ciocnesc și
-            își schimbă permanent direcția de mișcare.
-          </div>
-        </section>
-
-        <section class="lesson-page" data-page="2">
-          <div class="section-title"><span class="dot"></span><strong>Mișcarea browniană</strong></div>
-
-          <p>
-            <strong>Mișcarea browniană</strong> este mișcarea aleatorie a particulelor suspendate într-un
-            fluid, produsă de ciocnirile acestor particule cu moleculele fluidului.
-          </p>
-
-          <div class="figure-panel">
-            <h3 class="figure-title">Traiectorie haotică a unei particule</h3>
-            <div class="svg-wrap">
-              <svg viewBox="0 0 620 240" role="img" aria-label="Traiectorie browniană">
-                <rect x="0" y="0" width="620" height="240" rx="18" fill="#07111d"></rect>
-                <path d="M55 185 L92 148 L125 166 L156 123 L190 136 L218 96 L257 117 L288 71 L326 111 L366 87 L405 126 L447 84 L487 112 L532 78 L570 104"
-                      fill="none" stroke="#38bdf8" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
-                <circle cx="55" cy="185" r="9" fill="#f59e0b"></circle>
-                <circle cx="570" cy="104" r="9" fill="#22c55e"></circle>
-
-                <circle cx="100" cy="55" r="4" fill="#94a3b8"></circle>
-                <circle cx="148" cy="55" r="4" fill="#94a3b8"></circle>
-                <circle cx="195" cy="56" r="4" fill="#94a3b8"></circle>
-                <circle cx="244" cy="54" r="4" fill="#94a3b8"></circle>
-                <circle cx="291" cy="56" r="4" fill="#94a3b8"></circle>
-                <circle cx="338" cy="56" r="4" fill="#94a3b8"></circle>
-                <circle cx="391" cy="55" r="4" fill="#94a3b8"></circle>
-                <circle cx="438" cy="58" r="4" fill="#94a3b8"></circle>
-                <circle cx="486" cy="53" r="4" fill="#94a3b8"></circle>
-                <circle cx="536" cy="57" r="4" fill="#94a3b8"></circle>
-
-                <text x="22" y="206" fill="#e2e8f0" font-size="18">start</text>
-                <text x="555" y="90" fill="#e2e8f0" font-size="18">mai târziu</text>
-                <text x="22" y="28" fill="#cbd5e1" font-size="18">particulă mare lovită din toate direcțiile</text>
-              </svg>
-            </div>
-          </div>
-
-          <div class="grid grid-2">
-            <article class="mini-card">
-              <h4>🔬 Robert Brown</h4>
-              <p>
-                Urmărind la microscop granule de polen pe lamele umede, a observat
-                această mișcare spontană, continuă și întâmplătoare.
-              </p>
-            </article>
-
-            <article class="mini-card">
-              <h4>🧠 Explicația</h4>
-              <p>
-                Particula vizibilă este lovită neuniform de moleculele fluidului. De aceea
-                direcția și sensul mișcării ei se schimbă mereu.
-              </p>
-            </article>
-          </div>
-
-          <div class="notice">
-            Mișcarea browniană nu înseamnă deplasare ordonată. Traiectoria este
-            <strong>haotică</strong>, iar sensul nu poate fi prevăzut dinainte.
-          </div>
-        </section>
-
-        <section class="lesson-page" data-page="3">
-          <div class="section-title"><span class="dot"></span><strong>Difuzia</strong></div>
-
-          <p>
-            <strong>Difuzia</strong> este fenomenul de pătrundere a moleculelor unui corp printre
-            moleculele altui corp, <strong>fără intervenție exterioară</strong>.
-          </p>
-
-          <div class="figure-panel">
-            <h3 class="figure-title">Cum apare amestecul spontan</h3>
-            <div class="svg-wrap">
-              <svg viewBox="0 0 620 230" role="img" aria-label="Difuzia particulelor">
-                <rect x="20" y="40" width="240" height="150" rx="16" fill="#08101e" stroke="#334155" stroke-width="2"></rect>
-                <rect x="360" y="40" width="240" height="150" rx="16" fill="#08101e" stroke="#334155" stroke-width="2"></rect>
-
-                <text x="88" y="28" fill="#e2e8f0" font-size="18">la început</text>
-                <text x="438" y="28" fill="#e2e8f0" font-size="18">după un timp</text>
-
-                <circle cx="65" cy="75" r="10" fill="#38bdf8"></circle>
-                <circle cx="100" cy="115" r="10" fill="#38bdf8"></circle>
-                <circle cx="130" cy="150" r="10" fill="#38bdf8"></circle>
-                <circle cx="165" cy="92" r="10" fill="#38bdf8"></circle>
-                <circle cx="195" cy="140" r="10" fill="#38bdf8"></circle>
-                <circle cx="225" cy="82" r="10" fill="#38bdf8"></circle>
-
-                <circle cx="430" cy="75" r="10" fill="#38bdf8"></circle>
-                <circle cx="475" cy="115" r="10" fill="#38bdf8"></circle>
-                <circle cx="515" cy="145" r="10" fill="#38bdf8"></circle>
-                <circle cx="560" cy="95" r="10" fill="#38bdf8"></circle>
-                <circle cx="405" cy="145" r="10" fill="#f59e0b"></circle>
-                <circle cx="450" cy="170" r="10" fill="#f59e0b"></circle>
-                <circle cx="505" cy="82" r="10" fill="#f59e0b"></circle>
-                <circle cx="545" cy="160" r="10" fill="#f59e0b"></circle>
-                <circle cx="585" cy="120" r="10" fill="#f59e0b"></circle>
-
-                <line x1="280" y1="114" x2="338" y2="114" stroke="#22c55e" stroke-width="6" stroke-linecap="round"></line>
-                <polygon points="338,114 318,102 318,126" fill="#22c55e"></polygon>
-              </svg>
-            </div>
-          </div>
-
-          <div class="grid grid-3">
-            <article class="mini-card">
-              <h4>În gaze</h4>
-              <p>Mirosul parfumului sau al gazului se răspândește repede în încăpere.</p>
-            </article>
-            <article class="mini-card">
-              <h4>În lichide</h4>
-              <p>O picătură de cerneală colorată se împrăștie singură în apă.</p>
-            </article>
-            <article class="mini-card">
-              <h4>În solide</h4>
-              <p>Fenomenul este mult mai lent, dar există și în această stare de agregare.</p>
-            </article>
-          </div>
-
-          <div class="formula-box">
-            <h3 style="margin-top:0;">Exemplu numeric</h3>
-            <p>
-              Într-o cameră rece, un miros se răspândește în aproximativ \(40\,s\), iar într-o cameră
-              mai caldă în \(20\,s\).
-            </p>
-            <p>\[
-              \frac{20}{40} = \frac{1}{2}
-            \]</p>
-            <p>
-              Timpul din camera caldă este <strong>jumătate</strong> din timpul din camera rece.
-              Deci, la temperatură mai mare, difuzia are loc mai repede.
-            </p>
-          </div>
-        </section>
-
-        <section class="lesson-page" data-page="4">
-          <div class="section-title"><span class="dot"></span><strong>Agitația termică</strong></div>
-
-          <p>
-            Oricare ar fi starea de agregare a unui corp, moleculele sale se află într-o
-            mișcare <strong>spontană</strong>, <strong>continuă</strong> și <strong>complet dezordonată</strong>.
-            Această mișcare se numește <strong>agitație termică</strong>.
-          </p>
-
-          <div class="state-row">
-            <article class="state-card">
-              <h4>Solid</h4>
-              <div class="particle-scene">
-                <span class="particle" style="left:14px; top:18px;"></span>
-                <span class="particle" style="left:42px; top:18px;"></span>
-                <span class="particle" style="left:70px; top:18px;"></span>
-                <span class="particle" style="left:98px; top:18px;"></span>
-                <span class="particle" style="left:14px; top:48px;"></span>
-                <span class="particle" style="left:42px; top:48px;"></span>
-                <span class="particle" style="left:70px; top:48px;"></span>
-                <span class="particle" style="left:98px; top:48px;"></span>
-                <span class="particle" style="left:14px; top:78px;"></span>
-                <span class="particle" style="left:42px; top:78px;"></span>
-                <span class="particle" style="left:70px; top:78px;"></span>
-                <span class="particle" style="left:98px; top:78px;"></span>
-                <span class="arrow" style="left:22px; top:4px;">↕</span>
-                <span class="arrow" style="left:75px; top:4px;">↕</span>
-              </div>
-              <p>Particulele oscilează în jurul unor poziții apropiate și ordonate.</p>
-            </article>
-
-            <article class="state-card">
-              <h4>Lichid</h4>
-              <div class="particle-scene">
-                <span class="particle hot" style="left:12px; top:18px;"></span>
-                <span class="particle hot" style="left:52px; top:36px;"></span>
-                <span class="particle hot" style="left:88px; top:18px;"></span>
-                <span class="particle hot" style="left:28px; top:68px;"></span>
-                <span class="particle hot" style="left:76px; top:78px;"></span>
-                <span class="particle hot" style="left:110px; top:52px;"></span>
-                <span class="arrow" style="left:16px; top:2px;">↗</span>
-                <span class="arrow" style="left:52px; top:4px;">↘</span>
-                <span class="arrow" style="left:90px; top:2px;">↙</span>
-              </div>
-              <p>Particulele sunt apropiate, dar pot aluneca unele printre altele.</p>
-            </article>
-
-            <article class="state-card">
-              <h4>Gaz</h4>
-              <div class="particle-scene">
-                <span class="particle hot" style="left:10px; top:16px;"></span>
-                <span class="particle hot" style="left:96px; top:14px;"></span>
-                <span class="particle hot" style="left:44px; top:52px;"></span>
-                <span class="particle hot" style="left:118px; top:84px;"></span>
-                <span class="particle hot" style="left:12px; top:90px;"></span>
-                <span class="arrow" style="left:24px; top:0;">↗</span>
-                <span class="arrow" style="left:70px; top:28px;">↔</span>
-                <span class="arrow" style="left:98px; top:58px;">↙</span>
-              </div>
-              <p>Particulele sunt mai depărtate și se mișcă liber în toate direcțiile.</p>
-            </article>
-          </div>
-
-          <div class="notice">
-            Când temperatura crește, agitația termică devine mai intensă. De aceea
-            fenomenele de amestec și răspândire apar mai repede.
-          </div>
-        </section>
-
-        <section class="lesson-page" data-page="5">
-          <div class="section-title"><span class="dot"></span><strong>Aplic</strong></div>
-
-          <div class="table-like">
-            <div class="cell">
-              <h4>Mișcarea browniană</h4>
-              <ul class="check-list">
-                <li>se observă la particule foarte mici suspendate într-un fluid;</li>
-                <li>este o mișcare haotică a particulei vizibile;</li>
-                <li>este produsă de ciocnirile cu moleculele fluidului.</li>
-              </ul>
-            </div>
-
-            <div class="cell">
-              <h4>Difuzia</h4>
-              <ul class="check-list">
-                <li>este amestecul spontan al moleculelor a două corpuri;</li>
-                <li>apare în gaze, lichide și solide;</li>
-                <li>se produce mai repede la temperatură mai mare.</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="grid grid-2" style="margin-top:14px;">
-            <article class="mini-card">
-              <h4>Exemplul 1</h4>
-              <p>
-                Praful luminat de o rază de soare pare să danseze. Aici observi o mișcare
-                neregulată a particulelor foarte mici aflate în aer.
-              </p>
-              <span class="tag">browniană</span>
-            </article>
-
-            <article class="mini-card">
-              <h4>Exemplul 2</h4>
-              <p>
-                Mirosul unei coji de portocală se simte în toată clasa după puțin timp,
-                chiar dacă nimeni nu plimbă coaja prin cameră.
-              </p>
-              <span class="tag">difuzie</span>
-            </article>
-          </div>
-
-          <div class="notice">
-            <strong>Legătura dintre fenomene:</strong> agitația termică a moleculelor explică atât
-            mișcarea browniană, cât și difuzia.
-          </div>
-        </section>
-
-        <section class="lesson-page" data-page="6">
-          <div class="section-title"><span class="dot"></span><strong>Rețin</strong></div>
-
-          <div class="card" style="padding:14px; margin-bottom:16px;">
-            <ul class="summary-list">
-              <li><strong>Mișcarea browniană</strong> este mișcarea aleatorie a particulelor suspendate într-un fluid.</li>
-              <li><strong>Difuzia</strong> este pătrunderea moleculelor unui corp printre moleculele altui corp fără intervenție exterioară.</li>
-              <li><strong>Agitația termică</strong> este mișcarea spontană, continuă și haotică a moleculelor.</li>
-              <li>Agitația termică există în <strong>toate stările de agregare</strong>.</li>
-              <li>La temperatură mai mare, particulele se mișcă mai intens, iar <strong>difuzia are loc mai repede</strong>.</li>
-              <li>Agitația termică explică fenomene observabile precum răspândirea mirosurilor și amestecul spontan al substanțelor.</li>
-            </ul>
-          </div>
-
-          <div class="figure-panel">
-            <h3 class="figure-title">Știai că?</h3>
-            <p style="margin-bottom:0;">
-              Albert Einstein a oferit o explicație teoretică importantă pentru mișcarea
-              browniană, iar Jean Perrin a confirmat experimental concluziile despre structura
-              discontinuă a materiei.
-            </p>
-          </div>
-        </section>
-
-        <section class="lesson-page" data-page="7">
-          <div class="section-title"><span class="dot"></span><strong>Verificare rapidă</strong></div>
-
-          <div class="quiz-item">
-            <h4>1. Mișcarea browniană este:</h4>
-            <div class="options">
-              <label class="option"><input type="radio" name="q1" value="a"><span>mișcarea aleatorie a particulelor suspendate într-un fluid</span></label>
-              <label class="option"><input type="radio" name="q1" value="b"><span>rotația Pământului în jurul Soarelui</span></label>
-              <label class="option"><input type="radio" name="q1" value="c"><span>deplasarea unei mașini pe șosea</span></label>
-            </div>
-            <div class="feedback" id="fb1"></div>
-          </div>
-
-          <div class="quiz-item">
-            <h4>2. Difuzia reprezintă:</h4>
-            <div class="options">
-              <label class="option"><input type="radio" name="q2" value="a"><span>oprirea totală a particulelor</span></label>
-              <label class="option"><input type="radio" name="q2" value="b"><span>pătrunderea moleculelor unui corp printre moleculele altui corp</span></label>
-              <label class="option"><input type="radio" name="q2" value="c"><span>o formă de lumină</span></label>
-            </div>
-            <div class="feedback" id="fb2"></div>
-          </div>
-
-          <div class="quiz-item">
-            <h4>3. Când temperatura crește, difuzia are loc de obicei:</h4>
-            <div class="options">
-              <label class="option"><input type="radio" name="q3" value="a"><span>mai lent</span></label>
-              <label class="option"><input type="radio" name="q3" value="b"><span>cu aceeași viteză în toate cazurile</span></label>
-              <label class="option"><input type="radio" name="q3" value="c"><span>mai repede</span></label>
-            </div>
-            <div class="feedback" id="fb3"></div>
-          </div>
-
-          <div class="quiz-item">
-            <h4>4. Agitația termică există:</h4>
-            <div class="options">
-              <label class="option"><input type="radio" name="q4" value="a"><span>în solide, lichide și gaze</span></label>
-              <label class="option"><input type="radio" name="q4" value="b"><span>numai în gaze</span></label>
-              <label class="option"><input type="radio" name="q4" value="c"><span>numai în apă fierbinte</span></label>
-            </div>
-            <div class="feedback" id="fb4"></div>
-          </div>
-
-          <div class="quiz-item">
-            <h4>5. Particulele fine de fum se mișcă haotic deoarece:</h4>
-            <div class="options">
-              <label class="option"><input type="radio" name="q5" value="a"><span>cineva le împinge cu mâna</span></label>
-              <label class="option"><input type="radio" name="q5" value="b"><span>sunt lovite din toate direcțiile de moleculele aerului</span></label>
-              <label class="option"><input type="radio" name="q5" value="c"><span>nu există aer în jurul lor</span></label>
-            </div>
-            <div class="feedback" id="fb5"></div>
-          </div>
-
-          <button class="button" type="button" onclick="verificaTest()">Verifică răspunsurile</button>
-
-          <div class="result-box" id="rezultatBox" style="display:none;">
-            <strong id="rezultatText"></strong>
-            <p class="small" id="rezultatMesaj" style="margin-bottom:0;"></p>
-          </div>
-
-          <section class="actions">
-            <a class="button secondary" href="./index.html">Înapoi la lecții</a>
-            <a class="button secondary" href="./lectia-2.html">Lecția următoare</a>
-          </section>
-        </section>
-      </div>
-
-      <div class="lesson-nav">
-        <button class="nav-btn prev" id="prevBtn" type="button">⬅ Înapoi</button>
-        <button class="nav-btn next" id="nextBtn" type="button">Mergi mai departe ➜</button>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="wrapper">
-      © Fizica Galaction · Prof. DĂNUȚ ANDRONIE
-    </div>
-  </footer>
-
-  <script>
-    const pages = Array.from(document.querySelectorAll('.lesson-page'));
-    const tabs = Array.from(document.querySelectorAll('.tab-btn'));
-    const pageCounter = document.getElementById('pageCounter');
-    const progressBar = document.getElementById('progressBar');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-
-    let currentPage = 0;
-
-    function updateLessonPage(index){
-      currentPage = index;
-
-      pages.forEach((page, i) => {
-        page.classList.toggle('active', i === index);
-      });
-
-      tabs.forEach((tab, i) => {
-        tab.classList.toggle('active', i === index);
-      });
-
-      pageCounter.textContent = `Pagina ${index + 1} / ${pages.length}`;
-      progressBar.style.width = `${((index + 1) / pages.length) * 100}%`;
-
-      prevBtn.disabled = index === 0;
-
-      if(index === pages.length - 1){
-        nextBtn.textContent = 'Lecția următoare ➜';
-      } else {
-        nextBtn.textContent = 'Mergi mai departe ➜';
-      }
-
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    prevBtn.addEventListener('click', () => {
-      if(currentPage > 0){
-        updateLessonPage(currentPage - 1);
-      }
-    });
-
-    nextBtn.addEventListener('click', () => {
-      if(currentPage < pages.length - 1){
-        updateLessonPage(currentPage + 1);
-      } else {
-        window.location.href = './lectia-2.html';
-      }
-    });
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        updateLessonPage(Number(tab.dataset.go));
-      });
-    });
-
-    function verificaTest(){
-      const raspunsuriCorecte = {
-        q1: 'a',
-        q2: 'b',
-        q3: 'c',
-        q4: 'a',
-        q5: 'b'
-      };
-
-      let scor = 0;
-
-      Object.entries(raspunsuriCorecte).forEach(([nume, corect], index) => {
-        const ales = document.querySelector(`input[name="${nume}"]:checked`);
-        const feedback = document.getElementById(`fb${index + 1}`);
-
-        if(!ales){
-          feedback.textContent = 'Alege un răspuns.';
-          feedback.className = 'feedback bad';
-          return;
-        }
-
-        if(ales.value === corect){
-          scor++;
-          feedback.textContent = 'Corect.';
-          feedback.className = 'feedback ok';
-        } else {
-          feedback.textContent = 'Mai încearcă.';
-          feedback.className = 'feedback bad';
-        }
-      });
-
-      const rezultatBox = document.getElementById('rezultatBox');
-      const rezultatText = document.getElementById('rezultatText');
-      const rezultatMesaj = document.getElementById('rezultatMesaj');
-
-      rezultatBox.style.display = 'block';
-      rezultatText.textContent = `Scor: ${scor} / 5`;
-
-      if(scor === 5){
-        rezultatMesaj.textContent = 'Foarte bine! Ai înțeles legătura dintre mișcarea browniană, difuzie și agitația termică.';
-      } else if(scor >= 3){
-        rezultatMesaj.textContent = 'Bine. Recitește paginile despre difuzie și despre rolul temperaturii.';
-      } else {
-        rezultatMesaj.textContent = 'Reia lecția și urmărește cu atenție definițiile și exemplele experimentale.';
-      }
-
-      rezultatBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-
-    updateLessonPage(0);
-  </script>
+<div class="app">
+<header class="banner" id="banner">
+  <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+  <div class="teacher">Prof. Dănuț Andronie</div>
+  <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+</header>
+<main>
+<section class="page active"><div class="card">
+  <span class="badge">Clasa a VIII-a · Unitatea 1 · Lecția 1</span>
+  <h1>Mișcarea browniană. Agitația termică. Difuzia</h1>
+  <p class="lead">Înveți de ce particulele foarte mici nu stau nemișcate și de ce unele substanțe se amestecă singure.</p>
+  <div class="idea">Ideea-cheie: materia este alcătuită din particule foarte mici, iar aceste particule se mișcă permanent și dezordonat.</div>
+  <div class="grid">
+    <div class="mini"><strong>Observi</strong><br>praful în lumină, cerneala în apă, mirosul de parfum.</div>
+    <div class="mini"><strong>Explici</strong><br>mișcarea browniană, difuzia și agitația termică.</div>
+  </div>
+  <a class="home" href="./index.html">Înapoi la lista lecțiilor</a>
+</div></section>
+
+<section class="page"><div class="card">
+  <span class="badge">Observ</span>
+  <h2>Ce se mișcă fără să amestecăm?</h2>
+  <div class="grid">
+    <div class="mini"><strong>Parfum în clasă</strong><p>Mirosul ajunge și la colegii aflați mai departe.</p><span class="tag">răspândire în aer</span></div>
+    <div class="mini"><strong>Cerneală în apă</strong><p>Picătura colorată se împrăștie treptat.</p><span class="tag">amestec spontan</span></div>
+    <div class="mini"><strong>Praf în lumină</strong><p>Particulele mici par să „danseze”.</p><span class="tag">mișcare neregulată</span></div>
+    <div class="mini"><strong>Ceai în apă caldă</strong><p>Culoarea și aroma apar mai repede.</p><span class="tag">temperatura contează</span></div>
+  </div>
+  <div class="idea">Concluzie: la scară microscopică, particulele se mișcă permanent.</div>
+</div></section>
+
+<section class="page"><div class="card">
+  <span class="badge">Experimentez</span>
+  <h2>Difuzia în lichide</h2>
+  <p>Pregătește trei pahare: <strong>A</strong> cu apă cu gheață, <strong>B</strong> cu apă la temperatura camerei, <strong>C</strong> cu apă caldă.</p>
+  <p>Pune 2–3 picături de cerneală sau colorant în fiecare pahar și cronometrează timpul până când culoarea se uniformizează.</p>
+  <div class="svgbox">
+    <svg viewBox="0 0 900 305" role="img" aria-label="Trei pahare cu apă la temperaturi diferite">
+      <rect width="900" height="305" rx="24" fill="#071525"/>
+      <g transform="translate(75,35)"><path d="M30,0H190L165,220H55Z" fill="none" stroke="#e0f2fe" stroke-width="6"/><path d="M53,90H167L153,210H67Z" fill="#38bdf8" opacity=".55"/><circle cx="105" cy="135" r="17" fill="#a855f7"/><circle cx="128" cy="166" r="8" fill="#a855f7" opacity=".6"/><text x="110" y="262" text-anchor="middle" fill="#e0f2fe" font-size="27" font-weight="800">A: rece</text></g>
+      <g transform="translate(340,35)"><path d="M30,0H190L165,220H55Z" fill="none" stroke="#e0f2fe" stroke-width="6"/><path d="M53,90H167L153,210H67Z" fill="#60a5fa" opacity=".55"/><circle cx="90" cy="125" r="12" fill="#a855f7"/><circle cx="130" cy="150" r="10" fill="#a855f7" opacity=".75"/><circle cx="100" cy="188" r="7" fill="#a855f7" opacity=".55"/><text x="110" y="262" text-anchor="middle" fill="#e0f2fe" font-size="27" font-weight="800">B: obișnuită</text></g>
+      <g transform="translate(605,35)"><path d="M30,0H190L165,220H55Z" fill="none" stroke="#e0f2fe" stroke-width="6"/><path d="M53,90H167L153,210H67Z" fill="#fb923c" opacity=".55"/><circle cx="82" cy="115" r="10" fill="#a855f7"/><circle cx="130" cy="122" r="9" fill="#a855f7" opacity=".8"/><circle cx="105" cy="150" r="8" fill="#a855f7" opacity=".7"/><circle cx="145" cy="178" r="7" fill="#a855f7" opacity=".6"/><circle cx="78" cy="194" r="6" fill="#a855f7" opacity=".5"/><path d="M92 62q18-32 34 0M128 58q18-32 34 0" fill="none" stroke="#fed7aa" stroke-width="6" stroke-linecap="round"/><text x="110" y="262" text-anchor="middle" fill="#e0f2fe" font-size="27" font-weight="800">C: caldă</text></g>
+    </svg>
+    <div class="caption">Colorantul se uniformizează cel mai repede în apa caldă.</div>
+  </div>
+  <div class="note">Lucrează în siguranță: apa caldă se folosește doar cu acordul profesorului.</div>
+</div></section>
+
+<section class="page"><div class="card">
+  <span class="badge">Experimentez</span>
+  <h2>Model pentru mișcarea browniană</h2>
+  <p>O simulare simplă folosește biluțe mici care lovesc o bilă mai mare. Bila mare se deplasează neregulat, deoarece primește lovituri din toate părțile.</p>
+  <div class="svgbox">
+    <svg viewBox="0 0 900 360" role="img" aria-label="Simulare pentru mișcarea browniană">
+      <rect width="900" height="360" rx="24" fill="#071525"/><rect x="90" y="52" width="720" height="240" rx="30" fill="#0f2a44" stroke="#7dd3fc" stroke-width="5"/>
+      <circle cx="465" cy="178" r="43" fill="#facc15" stroke="#fff7ed" stroke-width="6"/><text x="465" y="187" text-anchor="middle" font-size="24" font-weight="900" fill="#422006">particulă</text>
+      <g fill="#67e8f9" opacity=".9"><circle cx="180" cy="110" r="13"/><circle cx="240" cy="210" r="11"/><circle cx="315" cy="145" r="12"/><circle cx="550" cy="122" r="13"/><circle cx="635" cy="215" r="10"/><circle cx="720" cy="145" r="12"/><circle cx="690" cy="260" r="9"/><circle cx="255" cy="92" r="9"/><circle cx="565" cy="260" r="11"/><circle cx="150" cy="245" r="10"/></g>
+      <g stroke="#a7f3d0" stroke-width="5" stroke-linecap="round"><path d="M195 110L270 135"/><path d="M560 125L505 155"/><path d="M640 215L520 190"/><path d="M320 145L415 165"/></g>
+      <path d="M465 178C430 142 510 122 485 90C450 48 548 48 595 88" fill="none" stroke="#fef08a" stroke-width="7" stroke-linecap="round" stroke-dasharray="13 12"/>
+      <text x="450" y="330" text-anchor="middle" fill="#e0f2fe" font-size="26" font-weight="800">loviri neregulate → traiectorie haotică</text>
+    </svg>
+  </div>
+  <div class="idea">Acest model arată de ce o particulă suspendată într-un fluid are o mișcare greu de prevăzut.</div>
+</div></section>
+
+<section class="page"><div class="card">
+  <span class="badge">Rețin</span>
+  <h2>Mișcarea browniană</h2>
+  <p><strong>Mișcarea browniană</strong> este mișcarea aleatorie a particulelor foarte mici suspendate într-un fluid.</p>
+  <p>Particula vizibilă este lovită permanent de moleculele fluidului. Loviturile nu sunt egale din toate părțile, deci direcția se schimbă mereu.</p>
+  <div class="grid">
+    <div class="mini"><strong>Exemplu</strong><p>Granule de polen pe apă, observate la microscop.</p></div>
+    <div class="mini"><strong>Important</strong><p>Haotic nu înseamnă „fără cauză”, ci neregulat și greu de prevăzut.</p></div>
+  </div>
+  <div class="idea">Pe scurt: particule mici + fluid + ciocniri permanente = mișcare browniană.</div>
+</div></section>
+
+<section class="page"><div class="card">
+  <span class="badge">Rețin</span>
+  <h2>Difuzia</h2>
+  <p><strong>Difuzia</strong> este pătrunderea moleculelor unui corp printre moleculele altui corp, fără intervenție exterioară.</p>
+  <div class="svgbox">
+    <svg viewBox="0 0 900 320" role="img" aria-label="Difuzia colorantului în apă">
+      <rect width="900" height="320" rx="24" fill="#071525"/>
+      <g transform="translate(70,45)"><text x="155" y="0" text-anchor="middle" fill="#e0f2fe" font-size="28" font-weight="900">la început</text><rect x="10" y="25" width="290" height="205" rx="25" fill="#0f2a44" stroke="#7dd3fc" stroke-width="4"/><circle cx="155" cy="118" r="42" fill="#a855f7" opacity=".95"/><circle cx="155" cy="118" r="72" fill="#a855f7" opacity=".16"/></g>
+      <path d="M335 160H535" stroke="#a7f3d0" stroke-width="8" stroke-linecap="round"/><text x="435" y="135" text-anchor="middle" fill="#d1fae5" font-size="24" font-weight="900">timp</text>
+      <g transform="translate(560,45)"><text x="155" y="0" text-anchor="middle" fill="#e0f2fe" font-size="28" font-weight="900">după un timp</text><rect x="10" y="25" width="290" height="205" rx="25" fill="#0f2a44" stroke="#7dd3fc" stroke-width="4"/><g fill="#a855f7"><circle cx="60" cy="70" r="13" opacity=".65"/><circle cx="115" cy="92" r="11" opacity=".72"/><circle cx="172" cy="76" r="12" opacity=".7"/><circle cx="228" cy="112" r="10" opacity=".62"/><circle cx="72" cy="154" r="12" opacity=".62"/><circle cx="142" cy="150" r="14" opacity=".72"/><circle cx="210" cy="170" r="11" opacity=".6"/><circle cx="250" cy="70" r="9" opacity=".55"/><circle cx="95" cy="205" r="9" opacity=".5"/></g></g>
+    </svg>
+  </div>
+  <div class="grid">
+    <div class="mini"><strong>În gaze</strong><br>parfum în cameră</div>
+    <div class="mini"><strong>În lichide</strong><br>cerneală în apă</div>
+    <div class="mini"><strong>În solide</strong><br>există, dar este mult mai lentă</div>
+    <div class="mini"><strong>Cauza</strong><br>mișcarea continuă a particulelor</div>
+  </div>
+</div></section>
+
+<section class="page"><div class="card">
+  <span class="badge">Rețin</span>
+  <h2>Agitația termică</h2>
+  <p><strong>Agitația termică</strong> este mișcarea spontană, continuă și dezordonată a moleculelor unui corp.</p>
+  <p>Există în toate stările de agregare.</p>
+  <div class="states">
+    <div class="state"><strong>Solid</strong><div class="atoms">●●●<br>●●●</div><p>Particulele oscilează în jurul unor poziții apropiate.</p></div>
+    <div class="state"><strong>Lichid</strong><div class="atoms">● ●●<br> ● ●</div><p>Particulele sunt apropiate, dar pot aluneca unele printre altele.</p></div>
+    <div class="state"><strong>Gaz</strong><div class="atoms">● &nbsp; ●<br>&nbsp; ● &nbsp;</div><p>Particulele sunt depărtate și se mișcă liber în toate direcțiile.</p></div>
+  </div>
+  <div class="idea">Când temperatura crește, agitația termică devine mai intensă. De aceea difuzia se produce mai repede.</div>
+</div></section>
+
+<section class="page"><div class="card">
+  <span class="badge">Exemplu</span>
+  <h2>Temperatura schimbă timpul de difuzie</h2>
+  <p>În apă rece, culoarea se uniformizează în aproximativ \(60\,s\). În apă caldă, în aproximativ \(20\,s\).</p>
+  <div class="formula">\[\frac{20\,s}{60\,s}=\frac{1}{3}\]</div>
+  <p>Timpul în apa caldă este de trei ori mai mic.</p>
+  <div class="idea">Interpretare: la temperatură mai mare, particulele se mișcă mai intens, deci amestecul spontan apare mai repede.</div>
+  <div class="note">Nu spunem că „apa trage colorantul”. Spunem că particulele au agitație termică mai mare.</div>
+</div></section>
+
+<section class="page"><div class="card">
+  <span class="badge">Aplic</span>
+  <h2>Cum recunoști fenomenul?</h2>
+  <div class="grid">
+    <div class="mini"><strong>Praful luminat de Soare</strong><p>Particulele mici se mișcă neregulat în aer.</p><span class="tag">mișcare browniană</span></div>
+    <div class="mini"><strong>Mirosul de portocală</strong><p>Moleculele se răspândesc în clasă.</p><span class="tag">difuzie</span></div>
+    <div class="mini"><strong>Colorant în apă</strong><p>Culoarea se întinde în lichid.</p><span class="tag">difuzie în lichide</span></div>
+    <div class="mini"><strong>Apă mai caldă</strong><p>Particulele se mișcă mai intens.</p><span class="tag">agitație termică</span></div>
+  </div>
+  <div class="note">Legătura importantă: agitația termică explică atât mișcarea browniană, cât și difuzia.</div>
+</div></section>
+
+<section class="page"><div class="card">
+  <span class="badge">Verificare rapidă</span>
+  <h2>Alege varianta corectă</h2>
+  <div class="quiz" id="quiz">
+    <div class="q" data-answer="b"><p>1. Mișcarea browniană este:</p><div class="choices"><label class="choice"><input type="radio" name="q1" value="a"> deplasarea ordonată a unei mașini</label><label class="choice"><input type="radio" name="q1" value="b"> mișcarea aleatorie a particulelor suspendate într-un fluid</label><label class="choice"><input type="radio" name="q1" value="c"> rotația Pământului</label></div></div>
+    <div class="q" data-answer="b"><p>2. Difuzia reprezintă:</p><div class="choices"><label class="choice"><input type="radio" name="q2" value="a"> oprirea totală a moleculelor</label><label class="choice"><input type="radio" name="q2" value="b"> pătrunderea moleculelor unui corp printre moleculele altui corp</label><label class="choice"><input type="radio" name="q2" value="c"> măsurarea masei</label></div></div>
+    <div class="q" data-answer="c"><p>3. Când temperatura crește, difuzia se produce de obicei:</p><div class="choices"><label class="choice"><input type="radio" name="q3" value="a"> mai lent</label><label class="choice"><input type="radio" name="q3" value="b"> la fel în orice situație</label><label class="choice"><input type="radio" name="q3" value="c"> mai repede</label></div></div>
+    <div class="q" data-answer="a"><p>4. Agitația termică există:</p><div class="choices"><label class="choice"><input type="radio" name="q4" value="a"> în solide, lichide și gaze</label><label class="choice"><input type="radio" name="q4" value="b"> numai în gaze</label><label class="choice"><input type="radio" name="q4" value="c"> numai în apă fierbinte</label></div></div>
+  </div>
+  <button class="check" type="button" onclick="checkQuiz()">Verifică răspunsurile</button>
+  <div id="feedback" class="feedback" aria-live="polite"></div>
+  <div class="final">Prof. Dănuț Andronie<br>email: <span class="email">danutmg@gmail.com</span></div>
+</div></section>
+</main>
+</div>
+<nav class="nav" aria-label="Navigare lecție"><div class="nav-inner"><button class="back" id="backBtn" type="button">⬅ Înapoi</button><div class="counter" id="counter">1/10</div><button class="next" id="nextBtn" type="button">Mergi mai departe ➜</button></div><div class="kbd">Poți folosi și tastele ← / →</div></nav>
+<script>
+const pages=[...document.querySelectorAll('.page')],backBtn=document.getElementById('backBtn'),nextBtn=document.getElementById('nextBtn'),counter=document.getElementById('counter'),banner=document.getElementById('banner'),nextLesson='./lectia-2.html';let i=0;
+function show(n){i=Math.max(0,Math.min(n,pages.length-1));pages.forEach((p,k)=>p.classList.toggle('active',k===i));counter.textContent=(i+1)+'/'+pages.length;backBtn.disabled=i===0;nextBtn.textContent=i===pages.length-1?'Lecția următoare ➜':'Mergi mai departe ➜';banner.style.display=i===0?'block':'none';window.scrollTo({top:0,behavior:'smooth'});if(window.MathJax&&MathJax.typesetPromise){MathJax.typesetPromise([pages[i]]).catch(()=>{})}}
+backBtn.onclick=()=>show(i-1);nextBtn.onclick=()=>{if(i===pages.length-1) location.href=nextLesson; else show(i+1)};
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();i===pages.length-1?location.href=nextLesson:show(i+1)} if(e.key==='ArrowLeft'){e.preventDefault();show(i-1)}});
+function checkQuiz(){const qs=[...document.querySelectorAll('.q')];let a=0,c=0;qs.forEach(q=>{const x=q.querySelector('input:checked');if(x){a++;if(x.value===q.dataset.answer)c++}});const f=document.getElementById('feedback');f.className='feedback';if(a<qs.length){f.textContent='Alege mai întâi o variantă.';f.classList.add('warn');return}if(c===qs.length){f.textContent='Corect!';f.classList.add('good')}else{f.textContent='Mai încearcă. Recitește pagina cu explicația.';f.classList.add('bad')}}
+show(0);
+</script>
 </body>
 </html>

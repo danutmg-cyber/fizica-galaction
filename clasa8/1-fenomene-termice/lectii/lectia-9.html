@@ -2,825 +2,962 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Lecția 9 | Extindere în tehnologie: Stabilirea temperaturii de echilibru în sisteme neomogene | Fizica Galaction</title>
-  <meta name="description" content="Lecția 9 pentru clasa a VIII-a: Extindere în tehnologie: Stabilirea temperaturii de echilibru în sisteme neomogene. Lecție interactivă pe pagini, cu buton Mergi mai departe, MathJax și verificare rapidă.">
-  <style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Lecția 9 | Stabilirea temperaturii de echilibru în sisteme neomogene | Fizica Galaction</title>
+  <meta name="description" content="Lecție interactivă de fizică pentru clasa a VIII-a: stabilirea temperaturii de echilibru în sisteme neomogene.">
 
-    *{box-sizing:border-box;}
-    :root{
-      --bg:#0f172a;
-      --surface:#1e293b;
-      --surface-2:#162033;
-      --surface-3:#0b1220;
-      --text:#f8fafc;
-      --muted:#cbd5e1;
-      --accent:#22c55e;
-      --accent-2:#38bdf8;
-      --accent-3:#f59e0b;
-      --accent-4:#a78bfa;
-      --danger:#ef4444;
-      --ok:#22c55e;
-      --border:rgba(255,255,255,.12);
-      --shadow:0 10px 26px rgba(0,0,0,.24);
-      --radius:18px;
-    }
-
-    html{
-      scroll-behavior:smooth;
-      font-size:clamp(16px, 0.35vw + 15px, 19px);
-    }
-
-    body{
-      margin:0;
-      font-family: Arial, sans-serif;
-      background:
-        radial-gradient(circle at top right, rgba(56,189,248,.12), transparent 26%),
-        radial-gradient(circle at top left, rgba(34,197,94,.10), transparent 22%),
-        linear-gradient(180deg, #0f172a 0%, #111827 100%);
-      color:var(--text);
-      line-height:1.65;
-      min-height:100vh;
-    }
-
-    .wrapper{
-      width:min(100%, 980px);
-      margin:0 auto;
-      padding-inline:clamp(12px, 2vw, 24px);
-    }
-
-    .site-header{
-      background:rgba(30, 41, 59, .92);
-      border-bottom:3px solid var(--accent);
-      position:sticky;
-      top:0;
-      z-index:30;
-      backdrop-filter: blur(8px);
-    }
-
-    .site-header .wrapper{
-      padding-block:14px;
-    }
-
-    .site-title{
-      margin:0;
-      font-size:clamp(1.2rem, 2vw, 1.9rem);
-      line-height:1.2;
-    }
-
-    .site-subtitle{
-      margin:.35rem 0 0;
-      color:var(--muted);
-      font-size:.98rem;
-    }
-
-    .hero{
-      padding:24px 0 10px;
-    }
-
-    .hero-card,
-    .lesson-page{
-      background:linear-gradient(180deg, rgba(30,41,59,.98), rgba(15,23,42,.98));
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-    }
-
-    .hero-card{
-      padding:22px;
-    }
-
-    .eyebrow{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      border-radius:999px;
-      padding:6px 12px;
-      background:rgba(56,189,248,.12);
-      color:#dbeafe;
-      font-size:.92rem;
-      font-weight:700;
-      margin-bottom:12px;
-    }
-
-    .hero h1{
-      margin:.1rem 0 .7rem;
-      font-size:clamp(1.5rem, 4vw, 2.4rem);
-      line-height:1.18;
-    }
-
-    .quote{
-      margin:0 0 1rem;
-      color:#fde68a;
-      font-style:italic;
-      border-left:4px solid var(--accent-3);
-      padding-left:12px;
-    }
-
-    .hero-grid{
-      display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));
-      gap:12px;
-      margin-top:14px;
-    }
-
-    .pill{
-      background:rgba(15,23,42,.8);
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:12px 14px;
-    }
-
-    .pill strong{
-      display:block;
-      color:#e2e8f0;
-      margin-bottom:4px;
-      font-size:.95rem;
-    }
-
-    .top-tools{
-      position:sticky;
-      top:86px;
-      z-index:20;
-      padding-bottom:10px;
-      background:linear-gradient(180deg, rgba(15,23,42,.96), rgba(15,23,42,.78), rgba(15,23,42,0));
-    }
-
-    .progress-wrap{
-      height:10px;
-      background:rgba(255,255,255,.08);
-      border-radius:999px;
-      overflow:hidden;
-      margin:4px 0 12px;
-    }
-
-    .progress-bar{
-      height:100%;
-      width:0%;
-      background:linear-gradient(90deg, var(--accent), var(--accent-2));
-      transition:width .25s ease;
-    }
-
-    .tabs{
-      display:flex;
-      gap:8px;
-      overflow:auto;
-      padding-bottom:4px;
-      scrollbar-width:thin;
-    }
-
-    .tab-btn{
-      white-space:nowrap;
-      border:1px solid var(--border);
-      background:rgba(30,41,59,.95);
-      color:var(--text);
-      border-radius:999px;
-      padding:10px 14px;
-      cursor:pointer;
-      font-weight:700;
-      font-size:.92rem;
-    }
-
-    .tab-btn.active{
-      background:linear-gradient(90deg, rgba(34,197,94,.18), rgba(56,189,248,.18));
-      border-color:rgba(56,189,248,.55);
-    }
-
-    .lesson-shell{
-      padding:4px 0 110px;
-    }
-
-    .lesson-page{
-      display:none;
-      padding:22px;
-      margin-bottom:14px;
-    }
-
-    .lesson-page.active{
-      display:block;
-      animation:fadeIn .25s ease;
-    }
-
-    @keyframes fadeIn{
-      from{opacity:.45; transform:translateY(8px);}
-      to{opacity:1; transform:translateY(0);}
-    }
-
-    .section-title{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin-bottom:14px;
-      color:#dbeafe;
-      font-size:1.05rem;
-    }
-
-    .dot{
-      width:12px;
-      height:12px;
-      border-radius:50%;
-      background:linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow:0 0 0 4px rgba(56,189,248,.14);
-      flex:0 0 auto;
-    }
-
-    h2,h3,h4{
-      line-height:1.25;
-      margin-top:0;
-    }
-
-    p, li{
-      color:#f8fafc;
-    }
-
-    .lead{
-      font-size:1.06rem;
-      color:#e2e8f0;
-    }
-
-    .muted{color:var(--muted);}
-
-    .split,
-    .grid-2,
-    .grid-3{
-      display:grid;
-      gap:14px;
-    }
-
-    .split,
-    .grid-2{
-      grid-template-columns:repeat(auto-fit, minmax(250px, 1fr));
-    }
-
-    .grid-3{
-      grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));
-    }
-
-    .mini-card,
-    .formula-card,
-    .note,
-    .quiz-card,
-    .example,
-    .diagram,
-    .table-card{
-      background:rgba(15,23,42,.72);
-      border:1px solid var(--border);
-      border-radius:16px;
-      padding:16px;
-    }
-
-    .mini-card h4,
-    .formula-card h4,
-    .quiz-card h4,
-    .example h4{
-      margin-bottom:10px;
-    }
-
-    .accent{
-      color:#93c5fd;
-      font-weight:700;
-    }
-
-    .check-list,
-    .plain-list{
-      margin:0;
-      padding-left:20px;
-    }
-
-    .check-list li{margin:.42rem 0;}
-    .check-list li::marker{color:var(--accent);}
-
-    .note{
-      border-left:4px solid var(--accent-3);
-      color:#fef3c7;
-      background:rgba(245,158,11,.09);
-    }
-
-    .ok-box{
-      border-left:4px solid var(--accent);
-      color:#dcfce7;
-      background:rgba(34,197,94,.10);
-      padding:12px 14px;
-      border-radius:14px;
-    }
-
-    .blue-box{
-      border-left:4px solid var(--accent-2);
-      color:#dbeafe;
-      background:rgba(56,189,248,.10);
-      padding:12px 14px;
-      border-radius:14px;
-    }
-
-    .formula{
-      font-size:1.04rem;
-      overflow:auto hidden;
-    }
-
-    .formula-card{
-      background:linear-gradient(180deg, rgba(56,189,248,.09), rgba(15,23,42,.76));
-    }
-
-    .diagram-row{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-      justify-content:center;
-    }
-
-    .chip{
-      background:rgba(30,41,59,.95);
-      border:1px solid var(--border);
-      border-radius:999px;
-      padding:8px 12px;
-      font-weight:700;
-      font-size:.94rem;
-    }
-
-    .arrow{
-      font-size:1.4rem;
-      color:#93c5fd;
-      font-weight:700;
-    }
-
-    .table{
-      width:100%;
-      border-collapse:collapse;
-      font-size:.96rem;
-    }
-
-    .table th,
-    .table td{
-      border:1px solid rgba(255,255,255,.10);
-      padding:10px;
-      vertical-align:top;
-      text-align:left;
-    }
-
-    .table th{
-      background:rgba(56,189,248,.11);
-      color:#e0f2fe;
-    }
-
-    .quiz-card{
-      margin-bottom:14px;
-    }
-
-    .quiz-card p{
-      margin-top:0;
-    }
-
-    .choice-grid{
-      display:grid;
-      gap:10px;
-      margin-top:10px;
-    }
-
-    .choice-grid label{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      background:rgba(30,41,59,.72);
-      border:1px solid var(--border);
-      border-radius:14px;
-      padding:12px 14px;
-      cursor:pointer;
-    }
-
-    .choice-grid input,
-    .choice-grid select{
-      margin-top:2px;
-      accent-color:#22c55e;
-    }
-
-    .inline-input,
-    input[type="text"],
-    input[type="number"],
-    select{
-      width:100%;
-      padding:12px 14px;
-      border-radius:12px;
-      border:1px solid rgba(255,255,255,.16);
-      background:#0b1220;
-      color:#f8fafc;
-      font-size:1rem;
-    }
-
-    .btn{
-      border:none;
-      border-radius:14px;
-      padding:13px 18px;
-      font-size:1rem;
-      font-weight:800;
-      cursor:pointer;
-      transition:transform .12s ease, opacity .12s ease;
-    }
-
-    .btn:hover{transform:translateY(-1px);}
-    .btn:disabled{opacity:.55; cursor:not-allowed; transform:none;}
-
-    .btn-primary{
-      background:linear-gradient(90deg, var(--accent), #16a34a);
-      color:#04130a;
-    }
-
-    .btn-secondary{
-      background:rgba(148,163,184,.16);
-      color:var(--text);
-      border:1px solid var(--border);
-    }
-
-    .btn-accent{
-      background:linear-gradient(90deg, var(--accent-2), #2563eb);
-      color:white;
-    }
-
-    .feedback{
-      margin-top:10px;
-      font-weight:700;
-      min-height:24px;
-    }
-
-    .feedback.ok{color:#86efac;}
-    .feedback.bad{color:#fca5a5;}
-
-    .score-box{
-      display:none;
-      margin-top:14px;
-      background:rgba(34,197,94,.10);
-      border:1px solid rgba(34,197,94,.28);
-      border-radius:14px;
-      padding:14px;
-    }
-
-    .bottom-nav{
-      position:fixed;
-      left:0;
-      right:0;
-      bottom:0;
-      z-index:40;
-      background:rgba(11,18,32,.96);
-      border-top:1px solid rgba(255,255,255,.10);
-      backdrop-filter: blur(12px);
-      box-shadow:0 -10px 28px rgba(0,0,0,.28);
-    }
-
-    .bottom-nav .wrapper{
-      display:grid;
-      grid-template-columns:auto 1fr auto;
-      gap:12px;
-      align-items:center;
-      padding-block:10px calc(10px + env(safe-area-inset-bottom));
-    }
-
-    .page-counter{
-      text-align:center;
-      color:#cbd5e1;
-      font-weight:700;
-      font-size:.96rem;
-    }
-
-    .footer-links{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
-
-    .footer-links a{
-      color:#93c5fd;
-      font-weight:700;
-    }
-
-    @media (max-width: 720px){
-      .bottom-nav .wrapper{
-        grid-template-columns:1fr 1fr;
-      }
-      .page-counter{
-        grid-column:1 / -1;
-        order:-1;
-      }
-      .btn{
-        width:100%;
-      }
-      .lesson-page{padding:18px;}
-      .hero-card{padding:18px;}
-    }
-
-  </style>
   <script>
     window.MathJax = {
       tex: {
         inlineMath: [['\\(', '\\)'], ['$', '$']],
-        displayMath: [['\\[', '\\]']]
+        displayMath: [['\\[', '\\]']],
+        processEscapes: true
       },
-      options: {
-        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-      }
+      svg: { fontCache: 'global' },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
     };
   </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root{
+      --bg:#08111f;
+      --panel:#102033;
+      --panel2:#132943;
+      --text:#f4f7fb;
+      --muted:#cbd5e1;
+      --cyan:#67e8f9;
+      --cyan2:#22d3ee;
+      --green:#22c55e;
+      --green-dark:#15803d;
+      --light:#e2e8f0;
+      --dark:#0f172a;
+      --amber:#facc15;
+      --red:#fb7185;
+      --border:rgba(148,163,184,.28);
+      --shadow:0 18px 45px rgba(0,0,0,.35);
+      --radius:22px;
+    }
+
+    *{ box-sizing:border-box; }
+
+    html, body{
+      margin:0;
+      min-height:100%;
+      background:
+        radial-gradient(circle at top left, rgba(34,211,238,.16), transparent 34rem),
+        radial-gradient(circle at bottom right, rgba(34,197,94,.10), transparent 32rem),
+        var(--bg);
+      color:var(--text);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    }
+
+    body{
+      min-height:100dvh;
+      line-height:1.55;
+    }
+
+    .app{
+      width:min(960px, 100%);
+      margin:0 auto;
+      min-height:100dvh;
+      display:flex;
+      flex-direction:column;
+    }
+
+    .top-banner{
+      margin:14px 14px 0;
+      padding:16px;
+      border:1px solid rgba(103,232,249,.35);
+      border-radius:var(--radius);
+      background:linear-gradient(135deg, rgba(14,165,233,.20), rgba(15,23,42,.72));
+      box-shadow:var(--shadow);
+      text-align:center;
+    }
+
+    .school{
+      color:var(--cyan);
+      font-weight:900;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      font-size:clamp(1rem, 3.5vw, 1.25rem);
+    }
+
+    .teacher{
+      margin-top:4px;
+      color:#dbeafe;
+      font-size:clamp(.92rem, 3vw, 1.05rem);
+      font-weight:700;
+    }
+
+    .motto{
+      margin:12px auto 0;
+      width:min(760px,100%);
+      padding:10px 12px;
+      border-left:4px solid var(--cyan2);
+      border-radius:14px;
+      background:rgba(250,204,21,.12);
+      color:#fef3c7;
+      font-style:italic;
+      font-weight:650;
+    }
+
+    main{
+      flex:1;
+      display:flex;
+      flex-direction:column;
+      padding:14px;
+      padding-bottom:106px;
+    }
+
+    .page{
+      display:none;
+      width:100%;
+      min-height:calc(100dvh - 132px);
+      animation:fade .22s ease-in-out;
+    }
+
+    .page.active{
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(19,41,67,.96), rgba(15,32,51,.96));
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:clamp(18px, 4.4vw, 34px);
+      overflow:hidden;
+    }
+
+    h1, h2, h3{
+      margin:0 0 12px;
+      line-height:1.16;
+    }
+
+    h1{
+      font-size:clamp(1.65rem, 7vw, 3rem);
+      color:var(--cyan);
+      letter-spacing:-.03em;
+    }
+
+    h2{
+      font-size:clamp(1.35rem, 5.2vw, 2.25rem);
+      color:var(--cyan);
+      letter-spacing:-.02em;
+    }
+
+    h3{
+      color:#bfdbfe;
+      font-size:clamp(1.1rem, 4vw, 1.45rem);
+    }
+
+    p, li{
+      font-size:clamp(1.03rem, 3.85vw, 1.28rem);
+    }
+
+    p{ margin:10px 0; }
+
+    ul, ol{
+      margin:10px 0 0;
+      padding-left:1.25em;
+    }
+
+    li{ margin:7px 0; }
+
+    .lead{
+      font-size:clamp(1.15rem, 4.6vw, 1.5rem);
+      color:#e0f2fe;
+      font-weight:750;
+    }
+
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 10px;
+      border:1px solid rgba(103,232,249,.36);
+      border-radius:999px;
+      color:#cffafe;
+      background:rgba(8,145,178,.16);
+      font-size:.95rem;
+      font-weight:800;
+      margin-bottom:12px;
+    }
+
+    .idea{
+      margin-top:14px;
+      padding:14px;
+      border-radius:18px;
+      border:1px solid rgba(34,211,238,.32);
+      background:rgba(8,145,178,.14);
+    }
+
+    .retin{
+      margin-top:14px;
+      padding:14px;
+      border-radius:18px;
+      border-left:5px solid var(--green);
+      background:rgba(34,197,94,.12);
+    }
+
+    .warning{
+      margin-top:14px;
+      padding:14px;
+      border-radius:18px;
+      border-left:5px solid var(--amber);
+      background:rgba(250,204,21,.12);
+      color:#fef3c7;
+    }
+
+    .formula{
+      margin:16px 0;
+      padding:12px 10px;
+      border-radius:18px;
+      border:1px solid rgba(148,163,184,.28);
+      background:rgba(15,23,42,.50);
+      overflow-x:auto;
+      -webkit-overflow-scrolling:touch;
+      text-align:center;
+    }
+
+    .formula mjx-container[display="true"]{
+      margin:.45em 0 !important;
+      font-size:clamp(100%, 3.6vw, 115%) !important;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:12px;
+      margin-top:12px;
+    }
+
+    .mini-card{
+      border:1px solid var(--border);
+      border-radius:18px;
+      background:rgba(15,23,42,.35);
+      padding:14px;
+    }
+
+    .mini-card strong{
+      color:#bae6fd;
+      display:block;
+      margin-bottom:5px;
+      font-size:clamp(1.03rem, 3.6vw, 1.2rem);
+    }
+
+    .mini-card p{
+      margin:0;
+      color:var(--muted);
+      font-size:clamp(.98rem, 3.5vw, 1.12rem);
+    }
+
+    .steps{
+      counter-reset:step;
+      display:grid;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    .step{
+      counter-increment:step;
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:10px;
+      align-items:start;
+      padding:12px;
+      border-radius:16px;
+      background:rgba(15,23,42,.42);
+      border:1px solid rgba(148,163,184,.22);
+    }
+
+    .step::before{
+      content:counter(step);
+      width:32px;
+      height:32px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:var(--cyan2);
+      color:#052f3a;
+      font-weight:950;
+    }
+
+    .step p{
+      margin:0;
+      font-size:clamp(1rem, 3.5vw, 1.15rem);
+    }
+
+    .svgbox{
+      margin:14px auto;
+      width:min(720px, 100%);
+      padding:12px;
+      border-radius:20px;
+      border:1px solid rgba(103,232,249,.26);
+      background:rgba(2,6,23,.28);
+    }
+
+    .svgbox > svg{
+      width:100%;
+      height:auto;
+      display:block;
+    }
+
+    .caption{
+      color:#dbeafe;
+      font-size:clamp(.92rem, 3.2vw, 1.05rem);
+      text-align:center;
+      margin-top:8px;
+    }
+
+    .quiz{
+      display:grid;
+      gap:12px;
+      margin-top:14px;
+    }
+
+    .question{
+      padding:14px;
+      border-radius:18px;
+      background:rgba(15,23,42,.38);
+      border:1px solid rgba(148,163,184,.22);
+    }
+
+    .question p{
+      margin:0 0 10px;
+      font-weight:800;
+      color:#e0f2fe;
+    }
+
+    .answers{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:8px;
+    }
+
+    .answers label{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:10px;
+      align-items:center;
+      padding:10px 12px;
+      border-radius:14px;
+      border:1px solid rgba(148,163,184,.24);
+      background:rgba(2,6,23,.22);
+      color:#f8fafc;
+      font-size:clamp(1rem, 3.6vw, 1.14rem);
+      cursor:pointer;
+    }
+
+    .answers input{
+      transform:scale(1.16);
+      accent-color:var(--green);
+    }
+
+    .check-row{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-top:12px;
+    }
+
+    .check-btn{
+      border:0;
+      border-radius:14px;
+      padding:11px 16px;
+      background:var(--cyan2);
+      color:#062a35;
+      font-weight:950;
+      font-size:1rem;
+      cursor:pointer;
+    }
+
+    .feedback{
+      min-height:28px;
+      font-weight:850;
+      color:#fef3c7;
+    }
+
+    .final-banner{
+      margin-top:18px;
+      padding:16px;
+      border-radius:18px;
+      border:1px solid rgba(103,232,249,.35);
+      background:rgba(8,145,178,.15);
+      text-align:center;
+    }
+
+    .final-banner strong{
+      color:var(--cyan);
+      display:block;
+      font-size:1.15rem;
+    }
+
+    .bottom-nav{
+      position:sticky;
+      bottom:0;
+      left:0;
+      right:0;
+      z-index:10;
+      padding:10px 14px calc(10px + env(safe-area-inset-bottom));
+      background:linear-gradient(180deg, rgba(8,17,31,0), rgba(8,17,31,.96) 22%, rgba(8,17,31,1));
+      backdrop-filter:blur(10px);
+    }
+
+    .nav-inner{
+      width:min(960px, 100%);
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      gap:10px;
+      align-items:center;
+    }
+
+    .nav-btn{
+      border:0;
+      border-radius:16px;
+      padding:13px 12px;
+      min-height:52px;
+      font-size:clamp(.95rem, 3.5vw, 1.08rem);
+      font-weight:950;
+      cursor:pointer;
+      box-shadow:0 10px 22px rgba(0,0,0,.28);
+      transition:transform .15s ease, filter .15s ease;
+    }
+
+    .nav-btn:active{ transform:translateY(1px) scale(.99); }
+    .nav-btn:disabled{ opacity:.45; cursor:not-allowed; box-shadow:none; }
+
+    .back-btn{
+      background:var(--light);
+      color:var(--dark);
+    }
+
+    .next-btn{
+      background:var(--green);
+      color:#052e16;
+    }
+
+    .next-btn:hover{ background:#4ade80; }
+
+    .page-indicator{
+      min-width:70px;
+      text-align:center;
+      font-weight:950;
+      color:#e0f2fe;
+      background:rgba(15,23,42,.75);
+      border:1px solid rgba(148,163,184,.28);
+      border-radius:999px;
+      padding:9px 10px;
+    }
+
+    .hidden{ display:none !important; }
+
+    @keyframes fade{
+      from{ opacity:0; transform:translateY(8px); }
+      to{ opacity:1; transform:translateY(0); }
+    }
+
+    @media (max-width: 680px){
+      .grid{
+        grid-template-columns:1fr;
+      }
+
+      main{
+        padding-left:10px;
+        padding-right:10px;
+      }
+
+      .top-banner{
+        margin-left:10px;
+        margin-right:10px;
+      }
+
+      .card{
+        border-radius:20px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .page{ animation:none; }
+      .nav-btn{ transition:none; }
+    }
+  </style>
 </head>
-<body data-next-lesson="lectia-10.html">
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction – Clasa a VIII-a</h1>
-      <p class="site-subtitle">Unitatea 1: Fenomene termice</p>
-    </div>
+
+<body>
+<div class="app">
+
+  <header class="top-banner" id="topBanner">
+    <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+    <div class="teacher">Prof. Dănuț Andronie</div>
+    <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
   </header>
 
-  <main class="wrapper">
-    <section class="hero">
-      <div class="hero-card">
-        <div class="eyebrow">Lecția 9</div>
-        <h1>Extindere în tehnologie: Stabilirea temperaturii de echilibru în sisteme neomogene</h1>
-        <p class="quote">„Fizica nu este dominată de formule, ci de logică.”</p>
-        <p class="lead">Temperatura finală după schimb de căldură</p>
+  <main id="lesson">
+    <section class="page active">
+      <div class="card">
+        <span class="tag">Clasa a VIII-a • Fenomene termice • Lecția 9</span>
+        <h1>Stabilirea temperaturii de echilibru în sisteme neomogene</h1>
+        <p class="lead">Când corpuri diferite sunt puse împreună, ele schimbă căldură până ajung la o temperatură comună.</p>
+        <div class="idea">
+          <p><strong>Ideea-cheie:</strong> corpul mai cald cedează energie, corpul mai rece primește energie, iar temperatura finală depinde de masa și materialul corpurilor.</p>
+        </div>
 
-        <div class="hero-grid">
-          <div class="pill">
-            <strong>Format</strong>
-            pagini scurte, ușor de parcurs
-          </div>
-          <div class="pill">
-            <strong>Conține</strong>
-            noțiuni, exemple, verificare rapidă
-          </div>
-          <div class="pill">
-            <strong>Compatibil</strong>
-            telefon, tabletă, PC
-          </div>
+        <div class="svgbox" aria-label="Două corpuri la temperaturi diferite ajung la temperatură comună">
+          <svg viewBox="0 0 760 250" role="img">
+            <defs>
+              <linearGradient id="hot" x1="0" x2="1">
+                <stop offset="0" stop-color="#fb7185"/>
+                <stop offset="1" stop-color="#f97316"/>
+              </linearGradient>
+              <linearGradient id="cold" x1="0" x2="1">
+                <stop offset="0" stop-color="#38bdf8"/>
+                <stop offset="1" stop-color="#2563eb"/>
+              </linearGradient>
+              <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L9,3 z" fill="#facc15"/>
+              </marker>
+            </defs>
+            <rect x="28" y="55" width="170" height="120" rx="22" fill="url(#hot)" opacity=".92"/>
+            <text x="113" y="110" text-anchor="middle" fill="white" font-size="30" font-weight="800">corp cald</text>
+            <text x="113" y="145" text-anchor="middle" fill="white" font-size="25">80°C</text>
+            <path d="M220 115 C285 65, 355 65, 420 115" fill="none" stroke="#facc15" stroke-width="9" marker-end="url(#arr)"/>
+            <text x="320" y="55" text-anchor="middle" fill="#fef3c7" font-size="26" font-weight="800">căldură</text>
+            <rect x="448" y="55" width="170" height="120" rx="22" fill="url(#cold)" opacity=".92"/>
+            <text x="533" y="110" text-anchor="middle" fill="white" font-size="30" font-weight="800">corp rece</text>
+            <text x="533" y="145" text-anchor="middle" fill="white" font-size="25">20°C</text>
+            <rect x="265" y="185" width="230" height="44" rx="22" fill="#22c55e" opacity=".85"/>
+            <text x="380" y="214" text-anchor="middle" fill="#052e16" font-size="25" font-weight="900">temperatură comună</text>
+          </svg>
+          <div class="caption">Schimbul de căldură continuă până la echilibru termic.</div>
         </div>
       </div>
     </section>
 
-    <section class="top-tools">
-      <div class="progress-wrap" aria-hidden="true">
-        <div class="progress-bar" id="progressBar"></div>
-      </div>
-      <div class="tabs" role="tablist" aria-label="Pagini lecție">
-        <button class="tab-btn active" type="button">1. Observ</button>
-<button class="tab-btn" type="button">2. Rețin</button>
-<button class="tab-btn" type="button">3. Mai departe</button>
-<button class="tab-btn" type="button">4. Aplic</button>
-<button class="tab-btn" type="button">5. Verificare</button>
-<button class="tab-btn" type="button">6. Rețin</button>
+    <section class="page">
+      <div class="card">
+        <span class="tag">Observ</span>
+        <h2>Ce înseamnă „sistem neomogen”?</h2>
+        <p>Un sistem este <strong>neomogen</strong> când este format din corpuri sau substanțe diferite.</p>
+        <div class="grid">
+          <div class="mini-card">
+            <strong>Exemplu 1</strong>
+            <p>apă caldă + lingură metalică rece</p>
+          </div>
+          <div class="mini-card">
+            <strong>Exemplu 2</strong>
+            <p>apă fierbinte + cană ceramică rece</p>
+          </div>
+          <div class="mini-card">
+            <strong>Exemplu 3</strong>
+            <p>piesă de aluminiu încălzită + apă rece</p>
+          </div>
+          <div class="mini-card">
+            <strong>Exemplu 4</strong>
+            <p>radiator cald + aer mai rece din cameră</p>
+          </div>
+        </div>
+        <div class="retin">
+          <p><strong>Rețin:</strong> într-un sistem neomogen, corpurile pot avea mase diferite și pot fi făcute din materiale diferite.</p>
+        </div>
       </div>
     </section>
 
-    <section class="lesson-shell">
-      <section class="lesson-page active" data-page="1">
-          <div class="section-title"><span class="dot"></span><strong>Observ</strong></div>
-          
-<p class="lead">Dacă punem în contact corpuri cu temperaturi diferite, după un timp ele ajung la aceeași temperatură. Aceasta se numește <strong>temperatură de echilibru</strong>.</p>
-<div class="diagram">
-  <div class="diagram-row">
-    <span class="chip">corp cald</span>
-    <span class="arrow">→</span>
-    <span class="chip">schimb de căldură</span>
-    <span class="arrow">→</span>
-    <span class="chip">corp rece</span>
-    <span class="arrow">→</span>
-    <span class="chip">aceeași temperatură finală</span>
-  </div>
-</div>
+    <section class="page">
+      <div class="card">
+        <span class="tag">Observ</span>
+        <h2>Căldura se transferă spontan</h2>
+        <p>Când două corpuri au temperaturi diferite, căldura trece de la corpul mai cald la corpul mai rece.</p>
+        <div class="steps">
+          <div class="step"><p>Corpul cald <strong>cedează</strong> căldură.</p></div>
+          <div class="step"><p>Corpul rece <strong>primește</strong> căldură.</p></div>
+          <div class="step"><p>După un timp, corpurile ajung la aceeași temperatură.</p></div>
+        </div>
+        <div class="formula">
+          \[
+            T_{\text{cald}} > T_e > T_{\text{rece}}
+          \]
+        </div>
+        <p>Temperatura finală \(T_e\) se numește <strong>temperatură de echilibru</strong>.</p>
+      </div>
+    </section>
 
-        </section>
-<section class="lesson-page" data-page="2">
-          <div class="section-title"><span class="dot"></span><strong>Rețin</strong></div>
-          
-<div class="formula-card">
-  <h4>Bilanț termic</h4>
-  <p>Într-un sistem izolat:</p>
-  <p class="formula">\[
-    Q_{cedat} + Q_{primit} = 0
-  \]</p>
-  <p>Pentru două corpuri care nu își schimbă starea de agregare:</p>
-  <p class="formula">\[
-    m_1 c_1 (T_1 - T_e) = m_2 c_2 (T_e - T_2)
-  \]</p>
-</div>
+    <section class="page">
+      <div class="card">
+        <span class="tag">Rețin</span>
+        <h2>Bilanțul termic</h2>
+        <p>Într-un sistem izolat termic, presupunem că nu se pierde căldură în exterior.</p>
+        <div class="idea">
+          <p><strong>Atunci:</strong> câtă căldură cedează corpul cald, atâta căldură primește corpul rece.</p>
+        </div>
+        <div class="formula">
+          \[
+            Q_{\text{cedată}}=Q_{\text{primită}}
+          \]
+        </div>
+        <p>Aceasta este forma simplă a <strong>bilanțului termic</strong>.</p>
+        <div class="warning">
+          <p>În realitate, pot exista pierderi de căldură spre aer, masă, vas sau mână. La școală folosim întâi modelul ideal, ca să înțelegem regula de bază.</p>
+        </div>
+      </div>
+    </section>
 
-        </section>
-<section class="lesson-page" data-page="3">
-          <div class="section-title"><span class="dot"></span><strong>Mai departe</strong></div>
-          
-<div class="formula-card">
-  <h4>Caz particular important</h4>
-  <p>Dacă cele două corpuri sunt din aceeași substanță, formula pentru temperatura de echilibru poate fi scrisă:</p>
-  <p class="formula">\[
-    T_e = \frac{m_1T_1 + m_2T_2}{m_1 + m_2}
-  \]</p>
-</div>
-<div class="example">
-  <h4>Exemplu numeric</h4>
-  <p>Amesteci \(m_1=2\,\text{kg}\) de apă la \(60^\circ\text{C}\) cu \(m_2=1\,\text{kg}\) de apă la \(20^\circ\text{C}\).</p>
-  <p class="formula">\[
-    T_e = \frac{2\cdot 60 + 1\cdot 20}{2+1}
-        = \frac{140}{3}
-        \approx 46{,}7^\circ\text{C}
-  \]</p>
-</div>
+    <section class="page">
+      <div class="card">
+        <span class="tag">Rețin</span>
+        <h2>Cum calculăm căldura schimbată?</h2>
+        <p>Dacă nu are loc o transformare de stare, căldura schimbată se calculează cu relația:</p>
+        <div class="formula">
+          \[
+            Q=m\,c\,\Delta T
+          \]
+        </div>
+        <div class="grid">
+          <div class="mini-card">
+            <strong>\(m\)</strong>
+            <p>masa corpului, în kg</p>
+          </div>
+          <div class="mini-card">
+            <strong>\(c\)</strong>
+            <p>căldura specifică a materialului</p>
+          </div>
+          <div class="mini-card">
+            <strong>\(\Delta T\)</strong>
+            <p>modificarea temperaturii</p>
+          </div>
+          <div class="mini-card">
+            <strong>\(Q\)</strong>
+            <p>căldura schimbată, în J</p>
+          </div>
+        </div>
+        <div class="retin">
+          <p><strong>Materialul contează:</strong> apa, aluminiul, fierul sau cuprul nu se încălzesc la fel de ușor.</p>
+        </div>
+      </div>
+    </section>
 
-        </section>
-<section class="lesson-page" data-page="4">
-          <div class="section-title"><span class="dot"></span><strong>Aplic</strong></div>
-          
-<div class="split">
-  <div class="mini-card">
-    <h4>Unde apare în tehnologie?</h4>
-    <ul class="check-list">
-      <li>în schimbătoare de căldură;</li>
-      <li>în instalații de încălzire;</li>
-      <li>în răcirea motoarelor;</li>
-      <li>în procese industriale de amestec.</li>
-    </ul>
-  </div>
-  <div class="mini-card">
-    <h4>Observație</h4>
-    <p>În practică, trebuie ținut cont și de vasul în care se face amestecul sau de pierderile de căldură spre mediul exterior.</p>
-  </div>
-</div>
+    <section class="page">
+      <div class="card">
+        <span class="tag">Rețin</span>
+        <h2>Formula pentru două corpuri diferite</h2>
+        <p>Presupunem că avem două corpuri, fără pierderi de căldură și fără schimbare de stare.</p>
+        <div class="formula">
+          \[
+            m_1 c_1 (T_1-T_e)=m_2 c_2 (T_e-T_2)
+          \]
+        </div>
+        <p>Această relație spune că:</p>
+        <div class="grid">
+          <div class="mini-card">
+            <strong>partea stângă</strong>
+            <p>căldura cedată de corpul cald</p>
+          </div>
+          <div class="mini-card">
+            <strong>partea dreaptă</strong>
+            <p>căldura primită de corpul rece</p>
+          </div>
+        </div>
+        <div class="warning">
+          <p>Nu memora mecanic formula. Citește-o logic: „masă × căldură specifică × scădere de temperatură” este egal cu „masă × căldură specifică × creștere de temperatură”.</p>
+        </div>
+      </div>
+    </section>
 
-        </section>
-<section class="lesson-page" data-page="5">
-          <div class="section-title"><span class="dot"></span><strong>Verificare</strong></div>
-          
-<div class="quiz-card">
-  <h4>1. Temperatura de echilibru apare atunci când corpurile au:</h4>
-  <div class="choice-grid">
-    <label><input type="radio" name="q1" value="a"> aceeași masă</label>
-    <label><input type="radio" name="q1" value="b"> aceeași temperatură finală</label>
-    <label><input type="radio" name="q1" value="c"> aceeași culoare</label>
-  </div>
-  <div id="fb1" class="feedback"></div>
-</div>
+    <section class="page">
+      <div class="card">
+        <span class="tag">Mai departe</span>
+        <h2>O formulă utilă pentru temperatura finală</h2>
+        <p>Din bilanțul termic se poate obține direct temperatura de echilibru:</p>
+        <div class="formula">
+          \[
+            T_e=\frac{m_1c_1T_1+m_2c_2T_2}{m_1c_1+m_2c_2}
+          \]
+        </div>
+        <p>Observă că fiecare temperatură este „cântărită” cu \(m\cdot c\).</p>
+        <div class="retin">
+          <p><strong>Important:</strong> un corp cu masă mare sau cu \(c\) mare influențează mai mult temperatura finală.</p>
+        </div>
+        <div class="svgbox" aria-label="Temperatura finală depinde de masa și materialul corpurilor">
+          <svg viewBox="0 0 760 250" role="img">
+            <rect x="55" y="48" width="220" height="150" rx="24" fill="#0f172a" stroke="#38bdf8" stroke-width="4"/>
+            <circle cx="115" cy="125" r="28" fill="#38bdf8"/>
+            <circle cx="185" cy="125" r="28" fill="#38bdf8"/>
+            <circle cx="225" cy="82" r="16" fill="#38bdf8"/>
+            <text x="165" y="222" text-anchor="middle" fill="#e0f2fe" font-size="24" font-weight="800">apă: \(m_1c_1\)</text>
 
-<div class="quiz-card">
-  <h4>2. În sistem izolat termic, suma căldurilor schimbate este:</h4>
-  <div class="choice-grid">
-    <label><input type="radio" name="q2" value="a"> 0</label>
-    <label><input type="radio" name="q2" value="b"> 1</label>
-    <label><input type="radio" name="q2" value="c"> 100</label>
-  </div>
-  <div id="fb2" class="feedback"></div>
-</div>
+            <rect x="485" y="72" width="190" height="105" rx="18" fill="#64748b" stroke="#cbd5e1" stroke-width="4"/>
+            <text x="580" y="134" text-anchor="middle" fill="white" font-size="30" font-weight="800">metal</text>
+            <text x="580" y="222" text-anchor="middle" fill="#e0f2fe" font-size="24" font-weight="800">metal: \(m_2c_2\)</text>
 
-<div class="quiz-card">
-  <h4>3. Completează: temperatura finală comună se numește temperatură de ...</h4>
-  <input id="q3" type="text" placeholder="Scrie un cuvânt">
-  <div id="fb3" class="feedback"></div>
-</div>
+            <path d="M310 124 L445 124" stroke="#facc15" stroke-width="9" stroke-linecap="round"/>
+            <path d="M430 104 L455 124 L430 144" fill="none" stroke="#facc15" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="caption">Nu doar temperatura inițială contează, ci și „capacitatea” fiecărui corp de a schimba căldură.</div>
+        </div>
+      </div>
+    </section>
 
-<div class="quiz-card">
-  <h4>4. Pentru două mase de aceeași substanță, \(T_e\) este o:</h4>
-  <select id="q4">
-    <option value="">Alege...</option>
-    <option value="medie-ponderata">medie ponderată</option>
-    <option value="diferență">diferență</option>
-    <option value="presiune">presiune</option>
-  </select>
-  <div id="fb4" class="feedback"></div>
-</div>
+    <section class="page">
+      <div class="card">
+        <span class="tag">Exemplu</span>
+        <h2>Apă caldă și o piesă de aluminiu rece</h2>
+        <p>Avem:</p>
+        <ul>
+          <li>\(m_1=0{,}20\,kg\), \(c_1=4200\,\frac{J}{kg\cdot^\circ C}\), \(T_1=80^\circ C\) pentru apă;</li>
+          <li>\(m_2=0{,}50\,kg\), \(c_2=900\,\frac{J}{kg\cdot^\circ C}\), \(T_2=20^\circ C\) pentru aluminiu.</li>
+        </ul>
+        <div class="formula">
+          \[
+            T_e=\frac{0{,}20\cdot 4200\cdot 80+0{,}50\cdot 900\cdot 20}{0{,}20\cdot 4200+0{,}50\cdot 900}
+          \]
+        </div>
+        <div class="formula">
+          \[
+            T_e=\frac{67200+9000}{840+450}
+            =\frac{76200}{1290}\approx 59{,}1^\circ C
+          \]
+        </div>
+        <div class="retin">
+          <p><strong>Răspuns:</strong> temperatura de echilibru este aproximativ \(59^\circ C\).</p>
+        </div>
+      </div>
+    </section>
 
-<button class="btn btn-accent" onclick='verifyQuiz({
-  scoreBoxId:"rezultatBox", scoreTextId:"rezultatText", scoreMsgId:"rezultatMesaj",
-  items:[
-    {type:"radio", name:"q1", answer:"b", feedbackId:"fb1", showAnswer:"aceeași temperatură finală"},
-    {type:"radio", name:"q2", answer:"a", feedbackId:"fb2", showAnswer:"0"},
-    {type:"text", id:"q3", answers:["echilibru"], feedbackId:"fb3", showAnswer:"echilibru"},
-    {type:"select", id:"q4", answer:"medie-ponderata", feedbackId:"fb4", showAnswer:"medie ponderată"}
-  ]
-})'>Verifică răspunsurile</button>
+    <section class="page">
+      <div class="card">
+        <span class="tag">Aplic</span>
+        <h2>Caz simplu: aceeași substanță</h2>
+        <p>Dacă amestecăm două cantități din aceeași substanță, \(c\) este același și se simplifică.</p>
+        <div class="formula">
+          \[
+            T_e=\frac{m_1T_1+m_2T_2}{m_1+m_2}
+          \]
+        </div>
+        <p>Exemplu: \(2\,kg\) de apă la \(60^\circ C\) se amestecă cu \(1\,kg\) de apă la \(20^\circ C\).</p>
+        <div class="formula">
+          \[
+            T_e=\frac{2\cdot 60+1\cdot 20}{2+1}
+            =\frac{140}{3}\approx 46{,}7^\circ C
+          \]
+        </div>
+        <div class="warning">
+          <p>Temperatura finală nu este media simplă \(40^\circ C\), deoarece sunt mai multe kilograme de apă caldă decât apă rece.</p>
+        </div>
+      </div>
+    </section>
 
-<div id="rezultatBox" class="score-box">
-  <div id="rezultatText"></div>
-  <div id="rezultatMesaj" class="muted"></div>
-</div>
+    <section class="page">
+      <div class="card">
+        <span class="tag">Aplic</span>
+        <h2>Pașii de rezolvare</h2>
+        <p>Când primești o problemă de temperatură de echilibru, lucrează ordonat.</p>
+        <div class="steps">
+          <div class="step"><p>Notează datele: masele, temperaturile inițiale și căldurile specifice.</p></div>
+          <div class="step"><p>Stabilește cine cedează căldură și cine primește căldură.</p></div>
+          <div class="step"><p>Scrie bilanțul termic: \(Q_{\text{cedată}}=Q_{\text{primită}}\).</p></div>
+          <div class="step"><p>Înlocuiește \(Q=m\,c\,\Delta T\).</p></div>
+          <div class="step"><p>Calculează \(T_e\) și verifică dacă este între temperaturile inițiale.</p></div>
+        </div>
+        <div class="retin">
+          <p><strong>Control rapid:</strong> temperatura finală trebuie să fie între temperatura corpului rece și temperatura corpului cald.</p>
+        </div>
+      </div>
+    </section>
 
-        </section>
-<section class="lesson-page" data-page="6">
-          <div class="section-title"><span class="dot"></span><strong>Rețin</strong></div>
-          
-<div class="mini-card">
-  <h4>Idei-cheie</h4>
-  <ul class="check-list">
-    <li>corpul mai cald cedează căldură, corpul mai rece primește;</li>
-    <li>temperatura finală comună este temperatura de echilibru;</li>
-    <li>în sisteme simple se folosește bilanțul termic.</li>
-  </ul>
-</div>
+    <section class="page">
+      <div class="card">
+        <span class="tag">Aplic în tehnologie</span>
+        <h2>Unde apare această idee?</h2>
+        <p>Stabilirea temperaturii de echilibru este importantă în multe situații tehnice.</p>
+        <div class="grid">
+          <div class="mini-card">
+            <strong>Schimbătoare de căldură</strong>
+            <p>un fluid cald încălzește un fluid rece fără să se amestece direct</p>
+          </div>
+          <div class="mini-card">
+            <strong>Instalații de încălzire</strong>
+            <p>apa caldă cedează energie radiatoarelor și aerului</p>
+          </div>
+          <div class="mini-card">
+            <strong>Răcirea motoarelor</strong>
+            <p>lichidul de răcire preia căldură de la motor</p>
+          </div>
+          <div class="mini-card">
+            <strong>Industrie alimentară</strong>
+            <p>temperatura amestecurilor trebuie controlată</p>
+          </div>
+        </div>
 
-        </section>
+        <div class="svgbox" aria-label="Schimbător de căldură">
+          <svg viewBox="0 0 760 260" role="img">
+            <rect x="75" y="55" width="610" height="150" rx="32" fill="#0f172a" stroke="#67e8f9" stroke-width="4"/>
+            <path d="M115 95 C190 35, 260 155, 335 95 S480 155, 555 95 S655 140, 675 105" fill="none" stroke="#fb7185" stroke-width="12" stroke-linecap="round"/>
+            <path d="M115 165 C190 225, 260 105, 335 165 S480 105, 555 165 S655 120, 675 155" fill="none" stroke="#38bdf8" stroke-width="12" stroke-linecap="round"/>
+            <text x="162" y="42" fill="#fecaca" font-size="24" font-weight="800">fluid cald</text>
+            <text x="500" y="235" fill="#bfdbfe" font-size="24" font-weight="800">fluid rece</text>
+            <text x="380" y="132" text-anchor="middle" fill="#f8fafc" font-size="28" font-weight="900">schimb de căldură</text>
+          </svg>
+          <div class="caption">Într-un schimbător de căldură, energia trece de la fluidul cald la fluidul rece.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="card">
+        <span class="tag">Verificare rapidă</span>
+        <h2>Alege varianta corectă</h2>
+        <div class="quiz">
+          <div class="question" data-answer="b">
+            <p>1. Temperatura de echilibru este:</p>
+            <div class="answers">
+              <label><input type="radio" name="q1" value="a"> temperatura inițială a corpului rece</label>
+              <label><input type="radio" name="q1" value="b"> temperatura finală comună</label>
+              <label><input type="radio" name="q1" value="c"> întotdeauna \(0^\circ C\)</label>
+            </div>
+          </div>
+
+          <div class="question" data-answer="a">
+            <p>2. Într-un sistem ideal izolat, căldura cedată de corpul cald este:</p>
+            <div class="answers">
+              <label><input type="radio" name="q2" value="a"> egală cu căldura primită de corpul rece</label>
+              <label><input type="radio" name="q2" value="b"> mereu zero</label>
+              <label><input type="radio" name="q2" value="c"> mai mare decât orice temperatură</label>
+            </div>
+          </div>
+
+          <div class="question" data-answer="c">
+            <p>3. În relația \(Q=m\,c\,\Delta T\), simbolul \(c\) reprezintă:</p>
+            <div class="answers">
+              <label><input type="radio" name="q3" value="a"> culoarea corpului</label>
+              <label><input type="radio" name="q3" value="b"> timpul de încălzire</label>
+              <label><input type="radio" name="q3" value="c"> căldura specifică</label>
+            </div>
+          </div>
+        </div>
+        <div class="check-row">
+          <button class="check-btn" type="button" onclick="checkQuiz()">Verifică</button>
+          <span class="feedback" id="quizFeedback"></span>
+        </div>
+      </div>
+    </section>
+
+    <section class="page">
+      <div class="card">
+        <span class="tag">Rețin</span>
+        <h2>Idei-cheie</h2>
+        <ul>
+          <li>Corpul mai cald cedează căldură, iar corpul mai rece primește căldură.</li>
+          <li>Temperatura finală comună se numește temperatură de echilibru.</li>
+          <li>În modelul ideal fără pierderi: \(Q_{\text{cedată}}=Q_{\text{primită}}\).</li>
+          <li>Pentru încălzire sau răcire fără schimbare de stare folosim \(Q=m\,c\,\Delta T\).</li>
+          <li>În sisteme neomogene contează masa și materialul fiecărui corp.</li>
+        </ul>
+        <div class="formula">
+          \[
+            T_e=\frac{m_1c_1T_1+m_2c_2T_2}{m_1c_1+m_2c_2}
+          \]
+        </div>
+        <div class="final-banner">
+          <strong>Prof. Dănuț Andronie</strong>
+          <span>email: danutmg@gmail.com</span>
+        </div>
+      </div>
     </section>
   </main>
 
-  <nav class="bottom-nav" aria-label="Navigare între pagini">
-    <div class="wrapper">
-      <button class="btn btn-secondary" id="prevBtn" type="button">◀ Înapoi</button>
-      <div class="page-counter" id="pageCounter">Pagina 1 / 6</div>
-      <button class="btn btn-primary" id="nextBtn" type="button">Mergi mai departe ➜</button>
+  <nav class="bottom-nav" aria-label="Navigare lecție">
+    <div class="nav-inner">
+      <button class="nav-btn back-btn" id="backBtn" type="button" onclick="prevPage()">Înapoi</button>
+      <div class="page-indicator" id="pageIndicator">1/13</div>
+      <button class="nav-btn next-btn" id="nextBtn" type="button" onclick="nextPage()">Mergi mai departe</button>
     </div>
   </nav>
+</div>
 
+<script>
+  const pages = Array.from(document.querySelectorAll('.page'));
+  const topBanner = document.getElementById('topBanner');
+  const backBtn = document.getElementById('backBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const pageIndicator = document.getElementById('pageIndicator');
+  let currentPage = 0;
 
-  <script>
-    const pages = Array.from(document.querySelectorAll('.lesson-page'));
-    const tabs = Array.from(document.querySelectorAll('.tab-btn'));
-    const pageCounter = document.getElementById('pageCounter');
-    const progressBar = document.getElementById('progressBar');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const nextLesson = document.body.dataset.nextLesson || '';
+  function renderMath(){
+    if(window.MathJax && window.MathJax.typesetPromise){
+      window.MathJax.typesetPromise([pages[currentPage]]).catch(() => {});
+    }
+  }
 
-    let currentPage = 0;
+  function showPage(index){
+    currentPage = Math.max(0, Math.min(index, pages.length - 1));
+    pages.forEach((page, i) => page.classList.toggle('active', i === currentPage));
 
-    function updateLessonPage(index){
-      currentPage = index;
+    topBanner.classList.toggle('hidden', currentPage !== 0);
+    backBtn.disabled = currentPage === 0;
+    pageIndicator.textContent = `${currentPage + 1}/${pages.length}`;
 
-      pages.forEach((page, i) => page.classList.toggle('active', i === index));
-      tabs.forEach((tab, i) => tab.classList.toggle('active', i === index));
-
-      pageCounter.textContent = `Pagina ${index + 1} / ${pages.length}`;
-      progressBar.style.width = `${((index + 1) / pages.length) * 100}%`;
-
-      prevBtn.disabled = index === 0;
-
-      if(index === pages.length - 1){
-        nextBtn.textContent = nextLesson ? 'Lecția următoare ➜' : 'Sfârșit de lecție';
-      } else {
-        nextBtn.textContent = 'Mergi mai departe ➜';
-      }
-
-      window.scrollTo({top:0, behavior:'smooth'});
+    if(currentPage === pages.length - 1){
+      nextBtn.textContent = 'Lecția următoare';
+    } else {
+      nextBtn.textContent = 'Mergi mai departe';
     }
 
-    prevBtn.addEventListener('click', () => {
-      if(currentPage > 0){ updateLessonPage(currentPage - 1); }
-    });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    renderMath();
+  }
 
-    nextBtn.addEventListener('click', () => {
-      if(currentPage < pages.length - 1){
-        updateLessonPage(currentPage + 1);
-      } else if(nextLesson){
-        window.location.href = nextLesson;
+  function nextPage(){
+    if(currentPage < pages.length - 1){
+      showPage(currentPage + 1);
+    } else {
+      window.location.href = './lectia-10.html';
+    }
+  }
+
+  function prevPage(){
+    if(currentPage > 0){
+      showPage(currentPage - 1);
+    }
+  }
+
+  function checkQuiz(){
+    const questions = Array.from(document.querySelectorAll('.question[data-answer]'));
+    const feedback = document.getElementById('quizFeedback');
+    let correct = 0;
+
+    for(const q of questions){
+      const name = q.querySelector('input[type="radio"]').name;
+      const selected = document.querySelector(`input[name="${name}"]:checked`);
+      if(!selected){
+        feedback.textContent = 'Alege mai întâi o variantă.';
+        feedback.style.color = '#fef3c7';
+        return;
       }
-    });
-
-    tabs.forEach((tab, index) => {
-      tab.addEventListener('click', () => updateLessonPage(index));
-    });
-
-    function verifyQuiz(config){
-      let score = 0;
-      config.items.forEach((item, idx) => {
-        const box = document.getElementById(item.feedbackId);
-        let ok = false;
-        let value = '';
-
-        if(item.type === 'radio'){
-          const checked = document.querySelector(`input[name="${item.name}"]:checked`);
-          value = checked ? checked.value : '';
-          ok = value === item.answer;
-        } else if(item.type === 'select'){
-          const el = document.getElementById(item.id);
-          value = (el.value || '').trim();
-          ok = value === item.answer;
-        } else {
-          const el = document.getElementById(item.id);
-          value = (el.value || '').trim().toLowerCase();
-          ok = item.answers.includes(value);
-        }
-
-        if(ok){
-          score++;
-          box.textContent = 'Corect.';
-          box.className = 'feedback ok';
-        } else {
-          box.textContent = `Răspuns corect: ${item.showAnswer}`;
-          box.className = 'feedback bad';
-        }
-      });
-
-      const scoreBox = document.getElementById(config.scoreBoxId);
-      const scoreText = document.getElementById(config.scoreTextId);
-      const scoreMsg = document.getElementById(config.scoreMsgId);
-
-      scoreBox.style.display = 'block';
-      scoreText.textContent = `Ai obținut ${score} din ${config.items.length}.`;
-
-      if(score === config.items.length){
-        scoreMsg.textContent = 'Foarte bine! Poți merge la lecția următoare.';
-      } else if(score >= Math.ceil(config.items.length * 0.6)){
-        scoreMsg.textContent = 'Bine! Recitește pe scurt ideile-cheie și încearcă din nou.';
-      } else {
-        scoreMsg.textContent = 'Mai exersează puțin. Reia paginile cu noțiuni și exemple.';
+      if(selected.value === q.dataset.answer){
+        correct++;
       }
     }
 
-    updateLessonPage(0);
-  </script>
+    if(correct === questions.length){
+      feedback.textContent = 'Corect!';
+      feedback.style.color = '#86efac';
+    } else {
+      feedback.textContent = 'Mai încearcă. Recitește pagina cu explicația.';
+      feedback.style.color = '#fecaca';
+    }
+  }
 
+  document.addEventListener('keydown', (event) => {
+    if(event.key === 'ArrowRight') nextPage();
+    if(event.key === 'ArrowLeft') prevPage();
+  });
+
+  showPage(0);
+</script>
 </body>
 </html>

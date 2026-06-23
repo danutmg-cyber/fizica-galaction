@@ -2,296 +2,972 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Lecția 9 | Extindere: Teoremele lui Kirchhoff | Fizica Galaction</title>
-  <meta name="description" content="Lecția 9 pentru clasa a VIII-a: Extindere: Teoremele lui Kirchhoff. Lecție interactivă pe pagini, cu buton Mergi mai departe, MathJax și verificare rapidă.">
-  <style>
-    *{box-sizing:border-box}
-    :root{
-      --bg:#0f172a;--surface:#1e293b;--surface-2:#162033;--surface-3:#0b1220;--text:#f8fafc;--muted:#cbd5e1;
-      --accent:#22c55e;--accent-2:#38bdf8;--accent-3:#f59e0b;--accent-4:#a78bfa;--danger:#ef4444;--ok:#22c55e;
-      --border:rgba(255,255,255,.12);--shadow:0 10px 26px rgba(0,0,0,.24);--radius:18px;
-    }
-    html{scroll-behavior:smooth;font-size:clamp(16px,0.35vw + 15px,19px)}
-    body{margin:0;font-family:Arial,sans-serif;background:radial-gradient(circle at top right, rgba(56,189,248,.12), transparent 26%),radial-gradient(circle at top left, rgba(34,197,94,.10), transparent 22%),linear-gradient(180deg,#0f172a 0%, #111827 100%);color:var(--text);line-height:1.65;min-height:100vh}
-    .wrapper{width:min(100%,980px);margin:0 auto;padding-inline:clamp(12px,2vw,24px)}
-    .site-header{background:rgba(30,41,59,.92);border-bottom:3px solid var(--accent);position:sticky;top:0;z-index:30;backdrop-filter:blur(8px)}
-    .site-header .wrapper{padding-block:14px}
-    .site-title{margin:0;font-size:clamp(1.35rem,2vw,2rem);line-height:1.2}
-    .site-subtitle{margin:.35rem 0 0;color:var(--muted);font-size:1rem}
-    .page-content{padding:18px 0 124px}
-    .page-hero,.lesson-shell,.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
-    .page-hero,.card{padding:18px;margin-bottom:16px}
-    .page-hero h2,.card h2,.card h3,.card h4{margin-top:0;line-height:1.25}
-    .page-hero h2{font-size:clamp(1.35rem,1.5vw,1.9rem);margin-bottom:10px}
-    .quote{margin:0 0 10px;padding:12px 14px;border-left:4px solid var(--accent-2);background:#10243f;color:#dbeafe;border-radius:12px;font-style:italic}
-    .hint,.notice,.info-box{border-radius:14px;padding:12px 14px;margin-top:12px}
-    .hint{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.28);color:#fde68a}
-    .notice{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.28);color:#dcfce7}
-    .info-box{background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.28);color:#dbeafe}
-    .lesson-shell{overflow:hidden}.lesson-top{padding:16px 16px 8px}
-    .lesson-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-    .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(56,189,248,.14);color:#dbeafe;border:1px solid rgba(56,189,248,.28);font-weight:700;font-size:.92rem}
-    .page-counter{color:#e2e8f0;font-weight:700}
-    .progress{width:100%;height:10px;border-radius:999px;background:#0b1220;overflow:hidden;margin:12px 0 14px}
-    .progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent-2),var(--accent))}
-    .tab-strip{display:flex;gap:8px;overflow:auto;padding-bottom:8px;scrollbar-width:thin}
-    .tab-btn{border:none;cursor:pointer;white-space:nowrap;padding:10px 14px;border-radius:12px;background:#0b1220;color:#e5e7eb;font-weight:700}
-    .tab-btn.active{background:linear-gradient(135deg,var(--accent),#16a34a);color:#052e16}
-    .page-stage{padding:0 16px 18px}
-    .lesson-page{display:none;animation:fade .25s ease}.lesson-page.active{display:block}
-    @keyframes fade{from{opacity:.4;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-    .section-title{display:flex;align-items:center;gap:10px;font-size:1.08rem;margin:6px 0 12px}
-    .dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--accent-2),var(--accent));box-shadow:0 0 0 4px rgba(56,189,248,.12)}
-    .grid{display:grid;gap:14px}.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .split,.compare{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .mini-card,.formula-card{background:linear-gradient(180deg,var(--surface-2),var(--surface-3));border:1px solid var(--border);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
-    .mini-card h4,.formula-card h3{margin:0 0 8px}.mini-card p,.formula-card p{margin:.35rem 0}
-    .tag{display:inline-block;margin-top:8px;font-size:.85rem;font-weight:700;background:rgba(167,139,250,.12);color:#ddd6fe;border:1px solid rgba(167,139,250,.28);padding:6px 10px;border-radius:999px}
-    .check-list,.ordered{padding-left:1.15rem;margin:0}.check-list li,.ordered li{margin:.45rem 0}
-    .quiz-block{background:linear-gradient(180deg,var(--surface-2),var(--surface-3));border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:14px}
-    .quiz-options{display:grid;gap:10px;margin-top:10px}
-    .quiz-option{display:flex;gap:10px;align-items:flex-start;background:#0b1220;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px}
-    .quiz-option input{margin-top:4px}
-    .quiz-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .action-btn{border:none;cursor:pointer;border-radius:12px;padding:11px 14px;font-weight:800}
-    .check-btn{background:linear-gradient(135deg,var(--accent),#16a34a);color:#052e16}.reset-btn{background:#334155;color:#f8fafc}
-    .feedback{margin-top:10px;padding:10px 12px;border-radius:12px;font-weight:700;display:none}
-    .feedback.ok{display:block;background:rgba(34,197,94,.12);color:#dcfce7;border:1px solid rgba(34,197,94,.28)}
-    .feedback.bad{display:block;background:rgba(239,68,68,.12);color:#fecaca;border:1px solid rgba(239,68,68,.28)}
-    .bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(15,23,42,.96);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.08)}
-    .bottom-nav .inner{width:min(100%,980px);margin:0 auto;padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:center}
-    .nav-btn,.home-link{appearance:none;border:none;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;min-height:48px;border-radius:14px;font-weight:800;cursor:pointer;padding:12px 14px}
-    .nav-btn.prev{background:#334155;color:#f8fafc}.nav-btn.next{background:linear-gradient(135deg,var(--accent),#16a34a);color:#052e16}
-    .home-link{background:#0b1220;color:#e5e7eb;border:1px solid var(--border)}.nav-btn:disabled{opacity:.45;cursor:not-allowed}
-    @media (max-width:900px){.grid-3{grid-template-columns:1fr 1fr}}
-    @media (max-width:760px){.grid-2,.grid-3,.split,.compare{grid-template-columns:1fr}.bottom-nav .inner{grid-template-columns:1fr 1fr}.home-link{grid-column:1 / -1}}
-</style>
+  <meta name="description" content="Lecție interactivă de fizică pentru clasa a VIII-a: noduri, laturi, ochiuri și teoremele lui Kirchhoff.">
   <script>
     window.MathJax = {
-      tex: {inlineMath: [['\\(','\\)'], ['$', '$']]},
-      svg: {fontCache: 'global'}
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']], displayMath: [['\\[','\\]']] },
+      svg: { fontCache: 'global' },
+      options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    :root{
+      --bg:#07111f;
+      --bg2:#0f172a;
+      --card:#111c31;
+      --card2:#17243a;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --cyan:#38d5ff;
+      --cyan2:#7dd3fc;
+      --green:#22c55e;
+      --green2:#16a34a;
+      --back:#e2e8f0;
+      --backText:#0f172a;
+      --yellow:#fde68a;
+      --orange:#fb923c;
+      --red:#f87171;
+      --line:#334155;
+      --shadow:0 18px 45px rgba(0,0,0,.35);
+      --radius:22px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      min-height:100dvh;
+      font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(56,213,255,.16), transparent 30%),
+        radial-gradient(circle at bottom right, rgba(34,197,94,.13), transparent 28%),
+        linear-gradient(160deg, var(--bg), var(--bg2));
+      color:var(--text);
+      font-size:clamp(18px, 2.6vw, 21px);
+      line-height:1.6;
+    }
+
+    .app{
+      width:min(980px, 100%);
+      margin:0 auto;
+      min-height:100dvh;
+      display:flex;
+      flex-direction:column;
+      padding:clamp(12px, 2vw, 20px);
+    }
+
+    .top-banner{
+      background:linear-gradient(135deg, rgba(56,213,255,.18), rgba(34,197,94,.12));
+      border:1px solid rgba(125,211,252,.35);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:16px;
+      margin-bottom:14px;
+      text-align:center;
+    }
+
+    .top-banner.hidden{display:none}
+
+    .school{
+      color:var(--cyan2);
+      font-weight:900;
+      letter-spacing:.02em;
+      text-transform:uppercase;
+      font-size:clamp(16px,2.4vw,20px);
+    }
+
+    .teacher{
+      color:var(--muted);
+      font-size:clamp(14px,2vw,16px);
+      margin-top:4px;
+    }
+
+    .motto{
+      margin:12px auto 0;
+      color:#fef3c7;
+      background:rgba(251,191,36,.10);
+      border-left:4px solid var(--cyan);
+      border-radius:12px;
+      padding:10px 12px;
+      width:min(760px,100%);
+      font-style:italic;
+      font-weight:700;
+    }
+
+    main{
+      flex:1;
+      display:flex;
+      align-items:stretch;
+    }
+
+    .slide{
+      display:none;
+      width:100%;
+      min-height:calc(100dvh - 190px);
+      background:rgba(17,28,49,.94);
+      border:1px solid rgba(148,163,184,.22);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:clamp(18px, 4vw, 34px);
+      padding-bottom:calc(100px + env(safe-area-inset-bottom));
+      overflow-wrap:anywhere;
+    }
+
+    .slide.active{
+      display:block;
+      animation:fadeIn .22s ease-out;
+    }
+
+    @keyframes fadeIn{
+      from{opacity:.2; transform:translateY(8px)}
+      to{opacity:1; transform:translateY(0)}
+    }
+
+    .kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      color:var(--cyan2);
+      background:rgba(56,213,255,.10);
+      border:1px solid rgba(56,213,255,.25);
+      border-radius:999px;
+      padding:6px 12px;
+      font-size:.9rem;
+      font-weight:800;
+      margin-bottom:10px;
+    }
+
+    h1,h2,h3{
+      color:var(--cyan);
+      line-height:1.15;
+      margin:8px 0 14px;
+    }
+
+    h1{font-size:clamp(2rem,7vw,3.35rem)}
+    h2{font-size:clamp(1.55rem,5vw,2.35rem)}
+    h3{font-size:clamp(1.15rem,3.2vw,1.55rem)}
+    p{margin:12px 0}
+
+    .lead{
+      color:#e0f2fe;
+      font-size:1.12em;
+      font-weight:700;
+    }
+
+    .idea{
+      display:grid;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .box{
+      background:rgba(23,36,58,.88);
+      border:1px solid rgba(148,163,184,.20);
+      border-radius:18px;
+      padding:16px;
+    }
+
+    .box strong{color:var(--yellow)}
+
+    .note{
+      background:rgba(34,197,94,.10);
+      border-left:5px solid var(--green);
+      border-radius:16px;
+      padding:14px 16px;
+      color:#dcfce7;
+      font-weight:700;
+    }
+
+    .warning{
+      background:rgba(251,146,60,.11);
+      border-left:5px solid var(--orange);
+      border-radius:16px;
+      padding:14px 16px;
+      color:#ffedd5;
+      font-weight:700;
+    }
+
+    .formula{
+      background:#0b1220;
+      border:1px solid rgba(56,213,255,.28);
+      border-radius:18px;
+      padding:14px;
+      margin:16px 0;
+      overflow-x:auto;
+      text-align:center;
+    }
+
+    .formula .MathJax{
+      font-size:1.02em !important;
+    }
+
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2, minmax(0,1fr));
+      gap:14px;
+      margin:16px 0;
+    }
+
+    .mini-card{
+      background:rgba(15,23,42,.72);
+      border:1px solid rgba(148,163,184,.18);
+      border-radius:16px;
+      padding:14px;
+    }
+
+    .mini-card .label{
+      color:var(--cyan2);
+      font-weight:900;
+      margin-bottom:6px;
+    }
+
+    .steps{
+      counter-reset:step;
+      display:grid;
+      gap:10px;
+      margin:16px 0;
+      padding:0;
+      list-style:none;
+    }
+
+    .steps li{
+      counter-increment:step;
+      background:rgba(15,23,42,.75);
+      border:1px solid rgba(148,163,184,.18);
+      border-radius:16px;
+      padding:12px 14px 12px 56px;
+      position:relative;
+    }
+
+    .steps li::before{
+      content:counter(step);
+      position:absolute;
+      left:14px;
+      top:12px;
+      width:30px;
+      height:30px;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      background:rgba(56,213,255,.16);
+      color:var(--cyan2);
+      font-weight:900;
+      border:1px solid rgba(56,213,255,.25);
+    }
+
+    .svgbox{
+      background:#08111f;
+      border:1px solid rgba(125,211,252,.24);
+      border-radius:20px;
+      padding:14px;
+      margin:16px auto;
+      width:min(760px,100%);
+      overflow:hidden;
+    }
+
+    .svgbox > svg{
+      width:100%;
+      height:auto;
+      display:block;
+    }
+
+    .caption{
+      color:var(--muted);
+      font-size:.92em;
+      text-align:center;
+      margin-top:8px;
+    }
+
+    .pill-row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin:14px 0;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      border-radius:999px;
+      background:rgba(56,213,255,.10);
+      border:1px solid rgba(56,213,255,.22);
+      color:#e0f2fe;
+      padding:8px 12px;
+      font-weight:800;
+      font-size:.94em;
+    }
+
+    .quiz{
+      display:grid;
+      gap:12px;
+      margin-top:16px;
+    }
+
+    .question{
+      background:rgba(15,23,42,.78);
+      border:1px solid rgba(148,163,184,.20);
+      border-radius:18px;
+      padding:16px;
+    }
+
+    .answers{
+      display:grid;
+      gap:10px;
+      margin-top:10px;
+    }
+
+    .answers label{
+      display:grid;
+      grid-template-columns:28px 1fr;
+      align-items:start;
+      gap:10px;
+      background:rgba(2,6,23,.52);
+      border:1px solid rgba(148,163,184,.18);
+      border-radius:14px;
+      padding:10px 12px;
+      cursor:pointer;
+    }
+
+    .answers input{
+      width:20px;
+      height:20px;
+      margin-top:4px;
+      accent-color:var(--green);
+    }
+
+    .check{
+      appearance:none;
+      border:none;
+      background:var(--cyan);
+      color:#06202c;
+      border-radius:14px;
+      padding:12px 14px;
+      font-weight:900;
+      font-size:1rem;
+      cursor:pointer;
+      width:100%;
+      margin-top:12px;
+    }
+
+    .feedback{
+      display:none;
+      margin-top:12px;
+      border-radius:14px;
+      padding:12px;
+      font-weight:900;
+    }
+
+    .feedback.ok{
+      display:block;
+      background:rgba(34,197,94,.14);
+      color:#bbf7d0;
+      border:1px solid rgba(34,197,94,.28);
+    }
+
+    .feedback.no{
+      display:block;
+      background:rgba(248,113,113,.13);
+      color:#fecaca;
+      border:1px solid rgba(248,113,113,.30);
+    }
+
+    .feedback.choose{
+      display:block;
+      background:rgba(251,191,36,.13);
+      color:#fde68a;
+      border:1px solid rgba(251,191,36,.30);
+    }
+
+    .final-banner{
+      margin-top:20px;
+      background:linear-gradient(135deg, rgba(56,213,255,.16), rgba(34,197,94,.16));
+      border:1px solid rgba(125,211,252,.35);
+      border-radius:20px;
+      padding:18px;
+      text-align:center;
+    }
+
+    .nav{
+      position:sticky;
+      bottom:0;
+      z-index:10;
+      display:grid;
+      grid-template-columns:1fr auto 1fr;
+      align-items:center;
+      gap:10px;
+      width:100%;
+      padding:12px 0 calc(10px + env(safe-area-inset-bottom));
+      background:linear-gradient(180deg, rgba(7,17,31,0), rgba(7,17,31,.92) 25%, rgba(7,17,31,.98));
+    }
+
+    .nav button, .nav a{
+      min-height:54px;
+      border:0;
+      border-radius:16px;
+      padding:12px 14px;
+      font-size:clamp(15px,2.5vw,18px);
+      font-weight:900;
+      cursor:pointer;
+      text-decoration:none;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+    }
+
+    .nav .back{
+      background:var(--back);
+      color:var(--backText);
+    }
+
+    .nav .next{
+      background:linear-gradient(135deg, var(--green), var(--green2));
+      color:#052e16;
+    }
+
+    .nav .nextLink{
+      background:linear-gradient(135deg, var(--green), var(--green2));
+      color:#052e16;
+    }
+
+    .nav .disabled{
+      opacity:.45;
+      cursor:not-allowed;
+    }
+
+    .counter{
+      color:var(--text);
+      background:rgba(15,23,42,.92);
+      border:1px solid rgba(148,163,184,.28);
+      border-radius:999px;
+      padding:10px 12px;
+      font-weight:900;
+      min-width:68px;
+      text-align:center;
+    }
+
+    @media (max-width:720px){
+      .app{padding:10px}
+      .slide{
+        border-radius:18px;
+        min-height:calc(100dvh - 150px);
+      }
+      .grid{grid-template-columns:1fr}
+      .nav{gap:8px}
+      .nav button, .nav a{
+        min-height:52px;
+        padding:10px 8px;
+      }
+      .counter{min-width:58px; padding:9px 8px}
+    }
+  </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction</h1>
-      <p class="site-subtitle">Clasa a VIII-a • Electrocinetică • Lecția 9</p>
-    </div>
-  </header>
+  <div class="app">
+    <header class="top-banner" id="topBanner">
+      <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+      <div class="teacher">Clasa a VIII-a • Electrocinetică • Lecția 9</div>
+      <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+    </header>
 
-  <main class="page-content wrapper">
-    <section class="page-hero">
-      <h2>Lecția 9 – Extindere: Teoremele lui Kirchhoff</h2>
-      <p class="quote">„Fizica nu este dominată de formule, ci de logică.”</p>
-      <p>Extindere pentru circuite cu mai multe ramuri: regulile de bază formulate de Kirchhoff ajută la analiza curenților și tensiunilor.</p>
-    </section>
+    <main>
+      <section class="slide active">
+        <span class="kicker">⚡ Lecția 9</span>
+        <h1>Extindere: Teoremele lui Kirchhoff</h1>
+        <p class="lead">Când circuitul are mai multe ramuri, curentul nu mai are un singur drum. Teoremele lui Kirchhoff ne ajută să urmărim curenții și tensiunile fără să ne pierdem în desen.</p>
+        <div class="note">Ideea-cheie: într-un nod, sarcina electrică nu dispare; într-un ochi de circuit, energia primită de sarcini se regăsește în consumatori.</div>
+        <div class="pill-row">
+          <span class="pill">nod</span>
+          <span class="pill">latură</span>
+          <span class="pill">ochi</span>
+          <span class="pill">curenți</span>
+          <span class="pill">tensiuni</span>
+        </div>
+      </section>
 
-    <section class="lesson-shell" aria-label="Lecție interactivă">
-      <div class="lesson-top">
-        <div class="lesson-meta">
-          <div class="badge">📘 Lecție interactivă</div>
-          <div class="page-counter" id="pageCounter">Pagina 1 / 6</div>
-        </div>
-        <div class="progress" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
-        <div class="tab-strip" aria-label="Paginile lecției"><button class="tab-btn active" data-go="0">1. Observ</button><button class="tab-btn" data-go="1">2. Noduri</button><button class="tab-btn" data-go="2">3. Ochiuri</button><button class="tab-btn" data-go="3">4. Exemplu</button><button class="tab-btn" data-go="4">5. Rețin</button><button class="tab-btn" data-go="5">6. Verificare</button></div>
-      </div>
-      <div class="page-stage">
-        <section class="lesson-page active">
-<div class="section-title"><span class="dot"></span><strong>Observ</strong></div>
-<p>Într-un circuit complicat, curentul se poate împărți pe mai multe ramuri și se poate reuni în alte puncte. Pentru aceste situații avem nevoie de reguli generale.</p>
-</section>
-<section class="lesson-page">
-<div class="section-title"><span class="dot"></span><strong>Prima teoremă a lui Kirchhoff</strong></div>
-<p>Într-un <strong>nod</strong> al circuitului, suma intensităților curenților care intră este egală cu suma intensităților curenților care ies.</p>
-<div class="formula-card">
-  <p>\[
-  I_1+I_2+\dots=I'_1+I'_2+\dots
-  \]</p>
-</div>
-<div class="info-box">Aceasta exprimă conservarea sarcinii electrice.</div>
-</section>
-<section class="lesson-page">
-<div class="section-title"><span class="dot"></span><strong>A doua teoremă a lui Kirchhoff</strong></div>
-<p>Pe un <strong>ochi de circuit</strong>, suma algebrică a tensiunilor este nulă.</p>
-<div class="formula-card">
-  <p>\[
-  \sum U=0
-  \]</p>
-</div>
-<p>Pentru un ochi simplu cu o sursă și un rezistor:</p>
-<div class="formula-card">
-  <p>\[
-  E-IR=0
-  \]</p>
-</div>
-<div class="notice">Aceasta exprimă conservarea energiei pe un traseu închis.</div>
-</section>
-<section class="lesson-page">
-<div class="section-title"><span class="dot"></span><strong>Exemplu simplu</strong></div>
-<p>Dacă într-un nod intră doi curenți de \(2\,\text{A}\) și \(3\,\text{A}\), iar pe o ramură iese un curent de \(1\,\text{A}\), pe cealaltă ramură trebuie să iasă:</p>
-<div class="formula-card">
-  <p>\[
-  2+3=1+I
-  \Rightarrow I=4\,\text{A}
-  \]</p>
-</div>
-</section>
-<section class="lesson-page">
-<div class="section-title"><span class="dot"></span><strong>Rețin</strong></div>
-<ul class="check-list">
-  <li>În nod: suma curenților care intră = suma curenților care ies.</li>
-  <li>Pe un ochi de circuit: suma algebrică a tensiunilor este nulă.</li>
-  <li>Teoremele lui Kirchhoff sunt utile la circuite cu mai multe ramuri.</li>
-</ul>
-</section>
-<section class="lesson-page">
-    <div class="section-title"><span class="dot"></span><strong>Verificare rapidă</strong></div>
-    <p>Alege varianta corectă și verifică imediat răspunsul.</p>
-    
-        <div class="quiz-block" data-answer="Prima teoremă se referă la noduri.">
-          <h3>Itemul 1</h3>
-          <p><strong>Prima teoremă a lui Kirchhoff se aplică într-un:</strong></p>
-          <div class="quiz-options">
-            <label class="quiz-option">
-              <input type="radio" name="l9q1" value="1">
-              <span>nod</span>
-            </label>
-            
-            <label class="quiz-option">
-              <input type="radio" name="l9q1" value="0">
-              <span>rezistor izolat</span>
-            </label>
-            
-            <label class="quiz-option">
-              <input type="radio" name="l9q1" value="0">
-              <span>termometru</span>
-            </label>
-            </div>
-          <div class="quiz-actions">
-            <button class="action-btn check-btn" onclick="checkQuestion('l9q1', this)">Verifică</button>
-            <button class="action-btn reset-btn" onclick="resetQuestion('l9q1')">Resetează</button>
-          </div>
-          <div class="feedback" id="l9q1-feedback"></div>
-        </div>
-        
-        <div class="quiz-block" data-answer="A doua teoremă se aplică unui traseu închis.">
-          <h3>Itemul 2</h3>
-          <p><strong>A doua teoremă a lui Kirchhoff se referă la:</strong></p>
-          <div class="quiz-options">
-            <label class="quiz-option">
-              <input type="radio" name="l9q2" value="1">
-              <span>un ochi de circuit</span>
-            </label>
-            
-            <label class="quiz-option">
-              <input type="radio" name="l9q2" value="0">
-              <span>culoarea firelor</span>
-            </label>
-            
-            <label class="quiz-option">
-              <input type="radio" name="l9q2" value="0">
-              <span>masa sursei</span>
-            </label>
-            </div>
-          <div class="quiz-actions">
-            <button class="action-btn check-btn" onclick="checkQuestion('l9q2', this)">Verifică</button>
-            <button class="action-btn reset-btn" onclick="resetQuestion('l9q2')">Resetează</button>
-          </div>
-          <div class="feedback" id="l9q2-feedback"></div>
-        </div>
-        
-        <div class="quiz-block" data-answer="Din conservarea sarcinii rezultă 3 A.">
-          <h3>Itemul 3</h3>
-          <p><strong>Dacă într-un nod intră 5 A și ies 2 A pe o ramură, pe cealaltă ramură ies:</strong></p>
-          <div class="quiz-options">
-            <label class="quiz-option">
-              <input type="radio" name="l9q3" value="1">
-              <span>3 A</span>
-            </label>
-            
-            <label class="quiz-option">
-              <input type="radio" name="l9q3" value="0">
-              <span>7 A</span>
-            </label>
-            
-            <label class="quiz-option">
-              <input type="radio" name="l9q3" value="0">
-              <span>2 A</span>
-            </label>
-            </div>
-          <div class="quiz-actions">
-            <button class="action-btn check-btn" onclick="checkQuestion('l9q3', this)">Verifică</button>
-            <button class="action-btn reset-btn" onclick="resetQuestion('l9q3')">Resetează</button>
-          </div>
-          <div class="feedback" id="l9q3-feedback"></div>
-        </div>
-        
-    </section>
-      </div>
-    </section>
-  </main>
+      <section class="slide">
+        <span class="kicker">Observ</span>
+        <h2>De ce avem nevoie de reguli noi?</h2>
+        <p>Într-un circuit simplu, curentul trece printr-un singur traseu. În circuitele reale, cum sunt cele dintr-un robot, calculator sau telefon, există multe ramuri.</p>
+        <div class="svgbox" aria-label="Rețea electrică simplificată">
+          <svg viewBox="0 0 760 330" role="img">
+            <rect x="70" y="60" width="120" height="210" rx="20" fill="#12304a" stroke="#38d5ff" stroke-width="4"/>
+            <text x="130" y="115" text-anchor="middle" font-size="30" fill="#e0f2fe" font-weight="700">Sursă</text>
+            <text x="130" y="165" text-anchor="middle" font-size="28" fill="#fef3c7">E</text>
 
-  <div class="bottom-nav" aria-label="Navigare lecție">
-    <div class="inner">
-      <button class="nav-btn prev" id="prevBtn">Înapoi</button>
-      <button class="nav-btn next" id="nextBtn">Mergi mai departe</button>
-      <a class="home-link" href="../index.html">Înapoi la capitol</a>
-    </div>
+            <circle cx="310" cy="105" r="13" fill="#38d5ff"/>
+            <circle cx="310" cy="225" r="13" fill="#38d5ff"/>
+            <circle cx="600" cy="105" r="13" fill="#38d5ff"/>
+            <circle cx="600" cy="225" r="13" fill="#38d5ff"/>
+
+            <path d="M190 105 H310" stroke="#e2e8f0" stroke-width="8" fill="none"/>
+            <path d="M190 225 H310" stroke="#e2e8f0" stroke-width="8" fill="none"/>
+            <path d="M600 105 H680 V225 H600" stroke="#e2e8f0" stroke-width="8" fill="none"/>
+
+            <path d="M310 105 H600" stroke="#e2e8f0" stroke-width="8" fill="none"/>
+            <path d="M310 225 H600" stroke="#e2e8f0" stroke-width="8" fill="none"/>
+            <path d="M310 105 C400 140 500 190 600 225" stroke="#e2e8f0" stroke-width="8" fill="none"/>
+
+            <rect x="410" y="85" width="90" height="40" rx="10" fill="#f97316"/>
+            <rect x="410" y="205" width="90" height="40" rx="10" fill="#22c55e"/>
+            <rect x="430" y="145" width="90" height="40" rx="10" fill="#7dd3fc"/>
+
+            <text x="455" y="74" text-anchor="middle" font-size="22" fill="#f8fafc">ramură 1</text>
+            <text x="455" y="285" text-anchor="middle" font-size="22" fill="#f8fafc">ramură 2</text>
+            <text x="575" y="166" text-anchor="middle" font-size="22" fill="#f8fafc">ramură 3</text>
+
+            <text x="310" y="85" text-anchor="middle" font-size="24" fill="#fde68a" font-weight="800">nod</text>
+            <text x="600" y="85" text-anchor="middle" font-size="24" fill="#fde68a" font-weight="800">nod</text>
+          </svg>
+          <div class="caption">Un circuit cu mai multe ramuri se numește rețea electrică.</div>
+        </div>
+        <div class="note">Regulile lui Kirchhoff sunt utile când legea lui Ohm singură nu mai este suficientă.</div>
+      </section>
+
+      <section class="slide">
+        <span class="kicker">Rețin</span>
+        <h2>Elementele unei rețele electrice</h2>
+        <div class="grid">
+          <div class="mini-card">
+            <div class="label">Nodul</div>
+            <p>Locul unde se întâlnesc cel puțin trei conductoare. Acolo curentul se poate împărți sau reuni.</p>
+          </div>
+          <div class="mini-card">
+            <div class="label">Latura</div>
+            <p>Porțiunea de circuit dintre două noduri succesive. Prin elementele de pe aceeași latură trece același curent.</p>
+          </div>
+          <div class="mini-card">
+            <div class="label">Ochiul</div>
+            <p>Un traseu închis format din laturi. Parcurgi circuitul și te întorci în punctul de plecare.</p>
+          </div>
+          <div class="mini-card">
+            <div class="label">Rețeaua electrică</div>
+            <p>Un circuit mai complex, alcătuit din noduri, laturi și ochiuri.</p>
+          </div>
+        </div>
+        <div class="warning">Nu memorăm definițiile mecanic. Le folosim ca să știm unde aplicăm fiecare regulă.</div>
+      </section>
+
+      <section class="slide">
+        <span class="kicker">Observ</span>
+        <h2>Ce se întâmplă într-un nod?</h2>
+        <p>Imaginează-ți o intersecție de drumuri. Mașinile care intră în intersecție trebuie să iasă pe alte drumuri. Ele nu dispar în intersecție.</p>
+        <p>La fel, într-un nod al circuitului, sarcina electrică nu se pierde și nu se adună la nesfârșit.</p>
+        <div class="svgbox" aria-label="Nod cu curenți care intră și ies">
+          <svg viewBox="0 0 760 360" role="img">
+            <circle cx="380" cy="180" r="24" fill="#38d5ff"/>
+            <text x="380" y="226" text-anchor="middle" font-size="24" fill="#fde68a" font-weight="800">nod</text>
+
+            <path d="M110 90 L360 170" stroke="#e2e8f0" stroke-width="10" fill="none"/>
+            <path d="M120 270 L360 190" stroke="#e2e8f0" stroke-width="10" fill="none"/>
+            <path d="M400 168 L650 90" stroke="#e2e8f0" stroke-width="10" fill="none"/>
+            <path d="M400 192 L650 270" stroke="#e2e8f0" stroke-width="10" fill="none"/>
+
+            <polygon points="338,162 360,170 342,184" fill="#22c55e"/>
+            <polygon points="338,198 360,190 342,176" fill="#22c55e"/>
+            <polygon points="421,161 400,168 416,184" fill="#f97316"/>
+            <polygon points="421,199 400,192 416,176" fill="#f97316"/>
+
+            <text x="200" y="70" text-anchor="middle" font-size="30" fill="#bbf7d0">I₁ intră</text>
+            <text x="200" y="306" text-anchor="middle" font-size="30" fill="#bbf7d0">I₂ intră</text>
+            <text x="560" y="70" text-anchor="middle" font-size="30" fill="#fed7aa">I₃ iese</text>
+            <text x="560" y="306" text-anchor="middle" font-size="30" fill="#fed7aa">I₄ iese</text>
+          </svg>
+        </div>
+      </section>
+
+      <section class="slide">
+        <span class="kicker">Rețin</span>
+        <h2>Prima teoremă a lui Kirchhoff</h2>
+        <p>Într-un nod de circuit, <strong>suma curenților care intră</strong> este egală cu <strong>suma curenților care ies</strong>.</p>
+        <div class="formula">
+          \[
+            I_{\text{intră}} = I_{\text{ies}}
+          \]
+        </div>
+        <p>Scris pentru mai mulți curenți:</p>
+        <div class="formula">
+          \[
+            I_1+I_2=I_3+I_4
+          \]
+        </div>
+        <div class="note">Această regulă exprimă conservarea sarcinii electrice: sarcina nu se creează și nu dispare într-un nod.</div>
+      </section>
+
+      <section class="slide">
+        <span class="kicker">Exemplu</span>
+        <h2>Calcul într-un nod</h2>
+        <p>Într-un nod intră doi curenți:</p>
+        <div class="formula">
+          \[
+            I_1=2\,A,\qquad I_2=3\,A
+          \]
+        </div>
+        <p>Din nod ies doi curenți. Unul este \(I_3=1\,A\). Află celălalt curent, \(I_4\).</p>
+        <div class="formula">
+          \[
+            I_1+I_2=I_3+I_4
+          \]
+          \[
+            2\,A+3\,A=1\,A+I_4
+          \]
+          \[
+            I_4=4\,A
+          \]
+        </div>
+        <div class="note">Verificare logică: intră în total \(5\,A\), deci trebuie să iasă tot \(5\,A\).</div>
+      </section>
+
+      <section class="slide">
+        <span class="kicker">Aplic</span>
+        <h2>Cum se verifică experimental?</h2>
+        <p>În laborator se poate monta un circuit cu mai multe ramuri. Se măsoară intensitățile curenților din fiecare ramură cu ampermetrul.</p>
+        <ol class="steps">
+          <li>Desenezi circuitul și marchezi nodurile.</li>
+          <li>Alegi sensuri pentru curenți pe fiecare latură.</li>
+          <li>Măsori curenții cu ampermetrul, conectat în serie pe ramura studiată.</li>
+          <li>Compari suma curenților care intră cu suma curenților care ies.</li>
+        </ol>
+        <div class="warning">Dacă valorile nu se potrivesc perfect, cauza poate fi eroarea de măsurare sau contacte imperfecte.</div>
+      </section>
+
+      <section class="slide">
+        <span class="kicker">Observ</span>
+        <h2>Ce se întâmplă pe un ochi de circuit?</h2>
+        <p>Un ochi este un traseu închis. Dacă pornești dintr-un punct, mergi pe laturi și revii în același punct.</p>
+        <p>Pe drum, sursele pot oferi energie sarcinilor electrice, iar rezistorii o consumă sub formă de căldură sau lumină.</p>
+        <div class="svgbox" aria-label="Ochi de circuit">
+          <svg viewBox="0 0 760 360" role="img">
+            <path d="M180 100 H590 V260 H180 Z" stroke="#e2e8f0" stroke-width="9" fill="none"/>
+            <rect x="130" y="145" width="100" height="70" rx="16" fill="#12304a" stroke="#38d5ff" stroke-width="4"/>
+            <text x="180" y="188" text-anchor="middle" font-size="28" fill="#fde68a" font-weight="800">E</text>
+
+            <rect x="340" y="78" width="100" height="44" rx="12" fill="#f97316"/>
+            <text x="390" y="70" text-anchor="middle" font-size="24" fill="#f8fafc">R₁</text>
+
+            <rect x="340" y="238" width="100" height="44" rx="12" fill="#22c55e"/>
+            <text x="390" y="318" text-anchor="middle" font-size="24" fill="#f8fafc">R₂</text>
+
+            <path d="M300 180 C355 130 445 130 500 180 C445 230 355 230 300 180" fill="none" stroke="#38d5ff" stroke-width="5" stroke-dasharray="10 10"/>
+            <polygon points="496,169 520,180 496,191" fill="#38d5ff"/>
+            <text x="395" y="184" text-anchor="middle" font-size="26" fill="#e0f2fe">sens ales</text>
+          </svg>
+          <div class="caption">Pe un traseu închis aplicăm a doua teoremă a lui Kirchhoff.</div>
+        </div>
+      </section>
+
+      <section class="slide">
+        <span class="kicker">Rețin</span>
+        <h2>A doua teoremă a lui Kirchhoff</h2>
+        <p>Pe un ochi de circuit, energia oferită de surse se regăsește în căderile de tensiune de pe elementele circuitului.</p>
+        <div class="formula">
+          \[
+            \sum E = \sum U
+          \]
+        </div>
+        <p>Pentru rezistori, căderea de tensiune se poate scrie cu legea lui Ohm:</p>
+        <div class="formula">
+          \[
+            U=I\cdot R
+          \]
+        </div>
+        <p>De aceea, într-un ochi simplu:</p>
+        <div class="formula">
+          \[
+            E = I\cdot R
+          \]
+        </div>
+        <div class="note">Această regulă exprimă conservarea energiei pe un traseu închis.</div>
+      </section>
+
+      <section class="slide">
+        <span class="kicker">Exemplu</span>
+        <h2>Ochi cu doi rezistori în serie</h2>
+        <p>O baterie de \(9\,V\) alimentează doi rezistori în serie:</p>
+        <div class="formula">
+          \[
+            R_1=10\,\Omega,\qquad R_2=20\,\Omega
+          \]
+        </div>
+        <p>Pentru ochiul de circuit:</p>
+        <div class="formula">
+          \[
+            E=I(R_1+R_2)
+          \]
+          \[
+            I=\frac{E}{R_1+R_2}
+          \]
+          \[
+            I=\frac{9\,V}{10\,\Omega+20\,\Omega}
+            =\frac{9\,V}{30\,\Omega}=0{,}3\,A
+          \]
+        </div>
+        <div class="note">Am folosit fracție MathJax și am aplicat ideea: tensiunea sursei se „împarte” pe rezistori.</div>
+      </section>
+
+      <section class="slide">
+        <span class="kicker">Rețin</span>
+        <h2>Semnele: o variantă simplă</h2>
+        <p>În manual, teoremele pot fi scrise cu semne \(+\) și \(-\). Semnul depinde de sensul ales pentru curenți sau pentru parcurgerea ochiului.</p>
+        <div class="grid">
+          <div class="mini-card">
+            <div class="label">Pentru nod</div>
+            <p>Poți considera curenții care intră cu \(+\), iar curenții care ies cu \(-\).</p>
+            <div class="formula">\[
+              I_1+I_2-I_3-I_4=0
+            \]</div>
+          </div>
+          <div class="mini-card">
+            <div class="label">Pentru ochi</div>
+            <p>Poți considera sursele ca energie primită, iar rezistorii ca energie consumată.</p>
+            <div class="formula">\[
+              E-I R=0
+            \]</div>
+          </div>
+        </div>
+        <div class="warning">La clasa a VIII-a este mai important să înțelegi ideea decât să alegi semne complicate.</div>
+      </section>
+
+      <section class="slide">
+        <span class="kicker">Aplic</span>
+        <h2>Pași pentru rezolvarea unei rețele</h2>
+        <ol class="steps">
+          <li>Identifică nodurile și notează-le cu litere mari: A, B, C.</li>
+          <li>Identifică laturile și ochiurile circuitului.</li>
+          <li>Alege un sens pentru fiecare curent. Sensul ales este o presupunere.</li>
+          <li>Scrie prima teoremă pentru noduri.</li>
+          <li>Scrie a doua teoremă pentru ochiuri.</li>
+          <li>Rezolvă ecuațiile obținute și verifică unitățile.</li>
+        </ol>
+        <div class="note">Dacă obții un curent negativ, nu este „greșit”: înseamnă că sensul real este opus sensului ales inițial.</div>
+      </section>
+
+      <section class="slide">
+        <span class="kicker">Exemplu</span>
+        <h2>Două reguli într-o problemă</h2>
+        <p>Într-un nod intră curentul \(I\) și iese prin două ramuri:</p>
+        <div class="formula">
+          \[
+            I_1=0{,}40\,A,\qquad I_2=0{,}20\,A
+          \]
+        </div>
+        <p>Prima teoremă:</p>
+        <div class="formula">
+          \[
+            I=I_1+I_2=0{,}40\,A+0{,}20\,A=0{,}60\,A
+          \]
+        </div>
+        <p>Dacă pe o ramură avem \(R=10\,\Omega\), căderea de tensiune este:</p>
+        <div class="formula">
+          \[
+            U=I_1R=0{,}40\,A\cdot 10\,\Omega=4\,V
+          \]
+        </div>
+        <div class="note">Kirchhoff + Ohm = metoda de bază pentru circuite mai complicate.</div>
+      </section>
+
+      <section class="slide">
+        <span class="kicker">Observ</span>
+        <h2>Unde apar teoremele lui Kirchhoff?</h2>
+        <div class="grid">
+          <div class="mini-card">
+            <div class="label">Electronice</div>
+            <p>Plăci de calculator, telefoane, încărcătoare, circuite de comandă.</p>
+          </div>
+          <div class="mini-card">
+            <div class="label">Instalații electrice</div>
+            <p>Ramuri diferite pentru prize, becuri și aparate.</p>
+          </div>
+          <div class="mini-card">
+            <div class="label">Măsurători</div>
+            <p>Verificarea curenților din ramuri și a tensiunilor pe componente.</p>
+          </div>
+          <div class="mini-card">
+            <div class="label">Proiectare</div>
+            <p>Alegerea rezistorilor și a surselor pentru ca circuitul să funcționeze corect.</p>
+          </div>
+        </div>
+        <div class="warning">În practică, se ține cont și de rezistența internă a surselor, de toleranța rezistorilor și de încălzire.</div>
+      </section>
+
+      <section class="slide">
+        <span class="kicker">Rețin</span>
+        <h2>Sinteza lecției</h2>
+        <div class="idea">
+          <div class="box"><strong>Nod:</strong> locul unde se întâlnesc cel puțin trei conductoare.</div>
+          <div class="box"><strong>Latură:</strong> porțiune de circuit dintre două noduri succesive.</div>
+          <div class="box"><strong>Ochi:</strong> traseu închis din circuit.</div>
+          <div class="box"><strong>Prima teoremă:</strong> suma curenților care intră într-un nod este egală cu suma curenților care ies.</div>
+          <div class="box"><strong>A doua teoremă:</strong> pe un ochi, suma tensiunilor electromotoare este egală cu suma căderilor de tensiune.</div>
+        </div>
+        <div class="formula">
+          \[
+            I_{\text{intră}}=I_{\text{ies}},\qquad
+            \sum E=\sum U
+          \]
+        </div>
+      </section>
+
+      <section class="slide">
+        <span class="kicker">Verificare rapidă</span>
+        <h2>Itemul 1</h2>
+        <div class="quiz">
+          <div class="question" data-answer="b">
+            <p><strong>Prima teoremă a lui Kirchhoff se aplică într-un:</strong></p>
+            <div class="answers">
+              <label><input type="radio" name="q1" value="a"> rezistor izolat</label>
+              <label><input type="radio" name="q1" value="b"> nod de circuit</label>
+              <label><input type="radio" name="q1" value="c"> termometru</label>
+            </div>
+            <button class="check" type="button" onclick="checkQuiz(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+        <div class="note">Gândește logic: în nod curenții se împart sau se reunesc.</div>
+      </section>
+
+      <section class="slide">
+        <span class="kicker">Verificare rapidă</span>
+        <h2>Itemul 2</h2>
+        <div class="quiz">
+          <div class="question" data-answer="a">
+            <p><strong>A doua teoremă a lui Kirchhoff se referă la:</strong></p>
+            <div class="answers">
+              <label><input type="radio" name="q2" value="a"> un ochi de circuit</label>
+              <label><input type="radio" name="q2" value="b"> culoarea firelor</label>
+              <label><input type="radio" name="q2" value="c"> masa bateriei</label>
+            </div>
+            <button class="check" type="button" onclick="checkQuiz(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+        <div class="note">Pe un ochi de circuit comparăm tensiunile surselor cu tensiunile pe consumatori.</div>
+      </section>
+
+      <section class="slide">
+        <span class="kicker">Verificare rapidă</span>
+        <h2>Itemul 3</h2>
+        <div class="quiz">
+          <div class="question" data-answer="c">
+            <p><strong>Într-un nod intră \(5\,A\). Pe o ramură ies \(2\,A\). Pe cealaltă ramură ies:</strong></p>
+            <div class="answers">
+              <label><input type="radio" name="q3" value="a"> \(7\,A\)</label>
+              <label><input type="radio" name="q3" value="b"> \(2\,A\)</label>
+              <label><input type="radio" name="q3" value="c"> \(3\,A\)</label>
+            </div>
+            <button class="check" type="button" onclick="checkQuiz(this)">Verifică</button>
+            <div class="feedback"></div>
+          </div>
+        </div>
+        <div class="formula">
+          \[
+            5\,A=2\,A+I \Rightarrow I=3\,A
+          \]
+        </div>
+      </section>
+
+      <section class="slide">
+        <span class="kicker">Final</span>
+        <h2>Ai terminat lecția 9</h2>
+        <p class="lead">Teoremele lui Kirchhoff sunt reguli de ordine într-o rețea electrică.</p>
+        <div class="idea">
+          <div class="box"><strong>În nod:</strong> curentul care intră se regăsește în curenții care ies.</div>
+          <div class="box"><strong>În ochi:</strong> energia primită de sarcini de la surse se regăsește în consumatori.</div>
+          <div class="box"><strong>În probleme:</strong> identifici nodurile, laturile și ochiurile, apoi scrii ecuațiile.</div>
+        </div>
+        <div class="final-banner">
+          <strong>Prof. Dănuț Andronie</strong><br>
+          email: <a href="mailto:danutmg@gmail.com" style="color:#7dd3fc; font-weight:900;">danutmg@gmail.com</a>
+        </div>
+      </section>
+    </main>
+
+    <nav class="nav" aria-label="Navigare lecție">
+      <button class="back" id="backBtn" type="button" onclick="prevSlide()">Înapoi</button>
+      <div class="counter" id="counter">1/18</div>
+      <button class="next" id="nextBtn" type="button" onclick="nextSlide()">Mergi mai departe</button>
+    </nav>
   </div>
 
   <script>
-    (function(){
-      const pages = Array.from(document.querySelectorAll('.lesson-page'));
-      const tabs = Array.from(document.querySelectorAll('.tab-btn'));
-      const prevBtn = document.getElementById('prevBtn');
-      const nextBtn = document.getElementById('nextBtn');
-      const counter = document.getElementById('pageCounter');
-      const progress = document.getElementById('progressBar');
-      let current = 0;
-      function showPage(index){
-        current = Math.max(0, Math.min(index, pages.length - 1));
-        pages.forEach((page, i) => page.classList.toggle('active', i === current));
-        tabs.forEach((tab, i) => tab.classList.toggle('active', i === current));
-        counter.textContent = `Pagina ${current + 1} / ${pages.length}`;
-        progress.style.width = `${((current + 1) / pages.length) * 100}%`;
-        prevBtn.disabled = current === 0;
-        nextBtn.textContent = current === pages.length - 1 ? 'Reia lecția' : 'Mergi mai departe';
-        window.scrollTo({top: 0, behavior: 'smooth'});
-        if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    const counter = document.getElementById('counter');
+    const backBtn = document.getElementById('backBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const topBanner = document.getElementById('topBanner');
+    let current = 0;
+
+    function updateMath(){
+      if(window.MathJax && window.MathJax.typesetPromise){
+        window.MathJax.typesetPromise([slides[current]]).catch(() => {});
       }
-      tabs.forEach((tab, i) => tab.addEventListener('click', () => showPage(i)));
-      prevBtn.addEventListener('click', () => showPage(current - 1));
-      nextBtn.addEventListener('click', () => current === pages.length - 1 ? showPage(0) : showPage(current + 1));
-      showPage(0);
-    })();
-    function checkQuestion(groupName, btn){
-      const selected = document.querySelector(`input[name="${groupName}"]:checked`);
-      const feedback = document.getElementById(`${groupName}-feedback`);
-      if(!selected){
-        feedback.className = 'feedback bad';
-        feedback.textContent = 'Alege mai întâi o variantă.';
+    }
+
+    function render(){
+      slides.forEach((s, i) => s.classList.toggle('active', i === current));
+      counter.textContent = `${current + 1}/${slides.length}`;
+      backBtn.disabled = current === 0;
+      backBtn.classList.toggle('disabled', current === 0);
+      topBanner.classList.toggle('hidden', current !== 0);
+
+      if(current === slides.length - 1){
+        nextBtn.textContent = 'Lecția următoare';
+        nextBtn.onclick = () => { window.location.href = './lectia-10.html'; };
+      }else{
+        nextBtn.textContent = 'Mergi mai departe';
+        nextBtn.onclick = nextSlide;
+      }
+
+      window.scrollTo({top:0, behavior:'smooth'});
+      updateMath();
+    }
+
+    function nextSlide(){
+      if(current < slides.length - 1){
+        current++;
+        render();
+      }
+    }
+
+    function prevSlide(){
+      if(current > 0){
+        current--;
+        render();
+      }
+    }
+
+    function checkQuiz(btn){
+      const q = btn.closest('.question');
+      const fb = q.querySelector('.feedback');
+      const answer = q.dataset.answer;
+      const chosen = q.querySelector('input[type="radio"]:checked');
+
+      fb.className = 'feedback';
+
+      if(!chosen){
+        fb.textContent = 'Alege mai întâi o variantă.';
+        fb.classList.add('choose');
         return;
       }
-      const block = btn.closest('.quiz-block');
-      const explain = block.dataset.answer || '';
-      if(selected.value === '1'){
-        feedback.className = 'feedback ok';
-        feedback.textContent = 'Corect! ' + explain;
-      } else {
-        feedback.className = 'feedback bad';
-        feedback.textContent = 'Răspuns greșit. ' + explain;
+
+      if(chosen.value === answer){
+        fb.textContent = 'Corect!';
+        fb.classList.add('ok');
+      }else{
+        fb.textContent = 'Mai încearcă. Recitește pagina cu explicația.';
+        fb.classList.add('no');
       }
     }
-    function resetQuestion(groupName){
-      document.querySelectorAll(`input[name="${groupName}"]`).forEach(input => input.checked = false);
-      const feedback = document.getElementById(`${groupName}-feedback`);
-      feedback.className = 'feedback';
-      feedback.textContent = '';
-    }
+
+    document.addEventListener('keydown', (event) => {
+      if(event.key === 'ArrowRight') nextSlide();
+      if(event.key === 'ArrowLeft') prevSlide();
+    });
+
+    render();
   </script>
 </body>
 </html>

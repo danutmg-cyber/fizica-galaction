@@ -2,299 +2,763 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Lecția 10 | Gruparea generatoarelor identice (studiu experimental) | Fizica Galaction</title>
-  <meta name="description" content="Lecția 10 pentru clasa a VIII-a: Gruparea generatoarelor identice (studiu experimental). Lecție interactivă pe pagini, cu buton Mergi mai departe, MathJax și verificare rapidă.">
-  <style>
-    *{box-sizing:border-box}
-    :root{
-      --bg:#0f172a;--surface:#1e293b;--surface-2:#162033;--surface-3:#0b1220;--text:#f8fafc;--muted:#cbd5e1;
-      --accent:#22c55e;--accent-2:#38bdf8;--accent-3:#f59e0b;--accent-4:#a78bfa;--danger:#ef4444;--ok:#22c55e;
-      --border:rgba(255,255,255,.12);--shadow:0 10px 26px rgba(0,0,0,.24);--radius:18px;
-    }
-    html{scroll-behavior:smooth;font-size:clamp(16px,0.35vw + 15px,19px)}
-    body{margin:0;font-family:Arial,sans-serif;background:radial-gradient(circle at top right, rgba(56,189,248,.12), transparent 26%),radial-gradient(circle at top left, rgba(34,197,94,.10), transparent 22%),linear-gradient(180deg,#0f172a 0%, #111827 100%);color:var(--text);line-height:1.65;min-height:100vh}
-    .wrapper{width:min(100%,980px);margin:0 auto;padding-inline:clamp(12px,2vw,24px)}
-    .site-header{background:rgba(30,41,59,.92);border-bottom:3px solid var(--accent);position:sticky;top:0;z-index:30;backdrop-filter:blur(8px)}
-    .site-header .wrapper{padding-block:14px}
-    .site-title{margin:0;font-size:clamp(1.35rem,2vw,2rem);line-height:1.2}
-    .site-subtitle{margin:.35rem 0 0;color:var(--muted);font-size:1rem}
-    .page-content{padding:18px 0 124px}
-    .page-hero,.lesson-shell,.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
-    .page-hero,.card{padding:18px;margin-bottom:16px}
-    .page-hero h2,.card h2,.card h3,.card h4{margin-top:0;line-height:1.25}
-    .page-hero h2{font-size:clamp(1.35rem,1.5vw,1.9rem);margin-bottom:10px}
-    .quote{margin:0 0 10px;padding:12px 14px;border-left:4px solid var(--accent-2);background:#10243f;color:#dbeafe;border-radius:12px;font-style:italic}
-    .hint,.notice,.info-box{border-radius:14px;padding:12px 14px;margin-top:12px}
-    .hint{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.28);color:#fde68a}
-    .notice{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.28);color:#dcfce7}
-    .info-box{background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.28);color:#dbeafe}
-    .lesson-shell{overflow:hidden}.lesson-top{padding:16px 16px 8px}
-    .lesson-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-    .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(56,189,248,.14);color:#dbeafe;border:1px solid rgba(56,189,248,.28);font-weight:700;font-size:.92rem}
-    .page-counter{color:#e2e8f0;font-weight:700}
-    .progress{width:100%;height:10px;border-radius:999px;background:#0b1220;overflow:hidden;margin:12px 0 14px}
-    .progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent-2),var(--accent))}
-    .tab-strip{display:flex;gap:8px;overflow:auto;padding-bottom:8px;scrollbar-width:thin}
-    .tab-btn{border:none;cursor:pointer;white-space:nowrap;padding:10px 14px;border-radius:12px;background:#0b1220;color:#e5e7eb;font-weight:700}
-    .tab-btn.active{background:linear-gradient(135deg,var(--accent),#16a34a);color:#052e16}
-    .page-stage{padding:0 16px 18px}
-    .lesson-page{display:none;animation:fade .25s ease}.lesson-page.active{display:block}
-    @keyframes fade{from{opacity:.4;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-    .section-title{display:flex;align-items:center;gap:10px;font-size:1.08rem;margin:6px 0 12px}
-    .dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--accent-2),var(--accent));box-shadow:0 0 0 4px rgba(56,189,248,.12)}
-    .grid{display:grid;gap:14px}.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .split,.compare{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .mini-card,.formula-card{background:linear-gradient(180deg,var(--surface-2),var(--surface-3));border:1px solid var(--border);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
-    .mini-card h4,.formula-card h3{margin:0 0 8px}.mini-card p,.formula-card p{margin:.35rem 0}
-    .tag{display:inline-block;margin-top:8px;font-size:.85rem;font-weight:700;background:rgba(167,139,250,.12);color:#ddd6fe;border:1px solid rgba(167,139,250,.28);padding:6px 10px;border-radius:999px}
-    .check-list,.ordered{padding-left:1.15rem;margin:0}.check-list li,.ordered li{margin:.45rem 0}
-    .quiz-block{background:linear-gradient(180deg,var(--surface-2),var(--surface-3));border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:14px}
-    .quiz-options{display:grid;gap:10px;margin-top:10px}
-    .quiz-option{display:flex;gap:10px;align-items:flex-start;background:#0b1220;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px}
-    .quiz-option input{margin-top:4px}
-    .quiz-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .action-btn{border:none;cursor:pointer;border-radius:12px;padding:11px 14px;font-weight:800}
-    .check-btn{background:linear-gradient(135deg,var(--accent),#16a34a);color:#052e16}.reset-btn{background:#334155;color:#f8fafc}
-    .feedback{margin-top:10px;padding:10px 12px;border-radius:12px;font-weight:700;display:none}
-    .feedback.ok{display:block;background:rgba(34,197,94,.12);color:#dcfce7;border:1px solid rgba(34,197,94,.28)}
-    .feedback.bad{display:block;background:rgba(239,68,68,.12);color:#fecaca;border:1px solid rgba(239,68,68,.28)}
-    .bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(15,23,42,.96);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.08)}
-    .bottom-nav .inner{width:min(100%,980px);margin:0 auto;padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:center}
-    .nav-btn,.home-link{appearance:none;border:none;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;min-height:48px;border-radius:14px;font-weight:800;cursor:pointer;padding:12px 14px}
-    .nav-btn.prev{background:#334155;color:#f8fafc}.nav-btn.next{background:linear-gradient(135deg,var(--accent),#16a34a);color:#052e16}
-    .home-link{background:#0b1220;color:#e5e7eb;border:1px solid var(--border)}.nav-btn:disabled{opacity:.45;cursor:not-allowed}
-    @media (max-width:900px){.grid-3{grid-template-columns:1fr 1fr}}
-    @media (max-width:760px){.grid-2,.grid-3,.split,.compare{grid-template-columns:1fr}.bottom-nav .inner{grid-template-columns:1fr 1fr}.home-link{grid-column:1 / -1}}
-</style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Lecția 10 | Gruparea generatoarelor identice | Fizica Galaction</title>
+  <meta name="description" content="Lecție interactivă pentru clasa a VIII-a: gruparea generatoarelor identice în serie și în paralel.">
   <script>
     window.MathJax = {
-      tex: {inlineMath: [['\\(','\\)'], ['$', '$']]},
-      svg: {fontCache: 'global'}
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' },
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    :root{
+      --bg:#07111f;
+      --bg2:#0f172a;
+      --card:#111c2f;
+      --card2:#17263d;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --line:#35506f;
+      --cyan:#67e8f9;
+      --cyan2:#38bdf8;
+      --green:#22c55e;
+      --green2:#16a34a;
+      --back:#e2e8f0;
+      --backText:#0f172a;
+      --yellow:#fde68a;
+      --orange:#fdba74;
+      --red:#fca5a5;
+      --shadow:0 20px 60px rgba(0,0,0,.35);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0; min-height:100%; background:radial-gradient(circle at top,#12345a 0,#07111f 45%,#040812 100%); color:var(--text); font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;}
+    body{min-height:100dvh; font-size:18px; line-height:1.55;}
+    .app{min-height:100dvh; display:flex; flex-direction:column;}
+    .topbar{width:100%; max-width:1000px; margin:0 auto; padding:14px 16px 0;}
+    .hero{
+      border:1px solid rgba(103,232,249,.35);
+      background:linear-gradient(135deg,rgba(14,116,144,.40),rgba(15,23,42,.78));
+      border-radius:var(--radius);
+      padding:18px;
+      box-shadow:var(--shadow);
+    }
+    .school{font-weight:900; letter-spacing:.03em; color:var(--cyan); font-size:1.05rem; text-transform:uppercase;}
+    .teacher{color:var(--muted); font-weight:700; margin-top:2px;}
+    .motto{margin-top:12px; padding:10px 12px; border-left:4px solid var(--cyan); background:rgba(8,145,178,.18); color:var(--yellow); border-radius:12px; font-style:italic;}
+    main{width:100%; max-width:1000px; margin:0 auto; flex:1; padding:16px 16px 96px;}
+    .page{display:none;}
+    .page.active{display:block; animation:fade .18s ease-in;}
+    @keyframes fade{from{opacity:.35; transform:translateY(6px)}to{opacity:1; transform:translateY(0)}}
+    .card{
+      background:linear-gradient(180deg,rgba(23,38,61,.98),rgba(15,23,42,.98));
+      border:1px solid rgba(148,163,184,.22);
+      border-radius:var(--radius);
+      padding:clamp(18px,3vw,30px);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+    }
+    h1,h2,h3{line-height:1.15; margin:0 0 14px;}
+    h1{font-size:clamp(1.8rem,5.5vw,3.4rem); color:#e0f2fe;}
+    h2{font-size:clamp(1.45rem,4vw,2.2rem); color:var(--cyan);}
+    h3{font-size:clamp(1.15rem,3vw,1.55rem); color:#bae6fd;}
+    p{margin:0 0 14px;}
+    ul{margin:10px 0 0; padding-left:22px;}
+    li{margin:8px 0;}
+    .tag{display:inline-flex; align-items:center; gap:8px; padding:7px 11px; border-radius:999px; background:rgba(34,211,238,.12); border:1px solid rgba(103,232,249,.35); color:var(--cyan); font-weight:800; font-size:.95rem;}
+    .idea{font-size:1.16rem; color:#f8fafc;}
+    .muted{color:var(--muted);}
+    .grid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; margin-top:16px;}
+    .mini{
+      background:rgba(15,23,42,.72);
+      border:1px solid rgba(148,163,184,.22);
+      border-radius:18px;
+      padding:14px;
+    }
+    .mini strong{color:#e0f2fe}
+    .formula{
+      margin:16px 0;
+      padding:14px;
+      border-radius:18px;
+      background:rgba(2,6,23,.72);
+      border:1px solid rgba(103,232,249,.22);
+      overflow-x:auto;
+      text-align:center;
+      font-size:1.02rem;
+    }
+    mjx-container[jax="SVG"]{max-width:100%; overflow-x:auto; overflow-y:hidden;}
+    .example{
+      background:rgba(34,197,94,.10);
+      border:1px solid rgba(74,222,128,.35);
+      border-radius:18px;
+      padding:14px;
+      margin-top:14px;
+    }
+    .warning{
+      background:rgba(251,191,36,.11);
+      border:1px solid rgba(253,230,138,.38);
+      border-radius:18px;
+      padding:14px;
+      margin-top:14px;
+    }
+    .danger{
+      background:rgba(248,113,113,.10);
+      border:1px solid rgba(252,165,165,.36);
+      border-radius:18px;
+      padding:14px;
+      margin-top:14px;
+    }
+    .svgbox{
+      margin:16px 0;
+      border-radius:20px;
+      background:rgba(2,6,23,.58);
+      border:1px solid rgba(148,163,184,.20);
+      padding:12px;
+      overflow:hidden;
+    }
+    .svgbox > svg{width:100%; height:auto; display:block;}
+    .caption{font-size:.95rem; color:var(--muted); text-align:center; margin-top:8px;}
+    .steps{counter-reset:step; display:grid; gap:10px; margin-top:14px;}
+    .step{position:relative; padding:12px 12px 12px 48px; background:rgba(15,23,42,.70); border:1px solid rgba(148,163,184,.20); border-radius:16px;}
+    .step:before{counter-increment:step; content:counter(step); position:absolute; left:12px; top:12px; width:26px; height:26px; border-radius:50%; display:grid; place-items:center; background:var(--cyan2); color:#082f49; font-weight:900;}
+    .compare{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:14px;}
+    .compare .mini:first-child{border-color:rgba(103,232,249,.45)}
+    .compare .mini:last-child{border-color:rgba(74,222,128,.45)}
+    table{width:100%; border-collapse:collapse; margin-top:12px; overflow:hidden; border-radius:16px; font-size:1rem;}
+    th,td{border:1px solid rgba(148,163,184,.25); padding:10px; text-align:center;}
+    th{background:rgba(14,116,144,.28); color:#e0f2fe;}
+    td{background:rgba(15,23,42,.45);}
+    .quiz{display:grid; gap:14px; margin-top:14px;}
+    .qbox{background:rgba(15,23,42,.72); border:1px solid rgba(148,163,184,.22); border-radius:18px; padding:14px;}
+    .answers{display:grid; gap:10px; margin-top:10px;}
+    .answers label{display:grid; grid-template-columns:auto 1fr; gap:10px; align-items:start; padding:10px 12px; border-radius:14px; background:rgba(2,6,23,.56); border:1px solid rgba(148,163,184,.18); cursor:pointer;}
+    .answers input{margin-top:6px; transform:scale(1.15);}
+    .checkline{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:12px;}
+    .checkbtn,.resetbtn{border:0; border-radius:12px; padding:10px 14px; font-weight:900; cursor:pointer;}
+    .checkbtn{background:var(--cyan2); color:#082f49;}
+    .resetbtn{background:#334155; color:#f8fafc;}
+    .feedback{font-weight:900; min-height:28px;}
+    .feedback.ok{color:#86efac;}
+    .feedback.bad{color:#fca5a5;}
+    .feedback.warn{color:#fde68a;}
+    .finalBanner{
+      margin-top:18px;
+      border-radius:20px;
+      padding:16px;
+      background:linear-gradient(135deg,rgba(8,145,178,.25),rgba(22,163,74,.18));
+      border:1px solid rgba(103,232,249,.32);
+      text-align:center;
+    }
+    .bottomNav{
+      position:sticky;
+      bottom:0;
+      z-index:20;
+      background:linear-gradient(180deg,rgba(7,17,31,0),rgba(7,17,31,.96) 28%,rgba(7,17,31,.98));
+      padding:18px 16px max(18px,env(safe-area-inset-bottom));
+      border-top:1px solid rgba(148,163,184,.10);
+    }
+    .navInner{max-width:1000px; margin:0 auto; display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:12px;}
+    .navBtn{
+      min-height:52px;
+      border:0;
+      border-radius:16px;
+      padding:12px 14px;
+      font-size:1rem;
+      font-weight:950;
+      cursor:pointer;
+      box-shadow:0 12px 30px rgba(0,0,0,.25);
+    }
+    .navBtn.prev{background:var(--back); color:var(--backText);}
+    .navBtn.next{background:linear-gradient(135deg,var(--green),var(--green2)); color:#052e16;}
+    .navBtn:disabled{opacity:.45; cursor:not-allowed;}
+    .pageCount{color:#e0f2fe; font-weight:950; background:rgba(15,23,42,.85); border:1px solid rgba(148,163,184,.25); padding:10px 12px; border-radius:14px; min-width:64px; text-align:center;}
+    a{color:#7dd3fc;}
+    .kbd{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; background:#0f172a; border:1px solid rgba(148,163,184,.28); padding:2px 7px; border-radius:8px; color:#e0f2fe;}
+    @media (max-width:760px){
+      body{font-size:17px;}
+      .grid,.compare{grid-template-columns:1fr;}
+      main{padding-left:12px; padding-right:12px; padding-bottom:104px;}
+      .topbar{padding-left:12px; padding-right:12px;}
+      .navInner{grid-template-columns:1fr auto 1fr; gap:8px;}
+      .navBtn{font-size:.95rem; padding:10px 8px;}
+      .pageCount{min-width:56px; padding:10px 8px;}
+      table{font-size:.92rem;}
+    }
+  </style>
 </head>
 <body>
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction</h1>
-      <p class="site-subtitle">Clasa a VIII-a • Electrocinetică • Lecția 10</p>
-    </div>
-  </header>
+<div class="app">
+  <div class="topbar" id="topBanner">
+    <section class="hero">
+      <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+      <div class="teacher">Profesor: Prof. Dănuț Andronie</div>
+      <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+    </section>
+  </div>
 
-  <main class="page-content wrapper">
-    <section class="page-hero">
-      <h2>Lecția 10 – Gruparea generatoarelor identice (studiu experimental)</h2>
-      <p class="quote">„Fizica nu este dominată de formule, ci de logică.”</p>
-      <p>Analizezi cum se comportă sursele identice legate în serie sau în paralel și în ce situații alegem fiecare tip de grupare.</p>
+  <main>
+    <section class="page active">
+      <article class="card">
+        <span class="tag">Clasa a VIII-a • Electrocinetică • Lecția 10</span>
+        <h1>Gruparea generatoarelor identice</h1>
+        <h2>Studiu experimental</h2>
+        <p class="idea">În această lecție aflăm de ce unele aparate folosesc mai multe baterii și cum alegem gruparea corectă: <strong>în serie</strong> sau <strong>în paralel</strong>.</p>
+        <div class="grid">
+          <div class="mini"><strong>Ideea-cheie:</strong><br>mai multe baterii pot forma o singură „sursă echivalentă”.</div>
+          <div class="mini"><strong>Întrebarea lecției:</strong><br>când crește tensiunea și când crește capacitatea de a alimenta un circuit?</div>
+        </div>
+        <div class="svgbox">
+          <svg viewBox="0 0 900 250" role="img" aria-label="Aparate care folosesc mai multe baterii">
+            <rect x="15" y="15" width="870" height="220" rx="26" fill="#0f172a" stroke="#38bdf8" stroke-width="3"/>
+            <g transform="translate(80 58)">
+              <rect x="0" y="0" width="180" height="110" rx="24" fill="#1e293b" stroke="#94a3b8" stroke-width="3"/>
+              <circle cx="45" cy="40" r="12" fill="#67e8f9"/>
+              <circle cx="90" cy="40" r="12" fill="#fbbf24"/>
+              <circle cx="135" cy="40" r="12" fill="#22c55e"/>
+              <rect x="45" y="78" width="90" height="12" rx="6" fill="#64748b"/>
+              <text x="90" y="150" text-anchor="middle" fill="#e0f2fe" font-size="24" font-weight="800">telecomandă</text>
+            </g>
+            <g transform="translate(360 60)">
+              <rect x="0" y="25" width="180" height="90" rx="18" fill="#1e293b" stroke="#94a3b8" stroke-width="3"/>
+              <circle cx="130" cy="70" r="35" fill="#0f172a" stroke="#67e8f9" stroke-width="5"/>
+              <rect x="30" y="0" width="60" height="25" rx="10" fill="#475569"/>
+              <text x="90" y="150" text-anchor="middle" fill="#e0f2fe" font-size="24" font-weight="800">aparat foto</text>
+            </g>
+            <g transform="translate(650 58)">
+              <rect x="0" y="20" width="150" height="90" rx="45" fill="#1e293b" stroke="#94a3b8" stroke-width="3"/>
+              <circle cx="120" cy="65" r="32" fill="#fef3c7" stroke="#f59e0b" stroke-width="4"/>
+              <rect x="-55" y="50" width="75" height="30" rx="14" fill="#334155"/>
+              <text x="72" y="150" text-anchor="middle" fill="#e0f2fe" font-size="24" font-weight="800">lanternă</text>
+            </g>
+          </svg>
+          <div class="caption">Aparate simple pot folosi două sau mai multe baterii.</div>
+        </div>
+      </article>
     </section>
 
-    <section class="lesson-shell" aria-label="Lecție interactivă">
-      <div class="lesson-top">
-        <div class="lesson-meta">
-          <div class="badge">📘 Lecție interactivă</div>
-          <div class="page-counter" id="pageCounter">Pagina 1 / 6</div>
-        </div>
-        <div class="progress" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
-        <div class="tab-strip" aria-label="Paginile lecției"><button class="tab-btn active" data-go="0">1. Observ</button><button class="tab-btn" data-go="1">2. În serie</button><button class="tab-btn" data-go="2">3. În paralel</button><button class="tab-btn" data-go="3">4. Exemplu</button><button class="tab-btn" data-go="4">5. Rețin</button><button class="tab-btn" data-go="5">6. Verificare</button></div>
-      </div>
-      <div class="page-stage">
-        <section class="lesson-page active">
-<div class="section-title"><span class="dot"></span><strong>Observ</strong></div>
-<p>Două baterii identice pot fi folosite în lanternă sau într-o jucărie. Uneori se montează una după alta, alteori în configurații speciale pentru a obține efectul dorit.</p>
-</section>
-<section class="lesson-page">
-<div class="section-title"><span class="dot"></span><strong>Generatoare identice în serie</strong></div>
-<p>Când legăm corect surse identice în serie, tensiunile electromotoare se adună.</p>
-<div class="formula-card">
-  <p>\[
-  E_{{eq}}=nE
-  \qquad
-  r_{{eq}}=nr
-  \]</p>
-</div>
-<div class="info-box">Această grupare este utilă când dorim o tensiune mai mare.</div>
-</section>
-<section class="lesson-page">
-<div class="section-title"><span class="dot"></span><strong>Generatoare identice în paralel</strong></div>
-<p>Pentru surse identice legate în paralel, tensiunea electromotoare echivalentă rămâne aceeași, iar rezistența internă echivalentă scade.</p>
-<div class="formula-card">
-  <p>\[
-  E_{{eq}}=E
-  \qquad
-  r_{{eq}}=\frac{{r}}{{n}}
-  \]</p>
-</div>
-<div class="notice">În paralel se folosesc surse identice și conectate corect, pentru siguranță și funcționare corespunzătoare.</div>
-</section>
-<section class="lesson-page">
-<div class="section-title"><span class="dot"></span><strong>Exemplu</strong></div>
-<p>Trei baterii identice au fiecare \(E=1{{,}}5\,\text{V}\). În serie:</p>
-<div class="formula-card">
-  <p>\[
-  E_{{eq}}=3\cdot 1{{,}}5=4{{,}}5\,\text{V}
-  \]</p>
-</div>
-<p>Dacă aceleași baterii sunt în paralel, tensiunea rămâne:</p>
-<div class="formula-card">
-  <p>\[
-  E_{{eq}}=1{{,}}5\,\text{V}
-  \]</p>
-</div>
-</section>
-<section class="lesson-page">
-<div class="section-title"><span class="dot"></span><strong>Rețin</strong></div>
-<ul class="check-list">
-  <li>În serie, tensiunile electromotoare se adună.</li>
-  <li>În paralel, tensiunea electromotoare echivalentă rămâne aceeași pentru surse identice.</li>
-  <li>Gruparea se alege în funcție de tensiunea dorită și de comportarea circuitului.</li>
-</ul>
-</section>
-<section class="lesson-page">
-    <div class="section-title"><span class="dot"></span><strong>Verificare rapidă</strong></div>
-    <p>Alege varianta corectă și verifică imediat răspunsul.</p>
-    
-        <div class="quiz-block" data-answer="În serie, tensiunile electromotoare se adună.">
-          <h3>Itemul 1</h3>
-          <p><strong>Pentru surse identice în serie, tensiunea electromotoare echivalentă:</strong></p>
-          <div class="quiz-options">
-            <label class="quiz-option">
-              <input type="radio" name="l10q1" value="1">
-              <span>crește</span>
-            </label>
-            
-            <label class="quiz-option">
-              <input type="radio" name="l10q1" value="0">
-              <span>scade la zero</span>
-            </label>
-            
-            <label class="quiz-option">
-              <input type="radio" name="l10q1" value="0">
-              <span>rămâne mereu aceeași</span>
-            </label>
-            </div>
-          <div class="quiz-actions">
-            <button class="action-btn check-btn" onclick="checkQuestion('l10q1', this)">Verifică</button>
-            <button class="action-btn reset-btn" onclick="resetQuestion('l10q1')">Resetează</button>
+    <section class="page">
+      <article class="card">
+        <span class="tag">Observ</span>
+        <h2>De ce grupăm generatoarele?</h2>
+        <p>O singură baterie poate să nu fie suficientă pentru un aparat. Uneori avem nevoie de <strong>tensiune mai mare</strong>; alteori vrem ca sursa să poată alimenta circuitul mai bine.</p>
+        <div class="compare">
+          <div class="mini">
+            <h3>Avem nevoie de tensiune mai mare</h3>
+            <p>Legăm bateriile <strong>în serie</strong>.</p>
+            <p class="muted">Exemplu: două baterii de \(1{,}5\,V\) pot da aproximativ \(3\,V\).</p>
           </div>
-          <div class="feedback" id="l10q1-feedback"></div>
-        </div>
-        
-        <div class="quiz-block" data-answer="În paralel, pentru surse identice, tensiunea rămâne aceeași.">
-          <h3>Itemul 2</h3>
-          <p><strong>Pentru surse identice în paralel, \(E_{{eq}}\):</strong></p>
-          <div class="quiz-options">
-            <label class="quiz-option">
-              <input type="radio" name="l10q2" value="1">
-              <span>rămâne aceeași</span>
-            </label>
-            
-            <label class="quiz-option">
-              <input type="radio" name="l10q2" value="0">
-              <span>se dublează obligatoriu</span>
-            </label>
-            
-            <label class="quiz-option">
-              <input type="radio" name="l10q2" value="0">
-              <span>devine negativă</span>
-            </label>
-            </div>
-          <div class="quiz-actions">
-            <button class="action-btn check-btn" onclick="checkQuestion('l10q2', this)">Verifică</button>
-            <button class="action-btn reset-btn" onclick="resetQuestion('l10q2')">Resetează</button>
+          <div class="mini">
+            <h3>Avem nevoie de alimentare mai susținută</h3>
+            <p>Legăm baterii identice <strong>în paralel</strong>.</p>
+            <p class="muted">Tensiunea rămâne aceeași, dar rezistența internă echivalentă scade.</p>
           </div>
-          <div class="feedback" id="l10q2-feedback"></div>
         </div>
-        
-        <div class="quiz-block" data-answer="În serie obținem o tensiune mai mare.">
-          <h3>Itemul 3</h3>
-          <p><strong>Dacă vrem tensiune mai mare, preferăm gruparea:</strong></p>
-          <div class="quiz-options">
-            <label class="quiz-option">
-              <input type="radio" name="l10q3" value="1">
-              <span>în serie</span>
-            </label>
-            
-            <label class="quiz-option">
-              <input type="radio" name="l10q3" value="0">
-              <span>în paralel</span>
-            </label>
-            
-            <label class="quiz-option">
-              <input type="radio" name="l10q3" value="0">
-              <span>aleator</span>
-            </label>
-            </div>
-          <div class="quiz-actions">
-            <button class="action-btn check-btn" onclick="checkQuestion('l10q3', this)">Verifică</button>
-            <button class="action-btn reset-btn" onclick="resetQuestion('l10q3')">Resetează</button>
-          </div>
-          <div class="feedback" id="l10q3-feedback"></div>
-        </div>
-        
+        <div class="warning"><strong>Atenție:</strong> în paralel se folosesc surse identice și conectate corect. Nu legăm la întâmplare baterii diferite.</div>
+      </article>
     </section>
-      </div>
+
+    <section class="page">
+      <article class="card">
+        <span class="tag">Rețin</span>
+        <h2>Bateria reală: \(E\) și \(r\)</h2>
+        <p>O baterie reală se comportă ca un generator ideal, dar are și o mică „piedică” în interior, numită <strong>rezistență internă</strong>.</p>
+        <div class="grid">
+          <div class="mini"><strong>\(E\)</strong> — tensiunea electromotoare<br><span class="muted">se măsoară cel mai simplu când bateria nu alimentează un consumator: „mers în gol”.</span></div>
+          <div class="mini"><strong>\(r\)</strong> — rezistența internă<br><span class="muted">face ca tensiunea la borne să fie mai mică atunci când bateria alimentează un circuit.</span></div>
+        </div>
+        <div class="formula">
+          \[
+            E=U+u
+            \qquad
+            u=I\cdot r
+          \]
+        </div>
+        <p class="muted">Pe înțeles simplu: o parte din tensiune rămâne disponibilă la borne, iar o parte se „pierde” în interiorul bateriei.</p>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="tag">Experiment</span>
+        <h2>Determinarea parametrilor unei baterii</h2>
+        <p>Putem afla experimental tensiunea electromotoare și rezistența internă ale unei baterii.</p>
+        <div class="steps">
+          <div class="step"><strong>Mers în gol:</strong> conectăm voltmetrul la bornele bateriei și citim \(E\).</div>
+          <div class="step"><strong>În sarcină:</strong> conectăm un bec, ampermetru și voltmetru. Citim \(I\) și \(U\).</div>
+          <div class="step"><strong>Calculăm:</strong> folosim diferența dintre \(E\) și \(U\) pentru a afla \(r\).</div>
+        </div>
+        <div class="formula">
+          \[
+            r=\frac{E-U}{I}
+          \]
+        </div>
+        <div class="svgbox">
+          <svg viewBox="0 0 900 310" role="img" aria-label="Măsurare E, U și I pentru o baterie">
+            <rect x="20" y="20" width="860" height="270" rx="26" fill="#0f172a" stroke="#334155" stroke-width="3"/>
+            <g transform="translate(80 70)">
+              <text x="100" y="-20" text-anchor="middle" fill="#e0f2fe" font-size="24" font-weight="800">Mers în gol</text>
+              <rect x="30" y="60" width="140" height="54" rx="10" fill="#1e293b" stroke="#94a3b8" stroke-width="3"/>
+              <line x1="70" y1="45" x2="70" y2="130" stroke="#f8fafc" stroke-width="5"/>
+              <line x1="115" y1="65" x2="115" y2="110" stroke="#f8fafc" stroke-width="5"/>
+              <text x="100" y="95" text-anchor="middle" fill="#fbbf24" font-size="22" font-weight="800">E</text>
+              <circle cx="100" cy="175" r="34" fill="#0f172a" stroke="#67e8f9" stroke-width="5"/>
+              <text x="100" y="183" text-anchor="middle" fill="#67e8f9" font-size="30" font-weight="900">V</text>
+              <path d="M70 60 V30 H100 V141" stroke="#e2e8f0" stroke-width="5" fill="none"/>
+              <path d="M130 60 V30 H100" stroke="#e2e8f0" stroke-width="5" fill="none"/>
+            </g>
+            <g transform="translate(480 70)">
+              <text x="160" y="-20" text-anchor="middle" fill="#e0f2fe" font-size="24" font-weight="800">În sarcină</text>
+              <rect x="0" y="60" width="120" height="54" rx="10" fill="#1e293b" stroke="#94a3b8" stroke-width="3"/>
+              <line x1="38" y1="45" x2="38" y2="130" stroke="#f8fafc" stroke-width="5"/>
+              <line x1="78" y1="65" x2="78" y2="110" stroke="#f8fafc" stroke-width="5"/>
+              <text x="60" y="96" text-anchor="middle" fill="#fbbf24" font-size="22" font-weight="800">E,r</text>
+              <circle cx="205" cy="86" r="32" fill="#0f172a" stroke="#fbbf24" stroke-width="5"/>
+              <text x="205" y="94" text-anchor="middle" fill="#fbbf24" font-size="29" font-weight="900">A</text>
+              <circle cx="330" cy="86" r="34" fill="#fef3c7" stroke="#f59e0b" stroke-width="5"/>
+              <text x="330" y="94" text-anchor="middle" fill="#92400e" font-size="25" font-weight="900">bec</text>
+              <circle cx="160" cy="180" r="32" fill="#0f172a" stroke="#67e8f9" stroke-width="5"/>
+              <text x="160" y="188" text-anchor="middle" fill="#67e8f9" font-size="29" font-weight="900">V</text>
+              <path d="M38 60 V30 H205" stroke="#e2e8f0" stroke-width="5" fill="none"/>
+              <path d="M237 86 H296" stroke="#e2e8f0" stroke-width="5" fill="none"/>
+              <path d="M364 86 H420 V150 H78 V114" stroke="#e2e8f0" stroke-width="5" fill="none"/>
+              <path d="M78 60 V30 H173" stroke="#e2e8f0" stroke-width="5" fill="none"/>
+            </g>
+          </svg>
+          <div class="caption">Voltmetrul se leagă în paralel; ampermetrul se leagă în serie.</div>
+        </div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="tag">Exemplu numeric</span>
+        <h2>Calculul rezistenței interne</h2>
+        <p>O baterie are \(E=4{,}65\,V\). Când alimentează un bec, se măsoară \(U=3{,}50\,V\) și \(I=0{,}24\,A\).</p>
+        <div class="formula">
+          \[
+            r=\frac{E-U}{I}
+            =
+            \frac{4{,}65\,V-3{,}50\,V}{0{,}24\,A}
+            =
+            \frac{1{,}15\,V}{0{,}24\,A}
+            \approx 4{,}79\,\Omega
+          \]
+        </div>
+        <div class="example">
+          <strong>Interpretare:</strong> bateria nu este ideală. În interiorul ei apare o rezistență de aproximativ \(4{,}79\,\Omega\), care influențează curentul din circuit.
+        </div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="tag">Observ</span>
+        <h2>Generatoare în serie</h2>
+        <p>La gruparea în serie, legăm borna pozitivă a unei baterii cu borna negativă a următoarei baterii. Efectul principal: <strong>tensiunile electromotoare se adună</strong>.</p>
+        <div class="svgbox">
+          <svg viewBox="0 0 900 260" role="img" aria-label="Două baterii identice în serie">
+            <rect x="20" y="20" width="860" height="220" rx="26" fill="#0f172a" stroke="#334155" stroke-width="3"/>
+            <text x="450" y="58" text-anchor="middle" fill="#e0f2fe" font-size="28" font-weight="900">Grupare în serie</text>
+            <g transform="translate(140 90)">
+              <rect x="0" y="30" width="150" height="65" rx="10" fill="#1e293b" stroke="#94a3b8" stroke-width="3"/>
+              <line x1="45" y1="15" x2="45" y2="112" stroke="#f8fafc" stroke-width="6"/>
+              <line x1="95" y1="38" x2="95" y2="88" stroke="#f8fafc" stroke-width="6"/>
+              <text x="75" y="70" text-anchor="middle" fill="#fbbf24" font-size="22" font-weight="900">E,r</text>
+              <text x="20" y="25" fill="#86efac" font-size="22" font-weight="900">−</text>
+              <text x="130" y="25" fill="#fca5a5" font-size="22" font-weight="900">+</text>
+            </g>
+            <path d="M290 122 H375" stroke="#e2e8f0" stroke-width="7" fill="none"/>
+            <g transform="translate(375 90)">
+              <rect x="0" y="30" width="150" height="65" rx="10" fill="#1e293b" stroke="#94a3b8" stroke-width="3"/>
+              <line x1="45" y1="15" x2="45" y2="112" stroke="#f8fafc" stroke-width="6"/>
+              <line x1="95" y1="38" x2="95" y2="88" stroke="#f8fafc" stroke-width="6"/>
+              <text x="75" y="70" text-anchor="middle" fill="#fbbf24" font-size="22" font-weight="900">E,r</text>
+              <text x="20" y="25" fill="#86efac" font-size="22" font-weight="900">−</text>
+              <text x="130" y="25" fill="#fca5a5" font-size="22" font-weight="900">+</text>
+            </g>
+            <path d="M95 122 H140 M525 122 H640" stroke="#e2e8f0" stroke-width="7" fill="none"/>
+            <circle cx="700" cy="122" r="38" fill="#fef3c7" stroke="#f59e0b" stroke-width="5"/>
+            <text x="700" y="131" text-anchor="middle" fill="#92400e" font-size="25" font-weight="900">R</text>
+            <path d="M738 122 H805 V205 H95 V122" stroke="#e2e8f0" stroke-width="7" fill="none"/>
+          </svg>
+        </div>
+        <div class="formula">
+          \[
+            E_s=E_1+E_2+\dots
+            \qquad
+            r_s=r_1+r_2+\dots
+          \]
+        </div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="tag">Rețin</span>
+        <h2>În serie, pentru generatoare identice</h2>
+        <p>Dacă avem \(n\) generatoare identice, fiecare cu tensiunea electromotoare \(E\) și rezistența internă \(r\), atunci:</p>
+        <div class="formula">
+          \[
+            E_s=n\cdot E
+            \qquad
+            r_s=n\cdot r
+          \]
+        </div>
+        <div class="example">
+          <strong>Exemplu:</strong> trei baterii de \(1{,}5\,V\) în serie dau:
+          \[
+            E_s=3\cdot 1{,}5\,V=4{,}5\,V
+          \]
+        </div>
+        <p>De aceea, în unele baterii de \(4{,}5\,V\) găsim trei elemente de \(1{,}5\,V\) legate în serie.</p>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="tag">Aplic</span>
+        <h2>Calcul cu generatoare în serie</h2>
+        <p>Două baterii identice au \(E=1{,}5\,V\) și \(r=0{,}5\,\Omega\). Ele sunt legate în serie și alimentează un rezistor \(R=5\,\Omega\).</p>
+        <div class="steps">
+          <div class="step">Tensiunea electromotoare echivalentă:
+            \[
+              E_s=2\cdot 1{,}5\,V=3\,V
+            \]
+          </div>
+          <div class="step">Rezistența internă echivalentă:
+            \[
+              r_s=2\cdot 0{,}5\,\Omega=1\,\Omega
+            \]
+          </div>
+          <div class="step">Curentul din circuit:
+            \[
+              I=\frac{E_s}{R+r_s}=\frac{3\,V}{5\,\Omega+1\,\Omega}=0{,}5\,A
+            \]
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="tag">Observ</span>
+        <h2>Generatoare în paralel</h2>
+        <p>La gruparea în paralel, bornele pozitive se leagă împreună, iar bornele negative se leagă împreună. Pentru surse identice, tensiunea electromotoare rămâne aceeași.</p>
+        <div class="svgbox">
+          <svg viewBox="0 0 900 330" role="img" aria-label="Două baterii identice în paralel">
+            <rect x="20" y="20" width="860" height="290" rx="26" fill="#0f172a" stroke="#334155" stroke-width="3"/>
+            <text x="450" y="58" text-anchor="middle" fill="#e0f2fe" font-size="28" font-weight="900">Grupare în paralel</text>
+            <g transform="translate(150 90)">
+              <rect x="0" y="20" width="150" height="60" rx="10" fill="#1e293b" stroke="#94a3b8" stroke-width="3"/>
+              <line x1="45" y1="6" x2="45" y2="94" stroke="#f8fafc" stroke-width="6"/>
+              <line x1="95" y1="28" x2="95" y2="72" stroke="#f8fafc" stroke-width="6"/>
+              <text x="75" y="58" text-anchor="middle" fill="#fbbf24" font-size="22" font-weight="900">E,r</text>
+              <text x="20" y="12" fill="#86efac" font-size="22" font-weight="900">−</text>
+              <text x="130" y="12" fill="#fca5a5" font-size="22" font-weight="900">+</text>
+            </g>
+            <g transform="translate(150 195)">
+              <rect x="0" y="20" width="150" height="60" rx="10" fill="#1e293b" stroke="#94a3b8" stroke-width="3"/>
+              <line x1="45" y1="6" x2="45" y2="94" stroke="#f8fafc" stroke-width="6"/>
+              <line x1="95" y1="28" x2="95" y2="72" stroke="#f8fafc" stroke-width="6"/>
+              <text x="75" y="58" text-anchor="middle" fill="#fbbf24" font-size="22" font-weight="900">E,r</text>
+              <text x="20" y="12" fill="#86efac" font-size="22" font-weight="900">−</text>
+              <text x="130" y="12" fill="#fca5a5" font-size="22" font-weight="900">+</text>
+            </g>
+            <path d="M195 96 H105 V260 H195 M245 118 H410 V245 H245" stroke="#e2e8f0" stroke-width="7" fill="none"/>
+            <path d="M410 180 H620" stroke="#e2e8f0" stroke-width="7" fill="none"/>
+            <circle cx="680" cy="180" r="42" fill="#fef3c7" stroke="#f59e0b" stroke-width="5"/>
+            <text x="680" y="189" text-anchor="middle" fill="#92400e" font-size="26" font-weight="900">R</text>
+            <path d="M722 180 H805 V275 H105" stroke="#e2e8f0" stroke-width="7" fill="none"/>
+            <text x="112" y="84" fill="#86efac" font-size="24" font-weight="900">− comun</text>
+            <text x="415" y="119" fill="#fca5a5" font-size="24" font-weight="900">+ comun</text>
+          </svg>
+        </div>
+        <div class="formula">
+          \[
+            E_p=E
+            \qquad
+            r_p=\frac{r}{n}
+          \]
+        </div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="tag">Rețin</span>
+        <h2>În paralel, pentru generatoare identice</h2>
+        <p>Pentru \(n\) generatoare identice legate în paralel:</p>
+        <div class="formula">
+          \[
+            E_p=E
+            \qquad
+            r_p=\frac{r}{n}
+          \]
+        </div>
+        <div class="grid">
+          <div class="mini"><strong>Ce nu se schimbă?</strong><br>Tensiunea electromotoare rămâne \(E\).</div>
+          <div class="mini"><strong>Ce se schimbă?</strong><br>Rezistența internă echivalentă scade.</div>
+        </div>
+        <div class="warning">
+          <strong>De ce contează?</strong> O rezistență internă mai mică permite sursei echivalente să alimenteze mai bine un consumator, în special când acesta cere curent mai mare.
+        </div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="tag">Aplic</span>
+        <h2>Calcul cu generatoare în paralel</h2>
+        <p>Două baterii identice au \(E=1{,}5\,V\) și \(r=0{,}6\,\Omega\). Ele sunt legate în paralel.</p>
+        <div class="steps">
+          <div class="step">Tensiunea electromotoare echivalentă:
+            \[
+              E_p=1{,}5\,V
+            \]
+          </div>
+          <div class="step">Rezistența internă echivalentă:
+            \[
+              r_p=\frac{r}{2}=\frac{0{,}6\,\Omega}{2}=0{,}3\,\Omega
+            \]
+          </div>
+          <div class="step">Dacă \(R=3\,\Omega\), curentul prin circuit este:
+            \[
+              I=\frac{E_p}{R+r_p}=\frac{1{,}5\,V}{3\,\Omega+0{,}3\,\Omega}\approx 0{,}45\,A
+            \]
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="tag">Compar</span>
+        <h2>Serie sau paralel?</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Grupare</th>
+              <th>Ce se întâmplă cu \(E\)?</th>
+              <th>Ce se întâmplă cu \(r\)?</th>
+              <th>Când o alegem?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Serie</strong></td>
+              <td>\(E_s=nE\)</td>
+              <td>\(r_s=nr\)</td>
+              <td>când vrem tensiune mai mare</td>
+            </tr>
+            <tr>
+              <td><strong>Paralel</strong></td>
+              <td>\(E_p=E\)</td>
+              <td>\(r_p=\frac{r}{n}\)</td>
+              <td>când vrem rezistență internă mai mică</td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="danger">
+          <strong>Siguranță:</strong> nu conecta direct bornele unei baterii între ele. Aceasta poate produce curent mare, încălzire și deteriorarea bateriei.
+        </div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="tag">Aplic în viața reală</span>
+        <h2>Unde întâlnim grupări de baterii?</h2>
+        <div class="grid">
+          <div class="mini"><strong>Telecomandă</strong><br>Două baterii mici pot fi puse în serie pentru a obține tensiunea necesară circuitului.</div>
+          <div class="mini"><strong>Lanternă</strong><br>Mai multe elemente pot crește tensiunea pentru bec sau LED-uri.</div>
+          <div class="mini"><strong>Sisteme de backup</strong><br>Folosesc baterii pentru alimentare atunci când rețeaua cade.</div>
+          <div class="mini"><strong>Jucării și aparate portabile</strong><br>Au spații speciale pentru baterii, cu semnele \(+\) și \(-\).</div>
+        </div>
+        <div class="warning">
+          <strong>Regulă practică:</strong> urmărește mereu semnele \(+\) și \(-\) din aparat. Ele arată cum trebuie așezate bateriile.
+        </div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="tag">Rețin</span>
+        <h2>Sinteza lecției</h2>
+        <ul>
+          <li>Mai multe generatoare pot forma o <strong>sursă echivalentă</strong>.</li>
+          <li>O baterie reală are tensiune electromotoare \(E\) și rezistență internă \(r\).</li>
+          <li>În serie, tensiunile electromotoare se adună: \(E_s=nE\).</li>
+          <li>În serie, rezistențele interne se adună: \(r_s=nr\).</li>
+          <li>În paralel, pentru generatoare identice, \(E_p=E\).</li>
+          <li>În paralel, rezistența internă echivalentă scade: \(r_p=\frac{r}{n}\).</li>
+        </ul>
+        <div class="formula">
+          \[
+            I=\frac{E_{\text{echiv}}}{R+r_{\text{echiv}}}
+          \]
+        </div>
+        <p class="muted">Această formulă folosește legea lui Ohm pentru întregul circuit.</p>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="tag">Verificare rapidă</span>
+        <h2>Alege varianta corectă</h2>
+        <p>Răspunde la fiecare item, apoi apasă „Verifică”.</p>
+        <div class="quiz">
+          <div class="qbox" data-answer="b">
+            <h3>1. Dacă legăm corect trei baterii identice în serie, atunci tensiunea electromotoare echivalentă:</h3>
+            <div class="answers">
+              <label><input type="radio" name="q1" value="a"> rămâne egală cu tensiunea unei singure baterii</label>
+              <label><input type="radio" name="q1" value="b"> devine de trei ori mai mare</label>
+              <label><input type="radio" name="q1" value="c"> devine zero</label>
+            </div>
+            <div class="checkline">
+              <button class="checkbtn" onclick="checkQuiz(this)">Verifică</button>
+              <button class="resetbtn" onclick="resetQuiz(this)">Resetează</button>
+              <span class="feedback"></span>
+            </div>
+          </div>
+
+          <div class="qbox" data-answer="a">
+            <h3>2. Pentru două generatoare identice legate în paralel, tensiunea electromotoare echivalentă:</h3>
+            <div class="answers">
+              <label><input type="radio" name="q2" value="a"> rămâne egală cu tensiunea unui generator</label>
+              <label><input type="radio" name="q2" value="b"> se dublează</label>
+              <label><input type="radio" name="q2" value="c"> se schimbă în tensiune negativă</label>
+            </div>
+            <div class="checkline">
+              <button class="checkbtn" onclick="checkQuiz(this)">Verifică</button>
+              <button class="resetbtn" onclick="resetQuiz(this)">Resetează</button>
+              <span class="feedback"></span>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="page">
+      <article class="card">
+        <span class="tag">Verificare rapidă</span>
+        <h2>Încă două întrebări</h2>
+        <div class="quiz">
+          <div class="qbox" data-answer="c">
+            <h3>3. Dacă vrem o tensiune mai mare decât a unei singure baterii, alegem de obicei gruparea:</h3>
+            <div class="answers">
+              <label><input type="radio" name="q3" value="a"> în paralel</label>
+              <label><input type="radio" name="q3" value="b"> fără consumator</label>
+              <label><input type="radio" name="q3" value="c"> în serie</label>
+            </div>
+            <div class="checkline">
+              <button class="checkbtn" onclick="checkQuiz(this)">Verifică</button>
+              <button class="resetbtn" onclick="resetQuiz(this)">Resetează</button>
+              <span class="feedback"></span>
+            </div>
+          </div>
+
+          <div class="qbox" data-answer="b">
+            <h3>4. Două baterii identice, fiecare cu \(r=0{,}8\,\Omega\), sunt legate în paralel. Rezistența internă echivalentă este:</h3>
+            <div class="answers">
+              <label><input type="radio" name="q4" value="a"> \(1{,}6\,\Omega\)</label>
+              <label><input type="radio" name="q4" value="b"> \(0{,}4\,\Omega\)</label>
+              <label><input type="radio" name="q4" value="c"> \(0\,\Omega\)</label>
+            </div>
+            <div class="checkline">
+              <button class="checkbtn" onclick="checkQuiz(this)">Verifică</button>
+              <button class="resetbtn" onclick="resetQuiz(this)">Resetează</button>
+              <span class="feedback"></span>
+            </div>
+          </div>
+        </div>
+        <div class="finalBanner">
+          <strong>Prof. Dănuț Andronie</strong><br>
+          email: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+        </div>
+      </article>
     </section>
   </main>
 
-  <div class="bottom-nav" aria-label="Navigare lecție">
-    <div class="inner">
-      <button class="nav-btn prev" id="prevBtn">Înapoi</button>
-      <button class="nav-btn next" id="nextBtn">Mergi mai departe</button>
-      <a class="home-link" href="../index.html">Înapoi la capitol</a>
+  <nav class="bottomNav" aria-label="Navigare lecție">
+    <div class="navInner">
+      <button class="navBtn prev" id="prevBtn" onclick="prevPage()">Înapoi</button>
+      <div class="pageCount" id="pageCount">1/16</div>
+      <button class="navBtn next" id="nextBtn" onclick="nextPage()">Mergi mai departe</button>
     </div>
-  </div>
+  </nav>
+</div>
 
-  <script>
-    (function(){
-      const pages = Array.from(document.querySelectorAll('.lesson-page'));
-      const tabs = Array.from(document.querySelectorAll('.tab-btn'));
-      const prevBtn = document.getElementById('prevBtn');
-      const nextBtn = document.getElementById('nextBtn');
-      const counter = document.getElementById('pageCounter');
-      const progress = document.getElementById('progressBar');
-      let current = 0;
-      function showPage(index){
-        current = Math.max(0, Math.min(index, pages.length - 1));
-        pages.forEach((page, i) => page.classList.toggle('active', i === current));
-        tabs.forEach((tab, i) => tab.classList.toggle('active', i === current));
-        counter.textContent = `Pagina ${current + 1} / ${pages.length}`;
-        progress.style.width = `${((current + 1) / pages.length) * 100}%`;
-        prevBtn.disabled = current === 0;
-        nextBtn.textContent = current === pages.length - 1 ? 'Reia lecția' : 'Mergi mai departe';
-        window.scrollTo({top: 0, behavior: 'smooth'});
-        if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
-      }
-      tabs.forEach((tab, i) => tab.addEventListener('click', () => showPage(i)));
-      prevBtn.addEventListener('click', () => showPage(current - 1));
-      nextBtn.addEventListener('click', () => current === pages.length - 1 ? showPage(0) : showPage(current + 1));
-      showPage(0);
-    })();
-    function checkQuestion(groupName, btn){
-      const selected = document.querySelector(`input[name="${groupName}"]:checked`);
-      const feedback = document.getElementById(`${groupName}-feedback`);
-      if(!selected){
-        feedback.className = 'feedback bad';
-        feedback.textContent = 'Alege mai întâi o variantă.';
-        return;
-      }
-      const block = btn.closest('.quiz-block');
-      const explain = block.dataset.answer || '';
-      if(selected.value === '1'){
-        feedback.className = 'feedback ok';
-        feedback.textContent = 'Corect! ' + explain;
-      } else {
-        feedback.className = 'feedback bad';
-        feedback.textContent = 'Răspuns greșit. ' + explain;
-      }
+<script>
+  const pages = Array.from(document.querySelectorAll('.page'));
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const pageCount = document.getElementById('pageCount');
+  const topBanner = document.getElementById('topBanner');
+  let page = 0;
+  const nextLesson = './lectia-11.html';
+
+  function updatePage(){
+    pages.forEach((p,i)=>p.classList.toggle('active', i===page));
+    prevBtn.disabled = page === 0;
+    pageCount.textContent = `${page+1}/${pages.length}`;
+    topBanner.style.display = page === 0 ? 'block' : 'none';
+    nextBtn.textContent = page === pages.length-1 ? 'Lecția următoare' : 'Mergi mai departe';
+    window.scrollTo({top:0, behavior:'smooth'});
+    if(window.MathJax && MathJax.typesetPromise){
+      MathJax.typesetPromise([pages[page]]).catch(()=>{});
     }
-    function resetQuestion(groupName){
-      document.querySelectorAll(`input[name="${groupName}"]`).forEach(input => input.checked = false);
-      const feedback = document.getElementById(`${groupName}-feedback`);
-      feedback.className = 'feedback';
-      feedback.textContent = '';
+  }
+  function nextPage(){
+    if(page < pages.length-1){
+      page++;
+      updatePage();
+    } else {
+      window.location.href = nextLesson;
     }
-  </script>
+  }
+  function prevPage(){
+    if(page > 0){
+      page--;
+      updatePage();
+    }
+  }
+  document.addEventListener('keydown', (e)=>{
+    if(e.key === 'ArrowRight') nextPage();
+    if(e.key === 'ArrowLeft') prevPage();
+  });
+
+  function checkQuiz(btn){
+    const box = btn.closest('.qbox');
+    const correct = box.dataset.answer;
+    const chosen = box.querySelector('input[type="radio"]:checked');
+    const fb = box.querySelector('.feedback');
+    fb.className = 'feedback';
+    if(!chosen){
+      fb.textContent = 'Alege mai întâi o variantă.';
+      fb.classList.add('warn');
+      return;
+    }
+    if(chosen.value === correct){
+      fb.textContent = 'Corect!';
+      fb.classList.add('ok');
+    } else {
+      fb.textContent = 'Mai încearcă. Recitește pagina cu explicația.';
+      fb.classList.add('bad');
+    }
+  }
+
+  function resetQuiz(btn){
+    const box = btn.closest('.qbox');
+    box.querySelectorAll('input[type="radio"]').forEach(input=>input.checked=false);
+    const fb = box.querySelector('.feedback');
+    fb.textContent = '';
+    fb.className = 'feedback';
+  }
+
+  updatePage();
+</script>
 </body>
 </html>

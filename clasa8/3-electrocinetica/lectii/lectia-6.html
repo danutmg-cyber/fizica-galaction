@@ -1,295 +1,454 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Lecția 6 | Legea lui Ohm pentru o porțiune de circuit | Fizica Galaction</title>
-  <meta name="description" content="Lecția 6 pentru clasa a VIII-a: Legea lui Ohm pentru o porțiune de circuit. Lecție interactivă pe pagini, cu buton Mergi mai departe, MathJax și verificare rapidă.">
-  <style>
-    *{box-sizing:border-box}
-    :root{
-      --bg:#0f172a;--surface:#1e293b;--surface-2:#162033;--surface-3:#0b1220;--text:#f8fafc;--muted:#cbd5e1;
-      --accent:#22c55e;--accent-2:#38bdf8;--accent-3:#f59e0b;--accent-4:#a78bfa;--danger:#ef4444;--ok:#22c55e;
-      --border:rgba(255,255,255,.12);--shadow:0 10px 26px rgba(0,0,0,.24);--radius:18px;
-    }
-    html{scroll-behavior:smooth;font-size:clamp(16px,0.35vw + 15px,19px)}
-    body{margin:0;font-family:Arial,sans-serif;background:radial-gradient(circle at top right, rgba(56,189,248,.12), transparent 26%),radial-gradient(circle at top left, rgba(34,197,94,.10), transparent 22%),linear-gradient(180deg,#0f172a 0%, #111827 100%);color:var(--text);line-height:1.65;min-height:100vh}
-    .wrapper{width:min(100%,980px);margin:0 auto;padding-inline:clamp(12px,2vw,24px)}
-    .site-header{background:rgba(30,41,59,.92);border-bottom:3px solid var(--accent);position:sticky;top:0;z-index:30;backdrop-filter:blur(8px)}
-    .site-header .wrapper{padding-block:14px}
-    .site-title{margin:0;font-size:clamp(1.35rem,2vw,2rem);line-height:1.2}
-    .site-subtitle{margin:.35rem 0 0;color:var(--muted);font-size:1rem}
-    .page-content{padding:18px 0 124px}
-    .page-hero,.lesson-shell,.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
-    .page-hero,.card{padding:18px;margin-bottom:16px}
-    .page-hero h2,.card h2,.card h3,.card h4{margin-top:0;line-height:1.25}
-    .page-hero h2{font-size:clamp(1.35rem,1.5vw,1.9rem);margin-bottom:10px}
-    .quote{margin:0 0 10px;padding:12px 14px;border-left:4px solid var(--accent-2);background:#10243f;color:#dbeafe;border-radius:12px;font-style:italic}
-    .hint,.notice,.info-box{border-radius:14px;padding:12px 14px;margin-top:12px}
-    .hint{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.28);color:#fde68a}
-    .notice{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.28);color:#dcfce7}
-    .info-box{background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.28);color:#dbeafe}
-    .lesson-shell{overflow:hidden}.lesson-top{padding:16px 16px 8px}
-    .lesson-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-    .badge{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:rgba(56,189,248,.14);color:#dbeafe;border:1px solid rgba(56,189,248,.28);font-weight:700;font-size:.92rem}
-    .page-counter{color:#e2e8f0;font-weight:700}
-    .progress{width:100%;height:10px;border-radius:999px;background:#0b1220;overflow:hidden;margin:12px 0 14px}
-    .progress-bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent-2),var(--accent))}
-    .tab-strip{display:flex;gap:8px;overflow:auto;padding-bottom:8px;scrollbar-width:thin}
-    .tab-btn{border:none;cursor:pointer;white-space:nowrap;padding:10px 14px;border-radius:12px;background:#0b1220;color:#e5e7eb;font-weight:700}
-    .tab-btn.active{background:linear-gradient(135deg,var(--accent),#16a34a);color:#052e16}
-    .page-stage{padding:0 16px 18px}
-    .lesson-page{display:none;animation:fade .25s ease}.lesson-page.active{display:block}
-    @keyframes fade{from{opacity:.4;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-    .section-title{display:flex;align-items:center;gap:10px;font-size:1.08rem;margin:6px 0 12px}
-    .dot{width:12px;height:12px;border-radius:50%;background:linear-gradient(135deg,var(--accent-2),var(--accent));box-shadow:0 0 0 4px rgba(56,189,248,.12)}
-    .grid{display:grid;gap:14px}.grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
-    .split,.compare{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .mini-card,.formula-card{background:linear-gradient(180deg,var(--surface-2),var(--surface-3));border:1px solid var(--border);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
-    .mini-card h4,.formula-card h3{margin:0 0 8px}.mini-card p,.formula-card p{margin:.35rem 0}
-    .tag{display:inline-block;margin-top:8px;font-size:.85rem;font-weight:700;background:rgba(167,139,250,.12);color:#ddd6fe;border:1px solid rgba(167,139,250,.28);padding:6px 10px;border-radius:999px}
-    .check-list,.ordered{padding-left:1.15rem;margin:0}.check-list li,.ordered li{margin:.45rem 0}
-    .quiz-block{background:linear-gradient(180deg,var(--surface-2),var(--surface-3));border:1px solid var(--border);border-radius:16px;padding:14px;margin-bottom:14px}
-    .quiz-options{display:grid;gap:10px;margin-top:10px}
-    .quiz-option{display:flex;gap:10px;align-items:flex-start;background:#0b1220;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:10px}
-    .quiz-option input{margin-top:4px}
-    .quiz-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
-    .action-btn{border:none;cursor:pointer;border-radius:12px;padding:11px 14px;font-weight:800}
-    .check-btn{background:linear-gradient(135deg,var(--accent),#16a34a);color:#052e16}.reset-btn{background:#334155;color:#f8fafc}
-    .feedback{margin-top:10px;padding:10px 12px;border-radius:12px;font-weight:700;display:none}
-    .feedback.ok{display:block;background:rgba(34,197,94,.12);color:#dcfce7;border:1px solid rgba(34,197,94,.28)}
-    .feedback.bad{display:block;background:rgba(239,68,68,.12);color:#fecaca;border:1px solid rgba(239,68,68,.28)}
-    .bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:40;background:rgba(15,23,42,.96);backdrop-filter:blur(10px);border-top:1px solid rgba(255,255,255,.08)}
-    .bottom-nav .inner{width:min(100%,980px);margin:0 auto;padding:10px 12px calc(10px + env(safe-area-inset-bottom));display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:center}
-    .nav-btn,.home-link{appearance:none;border:none;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;min-height:48px;border-radius:14px;font-weight:800;cursor:pointer;padding:12px 14px}
-    .nav-btn.prev{background:#334155;color:#f8fafc}.nav-btn.next{background:linear-gradient(135deg,var(--accent),#16a34a);color:#052e16}
-    .home-link{background:#0b1220;color:#e5e7eb;border:1px solid var(--border)}.nav-btn:disabled{opacity:.45;cursor:not-allowed}
-    @media (max-width:900px){.grid-3{grid-template-columns:1fr 1fr}}
-    @media (max-width:760px){.grid-2,.grid-3,.split,.compare{grid-template-columns:1fr}.bottom-nav .inner{grid-template-columns:1fr 1fr}.home-link{grid-column:1 / -1}}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Lecția 6 | Legea lui Ohm pentru o porțiune de circuit | Fizica Galaction</title>
+<meta name="description" content="Lecție interactivă pentru clasa a VIII-a: Legea lui Ohm pentru o porțiune de circuit, conductor ohmic, caracteristica curent-tensiune și aplicații.">
+<script>
+window.MathJax={tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]']],processEscapes:true},svg:{fontCache:'global'},options:{enableMenu:false}};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+<style>
+:root{
+  --bg:#08111f;--card:#101b2e;--card2:#14243b;--txt:#f8fafc;--muted:#cbd5e1;
+  --cyan:#38bdf8;--cyan2:#67e8f9;--green:#22c55e;--back:#e2e8f0;--orange:#fb923c;
+  --warn:#fde68a;--border:rgba(148,163,184,.28);--shadow:0 18px 45px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:radial-gradient(circle at top left,rgba(56,189,248,.18),transparent 34%),linear-gradient(180deg,#08111f,#0f172a 60%,#08111f);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+body{font-size:clamp(18px,2.8vw,21px);line-height:1.55}
+.lesson-shell{min-height:100dvh;display:flex;flex-direction:column}
+.lesson-header{padding:14px 14px 8px;transition:.2s ease}
+.lesson-header.hidden-header{display:none}
+.banner{max-width:960px;margin:0 auto;background:linear-gradient(135deg,rgba(14,165,233,.18),rgba(34,197,94,.10));border:1px solid var(--border);border-radius:18px;padding:14px;box-shadow:var(--shadow)}
+.school{font-weight:800;color:var(--cyan2);letter-spacing:.02em;text-align:center}
+.prof{color:var(--muted);text-align:center;font-size:.95em;margin-top:4px}
+.motto{margin:12px auto 0;max-width:720px;text-align:center;color:#fef3c7;background:rgba(251,191,36,.10);border-left:4px solid var(--cyan);padding:10px;border-radius:12px;font-style:italic}
+.lesson-main{width:100%;max-width:960px;margin:0 auto;flex:1;padding:14px 14px 96px}
+.page{display:none;min-height:calc(100dvh - 128px);align-items:center}
+.page.active{display:flex}
+.card{width:100%;background:rgba(16,27,46,.96);border:1px solid var(--border);border-radius:22px;padding:clamp(18px,4vw,34px);box-shadow:var(--shadow)}
+.title-kicker{color:var(--cyan2);font-weight:800;text-transform:uppercase;letter-spacing:.08em;font-size:.78em;margin-bottom:10px}
+h1,h2{line-height:1.15;margin:0 0 14px;color:var(--cyan)}
+h1{font-size:clamp(2rem,6vw,3.4rem)}
+h2{font-size:clamp(1.55rem,4.6vw,2.4rem)}
+h3{color:var(--cyan2);font-size:1.18em;margin:20px 0 8px}
+p{margin:12px 0}
+strong{color:#ffffff}
+.badge-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.badge{background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.35);color:#dff7ff;border-radius:999px;padding:8px 12px;font-weight:700;font-size:.9em}
+.idea{background:rgba(34,197,94,.12);border:1px solid rgba(34,197,94,.35);border-radius:16px;padding:14px;margin:16px 0}
+.warn{background:rgba(251,146,60,.12);border:1px solid rgba(251,146,60,.4);border-radius:16px;padding:14px;margin:16px 0;color:#ffedd5}
+.formula{background:#08111f;border:1px solid rgba(103,232,249,.30);border-radius:16px;padding:12px;margin:14px 0;overflow-x:auto}
+.math-small mjx-container{font-size:105% !important}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.three-col{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.mini-card{background:var(--card2);border:1px solid var(--border);border-radius:16px;padding:14px}
+.table-wrap{overflow-x:auto;margin-top:10px}
+table{width:100%;border-collapse:collapse;font-size:.94em}
+th,td{border:1px solid rgba(148,163,184,.35);padding:10px;text-align:center;vertical-align:middle}
+th{color:#cffafe;background:rgba(56,189,248,.10)}
+.svgbox{background:rgba(8,17,31,.72);border:1px solid rgba(103,232,249,.25);border-radius:18px;padding:14px;margin:18px auto;max-width:760px}
+.svgbox > svg{width:100%;height:auto;display:block}
+.caption{font-size:.92em;color:var(--muted);text-align:center;margin-top:8px}
+.question{background:rgba(20,36,59,.94);border:1px solid var(--border);border-radius:18px;padding:16px;margin:18px 0}
+.answers{display:grid;gap:10px;margin-top:12px}
+.answers label{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;background:#0b1526;border:1px solid rgba(148,163,184,.28);padding:12px;border-radius:14px;cursor:pointer}
+.answers input{transform:translateY(.35em) scale(1.15)}
+.check-row{display:flex;gap:10px;margin-top:14px}
+.check-btn,.reset-btn{border:0;border-radius:12px;padding:12px 14px;font-weight:800;cursor:pointer;font-size:1rem}
+.check-btn{background:var(--green);color:#052e16}
+.reset-btn{background:#334155;color:#f8fafc}
+.feedback{min-height:34px;margin-top:12px;font-weight:800;border-radius:12px;padding:8px 10px;display:none}
+.feedback.ok{display:block;color:#052e16;background:#bbf7d0}
+.feedback.bad{display:block;color:#450a0a;background:#fecaca}
+.feedback.empty{display:block;color:#422006;background:#fde68a}
+.final-banner{margin-top:20px;text-align:center;border-top:1px solid var(--border);padding-top:16px;color:#e0f2fe}
+.nav-bar{position:sticky;bottom:0;z-index:20;background:linear-gradient(180deg,rgba(8,17,31,0),rgba(8,17,31,.96) 18%,#08111f);padding:10px 12px calc(10px + env(safe-area-inset-bottom))}
+.nav-inner{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1fr auto 1fr;gap:10px;align-items:center}
+.nav-btn{border:0;border-radius:14px;padding:14px 12px;font-weight:900;font-size:clamp(.95rem,2.8vw,1.08rem);cursor:pointer;box-shadow:0 8px 18px rgba(0,0,0,.28)}
+.nav-btn.back{background:var(--back);color:#0f172a}
+.nav-btn.next{background:var(--green);color:#052e16}
+.nav-btn:disabled{opacity:.5;cursor:not-allowed}
+.page-indicator{min-width:64px;text-align:center;color:#e0f2fe;font-weight:900;background:#0b1526;border:1px solid var(--border);border-radius:999px;padding:10px 12px}
+.kbd{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#0b1526;border:1px solid rgba(148,163,184,.35);border-radius:7px;padding:2px 6px;color:#e0f2fe}
+@media (max-width:720px){
+  .lesson-main{padding-left:10px;padding-right:10px}
+  .card{border-radius:18px}
+  .two-col,.three-col{grid-template-columns:1fr}
+  .check-row{flex-direction:column}
+  .nav-inner{grid-template-columns:1fr auto 1fr;gap:6px}
+  .nav-btn{padding:13px 9px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto!important}
+}
 </style>
-  <script>
-    window.MathJax = {
-      tex: {inlineMath: [['\\(','\\)'], ['$', '$']]},
-      svg: {fontCache: 'global'}
-    };
-  </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 </head>
 <body>
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction</h1>
-      <p class="site-subtitle">Clasa a VIII-a • Electrocinetică • Lecția 6</p>
-    </div>
-  </header>
-
-  <main class="page-content wrapper">
-    <section class="page-hero">
-      <h2>Lecția 6 – Legea lui Ohm pentru o porțiune de circuit</h2>
-      <p class="quote">„Fizica nu este dominată de formule, ci de logică.”</p>
-      <p>Afli relația dintre tensiunea aplicată unei porțiuni de circuit, intensitatea curentului și rezistența electrică.</p>
-    </section>
-
-    <section class="lesson-shell" aria-label="Lecție interactivă">
-      <div class="lesson-top">
-        <div class="lesson-meta">
-          <div class="badge">📘 Lecție interactivă</div>
-          <div class="page-counter" id="pageCounter">Pagina 1 / 6</div>
-        </div>
-        <div class="progress" aria-hidden="true"><div class="progress-bar" id="progressBar"></div></div>
-        <div class="tab-strip" aria-label="Paginile lecției"><button class="tab-btn active" data-go="0">1. Observ</button><button class="tab-btn" data-go="1">2. Legea</button><button class="tab-btn" data-go="2">3. Transformări</button><button class="tab-btn" data-go="3">4. Exemplu</button><button class="tab-btn" data-go="4">5. Rețin</button><button class="tab-btn" data-go="5">6. Verificare</button></div>
-      </div>
-      <div class="page-stage">
-        <section class="lesson-page active">
-<div class="section-title"><span class="dot"></span><strong>Observ</strong></div>
-<p>Dacă la același rezistor aplicăm o tensiune mai mare, curentul prin rezistor devine mai intens. Relația nu este întâmplătoare.</p>
-</section>
-<section class="lesson-page">
-<div class="section-title"><span class="dot"></span><strong>Legea lui Ohm</strong></div>
-<p>Pentru o porțiune de circuit cu rezistența constantă, intensitatea curentului este direct proporțională cu tensiunea aplicată și invers proporțională cu rezistența.</p>
-<div class="formula-card">
-  <p>\[
-  U=RI
-  \]</p>
-</div>
-<div class="info-box">Aceasta este forma folosită frecvent în gimnaziu.</div>
-</section>
-<section class="lesson-page">
-<div class="section-title"><span class="dot"></span><strong>Forme utile</strong></div>
-<div class="grid grid-3">
-  <article class="mini-card"><h4>Curentul</h4><p>\[
-  I=\frac{U}{R}
-  \]</p></article>
-  <article class="mini-card"><h4>Rezistența</h4><p>\[
-  R=\frac{U}{I}
-  \]</p></article>
-  <article class="mini-card"><h4>Tensiunea</h4><p>\[
-  U=RI
-  \]</p></article>
-</div>
-<div class="notice">Alege forma în funcție de mărimea necunoscută.</div>
-</section>
-<section class="lesson-page">
-<div class="section-title"><span class="dot"></span><strong>Exemplu numeric</strong></div>
-<p>Un rezistor are \(R=6\,\Omega\) și la bornele lui se aplică \(U=12\,\text{V}\). Intensitatea curentului este:</p>
-<div class="formula-card">
-  <p>\[
-  I=\frac{U}{R}=\frac{12}{6}=2\,\text{A}
-  \]</p>
-</div>
-</section>
-<section class="lesson-page">
-<div class="section-title"><span class="dot"></span><strong>Rețin</strong></div>
-<ul class="check-list">
-  <li>Legea lui Ohm pentru o porțiune de circuit: \(U=RI\).</li>
-  <li>Dacă \(R\) rămâne constantă, curentul crește când tensiunea crește.</li>
-  <li>Poți scrie și \(I=\frac{U}{R}\) sau \(R=\frac{U}{I}\).</li>
-</ul>
-</section>
-<section class="lesson-page">
-    <div class="section-title"><span class="dot"></span><strong>Verificare rapidă</strong></div>
-    <p>Alege varianta corectă și verifică imediat răspunsul.</p>
-    
-        <div class="quiz-block" data-answer="Pentru porțiunea de circuit se folosește U=RI.">
-          <h3>Itemul 1</h3>
-          <p><strong>Forma corectă a legii lui Ohm este:</strong></p>
-          <div class="quiz-options">
-            <label class="quiz-option">
-              <input type="radio" name="l6q1" value="1">
-              <span>\(U=RI\)</span>
-            </label>
-            
-            <label class="quiz-option">
-              <input type="radio" name="l6q1" value="0">
-              <span>\(P=UI\)</span>
-            </label>
-            
-            <label class="quiz-option">
-              <input type="radio" name="l6q1" value="0">
-              <span>\(Q=I^2R\Delta t\)</span>
-            </label>
-            </div>
-          <div class="quiz-actions">
-            <button class="action-btn check-btn" onclick="checkQuestion('l6q1', this)">Verifică</button>
-            <button class="action-btn reset-btn" onclick="resetQuestion('l6q1')">Resetează</button>
-          </div>
-          <div class="feedback" id="l6q1-feedback"></div>
-        </div>
-        
-        <div class="quiz-block" data-answer="Din relația I=U/R rezultă că intensitatea crește.">
-          <h3>Itemul 2</h3>
-          <p><strong>Dacă \(U\) crește, iar \(R\) rămâne constantă, curentul:</strong></p>
-          <div class="quiz-options">
-            <label class="quiz-option">
-              <input type="radio" name="l6q2" value="1">
-              <span>crește</span>
-            </label>
-            
-            <label class="quiz-option">
-              <input type="radio" name="l6q2" value="0">
-              <span>scade</span>
-            </label>
-            
-            <label class="quiz-option">
-              <input type="radio" name="l6q2" value="0">
-              <span>rămâne zero</span>
-            </label>
-            </div>
-          <div class="quiz-actions">
-            <button class="action-btn check-btn" onclick="checkQuestion('l6q2', this)">Verifică</button>
-            <button class="action-btn reset-btn" onclick="resetQuestion('l6q2')">Resetează</button>
-          </div>
-          <div class="feedback" id="l6q2-feedback"></div>
-        </div>
-        
-        <div class="quiz-block" data-answer="I = 10/5 = 2 A.">
-          <h3>Itemul 3</h3>
-          <p><strong>La \(U=10\,\text{V}\) și \(R=5\,\Omega\), curentul este:</strong></p>
-          <div class="quiz-options">
-            <label class="quiz-option">
-              <input type="radio" name="l6q3" value="1">
-              <span>2 A</span>
-            </label>
-            
-            <label class="quiz-option">
-              <input type="radio" name="l6q3" value="0">
-              <span>5 A</span>
-            </label>
-            
-            <label class="quiz-option">
-              <input type="radio" name="l6q3" value="0">
-              <span>50 A</span>
-            </label>
-            </div>
-          <div class="quiz-actions">
-            <button class="action-btn check-btn" onclick="checkQuestion('l6q3', this)">Verifică</button>
-            <button class="action-btn reset-btn" onclick="resetQuestion('l6q3')">Resetează</button>
-          </div>
-          <div class="feedback" id="l6q3-feedback"></div>
-        </div>
-        
-    </section>
-      </div>
-    </section>
-  </main>
-
-  <div class="bottom-nav" aria-label="Navigare lecție">
-    <div class="inner">
-      <button class="nav-btn prev" id="prevBtn">Înapoi</button>
-      <button class="nav-btn next" id="nextBtn">Mergi mai departe</button>
-      <a class="home-link" href="../index.html">Înapoi la capitol</a>
-    </div>
+<div class="lesson-shell">
+<header class="lesson-header" id="lessonHeader">
+  <div class="banner">
+    <div class="school">ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</div>
+    <div class="prof">Fizica Galaction • Prof. Dănuț Andronie</div>
+    <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
   </div>
+</header>
 
-  <script>
-    (function(){
-      const pages = Array.from(document.querySelectorAll('.lesson-page'));
-      const tabs = Array.from(document.querySelectorAll('.tab-btn'));
-      const prevBtn = document.getElementById('prevBtn');
-      const nextBtn = document.getElementById('nextBtn');
-      const counter = document.getElementById('pageCounter');
-      const progress = document.getElementById('progressBar');
-      let current = 0;
-      function showPage(index){
-        current = Math.max(0, Math.min(index, pages.length - 1));
-        pages.forEach((page, i) => page.classList.toggle('active', i === current));
-        tabs.forEach((tab, i) => tab.classList.toggle('active', i === current));
-        counter.textContent = `Pagina ${current + 1} / ${pages.length}`;
-        progress.style.width = `${((current + 1) / pages.length) * 100}%`;
-        prevBtn.disabled = current === 0;
-        nextBtn.textContent = current === pages.length - 1 ? 'Reia lecția' : 'Mergi mai departe';
-        window.scrollTo({top: 0, behavior: 'smooth'});
-        if (window.MathJax && window.MathJax.typesetPromise) window.MathJax.typesetPromise();
-      }
-      tabs.forEach((tab, i) => tab.addEventListener('click', () => showPage(i)));
-      prevBtn.addEventListener('click', () => showPage(current - 1));
-      nextBtn.addEventListener('click', () => current === pages.length - 1 ? showPage(0) : showPage(current + 1));
-      showPage(0);
-    })();
-    function checkQuestion(groupName, btn){
-      const selected = document.querySelector(`input[name="${groupName}"]:checked`);
-      const feedback = document.getElementById(`${groupName}-feedback`);
-      if(!selected){
-        feedback.className = 'feedback bad';
-        feedback.textContent = 'Alege mai întâi o variantă.';
-        return;
-      }
-      const block = btn.closest('.quiz-block');
-      const explain = block.dataset.answer || '';
-      if(selected.value === '1'){
-        feedback.className = 'feedback ok';
-        feedback.textContent = 'Corect! ' + explain;
-      } else {
-        feedback.className = 'feedback bad';
-        feedback.textContent = 'Răspuns greșit. ' + explain;
-      }
-    }
-    function resetQuestion(groupName){
-      document.querySelectorAll(`input[name="${groupName}"]`).forEach(input => input.checked = false);
-      const feedback = document.getElementById(`${groupName}-feedback`);
-      feedback.className = 'feedback';
-      feedback.textContent = '';
-    }
-  </script>
+<main class="lesson-main">
+  <section class="page active"><article class="card">
+    <div class="title-kicker">Clasa a VIII-a • Electrocinetică • Lecția 6</div>
+    <h1>Legea lui Ohm pentru o porțiune de circuit</h1>
+    <p>În această lecție afli cum se leagă între ele trei mărimi importante: tensiunea \(U\), intensitatea curentului \(I\) și rezistența \(R\).</p>
+    <div class="idea"><strong>Ideea-cheie:</strong> la un rezistor obișnuit, dacă tensiunea crește, curentul crește în același fel, cât timp rezistența rămâne constantă.</div>
+    <div class="badge-row">
+      <span class="badge">tensiune</span>
+      <span class="badge">curent</span>
+      <span class="badge">rezistență</span>
+      <span class="badge">\(U=RI\)</span>
+    </div>
+  </article></section>
+
+  <section class="page"><article class="card">
+    <div class="title-kicker">Observ</div>
+    <h2>Ce se întâmplă când mărim tensiunea?</h2>
+    <p>Folosim același rezistor și modificăm tensiunea aplicată la capetele lui.</p>
+    <div class="two-col">
+      <div class="mini-card"><strong>Tensiune mică</strong><br>Curentul prin rezistor este mai mic.</div>
+      <div class="mini-card"><strong>Tensiune mai mare</strong><br>Curentul prin același rezistor este mai mare.</div>
+    </div>
+    <div class="idea">Relația nu este la întâmplare. Pentru mulți rezistori, curentul crește proporțional cu tensiunea.</div>
+  </article></section>
+
+  <section class="page"><article class="card">
+    <div class="title-kicker">Experiment</div>
+    <h2>Cum se verifică relația?</h2>
+    <p>Realizăm un circuit cu un rezistor \(R\), un ampermetru și un voltmetru.</p>
+    <div class="svgbox" aria-label="Schema experimentului pentru legea lui Ohm">
+      <svg viewBox="0 0 760 360" role="img">
+        <rect x="35" y="35" width="690" height="285" rx="24" fill="#0b1526" stroke="#38bdf8" stroke-width="2"/>
+        <line x1="130" y1="175" x2="230" y2="175" stroke="#e5e7eb" stroke-width="8" stroke-linecap="round"/>
+        <circle cx="275" cy="175" r="45" fill="#14243b" stroke="#67e8f9" stroke-width="4"/>
+        <text x="275" y="185" fill="#f8fafc" font-size="36" text-anchor="middle" font-weight="700">A</text>
+        <line x1="320" y1="175" x2="410" y2="175" stroke="#e5e7eb" stroke-width="8" stroke-linecap="round"/>
+        <path d="M410 175 l18 -30 l18 60 l18 -60 l18 60 l18 -60 l18 60 l22 -30" fill="none" stroke="#fbbf24" stroke-width="8" stroke-linejoin="round"/>
+        <line x1="540" y1="175" x2="635" y2="175" stroke="#e5e7eb" stroke-width="8" stroke-linecap="round"/>
+        <line x1="130" y1="175" x2="130" y2="95" stroke="#e5e7eb" stroke-width="8" stroke-linecap="round"/>
+        <line x1="635" y1="175" x2="635" y2="95" stroke="#e5e7eb" stroke-width="8" stroke-linecap="round"/>
+        <line x1="130" y1="95" x2="330" y2="95" stroke="#e5e7eb" stroke-width="8" stroke-linecap="round"/>
+        <line x1="430" y1="95" x2="635" y2="95" stroke="#e5e7eb" stroke-width="8" stroke-linecap="round"/>
+        <line x1="330" y1="62" x2="330" y2="128" stroke="#22c55e" stroke-width="8" stroke-linecap="round"/>
+        <line x1="430" y1="78" x2="430" y2="112" stroke="#ef4444" stroke-width="8" stroke-linecap="round"/>
+        <line x1="410" y1="175" x2="410" y2="260" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+        <line x1="540" y1="175" x2="540" y2="260" stroke="#94a3b8" stroke-width="5" stroke-linecap="round"/>
+        <circle cx="475" cy="260" r="42" fill="#14243b" stroke="#67e8f9" stroke-width="4"/>
+        <text x="475" y="270" fill="#f8fafc" font-size="36" text-anchor="middle" font-weight="700">V</text>
+        <line x1="410" y1="260" x2="433" y2="260" stroke="#94a3b8" stroke-width="5"/>
+        <line x1="517" y1="260" x2="540" y2="260" stroke="#94a3b8" stroke-width="5"/>
+        <text x="275" y="238" fill="#cbd5e1" font-size="22" text-anchor="middle">în serie</text>
+        <text x="475" y="326" fill="#cbd5e1" font-size="22" text-anchor="middle">în paralel cu rezistorul</text>
+        <text x="480" y="150" fill="#fef3c7" font-size="24" text-anchor="middle">R</text>
+      </svg>
+      <div class="caption">Ampermetrul măsoară curentul prin rezistor. Voltmetrul măsoară tensiunea la capetele rezistorului.</div>
+    </div>
+  </article></section>
+
+  <section class="page"><article class="card">
+    <div class="title-kicker">Experiment</div>
+    <h2>Ce notăm în tabel?</h2>
+    <p>Aplicăm mai multe tensiuni mici, pentru ca rezistorul să nu se încălzească prea mult. Pentru fiecare măsurare notăm \(U\), \(I\) și calculăm \(R\).</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Determinare</th><th>\(U\)</th><th>\(I\)</th><th>\(R=\frac{U}{I}\)</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>\(1\,V\)</td><td>\(0{,}02\,A\)</td><td>\(50\,\Omega\)</td></tr>
+          <tr><td>2</td><td>\(2\,V\)</td><td>\(0{,}04\,A\)</td><td>\(50\,\Omega\)</td></tr>
+          <tr><td>3</td><td>\(3\,V\)</td><td>\(0{,}06\,A\)</td><td>\(50\,\Omega\)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="idea">Observăm că raportul \(\frac{U}{I}\) rămâne același: rezistența rezistorului este aproximativ constantă.</div>
+  </article></section>
+
+  <section class="page"><article class="card">
+    <div class="title-kicker">Observ</div>
+    <h2>Graficul curent–tensiune</h2>
+    <p>Dacă reprezentăm grafic intensitatea \(I\) în funcție de tensiunea \(U\), pentru un rezistor obișnuit obținem aproape o linie dreaptă.</p>
+    <div class="svgbox" aria-label="Grafic I în funcție de U">
+      <svg viewBox="0 0 760 430" role="img">
+        <rect x="45" y="35" width="670" height="350" rx="22" fill="#0b1526" stroke="#38bdf8" stroke-width="2"/>
+        <line x1="120" y1="330" x2="650" y2="330" stroke="#f8fafc" stroke-width="5" stroke-linecap="round"/>
+        <line x1="120" y1="330" x2="120" y2="85" stroke="#f8fafc" stroke-width="5" stroke-linecap="round"/>
+        <path d="M120 330 L620 105" fill="none" stroke="#22c55e" stroke-width="7" stroke-linecap="round"/>
+        <circle cx="220" cy="285" r="8" fill="#fbbf24"/>
+        <circle cx="320" cy="240" r="8" fill="#fbbf24"/>
+        <circle cx="420" cy="195" r="8" fill="#fbbf24"/>
+        <circle cx="520" cy="150" r="8" fill="#fbbf24"/>
+        <text x="650" y="370" fill="#f8fafc" font-size="28" text-anchor="end">U (V)</text>
+        <text x="85" y="100" fill="#f8fafc" font-size="28" text-anchor="middle">I (A)</text>
+        <text x="435" y="102" fill="#bbf7d0" font-size="26" text-anchor="middle">linie aproape dreaptă</text>
+      </svg>
+      <div class="caption">Linia dreaptă arată că \(I\) este proporțional cu \(U\), când \(R\) rămâne constantă.</div>
+    </div>
+  </article></section>
+
+  <section class="page"><article class="card">
+    <div class="title-kicker">Rețin</div>
+    <h2>Legea lui Ohm</h2>
+    <p>Pentru o porțiune de circuit fără sursă, străbătută de curent electric, intensitatea curentului depinde de tensiune și de rezistență.</p>
+    <div class="formula math-small">
+      \[
+        I=\frac{U}{R}
+      \]
+    </div>
+    <p>În cuvinte:</p>
+    <div class="idea">
+      <strong>Curentul crește</strong> când tensiunea crește și <strong>scade</strong> când rezistența este mai mare.
+    </div>
+  </article></section>
+
+  <section class="page"><article class="card">
+    <div class="title-kicker">Forme utile</div>
+    <h2>Același adevăr, trei forme</h2>
+    <p>În probleme alegem forma formulei în funcție de mărimea necunoscută.</p>
+    <div class="three-col">
+      <div class="mini-card">
+        <strong>Curentul</strong>
+        <div class="formula math-small">\[ I=\frac{U}{R} \]</div>
+      </div>
+      <div class="mini-card">
+        <strong>Tensiunea</strong>
+        <div class="formula math-small">\[ U=R\cdot I \]</div>
+      </div>
+      <div class="mini-card">
+        <strong>Rezistența</strong>
+        <div class="formula math-small">\[ R=\frac{U}{I} \]</div>
+      </div>
+    </div>
+    <div class="warn">Atenție la unități: \(U\) în volți, \(I\) în amperi, \(R\) în ohmi.</div>
+  </article></section>
+
+  <section class="page"><article class="card">
+    <div class="title-kicker">Exemplu</div>
+    <h2>Calculăm intensitatea curentului</h2>
+    <p>Un rezistor are rezistența \(R=6\,\Omega\). La capetele lui se aplică tensiunea \(U=12\,V\).</p>
+    <p><strong>Cât este intensitatea curentului?</strong></p>
+    <div class="formula math-small">
+      \[
+        I=\frac{U}{R}=\frac{12\,V}{6\,\Omega}=2\,A
+      \]
+    </div>
+    <div class="idea">Răspuns: prin rezistor trece un curent de \(2\,A\).</div>
+  </article></section>
+
+  <section class="page"><article class="card">
+    <div class="title-kicker">Exemplu</div>
+    <h2>Calculăm tensiunea</h2>
+    <p>Prin rezistorul de \(R=8\,\Omega\) trece curentul \(I=0{,}5\,A\).</p>
+    <p><strong>Ce tensiune este la capetele rezistorului?</strong></p>
+    <div class="formula math-small">
+      \[
+        U=R\cdot I=8\,\Omega\cdot 0{,}5\,A=4\,V
+      \]
+    </div>
+    <div class="idea">Răspuns: tensiunea aplicată rezistorului este \(4\,V\).</div>
+  </article></section>
+
+  <section class="page"><article class="card">
+    <div class="title-kicker">Exemplu</div>
+    <h2>Calculăm rezistența</h2>
+    <p>La capetele unei porțiuni de circuit este tensiunea \(U=9\,V\), iar curentul are intensitatea \(I=0{,}3\,A\).</p>
+    <div class="formula math-small">
+      \[
+        R=\frac{U}{I}=\frac{9\,V}{0{,}3\,A}=30\,\Omega
+      \]
+    </div>
+    <div class="idea">Răspuns: rezistența porțiunii de circuit este \(30\,\Omega\).</div>
+  </article></section>
+
+  <section class="page"><article class="card">
+    <div class="title-kicker">Rețin</div>
+    <h2>Ce este un conductor ohmic?</h2>
+    <p>Un conductor este <strong>ohmic</strong> dacă respectă legea lui Ohm: la temperatură aproximativ constantă, raportul \(\frac{U}{I}\) rămâne constant.</p>
+    <div class="two-col">
+      <div class="mini-card"><strong>Rezistor obișnuit</strong><br>Grafic \(I-U\) aproape liniar.<br>Respectă aproximativ legea lui Ohm.</div>
+      <div class="mini-card"><strong>Bec cu filament</strong><br>Se încălzește puternic.<br>Rezistența lui se schimbă.</div>
+    </div>
+    <div class="warn">Legea lui Ohm se aplică simplu pentru porțiuni de circuit fără surse și cu rezistență constantă.</div>
+  </article></section>
+
+  <section class="page"><article class="card">
+    <div class="title-kicker">Aplic</div>
+    <h2>Triunghiul formulei</h2>
+    <p>Un mod rapid de memorare:</p>
+    <div class="svgbox" aria-label="Triunghiul legii lui Ohm">
+      <svg viewBox="0 0 760 430" role="img">
+        <rect x="50" y="35" width="660" height="350" rx="22" fill="#0b1526" stroke="#38bdf8" stroke-width="2"/>
+        <path d="M380 80 L585 320 L175 320 Z" fill="#14243b" stroke="#67e8f9" stroke-width="6" stroke-linejoin="round"/>
+        <line x1="240" y1="225" x2="520" y2="225" stroke="#67e8f9" stroke-width="5"/>
+        <line x1="380" y1="225" x2="380" y2="320" stroke="#67e8f9" stroke-width="5"/>
+        <text x="380" y="175" fill="#fbbf24" font-size="72" text-anchor="middle" font-weight="800">U</text>
+        <text x="300" y="295" fill="#bbf7d0" font-size="72" text-anchor="middle" font-weight="800">R</text>
+        <text x="460" y="295" fill="#bbf7d0" font-size="72" text-anchor="middle" font-weight="800">I</text>
+        <text x="380" y="365" fill="#f8fafc" font-size="28" text-anchor="middle">acoperi mărimea necunoscută</text>
+      </svg>
+      <div class="caption">Rezultă: \(U=R\cdot I\), \(I=\frac{U}{R}\), \(R=\frac{U}{I}\).</div>
+    </div>
+  </article></section>
+
+  <section class="page"><article class="card">
+    <div class="title-kicker">Aplic</div>
+    <h2>Cum aleg formula corectă?</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Cunoști</th><th>Cauți</th><th>Folosești</th></tr></thead>
+        <tbody>
+          <tr><td>\(U\) și \(R\)</td><td>\(I\)</td><td>\(I=\frac{U}{R}\)</td></tr>
+          <tr><td>\(R\) și \(I\)</td><td>\(U\)</td><td>\(U=R\cdot I\)</td></tr>
+          <tr><td>\(U\) și \(I\)</td><td>\(R\)</td><td>\(R=\frac{U}{I}\)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="idea">Înainte de calcul, scrie mărimile cunoscute cu unitățile lor. Apoi alege formula.</div>
+  </article></section>
+
+  <section class="page"><article class="card">
+    <div class="title-kicker">Verificare rapidă</div>
+    <h2>Itemul 1</h2>
+    <div class="question" data-answer="b">
+      <p><strong>Forma pentru calcularea intensității curentului este:</strong></p>
+      <div class="answers">
+        <label><input type="radio" name="q1" value="a"> \(I=U\cdot R\)</label>
+        <label><input type="radio" name="q1" value="b"> \(I=\frac{U}{R}\)</label>
+        <label><input type="radio" name="q1" value="c"> \(I=\frac{R}{U}\)</label>
+      </div>
+      <div class="check-row">
+        <button class="check-btn" onclick="checkQuestion(this)">Verifică</button>
+        <button class="reset-btn" onclick="resetQuestion(this)">Resetează</button>
+      </div>
+      <div class="feedback" aria-live="polite"></div>
+    </div>
+  </article></section>
+
+  <section class="page"><article class="card">
+    <div class="title-kicker">Verificare rapidă</div>
+    <h2>Itemul 2</h2>
+    <div class="question" data-answer="a">
+      <p><strong>Dacă tensiunea crește, iar rezistența rămâne constantă, intensitatea curentului:</strong></p>
+      <div class="answers">
+        <label><input type="radio" name="q2" value="a"> crește</label>
+        <label><input type="radio" name="q2" value="b"> scade</label>
+        <label><input type="radio" name="q2" value="c"> devine întotdeauna zero</label>
+      </div>
+      <div class="check-row">
+        <button class="check-btn" onclick="checkQuestion(this)">Verifică</button>
+        <button class="reset-btn" onclick="resetQuestion(this)">Resetează</button>
+      </div>
+      <div class="feedback" aria-live="polite"></div>
+    </div>
+  </article></section>
+
+  <section class="page"><article class="card">
+    <div class="title-kicker">Verificare rapidă</div>
+    <h2>Itemul 3</h2>
+    <div class="question" data-answer="c">
+      <p><strong>La \(U=10\,V\) și \(R=5\,\Omega\), curentul este:</strong></p>
+      <div class="answers">
+        <label><input type="radio" name="q3" value="a"> \(50\,A\)</label>
+        <label><input type="radio" name="q3" value="b"> \(5\,A\)</label>
+        <label><input type="radio" name="q3" value="c"> \(2\,A\)</label>
+      </div>
+      <div class="check-row">
+        <button class="check-btn" onclick="checkQuestion(this)">Verifică</button>
+        <button class="reset-btn" onclick="resetQuestion(this)">Resetează</button>
+      </div>
+      <div class="feedback" aria-live="polite"></div>
+    </div>
+  </article></section>
+
+  <section class="page"><article class="card">
+    <div class="title-kicker">Final</div>
+    <h2>Ce trebuie să rămână clar</h2>
+    <ul>
+      <li>Legea lui Ohm pentru o porțiune de circuit: \(I=\frac{U}{R}\) sau \(U=R\cdot I\).</li>
+      <li>Dacă \(R\) este constantă, intensitatea curentului este direct proporțională cu tensiunea.</li>
+      <li>Rezistența se poate calcula cu \(R=\frac{U}{I}\).</li>
+      <li>Un conductor ohmic are caracteristica \(I-U\) aproximativ liniară.</li>
+    </ul>
+    <div class="idea">În lecția următoare vei extinde ideea la întregul circuit, unde apare și rezistența internă a sursei.</div>
+    <div class="final-banner">
+      <strong>Prof. Dănuț Andronie</strong><br>
+      email: <strong>danutmg@gmail.com</strong>
+    </div>
+  </article></section>
+</main>
+
+<nav class="nav-bar" aria-label="Navigare lecție">
+  <div class="nav-inner">
+    <button class="nav-btn back" id="backBtn" onclick="prevPage()">Înapoi</button>
+    <div class="page-indicator" id="pageIndicator">1/17</div>
+    <button class="nav-btn next" id="nextBtn" onclick="nextPage()">Mergi mai departe</button>
+  </div>
+</nav>
+</div>
+
+<script>
+const pages=[...document.querySelectorAll('.page')];
+const header=document.getElementById('lessonHeader');
+const backBtn=document.getElementById('backBtn');
+const nextBtn=document.getElementById('nextBtn');
+const pageIndicator=document.getElementById('pageIndicator');
+let pageIndex=0;
+const nextUrl='./lectia-7.html';
+
+function showPage(index){
+  pageIndex=Math.max(0,Math.min(index,pages.length-1));
+  pages.forEach((p,i)=>p.classList.toggle('active',i===pageIndex));
+  header.classList.toggle('hidden-header',pageIndex!==0);
+  backBtn.disabled=pageIndex===0;
+  pageIndicator.textContent=(pageIndex+1)+'/'+pages.length;
+  nextBtn.textContent=pageIndex===pages.length-1?'Lecția următoare':'Mergi mai departe';
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(window.MathJax && MathJax.typesetPromise){MathJax.typesetPromise([pages[pageIndex]]).catch(()=>{});}
+}
+function nextPage(){
+  if(pageIndex===pages.length-1){ window.location.href=nextUrl; return; }
+  showPage(pageIndex+1);
+}
+function prevPage(){ showPage(pageIndex-1); }
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight') nextPage();
+  if(e.key==='ArrowLeft') prevPage();
+});
+
+function checkQuestion(btn){
+  const q=btn.closest('.question');
+  const chosen=q.querySelector('input[type="radio"]:checked');
+  const fb=q.querySelector('.feedback');
+  fb.className='feedback';
+  if(!chosen){
+    fb.textContent='Alege mai întâi o variantă.';
+    fb.classList.add('empty');
+    return;
+  }
+  if(chosen.value===q.dataset.answer){
+    fb.textContent='Corect!';
+    fb.classList.add('ok');
+  }else{
+    fb.textContent='Mai încearcă. Recitește pagina cu explicația.';
+    fb.classList.add('bad');
+  }
+}
+function resetQuestion(btn){
+  const q=btn.closest('.question');
+  q.querySelectorAll('input[type="radio"]').forEach(i=>i.checked=false);
+  const fb=q.querySelector('.feedback');
+  fb.textContent='';
+  fb.className='feedback';
+}
+showPage(0);
+</script>
 </body>
 </html>

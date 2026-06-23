@@ -4,1156 +4,948 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Recapitulare | Electrocinetică | Fizica Galaction</title>
-  <meta name="description" content="Recapitulare interactivă pentru capitolul Electrocinetică, clasa a VIII-a: circuite electrice, legea lui Ohm, rezistențe, energie electrică, legea Joule, electroliză și electromagneți.">
+  <meta name="description" content="Recapitulare interactivă pentru capitolul Electrocinetică, clasa a VIII-a.">
   <script>
     window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)'], ['$', '$']], displayMath: [['\\[','\\]']] },
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']], displayMath: [['$$','$$'], ['\\[','\\]']] },
       svg: { fontCache: 'global' },
-      options: { renderActions: { addMenu: [] } }
+      options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
   <style>
-    :root{
-      --bg:#08111f;
-      --panel:#0f1d33;
-      --panel2:#13243e;
-      --card:#172a46;
-      --text:#f8fafc;
-      --muted:#cbd5e1;
-      --soft:#e0f2fe;
-      --cyan:#67e8f9;
-      --cyan2:#22d3ee;
-      --green:#22c55e;
-      --green2:#16a34a;
-      --back:#e2e8f0;
-      --backText:#0f172a;
-      --yellow:#fde68a;
-      --orange:#fdba74;
-      --red:#fecaca;
-      --bad:#ef4444;
-      --shadow:0 18px 45px rgba(0,0,0,.35);
-      --radius:22px;
+    :root {
+      --bg: #07111f;
+      --panel: #102033;
+      --panel2: #142a42;
+      --text: #f3f7fb;
+      --muted: #c7d2df;
+      --cyan: #67e8f9;
+      --blue: #93c5fd;
+      --green: #22c55e;
+      --green2: #16a34a;
+      --light: #e5edf7;
+      --dark: #06101c;
+      --yellow: #fde68a;
+      --orange: #fdba74;
+      --red: #fecaca;
+      --border: rgba(148, 163, 184, .28);
+      --shadow: 0 22px 55px rgba(0,0,0,.35);
+      --radius: 22px;
     }
 
-    *{ box-sizing:border-box; }
+    * { box-sizing: border-box; }
 
-    html,body{
-      margin:0;
-      min-height:100%;
+    html, body { margin: 0; min-height: 100%; }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(34,211,238,.18), transparent 32rem),
-        radial-gradient(circle at bottom right, rgba(34,197,94,.14), transparent 26rem),
+        radial-gradient(circle at top left, rgba(103, 232, 249, .18), transparent 32rem),
+        radial-gradient(circle at bottom right, rgba(34, 197, 94, .12), transparent 34rem),
         var(--bg);
-      color:var(--text);
-      font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
-      line-height:1.55;
-      overflow-x:hidden;
+      color: var(--text);
+      min-height: 100dvh;
+      line-height: 1.55;
     }
 
-    body{
-      min-height:100dvh;
+    .app {
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
     }
 
-    .app{
-      width:min(980px,100%);
-      margin:0 auto;
-      min-height:100dvh;
-      display:flex;
-      flex-direction:column;
+    .lesson {
+      width: min(980px, 100%);
+      min-height: calc(100dvh - 24px);
+      display: flex;
+      flex-direction: column;
     }
 
-    .top-banner{
-      margin:14px 14px 0;
-      padding:18px;
-      border:1px solid rgba(103,232,249,.28);
-      border-radius:24px;
-      background:linear-gradient(135deg, rgba(15,29,51,.96), rgba(19,36,62,.92));
-      box-shadow:var(--shadow);
-      text-align:center;
+    .banner {
+      background: linear-gradient(135deg, rgba(14, 165, 233, .25), rgba(34, 197, 94, .12));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      margin: 0 0 12px;
+      box-shadow: var(--shadow);
     }
 
-    .school{
-      font-weight:900;
-      letter-spacing:.03em;
-      color:var(--cyan);
-      text-transform:uppercase;
-      font-size:clamp(1rem, 2.8vw, 1.28rem);
+    .banner .school {
+      color: var(--cyan);
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      font-size: clamp(.88rem, 2.4vw, 1.05rem);
+      text-align: center;
     }
 
-    .teacher{
-      margin-top:4px;
-      color:var(--muted);
-      font-size:clamp(.9rem,2.4vw,1rem);
+    .banner .prof {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 4px;
+      font-size: clamp(.88rem, 2.4vw, 1rem);
     }
 
-    .motto{
-      margin:12px auto 0;
-      max-width:720px;
-      padding:10px 12px;
-      color:#fff7ed;
-      border-left:5px solid var(--cyan2);
-      border-radius:14px;
-      background:rgba(251,191,36,.12);
-      font-style:italic;
-      font-weight:650;
+    .motto {
+      margin: 10px auto 0;
+      max-width: 740px;
+      text-align: center;
+      color: #fff7cc;
+      background: rgba(253, 230, 138, .10);
+      border-left: 4px solid var(--cyan);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-style: italic;
+      font-weight: 650;
     }
 
-    main{
-      flex:1;
-      padding:14px 14px calc(104px + env(safe-area-inset-bottom));
-      display:flex;
-      align-items:stretch;
+    .page {
+      display: none;
+      flex: 1;
+      background: linear-gradient(180deg, rgba(16, 32, 51, .96), rgba(11, 24, 39, .96));
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: clamp(18px, 3.8vw, 34px);
+      box-shadow: var(--shadow);
+      overflow: auto;
+      padding-bottom: 120px;
     }
 
-    .screen{
-      width:100%;
-      min-height:calc(100dvh - 126px);
-      display:none;
-      animation:fade .22s ease-out;
+    .page.active { display: block; }
+
+    .eyebrow {
+      color: var(--orange);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      font-size: clamp(.78rem, 2vw, .92rem);
+      margin-bottom: 6px;
     }
 
-    .screen.active{
-      display:flex;
+    h1, h2, h3 { margin: 0 0 14px; line-height: 1.15; }
+
+    h1 {
+      color: var(--cyan);
+      font-size: clamp(2rem, 7.2vw, 4rem);
+      letter-spacing: -.03em;
     }
 
-    @keyframes fade{
-      from{ opacity:0; transform:translateY(8px); }
-      to{ opacity:1; transform:translateY(0); }
+    h2 {
+      color: var(--cyan);
+      font-size: clamp(1.6rem, 5.8vw, 3rem);
+      letter-spacing: -.02em;
     }
 
-    .card{
-      width:100%;
-      background:linear-gradient(180deg, rgba(19,36,62,.98), rgba(15,29,51,.98));
-      border:1px solid rgba(148,163,184,.22);
-      border-radius:var(--radius);
-      box-shadow:var(--shadow);
-      padding:clamp(18px, 4vw, 30px);
-      overflow:hidden;
+    h3 {
+      color: var(--blue);
+      font-size: clamp(1.18rem, 3.8vw, 1.55rem);
+      margin-top: 18px;
     }
 
-    h1,h2,h3{
-      margin:0 0 12px;
-      line-height:1.14;
+    p, li {
+      font-size: clamp(1.05rem, 3.35vw, 1.26rem);
+      color: var(--text);
     }
 
-    h1{
-      color:var(--cyan);
-      font-size:clamp(1.75rem, 7vw, 3.35rem);
-      letter-spacing:-.03em;
+    .lead {
+      font-size: clamp(1.18rem, 4.2vw, 1.5rem);
+      color: #eaf8ff;
+      font-weight: 650;
     }
 
-    h2{
-      color:var(--cyan);
-      font-size:clamp(1.42rem, 5vw, 2.35rem);
-      letter-spacing:-.02em;
+    .muted { color: var(--muted); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin: 16px 0;
     }
 
-    h3{
-      color:#bfdbfe;
-      font-size:clamp(1.12rem, 3.6vw, 1.45rem);
+    .card {
+      background: rgba(15, 23, 42, .62);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
     }
 
-    p,li{
-      font-size:clamp(1.05rem, 3.2vw, 1.25rem);
+    .card strong { color: var(--yellow); }
+
+    .formula {
+      margin: 14px 0;
+      padding: 14px;
+      border: 1px solid rgba(103, 232, 249, .28);
+      background: rgba(103, 232, 249, .08);
+      border-radius: 18px;
+      overflow-x: auto;
+      font-size: clamp(1rem, 2.6vw, 1.15rem);
     }
 
-    p{
-      margin:10px 0;
+    .example {
+      margin: 14px 0;
+      padding: 14px;
+      border-left: 5px solid var(--green);
+      background: rgba(34, 197, 94, .10);
+      border-radius: 16px;
     }
 
-    ul,ol{
-      padding-left:1.35rem;
-      margin:12px 0;
+    .remember {
+      margin: 14px 0;
+      padding: 14px;
+      border-left: 5px solid var(--cyan);
+      background: rgba(14, 165, 233, .10);
+      border-radius: 16px;
     }
 
-    strong{ color:#ffffff; }
-
-    .lead{
-      font-size:clamp(1.16rem, 3.7vw, 1.45rem);
-      color:#e0f2fe;
-      font-weight:650;
+    .warning {
+      margin: 14px 0;
+      padding: 14px;
+      border-left: 5px solid #fb7185;
+      background: rgba(251, 113, 133, .10);
+      border-radius: 16px;
     }
 
-    .badge-row{
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      margin:14px 0;
+    .chiprow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0;
     }
 
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:8px 11px;
-      border-radius:999px;
-      background:rgba(34,211,238,.13);
-      border:1px solid rgba(103,232,249,.25);
-      color:#cffafe;
-      font-size:clamp(.9rem, 2.6vw, 1rem);
-      font-weight:800;
+    .chip {
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: #eaf8ff;
+      background: rgba(255,255,255,.06);
+      font-weight: 700;
     }
 
-    .idea{
-      margin:16px 0;
-      padding:14px 15px;
-      border-radius:18px;
-      border:1px solid rgba(34,211,238,.28);
-      background:rgba(34,211,238,.10);
+    .svgbox {
+      margin: 16px auto;
+      max-width: 680px;
+      border-radius: 18px;
+      background: #eef7ff;
+      color: #082f49;
+      border: 1px solid rgba(147, 197, 253, .5);
+      overflow: hidden;
+      padding: 10px;
     }
 
-    .retain{
-      margin:16px 0;
-      padding:14px 15px;
-      border-radius:18px;
-      border:1px solid rgba(34,197,94,.30);
-      background:rgba(34,197,94,.10);
+    .svgbox > svg {
+      width: 100%;
+      height: auto;
+      display: block;
     }
 
-    .warn{
-      margin:16px 0;
-      padding:14px 15px;
-      border-radius:18px;
-      border:1px solid rgba(251,191,36,.35);
-      background:rgba(251,191,36,.11);
+    .table-wrap {
+      overflow-x: auto;
+      margin: 14px 0;
     }
 
-    .example{
-      margin:16px 0;
-      padding:14px 15px;
-      border-radius:18px;
-      border:1px solid rgba(147,197,253,.30);
-      background:rgba(59,130,246,.10);
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 540px;
+      background: rgba(15, 23, 42, .55);
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--border);
     }
 
-    .small{
-      font-size:clamp(.93rem, 2.7vw, 1.05rem);
-      color:var(--muted);
+    th, td {
+      padding: 11px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      font-size: clamp(.96rem, 2.8vw, 1.08rem);
     }
 
-    .formula{
-      overflow-x:auto;
-      padding:8px 2px;
+    th {
+      color: var(--yellow);
+      background: rgba(255,255,255,.06);
     }
 
-    mjx-container[jax="SVG"]{
-      max-width:100%;
-      overflow-x:auto;
-      overflow-y:hidden;
-      font-size:104% !important;
+    tr:last-child td { border-bottom: none; }
+
+    .quiz {
+      margin-top: 18px;
+      padding: 14px;
+      border-radius: 18px;
+      background: rgba(15, 23, 42, .62);
+      border: 1px solid var(--border);
     }
 
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:12px;
-      margin:14px 0;
+    .quiz-title {
+      color: var(--yellow);
+      font-weight: 850;
+      margin-bottom: 10px;
+      font-size: clamp(1.05rem, 3.2vw, 1.25rem);
     }
 
-    .mini{
-      padding:12px;
-      background:rgba(15,23,42,.42);
-      border:1px solid rgba(148,163,184,.20);
-      border-radius:16px;
+    .quiz-options {
+      display: grid;
+      gap: 10px;
+      margin: 10px 0;
     }
 
-    .mini b{
-      color:#fef3c7;
+    .quiz-options label {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      align-items: start;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: rgba(255,255,255,.045);
+      cursor: pointer;
+      font-size: clamp(1rem, 3.2vw, 1.15rem);
     }
 
-    .table-wrap{
-      overflow-x:auto;
-      margin:14px 0;
-      border-radius:18px;
-      border:1px solid rgba(148,163,184,.22);
+    .quiz-options input {
+      width: 20px;
+      height: 20px;
+      margin-top: 2px;
     }
 
-    table{
-      width:100%;
-      border-collapse:collapse;
-      min-width:620px;
-      background:rgba(15,23,42,.38);
+    .check {
+      appearance: none;
+      border: none;
+      border-radius: 14px;
+      padding: 11px 16px;
+      background: var(--cyan);
+      color: #052234;
+      font-weight: 900;
+      cursor: pointer;
+      font-size: 1rem;
     }
 
-    th,td{
-      padding:12px;
-      border-bottom:1px solid rgba(148,163,184,.18);
-      text-align:left;
-      vertical-align:top;
-      font-size:clamp(.95rem, 2.8vw, 1.08rem);
+    .feedback {
+      min-height: 28px;
+      margin-top: 10px;
+      font-weight: 850;
+      font-size: clamp(1rem, 3vw, 1.15rem);
     }
 
-    th{
-      color:#cffafe;
-      background:rgba(34,211,238,.11);
+    .feedback.ok { color: #86efac; }
+    .feedback.bad { color: var(--red); }
+    .feedback.wait { color: var(--yellow); }
+
+    .final-banner {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(103, 232, 249, .16), rgba(34, 197, 94, .14));
+      border: 1px solid rgba(103, 232, 249, .28);
+      text-align: center;
     }
 
-    tr:last-child td{ border-bottom:none; }
-
-    .svgbox{
-      margin:16px auto;
-      max-width:720px;
-      padding:10px;
-      border:1px solid rgba(103,232,249,.22);
-      border-radius:18px;
-      background:rgba(8,17,31,.42);
+    .final-banner strong {
+      color: var(--cyan);
+      display: block;
+      font-size: clamp(1.25rem, 4vw, 1.55rem);
     }
 
-    .svgbox > svg{
-      width:100%;
-      height:auto;
-      display:block;
+    .nav {
+      position: sticky;
+      bottom: max(8px, env(safe-area-inset-bottom));
+      z-index: 10;
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      background: rgba(7, 17, 31, .84);
+      backdrop-filter: blur(10px);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 10px;
+      box-shadow: 0 12px 35px rgba(0,0,0,.36);
     }
 
-    .quiz{
-      margin-top:14px;
-      padding:14px;
-      border-radius:18px;
-      background:rgba(15,23,42,.44);
-      border:1px solid rgba(148,163,184,.24);
+    .nav button, .nav a {
+      min-height: 48px;
+      border: none;
+      border-radius: 14px;
+      font-weight: 900;
+      font-size: clamp(.95rem, 3vw, 1.05rem);
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 10px 12px;
     }
 
-    .quiz-title{
-      font-weight:900;
-      color:var(--yellow);
-      margin-bottom:10px;
-      font-size:clamp(1.03rem, 3.2vw, 1.16rem);
+    .back {
+      background: var(--light);
+      color: #0f172a;
     }
 
-    .options{
-      display:grid;
-      gap:10px;
-      margin:12px 0;
+    .next {
+      background: var(--green);
+      color: #052e16;
     }
 
-    .options label{
-      display:grid;
-      grid-template-columns:auto 1fr;
-      gap:10px;
-      align-items:start;
-      padding:12px;
-      border-radius:14px;
-      background:rgba(226,232,240,.08);
-      border:1px solid rgba(226,232,240,.15);
-      font-size:clamp(1rem, 3.1vw, 1.12rem);
-      cursor:pointer;
+    .next:hover { background: var(--green2); color: #f0fdf4; }
+
+    .nav button:disabled {
+      opacity: .45;
+      cursor: not-allowed;
     }
 
-    .options input{
-      transform:scale(1.22);
-      margin-top:4px;
-      accent-color:var(--green);
+    .indicator {
+      color: var(--yellow);
+      font-weight: 950;
+      font-variant-numeric: tabular-nums;
+      min-width: 56px;
+      text-align: center;
     }
 
-    .check{
-      border:0;
-      border-radius:14px;
-      padding:12px 16px;
-      font-weight:900;
-      cursor:pointer;
-      background:var(--cyan2);
-      color:#082f49;
-      font-size:1rem;
-      min-height:46px;
+    .small {
+      font-size: clamp(.95rem, 2.8vw, 1.05rem);
     }
 
-    .feedback{
-      margin-top:10px;
-      min-height:28px;
-      font-weight:900;
-      font-size:clamp(1rem, 3vw, 1.1rem);
-    }
-
-    .feedback.ok{ color:#86efac; }
-    .feedback.no{ color:#fecaca; }
-    .feedback.pick{ color:#fde68a; }
-
-    .final-banner{
-      margin-top:18px;
-      padding:16px;
-      border-radius:20px;
-      background:linear-gradient(135deg, rgba(34,211,238,.14), rgba(34,197,94,.14));
-      border:1px solid rgba(103,232,249,.28);
-      text-align:center;
-    }
-
-    .nav{
-      position:fixed;
-      left:0;
-      right:0;
-      bottom:0;
-      z-index:50;
-      padding:10px 12px calc(10px + env(safe-area-inset-bottom));
-      background:rgba(8,17,31,.94);
-      backdrop-filter:blur(12px);
-      border-top:1px solid rgba(148,163,184,.20);
-    }
-
-    .nav-inner{
-      width:min(980px,100%);
-      margin:0 auto;
-      display:grid;
-      grid-template-columns:1fr auto 1fr;
-      gap:10px;
-      align-items:center;
-    }
-
-    .nav button,.nav a{
-      min-height:52px;
-      border:0;
-      border-radius:16px;
-      padding:12px 14px;
-      font-size:clamp(.94rem, 3vw, 1.05rem);
-      font-weight:950;
-      text-decoration:none;
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      text-align:center;
-      box-shadow:0 8px 20px rgba(0,0,0,.24);
-    }
-
-    #prevBtn{
-      background:var(--back);
-      color:var(--backText);
-    }
-
-    #nextBtn{
-      background:var(--green);
-      color:#052e16;
-    }
-
-    #nextBtn:hover{ background:var(--green2); color:#fff; }
-    #prevBtn:disabled{
-      opacity:.45;
-      cursor:not-allowed;
-    }
-
-    .counter{
-      min-width:58px;
-      text-align:center;
-      color:#e0f2fe;
-      font-weight:950;
-      font-size:1.02rem;
-      padding:8px 6px;
-      border-radius:999px;
-      background:rgba(226,232,240,.08);
-      border:1px solid rgba(226,232,240,.14);
-    }
-
-    @media (max-width:720px){
-      .grid{ grid-template-columns:1fr; }
-      main{ padding-inline:10px; }
-      .top-banner{ margin-inline:10px; }
-      .screen{ min-height:calc(100dvh - 118px); }
-      table{ min-width:560px; }
-    }
-
-    @media (max-width:420px){
-      .nav-inner{
-        grid-template-columns:1fr 56px 1fr;
-        gap:7px;
-      }
-      .nav button,.nav a{
-        min-height:50px;
-        padding:10px 8px;
-      }
-      .counter{
-        min-width:50px;
-        font-size:.95rem;
-      }
-      .card{ border-radius:18px; }
+    @media (max-width: 720px) {
+      .grid { grid-template-columns: 1fr; }
+      .page { padding-bottom: 130px; }
+      .nav { gap: 7px; padding: 8px; }
+      .nav button, .nav a { padding: 8px; }
     }
   </style>
 </head>
 <body>
   <div class="app">
-    <section class="top-banner" id="topBanner">
-      <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
-      <div class="teacher">Fizica Galaction • Prof. Dănuț Andronie</div>
-      <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
-    </section>
-
-    <main>
-      <section class="screen active">
-        <article class="card">
-          <div class="badge-row">
-            <span class="badge">Clasa a VIII-a</span>
-            <span class="badge">Capitolul 3</span>
-            <span class="badge">Recapitulare</span>
-          </div>
-          <h1>Electrocinetică</h1>
-          <p class="lead">Recapitulăm circuitele electrice și mărimile care descriu curentul electric: intensitate, tensiune, rezistență, energie și putere.</p>
-          <div class="idea">
-            <h3>Ideea-cheie</h3>
-            <p>Un circuit electric funcționează atunci când există un drum închis pentru purtătorii de sarcină și o sursă care îi pune în mișcare.</p>
-          </div>
-          <div class="svgbox" aria-label="Circuit electric simplu">
-            <svg viewBox="0 0 760 250" role="img">
-              <rect x="20" y="20" width="720" height="210" rx="28" fill="#0b1728" stroke="#22d3ee" stroke-width="3"/>
-              <path d="M130 130 H260 M500 130 H630 M260 130 V80 H500 V130 M260 130 V180 H500 V130" fill="none" stroke="#e0f2fe" stroke-width="8" stroke-linecap="round"/>
-              <rect x="75" y="94" width="55" height="72" rx="8" fill="#1e293b" stroke="#67e8f9" stroke-width="4"/>
-              <line x1="93" y1="108" x2="93" y2="154" stroke="#67e8f9" stroke-width="5"/>
-              <line x1="111" y1="120" x2="111" y2="142" stroke="#67e8f9" stroke-width="5"/>
-              <circle cx="380" cy="80" r="34" fill="#fde68a" stroke="#f59e0b" stroke-width="4"/>
-              <path d="M370 80 q10 -28 20 0 q-10 -10 -20 0" fill="none" stroke="#0f172a" stroke-width="4"/>
-              <circle cx="380" cy="180" r="30" fill="#172a46" stroke="#e2e8f0" stroke-width="4"/>
-              <text x="380" y="188" text-anchor="middle" font-size="28" fill="#e2e8f0" font-weight="800">K</text>
-              <text x="103" y="190" text-anchor="middle" font-size="23" fill="#cffafe" font-weight="800">generator</text>
-              <text x="380" y="38" text-anchor="middle" font-size="23" fill="#fde68a" font-weight="800">bec</text>
-              <text x="380" y="226" text-anchor="middle" font-size="23" fill="#e2e8f0" font-weight="800">întrerupător</text>
-            </svg>
-          </div>
-        </article>
+    <main class="lesson">
+      <section class="banner" id="topBanner">
+        <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+        <div class="prof">Prof. Dănuț Andronie • danutmg@gmail.com</div>
+        <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>1. Circuitul electric</h2>
-          <p>Un circuit electric este un ansamblu de componente conectate prin conductoare.</p>
-          <div class="grid">
-            <div class="mini"><b>Generator</b><br>menține diferența de potențial și pune sarcinile în mișcare: baterie, acumulator, sursă.</div>
-            <div class="mini"><b>Consumator</b><br>transformă energia electrică în lumină, căldură, mișcare sau sunet.</div>
-            <div class="mini"><b>Conductoare</b><br>leagă piesele și permit trecerea curentului.</div>
-            <div class="mini"><b>Întrerupător</b><br>închide sau deschide circuitul.</div>
-          </div>
-          <div class="retain">
-            <h3>Rețin</h3>
-            <p>Curentul electric trece numai printr-un circuit <strong>închis</strong>. Dacă întrerupătorul este deschis sau firul este rupt, circuitul nu mai funcționează.</p>
-          </div>
-        </article>
+      <section class="page active">
+        <div class="eyebrow">Clasa a VIII-a • Capitolul 3</div>
+        <h1>Recapitulare: Electrocinetică</h1>
+        <p class="lead">În acest capitol ai învățat cum funcționează circuitele electrice, cum se calculează mărimile electrice și cum apar efectele curentului electric.</p>
+        <div class="remember">
+          <strong>Ideea-cheie:</strong> curentul electric apare într-un circuit închis, iar generatorul menține tensiunea care pune sarcinile electrice în mișcare ordonată.
+        </div>
+        <div class="chiprow">
+          <span class="chip">circuite</span>
+          <span class="chip">curent</span>
+          <span class="chip">tensiune</span>
+          <span class="chip">rezistență</span>
+          <span class="chip">putere</span>
+          <span class="chip">efect magnetic</span>
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>2. Intensitatea curentului electric</h2>
-          <p>Intensitatea curentului electric arată câtă sarcină electrică trece printr-o secțiune a circuitului într-un anumit timp.</p>
-          <div class="formula">
-            \[
-              I=\frac{q}{\Delta t}
-            \]
-          </div>
-          <div class="grid">
-            <div class="mini"><b>\(I\)</b> – intensitatea curentului electric</div>
-            <div class="mini"><b>\(q\)</b> – sarcina electrică transportată</div>
-            <div class="mini"><b>\(\Delta t\)</b> – intervalul de timp</div>
-            <div class="mini"><b>Unitate</b> – amper, \(A\)</div>
-          </div>
-          <div class="example">
-            <h3>Exemplu numeric</h3>
-            <p>Dacă printr-un conductor trece sarcina \(q=12\,C\) în \(\Delta t=6\,s\), atunci:</p>
-            <div class="formula">
-              \[
-                I=\frac{12\,C}{6\,s}=2\,A
-              \]
-            </div>
-          </div>
-        </article>
+      <section class="page">
+        <div class="eyebrow">1. Circuitul electric</div>
+        <h2>Un circuit trebuie să fie închis</h2>
+        <p>Un circuit electric simplu conține un <strong>generator</strong>, un <strong>consumator</strong>, fire de legătură și, de obicei, un întrerupător.</p>
+        <div class="svgbox" aria-label="Circuit electric simplu">
+          <svg viewBox="0 0 760 340" role="img">
+            <rect width="760" height="340" fill="#eef7ff"/>
+            <path d="M170 170 H300 M460 170 H590 M590 170 V260 H170 V170" stroke="#0f172a" stroke-width="8" fill="none" stroke-linecap="round"/>
+            <line x1="300" y1="130" x2="300" y2="210" stroke="#0f172a" stroke-width="8"/>
+            <line x1="330" y1="110" x2="330" y2="230" stroke="#0f172a" stroke-width="12"/>
+            <text x="255" y="85" font-size="28" fill="#0f172a" font-weight="700">generator</text>
+            <circle cx="455" cy="170" r="45" fill="#fde68a" stroke="#0f172a" stroke-width="7"/>
+            <path d="M430 195 L480 145 M430 145 L480 195" stroke="#0f172a" stroke-width="6"/>
+            <text x="400" y="85" font-size="28" fill="#0f172a" font-weight="700">bec</text>
+            <circle cx="170" cy="170" r="8" fill="#0f172a"/>
+            <circle cx="590" cy="170" r="8" fill="#0f172a"/>
+            <path d="M235 255 q60 35 120 0" stroke="#2563eb" stroke-width="7" fill="none" marker-end="url(#arrow)"/>
+            <defs>
+              <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+                <path d="M0 0 L12 6 L0 12 Z" fill="#2563eb"/>
+              </marker>
+            </defs>
+            <text x="245" y="315" font-size="26" fill="#1d4ed8" font-weight="700">sens convențional al curentului</text>
+          </svg>
+        </div>
+        <div class="remember">
+          <strong>Rețin:</strong> generatorul nu „împinge curent” printr-un circuit deschis. El menține tensiune la borne; curentul apare când circuitul este închis.
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>3. Tensiunea electrică</h2>
-          <p>Tensiunea electrică arată câtă energie primește sau pierde o sarcină electrică atunci când se deplasează între două puncte ale circuitului.</p>
-          <div class="formula">
-            \[
-              U=\frac{W}{q}
-            \]
+      <section class="page">
+        <div class="eyebrow">2. Intensitate și tensiune</div>
+        <h2>Două mărimi de bază</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Intensitatea curentului</h3>
+            <p>Arată câtă sarcină electrică trece printr-o secțiune a conductorului într-un anumit timp.</p>
+            <div class="formula">$$I=\frac{\Delta q}{\Delta t}$$</div>
+            <p class="small">Unitate: amper, \(A\).</p>
           </div>
-          <div class="retain">
-            <h3>Rețin</h3>
-            <p>Unitatea de măsură pentru tensiunea electrică este <strong>voltul</strong>, notat \(V\).</p>
+          <div class="card">
+            <h3>Tensiunea electrică</h3>
+            <p>Arată energia transferată pentru fiecare coulomb de sarcină.</p>
+            <div class="formula">$$U=\frac{W}{q}$$</div>
+            <p class="small">Unitate: volt, \(V\).</p>
           </div>
-          <div class="example">
-            <h3>Exemplu numeric</h3>
-            <p>Dacă un receptor primește energia \(W=24\,J\) când trece sarcina \(q=4\,C\), atunci:</p>
-            <div class="formula">
-              \[
-                U=\frac{24\,J}{4\,C}=6\,V
-              \]
-            </div>
-          </div>
-        </article>
+        </div>
+        <div class="example">
+          <strong>Exemplu:</strong>
+          $$I=\frac{6\,C}{3\,s}=2\,A$$
+          Prin conductor trece un curent de \(2\,A\).
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>4. Instrumente de măsură</h2>
-          <p>Într-un circuit, instrumentele se conectează diferit, în funcție de mărimea măsurată.</p>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Instrument</th>
-                  <th>Ce măsoară?</th>
-                  <th>Cum se conectează?</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Ampermetru</td>
-                  <td>intensitatea curentului \(I\)</td>
-                  <td>în serie cu elementul</td>
-                </tr>
-                <tr>
-                  <td>Voltmetru</td>
-                  <td>tensiunea electrică \(U\)</td>
-                  <td>în paralel pe element</td>
-                </tr>
-                <tr>
-                  <td>Ohmmetru</td>
-                  <td>rezistența electrică \(R\)</td>
-                  <td>pe componenta scoasă din circuitul alimentat</td>
-                </tr>
-                <tr>
-                  <td>Wattmetru</td>
-                  <td>puterea electrică \(P\)</td>
-                  <td>în montaj potrivit pentru curent și tensiune</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="warn">
-            <p><strong>Atenție:</strong> ampermetrul nu se leagă direct la bornele sursei, deoarece poate produce scurtcircuit.</p>
-          </div>
-        </article>
+      <section class="page">
+        <div class="eyebrow">3. Instrumente de măsură</div>
+        <h2>Cum măsurăm în circuit?</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Instrument</th><th>Măsoară</th><th>Conectare</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Ampermetru</td><td>intensitatea \(I\)</td><td>în serie</td></tr>
+              <tr><td>Voltmetru</td><td>tensiunea \(U\)</td><td>în paralel</td></tr>
+              <tr><td>Ohmmetru</td><td>rezistența \(R\)</td><td>pe componenta scoasă din circuit</td></tr>
+              <tr><td>Wattmetru</td><td>puterea \(P\)</td><td>în circuit, după schema aparatului</td></tr>
+              <tr><td>Multimetru</td><td>mai multe mărimi</td><td>depinde de funcția aleasă</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="warning">
+          <strong>Atenție:</strong> ampermetrul nu se leagă direct la bornele bateriei. Se poate produce scurtcircuit.
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>5. Tensiunea electromotoare</h2>
-          <p>Generatorul are rolul de a transforma alte forme de energie în energie electrică. Tensiunea electromotoare arată energia oferită de generator fiecărui coulomb de sarcină.</p>
-          <div class="formula">
-            \[
-              E=\frac{W_{\text{generator}}}{q}
-            \]
-          </div>
-          <div class="retain">
-            <h3>Pe înțeles</h3>
-            <p>Un generator real are și rezistență internă. De aceea, tensiunea la borne poate fi mai mică decât tensiunea electromotoare atunci când circuitul funcționează.</p>
-            <div class="formula">
-              \[
-                U=E-Ir
-              \]
-            </div>
-          </div>
-        </article>
+      <section class="page">
+        <div class="eyebrow">4. Tensiunea electromotoare</div>
+        <h2>Sursa reală are și pierderi interne</h2>
+        <p>O baterie reală are tensiune electromotoare \(E\), dar și o rezistență internă \(r\). Când circuitul este închis, o parte din energie se pierde în interiorul sursei.</p>
+        <div class="formula">
+          $$E=U+u$$
+          $$u=I r$$
+          $$U=E-Ir$$
+        </div>
+        <div class="example">
+          <strong>Exemplu:</strong>
+          $$E=4{,}5\,V,\quad I=0{,}5\,A,\quad r=1\,\Omega$$
+          $$U=4{,}5\,V-0{,}5\,A\cdot1\,\Omega=4\,V$$
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>6. Rezistența electrică</h2>
-          <p>Rezistența electrică arată cât de mult se opune un conductor trecerii curentului electric.</p>
-          <div class="formula">
-            \[
-              R=\frac{U}{I}
-            \]
-          </div>
-          <div class="idea">
-            <h3>Depinde de material și de dimensiuni</h3>
-            <div class="formula">
-              \[
-                R=\rho\frac{l}{S}
-              \]
-            </div>
-            <p>Rezistența crește când firul este mai lung și scade când secțiunea lui este mai mare.</p>
-          </div>
-          <div class="example">
-            <p>Un bec are \(U=12\,V\) și este străbătut de \(I=3\,A\). Rezistența lui este:</p>
-            <div class="formula">
-              \[
-                R=\frac{12\,V}{3\,A}=4\,\Omega
-              \]
-            </div>
-          </div>
-        </article>
+      <section class="page">
+        <div class="eyebrow">5. Rezistența electrică</div>
+        <h2>Rezistența se opune trecerii curentului</h2>
+        <p>Rezistența electrică arată cât de mult se opune un conductor trecerii curentului electric.</p>
+        <div class="formula">$$R=\frac{U}{I}$$</div>
+        <p>Unitatea de măsură este <strong>ohmul</strong>, notat \(\Omega\).</p>
+        <div class="remember">
+          Rezistența depinde de material, lungime, grosime și temperatură:
+          $$R=\rho\frac{\ell}{S}$$
+        </div>
+        <div class="example">
+          $$R=\frac{6\,V}{0{,}3\,A}=20\,\Omega$$
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>7. Legea lui Ohm pentru o porțiune de circuit</h2>
-          <p>Pentru un rezistor, intensitatea curentului crește dacă tensiunea crește și scade dacă rezistența este mai mare.</p>
-          <div class="formula">
-            \[
-              I=\frac{U}{R}
-            \]
-          </div>
-          <div class="grid">
-            <div class="mini"><b>Mai mare \(U\)</b><br>curent mai mare</div>
-            <div class="mini"><b>Mai mare \(R\)</b><br>curent mai mic</div>
-          </div>
-          <div class="example">
-            <h3>Exemplu numeric</h3>
-            <p>Pentru \(U=9\,V\) și \(R=3\,\Omega\):</p>
-            <div class="formula">
-              \[
-                I=\frac{9\,V}{3\,\Omega}=3\,A
-              \]
-            </div>
-          </div>
-        </article>
+      <section class="page">
+        <div class="eyebrow">6. Legea lui Ohm pentru o porțiune de circuit</div>
+        <h2>Legătura dintre \(U\), \(I\) și \(R\)</h2>
+        <p>Pentru un conductor ohmic, intensitatea curentului este direct proporțională cu tensiunea aplicată și invers proporțională cu rezistența.</p>
+        <div class="formula">
+          $$I=\frac{U}{R}$$
+          $$U=R\cdot I$$
+          $$R=\frac{U}{I}$$
+        </div>
+        <div class="example">
+          <strong>Exemplu:</strong>
+          $$U=12\,V,\quad R=6\,\Omega$$
+          $$I=\frac{12\,V}{6\,\Omega}=2\,A$$
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>8. Legea lui Ohm pentru întregul circuit</h2>
-          <p>Într-un circuit real se ia în considerare și rezistența internă a generatorului.</p>
-          <div class="formula">
-            \[
-              I=\frac{E}{R+r}
-            \]
-          </div>
-          <div class="grid">
-            <div class="mini"><b>\(E\)</b> – tensiunea electromotoare</div>
-            <div class="mini"><b>\(R\)</b> – rezistența circuitului exterior</div>
-            <div class="mini"><b>\(r\)</b> – rezistența internă a generatorului</div>
-            <div class="mini"><b>\(I\)</b> – curentul din circuit</div>
-          </div>
-          <div class="example">
-            <p>Dacă \(E=12\,V\), \(R=5\,\Omega\), \(r=1\,\Omega\):</p>
-            <div class="formula">
-              \[
-                I=\frac{12\,V}{5\,\Omega+1\,\Omega}=2\,A
-              \]
-            </div>
-          </div>
-        </article>
+      <section class="page">
+        <div class="eyebrow">7. Legea lui Ohm pentru întregul circuit</div>
+        <h2>Adunăm rezistența exterioară cu cea internă</h2>
+        <p>Într-un circuit cu sursă reală, curentul depinde de rezistența exterioară \(R\) și de rezistența internă \(r\).</p>
+        <div class="formula">$$I=\frac{E}{R+r}$$</div>
+        <div class="example">
+          $$E=9\,V,\quad R=4\,\Omega,\quad r=1\,\Omega$$
+          $$I=\frac{9\,V}{4\,\Omega+1\,\Omega}=\frac{9}{5}\,A=1{,}8\,A$$
+        </div>
+        <div class="warning">
+          La scurtcircuit, \(R\) devine foarte mică, iar curentul poate deveni periculos de mare.
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>9. Gruparea rezistoarelor</h2>
-          <p>Rezistoarele se pot lega în serie sau în paralel.</p>
-          <div class="grid">
-            <div class="mini">
-              <b>În serie</b>
-              <div class="formula">\[
-                R_s=R_1+R_2+\cdots
-              \]</div>
-              <p class="small">Curentul este același prin toate rezistoarele.</p>
-            </div>
-            <div class="mini">
-              <b>În paralel</b>
-              <div class="formula">\[
-                \frac{1}{R_p}=\frac{1}{R_1}+\frac{1}{R_2}+\cdots
-              \]</div>
-              <p class="small">Tensiunea este aceeași pe fiecare ramură.</p>
-            </div>
+      <section class="page">
+        <div class="eyebrow">8. Gruparea rezistoarelor</div>
+        <h2>Serie sau paralel?</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>În serie</h3>
+            <p>Curentul este același prin toate rezistoarele.</p>
+            <div class="formula">$$R_s=R_1+R_2+\ldots$$</div>
           </div>
-          <div class="example">
-            <p>Pentru două rezistoare egale, \(R_1=R_2=6\,\Omega\), legate în paralel:</p>
-            <div class="formula">
-              \[
-                R_p=\frac{R}{2}=\frac{6\,\Omega}{2}=3\,\Omega
-              \]
-            </div>
+          <div class="card">
+            <h3>În paralel</h3>
+            <p>Tensiunea este aceeași pe fiecare ramură.</p>
+            <div class="formula">$$\frac{1}{R_p}=\frac{1}{R_1}+\frac{1}{R_2}+\ldots$$</div>
           </div>
-        </article>
+        </div>
+        <div class="example">
+          Pentru \(R_1=6\,\Omega\) și \(R_2=3\,\Omega\), în paralel:
+          $$\frac{1}{R_p}=\frac{1}{6}+\frac{1}{3}=\frac{1}{6}+\frac{2}{6}=\frac{3}{6}$$
+          $$R_p=2\,\Omega$$
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>10. Legile lui Kirchhoff, pe scurt</h2>
-          <p>Aceste legi sunt utile pentru circuite cu mai multe ramuri.</p>
-          <div class="retain">
-            <h3>Legea nodurilor</h3>
-            <p>Într-un nod, curenții care intră se compensează cu curenții care ies.</p>
-            <div class="formula">\[
-              I_{\text{intră}}=I_{\text{iese}}
-            \]</div>
-          </div>
-          <div class="retain">
-            <h3>Legea ochiurilor</h3>
-            <p>Pe un ochi de circuit, tensiunile surselor și tensiunile de pe consumatori se echilibrează.</p>
-          </div>
-          <p class="small">Nu este nevoie să memorăm o scriere complicată: important este să înțelegem conservarea sarcinii și a energiei în circuit.</p>
-        </article>
+      <section class="page">
+        <div class="eyebrow">9. Teoremele lui Kirchhoff</div>
+        <h2>Reguli pentru circuite mai complicate</h2>
+        <p>Într-un <strong>nod</strong>, curenții care intră se compensează cu cei care ies. Sarcina electrică nu dispare.</p>
+        <div class="formula">$$I_{\text{intră}}=I_{\text{ies}}$$</div>
+        <p>Într-un <strong>ochi de circuit</strong>, tensiunile surselor se compensează cu căderile de tensiune pe consumatori.</p>
+        <div class="formula">$$\sum E=\sum U$$</div>
+        <div class="example">
+          Dacă într-un nod intră \(3\,A\) și \(2\,A\), iar pe o ramură ies \(4\,A\), atunci pe cealaltă ramură iese:
+          $$I=3\,A+2\,A-4\,A=1\,A$$
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>11. Gruparea generatoarelor</h2>
-          <p>Generatoarele identice se pot grupa pentru a obține tensiune mai mare sau pentru a alimenta mai mult timp un circuit.</p>
-          <div class="grid">
-            <div class="mini">
-              <b>În serie</b>
-              <p>Tensiunile se adună:</p>
-              <div class="formula">\[
-                E_s=E_1+E_2+\cdots
-              \]</div>
-            </div>
-            <div class="mini">
-              <b>În paralel</b>
-              <p>Pot alimenta circuitul mai stabil, dar trebuie să fie generatoare potrivite între ele.</p>
-            </div>
+      <section class="page">
+        <div class="eyebrow">10. Gruparea generatoarelor identice</div>
+        <h2>Când vrem tensiune mai mare sau durată mai mare</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>Generatoare în serie</h3>
+            <p>Tensiunile electromotoare se adună.</p>
+            <div class="formula">$$E_s=nE,\quad r_s=nr$$</div>
           </div>
-          <div class="example">
-            <p>Două baterii de \(1{,}5\,V\), legate corect în serie, dau:</p>
-            <div class="formula">\[
-              E_s=1{,}5\,V+1{,}5\,V=3\,V
-            \]</div>
+          <div class="card">
+            <h3>Generatoare în paralel</h3>
+            <p>Tensiunea rămâne aceeași, dar rezistența internă echivalentă scade.</p>
+            <div class="formula">$$E_p=E,\quad r_p=\frac{r}{n}$$</div>
           </div>
-        </article>
+        </div>
+        <div class="example">
+          Două baterii identice de \(1{,}5\,V\) în serie dau:
+          $$E_s=2\cdot1{,}5\,V=3\,V$$
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>12. Energia și puterea electrică</h2>
-          <p>Curentul electric poate produce lumină, căldură, mișcare sau sunet. Toate acestea înseamnă transformare de energie.</p>
-          <div class="grid">
-            <div class="mini">
-              <b>Energia electrică</b>
-              <div class="formula">\[
-                W=UIt
-              \]</div>
-            </div>
-            <div class="mini">
-              <b>Puterea electrică</b>
-              <div class="formula">\[
-                P=UI
-              \]</div>
-            </div>
-          </div>
-          <div class="example">
-            <p>Un bec funcționează la \(U=12\,V\) și \(I=2\,A\). Puterea lui este:</p>
-            <div class="formula">\[
-              P=12\,V\cdot 2\,A=24\,W
-            \]</div>
-          </div>
-        </article>
+      <section class="page">
+        <div class="eyebrow">11. Energia și puterea electrică</div>
+        <h2>Puterea arată cât de repede se consumă energia</h2>
+        <div class="formula">
+          $$W=U I \Delta t$$
+          $$P=\frac{W}{\Delta t}=U I$$
+        </div>
+        <p>În practică, energia electrică se măsoară des în kilowatt-oră:</p>
+        <div class="formula">$$1\,kWh=3{,}6\cdot10^6\,J$$</div>
+        <div class="example">
+          Un bec de \(20\,W\) funcționează \(5\,h\):
+          $$E=P\Delta t=20\,W\cdot5\,h=100\,Wh=0{,}1\,kWh$$
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>13. Legea lui Joule</h2>
-          <p>Când curentul trece printr-un conductor cu rezistență, o parte din energia electrică se transformă în căldură.</p>
-          <div class="formula">
-            \[
-              Q=I^2Rt
-            \]
-          </div>
-          <div class="retain">
-            <h3>Interpretare</h3>
-            <p>Căldura degajată crește mult dacă intensitatea curentului crește, deoarece apare \(I^2\).</p>
-          </div>
-          <div class="example">
-            <p>Pentru \(I=2\,A\), \(R=5\,\Omega\), \(t=10\,s\):</p>
-            <div class="formula">
-              \[
-                Q=(2\,A)^2\cdot 5\,\Omega \cdot 10\,s=200\,J
-              \]
-            </div>
-          </div>
-        </article>
+      <section class="page">
+        <div class="eyebrow">12. Legea lui Joule</div>
+        <h2>Curentul electric poate încălzi conductoarele</h2>
+        <p>Când curentul trece printr-un conductor cu rezistență, conductorul se încălzește. Acesta este efectul termic al curentului electric.</p>
+        <div class="formula">
+          $$Q=I^2R\Delta t$$
+          $$Q=U I \Delta t$$
+          $$Q=\frac{U^2}{R}\Delta t$$
+        </div>
+        <div class="example">
+          $$I=2\,A,\quad R=5\,\Omega,\quad \Delta t=10\,s$$
+          $$Q=2^2\cdot5\cdot10=200\,J$$
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>14. Efectul chimic al curentului electric</h2>
-          <p>În soluții conductoare, curentul electric poate produce transformări chimice. Fenomenul se numește <strong>electroliză</strong>.</p>
-          <div class="idea">
-            <h3>Exemple</h3>
-            <ul>
-              <li>depunerea unui strat metalic pe un obiect;</li>
-              <li>obținerea unor substanțe prin descompunere;</li>
-              <li>procese folosite în industrie și în laborator.</li>
-            </ul>
-          </div>
-          <div class="warn">
-            <p><strong>Siguranță:</strong> experimentele cu surse electrice și soluții se fac numai cu tensiuni mici și sub supravegherea profesorului.</p>
-          </div>
-        </article>
+      <section class="page">
+        <div class="eyebrow">13. Electroliza</div>
+        <h2>Curentul electric poate produce transformări chimice</h2>
+        <p>Într-un electrolit, curentul este transportat de ioni. Ionii pozitivi merg spre catod, iar ionii negativi spre anod.</p>
+        <div class="grid">
+          <div class="card"><strong>Catod</strong><p>electrodul legat la borna negativă; atrage ionii pozitivi.</p></div>
+          <div class="card"><strong>Anod</strong><p>electrodul legat la borna pozitivă; atrage ionii negativi.</p></div>
+        </div>
+        <div class="remember">
+          Electroliza este folosită la depuneri metalice, obținerea unor substanțe și purificarea unor metale.
+        </div>
+        <div class="example">
+          Dacă \(I=0{,}5\,A\) timp de \(120\,s\), sarcina transportată este:
+          $$\Delta q=I\Delta t=0{,}5\,A\cdot120\,s=60\,C$$
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>15. Transferul de putere</h2>
-          <p>Un generator real are rezistență internă. De aceea, nu toată energia lui ajunge la consumator.</p>
-          <div class="grid">
-            <div class="mini">
-              <b>Puterea utilă</b>
-              <div class="formula">\[
-                P_u=UI
-              \]</div>
-            </div>
-            <div class="mini">
-              <b>Puterea totală</b>
-              <div class="formula">\[
-                P_t=EI
-              \]</div>
-            </div>
-          </div>
-          <div class="retain">
-            <h3>Pe scurt</h3>
-            <p>Într-un circuit real apar pierderi de energie, mai ales sub formă de căldură în rezistențe și în generator.</p>
-          </div>
-        </article>
+      <section class="page">
+        <div class="eyebrow">14. Transferul maxim de putere</div>
+        <h2>Puterea primită de consumator are un maxim</h2>
+        <p>Într-un circuit simplu cu generator real, puterea transmisă consumatorului depinde de rezistența lui \(R\).</p>
+        <div class="formula">
+          $$I=\frac{E}{R+r}$$
+          $$P=I^2R$$
+        </div>
+        <div class="remember">
+          Puterea transmisă circuitului exterior este maximă când:
+          $$R=r$$
+        </div>
+        <div class="example">
+          Dacă rezistența internă a sursei este \(r=2\,\Omega\), puterea maximă se obține pentru:
+          $$R=2\,\Omega$$
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>16. Efectul magnetic al curentului electric</h2>
-          <p>Un conductor străbătut de curent electric produce în jurul său un câmp magnetic.</p>
-          <div class="svgbox" aria-label="Electromagnet">
-            <svg viewBox="0 0 760 270" role="img">
-              <rect x="20" y="20" width="720" height="230" rx="28" fill="#0b1728" stroke="#22d3ee" stroke-width="3"/>
-              <rect x="245" y="100" width="270" height="70" rx="35" fill="#64748b" stroke="#cbd5e1" stroke-width="4"/>
-              <path d="M250 96 q25 -55 55 0 q25 55 55 0 q25 -55 55 0 q25 55 55 0 q25 -55 55 0" fill="none" stroke="#f59e0b" stroke-width="8" stroke-linecap="round"/>
-              <path d="M190 135 H245 M515 135 H575" stroke="#e0f2fe" stroke-width="7" stroke-linecap="round"/>
-              <rect x="90" y="105" width="95" height="60" rx="10" fill="#172a46" stroke="#67e8f9" stroke-width="4"/>
-              <line x1="121" y1="116" x2="121" y2="154" stroke="#67e8f9" stroke-width="5"/>
-              <line x1="150" y1="125" x2="150" y2="145" stroke="#67e8f9" stroke-width="5"/>
-              <path d="M575 135 q50 -55 90 0 q-40 55 -90 0" fill="none" stroke="#86efac" stroke-width="5"/>
-              <text x="380" y="210" text-anchor="middle" font-size="26" fill="#cffafe" font-weight="800">bobină + miez de fier = electromagnet</text>
-            </svg>
-          </div>
-          <div class="retain">
-            <h3>Electromagnetul</h3>
-            <p>O bobină străbătută de curent devine magnet. Efectul este mai puternic dacă folosim un miez de fier și un curent mai mare.</p>
-          </div>
-        </article>
+      <section class="page">
+        <div class="eyebrow">15. Efectul magnetic al curentului</div>
+        <h2>Curentul electric creează câmp magnetic</h2>
+        <p>Un conductor străbătut de curent electric se comportă ca un magnet slab: în jurul lui apare un câmp magnetic.</p>
+        <div class="svgbox" aria-label="Electromagnet cu bobină și miez">
+          <svg viewBox="0 0 760 340" role="img">
+            <rect width="760" height="340" fill="#eef7ff"/>
+            <rect x="260" y="130" width="240" height="72" rx="22" fill="#94a3b8" stroke="#0f172a" stroke-width="5"/>
+            <path d="M270 125 c20 -50 55 -50 75 0 c20 50 55 50 75 0 c20 -50 55 -50 75 0 c20 50 55 50 75 0" fill="none" stroke="#dc2626" stroke-width="8"/>
+            <line x1="150" y1="165" x2="260" y2="165" stroke="#0f172a" stroke-width="7"/>
+            <line x1="500" y1="165" x2="610" y2="165" stroke="#0f172a" stroke-width="7"/>
+            <rect x="118" y="132" width="68" height="66" rx="8" fill="#fde68a" stroke="#0f172a" stroke-width="5"/>
+            <text x="137" y="174" font-size="28" font-weight="800" fill="#0f172a">+</text>
+            <text x="598" y="174" font-size="30" font-weight="800" fill="#0f172a">−</text>
+            <path d="M245 78 C330 30 430 30 515 78" stroke="#2563eb" stroke-width="6" fill="none" marker-end="url(#ar2)"/>
+            <path d="M245 252 C330 310 430 310 515 252" stroke="#2563eb" stroke-width="6" fill="none" marker-end="url(#ar2)"/>
+            <defs>
+              <marker id="ar2" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+                <path d="M0 0 L12 6 L0 12 Z" fill="#2563eb"/>
+              </marker>
+            </defs>
+            <text x="276" y="232" font-size="26" font-weight="700" fill="#0f172a">bobină + miez de fier</text>
+          </svg>
+        </div>
+        <div class="remember">
+          Electromagnetul devine mai puternic dacă mărim curentul, numărul de spire sau folosim un miez feromagnetic.
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>17. Forța electromagnetică</h2>
-          <p>Un conductor străbătut de curent, aflat într-un câmp magnetic, poate fi pus în mișcare de o forță electromagnetică.</p>
-          <div class="idea">
-            <h3>De ce este important?</h3>
-            <p>Această idee stă la baza motoarelor electrice: energia electrică se transformă în energie mecanică.</p>
-          </div>
-          <div class="grid">
-            <div class="mini"><b>Curent mai mare</b><br>efect magnetic mai puternic.</div>
-            <div class="mini"><b>Câmp magnetic mai puternic</b><br>forță electromagnetică mai mare.</div>
-            <div class="mini"><b>Schimbăm sensul curentului</b><br>se poate schimba sensul forței.</div>
-            <div class="mini"><b>Schimbăm polii magnetului</b><br>se poate schimba sensul mișcării.</div>
-          </div>
-        </article>
+      <section class="page">
+        <div class="eyebrow">16. Forța electromagnetică</div>
+        <h2>Un conductor cu curent poate fi împins de câmpul magnetic</h2>
+        <p>Dacă un conductor străbătut de curent se află într-un câmp magnetic, asupra lui poate acționa o forță electromagnetică.</p>
+        <div class="formula">$$F=B I \ell \sin\alpha$$</div>
+        <div class="remember">
+          Forța crește dacă: \(B\) este mai mare, \(I\) este mai mare sau lungimea conductorului aflată în câmp este mai mare.
+        </div>
+        <div class="example">
+          Dacă \(B=0{,}2\,T\), \(I=3\,A\), \(\ell=0{,}5\,m\), iar conductorul este perpendicular pe câmp:
+          $$F=0{,}2\cdot3\cdot0{,}5=0{,}3\,N$$
+        </div>
+        <p>Aplicații: motor electric, releu, telegraf, macarale electromagnetice.</p>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>18. Formule-cheie</h2>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Mărime / Lege</th>
-                  <th>Formulă</th>
-                  <th>Unitate importantă</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td>Intensitate</td><td>\(I=\frac{q}{\Delta t}\)</td><td>\(A\)</td></tr>
-                <tr><td>Tensiune</td><td>\(U=\frac{W}{q}\)</td><td>\(V\)</td></tr>
-                <tr><td>Rezistență</td><td>\(R=\frac{U}{I}\)</td><td>\(\Omega\)</td></tr>
-                <tr><td>Ohm, porțiune</td><td>\(I=\frac{U}{R}\)</td><td>\(A\)</td></tr>
-                <tr><td>Ohm, circuit întreg</td><td>\(I=\frac{E}{R+r}\)</td><td>\(A\)</td></tr>
-                <tr><td>Putere</td><td>\(P=UI\)</td><td>\(W\)</td></tr>
-                <tr><td>Energie</td><td>\(W=UIt\)</td><td>\(J\)</td></tr>
-                <tr><td>Joule</td><td>\(Q=I^2Rt\)</td><td>\(J\)</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </article>
+      <section class="page">
+        <div class="eyebrow">17. Cum rezolvi problemele</div>
+        <h2>Pași simpli pentru calcule</h2>
+        <div class="grid">
+          <div class="card"><strong>1. Notează datele</strong><p>Scrie mărimile cunoscute cu unități.</p></div>
+          <div class="card"><strong>2. Alege formula</strong><p>Pornește de la mărimea cerută.</p></div>
+          <div class="card"><strong>3. Transformă unitățile</strong><p>De exemplu, \(mA\) în \(A\), minute în secunde.</p></div>
+          <div class="card"><strong>4. Calculează și verifică</strong><p>Rezultatul trebuie să aibă unitatea corectă.</p></div>
+        </div>
+        <div class="example">
+          Problemă-model:
+          $$P=U I=12\,V\cdot0{,}5\,A=6\,W$$
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>19. Aplic: problemă de recapitulare</h2>
-          <p>Un rezistor de \(6\,\Omega\) este conectat la o sursă ideală de \(12\,V\).</p>
-          <div class="example">
-            <h3>1. Intensitatea curentului</h3>
-            <div class="formula">
-              \[
-                I=\frac{U}{R}=\frac{12\,V}{6\,\Omega}=2\,A
-              \]
-            </div>
-          </div>
-          <div class="example">
-            <h3>2. Puterea consumată</h3>
-            <div class="formula">
-              \[
-                P=UI=12\,V\cdot 2\,A=24\,W
-              \]
-            </div>
-          </div>
-          <div class="example">
-            <h3>3. Energia în 10 secunde</h3>
-            <div class="formula">
-              \[
-                W=P\cdot t=24\,W\cdot 10\,s=240\,J
-              \]
-            </div>
-          </div>
-        </article>
+      <section class="page">
+        <div class="eyebrow">18. Harta formulelor</div>
+        <h2>Formule care apar cel mai des</h2>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Mărime / situație</th><th>Formula</th></tr></thead>
+            <tbody>
+              <tr><td>Intensitate</td><td>\(I=\frac{\Delta q}{\Delta t}\)</td></tr>
+              <tr><td>Tensiune</td><td>\(U=\frac{W}{q}\)</td></tr>
+              <tr><td>Rezistență</td><td>\(R=\frac{U}{I}\)</td></tr>
+              <tr><td>Ohm porțiune</td><td>\(I=\frac{U}{R}\)</td></tr>
+              <tr><td>Ohm circuit întreg</td><td>\(I=\frac{E}{R+r}\)</td></tr>
+              <tr><td>Putere</td><td>\(P=UI\)</td></tr>
+              <tr><td>Energie electrică</td><td>\(W=P\Delta t=UI\Delta t\)</td></tr>
+              <tr><td>Legea Joule</td><td>\(Q=I^2R\Delta t\)</td></tr>
+              <tr><td>Forță electromagnetică</td><td>\(F=BI\ell\sin\alpha\)</td></tr>
+            </tbody>
+          </table>
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>20. Verificare rapidă I</h2>
-          <div class="quiz" data-answer="b">
-            <div class="quiz-title">1. Cum se conectează ampermetrul pentru a măsura curentul printr-un bec?</div>
-            <div class="options">
-              <label><input type="radio" name="q1" value="a"> În paralel cu becul.</label>
-              <label><input type="radio" name="q1" value="b"> În serie cu becul.</label>
-              <label><input type="radio" name="q1" value="c"> Direct la bornele bateriei, fără consumator.</label>
-            </div>
-            <button class="check" type="button">Verifică</button>
-            <div class="feedback"></div>
+      <section class="page">
+        <div class="eyebrow">19. Verificare rapidă I</div>
+        <h2>Alege varianta corectă</h2>
+        <div class="quiz" data-quiz="q1">
+          <div class="quiz-title">1. Ampermetrul se conectează:</div>
+          <div class="quiz-options">
+            <label><input type="radio" name="q1" value="a"> în paralel cu becul</label>
+            <label><input type="radio" name="q1" value="b"> în serie cu elementul prin care măsurăm curentul</label>
+            <label><input type="radio" name="q1" value="c"> direct la bornele bateriei</label>
           </div>
+          <button class="check" data-check="q1" data-answer="b">Verifică</button>
+          <div class="feedback" id="fb-q1"></div>
+        </div>
 
-          <div class="quiz" data-answer="a">
-            <div class="quiz-title">2. Două rezistoare de \(4\,\Omega\) și \(6\,\Omega\) sunt legate în serie. Rezistența totală este:</div>
-            <div class="options">
-              <label><input type="radio" name="q2" value="a"> \(10\,\Omega\)</label>
-              <label><input type="radio" name="q2" value="b"> \(2\,\Omega\)</label>
-              <label><input type="radio" name="q2" value="c"> \(\frac{24}{10}\,\Omega\)</label>
-            </div>
-            <button class="check" type="button">Verifică</button>
-            <div class="feedback"></div>
+        <div class="quiz" data-quiz="q2">
+          <div class="quiz-title">2. Pentru \(U=10\,V\) și \(R=5\,\Omega\), intensitatea este:</div>
+          <div class="quiz-options">
+            <label><input type="radio" name="q2" value="a"> \(2\,A\)</label>
+            <label><input type="radio" name="q2" value="b"> \(50\,A\)</label>
+            <label><input type="radio" name="q2" value="c"> \(0{,}5\,A\)</label>
           </div>
-        </article>
+          <button class="check" data-check="q2" data-answer="a">Verifică</button>
+          <div class="feedback" id="fb-q2"></div>
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>21. Verificare rapidă II</h2>
-          <div class="quiz" data-answer="c">
-            <div class="quiz-title">3. Legea lui Joule pentru căldura degajată într-un rezistor este:</div>
-            <div class="options">
-              <label><input type="radio" name="q3" value="a"> \(Q=mc\Delta T\)</label>
-              <label><input type="radio" name="q3" value="b"> \(P=UI\)</label>
-              <label><input type="radio" name="q3" value="c"> \(Q=I^2Rt\)</label>
-            </div>
-            <button class="check" type="button">Verifică</button>
-            <div class="feedback"></div>
+      <section class="page">
+        <div class="eyebrow">20. Verificare rapidă II</div>
+        <h2>Recunoaște ideea fizică</h2>
+        <div class="quiz" data-quiz="q3">
+          <div class="quiz-title">3. Într-o grupare în serie a două rezistoare de \(3\,\Omega\) și \(4\,\Omega\), rezistența echivalentă este:</div>
+          <div class="quiz-options">
+            <label><input type="radio" name="q3" value="a"> \(1\,\Omega\)</label>
+            <label><input type="radio" name="q3" value="b"> \(7\,\Omega\)</label>
+            <label><input type="radio" name="q3" value="c"> \(\frac{12}{7}\,\Omega\)</label>
           </div>
+          <button class="check" data-check="q3" data-answer="b">Verifică</button>
+          <div class="feedback" id="fb-q3"></div>
+        </div>
 
-          <div class="quiz" data-answer="a">
-            <div class="quiz-title">4. Un electromagnet este mai puternic dacă:</div>
-            <div class="options">
-              <label><input type="radio" name="q4" value="a"> bobina are miez de fier și curentul este mai mare.</label>
-              <label><input type="radio" name="q4" value="b"> circuitul este deschis.</label>
-              <label><input type="radio" name="q4" value="c"> nu trece curent prin bobină.</label>
-            </div>
-            <button class="check" type="button">Verifică</button>
-            <div class="feedback"></div>
+        <div class="quiz" data-quiz="q4">
+          <div class="quiz-title">4. Un electromagnet devine mai puternic dacă:</div>
+          <div class="quiz-options">
+            <label><input type="radio" name="q4" value="a"> scădem curentul prin bobină</label>
+            <label><input type="radio" name="q4" value="b"> scoatem miezul de fier</label>
+            <label><input type="radio" name="q4" value="c"> mărim numărul de spire și intensitatea curentului</label>
           </div>
-        </article>
+          <button class="check" data-check="q4" data-answer="c">Verifică</button>
+          <div class="feedback" id="fb-q4"></div>
+        </div>
       </section>
 
-      <section class="screen">
-        <article class="card">
-          <h2>22. De reținut înainte de test</h2>
-          <div class="retain">
-            <ul>
-              <li>Curentul electric trece prin circuit închis.</li>
-              <li>Ampermetrul se leagă în serie, voltmetrul în paralel.</li>
-              <li>Rezistența electrică se măsoară în ohmi.</li>
-              <li>Legea lui Ohm leagă \(U\), \(I\) și \(R\).</li>
-              <li>În circuitele reale apar pierderi de energie.</li>
-              <li>Curentul electric poate avea efect termic, chimic și magnetic.</li>
-            </ul>
+      <section class="page">
+        <div class="eyebrow">21. Verificare rapidă III</div>
+        <h2>Ultimele întrebări</h2>
+        <div class="quiz" data-quiz="q5">
+          <div class="quiz-title">5. Legea lui Joule se referă la:</div>
+          <div class="quiz-options">
+            <label><input type="radio" name="q5" value="a"> încălzirea conductorului străbătut de curent</label>
+            <label><input type="radio" name="q5" value="b"> atracția dintre doi magneți</label>
+            <label><input type="radio" name="q5" value="c"> viteza luminii</label>
           </div>
-          <div class="final-banner">
-            <h3>Prof. Dănuț Andronie</h3>
-            <p>email: <strong>danutmg@gmail.com</strong></p>
-            <p class="small">Ai terminat recapitularea capitolului „Electrocinetică”. Urmează testul final.</p>
+          <button class="check" data-check="q5" data-answer="a">Verifică</button>
+          <div class="feedback" id="fb-q5"></div>
+        </div>
+
+        <div class="quiz" data-quiz="q6">
+          <div class="quiz-title">6. Puterea electrică se poate calcula cu:</div>
+          <div class="quiz-options">
+            <label><input type="radio" name="q6" value="a"> \(P=U+I\)</label>
+            <label><input type="radio" name="q6" value="b"> \(P=U\cdot I\)</label>
+            <label><input type="radio" name="q6" value="c"> \(P=\frac{R}{U}\)</label>
           </div>
-        </article>
+          <button class="check" data-check="q6" data-answer="b">Verifică</button>
+          <div class="feedback" id="fb-q6"></div>
+        </div>
       </section>
+
+      <section class="page">
+        <div class="eyebrow">Final</div>
+        <h2>Ești pregătit pentru testul final</h2>
+        <p class="lead">Pentru test, repetă formulele din harta formulelor și ideile-cheie: circuit închis, conectarea aparatelor, legea lui Ohm, grupările, energia, puterea, efectul termic, electroliza și efectul magnetic.</p>
+        <div class="remember">
+          <strong>Ultima verificare mentală:</strong> pentru fiecare problemă, întreabă-te: „Ce se cere?”, „Ce date am?”, „Ce formulă leagă datele de mărimea cerută?”
+        </div>
+        <div class="final-banner">
+          <strong>Prof. Dănuț Andronie</strong>
+          <span>email: danutmg@gmail.com</span>
+        </div>
+      </section>
+
+      <nav class="nav" aria-label="Navigare recapitulare">
+        <button class="back" id="backBtn" type="button">Înapoi</button>
+        <div class="indicator" id="indicator">1/22</div>
+        <button class="next" id="nextBtn" type="button">Mergi mai departe</button>
+      </nav>
     </main>
   </div>
 
-  <nav class="nav" aria-label="Navigare lecție">
-    <div class="nav-inner">
-      <button id="prevBtn" type="button">Înapoi</button>
-      <div class="counter" id="counter">1/22</div>
-      <button id="nextBtn" type="button">Mergi mai departe</button>
-    </div>
-  </nav>
-
   <script>
-    const screens = Array.from(document.querySelectorAll('.screen'));
-    const prevBtn = document.getElementById('prevBtn');
+    const pages = Array.from(document.querySelectorAll('.page'));
+    const backBtn = document.getElementById('backBtn');
     const nextBtn = document.getElementById('nextBtn');
-    const counter = document.getElementById('counter');
+    const indicator = document.getElementById('indicator');
     const topBanner = document.getElementById('topBanner');
-    const finalHref = '../test-final/index.html';
+    const finalLink = '../test-final/index.html';
     let current = 0;
 
-    function renderMath(){
-      if(window.MathJax && MathJax.typesetPromise){
-        MathJax.typesetPromise([screens[current]]).catch(() => {});
-      }
-    }
-
-    function showScreen(index){
-      current = Math.max(0, Math.min(index, screens.length - 1));
-      screens.forEach((screen, i) => screen.classList.toggle('active', i === current));
-      counter.textContent = `${current + 1}/${screens.length}`;
-      prevBtn.disabled = current === 0;
-
-      if(current === screens.length - 1){
-        nextBtn.textContent = 'Test final';
-        nextBtn.setAttribute('aria-label', 'Mergi la testul final');
-      }else{
-        nextBtn.textContent = 'Mergi mai departe';
-        nextBtn.setAttribute('aria-label', 'Mergi la pagina următoare');
-      }
-
+    function updatePage() {
+      pages.forEach((page, index) => page.classList.toggle('active', index === current));
+      indicator.textContent = `${current + 1}/${pages.length}`;
+      backBtn.disabled = current === 0;
+      nextBtn.textContent = current === pages.length - 1 ? 'Test final' : 'Mergi mai departe';
       topBanner.style.display = current === 0 ? 'block' : 'none';
-      window.scrollTo({top:0, behavior:'smooth'});
-      renderMath();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (window.MathJax && MathJax.typesetPromise) {
+        MathJax.typesetPromise([pages[current]]).catch(() => {});
+      }
     }
 
-    prevBtn.addEventListener('click', () => {
-      if(current > 0) showScreen(current - 1);
+    backBtn.addEventListener('click', () => {
+      if (current > 0) {
+        current -= 1;
+        updatePage();
+      }
     });
 
     nextBtn.addEventListener('click', () => {
-      if(current === screens.length - 1){
-        window.location.href = finalHref;
-      }else{
-        showScreen(current + 1);
+      if (current < pages.length - 1) {
+        current += 1;
+        updatePage();
+      } else {
+        window.location.href = finalLink;
       }
     });
 
     document.addEventListener('keydown', (event) => {
-      if(event.key === 'ArrowRight'){
-        if(current === screens.length - 1) window.location.href = finalHref;
-        else showScreen(current + 1);
-      }
-      if(event.key === 'ArrowLeft' && current > 0){
-        showScreen(current - 1);
-      }
+      if (event.key === 'ArrowRight') nextBtn.click();
+      if (event.key === 'ArrowLeft') backBtn.click();
     });
 
-    document.querySelectorAll('.quiz').forEach((quiz, quizIndex) => {
-      const btn = quiz.querySelector('.check');
-      const feedback = quiz.querySelector('.feedback');
-      btn.addEventListener('click', () => {
-        const checked = quiz.querySelector('input[type="radio"]:checked');
+    document.querySelectorAll('[data-check]').forEach(button => {
+      button.addEventListener('click', () => {
+        const name = button.dataset.check;
+        const answer = button.dataset.answer;
+        const chosen = document.querySelector(`input[name="${name}"]:checked`);
+        const feedback = document.getElementById(`fb-${name}`);
         feedback.className = 'feedback';
-        if(!checked){
+        if (!chosen) {
           feedback.textContent = 'Alege mai întâi o variantă.';
-          feedback.classList.add('pick');
+          feedback.classList.add('wait');
           return;
         }
-        if(checked.value === quiz.dataset.answer){
+        if (chosen.value === answer) {
           feedback.textContent = 'Corect!';
           feedback.classList.add('ok');
-        }else{
+        } else {
           feedback.textContent = 'Mai încearcă. Recitește pagina cu explicația.';
-          feedback.classList.add('no');
+          feedback.classList.add('bad');
         }
       });
     });
 
-    showScreen(0);
+    updatePage();
   </script>
 </body>
 </html>

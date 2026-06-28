@@ -1,824 +1,972 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>FIZICĂ VII - Unde mecanice</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Fizică VII – Unde mecanice</title>
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [["\\(","\\)"], ["$","$"]] },
+      svg: { fontCache: "global" }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
   <style>
-    :root {
-      --primary: #0ea5e9;
-      --primary-dark: #0284c7;
-      --text: #f8fafc;
-      --muted: #94a3b8;
-      --accent: #38bdf8;
-      --ok: #4ade80;
-      --bad: #f87171;
-      --border: #334155;
-      --panel: rgba(15, 23, 42, 0.92);
+    :root{
+      --bg:#08111f;
+      --card:#132238;
+      --card2:#182b45;
+      --text:#f8fafc;
+      --muted:#dbeafe;
+      --accent:#38bdf8;
+      --accent2:#fbbf24;
+      --ok:#22c55e;
+      --bad:#fb7185;
+      --line:#334155;
+      --btn:#f59e0b;
+      --next:#16a34a;
+    }
+    *{box-sizing:border-box}
+    html{font-size:clamp(18px,2.3vw,24px)}
+    body{
+      margin:0;
+      min-height:100vh;
+      background:
+        radial-gradient(circle at top left, rgba(56,189,248,.18), transparent 32rem),
+        linear-gradient(135deg,#08111f,#0f172a 60%,#0b1220);
+      color:var(--text);
+      font-family:Segoe UI,Arial,sans-serif;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:14px;
+    }
+    .app{
+      width:min(100%,900px);
+    }
+    .card{
+      background:rgba(19,34,56,.97);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:clamp(16px,3vw,28px);
+      box-shadow:0 22px 55px rgba(0,0,0,.36);
+    }
+    .top{
+      text-align:center;
+      margin-bottom:14px;
+    }
+    .school{
+      color:var(--accent);
+      font-weight:900;
+      font-size:clamp(1rem,2vw,1.25rem);
+      margin-bottom:4px;
+    }
+    .prof{
+      color:#cbd5e1;
+      font-size:.85rem;
+      margin-bottom:10px;
+    }
+    .motto{
+      color:#fef3c7;
+      background:rgba(251,191,36,.12);
+      border-left:4px solid var(--accent2);
+      border-radius:10px;
+      padding:8px 10px;
+      font-weight:700;
+      font-size:.85rem;
+    }
+    h1,h2,h3,p{margin-top:0}
+    h1{
+      text-align:center;
+      font-size:clamp(1.25rem,4vw,2rem);
+      margin-bottom:10px;
+      color:#fff;
+    }
+    .notice{
+      text-align:center;
+      font-size:clamp(1rem,3vw,1.35rem);
+      line-height:1.35;
+      color:#fff7ed;
+      background:rgba(245,158,11,.13);
+      border:1px solid rgba(245,158,11,.35);
+      border-radius:16px;
+      padding:14px;
+      margin:16px 0;
+      font-weight:800;
+    }
+    label{
+      display:block;
+      color:#e2e8f0;
+      font-weight:800;
+      margin:12px 0 6px;
+    }
+    input[type="text"], input[type="number"], select{
+      width:100%;
+      padding:15px;
+      font-size:1rem;
+      color:#fff;
+      background:#0b1220;
+      border:2px solid #475569;
+      border-radius:14px;
+      outline:none;
+    }
+    input:focus, select:focus{
+      border-color:var(--accent);
+      box-shadow:0 0 0 4px rgba(56,189,248,.16);
+    }
+    .row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:14px;
+    }
+    .btn{
+      width:100%;
+      padding:15px 16px;
+      font-size:1rem;
+      border:0;
+      border-radius:15px;
+      font-weight:900;
+      cursor:pointer;
+      color:#0b1220;
+      background:var(--btn);
+      box-shadow:0 10px 22px rgba(0,0,0,.22);
+    }
+    .btn:hover{filter:brightness(1.05)}
+    .btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+      filter:grayscale(.25);
+    }
+    .btn.secondary{
+      background:#334155;
+      color:#fff;
+      border:1px solid #64748b;
+    }
+    .btn.next{
+      background:var(--next);
+      color:white;
+    }
+    .actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+      margin-top:14px;
+    }
+    .actions.three{grid-template-columns:1fr 1fr 1fr}
+    .hidden{display:none!important}
+    .info{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      color:#e0f2fe;
+      font-weight:900;
+      margin-bottom:10px;
+    }
+    .bar{
+      width:100%;
+      height:12px;
+      background:#0b1220;
+      border-radius:999px;
+      overflow:hidden;
+      border:1px solid #334155;
+      margin-bottom:16px;
+    }
+    .bar span{
+      display:block;
+      height:100%;
+      width:0;
+      background:linear-gradient(90deg,#38bdf8,#22c55e);
+      border-radius:999px;
+      transition:.25s ease;
+    }
+    .question{
+      min-height:130px;
+      background:var(--card2);
+      border:1px solid #334155;
+      border-radius:18px;
+      padding:18px;
+      line-height:1.35;
+      font-size:clamp(1.05rem,3vw,1.35rem);
+      font-weight:850;
+      text-align:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-direction:column;
+      gap:12px;
+    }
+    .answers{
+      margin-top:14px;
+      display:grid;
+      gap:10px;
+    }
+    .option{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      width:100%;
+      padding:14px;
+      background:#0b1220;
+      color:#f8fafc;
+      border:2px solid #334155;
+      border-radius:15px;
+      cursor:pointer;
+      line-height:1.25;
+      font-size:1rem;
+      font-weight:750;
+    }
+    .option:hover{
+      border-color:#38bdf8;
+      background:#0f1b2d;
+    }
+    .option input{
+      transform:scale(1.35);
+      margin-top:4px;
+      accent-color:#38bdf8;
+    }
+    .feedback{
+      min-height:54px;
+      margin-top:14px;
+      padding:14px;
+      border-radius:15px;
+      font-weight:900;
+      text-align:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .feedback.ok{
+      background:rgba(34,197,94,.18);
+      color:#bbf7d0;
+      border:1px solid rgba(34,197,94,.45);
+    }
+    .feedback.bad{
+      background:rgba(251,113,133,.18);
+      color:#fecdd3;
+      border:1px solid rgba(251,113,133,.45);
+    }
+    .mini{
+      color:#cbd5e1;
+      text-align:center;
+      margin:10px 0 0;
+      font-size:.86rem;
+    }
+    .end-score{
+      text-align:center;
+      font-size:clamp(1.8rem,8vw,4rem);
+      color:#fbbf24;
+      font-weight:1000;
+      margin:10px 0;
     }
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
-      color: var(--text);
-      overflow: hidden;
+    /* DIPLOMĂ */
+    .diploma-screen{width:min(100%,1080px);margin:auto}
+    .diploma-view{
+      position:relative;
+      width:min(100%,1050px);
+      aspect-ratio:1426/1103;
+      background:#fff;
+      color:#1f2937;
+      margin:auto;
+      box-shadow:0 20px 50px rgba(0,0,0,.5);
+      overflow:hidden;
+    }
+    .diploma-bg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      z-index:0;
+      pointer-events:none;
+      user-select:none;
+    }
+    .d-text{
+      position:absolute;
+      z-index:1;
+      left:16%;
+      right:16%;
+      text-align:center;
+      overflow-wrap:anywhere;
+      text-wrap:balance;
+    }
+    .d-school{
+      top:15.3%;
+      font-size:clamp(12px,2.1vw,27px);
+      font-weight:800;
+      line-height:1.15;
+    }
+    .d-title{
+      top:25%;
+      color:#7a4a0e;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(24px,5.2vw,58px);
+      font-weight:900;
+      letter-spacing:.04em;
+      line-height:1.05;
+    }
+    .d-small{
+      top:38.8%;
+      font-size:clamp(12px,2vw,24px);
+      font-weight:800;
+    }
+    .d-name{
+      top:45.5%;
+      color:#7c2d12;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(20px,4vw,48px);
+      font-weight:900;
+      line-height:1.05;
+      left:18%;
+      right:18%;
+    }
+    .d-class{
+      top:52.5%;
+      color:#7c2d12;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(15px,2.7vw,32px);
+      font-weight:900;
+    }
+    .d-line{
+      position:absolute;
+      z-index:1;
+      left:22%;
+      right:22%;
+      top:58.8%;
+      height:2px;
+      background:#7c2d12;
+    }
+    .d-body{
+      top:62.5%;
+      font-size:clamp(11px,1.75vw,21px);
+      font-weight:800;
+      line-height:1.35;
+      left:18%;
+      right:18%;
+    }
+    .d-date{
+      top:73%;
+      font-size:clamp(11px,1.7vw,20px);
+      font-weight:900;
+    }
+    .d-sign{
+      top:81%;
+      left:36%;
+      right:36%;
+      font-size:clamp(10px,1.55vw,18px);
+      font-weight:800;
+      line-height:1.25;
+    }
+    .diploma-actions{
+      width:min(100%,760px);
+      margin:12px auto 0;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px;
     }
 
-    .app {
-      width: 100vw;
-      height: 100vh;
-      padding: 12px;
+    @media(max-width:620px){
+      body{align-items:flex-start}
+      .row,.actions,.actions.three,.diploma-actions{grid-template-columns:1fr}
+      .card{border-radius:16px}
+      .question{min-height:115px}
     }
 
-    .screen {
-      width: 100%;
-      height: 100%;
-      display: none;
-    }
-
-    .screen.active { display: block; }
-
-    .card {
-      width: 100%;
-      height: 100%;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
-      padding: 24px;
-      overflow: auto;
-    }
-
-    .start-wrap {
-      max-width: 900px;
-      margin: 0 auto;
-    }
-
-    .header {
-      text-align: center;
-      border-bottom: 2px solid var(--primary);
-      padding-bottom: 12px;
-      margin-bottom: 20px;
-    }
-
-    .school {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: var(--accent);
-      margin-bottom: 4px;
-      text-transform: uppercase;
-    }
-
-    .teacher {
-      font-size: 0.95rem;
-      color: var(--muted);
-      margin-bottom: 10px;
-      letter-spacing: 0.6px;
-    }
-
-    .quote {
-      color: #fef08a;
-      font-style: italic;
-      background: rgba(251, 191, 36, 0.10);
-      border-left: 4px solid var(--accent);
-      border-radius: 12px;
-      padding: 10px 12px;
-      display: inline-block;
-      max-width: 100%;
-    }
-
-    .title {
-      text-align: center;
-      font-size: 1.8rem;
-      margin: 0 0 8px;
-    }
-
-    .subtle {
-      text-align: center;
-      color: var(--muted);
-      margin: 0 0 18px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 160px;
-      gap: 12px;
-      margin-bottom: 14px;
-    }
-
-    input[type="text"], select {
-      width: 100%;
-      padding: 14px 16px;
-      border-radius: 14px;
-      border: 2px solid #475569;
-      background: #0b1220;
-      color: white;
-      font-size: 1rem;
-      outline: none;
-    }
-
-    input[type="text"]:focus, select:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
-    }
-
-    .info-box {
-      text-align: center;
-      color: #fde68a;
-      background: rgba(251, 191, 36, 0.10);
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 16px;
-      font-weight: 700;
-      line-height: 1.45;
-    }
-
-    .btn {
-      width: 100%;
-      border: none;
-      border-radius: 14px;
-      padding: 15px;
-      font-weight: 800;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      transition: transform 0.08s ease, opacity 0.2s ease;
-    }
-
-    .btn:hover { opacity: 0.96; }
-    .btn:active { transform: scale(0.99); }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-secondary { background: var(--primary-dark); color: white; }
-    .btn-disabled { opacity: 0.55; cursor: not-allowed; }
-
-    .game-card {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .meta-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 16px;
-    }
-
-    .pill {
-      background: rgba(14, 165, 233, 0.12);
-      color: var(--accent);
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      border-radius: 999px;
-      padding: 8px 12px;
-      font-weight: 800;
-      font-size: 0.92rem;
-    }
-
-    .question-box {
-      font-size: 1.45rem;
-      font-weight: 700;
-      line-height: 1.5;
-      text-align: center;
-      margin: 8px auto 18px;
-      max-width: 1000px;
-      min-height: 120px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .answer-box {
-      max-width: 700px;
-      width: 100%;
-      margin: 0 auto;
-      display: grid;
-      gap: 12px;
-    }
-
-    .feedback {
-      margin: 18px auto 0;
-      padding: 14px;
-      border-radius: 14px;
-      display: none;
-      text-align: center;
-      font-weight: 700;
-      line-height: 1.55;
-      border: 1px solid transparent;
-      max-width: 820px;
-    }
-
-    .feedback.ok {
-      color: var(--ok);
-      background: rgba(74, 222, 128, 0.08);
-      border-color: rgba(74, 222, 128, 0.22);
-    }
-
-    .feedback.bad {
-      color: #fecaca;
-      background: rgba(248, 113, 113, 0.10);
-      border-color: rgba(248, 113, 113, 0.22);
-    }
-
-    .result-score {
-      font-size: 4.8rem;
-      color: var(--accent);
-      font-weight: 900;
-      text-align: center;
-      line-height: 1;
-      margin: 24px 0 10px;
-    }
-
-    .center { text-align: center; }
-    .muted { color: var(--muted); }
-    .hidden { display: none; }
-
-    @media (max-width: 700px) {
-      .app { padding: 8px; }
-      .card { padding: 16px; border-radius: 18px; }
-      .grid { grid-template-columns: 1fr; }
-      .question-box { font-size: 1.15rem; min-height: 100px; }
-      .title { font-size: 1.45rem; }
+    @media print{
+      @page{size:landscape;margin:0}
+      html,body{
+        width:100%;
+        height:100%;
+        margin:0!important;
+        padding:0!important;
+        background:#fff!important;
+      }
+      .no-print,.diploma-actions{display:none!important}
+      .diploma-screen{
+        display:flex!important;
+        width:100vw!important;
+        height:100vh!important;
+        align-items:center!important;
+        justify-content:center!important;
+        background:#fff!important;
+      }
+      .diploma-view{
+        width:100vw!important;
+        max-width:none!important;
+        height:auto!important;
+        max-height:100vh!important;
+        box-shadow:none!important;
+        page-break-inside:avoid;
+      }
     }
   </style>
 </head>
+
 <body>
-  <div class="app">
-    <section class="screen active" id="screen-login">
-      <div class="card">
-        <div class="start-wrap">
-          <div class="header">
-            <div class="school">ȘCOALA GIMNAZIALĂ ....</div>
-            <div class="teacher">Prof. DĂNUȚ ANDRONIE</div>
-            <div class="quote">FIZICA NU ESTE O MATERIE DOMINATĂ DE FORMULE CI DE LOGICĂ</div>
-          </div>
-
-          <h1 class="title">Unde mecanice</h1>
-          <p class="subtle">Clasa a VII-a • 20 itemi • 100 puncte</p>
-
-          <div class="grid">
-            <input type="text" id="stdName" placeholder="Nume și prenume elev" autocomplete="name" />
-            <select id="stdClass">
-              <option value="">Clasa...</option>
-              <option value="VII A">VII A</option>
-              <option value="VII B">VII B</option>
-              <option value="VII C">VII C</option>
-              <option value="VII D">VII D</option>
-            </select>
-          </div>
-
-          <div class="info-box">Scrie numai valoarea numerică, cu maximum 2 zecimale.</div>
-
-          <button class="btn btn-primary" id="startBtn">Începe testul</button>
-        </div>
+  <main class="app no-print" id="app">
+    <section class="card" id="screen-start">
+      <div class="top">
+        <div class="school">ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</div>
+        <div class="prof">Prof. Dănuț Andronie</div>
+        <div class="motto">„Fizica nu este o materie dominată de formule, ci de logică.”</div>
       </div>
-    </section>
 
-    <section class="screen" id="screen-game">
-      <div class="card game-card">
+      <h1>Fizică VII – Unde mecanice</h1>
+      <div class="notice">Exersează de cel puțin 4 ori și vei primi o diplomă în format pdf pe care o poți prezenta profesorului tău.</div>
+
+      <label for="p-school">Antetul școlii</label>
+      <input id="p-school" type="text" autocomplete="organization" placeholder="Ex.: Școala gimnazială Gala Galaction Mangalia">
+
+      <label for="p-name">Numele și prenumele elevului</label>
+      <input id="p-name" type="text" autocomplete="name" placeholder="Scrie numele complet">
+
+      <div class="row">
         <div>
-          <div class="meta-row">
-            <div class="pill" id="q-info">Cerința 1 / 20</div>
-            <div class="pill" id="points-info">5 puncte</div>
-            <div class="pill" id="variant-info">Varianta 1 / 100</div>
-            <div class="pill" id="test-code">Cod test</div>
-          </div>
-
-          <div class="question-box" id="question"></div>
-          <div class="answer-box" id="input-area"></div>
-          <div class="feedback" id="feedback"></div>
+          <label for="p-class">Clasa</label>
+          <input id="p-class" type="text" placeholder="Ex.: a VII-a A">
         </div>
+        <div>
+          <label>&nbsp;</label>
+          <button class="btn" onclick="startTest()">Începe testul</button>
+        </div>
+      </div>
 
-        <button class="btn btn-secondary hidden" id="nextBtn">Următoarea</button>
+      <div class="actions">
+        <button class="btn secondary" onclick="resetAttempts()">Resetează exersările</button>
+        <button class="btn secondary" onclick="showSaved()">Vezi exersările</button>
+      </div>
+      <p class="mini" id="saved-info"></p>
+    </section>
+
+    <section class="card hidden" id="screen-test">
+      <div class="info">
+        <span id="q-count">Item 1/20</span>
+        <span>Scor: <span id="score-live">0 p</span></span>
+      </div>
+      <div class="bar"><span id="progress"></span></div>
+
+      <div class="question" id="question"></div>
+      <div class="answers" id="answers"></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+
+      <div class="actions">
+        <button class="btn" id="check-btn" onclick="checkAnswer()">Verifică răspunsul</button>
+        <button class="btn next" id="next-btn" onclick="nextItem()" disabled>Mergi mai departe</button>
+      </div>
+      <div class="actions">
+        <button class="btn secondary" onclick="goStart()">Revino la start</button>
       </div>
     </section>
 
-    <section class="screen" id="screen-end">
-      <div class="card">
-        <h2 class="title">Rezultat</h2>
-        <div class="center muted" id="end-variant"></div>
-        <div class="result-score" id="final-score"></div>
-        <p class="center muted" id="raw-points"></p>
-        <p class="center muted" id="final-grade"></p>
-        <p class="center muted" id="end-code"></p>
-        <button class="btn btn-primary" id="restartBtn">Reia testul</button>
+    <section class="card hidden" id="screen-end">
+      <h1>Test finalizat</h1>
+      <div class="end-score" id="final-score">0 / 100</div>
+      <p class="mini" id="attempt-info"></p>
+      <div class="actions three">
+        <button class="btn" onclick="startTest()">Reia testul</button>
+        <button class="btn next" id="diploma-btn" onclick="showDiploma()" disabled>Eliberează diploma</button>
+        <button class="btn secondary" onclick="goStart()">Înapoi la start</button>
       </div>
     </section>
-  </div>
+  </main>
 
-  <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec";
-    const TOTAL_QUESTIONS = 20;
-    const MIXED_COUNT = 10;
-    const NUMERIC_COUNT = 10;
-    const POINTS_PER_ITEM = 5;
-    const TOTAL_POINTS = 100;
-    const VARIANT_COUNT = 100;
-    const V_SOUND = 340;
+  <section class="diploma-screen hidden" id="screen-diploma">
+    <div class="diploma-view" id="diploma">
+      <img class="diploma-bg" src="../../../assets/img/diploma-nautica.png" alt="Model diplomă nautică">
+      <div class="d-text d-school" id="d-school">Școala gimnazială</div>
+      <div class="d-text d-title">DIPLOMĂ DE MERIT</div>
+      <div class="d-text d-small">acordată elevului/elevei</div>
+      <div class="d-text d-name" id="d-name"></div>
+      <div class="d-text d-class" id="d-class"></div>
+      <div class="d-line"></div>
+      <div class="d-text d-body">
+        care a exersat testul final la fizică, capitolul<br>
+        <span id="d-chapter"></span>,<br>
+        și a obținut punctajul maxim <span id="d-score"></span> din patru exersări.
+      </div>
+      <div class="d-text d-date" id="d-date"></div>
+      <div class="d-text d-sign">
+        Semnează:<br>
+        Prof. Dănuț Andronie<br>
+        Email: danutmg@gmail.com
+      </div>
+    </div>
+    <div class="diploma-actions">
+      <button class="btn" onclick="window.print()">Salvează diploma ca PDF</button>
+      <button class="btn secondary" onclick="hideDiploma()">Înapoi</button>
+    </div>
+  </section>
 
-    const state = {
-      name: "",
-      className: "",
-      correctAnswers: 0,
-      currentIdx: 0,
-      questions: [],
-      variant: 1,
-      testCode: "",
-      seed: 0,
-      sessionSalt: ""
-    };
+<script>
+  const CHAPTER = "Unde mecanice";
+  const ATTEMPT_KEY = "fizica7_unde_mecanice_attempts_v1";
+  const TOTAL_ITEMS = 20;
+  const POINTS_PER_ITEM = 5;
 
-    const el = {
-      login: document.getElementById("screen-login"),
-      game: document.getElementById("screen-game"),
-      end: document.getElementById("screen-end"),
-      stdName: document.getElementById("stdName"),
-      stdClass: document.getElementById("stdClass"),
-      startBtn: document.getElementById("startBtn"),
-      qInfo: document.getElementById("q-info"),
-      pointsInfo: document.getElementById("points-info"),
-      variantInfo: document.getElementById("variant-info"),
-      testCode: document.getElementById("test-code"),
-      question: document.getElementById("question"),
-      inputArea: document.getElementById("input-area"),
-      feedback: document.getElementById("feedback"),
-      nextBtn: document.getElementById("nextBtn"),
-      finalScore: document.getElementById("final-score"),
-      rawPoints: document.getElementById("raw-points"),
-      finalGrade: document.getElementById("final-grade"),
-      endVariant: document.getElementById("end-variant"),
-      endCode: document.getElementById("end-code"),
-      restartBtn: document.getElementById("restartBtn")
-    };
+  const state = {
+    school:"",
+    name:"",
+    className:"",
+    items:[],
+    index:0,
+    score:0,
+    checked:false,
+    currentOptions:[]
+  };
 
-    const fillPool = [
-      { q: "O undă mecanică are nevoie de un mediu .......... pentru a se propaga.", a: ["material"] },
-      { q: "Mărimea care arată numărul de oscilații efectuate în 1 secundă se numește ..........", a: ["frecvență", "frecventa"] },
-      { q: "Unitatea de măsură pentru frecvență este ..........", a: ["hertz", "hz"] },
-      { q: "Timpul necesar pentru o oscilație completă se numește ..........", a: ["perioadă", "perioada"] },
-      { q: "Distanța dintre două puncte succesive aflate în aceeași stare de oscilație se numește .......... de undă.", a: ["lungime", "lungimea"] },
-      { q: "În relația v = λ · f, simbolul λ reprezintă .......... de undă.", a: ["lungimea", "lungime"] },
-      { q: "În relația v = λ · f, simbolul v reprezintă viteza de ..........", a: ["propagare"] },
-      { q: "Sunetul nu se propagă în ..........", a: ["vid"] },
-      { q: "Reflexia sunetului poartă numele de ..........", a: ["ecou"] },
-      { q: "Sunetele cu frecvențe mai mari de 20 000 Hz se numesc ..........", a: ["ultrasunete"] },
-      { q: "Sunetele cu frecvențe mai mici de 20 Hz se numesc ..........", a: ["infrasunete"] },
-      { q: "În relația T = 1 / f, simbolul T reprezintă ..........", a: ["perioada", "perioadă"] },
-      { q: "Amplitudinea oscilației arată depărtarea maximă față de poziția de ..........", a: ["echilibru"] },
-      { q: "Viteza sunetului în aer este aproximativ .......... m/s.", a: ["340"] },
-      { q: "Unda transportă energie, dar nu transportă ..........", a: ["substanță", "substanta"] },
-      { q: "Sunetul este produs de corpuri aflate în ..........", a: ["vibrație", "vibratie"] }
+  const baseItems = [
+    {type:"mcq", q:"O undă mecanică se propagă prin:", options:["mediu elastic","vid","lumină","nimic"], answer:"mediu elastic"},
+    {type:"dual", q:"Sunetul este o undă mecanică.", answer:true},
+    {type:"dual", q:"Sunetul se propagă în vid.", answer:false},
+    {type:"mcq", q:"Unitatea frecvenței este:", options:["Hz","s","m","N"], answer:"Hz"},
+    {type:"mcq", q:"Unitatea perioadei este:", options:["s","Hz","m/s","J"], answer:"s"},
+    {type:"input", q:"Completează: mișcarea repetată în jurul poziției de echilibru se numește ______.", answers:["oscilatie","oscilație"], exact:"oscilație"},
+    {type:"input", q:"Completează: numărul de oscilații pe secundă se numește ______.", answers:["frecventa","frecvență"], exact:"frecvență"},
+    {type:"input", q:"Completează: timpul unei oscilații complete se numește ______.", answers:["perioada","perioadă"], exact:"perioadă"},
+    {type:"mcq", q:"În aer, viteza sunetului este aproximativ:", options:["340 m/s","34 m/s","3 400 m/s","30 m/s"], answer:"340 m/s"},
+    {type:"mcq", q:"Sunetele sub 20 Hz sunt:", options:["infrasunete","ultrasunete","ecouri","zgomote albe"], answer:"infrasunete"},
+    {type:"mcq", q:"Sunetele peste 20 000 Hz sunt:", options:["ultrasunete","infrasunete","ecouri","note joase"], answer:"ultrasunete"},
+    {type:"input", q:"Completează: reflexia sunetului pe un obstacol se numește ______.", answers:["ecou","ecoul"], exact:"ecou"},
+    {type:"dual", q:"Amplitudinea mai mare înseamnă sunet mai puternic.", answer:true},
+    {type:"dual", q:"Frecvența influențează înălțimea sunetului.", answer:true},
+    {type:"mcq", q:"Prin timbru deosebim:", options:["instrumente diferite","unități de măsură","sensul forței","masa corpului"], answer:"instrumente diferite"},
+    {type:"mcq", q:"O undă transportă:", options:["energie","masă definitiv","vid","greutate"], answer:"energie"},
+    {type:"dual", q:"Particulele mediului sunt transportate definitiv odată cu unda.", answer:false},
+    {type:"input", q:"Completează: distanța dintre două maxime succesive se numește ______ de undă.", answers:["lungime","lungimea"], exact:"lungime"},
+    {type:"mcq", q:"Undele seismice sunt:", options:["unde mecanice","unde luminoase","unde electrice pure","raze"], answer:"unde mecanice"},
+    {type:"dual", q:"Ecoul apare prin absorbția sunetului.", answer:false},
+    {type:"input", q:"Completează: corpul care produce sunetul se numește ______ sonoră.", answers:["sursa","sursă"], exact:"sursă"},
+    {type:"dual", q:"Intensitatea sunetului depinde de amplitudine.", answer:true},
+    {type:"mcq", q:"Zgomotul este un sunet:", options:["neregulat","perfect periodic","mereu slab","inaudibil"], answer:"neregulat"},
+    {type:"input", q:"Completează: mediul pentru unde mecanice trebuie să fie ______.", answers:["elastic"], exact:"elastic"}
+  ];
+
+  function generatedItems(){
+    const items = [];
+
+    const waveSpeed = [
+      {lambda:2, f:3, v:6},
+      {lambda:1.5, f:4, v:6},
+      {lambda:0.5, f:20, v:10},
+      {lambda:4, f:5, v:20},
+      {lambda:0.25, f:40, v:10}
     ];
+    for(const d of shuffle(waveSpeed).slice(0,3)){
+      items.push({
+        type:"input",
+        numeric:true,
+        q:`λ = ${formatRo(d.lambda)} m, f = ${d.f} Hz. Viteza undei este:`,
+        answers:[String(d.v)],
+        exact:`${formatRo(d.v)} m/s`
+      });
+    }
 
-    const tfPool = [
-      { q: "Sunetul este o undă mecanică.", a: ["adevărat", "adevarat"] },
-      { q: "Sunetul se poate propaga în vid.", a: ["fals"] },
-      { q: "Perioada și frecvența sunt mărimi inverse una față de cealaltă.", a: ["adevărat", "adevarat"] },
-      { q: "Unitatea de măsură pentru perioadă este secunda.", a: ["adevărat", "adevarat"] },
-      { q: "Ecoul apare datorită refracției sunetului.", a: ["fals"] },
-      { q: "În aceeași substanță, viteza undei depinde de proprietățile mediului.", a: ["adevărat", "adevarat"] },
-      { q: "Ultrasunetele au frecvențe mai mici decât sunetele audibile.", a: ["fals"] },
-      { q: "Lungimea de undă se poate calcula cu relația λ = v / f.", a: ["adevărat", "adevarat"] },
-      { q: "Dacă frecvența crește și viteza rămâne aceeași, lungimea de undă scade.", a: ["adevărat", "adevarat"] },
-      { q: "Amplitudinea se măsoară în hertzi.", a: ["fals"] },
-      { q: "Tunetul se aude după fulger deoarece viteza luminii este mult mai mare decât viteza sunetului.", a: ["adevărat", "adevarat"] },
-      { q: "Sunetele audibile pentru om au frecvențe aproximativ între 20 Hz și 20 000 Hz.", a: ["adevărat", "adevarat"] }
+    const wavelength = [
+      {v:340, f:170, lambda:2},
+      {v:340, f:85, lambda:4},
+      {v:300, f:100, lambda:3},
+      {v:200, f:50, lambda:4},
+      {v:120, f:40, lambda:3}
     ];
-
-    function normalizeText(value) {
-      return String(value)
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/\s+/g, " ")
-        .trim();
-    }
-
-    function normalizeNumberString(value) {
-      return String(value).trim().replace(/,/g, ".").replace(/\s+/g, "");
-    }
-
-    function parseLocaleNumber(value) {
-      const cleaned = normalizeNumberString(value);
-      if (!/^[-+]?\d+(\.\d+)?$/.test(cleaned)) return NaN;
-      return Number(cleaned);
-    }
-
-    function decimalCount(value) {
-      const cleaned = normalizeNumberString(value);
-      return cleaned.includes(".") ? cleaned.split(".")[1].length : 0;
-    }
-
-    function truncateTo(num, decimals = 2) {
-      const factor = Math.pow(10, decimals);
-      return Math.trunc(num * factor) / factor;
-    }
-
-    function roundTo(num, decimals = 2) {
-      const factor = Math.pow(10, decimals);
-      return Math.round(num * factor) / factor;
-    }
-
-    function formatNumber(num, maxDecimals = 2) {
-      if (Number.isInteger(num)) return String(num);
-      return Number(num.toFixed(maxDecimals)).toString();
-    }
-
-    function formatPrecise(num) {
-      if (Number.isInteger(num)) return String(num);
-      return Number(num.toFixed(4)).toString();
-    }
-
-    function shortCode(seed) {
-      return (seed >>> 0).toString(36).toUpperCase().slice(0, 6);
-    }
-
-    function hashString(str) {
-      let h = 2166136261;
-      for (let i = 0; i < str.length; i++) {
-        h ^= str.charCodeAt(i);
-        h = Math.imul(h, 16777619);
-      }
-      return h >>> 0;
-    }
-
-    function mulberry32(a) {
-      return function () {
-        let t = a += 0x6D2B79F5;
-        t = Math.imul(t ^ (t >>> 15), t | 1);
-        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-      };
-    }
-
-    function randInt(rng, min, max) {
-      return Math.floor(rng() * (max - min + 1)) + min;
-    }
-
-    function randFrom(rng, arr) {
-      return arr[Math.floor(rng() * arr.length)];
-    }
-
-    function pickUnique(rng, pool, count) {
-      const copy = [...pool];
-      const result = [];
-      while (result.length < count && copy.length) {
-        const idx = Math.floor(rng() * copy.length);
-        result.push(copy.splice(idx, 1)[0]);
-      }
-      return result;
-    }
-
-    function shuffleArray(rng, arr) {
-      const copy = [...arr];
-      for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(rng() * (i + 1));
-        [copy[i], copy[j]] = [copy[j], copy[i]];
-      }
-      return copy;
-    }
-
-    function questionFill(item) {
-      return { type: "fill", q: item.q, answers: item.a, points: POINTS_PER_ITEM };
-    }
-
-    function questionTrueFalse(item) {
-      return { type: "tf", q: item.q, answers: item.a, points: POINTS_PER_ITEM };
-    }
-
-    function questionNumeric({ q, exactAnswer, unit = "", formula = "" }) {
-      return {
-        type: "numeric",
-        q,
-        exactAnswer,
-        unit,
-        formula,
-        points: POINTS_PER_ITEM,
-        displayAnswer: `${formatPrecise(exactAnswer)}${unit ? " " + unit : ""}`
-      };
-    }
-
-    function genWaveSpeed(rng) {
-      const lambda = randFrom(rng, [0.2, 0.25, 0.4, 0.5, 0.8, 1.2, 1.5, 2, 2.5]);
-      const f = randFrom(rng, [10, 20, 25, 40, 50, 80, 100, 120, 200]);
-      return questionNumeric({
-        q: `O undă are lungimea de undă λ = ${formatNumber(lambda)} m și frecvența f = ${f} Hz. Calculează viteza de propagare.`,
-        exactAnswer: lambda * f,
-        unit: "m/s",
-        formula: "v = λ · f"
+    for(const d of shuffle(wavelength).slice(0,2)){
+      items.push({
+        type:"input",
+        numeric:true,
+        q:`v = ${d.v} m/s, f = ${d.f} Hz. Lungimea de undă este:`,
+        answers:[String(d.lambda)],
+        exact:`${formatRo(d.lambda)} m`
       });
     }
 
-    function genWavelength(rng) {
-      const v = randFrom(rng, [100, 120, 150, 200, 240, 300, 340, 400]);
-      const f = randFrom(rng, [10, 20, 25, 40, 50, 80, 100]);
-      return questionNumeric({
-        q: `O undă se propagă cu viteza v = ${v} m/s și are frecvența f = ${f} Hz. Calculează lungimea de undă.`,
-        exactAnswer: v / f,
-        unit: "m",
-        formula: "λ = v / f"
-      });
-    }
-
-    function genFrequency(rng) {
-      const v = randFrom(rng, [100, 120, 150, 200, 240, 300, 340]);
-      const lambda = randFrom(rng, [0.2, 0.25, 0.4, 0.5, 0.8, 1, 1.2, 1.5, 2]);
-      return questionNumeric({
-        q: `O undă se propagă cu viteza v = ${v} m/s și are lungimea de undă λ = ${formatNumber(lambda)} m. Calculează frecvența.`,
-        exactAnswer: v / lambda,
-        unit: "Hz",
-        formula: "f = v / λ"
-      });
-    }
-
-    function genPeriodFromFrequency(rng) {
-      const f = randFrom(rng, [2, 4, 5, 8, 10, 20, 25, 40, 50]);
-      return questionNumeric({
-        q: `Calculează perioada unei oscilații dacă frecvența este f = ${f} Hz.`,
-        exactAnswer: 1 / f,
-        unit: "s",
-        formula: "T = 1 / f"
-      });
-    }
-
-    function genFrequencyFromPeriod(rng) {
-      const t = randFrom(rng, [0.02, 0.04, 0.05, 0.1, 0.2, 0.25, 0.5, 1, 2]);
-      return questionNumeric({
-        q: `Calculează frecvența dacă perioada este T = ${formatNumber(t)} s.`,
-        exactAnswer: 1 / t,
-        unit: "Hz",
-        formula: "f = 1 / T"
-      });
-    }
-
-    function genEchoDistance(rng) {
-      const t = randFrom(rng, [0.2, 0.4, 0.5, 0.8, 1, 1.2, 1.5, 2]);
-      return questionNumeric({
-        q: `Un ecou este auzit după ${formatNumber(t)} s. Calculează distanța până la obstacol, considerând viteza sunetului 340 m/s.`,
-        exactAnswer: (V_SOUND * t) / 2,
-        unit: "m",
-        formula: "d = v · t / 2"
-      });
-    }
-
-    function genThunderDistance(rng) {
-      const t = randFrom(rng, [2, 3, 4, 5, 6, 8, 10]);
-      return questionNumeric({
-        q: `Între observarea fulgerului și auzul tunetului trec ${t} s. Aproximând viteza sunetului cu 340 m/s, calculează distanța până la fulger.`,
-        exactAnswer: V_SOUND * t,
-        unit: "m",
-        formula: "d ≈ v_sunet · t"
-      });
-    }
-
-    function genOscillationsFromFrequency(rng) {
-      const f = randFrom(rng, [2, 4, 5, 8, 10, 20, 25]);
-      const t = randFrom(rng, [2, 3, 4, 5, 6, 8, 10]);
-      return questionNumeric({
-        q: `O sursă are frecvența f = ${f} Hz. Câte oscilații efectuează în ${t} s?`,
-        exactAnswer: f * t,
-        formula: "N = f · t"
-      });
-    }
-
-    function genTimeFromOscillations(rng) {
-      const f = randFrom(rng, [2, 4, 5, 8, 10, 20]);
-      const n = randFrom(rng, [10, 20, 25, 40, 50, 80, 100]);
-      return questionNumeric({
-        q: `O sursă are frecvența f = ${f} Hz. În cât timp efectuează ${n} oscilații?`,
-        exactAnswer: n / f,
-        unit: "s",
-        formula: "t = N / f"
-      });
-    }
-
-    function genDistanceFromWaveSpeed(rng) {
-      const v = randFrom(rng, [100, 120, 150, 200, 240, 300, 340]);
-      const t = randFrom(rng, [0.5, 1, 1.5, 2, 2.5, 3, 4]);
-      return questionNumeric({
-        q: `O undă se propagă cu viteza v = ${v} m/s timp de ${formatNumber(t)} s. Calculează distanța parcursă.`,
-        exactAnswer: v * t,
-        unit: "m",
-        formula: "s = v · t"
-      });
-    }
-
-    function genSoundWavelength(rng) {
-      const f = randFrom(rng, [85, 100, 170, 200, 340, 425, 680]);
-      return questionNumeric({
-        q: `Sunetul se propagă în aer cu viteza 340 m/s. Calculează lungimea de undă pentru frecvența f = ${f} Hz.`,
-        exactAnswer: V_SOUND / f,
-        unit: "m",
-        formula: "λ = v / f"
-      });
-    }
-
-    const numericGenerators = [
-      genWaveSpeed,
-      genWavelength,
-      genFrequency,
-      genPeriodFromFrequency,
-      genFrequencyFromPeriod,
-      genEchoDistance,
-      genThunderDistance,
-      genOscillationsFromFrequency,
-      genTimeFromOscillations,
-      genDistanceFromWaveSpeed,
-      genSoundWavelength
+    const frequency = [
+      {v:340, lambda:2, f:170},
+      {v:300, lambda:3, f:100},
+      {v:200, lambda:4, f:50},
+      {v:120, lambda:2, f:60},
+      {v:80, lambda:4, f:20}
     ];
-
-    function generateSessionSalt() {
-      if (window.crypto && window.crypto.getRandomValues) {
-        const arr = new Uint32Array(1);
-        window.crypto.getRandomValues(arr);
-        return String(arr[0]);
-      }
-      return String(Math.floor(Math.random() * 1e9));
+    for(const d of shuffle(frequency).slice(0,2)){
+      items.push({
+        type:"mcq",
+        q:`v = ${d.v} m/s, λ = ${formatRo(d.lambda)} m. Frecvența este:`,
+        options:shuffle([`${d.f} Hz`, `${d.f*2} Hz`, `${Math.max(1,d.f/2)} Hz`, `${d.f+10} Hz`]),
+        answer:`${d.f} Hz`
+      });
     }
 
-    function getMinuteKey() {
-      const now = new Date();
-      const pad = (n) => String(n).padStart(2, "0");
-      return `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}`;
+    const period = [
+      {f:2, T:0.5},
+      {f:4, T:0.25},
+      {f:5, T:0.2},
+      {f:10, T:0.1},
+      {f:20, T:0.05}
+    ];
+    for(const d of shuffle(period).slice(0,2)){
+      items.push({
+        type:"input",
+        numeric:true,
+        q:`f = ${d.f} Hz. Perioada este:`,
+        answers:[String(d.T)],
+        exact:`${formatRo(d.T)} s`
+      });
     }
 
-    function buildTest() {
-      const baseKey = `${state.name}|${state.className}|${getMinuteKey()}|${state.sessionSalt}`;
-      state.seed = hashString(baseKey);
-      state.variant = (state.seed % VARIANT_COUNT) + 1;
-      state.testCode = `UM7-V${String(state.variant).padStart(3, "0")}-${shortCode(state.seed)}`;
+    const periodToFreq = [
+      {T:0.5, f:2},
+      {T:0.25, f:4},
+      {T:0.2, f:5},
+      {T:0.1, f:10},
+      {T:0.05, f:20}
+    ];
+    for(const d of shuffle(periodToFreq).slice(0,2)){
+      items.push({
+        type:"mcq",
+        q:`T = ${formatRo(d.T)} s. Frecvența este:`,
+        options:shuffle([`${d.f} Hz`, `${d.f*10} Hz`, `${d.f/2} Hz`, `${d.f+1} Hz`]),
+        answer:`${d.f} Hz`
+      });
+    }
 
-      const rng = mulberry32(state.seed);
-      const mixedPool = [
-        ...fillPool.map((item) => ({ ...item, itemType: "fill" })),
-        ...tfPool.map((item) => ({ ...item, itemType: "tf" }))
+    const echo = [
+      {t:1, d:170},
+      {t:2, d:340},
+      {t:0.5, d:85},
+      {t:0.2, d:34}
+    ];
+    for(const d of shuffle(echo).slice(0,2)){
+      items.push({
+        type:"input",
+        numeric:true,
+        q:`Ecoul se aude după ${formatRo(d.t)} s. Distanța până la obstacol este:`,
+        answers:[String(d.d)],
+        exact:`${formatRo(d.d)} m`
+      });
+    }
+
+    const thunder = [
+      {t:2, d:680},
+      {t:3, d:1020},
+      {t:4, d:1360},
+      {t:5, d:1700}
+    ];
+    for(const d of shuffle(thunder).slice(0,2)){
+      items.push({
+        type:"mcq",
+        q:`Tunetul se aude după ${d.t} s. Distanța aproximativă este:`,
+        options:shuffle([`${d.d} m`, `${d.d/2} m`, `${d.d*2} m`, `${d.t*10} m`]),
+        answer:`${d.d} m`
+      });
+    }
+
+    const oscillations = [
+      {f:5, t:4, n:20},
+      {f:10, t:3, n:30},
+      {f:8, t:5, n:40},
+      {f:20, t:2, n:40}
+    ];
+    for(const d of shuffle(oscillations).slice(0,2)){
+      items.push({
+        type:"input",
+        numeric:true,
+        q:`f = ${d.f} Hz, timp = ${d.t} s. Numărul de oscilații este:`,
+        answers:[String(d.n)],
+        exact:`${d.n}`
+      });
+    }
+
+    return items;
+  }
+
+  function formatRo(n){
+    return String(n).replace(".", ",");
+  }
+
+  
+  function startTest(){
+    state.school = document.getElementById("p-school").value.trim();
+    state.name = document.getElementById("p-name").value.trim();
+    state.className = document.getElementById("p-class").value.trim();
+    if(!state.school || !state.name || !state.className){
+      alert("Completează școala, numele și clasa.");
+      return;
+    }
+
+    const items = [...baseItems, ...generatedItems()];
+    state.items = shuffle(items).slice(0,TOTAL_ITEMS);
+    state.index = 0;
+    state.score = 0;
+    state.checked = false;
+
+    document.getElementById("screen-start").classList.add("hidden");
+    document.getElementById("screen-end").classList.add("hidden");
+    document.getElementById("screen-test").classList.remove("hidden");
+    showItem();
+  }
+
+  function showItem(){
+    const item = state.items[state.index];
+    state.checked = false;
+    state.currentOptions = [];
+
+    document.getElementById("q-count").textContent = `Item ${state.index + 1}/${TOTAL_ITEMS}`;
+    document.getElementById("score-live").textContent = `${state.score} p`;
+    document.getElementById("progress").style.width = `${(state.index / TOTAL_ITEMS) * 100}%`;
+
+    document.getElementById("question").innerHTML = `<div>${item.q}</div>`;
+    const fb = document.getElementById("feedback");
+    fb.className = "feedback";
+    fb.textContent = "";
+
+    const answers = document.getElementById("answers");
+    answers.innerHTML = "";
+
+    if(item.type === "mcq"){
+      const opts = shuffle(item.options).map(opt => ({text:opt, ok: normalizeAnswer(opt) === normalizeAnswer(item.answer)}));
+      state.currentOptions = opts;
+      answers.innerHTML = opts.map((o,i)=>`
+        <label class="option">
+          <input type="radio" name="answer" value="${i}">
+          <span>${o.text}</span>
+        </label>
+      `).join("");
+    } else if(item.type === "dual"){
+      const opts = [
+        {text:"Adevărat", value:"true"},
+        {text:"Fals", value:"false"}
       ];
-
-      const mixedQuestions = pickUnique(rng, mixedPool, MIXED_COUNT).map((item) =>
-        item.itemType === "fill" ? questionFill(item) : questionTrueFalse(item)
-      );
-
-      const numericQuestions = pickUnique(rng, numericGenerators, NUMERIC_COUNT).map((fn) => fn(rng));
-      state.questions = shuffleArray(rng, [...mixedQuestions, ...numericQuestions]);
-      state.currentIdx = 0;
-      state.correctAnswers = 0;
-    }
-
-    function showScreen(screen) {
-      [el.login, el.game, el.end].forEach((node) => node.classList.remove("active"));
-      screen.classList.add("active");
-    }
-
-    function showQuestion() {
-      const q = state.questions[state.currentIdx];
-      el.qInfo.textContent = `Cerința ${state.currentIdx + 1} / ${TOTAL_QUESTIONS}`;
-      el.pointsInfo.textContent = `${q.points} puncte`;
-      el.variantInfo.textContent = `Varianta ${state.variant} / ${VARIANT_COUNT}`;
-      el.testCode.textContent = state.testCode;
-      el.question.textContent = q.q;
-      el.feedback.className = "feedback";
-      el.feedback.style.display = "none";
-      el.feedback.innerHTML = "";
-      el.nextBtn.classList.add("hidden");
-
-      el.inputArea.innerHTML = `
-        <input type="text" id="userAnswer" placeholder="Răspuns..." autocomplete="off" />
-        <button class="btn btn-primary" id="checkBtn">Verifică</button>
+      answers.innerHTML = opts.map((o,i)=>`
+        <label class="option">
+          <input type="radio" name="answer" value="${o.value}">
+          <span>${o.text}</span>
+        </label>
+      `).join("");
+    } else {
+      answers.innerHTML = `
+        <label for="answer-input">Răspuns</label>
+        <input id="answer-input" type="text" inputmode="${item.numeric ? "decimal" : "text"}" autocomplete="off">
       `;
-
-      const answerInput = document.getElementById("userAnswer");
-      const checkBtn = document.getElementById("checkBtn");
-      checkBtn.addEventListener("click", checkAnswer);
-      answerInput.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") checkAnswer();
-      });
-      answerInput.focus();
+      setTimeout(()=>document.getElementById("answer-input")?.focus(),50);
     }
 
-    function numericAccepted(userValue, exactAnswer) {
-      if (decimalCount(userValue) > 2) return false;
-      const userNum = parseLocaleNumber(userValue);
-      if (Number.isNaN(userNum)) return false;
+    document.getElementById("check-btn").disabled = false;
+    document.getElementById("next-btn").disabled = true;
+    document.getElementById("next-btn").textContent = state.index === TOTAL_ITEMS - 1 ? "Finalizează testul" : "Mergi mai departe";
 
-      const accepted = new Set([
-        exactAnswer,
-        truncateTo(exactAnswer, 2),
-        roundTo(exactAnswer, 2)
-      ].map((n) => Number(n.toFixed(6))));
+    if(window.MathJax) MathJax.typesetPromise();
+  }
 
-      return accepted.has(Number(userNum.toFixed(6)));
-    }
+  function checkAnswer(){
+    if(state.checked) return;
+    const item = state.items[state.index];
+    let ok = false;
+    let shownAnswer = "";
 
-    function evaluateAnswer(userValue, q) {
-      if (q.type === "fill" || q.type === "tf") {
-        const clean = normalizeText(userValue);
-        return q.answers.some((ans) => normalizeText(ans) === clean);
-      }
-
-      if (q.type === "numeric") {
-        return numericAccepted(userValue, q.exactAnswer);
-      }
-
-      return false;
-    }
-
-    function checkAnswer() {
-      const q = state.questions[state.currentIdx];
-      const answerInput = document.getElementById("userAnswer");
-      const userValue = answerInput.value;
-      const correct = evaluateAnswer(userValue, q);
-
-      answerInput.disabled = true;
-      const checkBtn = document.getElementById("checkBtn");
-      checkBtn.disabled = true;
-      checkBtn.classList.add("btn-disabled");
-
-      el.feedback.style.display = "block";
-      if (correct) {
-        state.correctAnswers++;
-        el.feedback.className = "feedback ok";
-        el.feedback.innerHTML = `Corect ✅<br>+${q.points} puncte`;
+    if(item.type === "mcq"){
+      const selected = document.querySelector('input[name="answer"]:checked');
+      if(!selected) return alert("Alege un răspuns.");
+      ok = state.currentOptions[Number(selected.value)]?.ok === true;
+      shownAnswer = item.answer;
+    } else if(item.type === "dual"){
+      const selected = document.querySelector('input[name="answer"]:checked');
+      if(!selected) return alert("Alege Adevărat sau Fals.");
+      ok = (selected.value === String(item.answer));
+      shownAnswer = item.answer ? "Adevărat" : "Fals";
+    } else {
+      const input = document.getElementById("answer-input");
+      const user = input.value;
+      if(!user.trim()) return alert("Scrie răspunsul.");
+      if(item.numeric){
+        const target = numericValue(item.answers[0]);
+        const userNum = numericValue(user);
+        ok = Number.isFinite(userNum) && Math.abs(userNum - target) <= 0.05;
       } else {
-        el.feedback.className = "feedback bad";
-        if (q.type === "numeric") {
-          el.feedback.innerHTML = `Greșit ❌<br>Formula: <strong>${q.formula}</strong><br>Rezultat corect: <strong>${q.displayAnswer}</strong>`;
-        } else {
-          el.feedback.innerHTML = `Greșit ❌<br>Răspuns corect: <strong>${q.answers[0]}</strong>`;
-        }
+        ok = item.answers.some(a => normalizeAnswer(user) === normalizeAnswer(a));
       }
-      el.nextBtn.classList.remove("hidden");
+      shownAnswer = item.exact || item.answers[0];
     }
 
-    function nextQuestion() {
-      state.currentIdx++;
-      if (state.currentIdx < TOTAL_QUESTIONS) {
-        showQuestion();
-      } else {
-        finishGame();
-      }
+    state.checked = true;
+    document.getElementById("check-btn").disabled = true;
+
+    const fb = document.getElementById("feedback");
+    if(ok){
+      state.score += POINTS_PER_ITEM;
+      fb.className = "feedback ok";
+      fb.textContent = `Corect! +${POINTS_PER_ITEM} p`;
+    } else {
+      fb.className = "feedback bad";
+      fb.textContent = `Răspuns corect: ${shownAnswer}`;
     }
 
-    function finishGame() {
-      const points = state.correctAnswers * POINTS_PER_ITEM;
-      const grade = (1 + (points * 9) / TOTAL_POINTS).toFixed(2);
+    document.getElementById("score-live").textContent = `${state.score} p`;
+    document.getElementById("next-btn").disabled = false;
+  }
 
-      showScreen(el.end);
-      el.finalScore.textContent = `${points}p`;
-      el.rawPoints.textContent = `Scor: ${state.correctAnswers} / ${TOTAL_QUESTIONS} răspunsuri corecte • ${points} / ${TOTAL_POINTS} puncte.`;
-      el.finalGrade.textContent = `Notă orientativă: ${grade}`;
-      el.endVariant.textContent = `Varianta ${state.variant} din ${VARIANT_COUNT}`;
-      el.endCode.textContent = `Cod test: ${state.testCode}`;
-
-      const fd = new FormData();
-      fd.append("nume", state.name);
-      fd.append("clasa", `${state.className} - Unde mecanice 7`);
-      fd.append("varianta", String(state.variant));
-      fd.append("cod_test", state.testCode);
-      fd.append("scor", String(points));
-      fd.append("corecte", String(state.correctAnswers));
-      fd.append("total_itemi", String(TOTAL_QUESTIONS));
-      fd.append("punctaj_total", String(TOTAL_POINTS));
-
-      fetch(SCRIPT_URL, { method: "POST", body: fd, mode: "no-cors" }).catch(() => {});
+  function nextItem(){
+    if(!state.checked) return;
+    if(state.index < TOTAL_ITEMS - 1){
+      state.index++;
+      showItem();
+    } else {
+      finishTest();
     }
+  }
 
-    async function enterFullscreen() {
-      const elem = document.documentElement;
-      try {
-        if (elem.requestFullscreen && !document.fullscreenElement) {
-          await elem.requestFullscreen();
-        }
-      } catch (_) {}
+  function finishTest(){
+    document.getElementById("progress").style.width = "100%";
+    saveAttempt();
+    const attempts = getProfileAttempts();
+    document.getElementById("screen-test").classList.add("hidden");
+    document.getElementById("screen-end").classList.remove("hidden");
+    document.getElementById("final-score").textContent = `${state.score} / 100`;
+
+    const n = attempts.length;
+    const btn = document.getElementById("diploma-btn");
+    btn.disabled = n < 4;
+    document.getElementById("attempt-info").textContent = n < 4 ? `Exersări: ${n}/4` : "Diploma este disponibilă.";
+  }
+
+  function goStart(){
+    document.getElementById("screen-test").classList.add("hidden");
+    document.getElementById("screen-end").classList.add("hidden");
+    document.getElementById("screen-start").classList.remove("hidden");
+    showSaved();
+  }
+
+  function saveAttempt(){
+    const all = getAllAttempts();
+    const profile = profileKey();
+    all.push({
+      profile,
+      school: state.school,
+      name: state.name,
+      className: state.className,
+      score: state.score,
+      date: new Date().toISOString()
+    });
+    const filtered = all.filter(a => a.profile === profile).slice(-4);
+    const others = all.filter(a => a.profile !== profile).slice(-40);
+    localStorage.setItem(ATTEMPT_KEY, JSON.stringify([...others, ...filtered]));
+  }
+
+  function getAllAttempts(){
+    try{
+      return JSON.parse(localStorage.getItem(ATTEMPT_KEY) || "[]");
+    } catch(e){
+      return [];
     }
+  }
 
-    async function startGame() {
-      state.name = el.stdName.value.trim();
-      state.className = el.stdClass.value;
-      state.sessionSalt = generateSessionSalt();
+  function profileKey(){
+    return normalizeAnswer(`${state.school}|${state.name}|${state.className}`);
+  }
 
-      if (!state.name || !state.className) {
-        alert("Completează numele și clasa!");
-        return;
-      }
+  function getProfileAttempts(){
+    const key = profileKey();
+    return getAllAttempts().filter(a => a.profile === key).slice(-4);
+  }
 
-      await enterFullscreen();
-      buildTest();
-      showScreen(el.game);
-      showQuestion();
+  function resetAttempts(){
+    if(confirm("Ștergi exersările salvate pentru acest test?")){
+      localStorage.removeItem(ATTEMPT_KEY);
+      showSaved();
     }
+  }
 
-    function restartApp() {
-      showScreen(el.login);
-      el.stdName.focus();
+  function showSaved(){
+    const school = document.getElementById("p-school").value.trim();
+    const name = document.getElementById("p-name").value.trim();
+    const className = document.getElementById("p-class").value.trim();
+    const info = document.getElementById("saved-info");
+    if(!school || !name || !className){
+      info.textContent = "";
+      return;
     }
+    const key = normalizeAnswer(`${school}|${name}|${className}`);
+    const n = getAllAttempts().filter(a => a.profile === key).slice(-4).length;
+    info.textContent = `Exersări salvate: ${n}/4`;
+  }
 
-    el.startBtn.addEventListener("click", startGame);
-    el.nextBtn.addEventListener("click", nextQuestion);
-    el.restartBtn.addEventListener("click", restartApp);
-  </script>
+  function showDiploma(){
+    const attempts = getProfileAttempts();
+    if(attempts.length < 4) return;
+    const best = Math.max(...attempts.map(a => Number(a.score) || 0));
+
+    document.getElementById("app").classList.add("hidden");
+    document.getElementById("screen-diploma").classList.remove("hidden");
+
+    document.getElementById("d-school").textContent = schoolLine(state.school);
+    document.getElementById("d-name").textContent = state.name.toUpperCase();
+    document.getElementById("d-class").textContent = classLine(state.className);
+    document.getElementById("d-chapter").textContent = CHAPTER;
+    document.getElementById("d-score").textContent = `${best}/100`;
+    document.getElementById("d-date").textContent = `Data: ${new Date().toLocaleDateString("ro-RO")}`;
+  }
+
+  function hideDiploma(){
+    document.getElementById("screen-diploma").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+  }
+
+  function schoolLine(school){
+    const s = school.trim();
+    const n = normalizeAnswer(s);
+    if(n.startsWith("scoala gimnaziala") || n.startsWith("scoala generala") || n.startsWith("liceul") || n.startsWith("colegiul")) return s;
+    return `Școala gimnazială ${s}`;
+  }
+
+  function classLine(cls){
+    const s = cls.trim();
+    if(normalizeAnswer(s).startsWith("clasa")) return s;
+    return `clasa ${s}`;
+  }
+
+  function numericValue(text){
+    const cleaned = String(text).replace(",", ".").replace(/[^\d.\-]/g, "");
+    return Number(cleaned);
+  }
+
+  function normalizeAnswer(value){
+    return String(value)
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g,"")
+      .replace(/\s+/g," ")
+      .replace(/[.,;:!?]/g,"")
+      .replace(/³/g,"3")
+      .replace(/²/g,"2")
+      .trim();
+  }
+
+  function rand(min,max){
+    return Math.floor(Math.random()*(max-min+1))+min;
+  }
+
+  function pick(arr){
+    return arr[Math.floor(Math.random()*arr.length)];
+  }
+
+  function shuffle(arr){
+    const a = [...arr];
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+
+  ["p-school","p-name","p-class"].forEach(id=>{
+    document.addEventListener("input", e=>{
+      if(e.target && e.target.id === id) showSaved();
+    });
+  });
+</script>
 </body>
 </html>

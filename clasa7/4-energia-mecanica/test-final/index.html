@@ -1,203 +1,1036 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FIZICĂ VII - ENERGIA MECANICĂ</title>
-    <style>
-        :root { --primary: #06b6d4; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #22d3ee; }
-        * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; }
-        .header { text-align: center; width: 100%; max-width: 700px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
-        .container { width: 100%; max-width: 650px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
-        .question-box { font-size: 1.15rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; line-height: 1.4; }
-        .instruction-box { font-size: 0.85rem; color: #fbbf24; text-align: center; margin-bottom: 10px; font-weight: bold; background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 8px; }
-        input[type="text"], select { width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.2rem; text-align: center; margin-bottom: 15px; }
-        .check-btn { width: 100%; background: var(--primary); color: #0f172a; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .next-btn { width: 100%; background: #059669; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
-        #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; }
-        .hidden { display: none; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Fizică VII – Energia mecanică</title>
+  <style>
+    :root{
+      --bg:#08111f;
+      --card:#132238;
+      --card2:#182b45;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --accent:#fbbf24;
+      --accent2:#38bdf8;
+      --ok:#22c55e;
+      --bad:#fb7185;
+      --line:#334155;
+      --btn:#f59e0b;
+      --next:#059669;
+    }
+    *{box-sizing:border-box}
+    html{font-size:clamp(16px,2.8vw,20px)}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+      background:linear-gradient(180deg,#07101d,#0b1728);
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:14px;
+    }
+    .app{
+      width:min(100%,760px);
+      margin:auto;
+    }
+    .top{
+      text-align:center;
+      margin-bottom:10px;
+    }
+    .top h1{
+      margin:0;
+      font-size:clamp(1.35rem,5vw,2rem);
+      line-height:1.1;
+    }
+    .top .chapter{
+      color:var(--accent);
+      font-weight:800;
+      font-size:clamp(.95rem,3.8vw,1.1rem);
+      margin-top:4px;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:20px;
+      box-shadow:0 18px 40px rgba(0,0,0,.35);
+      padding:clamp(16px,4vw,26px);
+    }
+    .hidden{display:none!important}
+    .note{
+      text-align:center;
+      color:#fff7ed;
+      background:rgba(245,158,11,.14);
+      border:1px solid rgba(251,191,36,.4);
+      border-radius:14px;
+      padding:12px;
+      font-weight:700;
+      line-height:1.35;
+      margin:0 0 14px;
+    }
+    label.small{
+      display:block;
+      color:var(--muted);
+      font-size:.82rem;
+      font-weight:700;
+      margin:10px 0 6px;
+    }
+    input[type="text"], select{
+      width:100%;
+      border:2px solid #475569;
+      border-radius:14px;
+      background:#07111f;
+      color:var(--text);
+      padding:14px;
+      font-size:1.05rem;
+      font-weight:700;
+      outline:none;
+    }
+    input[readonly]{font-size:.9rem;}
+    input[type="text"]:focus, select:focus{
+      border-color:var(--accent2);
+      box-shadow:0 0 0 3px rgba(56,189,248,.18);
+    }
+    .row{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:12px;
+    }
+    .btn{
+      width:100%;
+      border:0;
+      border-radius:14px;
+      padding:15px 16px;
+      font-size:1rem;
+      font-weight:900;
+      cursor:pointer;
+      color:#1f1300;
+      background:var(--btn);
+      margin-top:14px;
+      min-height:54px;
+    }
+    .btn.secondary{
+      background:#e2e8f0;
+      color:#0f172a;
+    }
+    .btn.next{
+      background:var(--next);
+      color:white;
+      margin-top:10px;
+      opacity:.5;
+      cursor:not-allowed;
+    }
+    .btn.next.active{
+      opacity:1;
+      cursor:pointer;
+    }
+    .btn:disabled{
+      opacity:.5;
+      cursor:not-allowed;
+    }
+    .bar-wrap{
+      width:100%;
+      height:12px;
+      background:#0b1220;
+      border:1px solid #334155;
+      border-radius:999px;
+      overflow:hidden;
+      margin:12px 0 18px;
+    }
+    .bar{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,var(--accent),var(--accent2));
+      transition:width .25s ease;
+    }
+    .meta{
+      display:flex;
+      justify-content:space-between;
+      gap:8px;
+      align-items:center;
+      color:var(--accent);
+      font-weight:900;
+      font-size:.9rem;
+      margin-bottom:4px;
+    }
+    .question{
+      background:var(--card2);
+      border:1px solid #38506d;
+      border-radius:18px;
+      padding:18px;
+      text-align:center;
+      font-size:clamp(1.08rem,4.5vw,1.45rem);
+      line-height:1.35;
+      font-weight:800;
+      min-height:110px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .answers{
+      margin-top:14px;
+      display:grid;
+      gap:10px;
+    }
+    .choice{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      width:100%;
+      text-align:left;
+      padding:14px;
+      min-height:54px;
+      border-radius:14px;
+      border:2px solid #475569;
+      background:#07111f;
+      color:var(--text);
+      font-weight:800;
+      font-size:1rem;
+      cursor:pointer;
+    }
+    .choice input{
+      width:20px;
+      height:20px;
+      accent-color:var(--accent);
+      flex:0 0 auto;
+    }
+    .choice:has(input:checked){
+      border-color:var(--accent);
+      background:rgba(251,191,36,.12);
+    }
+    .feedback{
+      display:none;
+      margin-top:12px;
+      border-radius:14px;
+      padding:13px;
+      text-align:center;
+      font-weight:900;
+      border:1px solid transparent;
+    }
+    .feedback.ok{
+      display:block;
+      color:#dcfce7;
+      background:rgba(34,197,94,.16);
+      border-color:rgba(34,197,94,.45);
+    }
+    .feedback.bad{
+      display:block;
+      color:#ffe4e6;
+      background:rgba(251,113,133,.14);
+      border-color:rgba(251,113,133,.45);
+    }
+    .score-big{
+      text-align:center;
+      font-size:clamp(3rem,16vw,5rem);
+      line-height:1;
+      color:var(--accent);
+      font-weight:1000;
+      margin:6px 0 12px;
+    }
+    .center{text-align:center}
+    .muted{color:var(--muted)}
+    .actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:14px;
+    }
+
+    /* DIPLOMĂ */
+    .diploma-screen{
+      width:min(100%,1080px);
+      margin:auto;
+    }
+    .diploma-view{
+      position:relative;
+      width:min(100%,1050px);
+      aspect-ratio:1426/1103;
+      background:#fff;
+      color:#1f2937;
+      margin:auto;
+      box-shadow:0 20px 50px rgba(0,0,0,.5);
+      overflow:hidden;
+    }
+    .diploma-bg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      z-index:0;
+      pointer-events:none;
+      user-select:none;
+    }
+    .d-text{
+      position:absolute;
+      z-index:1;
+      left:16%;
+      right:16%;
+      text-align:center;
+      overflow-wrap:anywhere;
+      text-wrap:balance;
+    }
+    .d-school{
+      top:15.3%;
+      font-size:clamp(12px,2.1vw,27px);
+      font-weight:800;
+      line-height:1.15;
+    }
+    .d-title{
+      top:25%;
+      color:#7a4a0e;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(24px,5.2vw,58px);
+      font-weight:900;
+      letter-spacing:.04em;
+      line-height:1.05;
+    }
+    .d-small{
+      top:38.8%;
+      font-size:clamp(12px,2vw,24px);
+      font-weight:800;
+    }
+    .d-name{
+      top:45.5%;
+      color:#7c2d12;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(20px,4vw,48px);
+      font-weight:900;
+      line-height:1.05;
+      left:18%;
+      right:18%;
+    }
+    .d-class{
+      top:52.5%;
+      color:#7c2d12;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(15px,2.7vw,32px);
+      font-weight:900;
+    }
+    .d-line{
+      position:absolute;
+      z-index:1;
+      left:22%;
+      right:22%;
+      top:58.8%;
+      height:2px;
+      background:#7c2d12;
+    }
+    .d-body{
+      top:62.5%;
+      font-size:clamp(11px,1.75vw,21px);
+      font-weight:800;
+      line-height:1.35;
+      left:18%;
+      right:18%;
+    }
+    .d-date{
+      top:73%;
+      font-size:clamp(11px,1.7vw,20px);
+      font-weight:900;
+    }
+    .d-sign{
+      top:81%;
+      left:36%;
+      right:36%;
+      font-size:clamp(10px,1.55vw,18px);
+      font-weight:800;
+      line-height:1.25;
+    }
+    .diploma-actions{
+      width:min(100%,760px);
+      margin:12px auto 0;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px;
+    }
+
+    @media(max-width:560px){
+      body{align-items:flex-start}
+      .row,.actions,.diploma-actions{grid-template-columns:1fr}
+      .card{border-radius:16px}
+      .question{min-height:120px}
+    }
+
+    @media print{
+      @page{size:landscape;margin:0}
+      html,body{
+        width:100%;
+        height:100%;
+        margin:0!important;
+        padding:0!important;
+        background:#fff!important;
+      }
+      .no-print,.diploma-actions{display:none!important}
+      .diploma-screen{
+        display:flex!important;
+        width:100vw!important;
+        height:100vh!important;
+        align-items:center!important;
+        justify-content:center!important;
+        background:#fff!important;
+      }
+      .diploma-view{
+        width:100vw!important;
+        max-width:none!important;
+        height:auto!important;
+        max-height:100vh!important;
+        box-shadow:none!important;
+        page-break-inside:avoid;
+      }
+    }
+  </style>
 </head>
 <body>
+  <main class="app no-print" id="app">
+    <section class="top">
+      <h1>Fizică VII</h1>
+      <div class="chapter">Energia mecanică</div>
+    </section>
 
-    <div class="header">
-        <div style="font-size: 1.1rem; font-weight: bold; color: var(--accent); margin-bottom: 2px;">
-            ȘCOALA GIMNAZIALĂ "GALA GALACTION" MANGALIA
+    <section class="card" id="screen-start">
+      <p class="note">Exersează de cel puțin 4 ori și vei primi o diplomă în format pdf pe care o poți prezenta profesorului tău.</p>
+
+      <label class="small" for="p-school">Școala</label>
+      <input type="text" id="p-school" placeholder="Ex.: Gala Galaction Mangalia" autocomplete="organization">
+
+      <label class="small" for="p-name">Elev</label>
+      <input type="text" id="p-name" placeholder="Numele și prenumele" autocomplete="name">
+
+      <div class="row">
+        <div>
+          <label class="small" for="p-class">Clasa</label>
+          <select id="p-class">
+            <option value="">Alege...</option>
+            <option value="a VII-a A">a VII-a A</option>
+            <option value="a VII-a B">a VII-a B</option>
+            <option value="a VII-a C">a VII-a C</option>
+            <option value="a VII-a D">a VII-a D</option>
+          </select>
         </div>
-        <div style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 12px; letter-spacing: 1px;">
-            Prof. DĂNUȚ ANDRONIE
+        <div>
+          <label class="small" for="p-short">Capitol</label>
+          <input type="text" id="p-short" value="Energia mecanică" readonly>
         </div>
-        <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--accent); padding: 8px; margin-bottom: 15px; font-style: italic; color: #fef08a; font-size: 0.95rem;">
-            "FIZICA NU ESTE DOMINATĂ DE FORMULE, CI DE LOGICĂ"
-        </div>
-    </div>
+      </div>
 
-    <div class="container" id="screen-login">
-        <h2 style="text-align:center;">⚡ Energia Mecanică (30 Itemi)</h2>
-        <input type="text" id="p-name" placeholder="Numele elevului">
-        <select id="p-class">
-            <option value="">Alege clasa...</option>
-            <option value="7A">7A</option>
-            <option value="7B">7B</option>
-            <option value="7C">7C</option>
-            <option value="7D">7D</option>
-        </select>
-        <button class="check-btn" onclick="startGame()">START TEST FINAL</button>
-    </div>
+      <button class="btn" onclick="startTest()">Începe testul</button>
+      <button class="btn secondary" onclick="resetAttempts()">Resetează exersările</button>
+    </section>
 
-    <div class="container hidden" id="screen-game">
-        <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
-        <div class="instruction-box">Se consideră g = 10 N/kg. Atenție la unitățile S.I.!</div>
-        <div class="question-box" id="question"></div>
-        <div id="input-area"></div>
-        <div id="feedback"></div>
-        <button class="next-btn" id="next-btn" onclick="nextQuestion()">URMĂTOAREA ➡️</button>
-    </div>
+    <section class="card hidden" id="screen-test">
+      <div class="meta">
+        <span id="q-count">Item 1/20</span>
+        <span id="score-live">0 p</span>
+      </div>
+      <div class="bar-wrap"><div class="bar" id="progress"></div></div>
 
-    <div class="container hidden" id="screen-end">
-        <h2 style="text-align:center;">REZULTAT FINAL</h2>
-        <div style="font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center;" id="final-score"></div>
-        <p style="text-align:center; color: #94a3b8;" id="raw-points"></p>
-        <button class="check-btn" onclick="location.reload()">REIA TESTUL</button>
+      <div class="question" id="question"></div>
+      <div class="answers" id="answers"></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
+
+      <button class="btn" id="check-btn" onclick="checkAnswer()">Verifică</button>
+      <button class="btn next" id="next-btn" onclick="nextItem()" disabled>Mergi mai departe</button>
+    </section>
+
+    <section class="card hidden" id="screen-end">
+      <h2 class="center">Rezultat</h2>
+      <div class="score-big" id="final-score">0/100</div>
+      <p class="center muted" id="practice-info"></p>
+
+      <div class="actions">
+        <button class="btn" onclick="restartTest()">Reia testul</button>
+        <button class="btn secondary" id="diploma-btn" onclick="showDiploma()">Diplomă PDF</button>
+      </div>
+    </section>
+  </main>
+
+  <section class="diploma-screen hidden" id="screen-diploma">
+    <div class="diploma-view" id="diploma">
+      <img class="diploma-bg" src="../../../assets/img/diploma-nautica.png" alt="Model diplomă nautică">
+      <div class="d-text d-school" id="d-school">Școala gimnazială</div>
+      <div class="d-text d-title">DIPLOMĂ DE MERIT</div>
+      <div class="d-text d-small">acordată elevului/elevei</div>
+      <div class="d-text d-name" id="d-name"></div>
+      <div class="d-text d-class" id="d-class"></div>
+      <div class="d-line"></div>
+      <div class="d-text d-body">
+        care a exersat testul final la fizică, capitolul<br>
+        <span id="d-chapter"></span>,<br>
+        și a obținut punctajul maxim <span id="d-score"></span> din patru exersări.
+      </div>
+      <div class="d-text d-date" id="d-date"></div>
+      <div class="d-text d-sign">
+        Semnează:<br>
+        Prof. Dănuț Andronie<br>
+        Email: danutmg@gmail.com
+      </div>
     </div>
+    <div class="diploma-actions">
+      <button class="btn" onclick="window.print()">Salvează diploma ca PDF</button>
+      <button class="btn secondary" onclick="hideDiploma()">Înapoi</button>
+    </div>
+  </section>
 
 <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec"; 
-    let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [] };
 
-    // 1. POOL TEORIE (10 întrebări)
-    const theoryPool = [
-        { q: "Energia mecanică totală este suma energiei cinetice și a energiei ...........", a: ["potentiale", "potentiala"] },
-        { q: "Unitatea de măsură a energiei în S.I. este ...........", a: ["joule", "j"] },
-        { q: "Energia cinetică depinde de masa corpului și de ........... acestuia.", a: ["viteza", "v"] },
-        { q: "În absența frecărilor, energia mecanică a unui sistem izolat se ...........", a: ["conserva", "pastreaza"] },
-        { q: "Energia potențială elastică depinde de constanta elastică și de ...........", a: ["deformare", "alungire", "comprimare"] },
-        { q: "Teorema variației energiei cinetice spune că ΔEc este egală cu ........... mecanic total.", a: ["lucrul"] },
-        { q: "Un corp lăsat să cadă liber își transformă energia potențială în energie ...........", a: ["cinetica"] },
-        { q: "La înălțimea maximă a unei aruncări pe verticală, viteza este egală cu ...........", a: ["0", "zero"] },
-        { q: "Energia potențială gravitațională depinde de masă, accelerația gravitațională și ...........", a: ["inaltime", "h"] },
-        { q: "Dacă viteza unui corp se triplează, energia sa cinetică crește de ........... ori.", a: ["9", "noua"] }
-        { q: "Dacă viteza unui corp se dublează, energia sa cinetică crește de ........... ori.", a: ["4", "patru"] }
-        { q: "Dacă viteza unui corp crește de patru ori, energia sa cinetică crește de ........... ori.", a: ["16", "saisprezece"] }
+  const CHAPTER = "Energia mecanică";
+  const ATTEMPT_KEY = "fizica7_energia_mecanica_attempts_v2";
+  const TOTAL_ITEMS = 20;
+
+  const state = {
+    school:"",
+    name:"",
+    className:"",
+    items:[],
+    index:0,
+    score:0,
+    checked:false,
+    selected:null,
+    currentProfileAttempts:[]
+  };
+
+  const baseItems = [
+    {
+      type:"mcq",
+      q:"Unitatea de măsură pentru energie este:",
+      options:["joule","newton","metru","watt"],
+      answer:"joule"
+    },
+    {
+      type:"fill",
+      q:"Simbolul joule-ului este:",
+      answers:["j"]
+    },
+    {
+      type:"mcq",
+      q:"Energia cinetică este legată de:",
+      options:["mișcare","culoare","volum","temperatură"],
+      answer:"mișcare"
+    },
+    {
+      type:"mcq",
+      q:"Energia potențială gravitațională este legată de:",
+      options:["înălțime","culoare","sunet","formă"],
+      answer:"înălțime"
+    },
+    {
+      type:"dual",
+      q:"Un corp aflat în repaus are energie cinetică nulă.",
+      answer:true
+    },
+    {
+      type:"dual",
+      q:"Un corp în mișcare are energie cinetică.",
+      answer:true
+    },
+    {
+      type:"dual",
+      q:"Energia mecanică se măsoară în newtoni.",
+      answer:false
+    },
+    {
+      type:"fill",
+      q:"Energia cinetică se notează frecvent:",
+      answers:["ec","e c","e_c"]
+    },
+    {
+      type:"fill",
+      q:"Energia potențială se notează frecvent:",
+      answers:["ep","e p","e_p"]
+    },
+    {
+      type:"fill",
+      q:"Energia mecanică se notează frecvent:",
+      answers:["em","e m","e_m"]
+    },
+    {
+      type:"mcq",
+      q:"Energia mecanică totală este formată din:",
+      options:["energie cinetică și potențială","masă și volum","forță și timp","lungime și arie"],
+      answer:"energie cinetică și potențială"
+    },
+    {
+      type:"dual",
+      q:"Dacă viteza crește, energia cinetică crește.",
+      answer:true
+    },
+    {
+      type:"dual",
+      q:"Dacă înălțimea crește, energia potențială gravitațională crește.",
+      answer:true
+    },
+    {
+      type:"dual",
+      q:"Frecarea poate micșora energia mecanică a unui corp.",
+      answer:true
+    },
+    {
+      type:"mcq",
+      q:"În cădere liberă, energia potențială gravitațională:",
+      options:["scade","crește mereu","rămâne mereu zero","devine masă"],
+      answer:"scade"
+    },
+    {
+      type:"mcq",
+      q:"În cădere liberă, energia cinetică:",
+      options:["crește","scade mereu","rămâne zero","devine greutate"],
+      answer:"crește"
+    },
+    {
+      type:"dual",
+      q:"În lipsa pierderilor, energia mecanică se conservă.",
+      answer:true
+    },
+    {
+      type:"dual",
+      q:"Energia mecanică poate trece din formă potențială în formă cinetică.",
+      answer:true
+    },
+    {
+      type:"mcq",
+      q:"La înălțime mai mare, același corp are energie potențială:",
+      options:["mai mare","mai mică mereu","nulă","egală cu masa"],
+      answer:"mai mare"
+    },
+    {
+      type:"mcq",
+      q:"La aceeași viteză, corpul cu masa mai mare are energie cinetică:",
+      options:["mai mare","mai mică mereu","nulă","egală cu înălțimea"],
+      answer:"mai mare"
+    },
+    {
+      type:"dual",
+      q:"Energia potențială elastică este asociată deformării unui resort.",
+      answer:true
+    },
+    {
+      type:"mcq",
+      q:"Când un resort comprimat se destinde, energia elastică poate deveni:",
+      options:["energie cinetică","masă","volum","culoare"],
+      answer:"energie cinetică"
+    },
+    {
+      type:"dual",
+      q:"Energia și lucrul mecanic au aceeași unitate în SI.",
+      answer:true
+    },
+    {
+      type:"mcq",
+      q:"Într-un pendul ideal, energia mecanică totală:",
+      options:["rămâne constantă","crește fără limită","devine zero mereu","se măsoară în metri"],
+      answer:"rămâne constantă"
+    }
+  ];
+
+  function generatedItems(){
+    const m1 = pick([1,2,3,4,5,6,8,10]);
+    const h1 = pick([1,2,3,4,5,6,8,10]);
+    const Ep1 = m1 * 10 * h1;
+
+    const m2 = pick([2,4,6,8,10]);
+    const v2 = pick([2,3,4,5,6]);
+    const Ec2 = +(m2 * v2 * v2 / 2).toFixed(2);
+
+    const Ec3 = pick([20,30,40,50,60,80,100,120]);
+    const Ep3 = pick([10,20,30,40,50,60,80]);
+    const Em3 = Ec3 + Ep3;
+
+    const Em4 = pick([80,100,120,150,200,240,300]);
+    const Ep4 = pick([20,30,40,50,60,80,100]);
+    const Ec4 = Em4 - Ep4 > 0 ? Em4 - Ep4 : 40;
+
+    const Em5 = pick([90,120,150,180,200,240,300]);
+    const Ec5 = pick([30,40,50,60,80,100]);
+    const Ep5 = Em5 - Ec5 > 0 ? Em5 - Ec5 : 60;
+
+    const k = pick([50,100,150,200,300]);
+    const x = pick([0.1,0.2,0.3,0.4]);
+    const Ee = +(k * x * x / 2).toFixed(2);
+
+    const m6 = pick([1,2,3,4,5,6]);
+    const h6 = pick([2,3,4,5,6,8]);
+    const groundEc = m6 * 10 * h6;
+
+    const m7 = pick([2,3,4,5,6,8]);
+    const ep7 = pick([60,80,100,120,160,200,240]);
+    const h7 = +(ep7 / (m7 * 10)).toFixed(2);
+
+    const v8 = pick([2,3,4,5]);
+    const m8 = pick([2,4,6,8]);
+    const ec8a = +(m8 * v8 * v8 / 2).toFixed(2);
+    const ec8b = +(m8 * (2*v8) * (2*v8) / 2).toFixed(2);
+
+    const Ep9 = pick([40,60,80,100,120,160]);
+    const lost = pick([10,20,30,40]);
+    const finalE = Ep9 - lost > 0 ? Ep9 - lost : Ep9;
+
+    return [
+      {
+        type:"fill",
+        q:`Un corp de ${m1} kg este la ${h1} m. Energia potențială este:`,
+        answers:[String(Ep1), `${Ep1} j`],
+        exact:`${formatNum(Ep1)} J`,
+        numeric:true
+      },
+      {
+        type:"fill",
+        q:`Un corp de ${m2} kg are viteza ${v2} m/s. Energia cinetică este:`,
+        answers:[String(Ec2), `${formatNum(Ec2)} j`],
+        exact:`${formatNum(Ec2)} J`,
+        numeric:true
+      },
+      {
+        type:"fill",
+        q:`Energia cinetică este ${Ec3} J, iar energia potențială ${Ep3} J. Energia mecanică este:`,
+        answers:[String(Em3), `${Em3} j`],
+        exact:`${formatNum(Em3)} J`,
+        numeric:true
+      },
+      {
+        type:"fill",
+        q:`Energia mecanică este ${Em4} J, iar energia potențială ${Ep4} J. Energia cinetică este:`,
+        answers:[String(Ec4), `${Ec4} j`],
+        exact:`${formatNum(Ec4)} J`,
+        numeric:true
+      },
+      {
+        type:"fill",
+        q:`Energia mecanică este ${Em5} J, iar energia cinetică ${Ec5} J. Energia potențială este:`,
+        answers:[String(Ep5), `${Ep5} j`],
+        exact:`${formatNum(Ep5)} J`,
+        numeric:true
+      },
+      {
+        type:"fill",
+        q:`Un resort are k=${k} N/m și deformarea ${formatNum(x)} m. Energia elastică este:`,
+        answers:[String(Ee), `${formatNum(Ee)} j`],
+        exact:`${formatNum(Ee)} J`,
+        numeric:true
+      },
+      {
+        type:"fill",
+        q:`Un corp de ${m6} kg cade de la ${h6} m. Energia cinetică la sol este:`,
+        answers:[String(groundEc), `${groundEc} j`],
+        exact:`${formatNum(groundEc)} J`,
+        numeric:true
+      },
+      {
+        type:"fill",
+        q:`Un corp de ${m7} kg are energia potențială ${ep7} J. Înălțimea este:`,
+        answers:[String(h7), `${formatNum(h7)} m`],
+        exact:`${formatNum(h7)} m`,
+        numeric:true
+      },
+      {
+        type:"mcq",
+        q:`Dacă viteza se dublează, energia cinetică devine:`,
+        options:["de 4 ori mai mare","de 2 ori mai mare","de 3 ori mai mare","neschimbată"],
+        answer:"de 4 ori mai mare"
+      },
+      {
+        type:"mcq",
+        q:`Dacă înălțimea se dublează, energia potențială gravitațională devine:`,
+        options:["de 2 ori mai mare","de 4 ori mai mare","neschimbată","zero"],
+        answer:"de 2 ori mai mare"
+      },
+      {
+        type:"mcq",
+        q:`La aceeași masă, energia cinetică la ${2*v8} m/s față de ${v8} m/s este:`,
+        options:[`${formatNum(ec8b)} J față de ${formatNum(ec8a)} J`,`egală`,`de 2 ori mai mică`,`zero`],
+        answer:`${formatNum(ec8b)} J față de ${formatNum(ec8a)} J`
+      },
+      {
+        type:"mcq",
+        q:`Un corp pornește cu ${Ep9} J energie mecanică și pierde ${lost} J. Energia rămasă este:`,
+        options:[`${formatNum(finalE)} J`,`${formatNum(Ep9+lost)} J`,`${formatNum(lost)} J`,`0 J`],
+        answer:`${formatNum(finalE)} J`
+      }
     ];
+  }
 
-    // 2. GENERATOR PROBLEME (20 întrebări calculate progresiv)
-    function generateProblems() {
-        let p = [];
-        
-        // Energie Cinetică (Calcul simplu m, v)
-        p.push({ q: "Un corp de 400g are viteza de 10 m/s. Ec = ? J", a: ["20"], type: "math" });
-        p.push({ q: "Un mobil de 2 tone se deplasează cu 72 km/h. Ec = ? J", a: ["400000"], type: "math" });
-        
-        // Energie Potențială Gravitațională
-        p.push({ q: "O piatră de 500g este la înălțimea de 400cm. Ep = ? J", a: ["20"], type: "math" });
-        p.push({ q: "Ce masă are un corp care la h=5m are Ep=100J?", a: ["2"], type: "math" });
+  function pick(arr){
+    return arr[Math.floor(Math.random()*arr.length)];
+  }
 
-        // Energie Potențială Elastică (k, delta l)
-        p.push({ q: "Un resort cu k=500 N/m este comprimat cu 20cm. Epe = ? J", a: ["10"], type: "math" });
-        p.push({ q: "Un resort cu k=2000 N/m are Epe=10J. Alungirea este ? cm", a: ["10"], type: "math" });
+  function shuffle(arr){
+    const a = [...arr];
+    for(let i=a.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
 
-        // Conservare: Cădere liberă (Viteza la sol) - Radicali perfecți
-        p.push({ q: "Un corp cade liber de la h=20m. Viteza la impactul cu solul este ? m/s", a: ["20"], type: "math" }); // v = sqrt(2*10*20) = 20
-        p.push({ q: "Un corp cade liber de la h=45m. Viteza la sol este ? m/s", a: ["30"], type: "math" }); // v = sqrt(2*10*45) = 30
+  function formatNum(n){
+    return String(n).replace(".",",");
+  }
 
-        // Conservare: Aruncare pe verticală (Înălțime maximă)
-        p.push({ q: "Un corp este aruncat în sus cu v=40 m/s. Înălțimea maximă h = ? m", a: ["80"], type: "math" }); // h = v^2/2g = 1600/20
-        p.push({ q: "Un corp este aruncat în sus cu v=10 m/s. Înălțimea maximă h = ? m", a: ["5"], type: "math" });
+  function normalizeText(s){
+    return String(s ?? "")
+      .toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+      .replace(/ă/g,"a").replace(/â/g,"a").replace(/î/g,"i").replace(/ș|ş/g,"s").replace(/ț|ţ/g,"t")
+      .replace(/\s+/g," ")
+      .trim();
+  }
 
-        // Variația Energiei Potențiale
-        p.push({ q: "Un corp de 2kg coboară de la h1=10m la h2=2m. |ΔEp| = ? J", a: ["160"], type: "math" });
-        p.push({ q: "Un sac de 50kg este ridicat de la sol la h=1.5m. ΔEp = ? J", a: ["750"], type: "math" });
+  function normalizeAnswer(s){
+    return normalizeText(s).replace(",",".").replace(/\s+/g," ").trim();
+  }
 
-        // Variația Ec -> Lucru Mecanic Total
-        p.push({ q: "Un corp de 4kg accelerează de la 2m/s la 4m/s. L_total = ? J", a: ["24"], type: "math" }); // 0.5*4*(16-4)
-        p.push({ q: "Un obiect de 10kg încetinește de la 10m/s la 0m/s. |L_frecare| = ? J", a: ["500"], type: "math" });
+  function numericValue(s){
+    const found = String(s).replace(",",".").match(/-?\d+(\.\d+)?/);
+    return found ? Number(found[0]) : NaN;
+  }
 
-        // Probleme complexe (Viteză la h/2)
-        p.push({ q: "Un corp cade de la h=40m. Viteza la jumătatea înălțimii (h=20m) este ? m/s", a: ["20"], type: "math" });
-        
-        // Mai multe de energie elastică
-        p.push({ q: "O forță de 20N alungește un resort cu 10cm. Energia elastică stocată este ? J", a: ["1"], type: "math" }); // k=200, E=0.5*200*0.01
+  function startTest(){
+    state.school = document.getElementById("p-school").value.trim();
+    state.name = document.getElementById("p-name").value.trim();
+    state.className = document.getElementById("p-class").value.trim();
+    if(!state.school || !state.name || !state.className){
+      alert("Completează școala, numele și clasa.");
+      return;
+    }
+    state.items = shuffle([...shuffle(baseItems).slice(0,14), ...shuffle(generatedItems()).slice(0,6)]);
+    state.index = 0;
+    state.score = 0;
+    state.checked = false;
+    state.selected = null;
 
-        // Transformări km/h -> m/s progresive
-        p.push({ q: "Un vultur de 2kg zboară la h=10m cu v=36 km/h. E_mecanica_totala = ? J", a: ["300"], type: "math" }); // Ep=200, Ec=100
-        p.push({ q: "Un obiect de 1kg are Ec=50J. Viteza sa este ? m/s", a: ["10"], type: "math" });
-        p.push({ q: "O minge de 200g este aruncată cu v=20m/s. Ec = ? J", a: ["40"], type: "math" });
-        p.push({ q: "Energia potențială a unui corp de 3kg crește cu 150J. Cu cât a fost ridicat? (h = ? m)", a: ["5"], type: "math" });
+    document.getElementById("screen-start").classList.add("hidden");
+    document.getElementById("screen-end").classList.add("hidden");
+    document.getElementById("screen-test").classList.remove("hidden");
+    showItem();
+  }
 
-        return p;
+  function showItem(){
+    const item = state.items[state.index];
+    state.checked = false;
+    state.selected = null;
+
+    document.getElementById("q-count").textContent = `Item ${state.index + 1}/${TOTAL_ITEMS}`;
+    document.getElementById("score-live").textContent = `${state.score} p`;
+    document.getElementById("progress").style.width = `${(state.index / TOTAL_ITEMS) * 100}%`;
+    document.getElementById("question").textContent = item.q;
+    document.getElementById("feedback").className = "feedback";
+    document.getElementById("feedback").textContent = "";
+
+    const answers = document.getElementById("answers");
+    answers.innerHTML = "";
+
+    if(item.type === "mcq"){
+      shuffle(item.options).forEach((opt, idx) => {
+        const id = `opt-${idx}`;
+        answers.insertAdjacentHTML("beforeend", `
+          <label class="choice" for="${id}">
+            <input id="${id}" type="radio" name="answer" value="${escapeHtml(opt)}">
+            <span>${escapeHtml(opt)}</span>
+          </label>
+        `);
+      });
+    } else if(item.type === "dual"){
+      ["Adevărat","Fals"].forEach((opt, idx) => {
+        const id = `dual-${idx}`;
+        const val = opt === "Adevărat" ? "true" : "false";
+        answers.insertAdjacentHTML("beforeend", `
+          <label class="choice" for="${id}">
+            <input id="${id}" type="radio" name="answer" value="${val}">
+            <span>${opt}</span>
+          </label>
+        `);
+      });
+    } else {
+      answers.innerHTML = `<input type="text" id="answer-input" placeholder="Răspuns" autocomplete="off">`;
+      setTimeout(() => document.getElementById("answer-input")?.focus(), 50);
     }
 
-    function startGame() {
-        state.name = document.getElementById('p-name').value.trim();
-        state.class = document.getElementById('p-class').value;
-        if(!state.name || !state.class) return alert("Introdu numele și clasa!");
-        
-        // Combinăm pool-ul (10 teorie + 20 probleme = 30 itemi)
-        state.questions = [...theoryPool, ...generateProblems()];
-        // Putem amesteca întrebările dacă dorim: state.questions.sort(() => 0.5 - Math.random());
-        
-        document.getElementById('screen-login').classList.add('hidden');
-        document.getElementById('screen-game').classList.remove('hidden');
-        showQuestion();
+    document.getElementById("check-btn").disabled = false;
+    const next = document.getElementById("next-btn");
+    next.disabled = true;
+    next.classList.remove("active");
+    next.textContent = state.index === TOTAL_ITEMS - 1 ? "Finalizează" : "Mergi mai departe";
+  }
+
+  function checkAnswer(){
+    if(state.checked) return;
+    const item = state.items[state.index];
+    let ok = false;
+    let shownAnswer = "";
+
+    if(item.type === "mcq"){
+      const selected = document.querySelector('input[name="answer"]:checked');
+      if(!selected) return alert("Alege un răspuns.");
+      ok = normalizeAnswer(selected.value) === normalizeAnswer(item.answer);
+      shownAnswer = item.answer;
+    } else if(item.type === "dual"){
+      const selected = document.querySelector('input[name="answer"]:checked');
+      if(!selected) return alert("Alege Adevărat sau Fals.");
+      ok = (selected.value === String(item.answer));
+      shownAnswer = item.answer ? "Adevărat" : "Fals";
+    } else {
+      const input = document.getElementById("answer-input");
+      const user = input.value;
+      if(!user.trim()) return alert("Scrie răspunsul.");
+      if(item.numeric){
+        const target = numericValue(item.answers[0]);
+        const userNum = numericValue(user);
+        ok = Number.isFinite(userNum) && Math.abs(userNum - target) <= 0.05;
+      } else {
+        ok = item.answers.some(a => normalizeAnswer(user) === normalizeAnswer(a));
+      }
+      shownAnswer = item.exact || item.answers[0];
     }
 
-    function showQuestion() {
-        const q = state.questions[state.currentIdx];
-        document.getElementById('q-info').innerText = `ITEM ${state.currentIdx + 1} / 30`;
-        document.getElementById('question').innerText = q.q;
-        const area = document.getElementById('input-area');
-        area.innerHTML = `<input type="text" id="user-ans" placeholder="Scrie rezultatul numeric sau cuvântul" autocomplete="off">
-                          <button class="check-btn" id="btn-check" onclick="checkAns()">VERIFICĂ</button>`;
-        document.getElementById('feedback').style.display = 'none';
-        document.getElementById('next-btn').style.display = 'none';
-        document.getElementById('user-ans').focus();
+    state.checked = true;
+    document.getElementById("check-btn").disabled = true;
+
+    const fb = document.getElementById("feedback");
+    if(ok){
+      state.score += 5;
+      fb.className = "feedback ok";
+      fb.textContent = "Corect! +5 p";
+    } else {
+      fb.className = "feedback bad";
+      fb.textContent = `Greșit. Răspuns: ${shownAnswer}`;
     }
 
-    function checkAns() {
-        const user = document.getElementById('user-ans').value;
-        if(!user.trim()) return;
+    document.getElementById("score-live").textContent = `${state.score} p`;
+    const next = document.getElementById("next-btn");
+    next.disabled = false;
+    next.classList.add("active");
+  }
 
-        const q = state.questions[state.currentIdx];
-        const clean = (s) => s.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().replace(",", ".");
-        
-        let isCorrect = q.a.some(ans => clean(user) === clean(ans));
-
-        const f = document.getElementById('feedback');
-        f.style.display = 'block';
-        if(isCorrect) { 
-            state.correctAnswers++; 
-            f.innerText = "CORECT! ✅"; f.style.color = "#4ade80"; 
-        } else { 
-            f.innerText = `GREȘIT! Răspuns: ${q.a[0]} ❌`; f.style.color = "#f87171"; 
-        }
-        
-        document.getElementById('btn-check').classList.add('hidden');
-        document.getElementById('next-btn').style.display = 'block';
+  function nextItem(){
+    if(!state.checked) return;
+    state.index += 1;
+    if(state.index < TOTAL_ITEMS){
+      showItem();
+    } else {
+      finishTest();
     }
+  }
 
-    function nextQuestion() {
-        state.currentIdx++;
-        if(state.currentIdx < 30) showQuestion(); else finishGame();
-    }
+  function finishTest(){
+    document.getElementById("progress").style.width = "100%";
+    saveAttempt();
 
-    function finishGame() {
-        document.getElementById('screen-game').classList.add('hidden');
-        document.getElementById('screen-end').classList.remove('hidden');
-        
-        // Calcul notă: 1 punct din oficiu + (9 puncte / 30 întrebări) * răspunsuri_corecte
-        const nota = (1 + (state.correctAnswers * 0.3)).toFixed(2);
-        
-        document.getElementById('final-score').innerText = nota;
-        document.getElementById('raw-points').innerText = `Ai rezolvat corect ${state.correctAnswers} itemi din 30.`;
-        
-        const fd = new FormData();
-        fd.append("nume", state.name); 
-        fd.append("clasa", state.class + " - Energia 30 Itemi"); 
-        fd.append("scor", nota);
-        fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+    document.getElementById("screen-test").classList.add("hidden");
+    document.getElementById("screen-end").classList.remove("hidden");
+
+    document.getElementById("final-score").textContent = `${state.score}/100`;
+
+    const attempts = getProfileAttempts();
+    const count = Math.min(attempts.length, 4);
+    document.getElementById("practice-info").textContent = `Exersări: ${count}/4`;
+
+    const btn = document.getElementById("diploma-btn");
+    if(attempts.length >= 4){
+      btn.disabled = false;
+      btn.textContent = "Diplomă PDF";
+    } else {
+      btn.disabled = true;
+      btn.textContent = `Diplomă după ${4 - attempts.length} exersări`;
     }
+  }
+
+  function restartTest(){
+    document.getElementById("screen-end").classList.add("hidden");
+    document.getElementById("screen-start").classList.remove("hidden");
+  }
+
+  function profileId(){
+    return normalizeText(`${state.school}|${state.name}|${state.className}|${CHAPTER}`);
+  }
+
+  function allAttempts(){
+    try{
+      const data = JSON.parse(localStorage.getItem(ATTEMPT_KEY) || "[]");
+      return Array.isArray(data) ? data : [];
+    }catch(e){
+      return [];
+    }
+  }
+
+  function saveAttempt(){
+    const entry = {
+      profile: profileId(),
+      school: state.school,
+      name: state.name,
+      className: state.className,
+      chapter: CHAPTER,
+      score: state.score,
+      date: new Date().toISOString()
+    };
+    const data = allAttempts();
+    data.push(entry);
+    const compact = data.slice(-80);
+    localStorage.setItem(ATTEMPT_KEY, JSON.stringify(compact));
+  }
+
+  function getProfileAttempts(){
+    return allAttempts().filter(a => a.profile === profileId());
+  }
+
+  function resetAttempts(){
+    if(confirm("Ștergi exersările salvate pe acest dispozitiv?")){
+      localStorage.removeItem(ATTEMPT_KEY);
+    }
+  }
+
+  function cleanSchoolName(s){
+    let t = String(s || "").trim();
+    t = t.replace(/^școala\s+gimnazială\s*/i, "");
+    t = t.replace(/^scoala\s+gimnaziala\s*/i, "");
+    return t.trim();
+  }
+
+  function showDiploma(){
+    const attempts = getProfileAttempts();
+    if(attempts.length < 4) return;
+
+    const lastFour = attempts.slice(-4);
+    const best = Math.max(...lastFour.map(a => Number(a.score) || 0));
+
+    document.getElementById("d-school").textContent = `Școala gimnazială ${cleanSchoolName(state.school)}`;
+    document.getElementById("d-name").textContent = state.name.toUpperCase();
+    document.getElementById("d-class").textContent = `clasa ${state.className}`;
+    document.getElementById("d-chapter").textContent = CHAPTER;
+    document.getElementById("d-score").textContent = `${best}/100`;
+    document.getElementById("d-date").textContent = `Data: ${new Date().toLocaleDateString("ro-RO")}`;
+
+    document.getElementById("app").classList.add("hidden");
+    document.getElementById("screen-diploma").classList.remove("hidden");
+  }
+
+  function hideDiploma(){
+    document.getElementById("screen-diploma").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+  }
+
+  function escapeHtml(s){
+    return String(s).replace(/[&<>"']/g, ch => ({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#039;"
+    }[ch]));
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if(e.key !== "Enter") return;
+    if(!document.getElementById("screen-test").classList.contains("hidden")){
+      if(state.checked) nextItem();
+      else checkAnswer();
+    }
+  });
 </script>
 </body>
 </html>

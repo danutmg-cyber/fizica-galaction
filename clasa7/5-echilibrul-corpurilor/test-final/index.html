@@ -1,1310 +1,1063 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FIZICĂ VII – Echilibrul corpurilor</title>
-  <meta name="description" content="Test interactiv pentru clasa a VII-a: momentul forței, echilibrul de rotație, pârghii și scripeți." />
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Fizică VII – Echilibrul corpurilor</title>
   <script>
     window.MathJax = {
-      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
-      svg: { fontCache: 'global' }
+      tex: { inlineMath: [["\\(","\\)"], ["$","$"]] },
+      svg: { fontCache: "global" }
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
-
   <style>
-    :root {
-      --bg: #0f172a;
-      --panel: #111827;
-      --card: #1e293b;
-      --text: #f8fafc;
-      --muted: #cbd5e1;
-      --accent: #22d3ee;
-      --accent-dark: #0891b2;
-      --success: #22c55e;
-      --success-dark: #15803d;
-      --warning: #fbbf24;
-      --danger: #fb7185;
-      --border: #334155;
-      --ink: #0f172a;
-      --paper: #f8fafc;
-      --radius: 22px;
-      --shadow: 0 18px 55px rgba(0, 0, 0, 0.35);
+    :root{
+      --bg:#08111f;
+      --card:#132238;
+      --card2:#182b45;
+      --text:#f8fafc;
+      --muted:#cbd5e1;
+      --accent:#fbbf24;
+      --accent2:#38bdf8;
+      --ok:#22c55e;
+      --bad:#fb7185;
+      --line:#334155;
+      --btn:#f59e0b;
+      --next:#059669;
+    }
+    *{box-sizing:border-box}
+    html{font-size:clamp(16px,2.8vw,20px)}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+      background:linear-gradient(180deg,#07101d,#0b1728);
+      color:var(--text);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:14px;
+    }
+    .app{width:min(100%,780px);margin:auto}
+    .top{text-align:center;margin-bottom:10px}
+    .top h1{margin:0;font-size:clamp(1.35rem,5vw,2rem);line-height:1.1}
+    .top .chapter{color:var(--accent);font-weight:900;font-size:clamp(.95rem,3.8vw,1.12rem);margin-top:4px}
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:20px;
+      box-shadow:0 18px 40px rgba(0,0,0,.35);
+      padding:clamp(16px,4vw,26px);
+    }
+    .hidden{display:none!important}
+    .note{
+      text-align:center;
+      color:#fff7ed;
+      background:rgba(245,158,11,.14);
+      border:1px solid rgba(251,191,36,.4);
+      border-radius:14px;
+      padding:12px;
+      font-weight:800;
+      line-height:1.35;
+      margin:0 0 14px;
+    }
+    label.small{
+      display:block;
+      color:var(--muted);
+      font-size:.82rem;
+      font-weight:800;
+      margin:10px 0 6px;
+    }
+    input[type="text"], select{
+      width:100%;
+      border:2px solid #475569;
+      border-radius:14px;
+      background:#0b1220;
+      color:var(--text);
+      padding:13px 14px;
+      font-size:1rem;
+      outline:none;
+    }
+    input[type="text"]:focus, select:focus{border-color:var(--accent2)}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .btn{
+      width:100%;
+      border:0;
+      border-radius:14px;
+      padding:14px 16px;
+      margin-top:12px;
+      background:var(--btn);
+      color:#111827;
+      font-weight:950;
+      cursor:pointer;
+      font-size:.95rem;
+      min-height:52px;
+    }
+    .btn.secondary{background:#e2e8f0;color:#0f172a}
+    .btn.next{background:var(--next);color:#fff}
+    .btn:disabled{opacity:.45;cursor:not-allowed}
+    .btn.active{filter:brightness(1.08)}
+    .meta{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      color:var(--muted);
+      font-weight:900;
+      font-size:.88rem;
+      margin-bottom:8px;
+    }
+    .bar-wrap{
+      height:12px;
+      background:#0b1220;
+      border:1px solid var(--line);
+      border-radius:99px;
+      overflow:hidden;
+      margin-bottom:14px;
+    }
+    .bar{
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,var(--accent2),var(--ok));
+      transition:width .22s ease;
+    }
+    .question{
+      background:var(--card2);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:clamp(14px,3vw,20px);
+      min-height:100px;
+      font-size:clamp(1.05rem,4vw,1.28rem);
+      line-height:1.35;
+      font-weight:800;
+    }
+    .question p{margin:.4rem 0}
+    .media-box{
+      margin:14px 0 0;
+      padding:10px;
+      border-radius:16px;
+      background:#f8fafc;
+      border:1px solid rgba(148,163,184,.5);
+      text-align:center;
+    }
+    .media-box img{
+      display:block;
+      max-width:100%;
+      height:auto;
+      max-height:340px;
+      margin:0 auto;
+      object-fit:contain;
+      border-radius:12px;
+    }
+    .media-caption{
+      margin-top:6px;
+      color:#334155;
+      font-size:.78rem;
+      font-weight:900;
+    }
+    .answers{display:grid;gap:10px;margin-top:14px}
+    .choice{
+      display:grid;
+      grid-template-columns:28px 1fr;
+      gap:10px;
+      align-items:start;
+      background:#0b1220;
+      border:2px solid #475569;
+      border-radius:15px;
+      padding:13px;
+      cursor:pointer;
+      font-weight:800;
+    }
+    .choice:hover{border-color:var(--accent2)}
+    .choice input{width:20px;height:20px;margin-top:2px;accent-color:var(--accent)}
+    .feedback{
+      margin-top:14px;
+      min-height:48px;
+      border-radius:16px;
+      padding:12px 14px;
+      border:1px solid transparent;
+      font-weight:900;
+      display:none;
+      line-height:1.35;
+    }
+    .feedback.ok{
+      display:block;
+      color:#dcfce7;
+      background:rgba(34,197,94,.14);
+      border-color:rgba(34,197,94,.45);
+    }
+    .feedback.bad{
+      display:block;
+      color:#ffe4e6;
+      background:rgba(251,113,133,.14);
+      border-color:rgba(251,113,133,.45);
+    }
+    .score-big{
+      text-align:center;
+      font-size:clamp(3rem,16vw,5rem);
+      line-height:1;
+      color:var(--accent);
+      font-weight:1000;
+      margin:6px 0 12px;
+    }
+    .center{text-align:center}
+    .muted{color:var(--muted)}
+    .actions{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:14px;
     }
 
-    * {
-      box-sizing: border-box;
+    /* DIPLOMĂ */
+    .diploma-screen{width:min(100%,1080px);margin:auto}
+    .diploma-view{
+      position:relative;
+      width:min(100%,1050px);
+      aspect-ratio:1426/1103;
+      background:#fff;
+      color:#1f2937;
+      margin:auto;
+      box-shadow:0 20px 50px rgba(0,0,0,.5);
+      overflow:hidden;
+    }
+    .diploma-bg{
+      position:absolute;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      z-index:0;
+      pointer-events:none;
+      user-select:none;
+    }
+    .d-text{
+      position:absolute;
+      z-index:1;
+      left:16%;
+      right:16%;
+      text-align:center;
+      overflow-wrap:anywhere;
+      text-wrap:balance;
+    }
+    .d-school{
+      top:15.3%;
+      font-size:clamp(12px,2.1vw,27px);
+      font-weight:800;
+      line-height:1.15;
+    }
+    .d-title{
+      top:25%;
+      color:#7a4a0e;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(24px,5.2vw,58px);
+      font-weight:900;
+      letter-spacing:.04em;
+      line-height:1.05;
+    }
+    .d-small{
+      top:38.8%;
+      font-size:clamp(12px,2vw,24px);
+      font-weight:800;
+    }
+    .d-name{
+      top:45.5%;
+      color:#7c2d12;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(20px,4vw,48px);
+      font-weight:900;
+      line-height:1.05;
+      left:18%;
+      right:18%;
+    }
+    .d-class{
+      top:52.5%;
+      color:#7c2d12;
+      font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(15px,2.7vw,32px);
+      font-weight:900;
+    }
+    .d-line{
+      position:absolute;
+      z-index:1;
+      left:22%;
+      right:22%;
+      top:58.8%;
+      height:2px;
+      background:#7c2d12;
+    }
+    .d-body{
+      top:62.5%;
+      font-size:clamp(11px,1.75vw,21px);
+      font-weight:800;
+      line-height:1.35;
+      left:18%;
+      right:18%;
+    }
+    .d-date{
+      top:73%;
+      font-size:clamp(11px,1.7vw,20px);
+      font-weight:900;
+    }
+    .d-sign{
+      top:81%;
+      left:36%;
+      right:36%;
+      font-size:clamp(10px,1.55vw,18px);
+      font-weight:800;
+      line-height:1.25;
+    }
+    .diploma-actions{
+      width:min(100%,760px);
+      margin:12px auto 0;
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:12px;
     }
 
-    html {
-      scroll-behavior: smooth;
+    @media(max-width:560px){
+      body{align-items:flex-start}
+      .row,.actions,.diploma-actions{grid-template-columns:1fr}
+      .card{border-radius:16px}
+      .question{min-height:110px}
+      .media-box img{max-height:260px}
     }
 
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(34, 211, 238, 0.18), transparent 28rem),
-        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.12), transparent 30rem),
-        var(--bg);
-      color: var(--text);
-      line-height: 1.55;
-    }
-
-    body.printing {
-      background: white;
-    }
-
-    .app {
-      width: 100%;
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 16px;
-    }
-
-    .topbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 14px 0 18px;
-      border-bottom: 2px solid rgba(34, 211, 238, 0.45);
-      margin-bottom: 16px;
-    }
-
-    .brand {
-      display: grid;
-      gap: 2px;
-    }
-
-    .brand strong {
-      font-size: clamp(1.15rem, 4vw, 1.8rem);
-      letter-spacing: 0.02em;
-    }
-
-    .brand span {
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-
-    .badge {
-      padding: 8px 12px;
-      border-radius: 999px;
-      background: rgba(34, 211, 238, 0.12);
-      border: 1px solid rgba(34, 211, 238, 0.42);
-      color: #e0f2fe;
-      font-weight: 700;
-      white-space: nowrap;
-    }
-
-    .screen {
-      display: none;
-      animation: fadeIn 0.22s ease-in-out;
-    }
-
-    .screen.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .card {
-      background: rgba(30, 41, 59, 0.96);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: clamp(18px, 4vw, 30px);
-      margin: 16px 0;
-    }
-
-    .card h1,
-    .card h2,
-    .card h3 {
-      margin-top: 0;
-      line-height: 1.22;
-    }
-
-    .intro-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-    }
-
-    @media (min-width: 760px) {
-      .intro-grid {
-        grid-template-columns: 1.15fr 0.85fr;
+    @media print{
+      @page{size:landscape;margin:0}
+      html,body{
+        width:100%;
+        height:100%;
+        margin:0!important;
+        padding:0!important;
+        background:#fff!important;
       }
-    }
-
-    label {
-      display: block;
-      font-weight: 700;
-      margin: 12px 0 6px;
-    }
-
-    input[type="text"] {
-      width: 100%;
-      min-height: 50px;
-      border-radius: 14px;
-      border: 2px solid #475569;
-      background: #0b1220;
-      color: var(--text);
-      font-size: 1.05rem;
-      padding: 12px 14px;
-      outline: none;
-    }
-
-    input[type="text"]:focus {
-      border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.16);
-    }
-
-    .muted {
-      color: var(--muted);
-    }
-
-    .note {
-      padding: 12px 14px;
-      border-radius: 16px;
-      background: rgba(34, 211, 238, 0.1);
-      border: 1px solid rgba(34, 211, 238, 0.3);
-      color: #e0f2fe;
-    }
-
-    .actions {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      margin-top: 18px;
-    }
-
-    @media (min-width: 560px) {
-      .actions.two {
-        grid-template-columns: 1fr 1fr;
+      .no-print,.diploma-actions{display:none!important}
+      .diploma-screen{
+        display:flex!important;
+        width:100vw!important;
+        height:100vh!important;
+        align-items:center!important;
+        justify-content:center!important;
+        background:#fff!important;
       }
-    }
-
-    button {
-      appearance: none;
-      border: none;
-      border-radius: 15px;
-      padding: 15px 18px;
-      min-height: 52px;
-      font-size: 1rem;
-      font-weight: 800;
-      cursor: pointer;
-      transition: transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease;
-    }
-
-    button:hover:not(:disabled) {
-      transform: translateY(-1px);
-      filter: brightness(1.04);
-    }
-
-    button:disabled {
-      cursor: not-allowed;
-      opacity: 0.58;
-    }
-
-    .primary {
-      background: var(--accent);
-      color: #082f49;
-    }
-
-    .success {
-      background: var(--success);
-      color: #052e16;
-    }
-
-    .secondary {
-      background: #e2e8f0;
-      color: var(--ink);
-    }
-
-    .danger {
-      background: #fecdd3;
-      color: #7f1d1d;
-    }
-
-    .outline {
-      background: transparent;
-      color: var(--text);
-      border: 2px solid #475569;
-    }
-
-    .progress-wrap {
-      display: grid;
-      gap: 10px;
-      margin-bottom: 16px;
-    }
-
-    .progress-text {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      font-weight: 800;
-      color: #e0f2fe;
-    }
-
-    .bar {
-      height: 12px;
-      background: #0b1220;
-      border-radius: 999px;
-      overflow: hidden;
-      border: 1px solid #334155;
-    }
-
-    .bar > div {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--accent), var(--success));
-      transition: width 0.22s ease;
-    }
-
-    .question-title {
-      font-size: clamp(1.15rem, 4vw, 1.45rem);
-      margin-bottom: 12px;
-      color: #e0f2fe;
-    }
-
-    .statement {
-      font-size: clamp(1.02rem, 3.5vw, 1.16rem);
-    }
-
-    .statement p {
-      margin: 9px 0;
-    }
-
-    .media-box {
-      margin: 18px 0;
-      padding: 12px;
-      border: 1px solid rgba(148, 163, 184, 0.35);
-      border-radius: 18px;
-      background: #f8fafc;
-      text-align: center;
-    }
-
-    .media-box img {
-      display: block;
-      max-width: 100%;
-      height: auto;
-      max-height: 360px;
-      margin: 0 auto;
-      object-fit: contain;
-      border-radius: 12px;
-    }
-
-    .media-caption {
-      margin-top: 8px;
-      color: #334155;
-      font-size: 0.92rem;
-      font-weight: 700;
-    }
-
-    .answer-area {
-      margin-top: 18px;
-      display: grid;
-      gap: 12px;
-    }
-
-    .answer-unit {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .unit-pill {
-      padding: 12px 14px;
-      border-radius: 14px;
-      background: #0b1220;
-      border: 1px solid #475569;
-      color: #e0f2fe;
-      font-weight: 900;
-      min-width: 72px;
-      text-align: center;
-    }
-
-    @media (max-width: 420px) {
-      .answer-unit {
-        grid-template-columns: 1fr;
-      }
-
-      .unit-pill {
-        width: 100%;
-      }
-    }
-
-    .options {
-      display: grid;
-      gap: 10px;
-    }
-
-    .option-row {
-      display: grid;
-      grid-template-columns: 28px 1fr;
-      align-items: start;
-      gap: 10px;
-      padding: 13px;
-      border-radius: 15px;
-      border: 2px solid #475569;
-      background: #0b1220;
-      cursor: pointer;
-    }
-
-    .option-row:hover {
-      border-color: var(--accent);
-    }
-
-    .option-row input {
-      width: 20px;
-      height: 20px;
-      margin-top: 2px;
-      accent-color: var(--accent);
-    }
-
-    .option-row span {
-      color: var(--text);
-      font-weight: 650;
-    }
-
-    .feedback {
-      min-height: 46px;
-      border-radius: 16px;
-      padding: 12px 14px;
-      border: 1px solid transparent;
-      font-weight: 800;
-      display: none;
-    }
-
-    .feedback.active {
-      display: block;
-    }
-
-    .feedback.good {
-      color: #dcfce7;
-      background: rgba(34, 197, 94, 0.15);
-      border-color: rgba(34, 197, 94, 0.45);
-    }
-
-    .feedback.bad {
-      color: #ffe4e6;
-      background: rgba(251, 113, 133, 0.15);
-      border-color: rgba(251, 113, 133, 0.45);
-    }
-
-    .feedback.warn {
-      color: #fef3c7;
-      background: rgba(251, 191, 36, 0.15);
-      border-color: rgba(251, 191, 36, 0.45);
-    }
-
-    .score-card {
-      display: grid;
-      gap: 12px;
-      text-align: center;
-    }
-
-    .score-number {
-      font-size: clamp(2.4rem, 10vw, 4.2rem);
-      font-weight: 900;
-      color: var(--accent);
-      line-height: 1;
-    }
-
-    .attempt-list {
-      display: grid;
-      gap: 8px;
-      margin: 14px 0 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .attempt-list li {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 10px 12px;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      background: #0b1220;
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .certificate {
-      display: none;
-      background: var(--paper);
-      color: var(--ink);
-      border: 8px double #0f172a;
-      border-radius: 24px;
-      padding: clamp(16px, 4vw, 30px);
-      margin-top: 16px;
-      box-shadow: var(--shadow);
-      text-align: center;
-    }
-
-    .certificate.active {
-      display: block;
-    }
-
-    .certificate .school {
-      font-weight: 900;
-      text-transform: uppercase;
-      font-size: clamp(0.95rem, 3vw, 1.25rem);
-      border-bottom: 2px solid #0f172a;
-      padding-bottom: 8px;
-      margin-bottom: 12px;
-      line-height: 1.2;
-    }
-
-    .certificate h2 {
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(1.9rem, 7vw, 3.2rem);
-      letter-spacing: 0.04em;
-      margin: 8px 0 4px;
-      line-height: 1.05;
-    }
-
-    .certificate .subtitle {
-      font-size: clamp(1rem, 3.3vw, 1.3rem);
-      font-weight: 800;
-      margin: 0;
-      line-height: 1.2;
-    }
-
-    .certificate .name {
-      font-family: Georgia, "Times New Roman", serif;
-      font-size: clamp(1.35rem, 5vw, 2.15rem);
-      font-weight: 900;
-      margin: 10px 0;
-      padding: 6px 8px;
-      border-bottom: 2px solid #334155;
-      display: inline-block;
-      min-width: min(520px, 90%);
-      line-height: 1.15;
-    }
-
-    .certificate .cert-grid {
-      display: grid;
-      gap: 10px;
-      margin: 14px auto;
-      text-align: left;
-      max-width: 650px;
-    }
-
-    .certificate .cert-grid div {
-      padding: 8px 10px;
-      border-radius: 10px;
-      background: #e2e8f0;
-      font-weight: 800;
-      line-height: 1.25;
-    }
-
-    .certificate .cert-reason {
-      margin: 12px 0 0;
-      line-height: 1.25;
-    }
-
-    .signature {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 6px;
-      align-items: end;
-      margin-top: 18px;
-      text-align: right;
-      font-weight: 900;
-      line-height: 1.25;
-    }
-
-    .quote {
-      font-style: italic;
-      color: var(--muted);
-      text-align: center;
-      margin: 14px 0 0;
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0,0,0,0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    @page {
-      size: A4 portrait;
-      margin: 8mm;
-    }
-
-    @media print {
-      html,
-      body {
-        width: 210mm;
-        height: 297mm;
-        margin: 0 !important;
-        padding: 0 !important;
-        background: white !important;
-        overflow: hidden !important;
-      }
-
-      body * {
-        visibility: hidden !important;
-      }
-
-      #certificate,
-      #certificate * {
-        visibility: visible !important;
-      }
-
-      #certificate {
-        display: block !important;
-        position: fixed !important;
-        left: 8mm !important;
-        top: 8mm !important;
-        width: calc(210mm - 16mm) !important;
-        min-height: calc(297mm - 16mm) !important;
-        max-height: calc(297mm - 16mm) !important;
-        margin: 0 !important;
-        padding: 9mm 11mm !important;
-        box-sizing: border-box !important;
-        border: 2.4mm double #0f172a !important;
-        border-radius: 0 !important;
-        box-shadow: none !important;
-        overflow: hidden !important;
-        page-break-inside: avoid !important;
-        break-inside: avoid !important;
-      }
-
-      .certificate .school {
-        font-size: 13pt !important;
-        padding-bottom: 3mm !important;
-        margin-bottom: 5mm !important;
-        line-height: 1.15 !important;
-      }
-
-      .certificate h2 {
-        font-size: 34pt !important;
-        margin: 2mm 0 1.5mm !important;
-        line-height: 1 !important;
-      }
-
-      .certificate .subtitle {
-        font-size: 14pt !important;
-        line-height: 1.15 !important;
-      }
-
-      .certificate .name {
-        font-size: 23pt !important;
-        margin: 4mm 0 !important;
-        padding: 1.5mm 4mm !important;
-        min-width: 135mm !important;
-        line-height: 1.1 !important;
-      }
-
-      .certificate .cert-grid {
-        grid-template-columns: 1fr 1fr !important;
-        gap: 3mm !important;
-        margin: 5mm auto !important;
-        max-width: 170mm !important;
-      }
-
-      .certificate .cert-grid div {
-        padding: 2mm 3mm !important;
-        border-radius: 2mm !important;
-        font-size: 12.5pt !important;
-        line-height: 1.15 !important;
-      }
-
-      .certificate .cert-reason {
-        font-size: 12.5pt !important;
-        margin: 4mm 0 0 !important;
-        line-height: 1.2 !important;
-      }
-
-      .signature {
-        margin-top: 6mm !important;
-        gap: 1.5mm !important;
-        font-size: 13pt !important;
-        line-height: 1.15 !important;
+      .diploma-view{
+        width:100vw!important;
+        max-width:none!important;
+        height:auto!important;
+        max-height:100vh!important;
+        box-shadow:none!important;
+        page-break-inside:avoid;
       }
     }
   </style>
 </head>
-
 <body>
-  <div class="app">
-    <header class="topbar">
-      <div class="brand">
-        <strong>Fizică VII – Echilibrul corpurilor</strong>
-        <span>Prof. DĂNUȚ ANDRONIE</span>
+  <main class="app no-print" id="app">
+    <section class="top">
+      <h1>Fizică VII</h1>
+      <div class="chapter">Echilibrul corpurilor</div>
+    </section>
+
+    <section class="card" id="screen-start">
+      <p class="note">Exersează de cel puțin 4 ori și vei primi o diplomă în format pdf pe care o poți prezenta profesorului tău.</p>
+
+      <label class="small" for="p-school">Școala</label>
+      <input type="text" id="p-school" placeholder="Ex.: Gala Galaction Mangalia" autocomplete="organization">
+
+      <label class="small" for="p-name">Elev</label>
+      <input type="text" id="p-name" placeholder="Numele și prenumele" autocomplete="name">
+
+      <div class="row">
+        <div>
+          <label class="small" for="p-class">Clasa</label>
+          <select id="p-class">
+            <option value="">Alege...</option>
+            <option value="a VII-a A">a VII-a A</option>
+            <option value="a VII-a B">a VII-a B</option>
+            <option value="a VII-a C">a VII-a C</option>
+            <option value="a VII-a D">a VII-a D</option>
+          </select>
+        </div>
+        <div>
+          <label class="small" for="p-short">Capitol</label>
+          <input type="text" id="p-short" value="Echilibrul corpurilor" readonly>
+        </div>
       </div>
-      <div class="badge">Echilibrul corpurilor</div>
-    </header>
 
-    <main>
-      <section id="screen-start" class="screen active">
-        <div class="card intro-grid">
-          <div>
-            <h1>Test interactiv</h1>
-            <p class="muted">Completează datele elevului, apoi începe testul. Fiecare cerință se deschide pe o pagină separată.</p>
-            <p class="note">După 4 exersări finalizate, se poate genera diploma cu punctajul mediu.</p>
-          </div>
-          <form id="studentForm" onsubmit="startTest(); return false;">
-            <label for="schoolInput">Antetul școlii</label>
-            <input id="schoolInput" type="text" autocomplete="organization" placeholder="Ex.: Școala Gimnazială ..." required>
+      <button class="btn" onclick="startTest()">Începe testul</button>
+      <button class="btn secondary" onclick="resetAttempts()">Resetează exersările</button>
+    </section>
 
-            <label for="nameInput">Numele și prenumele elevului</label>
-            <input id="nameInput" type="text" autocomplete="name" placeholder="Nume și prenume" required>
+    <section class="card hidden" id="screen-test">
+      <div class="meta">
+        <span id="q-count">Item 1/20</span>
+        <span id="score-live">0 p</span>
+      </div>
+      <div class="bar-wrap"><div class="bar" id="progress"></div></div>
 
-            <label for="classInput">Clasa</label>
-            <input id="classInput" type="text" placeholder="Ex.: a VII-a A" required>
+      <div class="question" id="question"></div>
+      <div class="answers" id="answers"></div>
+      <div class="feedback" id="feedback" aria-live="polite"></div>
 
-            <div class="actions">
-              <button class="primary" type="submit">Începe testul</button>
-              <button class="outline" type="button" onclick="resetAttempts()">Resetează exersările salvate</button>
-            </div>
-          </form>
-        </div>
-      </section>
+      <button class="btn" id="check-btn" onclick="checkAnswer()">Verifică</button>
+      <button class="btn next" id="next-btn" onclick="nextItem()" disabled>Mergi mai departe</button>
+    </section>
 
-      <section id="screen-quiz" class="screen">
-        <div class="progress-wrap">
-          <div class="progress-text">
-            <span id="progressLabel">Problema 1 din 10</span>
-            <span id="scoreLabel">Punctaj: 0</span>
-          </div>
-          <div class="bar" aria-hidden="true"><div id="progressBar"></div></div>
-        </div>
+    <section class="card hidden" id="screen-end">
+      <h2 class="center">Rezultat</h2>
+      <div class="score-big" id="final-score">0/100</div>
+      <p class="center muted" id="practice-info"></p>
 
-        <div class="card">
-          <h2 id="questionTitle" class="question-title"></h2>
-          <div id="statement" class="statement"></div>
-          <div id="media"></div>
-          <div id="answerArea" class="answer-area"></div>
+      <div class="actions">
+        <button class="btn" onclick="restartTest()">Reia testul</button>
+        <button class="btn secondary" id="diploma-btn" onclick="showDiploma()">Diplomă PDF</button>
+      </div>
+    </section>
+  </main>
 
-          <div id="feedback" class="feedback" aria-live="polite"></div>
-
-          <div class="actions two">
-            <button id="checkBtn" class="primary" type="button" onclick="checkAnswer()">Verifică răspunsul</button>
-            <button id="nextBtn" class="success" type="button" onclick="goNext()" disabled>Mergi mai departe</button>
-          </div>
-        </div>
-      </section>
-
-      <section id="screen-end" class="screen">
-        <div class="card score-card">
-          <h1>Test finalizat</h1>
-          <div id="finalScore" class="score-number">0 / 100</div>
-          <p id="certificateInfo" class="muted"></p>
-          <ul id="attemptList" class="attempt-list"></ul>
-          <div class="actions two">
-            <button class="primary" type="button" onclick="restartTest()">Reia testul</button>
-            <button id="printBtn" class="success" type="button" onclick="window.print()" disabled>Eliberează diploma</button>
-          </div>
-        </div>
-
-        <div id="certificate" class="certificate">
-          <div id="certSchool" class="school"></div>
-          <h2>DIPLOMĂ</h2>
-          <div class="subtitle">Se acordă elevului/elevei</div>
-          <div id="certName" class="name"></div>
-          <div class="cert-grid">
-            <div id="certClass"></div>
-            <div id="certAverage"></div>
-            <div id="certAttempts"></div>
-            <div id="certDate"></div>
-          </div>
-          <p class="cert-reason">Pentru finalizarea a 4 exersări la testul „Echilibrul corpurilor”.</p>
-          <div class="signature">
-            <span>Semnătura profesorului</span>
-            <span>Prof. DĂNUȚ ANDRONIE</span>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică.”</p>
-  </div>
+  <section class="diploma-screen hidden" id="screen-diploma">
+    <div class="diploma-view" id="diploma">
+      <img class="diploma-bg" src="../../../assets/img/diploma-nautica.png" alt="Model diplomă nautică">
+      <div class="d-text d-school" id="d-school">Școala gimnazială</div>
+      <div class="d-text d-title">DIPLOMĂ DE MERIT</div>
+      <div class="d-text d-small">acordată elevului/elevei</div>
+      <div class="d-text d-name" id="d-name"></div>
+      <div class="d-text d-class" id="d-class"></div>
+      <div class="d-line"></div>
+      <div class="d-text d-body">
+        care a exersat testul final la fizică, capitolul<br>
+        <span id="d-chapter"></span>,<br>
+        și a obținut punctajul maxim <span id="d-score"></span> din patru exersări.
+      </div>
+      <div class="d-text d-date" id="d-date"></div>
+      <div class="d-text d-sign">
+        Semnează:<br>
+        Prof. Dănuț Andronie<br>
+        Email: danutmg@gmail.com
+      </div>
+    </div>
+    <div class="diploma-actions">
+      <button class="btn" onclick="window.print()">Salvează diploma ca PDF</button>
+      <button class="btn secondary" onclick="hideDiploma()">Înapoi</button>
+    </div>
+  </section>
 
 <script>
-  const IMG_BASE = "https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/5-echilibrul-corpurilor/test-final/";
-  const TOTAL_QUESTIONS = 10;
-  const OFFICE_POINTS = 20;
-  const POINTS_PER_QUESTION = 8;
+  const CHAPTER = "Echilibrul corpurilor";
+  const ATTEMPT_KEY = "fizica7_echilibrul_corpurilor_attempts_v3";
+  const TOTAL_ITEMS = 20;
+  const POINTS_PER_ITEM = 5;
+  const IMG_BASE = "";
+  const RAW_IMG_BASE = "https://raw.githubusercontent.com/danutmg-cyber/fizica-galaction/main/clasa7/5-echilibrul-corpurilor/test-final/";
 
   const state = {
-    school: "",
-    name: "",
-    className: "",
-    questions: [],
-    index: 0,
-    score: OFFICE_POINTS,
-    checked: false,
-    currentEarned: 0
+    school:"",
+    name:"",
+    className:"",
+    items:[],
+    index:0,
+    score:0,
+    checked:false,
+    currentOptions:[]
   };
 
   const discConfigs = {
-    "disc-1.png": { f1: 1, f2: 1, f3: -1, label: "disc-1.png" },
-    "disc-2.png": { f1: 1, f2: 1, f3: -1, label: "disc-2.png" },
-    "disc-3.png": { f1: -1, f2: -1, f3: 1, label: "disc-3.png" },
-    "disc-4.png": { f1: -1, f2: -1, f3: 1, label: "disc-4.png" }
+    "disc-1.png": { f1: 1, f2: 1, f3: -1 },
+    "disc-2.png": { f1: 1, f2: 1, f3: -1 },
+    "disc-3.png": { f1: -1, f2: -1, f3: 1 },
+    "disc-4.png": { f1: -1, f2: -1, f3: 1 }
   };
 
-  const pulleySystems = [
-    { text: "un scripete fix", law: "\\(F=R\\)" },
-    { text: "un scripete mobil", law: "\\(F=\\frac{R}{2}\\)" },
-    { text: "un sistem compus dintr-un scripete fix și unul mobil", law: "\\(F=\\frac{R}{2}\\)" },
-    { text: "un sistem compus dintr-un scripete fix și doi mobili", law: "\\(F=\\frac{R}{4}\\)" },
-    { text: "un sistem compus dintr-un scripete fix și trei mobili", law: "\\(F=\\frac{R}{8}\\)" }
+  const baseItems = [
+    {type:"mcq", q:"Momentul forței se măsoară în:", options:["N·m","N","kg","m/s"], answer:"N·m"},
+    {type:"mcq", q:"O pârghie are obligatoriu:", options:["punct de sprijin","scripete","arc","termometru"], answer:"punct de sprijin"},
+    {type:"mcq", q:"Scripetele fix:", options:["schimbă direcția forței","dublează masa","mărește greutatea","anulează frecarea"], answer:"schimbă direcția forței"},
+    {type:"mcq", q:"Scripetele mobil:", options:["poate micșora forța necesară","nu are rol practic","este numai decorativ","măsoară forța"], answer:"poate micșora forța necesară"},
+    {type:"dual", q:"Brațul forței influențează efectul de rotație.", answer:true},
+    {type:"dual", q:"La echilibru, corpul își schimbă starea de mișcare.", answer:false},
+    {type:"dual", q:"Pârghia de ordinul I are sprijinul între forță și rezistență.", answer:true},
+    {type:"dual", q:"Penseta este un exemplu de pârghie.", answer:true},
+    {type:"fill", q:"Simbolul uzual pentru momentul forței este:", answers:["m","M","mf","M_f"], exact:"M"},
+    {type:"fill", q:"Unitatea pentru forță este:", answers:["newton","n"], exact:"newton"}
   ];
 
-  const pulleyOptions = [
-    "\\(F=R\\)",
-    "\\(F=\\frac{R}{2}\\)",
-    "\\(F=\\frac{R}{4}\\)",
-    "\\(F=\\frac{R}{6}\\)",
-    "\\(F=\\frac{R}{8}\\)"
-  ];
+  function generatedItems(){
+    const items = [];
+    const discImages = shuffle(["disc-1.png","disc-2.png","disc-3.png","disc-4.png"]);
+    const leverImages = shuffle(["parghia-1.png","parghia-2.png","parghia-3.png","parghia-4.png","parghia-5.png","parghia-6.png"]);
 
-  function randInt(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    items.push(makeMomentM());
+    items.push(makeMomentF());
+    items.push(makeMomentB());
+    items.push(makeDiscDirection(discImages[0]));
+    items.push(makeDiscEquilibrium(discImages[1]));
+    items.push(makeDiscF3(discImages[2]));
+    items.push(makeDiscF1(discImages[3]));
+    items.push(makeLeverR(leverImages[0]));
+    items.push(makeLeverF(leverImages[1]));
+    items.push(makeLeverBF(leverImages[2]));
+    items.push(makeLeverBR(leverImages[3]));
+    items.push(makeLeverText(leverImages[4]));
+    items.push(makePulleyLaw());
+    items.push(makePulleyNumeric());
+    items.push(makeLeverOrder());
+    return items;
   }
 
-  function randStep(min, max, step) {
-    const n = Math.floor((max - min) / step);
-    return min + randInt(0, n) * step;
+  function makeMomentM(){
+    const F = randStep(20,90,5);
+    const b = randStep(2,8,1)/10;
+    return {
+      type:"fill",
+      numeric:true,
+      q:`Se dau \\(F=${F}\\,\\text{N}\\), \\(b_F=${formatNum(b)}\\,\\text{m}\\). Determină \\(M_F\\).`,
+      answers:[String(round(F*b,2))],
+      exact:`${formatNum(round(F*b,2))} N·m`
+    };
   }
 
-  function choice(arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
+  function makeMomentF(){
+    const F = randStep(20,100,5);
+    const b = randStep(2,6,1)/10;
+    const M = round(F*b,2);
+    return {
+      type:"fill",
+      numeric:true,
+      q:`Se dau \\(M_F=${formatNum(M)}\\,\\text{N·m}\\), \\(b_F=${formatNum(b)}\\,\\text{m}\\). Determină \\(F\\).`,
+      answers:[String(F)],
+      exact:`${F} N`
+    };
   }
 
-  function shuffle(arr) {
-    const copy = [...arr];
-    for (let i = copy.length - 1; i > 0; i--) {
-      const j = randInt(0, i);
-      [copy[i], copy[j]] = [copy[j], copy[i]];
-    }
-    return copy;
+  function makeMomentB(){
+    const F = randStep(20,100,10);
+    const b = randStep(20,80,10);
+    const M = round(F*b/100,2);
+    return {
+      type:"fill",
+      numeric:true,
+      q:`Se dau \\(M_F=${formatNum(M)}\\,\\text{N·m}\\), \\(F=${F}\\,\\text{N}\\). Determină \\(b_F\\) în cm.`,
+      answers:[String(b)],
+      exact:`${b} cm`
+    };
   }
 
-  function sample(arr, count) {
-    return shuffle(arr).slice(0, count);
+  function discSum(img,F1,F2,F3,r=1){
+    const c = discConfigs[img];
+    return c.f1*F1*r + c.f2*F2*r/4 + c.f3*F3*r/2;
   }
 
-  function roundTo(value, digits = 3) {
-    const factor = Math.pow(10, digits);
-    return Math.round((value + Number.EPSILON) * factor) / factor;
+  function makeDiscDirection(img){
+    const F1 = randStep(16,40,2);
+    const F2 = randStep(20,56,4);
+    let F3 = randStep(30,86,2);
+    if(Math.abs(discSum(img,F1,F2,F3)) < 1) F3 += 8;
+    const sum = discSum(img,F1,F2,F3);
+    const answer = Math.abs(sum) < 1 ? "Da, este în echilibru." : (sum > 0 ? "Nu, sens antiorar." : "Nu, sens orar.");
+    return {
+      type:"mcq",
+      q:`Disc: \\(F_1=${F1}\\,\\text{N}\\), \\(F_2=${F2}\\,\\text{N}\\), \\(F_3=${F3}\\,\\text{N}\\). Alege.`,
+      img,
+      caption:"Disc cu forțe aplicate",
+      options:["Da, este în echilibru.","Nu, sens orar.","Nu, sens antiorar."],
+      answer
+    };
   }
 
-  function formatNumber(value, digits = 3) {
-    const rounded = roundTo(value, digits);
-    return String(rounded).replace(".", ",");
+  function makeDiscEquilibrium(img){
+    const F1 = randStep(16,38,2);
+    const F2 = randStep(20,60,4);
+    const F3 = 2*F1 + F2/2;
+    return {
+      type:"dual",
+      q:`Disc: \\(F_1=${F1}\\,\\text{N}\\), \\(F_2=${F2}\\,\\text{N}\\), \\(F_3=${F3}\\,\\text{N}\\). Discul este în echilibru de rotație.`,
+      img,
+      caption:"Disc cu forțe aplicate",
+      answer:true
+    };
   }
 
-  function parseNumber(input) {
-    if (!input) return NaN;
-    const normalized = String(input).trim().replace(",", ".").replace(/[^\d.+-]/g, "");
-    return Number(normalized);
+  function makeDiscF3(img){
+    const F1 = randStep(14,42,2);
+    const F2 = randStep(24,64,4);
+    const F3 = 2*F1 + F2/2;
+    return {
+      type:"fill",
+      numeric:true,
+      q:`Disc: \\(F_1=${F1}\\,\\text{N}\\), \\(F_2=${F2}\\,\\text{N}\\). Determină \\(F_3\\) pentru echilibru.`,
+      img,
+      caption:"Disc cu forțe aplicate",
+      answers:[String(F3)],
+      exact:`${formatNum(F3)} N`
+    };
   }
 
-  function showScreen(id) {
-    document.querySelectorAll(".screen").forEach(screen => screen.classList.remove("active"));
-    document.getElementById(id).classList.add("active");
-    window.scrollTo({ top: 0, behavior: "smooth" });
+  function makeDiscF1(img){
+    const F1 = randStep(14,42,2);
+    const F2 = randStep(24,64,4);
+    const F3 = 2*F1 + F2/2;
+    return {
+      type:"fill",
+      numeric:true,
+      q:`Disc: \\(F_2=${F2}\\,\\text{N}\\), \\(F_3=${F3}\\,\\text{N}\\). Determină \\(F_1\\) pentru echilibru.`,
+      img,
+      caption:"Disc cu forțe aplicate",
+      answers:[String(F1)],
+      exact:`${formatNum(F1)} N`
+    };
   }
 
-  function typeset() {
-    if (window.MathJax && window.MathJax.typesetPromise) {
-      window.MathJax.typesetPromise();
-    }
+  function makeLeverR(img){
+    const F = randStep(20,80,5);
+    const bF = randStep(30,80,10);
+    const bR = randStep(20,60,10);
+    const R = round(F*bF/bR,2);
+    return {
+      type:"fill",
+      numeric:true,
+      q:`Pârghie: \\(F=${F}\\,\\text{N}\\), \\(b_F=${bF}\\,\\text{cm}\\), \\(b_R=${bR}\\,\\text{cm}\\). Determină \\(R\\).`,
+      img,
+      caption:"Pârghie",
+      answers:[String(R)],
+      exact:`${formatNum(R)} N`
+    };
   }
 
-  function startTest() {
-    const school = document.getElementById("schoolInput").value.trim();
-    const name = document.getElementById("nameInput").value.trim();
-    const className = document.getElementById("classInput").value.trim();
+  function makeLeverF(img){
+    const R = randStep(30,120,10);
+    const bF = randStep(30,90,10);
+    const bR = randStep(20,60,10);
+    const F = round(R*bR/bF,2);
+    return {
+      type:"fill",
+      numeric:true,
+      q:`Pârghie: \\(R=${R}\\,\\text{N}\\), \\(b_F=${bF}\\,\\text{cm}\\), \\(b_R=${bR}\\,\\text{cm}\\). Determină \\(F\\).`,
+      img,
+      caption:"Pârghie",
+      answers:[String(F)],
+      exact:`${formatNum(F)} N`
+    };
+  }
 
-    if (!school || !name || !className) {
-      alert("Completează antetul școlii, numele și clasa.");
+  function makeLeverBF(img){
+    const F = randStep(30,90,10);
+    const R = randStep(30,120,10);
+    const bR = randStep(20,60,10);
+    const bF = round(R*bR/F,2);
+    return {
+      type:"fill",
+      numeric:true,
+      q:`Pârghie: \\(F=${F}\\,\\text{N}\\), \\(R=${R}\\,\\text{N}\\), \\(b_R=${bR}\\,\\text{cm}\\). Determină \\(b_F\\).`,
+      img,
+      caption:"Pârghie",
+      answers:[String(bF)],
+      exact:`${formatNum(bF)} cm`
+    };
+  }
+
+  function makeLeverBR(img){
+    const F = randStep(30,90,10);
+    const R = randStep(30,120,10);
+    const bF = randStep(30,80,10);
+    const bR = round(F*bF/R,2);
+    return {
+      type:"fill",
+      numeric:true,
+      q:`Pârghie: \\(F=${F}\\,\\text{N}\\), \\(R=${R}\\,\\text{N}\\), \\(b_F=${bF}\\,\\text{cm}\\). Determină \\(b_R\\).`,
+      img,
+      caption:"Pârghie",
+      answers:[String(bR)],
+      exact:`${formatNum(bR)} cm`
+    };
+  }
+
+  function makeLeverText(img){
+    return {
+      type:"mcq",
+      q:"În imagine este reprezentată:",
+      img,
+      caption:"Pârghie",
+      options:["o pârghie","un circuit electric","un termometru","un dinamometru"],
+      answer:"o pârghie"
+    };
+  }
+
+  function makePulleyLaw(){
+    const systems = [
+      {text:"scripete fix", ans:"\\(F=R\\)"},
+      {text:"scripete mobil", ans:"\\(F=\\frac{R}{2}\\)"},
+      {text:"un fix și doi mobili", ans:"\\(F=\\frac{R}{4}\\)"},
+      {text:"un fix și trei mobili", ans:"\\(F=\\frac{R}{8}\\)"}
+    ];
+    const s = pick(systems);
+    return {
+      type:"mcq",
+      q:`Sistem: ${s.text}. Alege relația corectă.`,
+      options:["\\(F=R\\)","\\(F=\\frac{R}{2}\\)","\\(F=\\frac{R}{4}\\)","\\(F=\\frac{R}{8}\\)"],
+      answer:s.ans
+    };
+  }
+
+  function makePulleyNumeric(){
+    const cases = [
+      {text:"un scripete mobil", div:2},
+      {text:"un scripete fix și doi mobili", div:4},
+      {text:"un scripete fix și trei mobili", div:8}
+    ];
+    const c = pick(cases);
+    const R = pick([40,60,80,100,120]);
+    return {
+      type:"fill",
+      numeric:true,
+      q:`Sistem: ${c.text}. \\(R=${R}\\,\\text{N}\\). Determină \\(F\\).`,
+      answers:[String(R/c.div)],
+      exact:`${formatNum(R/c.div)} N`
+    };
+  }
+
+  function makeLeverOrder(){
+    const q = pick([
+      {q:"Punctul de sprijin este între forță și rezistență. Ordinul pârghiei este:", a:"I"},
+      {q:"Rezistența este între sprijin și forță. Ordinul pârghiei este:", a:"II"},
+      {q:"Forța este între sprijin și rezistență. Ordinul pârghiei este:", a:"III"}
+    ]);
+    return {
+      type:"mcq",
+      q:q.q,
+      options:["I","II","III"],
+      answer:q.a
+    };
+  }
+
+  function startTest(){
+    state.school = document.getElementById("p-school").value.trim();
+    state.name = document.getElementById("p-name").value.trim();
+    state.className = document.getElementById("p-class").value.trim();
+    if(!state.school || !state.name || !state.className){
+      alert("Completează școala, numele și clasa.");
       return;
     }
-
-    state.school = school;
-    state.name = name;
-    state.className = className;
+    const items = [...baseItems, ...generatedItems()];
+    state.items = shuffle(items).slice(0,TOTAL_ITEMS);
     state.index = 0;
-    state.score = OFFICE_POINTS;
+    state.score = 0;
     state.checked = false;
-    state.currentEarned = 0;
-    state.questions = buildQuestions();
 
-    renderQuestion();
-    showScreen("screen-quiz");
+    document.getElementById("screen-start").classList.add("hidden");
+    document.getElementById("screen-end").classList.add("hidden");
+    document.getElementById("screen-test").classList.remove("hidden");
+    showItem();
   }
 
-  function buildQuestions() {
-    const discImages = sample(Object.keys(discConfigs), 3);
-    const leverImages = sample(["parghia-1.png", "parghia-2.png", "parghia-3.png", "parghia-4.png", "parghia-5.png", "parghia-6.png"], 3);
-    const leverAsks = sample(["F", "R", "bF", "bR"], 3);
-
-    return [
-      makeMomentQuestion("M"),
-      makeMomentQuestion("F"),
-      makeMomentQuestion("bF"),
-      makeDiscQuestion("direction", discImages[0]),
-      makeDiscQuestion("F1", discImages[1]),
-      makeDiscQuestion("F3", discImages[2]),
-      makeLeverQuestion(leverAsks[0], leverImages[0]),
-      makeLeverQuestion(leverAsks[1], leverImages[1]),
-      makeLeverQuestion(leverAsks[2], leverImages[2]),
-      makePulleyQuestion()
-    ];
-  }
-
-  function makeNumberQuestion({ title, statementHTML, expected, unit, mediaHTML = "" }) {
-    return {
-      title,
-      type: "number",
-      expected: roundTo(expected, 3),
-      unit,
-      points: POINTS_PER_QUESTION,
-      statementHTML,
-      mediaHTML,
-      correctText() {
-        return `${formatNumber(this.expected)} ${this.unit}`.trim();
-      }
-    };
-  }
-
-  function makeMomentQuestion(kind) {
-    if (kind === "M") {
-      const F = randStep(20, 95, 5);
-      const bCm = randStep(10, 75, 5);
-      const M = F * bCm / 100;
-      return makeNumberQuestion({
-        title: "Problema 1 – Momentul forței",
-        expected: M,
-        unit: "N·m",
-        statementHTML: `
-          <p>Se cunosc: \\(F=${F}\\,\\text{N}\\) și \\(b_F=${bCm}\\,\\text{cm}\\).</p>
-          <p>Determină \\(M_F\\). Scrie rezultatul în \\(\\text{N}\\cdot\\text{m}\\).</p>
-        `
-      });
-    }
-
-    if (kind === "F") {
-      const F = randStep(20, 120, 5);
-      const bCm = randStep(10, 75, 5);
-      const M = F * bCm / 100;
-      return makeNumberQuestion({
-        title: "Problema 2 – Momentul forței",
-        expected: F,
-        unit: "N",
-        statementHTML: `
-          <p>Se cunosc: \\(M_F=${formatNumber(M)}\\,\\text{N}\\cdot\\text{m}\\) și \\(b_F=${bCm}\\,\\text{cm}\\).</p>
-          <p>Determină \\(F\\). Scrie rezultatul în \\(\\text{N}\\).</p>
-        `
-      });
-    }
-
-    const F = randStep(20, 120, 5);
-    const bCm = randStep(10, 80, 5);
-    const M = F * bCm / 100;
-    return makeNumberQuestion({
-      title: "Problema 3 – Momentul forței",
-      expected: bCm,
-      unit: "cm",
-      statementHTML: `
-        <p>Se cunosc: \\(M_F=${formatNumber(M)}\\,\\text{N}\\cdot\\text{m}\\) și \\(F=${F}\\,\\text{N}\\).</p>
-        <p>Determină \\(b_F\\). Scrie rezultatul în \\(\\text{cm}\\).</p>
-      `
-    });
-  }
-
-  function makeDiscMedia(imageName) {
-    return `
-      <div class="media-box">
-        <img src="${IMG_BASE}${imageName}" alt="Disc cu forțe aplicate">
-        <div class="media-caption">${imageName}</div>
-      </div>
-    `;
-  }
-
-  function discMomentSum(config, F1, F2, F3, rM) {
-    const OA = rM;
-    const OB = rM / 4;
-    const OC = rM / 2;
-    return config.f1 * F1 * OA + config.f2 * F2 * OB + config.f3 * F3 * OC;
-  }
-
-  function makeDiscQuestion(kind, imageName) {
-    const config = discConfigs[imageName];
-    const rDm = randStep(32, 70, 1) / 10;
-    const rM = rDm / 10;
-
-    if (kind === "direction") {
-      let F1, F2, F3;
-      if (Math.random() < 0.25) {
-        F1 = randStep(18, 42, 2);
-        F2 = randStep(24, 60, 4);
-        F3 = 2 * F1 + F2 / 2;
-      } else {
-        F1 = randStep(18, 42, 2);
-        F2 = randStep(24, 60, 2);
-        F3 = randStep(44, 92, 2);
-        const sumTest = discMomentSum(config, F1, F2, F3, rM);
-        if (Math.abs(sumTest) < 0.06) F3 += 6;
-      }
-
-      const sum = discMomentSum(config, F1, F2, F3, rM);
-      let correctOption;
-      if (Math.abs(sum) < 0.06) correctOption = "Da, discul este în echilibru de rotație.";
-      else if (sum > 0) correctOption = "Nu, discul se rotește în sens antiorar.";
-      else correctOption = "Nu, discul se rotește în sens orar.";
-
-      const options = [
-        "Da, discul este în echilibru de rotație.",
-        "Nu, discul se rotește în sens orar.",
-        "Nu, discul se rotește în sens antiorar."
-      ];
-
-      return {
-        title: "Problema 4 – Rotația discului",
-        type: "radio",
-        options,
-        expected: options.indexOf(correctOption),
-        points: POINTS_PER_QUESTION,
-        statementHTML: `
-          <p>Se cunosc: \\(F_1=${F1}\\,\\text{N}\\), \\(F_2=${F2}\\,\\text{N}\\), \\(F_3=${formatNumber(F3)}\\,\\text{N}\\), \\(r=${formatNumber(rDm, 1)}\\,\\text{dm}\\).</p>
-          <p>În imagine: \\(OA=r\\), \\(OC=\\frac{r}{2}\\), \\(OB=\\frac{r}{4}\\).</p>
-          <p>Alege răspunsul corect.</p>
-        `,
-        mediaHTML: makeDiscMedia(imageName),
-        correctText() {
-          return this.options[this.expected];
-        }
-      };
-    }
-
-    if (kind === "F1") {
-      const F1 = randStep(18, 44, 2);
-      const F2 = randStep(24, 64, 4);
-      const F3 = 2 * F1 + F2 / 2;
-      return makeNumberQuestion({
-        title: "Problema 5 – Rotația discului",
-        expected: F1,
-        unit: "N",
-        mediaHTML: makeDiscMedia(imageName),
-        statementHTML: `
-          <p>Se cunosc: \\(F_2=${F2}\\,\\text{N}\\), \\(F_3=${formatNumber(F3)}\\,\\text{N}\\), \\(r=${formatNumber(rDm, 1)}\\,\\text{dm}\\).</p>
-          <p>În imagine: \\(OA=r\\), \\(OC=\\frac{r}{2}\\), \\(OB=\\frac{r}{4}\\).</p>
-          <p>Determină \\(F_1\\) pentru ca discul să fie în echilibru de rotație. Scrie rezultatul în \\(\\text{N}\\).</p>
-        `
-      });
-    }
-
-    const F1 = randStep(18, 44, 2);
-    const F2 = randStep(24, 64, 4);
-    const F3 = 2 * F1 + F2 / 2;
-    return makeNumberQuestion({
-      title: "Problema 6 – Rotația discului",
-      expected: F3,
-      unit: "N",
-      mediaHTML: makeDiscMedia(imageName),
-      statementHTML: `
-        <p>Se cunosc: \\(F_1=${F1}\\,\\text{N}\\), \\(F_2=${F2}\\,\\text{N}\\), \\(r=${formatNumber(rDm, 1)}\\,\\text{dm}\\).</p>
-        <p>În imagine: \\(OA=r\\), \\(OC=\\frac{r}{2}\\), \\(OB=\\frac{r}{4}\\).</p>
-        <p>Determină \\(F_3\\) pentru ca discul să fie în echilibru de rotație. Scrie rezultatul în \\(\\text{N}\\).</p>
-      `
-    });
-  }
-
-  function makeLeverMedia(imageName) {
-    return `
-      <div class="media-box">
-        <img src="${IMG_BASE}${imageName}" alt="Pârghie cu forța activă și forța rezistentă">
-        <div class="media-caption">${imageName}</div>
-      </div>
-    `;
-  }
-
-  function makeLeverQuestion(ask, imageName) {
-    const F = randStep(60, 220, 5);
-    const bF = randStep(20, 80, 5);
-    const bR = randStep(10, 45, 5);
-    const R = F * bF / bR;
-
-    if (ask === "F") {
-      return makeNumberQuestion({
-        title: "Problema 7 – Pârghia",
-        expected: F,
-        unit: "N",
-        mediaHTML: makeLeverMedia(imageName),
-        statementHTML: `
-          <p>Asupra pârghiei din imagine acționează forța rezistentă \\(R=${formatNumber(R)}\\,\\text{N}\\).</p>
-          <p>Se cunosc: \\(b_F=${bF}\\,\\text{cm}\\), \\(b_R=${bR}\\,\\text{cm}\\).</p>
-          <p>Determină \\(F\\). Scrie rezultatul în \\(\\text{N}\\).</p>
-        `
-      });
-    }
-
-    if (ask === "R") {
-      return makeNumberQuestion({
-        title: "Problema 8 – Pârghia",
-        expected: R,
-        unit: "N",
-        mediaHTML: makeLeverMedia(imageName),
-        statementHTML: `
-          <p>Asupra pârghiei din imagine acționează \\(F=${F}\\,\\text{N}\\).</p>
-          <p>Se cunosc: \\(b_F=${bF}\\,\\text{cm}\\), \\(b_R=${bR}\\,\\text{cm}\\).</p>
-          <p>Determină \\(R\\). Scrie rezultatul în \\(\\text{N}\\).</p>
-        `
-      });
-    }
-
-    if (ask === "bF") {
-      return makeNumberQuestion({
-        title: "Problema 9 – Pârghia",
-        expected: bF,
-        unit: "cm",
-        mediaHTML: makeLeverMedia(imageName),
-        statementHTML: `
-          <p>Asupra pârghiei din imagine acționează \\(F=${F}\\,\\text{N}\\) și \\(R=${formatNumber(R)}\\,\\text{N}\\).</p>
-          <p>Se cunoaște: \\(b_R=${bR}\\,\\text{cm}\\).</p>
-          <p>Determină \\(b_F\\). Scrie rezultatul în \\(\\text{cm}\\).</p>
-        `
-      });
-    }
-
-    return makeNumberQuestion({
-      title: "Problema 9 – Pârghia",
-      expected: bR,
-      unit: "cm",
-      mediaHTML: makeLeverMedia(imageName),
-      statementHTML: `
-        <p>Asupra pârghiei din imagine acționează \\(F=${F}\\,\\text{N}\\) și \\(R=${formatNumber(R)}\\,\\text{N}\\).</p>
-        <p>Se cunoaște: \\(b_F=${bF}\\,\\text{cm}\\).</p>
-        <p>Determină \\(b_R\\). Scrie rezultatul în \\(\\text{cm}\\).</p>
-      `
-    });
-  }
-
-  function makePulleyQuestion() {
-    const selected = choice(pulleySystems);
-    const options = shuffle(pulleyOptions);
-    const expected = options.indexOf(selected.law);
-
-    return {
-      title: "Problema 10 – Scripeți",
-      type: "radio",
-      options,
-      expected,
-      points: POINTS_PER_QUESTION,
-      statementHTML: `
-        <p>Se consideră ${selected.text}.</p>
-        <p>Alege legea corectă pentru sistemul de scripeți din enunț.</p>
-      `,
-      mediaHTML: "",
-      correctText() {
-        return this.options[this.expected];
-      }
-    };
-  }
-
-  function renderQuestion() {
-    const q = state.questions[state.index];
+  function showItem(){
+    const item = state.items[state.index];
     state.checked = false;
-    state.currentEarned = 0;
+    state.currentOptions = [];
 
-    document.getElementById("progressLabel").textContent = `Problema ${state.index + 1} din ${TOTAL_QUESTIONS}`;
-    document.getElementById("scoreLabel").textContent = `Punctaj: ${state.score}`;
-    document.getElementById("progressBar").style.width = `${(state.index / TOTAL_QUESTIONS) * 100}%`;
-    const topic = q.topic || (q.title.includes("–") ? q.title.split("–").slice(1).join("–").trim() : q.title);
-    document.getElementById("questionTitle").innerHTML = `Problema ${state.index + 1} – ${topic}`;
-    document.getElementById("statement").innerHTML = q.statementHTML;
-    document.getElementById("media").innerHTML = q.mediaHTML || "";
+    document.getElementById("q-count").textContent = `Item ${state.index + 1}/${TOTAL_ITEMS}`;
+    document.getElementById("score-live").textContent = `${state.score} p`;
+    document.getElementById("progress").style.width = `${(state.index / TOTAL_ITEMS) * 100}%`;
 
-    const answerArea = document.getElementById("answerArea");
-    if (q.type === "number") {
-      answerArea.innerHTML = `
-        <label for="answerInput">Răspuns</label>
-        <div class="answer-unit">
-          <input id="answerInput" type="text" inputmode="decimal" autocomplete="off" placeholder="Scrie valoarea numerică">
-          <div class="unit-pill">${q.unit}</div>
-        </div>
-      `;
-      setTimeout(() => document.getElementById("answerInput")?.focus(), 100);
+    let q = `<div>${item.q}</div>`;
+    if(item.img){
+      q += mediaHTML(item.img, item.caption || "");
+    }
+    document.getElementById("question").innerHTML = q;
+
+    const fb = document.getElementById("feedback");
+    fb.className = "feedback";
+    fb.textContent = "";
+
+    const answers = document.getElementById("answers");
+    answers.innerHTML = "";
+
+    if(item.type === "mcq"){
+      state.currentOptions = shuffle(item.options.map(opt => ({
+        text: opt,
+        ok: normalizeAnswer(opt) === normalizeAnswer(item.answer)
+      })));
+      state.currentOptions.forEach((opt, idx) => {
+        const id = `opt-${idx}`;
+        answers.insertAdjacentHTML("beforeend", `
+          <label class="choice" for="${id}">
+            <input id="${id}" type="radio" name="answer" value="${idx}">
+            <span>${opt.text}</span>
+          </label>
+        `);
+      });
+    } else if(item.type === "dual"){
+      [
+        {text:"Adevărat", value:true},
+        {text:"Fals", value:false}
+      ].forEach((opt, idx) => {
+        const id = `dual-${idx}`;
+        answers.insertAdjacentHTML("beforeend", `
+          <label class="choice" for="${id}">
+            <input id="${id}" type="radio" name="answer" value="${opt.value}">
+            <span>${opt.text}</span>
+          </label>
+        `);
+      });
     } else {
-      answerArea.innerHTML = `
-        <div class="options" role="radiogroup" aria-label="Variante de răspuns">
-          ${q.options.map((option, idx) => `
-            <label class="option-row">
-              <input type="radio" name="radioAnswer" value="${idx}">
-              <span>${option}</span>
-            </label>
-          `).join("")}
-        </div>
-      `;
+      answers.innerHTML = `<input type="text" id="answer-input" placeholder="Răspuns" autocomplete="off">`;
+      setTimeout(() => document.getElementById("answer-input")?.focus(), 50);
     }
 
-    const feedback = document.getElementById("feedback");
-    feedback.className = "feedback";
-    feedback.textContent = "";
-
-    document.getElementById("checkBtn").disabled = false;
-    document.getElementById("nextBtn").disabled = true;
-
+    document.getElementById("check-btn").disabled = false;
+    const next = document.getElementById("next-btn");
+    next.disabled = true;
+    next.classList.remove("active");
+    next.textContent = state.index === TOTAL_ITEMS - 1 ? "Finalizează" : "Mergi mai departe";
     typeset();
   }
 
-  function checkAnswer() {
-    if (state.checked) return;
+  function mediaHTML(img, caption){
+    const safeImg = escapeHtml(img);
+    return `
+      <div class="media-box">
+        <img src="${IMG_BASE}${safeImg}" alt="${escapeHtml(caption || "Imagine")}" onerror="this.onerror=null;this.src='${RAW_IMG_BASE}${safeImg}'">
+        ${caption ? `<div class="media-caption">${escapeHtml(caption)}</div>` : ""}
+      </div>
+    `;
+  }
 
-    const q = state.questions[state.index];
-    let correct = false;
+  function checkAnswer(){
+    if(state.checked) return;
+    const item = state.items[state.index];
+    let ok = false;
+    let shownAnswer = "";
 
-    if (q.type === "number") {
-      const input = document.getElementById("answerInput").value;
-      const value = parseNumber(input);
-      if (Number.isNaN(value)) {
-        showFeedback("warn", "Scrie un răspuns numeric.");
-        return;
-      }
-      const tolerance = Math.max(0.05, Math.abs(q.expected) * 0.015);
-      correct = Math.abs(value - q.expected) <= tolerance;
+    if(item.type === "mcq"){
+      const selected = document.querySelector('input[name="answer"]:checked');
+      if(!selected) return alert("Alege un răspuns.");
+      ok = state.currentOptions[Number(selected.value)]?.ok === true;
+      shownAnswer = item.answer;
+    } else if(item.type === "dual"){
+      const selected = document.querySelector('input[name="answer"]:checked');
+      if(!selected) return alert("Alege Adevărat sau Fals.");
+      ok = (selected.value === String(item.answer));
+      shownAnswer = item.answer ? "Adevărat" : "Fals";
     } else {
-      const checked = document.querySelector('input[name="radioAnswer"]:checked');
-      if (!checked) {
-        showFeedback("warn", "Alege o variantă de răspuns.");
-        return;
+      const input = document.getElementById("answer-input");
+      const user = input.value;
+      if(!user.trim()) return alert("Scrie răspunsul.");
+      if(item.numeric){
+        const target = numericValue(item.answers[0]);
+        const userNum = numericValue(user);
+        ok = Number.isFinite(userNum) && Math.abs(userNum - target) <= 0.05;
+      } else {
+        ok = item.answers.some(a => normalizeAnswer(user) === normalizeAnswer(a));
       }
-      correct = Number(checked.value) === q.expected;
+      shownAnswer = item.exact || item.answers[0];
     }
 
     state.checked = true;
-    state.currentEarned = correct ? q.points : 0;
-    state.score += state.currentEarned;
+    document.getElementById("check-btn").disabled = true;
 
-    if (correct) {
-      showFeedback("good", `Corect! Ai obținut ${q.points} puncte.`);
+    const fb = document.getElementById("feedback");
+    if(ok){
+      state.score += POINTS_PER_ITEM;
+      fb.className = "feedback ok";
+      fb.textContent = `Corect! +${POINTS_PER_ITEM} p`;
     } else {
-      showFeedback("bad", `Răspuns incorect. Răspuns corect: ${q.correctText()}.`);
+      fb.className = "feedback bad";
+      fb.textContent = `Greșit. Răspuns: ${plainText(shownAnswer)}`;
     }
 
-    document.getElementById("scoreLabel").textContent = `Punctaj: ${state.score}`;
-    document.getElementById("checkBtn").disabled = true;
-    document.getElementById("nextBtn").disabled = false;
-    typeset();
+    document.getElementById("score-live").textContent = `${state.score} p`;
+    const next = document.getElementById("next-btn");
+    next.disabled = false;
+    next.classList.add("active");
   }
 
-  function showFeedback(kind, message) {
-    const feedback = document.getElementById("feedback");
-    feedback.className = `feedback active ${kind}`;
-    feedback.innerHTML = message;
-  }
-
-  function goNext() {
-    if (!state.checked) return;
-
-    if (state.index < state.questions.length - 1) {
-      state.index += 1;
-      renderQuestion();
-      return;
-    }
-
-    finishTest();
-  }
-
-  function finishTest() {
-    const progress = document.getElementById("progressBar");
-    progress.style.width = "100%";
-
-    const finalScore = Math.min(100, state.score);
-    document.getElementById("finalScore").textContent = `${finalScore} / 100`;
-
-    const attempts = saveAttempt(finalScore);
-    const lastFour = attempts.slice(-4);
-    const attemptList = document.getElementById("attemptList");
-    attemptList.innerHTML = lastFour.map((attempt, index) => {
-      const date = new Date(attempt.date).toLocaleDateString("ro-RO");
-      return `<li><span>Exersarea ${attempts.length - lastFour.length + index + 1}</span><span>${attempt.score}/100 – ${date}</span></li>`;
-    }).join("");
-
-    const printBtn = document.getElementById("printBtn");
-    if (attempts.length >= 4) {
-      const average = lastFour.reduce((sum, item) => sum + item.score, 0) / lastFour.length;
-      document.getElementById("certificateInfo").textContent = "Diploma poate fi eliberată.";
-      fillCertificate(lastFour, average);
-      document.getElementById("certificate").classList.add("active");
-      printBtn.disabled = false;
+  function nextItem(){
+    if(!state.checked) return;
+    state.index += 1;
+    if(state.index < TOTAL_ITEMS){
+      showItem();
     } else {
-      const remaining = 4 - attempts.length;
-      document.getElementById("certificateInfo").textContent = `Mai sunt necesare ${remaining} exersări finalizate pentru eliberarea diplomei.`;
-      document.getElementById("certificate").classList.remove("active");
-      printBtn.disabled = true;
+      finishTest();
     }
-
-    showScreen("screen-end");
   }
 
-  function storageKey() {
-    const raw = `${state.name}|${state.className}`.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-    return "echilibrul-corpurilor-test-final-v3:" + raw.replace(/[^a-z0-9|]+/g, "-");
+  function finishTest(){
+    document.getElementById("progress").style.width = "100%";
+    saveAttempt();
+
+    document.getElementById("screen-test").classList.add("hidden");
+    document.getElementById("screen-end").classList.remove("hidden");
+
+    document.getElementById("final-score").textContent = `${state.score}/100`;
+
+    const attempts = getProfileAttempts();
+    const count = Math.min(attempts.length, 4);
+    document.getElementById("practice-info").textContent = `Exersări: ${count}/4`;
+
+    const btn = document.getElementById("diploma-btn");
+    if(attempts.length >= 4){
+      btn.disabled = false;
+      btn.textContent = "Diplomă PDF";
+    } else {
+      btn.disabled = true;
+      btn.textContent = `Diplomă după ${4 - attempts.length} exersări`;
+    }
   }
 
-  function saveAttempt(score) {
-    const key = storageKey();
-    const attempts = JSON.parse(localStorage.getItem(key) || "[]");
-    attempts.push({
-      score,
-      date: new Date().toISOString(),
+  function restartTest(){
+    document.getElementById("screen-end").classList.add("hidden");
+    document.getElementById("screen-start").classList.remove("hidden");
+  }
+
+  function saveAttempt(){
+    const all = getAllAttempts();
+    const profile = profileKey();
+    all.push({
+      profile,
       school: state.school,
       name: state.name,
-      className: state.className
+      className: state.className,
+      score: state.score,
+      date: new Date().toISOString()
     });
-    localStorage.setItem(key, JSON.stringify(attempts));
-    return attempts;
+    const filtered = all.filter(a => a.profile === profile).slice(-4);
+    const others = all.filter(a => a.profile !== profile).slice(-40);
+    localStorage.setItem(ATTEMPT_KEY, JSON.stringify([...others, ...filtered]));
   }
 
-  function fillCertificate(lastFour, average) {
-    document.getElementById("certSchool").textContent = state.school;
-    document.getElementById("certName").textContent = state.name;
-    document.getElementById("certClass").textContent = `Clasa: ${state.className}`;
-    document.getElementById("certAverage").textContent = `Punctaj mediu obținut: ${formatNumber(average, 2)} / 100`;
-    document.getElementById("certAttempts").textContent = `Punctaje luate în calcul: ${lastFour.map(item => item.score + "/100").join(", ")}`;
-    document.getElementById("certDate").textContent = `Data: ${new Date().toLocaleDateString("ro-RO")}`;
-  }
-
-  function restartTest() {
-    showScreen("screen-start");
-  }
-
-  function resetAttempts() {
-    const name = document.getElementById("nameInput").value.trim();
-    const className = document.getElementById("classInput").value.trim();
-    if (!name || !className) {
-      alert("Completează numele și clasa, apoi poți reseta exersările salvate.");
-      return;
+  function getAllAttempts(){
+    try{
+      return JSON.parse(localStorage.getItem(ATTEMPT_KEY) || "[]");
+    } catch(e){
+      return [];
     }
+  }
 
-    state.name = name;
-    state.className = className;
+  function profileKey(){
+    return normalizeAnswer(`${state.school}|${state.name}|${state.className}`);
+  }
 
-    if (confirm("Sigur vrei să ștergi exersările salvate local pentru acest elev?")) {
-      localStorage.removeItem(storageKey());
-      alert("Exersările au fost resetate.");
+  function getProfileAttempts(){
+    const key = profileKey();
+    return getAllAttempts().filter(a => a.profile === key).slice(-4);
+  }
+
+  function resetAttempts(){
+    if(confirm("Ștergi exersările salvate pentru acest test?")){
+      localStorage.removeItem(ATTEMPT_KEY);
+      alert("Exersările au fost șterse.");
+    }
+  }
+
+  function showDiploma(){
+    const attempts = getProfileAttempts();
+    if(attempts.length < 4) return;
+    const best = Math.max(...attempts.map(a => Number(a.score) || 0));
+
+    document.getElementById("app").classList.add("hidden");
+    document.getElementById("screen-diploma").classList.remove("hidden");
+
+    document.getElementById("d-school").textContent = schoolLine(state.school);
+    document.getElementById("d-name").textContent = state.name.toUpperCase();
+    document.getElementById("d-class").textContent = `clasa ${state.className}`;
+    document.getElementById("d-chapter").textContent = CHAPTER;
+    document.getElementById("d-score").textContent = `${best}/100`;
+    document.getElementById("d-date").textContent = `Data: ${new Date().toLocaleDateString("ro-RO")}`;
+  }
+
+  function hideDiploma(){
+    document.getElementById("screen-diploma").classList.add("hidden");
+    document.getElementById("app").classList.remove("hidden");
+  }
+
+  function schoolLine(school){
+    const s = school.trim();
+    const n = normalizeAnswer(s);
+    if(n.startsWith("scoala gimnaziala")) return s;
+    return `Școala gimnazială ${s}`;
+  }
+
+  function rand(min,max){
+    return Math.floor(Math.random()*(max-min+1))+min;
+  }
+
+  function randStep(min,max,step){
+    const n = Math.floor((max-min)/step);
+    return min + rand(0,n)*step;
+  }
+
+  function pick(arr){
+    return arr[Math.floor(Math.random()*arr.length)];
+  }
+
+  function shuffle(arr){
+    const a = [...arr];
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+
+  function round(n, digits=2){
+    const p = Math.pow(10,digits);
+    return Math.round((n + Number.EPSILON)*p)/p;
+  }
+
+  function formatNum(n){
+    return String(n).replace(".",",");
+  }
+
+  function normalizeText(s){
+    return String(s ?? "")
+      .toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g,"")
+      .replace(/ă/g,"a").replace(/â/g,"a").replace(/î/g,"i").replace(/ș|ş/g,"s").replace(/ț|ţ/g,"t")
+      .replace(/\s+/g," ")
+      .trim();
+  }
+
+  function normalizeAnswer(s){
+    return normalizeText(s)
+      .replace(",",".")
+      .replace(/\\\(|\\\)|\$/g,"")
+      .replace(/\\text\{([^}]*)\}/g,"$1")
+      .replace(/\\frac\{r\}\{2\}/g,"r/2")
+      .replace(/\\frac\{r\}\{4\}/g,"r/4")
+      .replace(/\\frac\{r\}\{8\}/g,"r/8")
+      .replace(/\\frac\{R\}\{2\}/gi,"r/2")
+      .replace(/\\frac\{R\}\{4\}/gi,"r/4")
+      .replace(/\\frac\{R\}\{8\}/gi,"r/8")
+      .replace(/\s+/g," ")
+      .trim();
+  }
+
+  function numericValue(s){
+    const found = String(s).replace(",",".").match(/-?\d+(\.\d+)?/);
+    return found ? Number(found[0]) : NaN;
+  }
+
+  function escapeHtml(str){
+    return String(str).replace(/[&<>"']/g, c => ({
+      "&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"
+    }[c]));
+  }
+
+  function plainText(s){
+    return String(s)
+      .replace(/\\\(|\\\)|\$/g,"")
+      .replace(/\\text\{([^}]*)\}/g,"$1")
+      .replace(/\\frac\{([^}]*)\}\{([^}]*)\}/g,"$1/$2")
+      .replace(/\\/g,"");
+  }
+
+  function typeset(){
+    if(window.MathJax && window.MathJax.typesetPromise){
+      window.MathJax.typesetPromise();
     }
   }
 </script>

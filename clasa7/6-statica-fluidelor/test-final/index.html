@@ -1,124 +1,1623 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Test Final – Statica Fluidelor</title>
-<style>
-body { font-family: Arial, sans-serif; margin: 20px; }
-button { padding: 10px 15px; font-size: 1em; margin-top: 10px; cursor: pointer; }
-input { width: 80px; max-width: 30%; }
-.correct { color: green; font-weight: bold; }
-.wrong { color: red; font-weight: bold; }
-@media (max-width: 768px) {
-  body { font-size: 0.95em; margin: 10px; }
-  input { width: 60px; }
-  button { font-size: 0.9em; padding: 8px; }
-}
-@media (min-width: 1024px) {
-  body { font-size: 1.1em; }
-  input { width: 100px; }
-}
-</style>
+    <meta charset="UTF-8">
+    <title>FIZICĂ VII – Echilibrul corpurilor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --bg-card: #1f2937;
+            --bg-card-light: #e5e7eb;
+            --accent: #38bdf8;
+            --accent-soft: #0ea5e9;
+            --accent-secondary: #22c55e;
+            --accent-danger: #fb7185;
+            --text-main: #f9fafb;
+            --text-muted: #cbd5f5;
+            --border-soft: #374151;
+            --max-width: 960px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+            background: radial-gradient(circle at top, #1e293b 0, #020617 50%, #000 100%);
+            color: var(--text-main);
+        }
+
+        .app-root {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: var(--max-width);
+        }
+
+        header.app-header {
+            margin-bottom: 16px;
+            padding: 16px 20px;
+            border-radius: 16px;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            border: 1px solid var(--border-soft);
+        }
+
+        .header-top {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .school-name {
+            font-size: 0.9rem;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        .teacher-name {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .header-title {
+            margin-top: 8px;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .header-motto {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            font-style: italic;
+            color: var(--accent-secondary);
+        }
+
+        main.app-main {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 18px;
+            border: 1px solid var(--border-soft);
+            padding: 16px 18px;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
+        }
+
+        .card-light {
+            background: var(--bg-card-light);
+            color: #111827;
+            border-radius: 16px;
+            border: 1px solid #d1d5db;
+            padding: 12px 14px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        @media (min-width: 640px) {
+            .form-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+        }
+
+        .form-field {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .form-input {
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1px solid var(--border-soft);
+            background: #020617;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+
+        .form-input::placeholder {
+            color: #64748b;
+        }
+
+        .form-input:focus {
+            outline: 2px solid var(--accent-soft);
+            outline-offset: 1px;
+        }
+
+        .button-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 999px;
+            padding: 10px 18px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.12s ease, color 0.12s ease;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: var(--accent-soft);
+            color: #0b1120;
+            box-shadow: 0 10px 25px rgba(56, 189, 248, 0.45);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 14px 30px rgba(56, 189, 248, 0.6);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(56, 189, 248, 0.1);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px dashed var(--border-soft);
+        }
+
+        .btn-ghost:hover {
+            background: rgba(148, 163, 184, 0.1);
+        }
+
+        .btn-success {
+            background: var(--accent-secondary);
+            color: #022c22;
+        }
+
+        .btn-danger {
+            background: var(--accent-danger);
+            color: #3b0b0f;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: default;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .status-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .status-pill {
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: #020617;
+            border: 1px solid var(--border-soft);
+        }
+
+        .progress-bar-wrapper {
+            width: 100%;
+            height: 8px;
+            border-radius: 999px;
+            background: #020617;
+            border: 1px solid var(--border-soft);
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .progress-bar-inner {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-soft), var(--accent-secondary));
+            transition: width 0.2s ease;
+        }
+
+        .problem-header {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-bottom: 10px;
+        }
+
+        .problem-title {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .problem-topic {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .problem-body {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        @media (min-width: 768px) {
+            .problem-body {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+        }
+
+        .problem-text {
+            flex: 2;
+            font-size: 0.95rem;
+        }
+
+        .problem-media {
+            flex: 1.4;
+            margin-top: 8px;
+        }
+
+        .problem-media .card-light {
+            width: 100%;
+        }
+
+        .problem-media svg {
+            width: 100%;
+            height: auto;
+        }
+
+        .answer-section {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px dashed var(--border-soft);
+        }
+
+        .answer-label {
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+        }
+
+        .answer-input {
+            width: 100%;
+            max-width: 260px;
+            padding: 8px 10px;
+            border-radius: 10px;
+            border: 1px solid var(--border-soft);
+            background: #020617;
+            color: var(--text-main);
+            font-size: 0.95rem;
+        }
+
+        .answer-input::placeholder {
+            color: #64748b;
+        }
+
+        .answer-input:focus {
+            outline: 2px solid var(--accent-soft);
+            outline-offset: 1px;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 4px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            border-radius: 10px;
+            background: #020617;
+            border: 1px solid var(--border-soft);
+            cursor: pointer;
+        }
+
+        .option-item input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-soft);
+        }
+
+        .option-text {
+            font-size: 0.9rem;
+        }
+
+        .feedback {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            padding: 8px 10px;
+            border-radius: 10px;
+        }
+
+        .feedback.correct {
+            background: rgba(34, 197, 94, 0.15);
+            border: 1px solid rgba(34, 197, 94, 0.6);
+            color: #bbf7d0;
+        }
+
+        .feedback.incorrect {
+            background: rgba(248, 113, 113, 0.15);
+            border: 1px solid rgba(248, 113, 113, 0.6);
+            color: #fecaca;
+        }
+
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .final-score {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin: 8px 0;
+        }
+
+        .exercises-list {
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .exercises-list ul {
+            margin: 4px 0 0;
+            padding-left: 18px;
+        }
+
+        .exercises-list li {
+            margin-bottom: 2px;
+        }
+
+        .diploma-card {
+            max-width: 720px;
+            margin: 0 auto;
+            background: #f9fafb;
+            color: #111827;
+            border-radius: 18px;
+            border: 2px solid #111827;
+            padding: 20px 24px;
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
+            position: relative;
+        }
+
+        .diploma-title {
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+        }
+
+        .diploma-subtitle {
+            text-align: center;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+
+        .diploma-section {
+            margin-top: 10px;
+            font-size: 0.95rem;
+        }
+
+        .diploma-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .diploma-label {
+            font-weight: 600;
+        }
+
+        .diploma-footer {
+            margin-top: 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            font-size: 0.9rem;
+        }
+
+        .diploma-sign {
+            text-align: right;
+        }
+
+        .diploma-sign-name {
+            margin-top: 4px;
+            font-weight: 600;
+        }
+
+        .print-hint {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        @media print {
+            body {
+                background: #ffffff;
+            }
+            .app-root > *:not(#diploma-print-wrapper) {
+                display: none !important;
+            }
+            #diploma-print-wrapper {
+                display: block !important;
+                padding: 0;
+            }
+            .diploma-card {
+                box-shadow: none;
+                margin: 0;
+                border-radius: 0;
+                border-width: 1px;
+            }
+        }
+    </style>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['\\(', '\\)'], ['$', '$']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
 </head>
-
 <body>
-<h2>Test Final – Statica Fluidelor</h2>
-<p>Fiecare elev primește valori numerice diferite, iar ordinea întrebărilor este amestecată.</p>
+<div class="app-root">
+    <div id="diploma-print-wrapper" style="display:none;">
+        <div class="diploma-card" id="diploma-print-card">
+            <div class="diploma-title">DIPLOMĂ</div>
+            <div class="diploma-subtitle">Testul „Echilibrul corpurilor” – Fizică, clasa a VII-a</div>
+            <div class="diploma-section">
+                <p>Se acordă elevului/elevei:</p>
+                <div class="diploma-row">
+                    <span class="diploma-label">Nume și prenume:</span>
+                    <span id="diploma-print-name"></span>
+                </div>
+                <div class="diploma-row">
+                    <span class="diploma-label">Clasa:</span>
+                    <span id="diploma-print-class"></span>
+                </div>
+            </div>
+            <div class="diploma-section">
+                <div class="diploma-row">
+                    <span class="diploma-label">Punctaj mediu (ultimele 4 exersări):</span>
+                    <span id="diploma-print-average"></span>
+                </div>
+                <div class="diploma-row">
+                    <span class="diploma-label">Număr exersări finalizate:</span>
+                    <span id="diploma-print-count"></span>
+                </div>
+                <div class="diploma-row">
+                    <span class="diploma-label">Data:</span>
+                    <span id="diploma-print-date"></span>
+                </div>
+            </div>
+            <div class="diploma-section">
+                <p>
+                    Pentru finalizarea a 4 exersări la testul „Echilibrul corpurilor”.
+                </p>
+            </div>
+            <div class="diploma-footer">
+                <div>
+                    <span class="diploma-label">ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</span>
+                </div>
+                <div class="diploma-sign">
+                    <span>Profesor:</span>
+                    <div class="diploma-sign-name">Prof. DĂNUȚ ANDRONIE</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-<button onclick="deschideTest()">Deschide testul în fereastră separată</button>
+    <div class="app-container">
+        <header class="app-header">
+            <div class="header-top">
+                <div class="school-name">ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</div>
+                <div class="teacher-name">Prof. DĂNUȚ ANDRONIE</div>
+            </div>
+            <div class="header-title">FIZICĂ VII – Echilibrul corpurilor</div>
+            <div class="header-motto">„Fizica nu este o materie dominată de formule, ci de logică.”</div>
+        </header>
 
-<div id="continutTest" style="display:none;">
-  <h2>Test Final – Statica Fluidelor</h2>
-  <div id="test"></div>
-  <button onclick="verifica()">Verifică răspunsurile</button>
-  <div id="rezultat"></div>
-  <div id="diploma" style="margin-top:20px;"></div>
+        <main class="app-main">
+            <!-- START SCREEN -->
+            <section class="screen active" id="screen-start">
+                <div class="card">
+                    <div class="card-title">Ecran de start</div>
+                    <div class="card-subtitle">
+                        Completează datele elevului, apoi începe testul. Fiecare cerință se deschide pe o pagină separată.
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-field">
+                            <label class="form-label" for="input-school-header">Antetul școlii (obligatoriu)</label>
+                            <input id="input-school-header" class="form-input" type="text"
+                                   placeholder="ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA"
+                                   value="ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA">
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label" for="input-student-name">Numele și prenumele elevului (obligatoriu)</label>
+                            <input id="input-student-name" class="form-input" type="text" placeholder="Nume Prenume">
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label" for="input-class">Clasa (obligatoriu)</label>
+                            <input id="input-class" class="form-input" type="text" placeholder="VII A, VII B etc.">
+                        </div>
+                        <div class="form-field">
+                            <label class="form-label">Informații despre exersări</label>
+                            <div class="card-light">
+                                <div class="card-title" style="font-size:0.95rem;margin-bottom:4px;">Exersări salvate</div>
+                                <div id="saved-exercises-info" class="exercises-list">
+                                    Nu există încă exersări finalizate.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="button-row">
+                        <button class="btn btn-primary" id="btn-start-test">Începe testul</button>
+                        <button class="btn btn-secondary" id="btn-reset-exercises">Resetează exersările salvate</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TEST SCREEN -->
+            <section class="screen" id="screen-test">
+                <div class="card">
+                    <div class="status-row">
+                        <div class="status-pill" id="status-problem">Problema 1 din 10</div>
+                        <div class="status-pill" id="status-score">Punctaj: 20 / 100</div>
+                    </div>
+                    <div class="progress-bar-wrapper">
+                        <div class="progress-bar-inner" id="progress-bar"></div>
+                    </div>
+                    <div class="problem-header">
+                        <div class="problem-title" id="problem-title"></div>
+                        <div class="problem-topic" id="problem-topic"></div>
+                    </div>
+                    <div class="problem-body">
+                        <div class="problem-text" id="problem-text"></div>
+                        <div class="problem-media" id="problem-media"></div>
+                    </div>
+                    <div class="answer-section">
+                        <div id="answer-container"></div>
+                        <div id="feedback" class="feedback" aria-live="polite" style="display:none;"></div>
+                    </div>
+                    <div class="button-row" style="margin-top:14px;">
+                        <button class="btn btn-success" id="btn-check-answer">Verifică răspunsul</button>
+                        <button class="btn btn-primary" id="btn-next-problem" disabled>Mergi mai departe</button>
+                        <button class="btn btn-ghost" id="btn-cancel-test">Revino la ecranul de start</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FINAL SCREEN -->
+            <section class="screen" id="screen-final">
+                <div class="card">
+                    <div class="card-title">Test finalizat</div>
+                    <div class="card-subtitle">
+                        Ai încheiat testul „Echilibrul corpurilor”. Mai jos este punctajul obținut.
+                    </div>
+                    <div class="final-score" id="final-score-text">Scor: 20 / 100</div>
+                    <div class="exercises-list" id="final-exercises-info"></div>
+                    <div class="button-row">
+                        <button class="btn btn-primary" id="btn-restart-test">Reia testul</button>
+                        <button class="btn btn-secondary" id="btn-show-diploma" disabled>Eliberează diploma</button>
+                        <button class="btn btn-ghost" id="btn-back-to-start">Înapoi la ecranul de start</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DIPLOMA SCREEN -->
+            <section class="screen" id="screen-diploma">
+                <div class="card">
+                    <div class="card-title">Diplomă</div>
+                    <div class="card-subtitle">
+                        Diploma se activează după finalizarea a cel puțin 4 exersări. Poate fi tipărită separat.
+                    </div>
+                    <div class="diploma-card" id="diploma-card">
+                        <div class="diploma-title">DIPLOMĂ</div>
+                        <div class="diploma-subtitle">Testul „Echilibrul corpurilor” – Fizică, clasa a VII-a</div>
+                        <div class="diploma-section">
+                            <p>Se acordă elevului/elevei:</p>
+                            <div class="diploma-row">
+                                <span class="diploma-label">Nume și prenume:</span>
+                                <span id="diploma-name"></span>
+                            </div>
+                            <div class="diploma-row">
+                                <span class="diploma-label">Clasa:</span>
+                                <span id="diploma-class"></span>
+                            </div>
+                        </div>
+                        <div class="diploma-section">
+                            <div class="diploma-row">
+                                <span class="diploma-label">Punctaj mediu (ultimele 4 exersări):</span>
+                                <span id="diploma-average"></span>
+                            </div>
+                            <div class="diploma-row">
+                                <span class="diploma-label">Număr exersări finalizate:</span>
+                                <span id="diploma-count"></span>
+                            </div>
+                            <div class="diploma-row">
+                                <span class="diploma-label">Data:</span>
+                                <span id="diploma-date"></span>
+                            </div>
+                        </div>
+                        <div class="diploma-section">
+                            <p>
+                                Pentru finalizarea a 4 exersări la testul „Echilibrul corpurilor”.
+                            </p>
+                        </div>
+                        <div class="diploma-footer">
+                            <div>
+                                <span class="diploma-label">ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</span>
+                            </div>
+                            <div class="diploma-sign">
+                                <span>Profesor:</span>
+                                <div class="diploma-sign-name">Prof. DĂNUȚ ANDRONIE</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="print-hint">
+                        La tipărire se va afișa doar diploma. Apasă „Printează diploma” pentru a deschide dialogul de tipărire.
+                    </div>
+                    <div class="button-row">
+                        <button class="btn btn-primary" id="btn-print-diploma">Printează diploma</button>
+                        <button class="btn btn-ghost" id="btn-diploma-back">Înapoi la ecranul final</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
 </div>
 
 <script>
-// Deschide testul într-o fereastră separată
-function deschideTest() {
-  const w = window.open("", "testFluidelor", "width=800,height=600,scrollbars=yes,resizable=yes");
-  w.document.write(document.getElementById("continutTest").innerHTML);
-  w.document.close();
-  w.focus();
+    (function () {
+        const TOTAL_PROBLEMS = 10;
+        const BASE_SCORE = 20;
+        const POINTS_PER_PROBLEM = 8;
+        const STORAGE_KEY = 'echilibrul_corpurilor_exersari';
 
-  // Injectăm scriptul testului în fereastra nouă
-  const script = document.createElement("script");
-  script.textContent = `
-    function shuffle(array) {
-      for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-      }
-    }
-    function rnd(min, max) {
-      return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
+        let currentScreen = 'start';
+        let currentProblemIndex = 0;
+        let currentScore = BASE_SCORE;
+        let problems = [];
+        let problemAnswered = Array(TOTAL_PROBLEMS).fill(false);
+        let lastCheckWasCorrect = false;
 
-    let intrebari = [];
-    for (let i = 1; i <= 20; i++) {
-      let m = rnd(1,10), h = rnd(2,15), ρ = rnd(900,1100), F = rnd(20,100), A = rnd(5,20), V = rnd(1,5);
-      let text = "";
-      let raspuns = "";
-      switch(i) {
-        case 1: text = \`Calculează greutatea unui corp de \${m} kg.\`; raspuns = (m*9.8).toFixed(1); break;
-        case 2: text = \`Presiunea la adâncimea \${h} m într-un lichid cu densitatea \${ρ} kg/m³.\`; raspuns = (ρ*9.8*h).toFixed(0); break;
-        case 3: text = \`Un piston exercită o forță de \${F} N pe o suprafață de \${A} cm².\`; raspuns = (F/(A/10000)).toFixed(0); break;
-        case 4: text = \`Greutatea unui volum de \${V} m³ de lichid cu densitatea \${ρ} kg/m³.\`; raspuns = (ρ*V*9.8).toFixed(0); break;
-        default: text = \`Calculează presiunea pentru F=\${F} N și A=\${A} cm².\`; raspuns = (F/(A/10000)).toFixed(0);
-      }
-      intrebari.push({text, raspuns});
-    }
-    shuffle(intrebari);
+        const screenStart = document.getElementById('screen-start');
+        const screenTest = document.getElementById('screen-test');
+        const screenFinal = document.getElementById('screen-final');
+        const screenDiploma = document.getElementById('screen-diploma');
 
-    let html = "";
-    intrebari.forEach((q,i)=>{
-      html += \`<p><b>\${i+1}.</b> \${q.text}<br>Răspuns: <input id="r\${i}"></p>\`;
-    });
-    document.getElementById("test").innerHTML = html;
+        const btnStartTest = document.getElementById('btn-start-test');
+        const btnResetExercises = document.getElementById('btn-reset-exercises');
+        const btnCheckAnswer = document.getElementById('btn-check-answer');
+        const btnNextProblem = document.getElementById('btn-next-problem');
+        const btnCancelTest = document.getElementById('btn-cancel-test');
+        const btnRestartTest = document.getElementById('btn-restart-test');
+        const btnBackToStart = document.getElementById('btn-back-to-start');
+        const btnShowDiploma = document.getElementById('btn-show-diploma');
+        const btnPrintDiploma = document.getElementById('btn-print-diploma');
+        const btnDiplomaBack = document.getElementById('btn-diploma-back');
 
-    function verifica() {
-      let corecte = 0;
-      intrebari.forEach((q,i)=>{
-        let user = document.getElementById("r"+i).value.trim();
-        if(user === q.raspuns){corecte++;document.getElementById("r"+i).className="correct";}
-        else{document.getElementById("r"+i).className="wrong";}
-      });
-      document.getElementById("rezultat").innerHTML = \`<h3>Ai obținut \${corecte} din 20.</h3>\`;
-      verificaDiploma();
-    }
+        const inputSchoolHeader = document.getElementById('input-school-header');
+        const inputStudentName = document.getElementById('input-student-name');
+        const inputClass = document.getElementById('input-class');
 
-    if(!localStorage.getItem("statica_rezolvari")) localStorage.setItem("statica_rezolvari",0);
+        const statusProblem = document.getElementById('status-problem');
+        const statusScore = document.getElementById('status-score');
+        const progressBar = document.getElementById('progress-bar');
 
-    function genereazaDiploma(){
-      const nume = prompt("Introdu numele tău pentru diplomă:");
-      if(!nume) return;
-      const data = new Date().toLocaleDateString("ro-RO");
-      const continut = \`<h1 style='text-align:center;'>Diplomă de Merit</h1>
-      <p style='text-align:center;'>Se acordă elevului</p>
-      <h2 style='text-align:center;'>\${nume}</h2>
-      <p style='text-align:center;'>pentru finalizarea testului „Statica fluidelor” de 4 ori.</p>
-      <p style='text-align:center;'>Data: \${data}</p>\`;
-      const w2 = window.open("", "_blank");
-      w2.document.write(continut);
-      w2.print();
-    }
+        const problemTitleEl = document.getElementById('problem-title');
+        const problemTopicEl = document.getElementById('problem-topic');
+        const problemTextEl = document.getElementById('problem-text');
+        const problemMediaEl = document.getElementById('problem-media');
+        const answerContainerEl = document.getElementById('answer-container');
+        const feedbackEl = document.getElementById('feedback');
 
-    function verificaDiploma(){
-      let nr = parseInt(localStorage.getItem("statica_rezolvari")) + 1;
-      localStorage.setItem("statica_rezolvari", nr);
-      if(nr >= 4){
-        document.getElementById("diploma").innerHTML = \`<h3>Felicitări! Ai rezolvat testul de \${nr} ori.</h3>
-        <button onclick='genereazaDiploma()'>Descarcă diploma PDF</button>\`;
-      } else {
-        document.getElementById("diploma").innerHTML = \`Ai rezolvat testul de \${nr} ori. Mai ai nevoie de \${4-nr} rezolvări pentru diplomă.\`;
-      }
-    }
-  `;
-  w.document.body.appendChild(script);
-}
+        const finalScoreText = document.getElementById('final-score-text');
+        const savedExercisesInfo = document.getElementById('saved-exercises-info');
+        const finalExercisesInfo = document.getElementById('final-exercises-info');
+
+        const diplomaName = document.getElementById('diploma-name');
+        const diplomaClass = document.getElementById('diploma-class');
+        const diplomaAverage = document.getElementById('diploma-average');
+        const diplomaCount = document.getElementById('diploma-count');
+        const diplomaDate = document.getElementById('diploma-date');
+
+        const diplomaPrintName = document.getElementById('diploma-print-name');
+        const diplomaPrintClass = document.getElementById('diploma-print-class');
+        const diplomaPrintAverage = document.getElementById('diploma-print-average');
+        const diplomaPrintCount = document.getElementById('diploma-print-count');
+        const diplomaPrintDate = document.getElementById('diploma-print-date');
+        const diplomaPrintWrapper = document.getElementById('diploma-print-wrapper');
+
+        function switchScreen(screenName) {
+            currentScreen = screenName;
+            screenStart.classList.toggle('active', screenName === 'start');
+            screenTest.classList.toggle('active', screenName === 'test');
+            screenFinal.classList.toggle('active', screenName === 'final');
+            screenDiploma.classList.toggle('active', screenName === 'diploma');
+        }
+
+        function loadExercisesFromStorage() {
+            let data = localStorage.getItem(STORAGE_KEY);
+            if (!data) {
+                return [];
+            }
+            try {
+                const parsed = JSON.parse(data);
+                if (Array.isArray(parsed)) {
+                    return parsed;
+                }
+            } catch (e) {
+                console.warn('Eroare la citirea exersărilor din localStorage', e);
+            }
+            return [];
+        }
+
+        function saveExercisesToStorage(exercises) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(exercises));
+            } catch (e) {
+                console.warn('Eroare la salvarea exersărilor în localStorage', e);
+            }
+        }
+
+        function updateExercisesInfo() {
+            const exercises = loadExercisesFromStorage();
+            if (!exercises.length) {
+                savedExercisesInfo.textContent = 'Nu există încă exersări finalizate.';
+                finalExercisesInfo.textContent = 'Nu există încă exersări salvate.';
+                btnShowDiploma.disabled = true;
+                return;
+            }
+            const lastFour = exercises.slice(-4);
+            const listHtml = ['<strong>Ultimele exersări:</strong><ul>'];
+            lastFour.forEach((score, idx) => {
+                const index = exercises.length - lastFour.length + idx + 1;
+                listHtml.push(`<li>Exersarea ${index}: ${score} / 100</li>`);
+            });
+            listHtml.push('</ul>');
+            savedExercisesInfo.innerHTML = listHtml.join('');
+            finalExercisesInfo.innerHTML = listHtml.join('');
+            btnShowDiploma.disabled = exercises.length < 4;
+        }
+
+        function addExerciseScore(score) {
+            const exercises = loadExercisesFromStorage();
+            exercises.push(score);
+            const trimmed = exercises.slice(-8);
+            saveExercisesToStorage(trimmed);
+            updateExercisesInfo();
+        }
+
+        function randomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function randomFloat(min, max, decimals) {
+            const value = Math.random() * (max - min) + min;
+            const factor = Math.pow(10, decimals || 2);
+            return Math.round(value * factor) / factor;
+        }
+
+        function formatNumberRo(value, decimals) {
+            const fixed = (decimals != null ? value.toFixed(decimals) : value.toString());
+            return fixed.replace('.', ',');
+        }
+
+        function parseNumericInput(raw) {
+            if (!raw) return NaN;
+            let cleaned = raw.toString().trim();
+            cleaned = cleaned.replace(/\s+/g, '');
+            cleaned = cleaned.replace(',', '.');
+            cleaned = cleaned.replace(/[^\d\.\-]/g, '');
+            return parseFloat(cleaned);
+        }
+
+        function isNumericCorrect(userValue, correctValue, tolerance) {
+            if (isNaN(userValue)) return false;
+            const tol = tolerance != null ? tolerance : 0.05;
+            return Math.abs(userValue - correctValue) <= tol;
+        }
+
+        function generateMomentProblems() {
+            const problemsList = [];
+
+            // Problem 1: M_F = F * b_F
+            (function () {
+                const F = randomInt(10, 60); // N
+                const useCm = Math.random() < 0.5;
+                let bF_m, bF_display, unit;
+                if (useCm) {
+                    const bF_cm = randomInt(10, 80);
+                    bF_m = bF_cm / 100;
+                    bF_display = bF_cm;
+                    unit = 'cm';
+                } else {
+                    bF_m = randomFloat(0.2, 1.2, 2);
+                    bF_display = formatNumberRo(bF_m, 2);
+                    unit = 'm';
+                }
+                const MF = F * bF_m;
+                const MF_rounded = Math.round(MF * 100) / 100;
+
+                const text = `
+                    Se consideră o forță de intensitate \\(F=${F}\\,\\text{N}\\) aplicată la un braț
+                    \\(b_F=${bF_display}\\,${unit}\\).<br>
+                    Transformă brațul în metri (dacă este nevoie) și determină momentul forței:
+                    \\(M_F=F \\cdot b_F\\).<br>
+                    Exprimă rezultatul în \\(\\text{N}\\cdot\\text{m}\\), rotunjit la cel mult două zecimale.
+                `;
+
+                problemsList.push({
+                    type: 'numeric',
+                    topic: 'Momentul forței',
+                    title: 'Problema 1 – Determinarea momentului forței',
+                    text: text,
+                    correctValue: MF_rounded,
+                    unit: 'N·m',
+                    explanation: `Momentul forței este \\(M_F=F \\cdot b_F=${F} \\cdot ${formatNumberRo(bF_m, 2)}\\approx ${formatNumberRo(MF_rounded, 2)}\\,\\text{N}\\cdot\\text{m}\\).`,
+                    diagram: 'lever'
+                });
+            })();
+
+            // Problem 2: F = M_F / b_F
+            (function () {
+                const bF = randomFloat(0.2, 1.0, 2);
+                const MF = randomInt(10, 80);
+                const F = MF / bF;
+                const F_rounded = Math.round(F * 100) / 100;
+
+                const text = `
+                    Se aplică o forță la un braț \\(b_F=${formatNumberRo(bF, 2)}\\,\\text{m}\\), iar momentul
+                    forței este \\(M_F=${MF}\\,\\text{N}\\cdot\\text{m}\\).<br>
+                    Determină intensitatea forței \\(F\\), folosind relația
+                    \\(F=\\frac{M_F}{b_F}\\). Rotunjește rezultatul la cel mult două zecimale.
+                `;
+
+                problemsList.push({
+                    type: 'numeric',
+                    topic: 'Momentul forței',
+                    title: 'Problema 2 – Determinarea forței',
+                    text: text,
+                    correctValue: F_rounded,
+                    unit: 'N',
+                    explanation: `Forța este \\(F=\\frac{M_F}{b_F}=\\frac{${MF}}{${formatNumberRo(bF, 2)}}\\approx ${formatNumberRo(F_rounded, 2)}\\,\\text{N}\\).`,
+                    diagram: 'lever'
+                });
+            })();
+
+            // Problem 3: b_F = M_F / F, result in cm
+            (function () {
+                const F = randomInt(20, 80);
+                const bF_m = randomFloat(0.2, 1.0, 2);
+                const MF = F * bF_m;
+                const bF_cm = Math.round(bF_m * 100);
+
+                const text = `
+                    O forță de intensitate \\(F=${F}\\,\\text{N}\\) produce un moment
+                    \\(M_F=${formatNumberRo(MF, 2)}\\,\\text{N}\\cdot\\text{m}\\).<br>
+                    Determină brațul forței \\(b_F\\) folosind relația
+                    \\(b_F=\\frac{M_F}{F}\\). Exprimă rezultatul în centimetri (cm),
+                    rotunjit la cel mai apropiat întreg.
+                `;
+
+                problemsList.push({
+                    type: 'numeric',
+                    topic: 'Momentul forței',
+                    title: 'Problema 3 – Determinarea brațului forței',
+                    text: text,
+                    correctValue: bF_cm,
+                    unit: 'cm',
+                    explanation: `Brațul forței este \\(b_F=\\frac{M_F}{F}=\\frac{${formatNumberRo(MF, 2)}}{${F}}\\approx ${formatNumberRo(bF_m, 2)}\\,\\text{m}\\approx ${bF_cm}\\,\\text{cm}\\).`,
+                    diagram: 'lever'
+                });
+            })();
+
+            return problemsList;
+        }
+
+        function generateDiscProblems() {
+            const problemsList = [];
+
+            // Problem 4: check equilibrium
+            (function () {
+                const r = randomInt(20, 40); // cm
+                const F1 = randomInt(20, 60);
+                const F2 = randomInt(10, 40);
+                const F3 = randomInt(10, 40);
+
+                const rA = r;
+                const rB = r / 4;
+                const rC = r / 2;
+
+                const M1 = F1 * (rA / 100);
+                const M2 = F2 * (rB / 100);
+                const M3 = F3 * (rC / 100);
+
+                const clockwiseMoment = M1 + M2;
+                const counterMoment = M3;
+
+                let correctOption;
+                if (Math.abs(clockwiseMoment - counterMoment) < 0.01) {
+                    correctOption = 'eq';
+                } else if (clockwiseMoment > counterMoment) {
+                    correctOption = 'clockwise';
+                } else {
+                    correctOption = 'counter';
+                }
+
+                const text = `
+                    Pe un disc cu centrul în punctul \\(O\\) se aplică trei forțe:<br>
+                    \\(F_1=${F1}\\,\\text{N}\\) la punctul \\(A\\), cu \\(OA=r=${r}\\,\\text{cm}\\);<br>
+                    \\(F_2=${F2}\\,\\text{N}\\) la punctul \\(B\\), cu \\(OB=\\frac{r}{4}\\);<br>
+                    \\(F_3=${F3}\\,\\text{N}\\) la punctul \\(C\\), cu \\(OC=\\frac{r}{2}\\).<br>
+                    Consideră că \\(F_1\\) și \\(F_2\\) tind să rotească discul în sens orar, iar \\(F_3\\) în sens antiorar.<br>
+                    Alege varianta corectă privind echilibrul de rotație al discului.
+                `;
+
+                problemsList.push({
+                    type: 'choice',
+                    topic: 'Echilibrul de rotație',
+                    title: 'Problema 4 – Echilibrul unui disc',
+                    text: text,
+                    correctOption: correctOption,
+                    options: [
+                        {value: 'eq', label: 'Da, discul este în echilibru de rotație.'},
+                        {value: 'clockwise', label: 'Nu, discul se rotește în sens orar.'},
+                        {value: 'counter', label: 'Nu, discul se rotește în sens antiorar.'}
+                    ],
+                    explanation: `
+                        Momentele în sens orar sunt \\(M_1=F_1 \\cdot OA\\) și \\(M_2=F_2 \\cdot OB\\),
+                        iar momentul în sens antiorar este \\(M_3=F_3 \\cdot OC\\).<br>
+                        \\(M_1\\approx ${formatNumberRo(M1, 2)}\\,\\text{N}\\cdot\\text{m}\\),
+                        \\(M_2\\approx ${formatNumberRo(M2, 2)}\\,\\text{N}\\cdot\\text{m}\\),
+                        \\(M_3\\approx ${formatNumberRo(M3, 2)}\\,\\text{N}\\cdot\\text{m}\\).
+                    `,
+                    diagram: 'disc'
+                });
+            })();
+
+            // Problem 5: sense of rotation
+            (function () {
+                const r = randomInt(20, 40);
+                const F1 = randomInt(10, 40);
+                const F2 = randomInt(10, 40);
+                const F3 = randomInt(20, 60);
+
+                const rA = r;
+                const rB = r / 4;
+                const rC = r / 2;
+
+                const M1 = F1 * (rA / 100);
+                const M2 = F2 * (rB / 100);
+                const M3 = F3 * (rC / 100);
+
+                const clockwiseMoment = M1;
+                const counterMoment = M2 + M3;
+
+                let correctOption;
+                if (Math.abs(clockwiseMoment - counterMoment) < 0.01) {
+                    correctOption = 'eq';
+                } else if (clockwiseMoment > counterMoment) {
+                    correctOption = 'clockwise';
+                } else {
+                    correctOption = 'counter';
+                }
+
+                const text = `
+                    Pe un disc cu centrul în \\(O\\) se aplică forțele:<br>
+                    \\(F_1=${F1}\\,\\text{N}\\) la \\(A\\), cu \\(OA=r=${r}\\,\\text{cm}\\) (sens orar);<br>
+                    \\(F_2=${F2}\\,\\text{N}\\) la \\(B\\), cu \\(OB=\\frac{r}{4}\\) (sens antiorar);<br>
+                    \\(F_3=${F3}\\,\\text{N}\\) la \\(C\\), cu \\(OC=\\frac{r}{2}\\) (sens antiorar).<br>
+                    Alege varianta corectă privind sensul de rotație al discului.
+                `;
+
+                problemsList.push({
+                    type: 'choice',
+                    topic: 'Echilibrul de rotație',
+                    title: 'Problema 5 – Sensul de rotație al discului',
+                    text: text,
+                    correctOption: correctOption,
+                    options: [
+                        {value: 'eq', label: 'Da, discul este în echilibru de rotație.'},
+                        {value: 'clockwise', label: 'Nu, discul se rotește în sens orar.'},
+                        {value: 'counter', label: 'Nu, discul se rotește în sens antiorar.'}
+                    ],
+                    explanation: `
+                        Comparăm suma momentelor în sens orar cu suma momentelor în sens antiorar:
+                        \\(M_1\\approx ${formatNumberRo(M1, 2)}\\,\\text{N}\\cdot\\text{m}\\),
+                        \\(M_2\\approx ${formatNumberRo(M2, 2)}\\,\\text{N}\\cdot\\text{m}\\),
+                        \\(M_3\\approx ${formatNumberRo(M3, 2)}\\,\\text{N}\\cdot\\text{m}\\).
+                    `,
+                    diagram: 'disc'
+                });
+            })();
+
+            // Problem 6: unknown force for equilibrium
+            (function () {
+                const r = randomInt(20, 40);
+                const F1 = randomInt(20, 60);
+                const F2 = randomInt(10, 40);
+
+                const rA = r;
+                const rB = r / 4;
+                const rC = r / 2;
+
+                const M1 = F1 * (rA / 100);
+                const M2 = F2 * (rB / 100);
+                const sumClockwise = M1 + M2;
+
+                const F3 = sumClockwise / (rC / 100);
+                const F3_rounded = Math.round(F3 * 100) / 100;
+
+                const text = `
+                    Pe un disc cu centrul în \\(O\\) se aplică forțele:<br>
+                    \\(F_1=${F1}\\,\\text{N}\\) la \\(A\\), cu \\(OA=r=${r}\\,\\text{cm}\\) (sens orar);<br>
+                    \\(F_2=${F2}\\,\\text{N}\\) la \\(B\\), cu \\(OB=\\frac{r}{4}\\) (sens orar);<br>
+                    La punctul \\(C\\), cu \\(OC=\\frac{r}{2}\\), se aplică o forță \\(F_3\\) în sens antiorar.<br>
+                    Determină intensitatea forței \\(F_3\\) astfel încât discul să fie în echilibru de rotație.
+                    Rotunjește rezultatul la cel mult două zecimale.
+                `;
+
+                problemsList.push({
+                    type: 'numeric',
+                    topic: 'Echilibrul de rotație',
+                    title: 'Problema 6 – Forță necunoscută pentru echilibru',
+                    text: text,
+                    correctValue: F3_rounded,
+                    unit: 'N',
+                    explanation: `
+                        Pentru echilibru de rotație, suma momentelor în sens orar este egală cu suma momentelor
+                        în sens antiorar: \\(M_1+M_2=M_3\\).<br>
+                        \\(F_3=\\frac{M_1+M_2}{OC}\\approx ${formatNumberRo(F3_rounded, 2)}\\,\\text{N}\\).
+                    `,
+                    diagram: 'disc'
+                });
+            })();
+
+            return problemsList;
+        }
+
+        function generateLeverProblems() {
+            const problemsList = [];
+
+            for (let i = 7; i <= 9; i++) {
+                const unknownType = ['F', 'R', 'bF', 'bR'][randomInt(0, 3)];
+                let F, R, bF, bR;
+                if (unknownType === 'F') {
+                    R = randomInt(40, 100);
+                    bR = randomFloat(0.2, 0.8, 2);
+                    bF = randomFloat(0.4, 1.2, 2);
+                    F = (R * bR) / bF;
+                } else if (unknownType === 'R') {
+                    F = randomInt(20, 80);
+                    bF = randomFloat(0.4, 1.2, 2);
+                    bR = randomFloat(0.2, 0.8, 2);
+                    R = (F * bF) / bR;
+                } else if (unknownType === 'bF') {
+                    F = randomInt(20, 80);
+                    R = randomInt(40, 100);
+                    bR = randomFloat(0.2, 0.8, 2);
+                    bF = (R * bR) / F;
+                } else {
+                    F = randomInt(20, 80);
+                    R = randomInt(40, 100);
+                    bF = randomFloat(0.4, 1.2, 2);
+                    bR = (F * bF) / R;
+                }
+
+                const F_rounded = Math.round(F * 100) / 100;
+                const R_rounded = Math.round(R * 100) / 100;
+                const bF_rounded = Math.round(bF * 100) / 100;
+                const bR_rounded = Math.round(bR * 100) / 100;
+
+                let title, text, correctValue, unit;
+                if (unknownType === 'F') {
+                    title = `Problema ${i} – Determină forța activă \\(F\\)`;
+                    text = `
+                        O pârghie este în echilibru sub acțiunea unei forțe active \\(F\\) și a unei rezistențe \\(R\\).<br>
+                        \\(R=${formatNumberRo(R_rounded, 2)}\\,\\text{N}\\), \\(b_R=${formatNumberRo(bR_rounded, 2)}\\,\\text{m}\\),
+                        \\(b_F=${formatNumberRo(bF_rounded, 2)}\\,\\text{m}\\).<br>
+                        Folosește relația \\(F \\cdot b_F = R \\cdot b_R\\) și determină forța activă \\(F\\),
+                        rotunjită la cel mult două zecimale.
+                    `;
+                    correctValue = F_rounded;
+                    unit = 'N';
+                } else if (unknownType === 'R') {
+                    title = `Problema ${i} – Determină rezistența \\(R\\)`;
+                    text = `
+                        O pârghie este în echilibru sub acțiunea unei forțe active \\(F\\) și a unei rezistențe \\(R\\).<br>
+                        \\(F=${formatNumberRo(F_rounded, 2)}\\,\\text{N}\\), \\(b_F=${formatNumberRo(bF_rounded, 2)}\\,\\text{m}\\),
+                        \\(b_R=${formatNumberRo(bR_rounded, 2)}\\,\\text{m}\\).<br>
+                        Folosește relația \\(F \\cdot b_F = R \\cdot b_R\\) și determină rezistența \\(R\\),
+                        rotunjită la cel mult două zecimale.
+                    `;
+                    correctValue = R_rounded;
+                    unit = 'N';
+                } else if (unknownType === 'bF') {
+                    title = `Problema ${i} – Determină brațul forței \\(b_F\\)`;
+                    text = `
+                        O pârghie este în echilibru sub acțiunea unei forțe active \\(F\\) și a unei rezistențe \\(R\\).<br>
+                        \\(F=${formatNumberRo(F_rounded, 2)}\\,\\text{N}\\), \\(R=${formatNumberRo(R_rounded, 2)}\\,\\text{N}\\),
+                        \\(b_R=${formatNumberRo(bR_rounded, 2)}\\,\\text{m}\\).<br>
+                        Folosește relația \\(F \\cdot b_F = R \\cdot b_R\\) și determină brațul forței \\(b_F\\),
+                        rotunjit la cel mult două zecimale.
+                    `;
+                    correctValue = bF_rounded;
+                    unit = 'm';
+                } else {
+                    title = `Problema ${i} – Determină brațul rezistenței \\(b_R\\)`;
+                    text = `
+                        O pârghie este în echilibru sub acțiunea unei forțe active \\(F\\) și a unei rezistențe \\(R\\).<br>
+                        \\(F=${formatNumberRo(F_rounded, 2)}\\,\\text{N}\\), \\(R=${formatNumberRo(R_rounded, 2)}\\,\\text{N}\\),
+                        \\(b_F=${formatNumberRo(bF_rounded, 2)}\\,\\text{m}\\).<br>
+                        Folosește relația \\(F \\cdot b_F = R \\cdot b_R\\) și determină brațul rezistenței \\(b_R\\),
+                        rotunjit la cel mult două zecimale.
+                    `;
+                    correctValue = bR_rounded;
+                    unit = 'm';
+                }
+
+                problemsList.push({
+                    type: 'numeric',
+                    topic: 'Pârghii',
+                    title: title,
+                    text: text,
+                    correctValue: correctValue,
+                    unit: unit,
+                    explanation: `
+                        Condiția de echilibru este \\(F \\cdot b_F = R \\cdot b_R\\).<br>
+                        Valorile sunt alese astfel încât rezultatul să fie rezonabil pentru clasa a VII-a.
+                    `,
+                    diagram: 'lever'
+                });
+            }
+
+            return problemsList;
+        }
+
+        function generatePulleyProblem() {
+            const systems = [
+                {description: 'Un scripete fix.', relation: 'F=R'},
+                {description: 'Un scripete mobil.', relation: 'F=R/2'},
+                {description: 'Un scripete fix și unul mobil.', relation: 'F=R/2'},
+                {description: 'Un scripete fix și doi mobili.', relation: 'F=R/4'},
+                {description: 'Un scripete fix și trei mobili.', relation: 'F=R/8'}
+            ];
+            const chosen = systems[randomInt(0, systems.length - 1)];
+            const R = randomInt(40, 120);
+
+            let correctRelation;
+            if (chosen.relation === 'F=R') correctRelation = 'FR';
+            else if (chosen.relation === 'F=R/2') correctRelation = 'FR2';
+            else if (chosen.relation === 'F=R/4') correctRelation = 'FR4';
+            else correctRelation = 'FR8';
+
+            const text = `
+                Se consideră un sistem de scripeți: ${chosen.description}<br>
+                Pentru o rezistență \\(R=${R}\\,\\text{N}\\), determină relația corectă dintre forța activă \\(F\\)
+                și rezistență \\(R\\).<br>
+                Alege varianta corectă:<br>
+                \\(F=R\\), \\(F=\\frac{R}{2}\\), \\(F=\\frac{R}{4}\\), \\(F=\\frac{R}{6}\\), \\(F=\\frac{R}{8}\\).<br>
+                Exemplu numeric: dacă \\(R=80\\,\\text{N}\\), atunci pentru un scripete mobil
+                \\(F=\\frac{R}{2}=\\frac{80}{2}=40\\,\\text{N}\\).
+            `;
+
+            return {
+                type: 'choice',
+                topic: 'Scripeți',
+                title: 'Problema 10 – Sistem de scripeți',
+                text: text,
+                correctOption: correctRelation,
+                options: [
+                    {value: 'FR', label: '\\(F=R\\)'},
+                    {value: 'FR2', label: '\\(F=\\frac{R}{2}\\)'},
+                    {value: 'FR4', label: '\\(F=\\frac{R}{4}\\)'},
+                    {value: 'FR6', label: '\\(F=\\frac{R}{6}\\)'},
+                    {value: 'FR8', label: '\\(F=\\frac{R}{8}\\)'}
+                ],
+                explanation: `
+                    Pentru scripeți, relațiile corecte sunt: \\(F=R\\) (scripete fix),
+                    \\(F=\\frac{R}{2}\\) (scripete mobil sau un fix și unul mobil),
+                    \\(F=\\frac{R}{4}\\) (un fix și doi mobili),
+                    \\(F=\\frac{R}{8}\\) (un fix și trei mobili).
+                `,
+                diagram: 'pulley'
+            };
+        }
+
+        function generateProblems() {
+            const list = [];
+            list.push(...generateMomentProblems());
+            list.push(...generateDiscProblems());
+            list.push(...generateLeverProblems());
+            list.push(generatePulleyProblem());
+            return list;
+        }
+
+        function renderDiagram(type) {
+            if (type === 'disc') {
+                return `
+                    <div class="card-light">
+                        <div style="font-size:0.85rem;margin-bottom:4px;">Diagramă disc cu forțe</div>
+                        <svg viewBox="0 0 200 200">
+                            <circle cx="100" cy="100" r="70" fill="#e5e7eb" stroke="#111827" stroke-width="2"></circle>
+                            <circle cx="100" cy="100" r="4" fill="#111827"></circle>
+                            <text x="100" y="95" text-anchor="middle" font-size="10" fill="#111827">O</text>
+
+                            <line x1="100" y1="100" x2="170" y2="100" stroke="#111827" stroke-width="2"></line>
+                            <circle cx="170" cy="100" r="3" fill="#111827"></circle>
+                            <text x="175" y="95" font-size="10" fill="#111827">A</text>
+                            <line x1="170" y1="100" x2="170" y2="70" stroke="#ef4444" stroke-width="2"></line>
+                            <text x="175" y="70" font-size="10" fill="#ef4444">F₁</text>
+
+                            <line x1="100" y1="100" x2="130" y2="130" stroke="#111827" stroke-width="2"></line>
+                            <circle cx="130" cy="130" r="3" fill="#111827"></circle>
+                            <text x="135" y="135" font-size="10" fill="#111827">B</text>
+                            <line x1="130" y1="130" x2="150" y2="150" stroke="#3b82f6" stroke-width="2"></line>
+                            <text x="155" y="155" font-size="10" fill="#3b82f6">F₂</text>
+
+                            <line x1="100" y1="100" x2="60" y2="60" stroke="#111827" stroke-width="2"></line>
+                            <circle cx="60" cy="60" r="3" fill="#111827"></circle>
+                            <text x="55" y="55" font-size="10" fill="#111827">C</text>
+                            <line x1="60" y1="60" x2="40" y2="40" stroke="#22c55e" stroke-width="2"></line>
+                            <text x="35" y="35" font-size="10" fill="#22c55e">F₃</text>
+                        </svg>
+                    </div>
+                `;
+            } else if (type === 'lever') {
+                return `
+                    <div class="card-light">
+                        <div style="font-size:0.85rem;margin-bottom:4px;">Diagramă pârghie</div>
+                        <svg viewBox="0 0 220 80">
+                            <rect x="20" y="40" width="180" height="4" fill="#111827"></rect>
+                            <polygon points="110,44 100,60 120,60" fill="#6b7280"></polygon>
+                            <text x="110" y="72" text-anchor="middle" font-size="10" fill="#111827">O</text>
+
+                            <line x1="60" y1="40" x2="60" y2="20" stroke="#ef4444" stroke-width="2"></line>
+                            <polygon points="56,20 64,20 60,12" fill="#ef4444"></polygon>
+                            <text x="60" y="10" text-anchor="middle" font-size="10" fill="#ef4444">F</text>
+                            <text x="85" y="30" font-size="10" fill="#111827">b_F</text>
+                            <line x1="60" y1="40" x2="110" y2="40" stroke="#111827" stroke-width="1" stroke-dasharray="3 2"></line>
+
+                            <line x1="160" y1="40" x2="160" y2="20" stroke="#3b82f6" stroke-width="2"></line>
+                            <polygon points="156,20 164,20 160,12" fill="#3b82f6"></polygon>
+                            <text x="160" y="10" text-anchor="middle" font-size="10" fill="#3b82f6">R</text>
+                            <text x="135" y="30" font-size="10" fill="#111827">b_R</text>
+                            <line x1="110" y1="40" x2="160" y2="40" stroke="#111827" stroke-width="1" stroke-dasharray="3 2"></line>
+                        </svg>
+                    </div>
+                `;
+            } else if (type === 'pulley') {
+                return `
+                    <div class="card-light">
+                        <div style="font-size:0.85rem;margin-bottom:4px;">Diagramă sistem de scripeți</div>
+                        <svg viewBox="0 0 220 120">
+                            <circle cx="60" cy="40" r="16" fill="#e5e7eb" stroke="#111827" stroke-width="2"></circle>
+                            <circle cx="140" cy="80" r="16" fill="#e5e7eb" stroke="#111827" stroke-width="2"></circle>
+
+                            <line x1="60" y1="24" x2="60" y2="10" stroke="#111827" stroke-width="2"></line>
+                            <rect x="52" y="10" width="16" height="6" fill="#111827"></rect>
+
+                            <line x1="140" y1="64" x2="140" y2="50" stroke="#111827" stroke-width="2"></line>
+                            <rect x="132" y="50" width="16" height="6" fill="#111827"></rect>
+
+                            <line x1="60" y1="56" x2="60" y2="100" stroke="#ef4444" stroke-width="2"></line>
+                            <rect x="52" y="100" width="16" height="10" fill="#ef4444"></rect>
+                            <text x="60" y="96" text-anchor="middle" font-size="10" fill="#ef4444">F</text>
+
+                            <line x1="140" y1="96" x2="140" y2="110" stroke="#3b82f6" stroke-width="2"></line>
+                            <rect x="132" y="110" width="16" height="10" fill="#3b82f6"></rect>
+                            <text x="140" y="106" text-anchor="middle" font-size="10" fill="#3b82f6">R</text>
+                        </svg>
+                    </div>
+                `;
+            }
+            return '';
+        }
+
+        function renderProblem(index) {
+            const problem = problems[index];
+            statusProblem.textContent = `Problema ${index + 1} din ${TOTAL_PROBLEMS}`;
+            statusScore.textContent = `Punctaj: ${currentScore} / 100`;
+            const progressPercent = ((index) / TOTAL_PROBLEMS) * 100;
+            progressBar.style.width = `${progressPercent}%`;
+
+            problemTitleEl.innerHTML = problem.title;
+            problemTopicEl.textContent = problem.topic;
+            problemTextEl.innerHTML = problem.text;
+            problemMediaEl.innerHTML = renderDiagram(problem.diagram);
+
+            answerContainerEl.innerHTML = '';
+            feedbackEl.style.display = 'none';
+            feedbackEl.textContent = '';
+            feedbackEl.classList.remove('correct', 'incorrect');
+
+            if (problem.type === 'numeric') {
+                const label = document.createElement('div');
+                label.className = 'answer-label';
+                label.textContent = `Introdu răspunsul numeric (poți folosi virgulă sau punct).`;
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'answer-input';
+                input.id = 'answer-numeric';
+                input.placeholder = `Valoare în ${problem.unit}`;
+                answerContainerEl.appendChild(label);
+                answerContainerEl.appendChild(input);
+            } else if (problem.type === 'choice') {
+                const label = document.createElement('div');
+                label.className = 'answer-label';
+                label.textContent = 'Alege varianta corectă:';
+                const optionsList = document.createElement('div');
+                optionsList.className = 'options-list';
+                problem.options.forEach((opt, idx) => {
+                    const item = document.createElement('label');
+                    item.className = 'option-item';
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = 'answer-choice';
+                    radio.value = opt.value;
+                    radio.id = `answer-choice-${idx}`;
+                    const span = document.createElement('span');
+                    span.className = 'option-text';
+                    span.innerHTML = opt.label;
+                    item.appendChild(radio);
+                    item.appendChild(span);
+                    optionsList.appendChild(item);
+                });
+                answerContainerEl.appendChild(label);
+                answerContainerEl.appendChild(optionsList);
+            }
+
+            btnNextProblem.disabled = true;
+            btnNextProblem.textContent = index === TOTAL_PROBLEMS - 1 ? 'Finalizează testul' : 'Mergi mai departe';
+            lastCheckWasCorrect = false;
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([problemTextEl, problemMediaEl, answerContainerEl]).catch(function (err) {
+                    console.error('MathJax error', err);
+                });
+            }
+        }
+
+        function checkAnswer() {
+            const problem = problems[currentProblemIndex];
+            let isCorrect = false;
+            let correctText = '';
+
+            if (problem.type === 'numeric') {
+                const input = document.getElementById('answer-numeric');
+                if (!input) return;
+                const userValue = parseNumericInput(input.value);
+                const correctValue = problem.correctValue;
+                isCorrect = isNumericCorrect(userValue, correctValue, 0.05);
+                correctText = `${formatNumberRo(correctValue, 2)} ${problem.unit}`;
+            } else if (problem.type === 'choice') {
+                const radios = document.querySelectorAll('input[name="answer-choice"]');
+                let selected = null;
+                radios.forEach(r => {
+                    if (r.checked) selected = r.value;
+                });
+                if (!selected) {
+                    feedbackEl.style.display = 'block';
+                    feedbackEl.classList.remove('correct');
+                    feedbackEl.classList.add('incorrect');
+                    feedbackEl.textContent = 'Te rog să selectezi o variantă de răspuns.';
+                    return;
+                }
+                isCorrect = selected === problem.correctOption;
+                const correctOpt = problem.options.find(o => o.value === problem.correctOption);
+                correctText = correctOpt ? correctOpt.label : '';
+            }
+
+            if (isCorrect) {
+                feedbackEl.style.display = 'block';
+                feedbackEl.classList.remove('incorrect');
+                feedbackEl.classList.add('correct');
+                feedbackEl.innerHTML = `Corect! Ai primit 8 puncte.`;
+                if (!problemAnswered[currentProblemIndex]) {
+                    currentScore += POINTS_PER_PROBLEM;
+                    problemAnswered[currentProblemIndex] = true;
+                    statusScore.textContent = `Punctaj: ${currentScore} / 100`;
+                }
+            } else {
+                feedbackEl.style.display = 'block';
+                feedbackEl.classList.remove('correct');
+                feedbackEl.classList.add('incorrect');
+                feedbackEl.innerHTML = `Greșit. Răspuns corect: ${correctText}<br>${problem.explanation || ''}`;
+            }
+
+            btnNextProblem.disabled = false;
+            lastCheckWasCorrect = isCorrect;
+
+            if (window.MathJax && window.MathJax.typesetPromise) {
+                window.MathJax.typesetPromise([feedbackEl]).catch(function (err) {
+                    console.error('MathJax error', err);
+                });
+            }
+        }
+
+        function goToNextProblem() {
+            if (currentProblemIndex < TOTAL_PROBLEMS - 1) {
+                currentProblemIndex++;
+                renderProblem(currentProblemIndex);
+            } else {
+                finalizeTest();
+            }
+        }
+
+        function finalizeTest() {
+            switchScreen('final');
+            finalScoreText.textContent = `Scor: ${currentScore} / 100`;
+            addExerciseScore(currentScore);
+        }
+
+        function startNewTest() {
+            currentScore = BASE_SCORE;
+            currentProblemIndex = 0;
+            problems = generateProblems();
+            problemAnswered = Array(TOTAL_PROBLEMS).fill(false);
+            switchScreen('test');
+            renderProblem(currentProblemIndex);
+        }
+
+        function validateStartForm() {
+            const school = inputSchoolHeader.value.trim();
+            const name = inputStudentName.value.trim();
+            const cls = inputClass.value.trim();
+            if (!school || !name || !cls) {
+                alert('Te rog să completezi toate câmpurile obligatorii: antetul școlii, numele elevului și clasa.');
+                return false;
+            }
+            return true;
+        }
+
+        function prepareDiploma() {
+            const exercises = loadExercisesFromStorage();
+            const lastFour = exercises.slice(-4);
+            if (lastFour.length < 4) {
+                alert('Diploma se poate elibera doar după finalizarea a cel puțin 4 exersări.');
+                return;
+            }
+            const sum = lastFour.reduce((acc, v) => acc + v, 0);
+            const avg = sum / lastFour.length;
+            const avgRounded = Math.round(avg * 100) / 100;
+
+            const name = inputStudentName.value.trim();
+            const cls = inputClass.value.trim();
+            const dateStr = new Date().toLocaleDateString('ro-RO');
+
+            diplomaName.textContent = name || '-';
+            diplomaClass.textContent = cls || '-';
+            diplomaAverage.textContent = `${formatNumberRo(avgRounded, 2)} / 100`;
+            diplomaCount.textContent = `${exercises.length}`;
+            diplomaDate.textContent = dateStr;
+
+            diplomaPrintName.textContent = diplomaName.textContent;
+            diplomaPrintClass.textContent = diplomaClass.textContent;
+            diplomaPrintAverage.textContent = diplomaAverage.textContent;
+            diplomaPrintCount.textContent = diplomaCount.textContent;
+            diplomaPrintDate.textContent = diplomaDate.textContent;
+
+            switchScreen('diploma');
+        }
+
+        function printDiploma() {
+            diplomaPrintWrapper.style.display = 'block';
+            window.print();
+            setTimeout(() => {
+                diplomaPrintWrapper.style.display = 'none';
+            }, 200);
+        }
+
+        btnStartTest.addEventListener('click', function () {
+            if (!validateStartForm()) return;
+            startNewTest();
+        });
+
+        btnResetExercises.addEventListener('click', function () {
+            if (confirm('Sigur dorești să resetezi toate exersările salvate?')) {
+                saveExercisesToStorage([]);
+                updateExercisesInfo();
+            }
+        });
+
+        btnCheckAnswer.addEventListener('click', function () {
+            checkAnswer();
+        });
+
+        btnNextProblem.addEventListener('click', function () {
+            goToNextProblem();
+        });
+
+        btnCancelTest.addEventListener('click', function () {
+            if (confirm('Dorești să revii la ecranul de start? Progresul acestui test va fi pierdut.')) {
+                switchScreen('start');
+            }
+        });
+
+        btnRestartTest.addEventListener('click', function () {
+            if (!validateStartForm()) {
+                alert('Pentru reluarea testului, asigură-te că datele elevului sunt completate.');
+                switchScreen('start');
+                return;
+            }
+            startNewTest();
+        });
+
+        btnBackToStart.addEventListener('click', function () {
+            switchScreen('start');
+        });
+
+        btnShowDiploma.addEventListener('click', function () {
+            prepareDiploma();
+        });
+
+        btnPrintDiploma.addEventListener('click', function () {
+            printDiploma();
+        });
+
+        btnDiplomaBack.addEventListener('click', function () {
+            switchScreen('final');
+        });
+
+        updateExercisesInfo();
+    })();
 </script>
 </body>
 </html>

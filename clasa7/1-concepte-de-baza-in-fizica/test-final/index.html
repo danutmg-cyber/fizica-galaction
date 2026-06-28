@@ -1,197 +1,1213 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>FIZICĂ VII - CONCEPTE DE BAZĂ</title>
-    <style>
-        :root { --primary: #3b82f6; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; --accent: #60a5fa; }
-        * { box-sizing: border-box; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; margin: 0; padding: 15px; }
-        .header { text-align: center; width: 100%; max-width: 700px; border-bottom: 2px solid var(--primary); margin-bottom: 20px; padding-bottom: 10px; }
-        .container { width: 100%; max-width: 650px; background: var(--card); border-radius: 20px; padding: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.3); border: 1px solid #334155; }
-        .question-box { font-size: 1.2rem; font-weight: 500; margin-bottom: 15px; text-align: center; min-height: 80px; line-height: 1.5; }
-        .instruction-box { font-size: 0.9rem; color: #fbbf24; text-align: center; margin-bottom: 10px; font-weight: bold; background: rgba(251, 191, 36, 0.1); padding: 8px; border-radius: 8px; }
-        input[type="text"], select { width: 100%; padding: 15px; border-radius: 12px; border: 2px solid #4a5568; background: #0f172a; color: white; font-size: 1.2rem; text-align: center; margin-bottom: 15px; outline: none; }
-        input[type="text"]:focus { border-color: var(--accent); }
-        .check-btn { width: 100%; background: var(--primary); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; text-transform: uppercase; transition: 0.3s; }
-        .check-btn:hover { filter: brightness(1.1); }
-        .next-btn { width: 100%; background: #059669; color: white; border: none; padding: 16px; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; display: none; }
-        #feedback { margin: 15px 0; padding: 15px; border-radius: 12px; display: none; text-align: center; font-weight: bold; }
-        .hidden { display: none; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>FIZICĂ VII – Concepte de bază în fizică</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(','\\)'], ['$', '$']], displayMath: [['\\[','\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #1e293b;
+      --card-2: #243449;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --primary: #22d3ee;
+      --primary-dark: #0891b2;
+      --good: #22c55e;
+      --good-dark: #15803d;
+      --warn: #fbbf24;
+      --bad: #fb7185;
+      --bad-bg: rgba(251, 113, 133, 0.14);
+      --good-bg: rgba(34, 197, 94, 0.13);
+      --border: #334155;
+      --ink: #0f172a;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.16), transparent 28rem),
+        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.10), transparent 24rem),
+        var(--bg);
+      color: var(--text);
+      font-family: "Segoe UI", Arial, sans-serif;
+    }
+
+    body {
+      padding: 14px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 940px;
+      margin: 0 auto;
+    }
+
+    .site-header {
+      text-align: center;
+      padding: 14px 10px 18px;
+      margin-bottom: 14px;
+      border-bottom: 2px solid rgba(34, 211, 238, 0.65);
+    }
+
+    .school {
+      font-size: clamp(1rem, 3vw, 1.25rem);
+      color: var(--primary);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+
+    .teacher {
+      color: var(--muted);
+      font-weight: 650;
+      margin-top: 4px;
+    }
+
+    .motto {
+      margin: 12px auto 0;
+      max-width: 760px;
+      color: #fef08a;
+      background: rgba(245, 158, 11, 0.11);
+      border-left: 4px solid var(--primary);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-style: italic;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(30, 41, 59, 0.98), rgba(15, 23, 42, 0.96));
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: clamp(16px, 3vw, 28px);
+      box-shadow: 0 18px 50px rgba(0,0,0,0.32);
+      margin-bottom: 16px;
+    }
+
+    h1, h2, h3 { margin-top: 0; }
+
+    h1 {
+      font-size: clamp(1.7rem, 6vw, 2.6rem);
+      line-height: 1.12;
+      text-align: center;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      margin: 0 auto 18px;
+      max-width: 760px;
+      line-height: 1.5;
+      font-size: 1.02rem;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 18px 0 6px;
+    }
+
+    .info-tile {
+      background: rgba(34, 211, 238, 0.08);
+      border: 1px solid rgba(34, 211, 238, 0.28);
+      border-radius: 16px;
+      padding: 12px;
+      text-align: center;
+      color: #e0f2fe;
+      font-weight: 700;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 18px;
+    }
+
+    label.field-label {
+      display: block;
+      color: #e2e8f0;
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select {
+      width: 100%;
+      padding: 14px 13px;
+      border-radius: 14px;
+      border: 2px solid #475569;
+      background: #0b1220;
+      color: #ffffff;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    select:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.13);
+    }
+
+    .full { grid-column: 1 / -1; }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    button {
+      border: none;
+      border-radius: 14px;
+      padding: 15px 16px;
+      font-weight: 850;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, filter 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover:not(:disabled) { transform: translateY(-1px); filter: brightness(1.04); }
+    button:disabled { opacity: 0.58; cursor: not-allowed; }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #06202a;
+    }
+
+    .btn-success {
+      background: var(--good);
+      color: #052e16;
+    }
+
+    .btn-secondary {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .btn-danger {
+      background: #fb7185;
+      color: #2f0610;
+    }
+
+    .btn-ghost {
+      background: rgba(226, 232, 240, 0.12);
+      border: 1px solid #64748b;
+      color: #f8fafc;
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 11px;
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.11);
+      color: #e0f2fe;
+      border: 1px solid rgba(34, 211, 238, 0.25);
+      font-weight: 800;
+      font-size: 0.94rem;
+    }
+
+    .progress-wrap {
+      height: 12px;
+      background: #0b1220;
+      border: 1px solid #334155;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 10px 0 22px;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #22d3ee, #22c55e);
+      transition: width 0.25s ease;
+    }
+
+    .question-title {
+      color: var(--primary);
+      font-size: 1.15rem;
+      margin-bottom: 10px;
+      font-weight: 900;
+    }
+
+    .question-box {
+      background: rgba(15, 23, 42, 0.82);
+      border: 1px solid #334155;
+      border-radius: 18px;
+      padding: 18px;
+      font-size: clamp(1.02rem, 3.2vw, 1.18rem);
+      line-height: 1.55;
+      margin-bottom: 16px;
+    }
+
+    .instruction {
+      color: #fef3c7;
+      background: rgba(251, 191, 36, 0.12);
+      border: 1px solid rgba(251, 191, 36, 0.30);
+      border-radius: 14px;
+      padding: 11px 12px;
+      font-weight: 750;
+      margin: 12px 0;
+    }
+
+    .formula-box {
+      background: rgba(34, 211, 238, 0.08);
+      border: 1px solid rgba(34, 211, 238, 0.22);
+      border-radius: 14px;
+      padding: 12px;
+      margin: 12px 0;
+      color: #ecfeff;
+      overflow-x: auto;
+    }
+
+    .choices {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .choice {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 11px;
+      align-items: center;
+      width: 100%;
+      border: 2px solid #475569;
+      background: rgba(226, 232, 240, 0.08);
+      border-radius: 15px;
+      padding: 13px;
+      cursor: pointer;
+      color: #f8fafc;
+      line-height: 1.35;
+    }
+
+    .choice:hover {
+      border-color: var(--primary);
+      background: rgba(34, 211, 238, 0.10);
+    }
+
+    .choice input {
+      width: 20px;
+      height: 20px;
+      accent-color: var(--primary);
+    }
+
+    .answer-area {
+      margin-top: 14px;
+    }
+
+    .answer-area input {
+      text-align: center;
+      font-size: 1.15rem;
+    }
+
+    .diagram {
+      margin: 14px auto;
+      border-radius: 16px;
+      background: #f8fafc;
+      color: #0f172a;
+      overflow: hidden;
+      border: 1px solid #94a3b8;
+      max-width: 620px;
+    }
+
+    .diagram svg {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .feedback {
+      display: none;
+      margin: 14px 0 0;
+      padding: 14px;
+      border-radius: 14px;
+      font-weight: 850;
+      line-height: 1.45;
+    }
+
+    .feedback.good {
+      display: block;
+      color: #dcfce7;
+      background: var(--good-bg);
+      border: 1px solid rgba(34, 197, 94, 0.36);
+    }
+
+    .feedback.bad {
+      display: block;
+      color: #ffe4e6;
+      background: var(--bad-bg);
+      border: 1px solid rgba(251, 113, 133, 0.38);
+    }
+
+    .explain {
+      display: block;
+      margin-top: 8px;
+      color: #e2e8f0;
+      font-weight: 650;
+    }
+
+    .question-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .results-score {
+      text-align: center;
+      font-size: clamp(2.2rem, 9vw, 4rem);
+      color: var(--primary);
+      font-weight: 950;
+      margin: 12px 0;
+    }
+
+    .history {
+      margin-top: 18px;
+      color: var(--muted);
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .history ul {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+
+    .notice {
+      color: #fef3c7;
+      text-align: center;
+      font-weight: 750;
+      margin-top: 10px;
+    }
+
+    .diploma {
+      background: #fffdf2;
+      color: #111827;
+      border: 12px double #0891b2;
+      border-radius: 18px;
+      padding: clamp(20px, 5vw, 48px);
+      text-align: center;
+      box-shadow: 0 16px 60px rgba(0,0,0,0.35);
+    }
+
+    .diploma h2 {
+      color: #0e7490;
+      font-size: clamp(2rem, 8vw, 4rem);
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    .diploma .name {
+      font-size: clamp(1.6rem, 6vw, 3rem);
+      font-family: Georgia, serif;
+      color: #0f172a;
+      border-bottom: 2px solid #0f172a;
+      display: inline-block;
+      padding: 6px 28px;
+      margin: 12px auto;
+    }
+
+    .diploma p {
+      font-size: 1.08rem;
+      line-height: 1.45;
+    }
+
+    .signature {
+      margin-top: 36px;
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: end;
+    }
+
+    .signature div {
+      flex: 1;
+      border-top: 1px solid #334155;
+      padding-top: 6px;
+      font-weight: 800;
+    }
+
+    .print-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .small {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 680px) {
+      body { padding: 10px; }
+      .form-grid, .button-row, .question-actions, .print-actions { grid-template-columns: 1fr; }
+      .info-grid { grid-template-columns: 1fr 1fr; }
+      .card { border-radius: 18px; }
+      .topline { align-items: stretch; }
+      .pill { justify-content: center; width: 100%; }
+      .signature { flex-direction: column; align-items: stretch; }
+    }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .site-header, #screen-start, #screen-test, #screen-result, .print-actions { display: none !important; }
+      #screen-diploma { display: block !important; }
+      .app { max-width: none; width: 100%; }
+      .card { box-shadow: none; border: none; padding: 0; margin: 0; background: white; }
+      .diploma { min-height: 96vh; box-shadow: none; border-color: #111827; border-radius: 0; }
+    }
+  </style>
 </head>
 <body>
+  <main class="app">
+    <header class="site-header">
+      <div class="school">ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</div>
+      <div class="teacher">Prof. DĂNUȚ ANDRONIE</div>
+      <div class="motto">„Fizica nu este o materie dominată de formule, ci de logică.”</div>
+    </header>
 
-    <div class="header">
-        <div style="font-size: 1.1rem; font-weight: bold; color: var(--accent); margin-bottom: 2px;">
-            ȘCOALA GIMNAZIALĂ "GALA GALACTION" MANGALIA
-        </div>
-        <div style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 12px; letter-spacing: 1px;">
-            Prof. DĂNUȚ ANDRONIE
-        </div>
-        <div style="background: rgba(245, 158, 11, 0.1); border-left: 4px solid var(--accent); padding: 8px; margin-bottom: 15px; font-style: italic; color: #fef08a; font-size: 0.95rem;">
-            "FIZICA NU ESTE DOMINATĂ DE FORMULE CI DE LOGICĂ"
-        </div>
-    </div>
+    <section id="screen-start" class="screen active card">
+      <h1>📘 FIZICĂ VII – Concepte de bază în fizică</h1>
+      <p class="subtitle">
+        Test interactiv cu 10 itemi. Fiecare cerință se deschide pe o pagină separată.
+        După 4 exersări finalizate, se poate genera diploma cu punctajul mediu.
+      </p>
 
-    <div class="container" id="screen-login">
-        <h2 style="text-align:center;">📐 Introducere în Fizică</h2>
-        <input type="text" id="p-name" placeholder="Numele elevului">
-        <select id="p-class">
+      <div class="info-grid" aria-label="Informații test">
+        <div class="info-tile">10 itemi</div>
+        <div class="info-tile">100 puncte</div>
+        <div class="info-tile">20 p. oficiu</div>
+        <div class="info-tile">100 variante</div>
+      </div>
+
+      <div class="form-grid">
+        <div class="full">
+          <label class="field-label" for="schoolHeader">Antetul școlii</label>
+          <input id="schoolHeader" type="text" value="ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA" />
+        </div>
+
+        <div>
+          <label class="field-label" for="studentName">Numele și prenumele elevului</label>
+          <input id="studentName" type="text" placeholder="Ex.: Popescu Andrei" autocomplete="name" />
+        </div>
+
+        <div>
+          <label class="field-label" for="studentClass">Clasa</label>
+          <select id="studentClass">
             <option value="">Alege clasa...</option>
             <option value="7A">7A</option>
             <option value="7B">7B</option>
             <option value="7C">7C</option>
             <option value="7D">7D</option>
-        </select>
-        <button class="check-btn" onclick="startGame()">START TEST (20 ITEMI)</button>
-    </div>
+            <option value="7E">7E</option>
+          </select>
+        </div>
 
-    <div class="container hidden" id="screen-game">
-        <div id="q-info" style="color: var(--accent); font-weight: bold; text-align: center; margin-bottom: 5px;"></div>
-        <div id="instruction" class="instruction-box">⚠️ CALCULĂRI ȘI FORMULE</div>
-        <div class="question-box" id="question"></div>
-        <div id="input-area"></div>
-        <div id="feedback"></div>
-        <button class="next-btn" id="next-btn" onclick="nextQuestion()">URMĂTOAREA ➡️</button>
-    </div>
+        <div class="full">
+          <label class="field-label" for="variantInput">Varianta de test (1–100). Lasă gol pentru alegere aleatorie.</label>
+          <input id="variantInput" type="number" min="1" max="100" placeholder="Ex.: 12" />
+        </div>
+      </div>
 
-    <div class="container hidden" id="screen-end">
-        <h2 style="text-align:center;">REZULTAT ANTRENAMENT VII</h2>
-        <div style="font-size: 5rem; color: var(--accent); font-weight: bold; text-align: center;" id="final-score"></div>
-        <p style="text-align:center; color: #94a3b8;" id="raw-points"></p>
-        <button class="check-btn" onclick="location.reload()">REIA TESTUL</button>
-    </div>
+      <div class="button-row">
+        <button class="btn-primary" onclick="startTest()">Începe testul</button>
+        <button class="btn-danger" onclick="resetAttempts()">Resetează exersările salvate</button>
+      </div>
 
-<script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec"; 
-    let state = { name: "", class: "", correctAnswers: 0, currentIdx: 0, questions: [] };
+      <div id="startHistory" class="history" aria-live="polite"></div>
+    </section>
 
-    // Pool de teorie (15 itemi)
-    const theoryPool = [
-        { q: "Mărimile fizice care sunt complet determinate de valoare numerică și unitate se numesc mărimi ...........", a: ["scalare"] },
-        { q: "Mărimile fizice care au și direcție, sens și punct de aplicație se numesc mărimi ...........", a: ["vectoriale"] },
-        { q: "Modulul unui vector reprezintă ........... acestuia.", a: ["valoarea", "lungimea", "marimea"] },
-        { q: "Diferența dintre valoarea măsurată și valoarea adevărată se numește ........... de măsurare.", a: ["eroare"] },
-        { q: "Unitatea de măsură fundamentală pentru lungime în S.I. este ...........", a: ["metrul", "m"] },
-        { q: "Timpul este o mărime fizică vectorială. (A/F)", a: ["fals", "f"] },
-        { q: "Viteza este o mărime fizică vectorială. (A/F)", a: ["adevarat", "a"] },
-        { q: "Instrumentul de măsură pentru volumul lichidelor este ...........", a: ["cilindrul gradat", "menzura"] },
-        { q: "Forța este o mărime fizică ........... (scalară/vectorială).", a: ["vectoriala"] },
-        { q: "Lungimea segmentului orientat care reprezintă un vector se numește ...........", a: ["modul", "marime"] },
-        { q: "Aria unei suprafețe de formă pătrată cu latura l este l la puterea ...........", a: ["2", "a doua", "doua"] },
-        { q: "Masa este o mărime fizică ........... (scalară/vectorială).", a: ["scalara"] },
-        { q: "Rezultatul mediu al mai multor măsurări se numește ........... aritmetică.", a: ["media"] },
-        { q: "Simbolul unității de măsură pentru arie în S.I. este m la puterea ...........", a: ["2", "a doua"] },
-        { q: "Un litru este echivalent cu un decimetru ...........", a: ["cub", "3"] }
-    ];
+    <section id="screen-test" class="screen card">
+      <div class="topline">
+        <span id="variantBadge" class="pill">Varianta 1 / 100</span>
+        <span id="progressText" class="pill">Problema 1 din 10</span>
+        <span id="scoreText" class="pill">Punctaj: 20</span>
+      </div>
 
-    function generateMath() {
-        let mathQ = [];
-        // Erori absolute
-        for(let i=0; i<5; i++) {
-            let real = (Math.floor(Math.random() * 50) + 10).toFixed(1);
-            let diff = (Math.random() * 0.5 + 0.1).toFixed(1);
-            let meas = (parseFloat(real) + parseFloat(diff)).toFixed(1);
-            mathQ.push({ q: `Valoarea adevărată este ${real} cm, iar cea măsurată este ${meas} cm. Eroarea absolută este ? cm.`, type: "math", a: [diff.toString()] });
-        }
-        // Transformări Arii (cm2 -> m2)
-        for(let i=0; i<5; i++) {
-            let val = (Math.floor(Math.random() * 9) + 1) * 10000;
-            let res = (val / 10000).toString();
-            mathQ.push({ q: `Transformă aria A = ${val} cm² în m².`, type: "math", a: [res] });
-        }
-        // Valoare medie
-        for(let i=0; i<5; i++) {
-            let n1 = Math.floor(Math.random() * 5) + 10;
-            let n2 = n1 + 2;
-            let n3 = n1 + 4;
-            let med = (n1 + n2 + n3) / 3;
-            mathQ.push({ q: `Valorile măsurate sunt: ${n1} cm, ${n2} cm și ${n3} cm. Valoarea medie este ? cm.`, type: "math", a: [med.toString()] });
-        }
-        return mathQ;
+      <div class="progress-wrap" aria-label="Progres test">
+        <div id="progressBar" class="progress-bar"></div>
+      </div>
+
+      <div class="question-title" id="questionCategory">Categorie</div>
+      <div id="questionBox" class="question-box"></div>
+      <div id="answerArea" class="answer-area"></div>
+      <div id="feedback" class="feedback" aria-live="polite"></div>
+
+      <div class="question-actions">
+        <button id="checkButton" class="btn-primary" onclick="checkAnswer()">Verifică răspunsul</button>
+        <button id="nextButton" class="btn-success" onclick="nextQuestion()" disabled>Mergi mai departe</button>
+      </div>
+    </section>
+
+    <section id="screen-result" class="screen card">
+      <h1>✅ Test finalizat</h1>
+      <p class="subtitle" id="resultDetails">Ai finalizat testul.</p>
+      <div id="finalScore" class="results-score">0 / 100</div>
+      <p id="diplomaNotice" class="notice"></p>
+
+      <div class="button-row">
+        <button class="btn-primary" onclick="restartFromResult()">Reia testul</button>
+        <button id="diplomaButton" class="btn-success" onclick="showDiploma()" disabled>Eliberează diploma</button>
+      </div>
+
+      <div id="resultHistory" class="history"></div>
+    </section>
+
+    <section id="screen-diploma" class="screen card">
+      <div class="diploma">
+        <h2>DIPLOMĂ</h2>
+        <p id="diplomaSchool">ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA</p>
+        <p>Se acordă elevului/elevei</p>
+        <div id="diplomaName" class="name">Numele elevului</div>
+        <p id="diplomaClass">Clasa a VII-a</p>
+        <p>
+          Pentru finalizarea a 4 exersări la testul interactiv<br>
+          <strong>„Concepte de bază în fizică”</strong>.
+        </p>
+        <p id="diplomaAverage"><strong>Punctaj mediu:</strong> 0 / 100</p>
+        <p id="diplomaCount"><strong>Număr exersări finalizate:</strong> 4</p>
+        <p id="diplomaDate"><strong>Data:</strong> --</p>
+        <p><em>„Fizica nu este o materie dominată de formule, ci de logică.”</em></p>
+        <div class="signature">
+          <div>Prof. DĂNUȚ ANDRONIE</div>
+          <div>Elev / Elevă</div>
+        </div>
+      </div>
+
+      <div class="print-actions">
+        <button class="btn-primary" onclick="window.print()">Tipărește diploma</button>
+        <button class="btn-secondary" onclick="goToResult()">Înapoi la rezultat</button>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const TEST_KEY = "fizica7_concepte_baza_exersari_v1";
+    const QUESTIONS_COUNT = 10;
+    const POINTS_OFFICE = 20;
+    const POINTS_PER_QUESTION = 8;
+
+    let student = { name: "", className: "", school: "" };
+    let currentVariant = 1;
+    let questions = [];
+    let currentIndex = 0;
+    let score = POINTS_OFFICE;
+    let checked = false;
+    let answeredCorrect = Array(QUESTIONS_COUNT).fill(false);
+
+    function $(id) {
+      return document.getElementById(id);
     }
 
-    function startGame() {
-        state.name = document.getElementById('p-name').value.trim();
-        state.class = document.getElementById('p-class').value;
-        if(!state.name || !state.class) return alert("Introdu numele și clasa!");
-        
-        state.questions = [...theoryPool, ...generateMath()].sort(() => 0.5 - Math.random()).slice(0, 20);
-        document.getElementById('screen-login').classList.add('hidden');
-        document.getElementById('screen-game').classList.remove('hidden');
-        showQuestion();
+    function showScreen(id) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      $(id).classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
-    function showQuestion() {
-        const q = state.questions[state.currentIdx];
-        document.getElementById('q-info').innerText = `ITEM ${state.currentIdx + 1} / 20`;
-        document.getElementById('question').innerText = q.q;
-        const area = document.getElementById('input-area');
-        area.innerHTML = `
-            <input type="text" id="user-ans" placeholder="Răspuns..." autocomplete="off">
-            <button class="check-btn" id="btn-submit" onclick="handleCheck()">VERIFICĂ</button>
+    function seedRng(seed) {
+      let a = seed >>> 0;
+      return function() {
+        a += 0x6D2B79F5;
+        let t = a;
+        t = Math.imul(t ^ (t >>> 15), t | 1);
+        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+      };
+    }
+
+    function pick(rng, arr) {
+      return arr[Math.floor(rng() * arr.length)];
+    }
+
+    function shuffle(rng, arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(rng() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function roundTo(value, decimals = 2) {
+      const factor = Math.pow(10, decimals);
+      return Math.round((value + Number.EPSILON) * factor) / factor;
+    }
+
+    function fmt(value, decimals = null) {
+      let n = Number(value);
+      if (!Number.isFinite(n)) return String(value);
+      let s = decimals === null ? String(n) : n.toFixed(decimals);
+      s = s.replace(/\.?0+$/, "");
+      return s.replace(".", ",");
+    }
+
+    function normalizeText(text) {
+      return String(text || "")
+        .toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function parseNumber(input) {
+      if (input === null || input === undefined) return NaN;
+      let raw = String(input)
+        .toLowerCase()
+        .replace(",", ".")
+        .replace(/[^0-9.\-]/g, "");
+      if ((raw.match(/\./g) || []).length > 1) {
+        const first = raw.indexOf(".");
+        raw = raw.slice(0, first + 1) + raw.slice(first + 1).replace(/\./g, "");
+      }
+      return parseFloat(raw);
+    }
+
+    function makeChoiceQuestion(category, prompt, instruction, options, correct, explanation, diagram = "") {
+      return { type: "choice", category, prompt, instruction, options, correct, explanation, diagram };
+    }
+
+    function makeNumberQuestion(category, prompt, instruction, answer, unit, tolerance, explanation, diagram = "") {
+      return { type: "number", category, prompt, instruction, answer, unit, tolerance, explanation, diagram };
+    }
+
+    function makeVectorDiagram() {
+      return `
+        <div class="diagram" aria-label="Diagramă vector">
+          <svg viewBox="0 0 620 220" role="img">
+            <defs>
+              <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L9,3 z" fill="#0f172a"></path>
+              </marker>
+            </defs>
+            <rect x="0" y="0" width="620" height="220" fill="#f8fafc"/>
+            <line x1="90" y1="150" x2="500" y2="70" stroke="#0f172a" stroke-width="7" marker-end="url(#arrow)" />
+            <circle cx="90" cy="150" r="7" fill="#0891b2"/>
+            <text x="74" y="178" font-size="22" font-weight="700" fill="#0f172a">origine</text>
+            <text x="475" y="54" font-size="24" font-weight="800" fill="#0f172a">vârf</text>
+            <text x="250" y="83" font-size="26" font-weight="900" fill="#0e7490">\\(\\vec{v}\\)</text>
+            <text x="206" y="195" font-size="20" fill="#334155">Direcția este dreapta suport, sensul este indicat de vârf.</text>
+          </svg>
+        </div>`;
+    }
+
+    function makeTriangleDiagram(a, b) {
+      const c = roundTo(Math.sqrt(a*a + b*b), 2);
+      return `
+        <div class="diagram" aria-label="Triunghi dreptunghic">
+          <svg viewBox="0 0 620 330" role="img">
+            <rect x="0" y="0" width="620" height="330" fill="#f8fafc"/>
+            <polygon points="120,260 500,260 120,70" fill="#e0f2fe" stroke="#0f172a" stroke-width="5"/>
+            <rect x="120" y="236" width="24" height="24" fill="none" stroke="#0f172a" stroke-width="4"/>
+            <text x="278" y="292" font-size="24" font-weight="800" fill="#0f172a">catetă: ${fmt(a)} m</text>
+            <text x="34" y="172" font-size="24" font-weight="800" fill="#0f172a" transform="rotate(-90 34,172)">catetă: ${fmt(b)} m</text>
+            <text x="290" y="145" font-size="25" font-weight="900" fill="#0e7490">ipotenuză = ?</text>
+            <text x="126" y="55" font-size="22" font-weight="800" fill="#0f172a">A</text>
+            <text x="510" y="265" font-size="22" font-weight="800" fill="#0f172a">B</text>
+            <text x="95" y="286" font-size="22" font-weight="800" fill="#0f172a">C</text>
+            <text x="170" y="30" font-size="20" fill="#334155">Folosește \\(c=\\sqrt{a^2+b^2}\\).</text>
+          </svg>
+        </div>`;
+    }
+
+    function buildQuestions(variant) {
+      const rng = seedRng(1000 + variant * 97);
+
+      const phenomena = [
+        { text: "deplasarea unei biciclete pe alee", answer: "mecanic", extra: "Mișcarea corpurilor este un fenomen mecanic." },
+        { text: "topirea unui cub de gheață", answer: "termic", extra: "Schimbarea stării de agregare prin încălzire este fenomen termic." },
+        { text: "formarea umbrei unui copac", answer: "optic", extra: "Umbra este legată de propagarea luminii, deci este fenomen optic." },
+        { text: "aprinderea unui bec într-un circuit", answer: "electric", extra: "Curentul electric din circuit produce funcționarea becului." },
+        { text: "atragerea agrafelor de către un magnet", answer: "magnetic", extra: "Atracția produsă de magnet este fenomen magnetic." }
+      ];
+      const p = pick(rng, phenomena);
+      const q1 = makeChoiceQuestion(
+        "Fenomene fizice",
+        `Un elev observă ${p.text}. Din ce categorie face parte fenomenul fizic?`,
+        "Alege varianta corectă.",
+        shuffle(rng, ["mecanic", "termic", "optic", "electric", "magnetic"]).map(v => ({ label: v.charAt(0).toUpperCase() + v.slice(1), value: v })),
+        p.answer,
+        p.extra
+      );
+
+      const methodOptions = [
+        { label: "observarea fenomenului → formularea ipotezei → experimentul → elaborarea modelului → formularea teoriei", value: "corect" },
+        { label: "experimentul → teoria → observarea fenomenului → ipoteza → modelul", value: "gresit1" },
+        { label: "modelul → teoria → ipoteza → observarea fenomenului → experimentul", value: "gresit2" },
+        { label: "unitatea de măsură → calculul → desenul → concluzia → nota", value: "gresit3" }
+      ];
+      const q2 = makeChoiceQuestion(
+        "Metoda științifică",
+        "Care este ordinea logică a etapelor metodei științifice de studiu a fenomenelor fizice?",
+        "Alege șirul corect.",
+        shuffle(rng, methodOptions),
+        "corect",
+        "Ordinea firească este: observăm fenomenul, formulăm ipoteze, verificăm prin experiment, construim un model și formulăm teoria."
+      );
+
+      const siItems = [
+        { quantity: "lungimea", symbol: "L", unit: "metru", unitSymbol: "m", distractors: ["kg", "s", "K"] },
+        { quantity: "masa", symbol: "m", unit: "kilogram", unitSymbol: "kg", distractors: ["m", "s", "A"] },
+        { quantity: "durata", symbol: "t", unit: "secundă", unitSymbol: "s", distractors: ["kg", "K", "cd"] },
+        { quantity: "temperatura", symbol: "T", unit: "kelvin", unitSymbol: "K", distractors: ["m", "A", "mol"] },
+        { quantity: "intensitatea curentului electric", symbol: "I", unit: "amper", unitSymbol: "A", distractors: ["kg", "m", "K"] }
+      ];
+      const si = pick(rng, siItems);
+      const q3 = makeChoiceQuestion(
+        "Mărimi și unități SI",
+        `Care este simbolul unității fundamentale SI pentru ${si.quantity} \\(${si.symbol}\\)?`,
+        "Alege simbolul corect al unității.",
+        shuffle(rng, [si.unitSymbol, ...si.distractors]).map(v => ({ label: v, value: v })),
+        si.unitSymbol,
+        `Pentru ${si.quantity}, unitatea fundamentală SI este ${si.unit}, cu simbolul ${si.unitSymbol}.`
+      );
+
+      const vectorExamples = [
+        { correct: "viteza", wrong: ["masa", "timpul", "temperatura"], reason: "Viteza are valoare, unitate de măsură, direcție și sens." },
+        { correct: "forța", wrong: ["lungimea", "volumul", "densitatea"], reason: "Forța se reprezintă prin vector, deoarece are direcție și sens." },
+        { correct: "accelerația", wrong: ["sarcina electrică", "distanța", "masa"], reason: "Accelerația este vectorială: are valoare, direcție și sens." }
+      ];
+      const ve = pick(rng, vectorExamples);
+      const q4 = makeChoiceQuestion(
+        "Mărimi scalare și vectoriale",
+        "Care dintre următoarele mărimi fizice este vectorială?",
+        "Alege mărimea care trebuie caracterizată și prin direcție și sens.",
+        shuffle(rng, [ve.correct, ...ve.wrong]).map(v => ({ label: v.charAt(0).toUpperCase() + v.slice(1), value: v })),
+        ve.correct,
+        ve.reason
+      );
+
+      const scalarSets = [
+        { correct: "masa, timpul, temperatura", wrong: ["viteza, forța, masa", "accelerația, forța, viteza", "forța, temperatura, viteza"] },
+        { correct: "volumul, densitatea, timpul", wrong: ["viteza, densitatea, forța", "forța, accelerația, timpul", "viteza, temperatura, forța"] },
+        { correct: "lungimea, masa, sarcina electrică", wrong: ["forța, viteza, masa", "accelerația, lungimea, forța", "forța, viteza, accelerația"] }
+      ];
+      const ss = pick(rng, scalarSets);
+      const q5 = makeChoiceQuestion(
+        "Identificarea mărimilor scalare",
+        "Care grup conține doar mărimi fizice scalare?",
+        "Alege varianta în care toate mărimile sunt caracterizate prin valoare numerică și unitate de măsură, fără direcție și sens.",
+        shuffle(rng, [ss.correct, ...ss.wrong]).map(v => ({ label: v, value: v })),
+        ss.correct,
+        "Mărimile scalare au valoare numerică și unitate de măsură; nu au direcție și sens."
+      );
+
+      const q6 = makeChoiceQuestion(
+        "Reprezentarea vectorilor",
+        "În desen este reprezentat un vector. Ce indică vârful săgeții?",
+        "Privește schema și alege răspunsul corect.",
+        shuffle(rng, [
+          { label: "Sensul vectorului", value: "sens" },
+          { label: "Unitatea de măsură", value: "unitate" },
+          { label: "Numele instrumentului de măsură", value: "instrument" },
+          { label: "Faptul că mărimea este scalară", value: "scalar" }
+        ]),
+        "sens",
+        "Un vector se reprezintă printr-un segment orientat; vârful săgeții arată sensul.",
+        makeVectorDiagram()
+      );
+
+      const conversions = [
+        () => {
+          const cm = pick(rng, [25, 40, 75, 120, 150, 250]);
+          return {
+            prompt: `Transformă lungimea ${cm} cm în metri.`,
+            answer: cm / 100,
+            unit: "m",
+            explanation: `Deoarece \\(1\\,\\text{m}=100\\,\\text{cm}\\), avem \\(${cm}\\,\\text{cm}=\\frac{${cm}}{100}\\,\\text{m}=${fmt(cm/100)}\\,\\text{m}\\).`
+          };
+        },
+        () => {
+          const min = pick(rng, [2, 3, 5, 8, 12, 15]);
+          return {
+            prompt: `Transformă durata ${min} min în secunde.`,
+            answer: min * 60,
+            unit: "s",
+            explanation: `Deoarece \\(1\\,\\text{min}=60\\,\\text{s}\\), avem \\(${min}\\,\\text{min}=${min}\\cdot60=${min*60}\\,\\text{s}\\).`
+          };
+        },
+        () => {
+          const g = pick(rng, [250, 500, 750, 1250, 1500, 2500]);
+          return {
+            prompt: `Transformă masa ${g} g în kilograme.`,
+            answer: g / 1000,
+            unit: "kg",
+            explanation: `Deoarece \\(1\\,\\text{kg}=1000\\,\\text{g}\\), avem \\(${g}\\,\\text{g}=\\frac{${g}}{1000}\\,\\text{kg}=${fmt(g/1000)}\\,\\text{kg}\\).`
+          };
+        }
+      ];
+      const conv = pick(rng, conversions)();
+      const q7 = makeNumberQuestion(
+        "Conversii de unități",
+        conv.prompt,
+        `Scrie doar valoarea numerică. Unitatea este ${conv.unit}.`,
+        conv.answer,
+        conv.unit,
+        0.01,
+        conv.explanation
+      );
+
+      const base = pick(rng, [8, 10, 12, 15, 18, 20, 24, 30]);
+      const values = shuffle(rng, [base - 1, base, base + 1]);
+      const avg = roundTo((values[0] + values[1] + values[2]) / 3, 2);
+      const q8 = makeNumberQuestion(
+        "Prelucrarea datelor experimentale",
+        `Un elev a măsurat de trei ori aceeași lungime și a obținut: ${fmt(values[0])} cm, ${fmt(values[1])} cm și ${fmt(values[2])} cm. Calculează valoarea medie.`,
+        "Scrie doar valoarea numerică, în cm.",
+        avg,
+        "cm",
+        0.01,
+        `Valoarea medie este \\(\\bar{x}=\\frac{x_1+x_2+x_3}{3}=\\frac{${fmt(values[0])}+${fmt(values[1])}+${fmt(values[2])}}{3}=${fmt(avg)}\\,\\text{cm}\\).`
+      );
+
+      const approxNumber = pick(rng, [3.14159, 9.876, 12.345, 0.768, 15.555, 24.249]);
+      const decimals = pick(rng, [1, 2]);
+      const approxAnswer = roundTo(approxNumber, decimals);
+      const q9 = makeNumberQuestion(
+        "Aproximarea valorilor numerice",
+        `Aproximează numărul ${String(approxNumber).replace(".", ",")} la ${decimals === 1 ? "o zecimală" : "două zecimale"}.`,
+        "Scrie valoarea aproximată. Poți folosi virgulă sau punct.",
+        approxAnswer,
+        "",
+        decimals === 1 ? 0.05 : 0.005,
+        `Rezultatul aproximat este ${fmt(approxAnswer, decimals)}. Se păstrează ${decimals === 1 ? "o cifră după virgulă" : "două cifre după virgulă"} și se rotunjește corect.`
+      );
+
+      const triples = [
+        [3, 4, 5], [5, 12, 13], [6, 8, 10], [8, 15, 17], [7, 24, 25]
+      ];
+      const tri = pick(rng, triples);
+      const q10 = makeNumberQuestion(
+        "Relații metrice în triunghiul dreptunghic",
+        `Într-un triunghi dreptunghic, catetele au lungimile ${tri[0]} m și ${tri[1]} m. Calculează lungimea ipotenuzei.`,
+        "Scrie doar valoarea numerică, în metri.",
+        tri[2],
+        "m",
+        0.01,
+        `Aplicăm teorema lui Pitagora: \\(c=\\sqrt{${tri[0]}^2+${tri[1]}^2}=\\sqrt{${tri[0]*tri[0]}+${tri[1]*tri[1]}}=\\sqrt{${tri[2]*tri[2]}}=${tri[2]}\\,\\text{m}\\).`,
+        makeTriangleDiagram(tri[0], tri[1])
+      );
+
+      return [q1, q2, q3, q4, q5, q6, q7, q8, q9, q10];
+    }
+
+    function renderMath() {
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise().catch(() => {});
+      }
+    }
+
+    function renderQuestion() {
+      const q = questions[currentIndex];
+      checked = false;
+
+      $("variantBadge").textContent = `Varianta ${currentVariant} / 100`;
+      $("progressText").textContent = `Problema ${currentIndex + 1} din ${QUESTIONS_COUNT}`;
+      $("scoreText").textContent = `Punctaj: ${score}`;
+      $("progressBar").style.width = `${(currentIndex / QUESTIONS_COUNT) * 100}%`;
+      $("questionCategory").textContent = q.category;
+
+      $("questionBox").innerHTML = `
+        <div>${q.prompt}</div>
+        ${q.diagram || ""}
+        <div class="instruction">${q.instruction}</div>
+        ${currentIndex === 7 ? '<div class="formula-box">Exemplu de fracție pentru medie: \\(\\bar{x}=\\frac{x_1+x_2+x_3}{3}\\). Dacă valorile sunt 12, 13 și 11, atunci \\(\\bar{x}=\\frac{12+13+11}{3}=12\\).</div>' : ''}
+      `;
+
+      $("feedback").className = "feedback";
+      $("feedback").innerHTML = "";
+      $("checkButton").disabled = false;
+      $("nextButton").disabled = true;
+      $("nextButton").textContent = currentIndex === QUESTIONS_COUNT - 1 ? "Finalizează testul" : "Mergi mai departe";
+
+      if (q.type === "choice") {
+        $("answerArea").innerHTML = `
+          <div class="choices" role="radiogroup" aria-label="Variante de răspuns">
+            ${q.options.map((opt, i) => `
+              <label class="choice">
+                <input type="radio" name="answer" value="${escapeHtml(opt.value)}" />
+                <span>${opt.label}</span>
+              </label>
+            `).join("")}
+          </div>
         `;
-        document.getElementById('feedback').style.display = 'none';
-        document.getElementById('next-btn').style.display = 'none';
-        document.getElementById('user-ans').focus();
+      } else {
+        $("answerArea").innerHTML = `
+          <label class="field-label" for="numericAnswer">Răspuns numeric ${q.unit ? "(" + q.unit + ")" : ""}</label>
+          <input id="numericAnswer" type="text" inputmode="decimal" placeholder="Scrie răspunsul aici" autocomplete="off" />
+          <div class="small">Se acceptă virgulă sau punct decimal. Poți scrie și unitatea, dar se verifică doar valoarea numerică.</div>
+        `;
+        setTimeout(() => $("numericAnswer").focus(), 80);
+      }
+
+      renderMath();
     }
 
-    function handleCheck() {
-        const val = document.getElementById('user-ans').value;
-        if(val.trim() === "") return;
-        checkAns(val);
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
     }
 
-    function checkAns(user) {
-        const q = state.questions[state.currentIdx];
-        const clean = (s) => s.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().replace(",", ".");
-        
-        let isCorrect = false;
-        if(q.type === "math") {
-            isCorrect = Math.abs(parseFloat(clean(user)) - parseFloat(clean(q.a[0]))) < 0.01;
-        } else {
-            isCorrect = q.a.some(ans => clean(user) === clean(ans));
-        }
+    function checkAnswer() {
+      if (checked) return;
+      const q = questions[currentIndex];
+      let ok = false;
+      let userValue = "";
 
-        const f = document.getElementById('feedback');
-        f.style.display = 'block';
-        if(isCorrect) { 
-            state.correctAnswers++; 
-            f.innerText = "CORECT! ✅"; f.style.color = "#4ade80"; 
-        } else { 
-            f.innerText = `GREȘIT! Răspuns corect: ${q.a[0]} ❌`; f.style.color = "#f87171"; 
+      if (q.type === "choice") {
+        const selected = document.querySelector('input[name="answer"]:checked');
+        if (!selected) {
+          showFeedback(false, "Alege o variantă înainte de verificare.", "Nu se acordă punctaj până nu selectezi un răspuns.");
+          return;
         }
-        
-        document.getElementById('btn-submit').style.display = 'none';
-        document.getElementById('next-btn').style.display = 'block';
+        userValue = selected.value;
+        ok = userValue === q.correct;
+      } else {
+        const input = $("numericAnswer");
+        const numeric = parseNumber(input.value);
+        if (!Number.isFinite(numeric)) {
+          showFeedback(false, "Scrie un răspuns numeric înainte de verificare.", "Exemplu de format acceptat: 2,5 sau 2.5.");
+          return;
+        }
+        userValue = numeric;
+        ok = Math.abs(numeric - q.answer) <= q.tolerance;
+      }
+
+      checked = true;
+      $("checkButton").disabled = true;
+      $("nextButton").disabled = false;
+
+      if (ok && !answeredCorrect[currentIndex]) {
+        score += POINTS_PER_QUESTION;
+        answeredCorrect[currentIndex] = true;
+      }
+
+      $("scoreText").textContent = `Punctaj: ${score}`;
+
+      if (ok) {
+        showFeedback(true, `Corect! Ai primit ${POINTS_PER_QUESTION} puncte.`, q.explanation);
+      } else {
+        const correct = q.type === "choice"
+          ? labelForCorrect(q)
+          : `${fmt(q.answer)}${q.unit ? " " + q.unit : ""}`;
+        showFeedback(false, `Greșit. Răspuns corect: ${correct}.`, q.explanation);
+      }
+
+      const inputs = $("answerArea").querySelectorAll("input");
+      inputs.forEach(input => input.disabled = true);
+      renderMath();
+    }
+
+    function labelForCorrect(q) {
+      const found = q.options.find(o => o.value === q.correct);
+      return found ? found.label : q.correct;
+    }
+
+    function showFeedback(isGood, title, explanation) {
+      $("feedback").className = `feedback ${isGood ? "good" : "bad"}`;
+      $("feedback").innerHTML = `${title}<span class="explain">${explanation || ""}</span>`;
+      renderMath();
     }
 
     function nextQuestion() {
-        state.currentIdx++;
-        if(state.currentIdx < 20) showQuestion(); else finishGame();
+      if (!checked) return;
+      if (currentIndex < QUESTIONS_COUNT - 1) {
+        currentIndex++;
+        renderQuestion();
+      } else {
+        finishTest();
+      }
     }
 
-    function finishGame() {
-        document.getElementById('screen-game').classList.add('hidden');
-        document.getElementById('screen-end').classList.remove('hidden');
-        const nota = (1 + (state.correctAnswers * 0.45)).toFixed(2);
-        document.getElementById('final-score').innerText = nota;
-        document.getElementById('raw-points').innerText = `Răspunsuri corecte: ${state.correctAnswers} / 20`;
-        
-        const fd = new FormData();
-        fd.append("nume", state.name); fd.append("clasa", state.class + " - Concepte 7"); fd.append("scor", nota);
-        fetch(SCRIPT_URL, { method: 'POST', body: fd, mode: 'no-cors' });
+    function startTest() {
+      const name = $("studentName").value.trim();
+      const className = $("studentClass").value.trim();
+      const school = $("schoolHeader").value.trim() || "ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA";
+      const variantRaw = parseInt($("variantInput").value, 10);
+
+      if (!name) {
+        alert("Completează numele și prenumele elevului.");
+        $("studentName").focus();
+        return;
+      }
+
+      if (!className) {
+        alert("Alege clasa.");
+        $("studentClass").focus();
+        return;
+      }
+
+      student = { name, className, school };
+      currentVariant = Number.isInteger(variantRaw) && variantRaw >= 1 && variantRaw <= 100
+        ? variantRaw
+        : Math.floor(Math.random() * 100) + 1;
+
+      questions = buildQuestions(currentVariant);
+      currentIndex = 0;
+      score = POINTS_OFFICE;
+      checked = false;
+      answeredCorrect = Array(QUESTIONS_COUNT).fill(false);
+
+      showScreen("screen-test");
+      renderQuestion();
     }
 
-    document.addEventListener('keypress', (e) => {
-        if(e.key === 'Enter') {
-            const next = document.getElementById('next-btn');
-            if(next && next.style.display === 'block') nextQuestion();
-            else handleCheck();
-        }
+    function finishTest() {
+      $("progressBar").style.width = "100%";
+      saveAttempt(score);
+      $("finalScore").textContent = `${score} / 100`;
+      $("resultDetails").textContent = `${student.name}, clasa ${student.className}, ai finalizat varianta ${currentVariant}.`;
+      updateResultView();
+      showScreen("screen-result");
+    }
+
+    function restartFromResult() {
+      $("variantInput").value = "";
+      showScreen("screen-start");
+      updateStartHistory();
+    }
+
+    function saveAttempt(finalScore) {
+      const attempts = getAttempts();
+      attempts.push({
+        name: student.name,
+        className: student.className,
+        school: student.school,
+        score: finalScore,
+        variant: currentVariant,
+        date: new Date().toISOString()
+      });
+      localStorage.setItem(TEST_KEY, JSON.stringify(attempts.slice(-12)));
+    }
+
+    function getAttempts() {
+      try {
+        const data = JSON.parse(localStorage.getItem(TEST_KEY) || "[]");
+        return Array.isArray(data) ? data : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function resetAttempts() {
+      const ok = confirm("Sigur vrei să ștergi exersările salvate pentru acest test?");
+      if (!ok) return;
+      localStorage.removeItem(TEST_KEY);
+      updateStartHistory();
+      alert("Exersările au fost resetate.");
+    }
+
+    function lastFourAttempts() {
+      return getAttempts().slice(-4);
+    }
+
+    function averageScore(attempts) {
+      if (!attempts.length) return 0;
+      return Math.round(attempts.reduce((sum, a) => sum + Number(a.score || 0), 0) / attempts.length);
+    }
+
+    function updateStartHistory() {
+      const attempts = getAttempts();
+      const last = attempts.slice(-4);
+      if (!attempts.length) {
+        $("startHistory").innerHTML = "Nu există încă exersări salvate pentru acest test.";
+        return;
+      }
+      $("startHistory").innerHTML = `
+        <strong>Exersări salvate:</strong> ${attempts.length}. Pentru diplomă sunt necesare 4 exersări finalizate.
+        <ul>
+          ${last.map(a => `<li>${new Date(a.date).toLocaleString("ro-RO")} – ${a.name}, ${a.className}, varianta ${a.variant}: <strong>${a.score}/100</strong></li>`).join("")}
+        </ul>
+      `;
+    }
+
+    function updateResultView() {
+      const attempts = getAttempts();
+      const last = attempts.slice(-4);
+      const countForDiploma = last.length;
+      const canDiploma = countForDiploma >= 4;
+      $("diplomaButton").disabled = !canDiploma;
+      $("diplomaNotice").textContent = canDiploma
+        ? `Ai ${countForDiploma} exersări recente. Poți elibera diploma.`
+        : `Ai ${countForDiploma} exersări recente. Mai sunt necesare ${4 - countForDiploma} pentru diplomă.`;
+
+      $("resultHistory").innerHTML = attempts.length
+        ? `<strong>Ultimele exersări:</strong><ul>${last.map(a => `<li>${new Date(a.date).toLocaleString("ro-RO")} – varianta ${a.variant}: <strong>${a.score}/100</strong></li>`).join("")}</ul>`
+        : "Nu există exersări salvate.";
+    }
+
+    function showDiploma() {
+      const attempts = lastFourAttempts();
+      if (attempts.length < 4) return;
+      const avg = averageScore(attempts);
+      const last = attempts[attempts.length - 1];
+
+      $("diplomaSchool").textContent = last.school || student.school || "ȘCOALA GIMNAZIALĂ „GALA GALACTION” MANGALIA";
+      $("diplomaName").textContent = last.name || student.name || "Numele elevului";
+      $("diplomaClass").textContent = `Clasa ${last.className || student.className || "a VII-a"}`;
+      $("diplomaAverage").innerHTML = `<strong>Punctaj mediu:</strong> ${avg} / 100`;
+      $("diplomaCount").innerHTML = `<strong>Număr exersări finalizate:</strong> ${attempts.length}`;
+      $("diplomaDate").innerHTML = `<strong>Data:</strong> ${new Date().toLocaleDateString("ro-RO")}`;
+      showScreen("screen-diploma");
+    }
+
+    function goToResult() {
+      showScreen("screen-result");
+      updateResultView();
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      updateStartHistory();
     });
-</script>
+
+    document.addEventListener("keydown", (event) => {
+      if (!$("screen-test").classList.contains("active")) return;
+      if (event.key === "Enter" && !$("checkButton").disabled) {
+        event.preventDefault();
+        checkAnswer();
+      }
+    });
+  </script>
 </body>
 </html>

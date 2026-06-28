@@ -1,869 +1,1007 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>FIZICĂ VIII - Electrostatică</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <title>Fizică VIII – Electrostatică</title>
+
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
   <style>
     :root {
-      --primary: #0ea5e9;
-      --primary-dark: #0284c7;
+      --bg: #08111f;
+      --card: #132238;
+      --card2: #182b46;
       --text: #f8fafc;
-      --muted: #94a3b8;
-      --accent: #38bdf8;
-      --ok: #4ade80;
-      --bad: #f87171;
-      --border: #334155;
-      --panel: rgba(15, 23, 42, 0.92);
+      --muted: #dbeafe;
+      --line: #385676;
+      --accent: #22d3ee;
+      --accent2: #38bdf8;
+      --good: #22c55e;
+      --bad: #fb7185;
+      --warn: #fbbf24;
+      --btnText: #06212b;
+      --shadow: rgba(0, 0, 0, 0.35);
     }
 
     * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; }
+
+    html, body {
+      margin: 0;
+      min-height: 100%;
+      background:
+        radial-gradient(circle at top left, rgba(34, 211, 238, 0.14), transparent 28rem),
+        radial-gradient(circle at bottom right, rgba(56, 189, 248, 0.10), transparent 30rem),
+        var(--bg);
+      color: var(--text);
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: clamp(18px, 2.2vw, 22px);
+    }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(180deg, #0f172a 0%, #111827 100%);
-      color: var(--text);
-      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: clamp(10px, 2vw, 24px);
     }
 
-    .app {
-      width: 100vw;
-      height: 100vh;
-      padding: 12px;
-    }
-
-    .screen {
-      width: 100%;
-      height: 100%;
-      display: none;
-    }
-
-    .screen.active { display: block; }
-
-    .card {
-      width: 100%;
-      height: 100%;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
-      padding: 24px;
-      overflow: auto;
-    }
-
-    .start-wrap {
-      max-width: 920px;
-      margin: 0 auto;
-    }
+    .app { width: min(960px, 100%); }
 
     .header {
       text-align: center;
-      border-bottom: 2px solid var(--primary);
-      padding-bottom: 12px;
-      margin-bottom: 20px;
-    }
-
-    .school {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: var(--accent);
-      margin-bottom: 4px;
-      text-transform: uppercase;
-    }
-
-    .teacher {
-      font-size: 0.95rem;
-      color: var(--muted);
-      margin-bottom: 10px;
-      letter-spacing: 0.6px;
-    }
-
-    .quote {
-      color: #fef08a;
-      font-style: italic;
-      background: rgba(251, 191, 36, 0.10);
-      border-left: 4px solid var(--accent);
-      border-radius: 12px;
-      padding: 10px 12px;
-      display: inline-block;
-      max-width: 100%;
-    }
-
-    .title {
-      text-align: center;
-      font-size: 1.8rem;
-      margin: 0 0 8px;
-    }
-
-    .subtle {
-      text-align: center;
-      color: var(--muted);
-      margin: 0 0 18px;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
-      gap: 12px;
       margin-bottom: 14px;
+      padding: 12px;
+      border-bottom: 2px solid var(--accent);
     }
 
-    input[type="text"], select {
+    .header h1 {
+      margin: 0;
+      font-size: clamp(1.25rem, 5vw, 2.25rem);
+      color: #e0f2fe;
+      line-height: 1.15;
+    }
+
+    .header .chapter {
+      margin-top: 8px;
+      color: var(--accent);
+      font-size: clamp(1rem, 3.5vw, 1.35rem);
+      font-weight: 800;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(30, 48, 76, 0.96), rgba(19, 34, 56, 0.96));
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: 0 18px 46px var(--shadow);
+      padding: clamp(16px, 4vw, 30px);
+    }
+
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    .only-note {
+      color: #fef9c3;
+      background: rgba(251, 191, 36, 0.10);
+      border: 1px solid rgba(251, 191, 36, 0.45);
+      border-radius: 16px;
+      padding: 14px;
+      text-align: center;
+      font-weight: 800;
+      line-height: 1.35;
+      margin: 0 0 16px;
+      font-size: clamp(1rem, 4vw, 1.25rem);
+    }
+
+    label.small {
+      display: block;
+      margin: 14px 0 6px;
+      font-size: clamp(0.85rem, 3vw, 1rem);
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    input[type="text"],
+    input[type="number"] {
       width: 100%;
       min-height: 56px;
-      padding: 14px 16px;
-      border-radius: 14px;
-      border: 2px solid #475569;
-      background: #0b1220;
-      color: white;
-      font-size: 1rem;
+      border: 2px solid #4f6f94;
+      border-radius: 15px;
+      background: #071626;
+      color: #ffffff;
+      font-size: clamp(1.05rem, 4.5vw, 1.35rem);
+      padding: 12px 14px;
       outline: none;
     }
 
-    select {
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      padding-right: 44px;
-      background-image: linear-gradient(45deg, transparent 50%, #38bdf8 50%), linear-gradient(135deg, #38bdf8 50%, transparent 50%);
-      background-position: calc(100% - 22px) calc(50% - 3px), calc(100% - 16px) calc(50% - 3px);
-      background-size: 6px 6px, 6px 6px;
-      background-repeat: no-repeat;
-      font-weight: 700;
-    }
-
-    select option { font-size: 1rem; white-space: normal; }
-
-    input[type="text"]:focus, select:focus {
+    input:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12);
+      box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.16);
     }
 
-    .info-box {
-      text-align: center;
-      color: #fde68a;
-      background: rgba(251, 191, 36, 0.10);
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 16px;
-      font-weight: 700;
-      line-height: 1.45;
-    }
-
-    .btn {
-      width: 100%;
-      border: none;
-      border-radius: 14px;
-      padding: 15px;
-      font-weight: 800;
-      cursor: pointer;
-      text-transform: uppercase;
-      letter-spacing: 0.4px;
-      transition: transform 0.08s ease, opacity 0.2s ease;
-    }
-
-    .btn:hover { opacity: 0.96; }
-    .btn:active { transform: scale(0.99); }
-    .btn-primary { background: var(--primary); color: white; }
-    .btn-secondary { background: var(--primary-dark); color: white; }
-    .btn-disabled { opacity: 0.55; cursor: not-allowed; }
-
-    .game-card {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .meta-row {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      justify-content: space-between;
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
       align-items: center;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      font-size: clamp(0.95rem, 3.5vw, 1.1rem);
     }
 
-    .pill {
-      background: rgba(14, 165, 233, 0.12);
-      color: var(--accent);
-      border: 1px solid rgba(56, 189, 248, 0.25);
+    .progress-wrap {
+      height: 14px;
+      background: #071626;
+      border: 1px solid #314b68;
       border-radius: 999px;
-      padding: 8px 12px;
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+
+    .progress {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--accent), var(--good));
+      transition: width 0.25s ease;
+    }
+
+    .q-type {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(34, 211, 238, 0.14);
+      color: #cffafe;
+      border: 1px solid rgba(34, 211, 238, 0.40);
+      font-size: clamp(0.82rem, 3vw, 0.98rem);
       font-weight: 800;
-      font-size: 0.92rem;
+      margin-bottom: 12px;
     }
 
-    .question-box {
-      font-size: 1.38rem;
-      font-weight: 700;
-      line-height: 1.5;
-      text-align: center;
-      margin: 8px auto 18px;
-      max-width: 1050px;
-      min-height: 120px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    .question {
+      font-size: clamp(1.25rem, 5.4vw, 2rem);
+      font-weight: 850;
+      line-height: 1.32;
+      margin: 0 0 18px;
+      color: #ffffff;
     }
 
-    .answer-box {
-      max-width: 760px;
-      width: 100%;
-      margin: 0 auto;
+    .answers {
       display: grid;
       gap: 12px;
+      margin: 12px 0;
+    }
+
+    .option {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-height: 58px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      border: 2px solid #4f6f94;
+      background: #0b1a2b;
+      color: #ffffff;
+      cursor: pointer;
+      font-weight: 750;
+      line-height: 1.25;
+    }
+
+    .option input {
+      width: 24px;
+      height: 24px;
+      accent-color: var(--accent);
+      flex: 0 0 auto;
+    }
+
+    .option:has(input:checked) {
+      border-color: var(--accent);
+      background: rgba(34, 211, 238, 0.16);
+    }
+
+    .answer-input {
+      margin-top: 10px;
+      text-align: center;
+      font-weight: 900;
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    button {
+      border: none;
+      min-height: 58px;
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-size: clamp(0.98rem, 4vw, 1.18rem);
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.12s ease, filter 0.12s ease, opacity 0.12s ease;
+    }
+
+    button:active { transform: scale(0.98); }
+
+    .btn-main {
+      width: 100%;
+      background: var(--accent);
+      color: var(--btnText);
+      margin-top: 14px;
+    }
+
+    .btn-check {
+      background: var(--accent2);
+      color: var(--btnText);
+    }
+
+    .btn-next {
+      background: var(--good);
+      color: #04170a;
+      opacity: 1;
+    }
+
+    .btn-next:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .btn-soft {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .btn-warn {
+      background: var(--warn);
+      color: #241700;
     }
 
     .feedback {
-      margin: 18px auto 0;
-      padding: 14px;
-      border-radius: 14px;
       display: none;
+      margin-top: 16px;
+      padding: 14px;
+      border-radius: 16px;
       text-align: center;
-      font-weight: 700;
-      line-height: 1.55;
-      border: 1px solid transparent;
-      max-width: 920px;
+      font-weight: 900;
+      line-height: 1.35;
     }
 
-    .feedback.ok {
-      color: var(--ok);
-      background: rgba(74, 222, 128, 0.08);
-      border-color: rgba(74, 222, 128, 0.22);
+    .feedback.good {
+      display: block;
+      background: rgba(34, 197, 94, 0.14);
+      border: 1px solid rgba(34, 197, 94, 0.7);
+      color: #dcfce7;
     }
 
     .feedback.bad {
-      color: #fecaca;
-      background: rgba(248, 113, 113, 0.10);
-      border-color: rgba(248, 113, 113, 0.22);
+      display: block;
+      background: rgba(251, 113, 133, 0.14);
+      border: 1px solid rgba(251, 113, 133, 0.75);
+      color: #ffe4e6;
     }
 
-    .result-score {
-      font-size: 4.8rem;
-      color: var(--accent);
-      font-weight: 900;
+    .result-big {
       text-align: center;
-      line-height: 1;
-      margin: 24px 0 10px;
+      font-size: clamp(2rem, 10vw, 4.5rem);
+      font-weight: 950;
+      color: #ffffff;
+      margin: 10px 0;
     }
 
     .center { text-align: center; }
-    .muted { color: var(--muted); }
-    .hidden { display: none; }
 
-    @media (max-width: 760px) {
-      .app { padding: 8px; }
-      .card { padding: 16px; border-radius: 18px; }
-      .grid { grid-template-columns: 1fr; }
-      .question-box { font-size: 1.1rem; min-height: 100px; }
-      .title { font-size: 1.45rem; }
-      input[type="text"], select { min-height: 60px; font-size: 1.05rem; }
-      select { padding-right: 48px; }
+    .mini {
+      color: var(--muted);
+      font-size: clamp(0.9rem, 3.2vw, 1.05rem);
+      line-height: 1.35;
+    }
+
+    .hidden { display: none !important; }
+
+    .diploma {
+      position: relative;
+      width: min(980px, 100%);
+      aspect-ratio: 1426 / 1103;
+      margin: auto;
+      background: #ffffff;
+      color: #1f2937;
+      overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+      text-align: center;
+      font-family: Georgia, "Times New Roman", serif;
+      container-type: inline-size;
+    }
+
+    .diploma-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      z-index: 0;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    .diploma-content {
+      position: absolute;
+      z-index: 1;
+      left: 15.5%;
+      right: 15.5%;
+      top: 13%;
+      bottom: 11%;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      gap: clamp(3px, 0.75cqw, 9px);
+      padding: 0 clamp(8px, 1.6cqw, 22px);
+    }
+
+    .diploma h2 {
+      margin: clamp(5px, 1.1cqw, 14px) 0 clamp(4px, 0.8cqw, 10px);
+      font-size: clamp(24px, 5.1cqw, 52px);
+      color: #7a4a0a;
+      letter-spacing: 0.025em;
+      text-transform: uppercase;
+      line-height: 0.98;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.85);
+    }
+
+    .diploma .school {
+      font-size: clamp(13px, 2.05cqw, 22px);
+      font-weight: 800;
+      color: #111827;
+      max-width: 90%;
+      line-height: 1.12;
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .diploma .line {
+      width: min(360px, 55%);
+      height: 1px;
+      background: #d8b46b;
+      margin: clamp(1px, 0.35cqw, 4px) auto clamp(1px, 0.4cqw, 5px);
+    }
+
+    .diploma .dtext {
+      font-size: clamp(12px, 1.75cqw, 18px);
+      line-height: 1.22;
+      margin: 0 auto;
+      max-width: 84%;
+      color: #1f2937;
+      font-weight: 650;
+    }
+
+    .diploma .name {
+      font-size: clamp(21px, 4.05cqw, 42px);
+      color: #7c2d12;
+      font-weight: 900;
+      display: block;
+      padding: 0 clamp(8px, 1.2cqw, 18px);
+      margin: clamp(2px, 0.55cqw, 7px) 0 0;
+      max-width: 86%;
+      overflow-wrap: anywhere;
+      line-height: 1.02;
+    }
+
+    .diploma .class-name {
+      font-size: clamp(16px, 2.75cqw, 29px);
+      color: #7c2d12;
+      font-weight: 900;
+      line-height: 1.05;
+      margin: 0;
+      max-width: 86%;
+      overflow-wrap: anywhere;
+    }
+
+    .diploma .name-rule {
+      width: min(560px, 78%);
+      height: 2px;
+      background: #7c2d12;
+      margin: clamp(1px, 0.45cqw, 5px) auto clamp(3px, 0.85cqw, 9px);
+    }
+
+    .diploma .score {
+      font-weight: 900;
+      color: #7a4a0a;
+      white-space: nowrap;
+    }
+
+    .diploma .sign {
+      margin-top: clamp(4px, 1.05cqw, 12px);
+      align-self: center;
+      text-align: center;
+      font-size: clamp(10px, 1.35cqw, 15px);
+      line-height: 1.18;
+      font-weight: 700;
+      color: #111827;
+      max-width: 64%;
+    }
+
+    @media (max-width: 620px) {
+      body { align-items: stretch; }
+      .button-row { grid-template-columns: 1fr; }
+      .topbar { grid-template-columns: 1fr; text-align: center; }
+      .card { border-radius: 18px; }
+      .diploma { width: 100%; }
+      .diploma-content { left: 15.5%; right: 15.5%; top: 13%; bottom: 11%; }
+      .diploma .dtext { max-width: 88%; }
+      .diploma .name, .diploma .class-name { max-width: 88%; }
+    }
+
+    @media print {
+      @page { size: A4 landscape; margin: 0; }
+      body {
+        background: white !important;
+        padding: 0 !important;
+        display: block !important;
+      }
+      body * { visibility: hidden !important; }
+      #screen-diploma,
+      #screen-diploma * { visibility: visible !important; }
+      #screen-diploma {
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        width: 100vw;
+        height: 100vh;
+        position: absolute;
+        inset: 0;
+      }
+      .header,
+      .print-hide { display: none !important; }
+      .diploma {
+        width: 265mm;
+        height: auto;
+        aspect-ratio: 1426 / 1103;
+        box-shadow: none;
+        margin: 0 auto;
+      }
+      .diploma-content {
+        left: 15.5%;
+        right: 15.5%;
+        top: 13%;
+        bottom: 11%;
+      }
     }
   </style>
 </head>
+
 <body>
-  <div class="app">
-    <section class="screen active" id="screen-login">
+  <main class="app">
+    <header class="header print-hide">
+      <h1>Fizică VIII</h1>
+      <div class="chapter">Electrostatică</div>
+    </header>
+
+    <section id="screen-start" class="screen active">
       <div class="card">
-        <div class="start-wrap">
-          <div class="header">
-            <div class="school">ȘCOALA GIMNAZIALĂ ....</div>
-            <div class="teacher">Prof. DĂNUȚ ANDRONIE
-        <div style="font-size: 0.9rem; color: #cbd5e1; margin-bottom: 12px;">
-            E-mail: <a href="mailto:danutmg@gmail.com" style="color: #22d3ee; text-decoration: none;">danutmg@gmail.com</a><br>
-            <span style="font-size: 0.85rem; color: #94a3b8;">
-                Pentru observații, propuneri și sugestii privind platforma educațională.
-            </span>
-        </div></div>
-            <div class="quote">FIZICA NU ESTE O MATERIE DOMINATĂ DE FORMULE CI DE LOGICĂ</div>
-          </div>
+        <p class="only-note">Exersează de cel puțin 4 ori și vei primi o diplomă în format pdf pe care o poți prezenta profesorului tău.</p>
 
-          <h1 class="title">Electrostatică</h1>
-          <p class="subtle">Clasa a VIII-a • 20 itemi • 100 puncte • minimum 100 variante</p>
+        <label class="small" for="schoolInput">Antetul școlii</label>
+        <input id="schoolInput" type="text" placeholder="Ex.: Gala Galaction Mangalia" autocomplete="organization">
 
-          <div class="grid">
-            <input type="text" id="stdName" placeholder="Nume și prenume elev" autocomplete="name" />
-            <select id="stdClass" aria-label="Selectează clasa">
-              <option value="">Clasa...</option>
-              <option value="CLASA a VIII-a A">CLASA a VIII-a A</option>
-              <option value="CLASA a VIII-a B">CLASA a VIII-a B</option>
-              <option value="CLASA a VIII-a C">CLASA a VIII-a C</option>
-              <option value="CLASA a VIII-a D">CLASA a VIII-a D</option>
-            </select>
-          </div>
+        <label class="small" for="nameInput">Numele elevului</label>
+        <input id="nameInput" type="text" placeholder="Nume și prenume" autocomplete="name">
 
-          <div class="info-box">Scrie numai valoarea numerică, cu maximum 2 zecimale.</div>
+        <label class="small" for="classInput">Clasa</label>
+        <input id="classInput" type="text" placeholder="Ex.: VIII A">
 
-          <button class="btn btn-primary" id="startBtn">Începe testul</button>
+        <button class="btn-main" onclick="startTest()">Începe testul</button>
+        <button class="btn-soft" onclick="resetPractice()">Resetează exersările</button>
+
+        <p id="startInfo" class="mini center"></p>
+      </div>
+    </section>
+
+    <section id="screen-test" class="screen">
+      <div class="card">
+        <div class="topbar">
+          <div id="qCounter">Item 1/20</div>
+          <div id="scoreNow">Punctaj: 20</div>
+        </div>
+        <div class="progress-wrap" aria-hidden="true">
+          <div id="progress" class="progress"></div>
+        </div>
+
+        <div id="qType" class="q-type">Alegere multiplă</div>
+        <p id="questionText" class="question"></p>
+
+        <div id="answerArea" class="answers"></div>
+
+        <div id="feedback" class="feedback" aria-live="polite"></div>
+
+        <div class="button-row">
+          <button id="checkBtn" class="btn-check" onclick="checkAnswer()">Verifică răspunsul</button>
+          <button id="nextBtn" class="btn-next" onclick="nextQuestion()" disabled>Mergi mai departe</button>
         </div>
       </div>
     </section>
 
-    <section class="screen" id="screen-game">
-      <div class="card game-card">
-        <div>
-          <div class="meta-row">
-            <div class="pill" id="q-info">Cerința 1 / 20</div>
-            <div class="pill" id="points-info">5 puncte</div>
-            <div class="pill" id="variant-info">Varianta 1 / 100</div>
-            <div class="pill" id="test-code">Cod test</div>
-          </div>
+    <section id="screen-final" class="screen">
+      <div class="card center">
+        <h2>Test finalizat</h2>
+        <div id="finalScore" class="result-big">0 / 100</div>
+        <p id="practiceInfo" class="mini"></p>
 
-          <div class="question-box" id="question"></div>
-          <div class="answer-box" id="input-area"></div>
-          <div class="feedback" id="feedback"></div>
+        <div class="button-row">
+          <button class="btn-main" onclick="startTest()">Reia testul</button>
+          <button id="diplomaBtn" class="btn-warn" onclick="showDiploma()">Generează diploma PDF</button>
         </div>
-
-        <button class="btn btn-secondary hidden" id="nextBtn">Următoarea</button>
+        <button class="btn-soft" onclick="showScreen('screen-start')">Date elev</button>
       </div>
     </section>
 
-    <section class="screen" id="screen-end">
-      <div class="card">
-        <h2 class="title">Rezultat</h2>
-        <div class="center muted" id="end-variant"></div>
-        <div class="result-score" id="final-score"></div>
-        <p class="center muted" id="raw-points"></p>
-        <p class="center muted" id="final-grade"></p>
-        <p class="center muted" id="end-code"></p>
-        <button class="btn btn-primary" id="restartBtn">Reia testul</button>
+    <section id="screen-diploma" class="screen">
+      <div id="diplomaPaper" class="diploma">
+        <!-- Template comun GitHub: assets/img/diploma-nautica.png -->
+        <img class="diploma-bg" src="../../../assets/img/diploma-nautica.png" alt="Model diplomă nautică">
+
+        <div class="diploma-content">
+          <div id="dipSchool" class="school">Școala gimnazială ........</div>
+          <div class="line"></div>
+          <h2>Diplomă de merit</h2>
+          <div class="dtext">acordată elevului/elevei</div>
+          <div id="dipName" class="name">..............</div>
+          <div id="dipClass" class="class-name"></div>
+          <div class="name-rule"></div>
+          <div id="dipText" class="dtext"></div>
+          <div id="dipDate" class="dtext"></div>
+          <div class="sign">
+            Semnează:<br>
+            Prof. Dănuț Andronie<br>
+            Email: danutmg@gmail.com
+          </div>
+        </div>
+      </div>
+
+      <div class="card print-hide" style="margin-top: 16px;">
+        <div class="button-row">
+          <button class="btn-warn" onclick="window.print()">Salvează diploma ca PDF</button>
+          <button class="btn-soft" onclick="showScreen('screen-final')">Înapoi</button>
+        </div>
       </div>
     </section>
-  </div>
+  </main>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzRIy0kI7SsJ9e9bD_UT2aH4htyB8vvDF0PUBwPPodz3xWJHc9Abky2E7FuvWK-1QGA/exec";
-    const TOTAL_QUESTIONS = 20;
-    const MIXED_COUNT = 10;
-    const NUMERIC_COUNT = 10;
-    const POINTS_PER_ITEM = 5;
-    const TOTAL_POINTS = 100;
-    const VARIANT_COUNT = 100;
-    const K = 9e9;
+    const CHAPTER = "Electrostatică";
+    const TOTAL_ITEMS = 20;
+    const START_SCORE = 20;
+    const POINTS_PER_ITEM = 4;
+    const STORAGE_KEY = "fizica8_electrostatica_exersari_v1";
+    const STUDENT_KEY = "fizica8_electrostatica_student_v1";
 
-    const state = {
-      name: "",
-      className: "",
-      correctAnswers: 0,
-      currentIdx: 0,
-      questions: [],
-      variant: 1,
-      testCode: "",
-      seed: 0,
-      sessionSalt: ""
-    };
+    let questions = [];
+    let current = 0;
+    let score = START_SCORE;
+    let checked = false;
+    let awarded = false;
+    let student = { school: "", name: "", className: "" };
 
-    const el = {
-      login: document.getElementById("screen-login"),
-      game: document.getElementById("screen-game"),
-      end: document.getElementById("screen-end"),
-      stdName: document.getElementById("stdName"),
-      stdClass: document.getElementById("stdClass"),
-      startBtn: document.getElementById("startBtn"),
-      qInfo: document.getElementById("q-info"),
-      pointsInfo: document.getElementById("points-info"),
-      variantInfo: document.getElementById("variant-info"),
-      testCode: document.getElementById("test-code"),
-      question: document.getElementById("question"),
-      inputArea: document.getElementById("input-area"),
-      feedback: document.getElementById("feedback"),
-      nextBtn: document.getElementById("nextBtn"),
-      finalScore: document.getElementById("final-score"),
-      rawPoints: document.getElementById("raw-points"),
-      finalGrade: document.getElementById("final-grade"),
-      endVariant: document.getElementById("end-variant"),
-      endCode: document.getElementById("end-code"),
-      restartBtn: document.getElementById("restartBtn")
-    };
+    const $ = id => document.getElementById(id);
 
-    const fillPool = [
-      { q: "Mărimea fizică ce caracterizează starea de electrizare a unui corp se numește sarcină ..........", a: ["electrică", "electrica"] },
-      { q: "Unitatea de măsură pentru sarcina electrică în SI este ..........", a: ["coulomb", "c"] },
-      { q: "Corpurile cu sarcini de același semn se ..........", a: ["resping"] },
-      { q: "Corpurile cu sarcini de semn contrar se ..........", a: ["atrag"] },
-      { q: "Electrizarea prin frecare produce sarcini electrice de semn .......... pe cele două corpuri", a: ["contrar", "opus"] },
-      { q: "Mărimea fizică ce caracterizează acțiunea câmpului electric asupra unei sarcini se numește intensitatea câmpului ..........", a: ["electric"] },
-      { q: "Formula intensității câmpului electric este E = F / ..........", a: ["q"] },
-      { q: "Diferența de potențial electric se mai numește .......... electrică", a: ["tensiune", "tensiunea"] },
-      { q: "Legea lui Coulomb arată cum depinde forța electrică de sarcini și de .......... dintre ele", a: ["distanța", "distanta"] },
-      { q: "Electrizarea prin contact presupune atingerea directă dintre corpuri și transfer de ..........", a: ["sarcină", "sarcini", "electroni"] },
-      { q: "Aparatul care evidențiază starea de electrizare se numește ..........", a: ["electroscop"] },
-      { q: "În relația U = W / q, simbolul W reprezintă lucrul ..........", a: ["electric"] },
-      { q: "Purtătorii de sarcină negativă în atom se numesc ..........", a: ["electroni"] },
-      { q: "Un corp neutru are numărul de protoni .......... cu numărul de electroni", a: ["egal", "egală", "egal cu"] },
-      { q: "Câmpul electric din jurul unei sarcini electrice poate exercita o .......... asupra altei sarcini", a: ["forță", "forta"] },
-      { q: "În legea lui Coulomb, forța electrică este invers proporțională cu pătratul .......... dintre sarcini", a: ["distanței", "distantei"] }
-    ];
-
-    const tfPool = [
-      { q: "Două corpuri încărcate cu sarcini de același semn se resping.", a: ["adevărat", "adevarat"] },
-      { q: "Unitatea de măsură pentru sarcina electrică este newtonul.", a: ["fals"] },
-      { q: "Legea lui Coulomb se referă la interacțiunea dintre sarcini electrice punctiforme.", a: ["adevărat", "adevarat"] },
-      { q: "Intensitatea câmpului electric se măsoară în C.", a: ["fals"] },
-      { q: "Electrizarea prin frecare poate produce sarcini electrice.", a: ["adevărat", "adevarat"] },
-      { q: "Dacă distanța dintre sarcini crește, forța electrică poate scădea.", a: ["adevărat", "adevarat"] },
-      { q: "Un corp neutru are numai protoni și nu are electroni.", a: ["fals"] },
-      { q: "Diferența de potențial electric se măsoară în volți.", a: ["adevărat", "adevarat"] },
-      { q: "Electroscopul este folosit pentru a încălzi un corp electrizat.", a: ["fals"] },
-      { q: "Câmpul electric poate exista în jurul unei sarcini electrice.", a: ["adevărat", "adevarat"] },
-      { q: "Forța electrică este direct proporțională cu produsul sarcinilor.", a: ["adevărat", "adevarat"] },
-      { q: "Dacă una dintre sarcini devine de două ori mai mare, forța electrică rămâne aceeași.", a: ["fals"] }
-    ];
-
-    function normalizeText(value) {
-      return String(value)
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/\s+/g, " ")
-        .trim();
+    function showScreen(id) {
+      document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+      $(id).classList.add("active");
+      if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+      updateStartInfo();
     }
 
-    function normalizeNumberString(value) {
-      return String(value).trim().replace(/,/g, ".").replace(/\s+/g, "");
+    function randInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
     }
 
-    function parseLocaleNumber(value) {
-      const cleaned = normalizeNumberString(value);
-      if (!/^[-+]?\d+(\.\d+)?$/.test(cleaned)) return NaN;
-      return Number(cleaned);
+    function choice(arr) {
+      return arr[Math.floor(Math.random() * arr.length)];
     }
 
-    function decimalCount(value) {
-      const cleaned = normalizeNumberString(value);
-      return cleaned.includes(".") ? cleaned.split(".")[1].length : 0;
-    }
-
-    function truncateTo(num, decimals = 2) {
-      const factor = Math.pow(10, decimals);
-      return Math.trunc(num * factor) / factor;
-    }
-
-    function roundTo(num, decimals = 2) {
-      const factor = Math.pow(10, decimals);
-      return Math.round(num * factor) / factor;
-    }
-
-    function formatNumber(num, maxDecimals = 2) {
-      if (Number.isInteger(num)) return String(num);
-      return Number(num.toFixed(maxDecimals)).toString();
-    }
-
-    function formatPrecise(num) {
-      if (Number.isInteger(num)) return String(num);
-      return Number(num.toFixed(6)).toString();
-    }
-
-    function shortCode(seed) {
-      return (seed >>> 0).toString(36).toUpperCase().slice(0, 6);
-    }
-
-    function hashString(str) {
-      let h = 2166136261;
-      for (let i = 0; i < str.length; i++) {
-        h ^= str.charCodeAt(i);
-        h = Math.imul(h, 16777619);
-      }
-      return h >>> 0;
-    }
-
-    function mulberry32(a) {
-      return function () {
-        let t = a += 0x6D2B79F5;
-        t = Math.imul(t ^ (t >>> 15), t | 1);
-        t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-        return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-      };
-    }
-
-    function randInt(rng, min, max) {
-      return Math.floor(rng() * (max - min + 1)) + min;
-    }
-
-    function randFrom(rng, arr) {
-      return arr[Math.floor(rng() * arr.length)];
-    }
-
-    function pickUnique(rng, pool, count) {
-      const copy = [...pool];
-      const result = [];
-      while (result.length < count && copy.length) {
-        const idx = Math.floor(rng() * copy.length);
-        result.push(copy.splice(idx, 1)[0]);
-      }
-      return result;
-    }
-
-    function shuffleArray(rng, arr) {
+    function shuffle(arr) {
       const copy = [...arr];
       for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(rng() * (i + 1));
+        const j = Math.floor(Math.random() * (i + 1));
         [copy[i], copy[j]] = [copy[j], copy[i]];
       }
       return copy;
     }
 
-    function questionFill(item) {
-      return { type: "fill", q: item.q, answers: item.a, points: POINTS_PER_ITEM };
+    function fmt(n) {
+      if (Math.abs(n - Math.round(n)) < 0.000001) return String(Math.round(n));
+      return String(Math.round(n * 1000) / 1000).replace(".", ",");
     }
 
-    function questionTrueFalse(item) {
-      return { type: "tf", q: item.q, answers: item.a, points: POINTS_PER_ITEM };
+    function normalizeText(s) {
+      return String(s || "")
+        .trim()
+        .toLowerCase()
+        .replaceAll(",", ".")
+        .replace(/[ăâ]/g, "a")
+        .replace(/[î]/g, "i")
+        .replace(/[șş]/g, "s")
+        .replace(/[țţ]/g, "t")
+        .replace(/\s+/g, " ");
     }
 
-    function questionNumeric({ q, exactAnswer, unit = "", formula = "", constants = "" }) {
+    function parseNumber(s) {
+      const cleaned = String(s || "")
+        .toLowerCase()
+        .replace(",", ".")
+        .replace(/[^\d.\-]/g, "");
+      if (!cleaned || cleaned === "-" || cleaned === ".") return NaN;
+      return Number(cleaned);
+    }
+
+    function makeMC(text, options, correct) {
+      return { type: "mc", label: "Alegere multiplă", text, options: shuffle(options), correct, display: correct };
+    }
+
+    function makeDual(text, correctBool) {
       return {
-        type: "numeric",
-        q,
-        exactAnswer,
-        unit,
-        formula,
-        constants,
-        points: POINTS_PER_ITEM,
-        displayAnswer: `${formatPrecise(exactAnswer)}${unit ? " " + unit : ""}`
+        type: "dual",
+        label: "Alegere duală",
+        text,
+        options: ["Adevărat", "Fals"],
+        correct: correctBool ? "Adevărat" : "Fals",
+        display: correctBool ? "Adevărat" : "Fals"
       };
     }
 
-    function genCoulombForce(rng) {
-      const q1 = randFrom(rng, [1, 2, 3, 4, 5, 6, 8, 10]);
-      const q2 = randFrom(rng, [1, 2, 3, 4, 5, 6, 8, 10]);
-      const r = randFrom(rng, [0.1, 0.2, 0.3, 0.4, 0.5]);
-      return questionNumeric({
-        q: `Două sarcini electrice q₁ = ${q1} μC și q₂ = ${q2} μC se află la distanța r = ${formatNumber(r)} m. Calculează forța electrică dintre ele.`,
-        exactAnswer: K * (q1 * 1e-6) * (q2 * 1e-6) / (r * r),
-        unit: "N",
-        formula: "F = k · q₁ · q₂ / r²",
-        constants: "Date: k = 9·10^9 N·m²/C²; 1 μC = 10^-6 C"
-      });
+    function makeNumber(text, answer, unit = "", tolerance = 0.001) {
+      return { type: "number", label: "Completare", text, answer, unit, tolerance, display: `${fmt(answer)}${unit ? " " + unit : ""}` };
     }
 
-    function genDistanceFromCoulomb(rng) {
-      const q1 = randFrom(rng, [2, 3, 4, 5, 6, 8, 10]);
-      const q2 = randFrom(rng, [1, 2, 3, 4, 5, 6]);
-      const r = randFrom(rng, [0.1, 0.2, 0.3, 0.4, 0.5]);
-      const F = K * (q1 * 1e-6) * (q2 * 1e-6) / (r * r);
-      return questionNumeric({
-        q: `Două sarcini q₁ = ${q1} μC și q₂ = ${q2} μC interacționează cu forța F = ${formatPrecise(F)} N. Calculează distanța dintre ele.`,
-        exactAnswer: Math.sqrt(K * (q1 * 1e-6) * (q2 * 1e-6) / F),
-        unit: "m",
-        formula: "r = √(k · q₁ · q₂ / F)",
-        constants: "Date: k = 9·10^9 N·m²/C²; 1 μC = 10^-6 C"
-      });
+    function makeText(text, answers, display) {
+      const list = Array.isArray(answers) ? answers : [answers];
+      return { type: "text", label: "Completare", text, answers: list, display: display || list[0] };
     }
 
-    function genFieldIntensity(rng) {
-      const F = randFrom(rng, [0.09, 0.18, 0.27, 0.36, 0.45, 0.54, 0.72, 0.9]);
-      const q = randFrom(rng, [1, 2, 3, 4, 5, 6, 9]);
-      return questionNumeric({
-        q: `Asupra unei sarcini q = ${q} μC acționează o forță F = ${formatNumber(F, 3)} N. Calculează intensitatea câmpului electric.`,
-        exactAnswer: F / (q * 1e-6),
-        unit: "N/C",
-        formula: "E = F / q",
-        constants: "Date: 1 μC = 10^-6 C"
-      });
-    }
+    
 
-    function genForceFromField(rng) {
-      const E = randFrom(rng, [1000, 2000, 3000, 4000, 5000, 8000, 10000]);
-      const q = randFrom(rng, [1, 2, 3, 4, 5, 6, 8]);
-      return questionNumeric({
-        q: `O sarcină q = ${q} μC se află într-un câmp electric de intensitate E = ${E} N/C. Calculează forța electrică.`,
-        exactAnswer: E * q * 1e-6,
-        unit: "N",
-        formula: "F = E · q",
-        constants: "Date: 1 μC = 10^-6 C"
-      });
-    }
+function buildBank() {
+      const p1 = randInt(8, 20);
+      const e1 = Math.max(0, p1 - choice([1, 2, 3, 4, 5]));
+      const netPlus = p1 - e1;
 
-    function genChargeFromField(rng) {
-      const E = randFrom(rng, [1000, 1500, 2000, 3000, 4000, 5000]);
-      const F = randFrom(rng, [0.002, 0.003, 0.004, 0.005, 0.006, 0.008, 0.01]);
-      return questionNumeric({
-        q: `Într-un câmp electric de intensitate E = ${E} N/C, o sarcină este acționată cu forța F = ${formatNumber(F, 3)} N. Calculează sarcina electrică în coulombi.`,
-        exactAnswer: F / E,
-        unit: "C",
-        formula: "q = F / E"
-      });
-    }
+      const p2 = randInt(8, 20);
+      const e2 = p2 + choice([1, 2, 3, 4, 5]);
+      const netMinus = p2 - e2;
 
-    function genVoltageFromWork(rng) {
-      const W = randFrom(rng, [2, 4, 5, 6, 8, 10, 12, 15]);
-      const q = randFrom(rng, [1, 2, 4, 5, 10]);
-      return questionNumeric({
-        q: `La deplasarea unei sarcini q = ${q} C se efectuează lucrul electric W = ${W} J. Calculează tensiunea electrică.`,
-        exactAnswer: W / q,
-        unit: "V",
-        formula: "U = W / q"
-      });
-    }
+      const factorCharge = choice([2, 3, 4]);
+      const factorDistance = choice([2, 3, 4]);
+      const distanceEffect = factorDistance * factorDistance;
 
-    function genWorkFromVoltage(rng) {
-      const U = randFrom(rng, [3, 4, 5, 6, 8, 9, 10, 12]);
-      const q = randFrom(rng, [1, 2, 3, 4, 5]);
-      return questionNumeric({
-        q: `O sarcină q = ${q} C este deplasată între două puncte cu tensiunea U = ${U} V. Calculează lucrul electric.`,
-        exactAnswer: U * q,
-        unit: "J",
-        formula: "W = U · q"
-      });
-    }
+      const qA = choice([2, 3, 4, 5, 6, 8]);
+      const qB = choice([1, 2, 3, 4]);
+      const qTotalSame = qA + qB;
+      const qTotalOpp = qA - qB;
 
-    function genChargeFromVoltage(rng) {
-      const W = randFrom(rng, [4, 6, 8, 10, 12, 15, 18, 20]);
-      const U = randFrom(rng, [2, 3, 4, 5, 6, 10]);
-      return questionNumeric({
-        q: `Între două puncte există tensiunea U = ${U} V, iar lucrul electric este W = ${W} J. Calculează sarcina electrică.`,
-        exactAnswer: W / U,
-        unit: "C",
-        formula: "q = W / U"
-      });
-    }
-
-    function genDoubleChargeEffect(rng) {
-      const F = randFrom(rng, [0.45, 0.9, 1.2, 1.8, 2.4, 3.6, 4.5]);
-      return questionNumeric({
-        q: `Dacă una dintre cele două sarcini electrice se dublează, iar distanța rămâne aceeași, forța electrică inițială F = ${formatNumber(F, 2)} N devine cât?`,
-        exactAnswer: 2 * F,
-        unit: "N",
-        formula: "F este direct proporțională cu sarcina"
-      });
-    }
-
-    function genDoubleDistanceEffect(rng) {
-      const F = randFrom(rng, [0.45, 0.9, 1.2, 1.8, 2.4, 3.6, 4.5]);
-      return questionNumeric({
-        q: `Dacă distanța dintre două sarcini se dublează, iar sarcinile rămân aceleași, forța electrică inițială F = ${formatNumber(F, 2)} N devine cât?`,
-        exactAnswer: F / 4,
-        unit: "N",
-        formula: "F este invers proporțională cu r²"
-      });
-    }
-
-    const numericGenerators = [
-      genCoulombForce,
-      genDistanceFromCoulomb,
-      genFieldIntensity,
-      genForceFromField,
-      genChargeFromField,
-      genVoltageFromWork,
-      genWorkFromVoltage,
-      genChargeFromVoltage,
-      genDoubleChargeEffect,
-      genDoubleDistanceEffect
-    ];
-
-    function generateSessionSalt() {
-      if (window.crypto && window.crypto.getRandomValues) {
-        const arr = new Uint32Array(1);
-        window.crypto.getRandomValues(arr);
-        return String(arr[0]);
-      }
-      return String(Math.floor(Math.random() * 1e9));
-    }
-
-    function getMinuteKey() {
-      const now = new Date();
-      const pad = (n) => String(n).padStart(2, "0");
-      return `${now.getFullYear()}${pad(now.getMonth() + 1)}${pad(now.getDate())}${pad(now.getHours())}${pad(now.getMinutes())}`;
-    }
-
-    function buildTest() {
-      const baseKey = `${state.name}|${state.className}|${getMinuteKey()}|${state.sessionSalt}`;
-      state.seed = hashString(baseKey);
-      state.variant = (state.seed % VARIANT_COUNT) + 1;
-      state.testCode = `ES8-V${String(state.variant).padStart(3, "0")}-${shortCode(state.seed)}`;
-
-      const rng = mulberry32(state.seed);
-      const mixedPool = [
-        ...fillPool.map((item) => ({ ...item, itemType: "fill" })),
-        ...tfPool.map((item) => ({ ...item, itemType: "tf" }))
+      const mc = [
+        makeMC("Un corp electrizat are:", ["sarcină electrică", "numai masă", "numai volum", "temperatură zero"], "sarcină electrică"),
+        makeMC("Două corpuri cu sarcini de același fel:", ["se resping", "se atrag mereu", "nu interacționează", "devin neutre instantaneu"], "se resping"),
+        makeMC("Două corpuri cu sarcini de semne opuse:", ["se atrag", "se resping", "nu interacționează", "își pierd masa"], "se atrag"),
+        makeMC("Sarcina protonului este:", ["pozitivă", "negativă", "nulă", "magnetică"], "pozitivă"),
+        makeMC("Sarcina electronului este:", ["negativă", "pozitivă", "nulă", "termică"], "negativă"),
+        makeMC("Neutronul are sarcină:", ["nulă", "pozitivă", "negativă", "dublă"], "nulă"),
+        makeMC("Unitatea de măsură pentru sarcina electrică este:", ["coulombul", "newtonul", "joule-ul", "metrul"], "coulombul"),
+        makeMC("Un bun conductor electric este:", ["cuprul", "plasticul", "sticla", "cauciucul"], "cuprul"),
+        makeMC("Un bun izolator electric este:", ["plasticul", "cuprul", "aluminiul", "fierul"], "plasticul"),
+        makeMC("Electroscopul indică:", ["electrizarea unui corp", "temperatura apei", "masa unui corp", "viteza sunetului"], "electrizarea unui corp"),
+        makeMC("Electrizarea prin frecare apare când două corpuri:", ["sunt frecate", "sunt încălzite egal", "au aceeași culoare", "sunt cântărite"], "sunt frecate"),
+        makeMC("Electrizarea prin contact apare când un corp neutru:", ["atinge un corp electrizat", "este pus în apă", "este luminat", "este răcit"], "atinge un corp electrizat"),
+        makeMC("Electrizarea prin influență are loc:", ["fără atingere directă", "numai prin topire", "numai prin ardere", "numai în vid absolut"], "fără atingere directă"),
+        makeMC("În jurul unui corp electrizat există:", ["câmp electric", "numai vid", "numai umbră", "numai sunet"], "câmp electric"),
+        makeMC("Forța electrostatică depinde de:", ["sarcini și distanță", "culoarea corpurilor", "numele materialului", "ora zilei"], "sarcini și distanță"),
+        makeMC("Descărcarea electrică în atmosferă poate produce:", ["fulger", "ecou", "reflexie", "solidificare"], "fulger"),
+        makeMC("Prin împământare, un corp electrizat poate deveni:", ["neutru", "mai cald obligatoriu", "transparent", "magnet permanent"], "neutru"),
+        makeMC("Atomul neutru are:", ["protoni și electroni în număr egal", "numai protoni", "numai electroni", "sarcină pozitivă obligatoriu"], "protoni și electroni în număr egal"),
+        makeMC("Corpurile electrizate interacționează prin:", ["forțe electrice", "forțe sonore", "forțe optice", "forțe termice"], "forțe electrice"),
+        makeMC("Sarcina electrică totală se:", ["conservă", "creează din nimic", "pierde mereu", "transformă în masă"], "conservă")
       ];
 
-      const mixedQuestions = pickUnique(rng, mixedPool, MIXED_COUNT).map((item) =>
-        item.itemType === "fill" ? questionFill(item) : questionTrueFalse(item)
-      );
+      const dual = [
+        makeDual("Un atom neutru are număr egal de protoni și electroni.", true),
+        makeDual("Electronul are sarcină pozitivă.", false),
+        makeDual("Protonul are sarcină pozitivă.", true),
+        makeDual("Două sarcini pozitive se resping.", true),
+        makeDual("Două sarcini de semne opuse se resping.", false),
+        makeDual("Sticla și plasticul pot fi izolatoare electrice.", true),
+        makeDual("Metalele sunt, în general, conductoare electrice.", true),
+        makeDual("Electrizarea prin influență cere atingere directă obligatorie.", false),
+        makeDual("Un corp neutru nu are protoni și electroni.", false),
+        makeDual("În jurul unei sarcini electrice există câmp electric.", true),
+        makeDual("Forța electrostatică scade când distanța crește.", true),
+        makeDual("Fulgerul este o descărcare electrică.", true),
+        makeDual("Împământarea poate contribui la neutralizarea unui corp.", true),
+        makeDual("Cauciucul este, în general, bun conductor electric.", false),
+        makeDual("Sarcinile electrice de același fel se atrag.", false),
+        makeDual("Sarcina electrică se măsoară în coulombi.", true)
+      ];
 
-      const numericQuestions = pickUnique(rng, numericGenerators, NUMERIC_COUNT).map((fn) => fn(rng));
-      state.questions = shuffleArray(rng, [...mixedQuestions, ...numericQuestions]);
-      state.currentIdx = 0;
-      state.correctAnswers = 0;
+      const completion = [
+        makeText("Completează: particula cu sarcină negativă este ______.", ["electronul", "electron"], "electronul"),
+        makeText("Completează: particula cu sarcină pozitivă este ______.", ["protonul", "proton"], "protonul"),
+        makeText("Completează: particula fără sarcină electrică este ______.", ["neutronul", "neutron"], "neutronul"),
+        makeText("Completează: unitatea pentru sarcina electrică este ______.", ["coulomb", "coulombul", "c"], "coulomb"),
+        makeText("Completează: un corp cu sarcină totală zero este ______.", ["neutru", "neutral"], "neutru"),
+        makeText("Completează: regiunea din jurul unei sarcini se numește câmp ______.", ["electric"], "electric"),
+        makeText("Completează: două sarcini opuse se ______.", ["atrag", "atrage"], "atrag"),
+        makeText("Completează: două sarcini de același fel se ______.", ["resping", "respinge"], "resping"),
+        makeText("Completează: transferul sarcinii către Pământ se numește ______.", ["impamantare", "împământare", "impamantarea", "împământarea"], "împământare"),
+        makeText("Completează: aparatul simplu pentru evidențierea electrizării este ______.", ["electroscopul", "electroscop"], "electroscopul"),
+        makeNumber(`Un corp are ${p1} protoni și ${e1} electroni. Sarcina netă este:`, netPlus, "e", 0.001),
+        makeNumber(`Un corp are ${p2} protoni și ${e2} electroni. Sarcina netă este:`, netMinus, "e", 0.001),
+        makeNumber(`Dacă o sarcină devine de ${factorCharge} ori mai mare, forța devine de câte ori mai mare?`, factorCharge, "", 0.001),
+        makeNumber(`Dacă distanța devine de ${factorDistance} ori mai mare, forța devine de câte ori mai mică?`, distanceEffect, "", 0.001),
+        makeNumber(`Două corpuri au sarcini de ${qA} μC și ${qB} μC, de același semn. Sarcina totală este:`, qTotalSame, "μC", 0.001),
+        makeNumber(`Două corpuri au sarcini de ${qA} μC și -${qB} μC. Sarcina totală este:`, qTotalOpp, "μC", 0.001),
+        makeNumber(`Un corp a primit ${factorCharge} electroni. Sarcina sa netă este:`, -factorCharge, "e", 0.001),
+        makeNumber(`Un corp a pierdut ${factorDistance} electroni. Sarcina sa netă este:`, factorDistance, "e", 0.001)
+      ];
+
+      return { mc, dual, completion };
     }
 
-    function showScreen(screen) {
-      [el.login, el.game, el.end].forEach((node) => node.classList.remove("active"));
-      screen.classList.add("active");
+
+    function generateQuestions() {
+      const bank = buildBank();
+      return [
+        ...shuffle(bank.mc).slice(0, 8),
+        ...shuffle(bank.dual).slice(0, 6),
+        ...shuffle(bank.completion).slice(0, 6)
+      ].sort(() => Math.random() - 0.5);
     }
 
-    function showQuestion() {
-      const q = state.questions[state.currentIdx];
-      el.qInfo.textContent = `Cerința ${state.currentIdx + 1} / ${TOTAL_QUESTIONS}`;
-      el.pointsInfo.textContent = `${q.points} puncte`;
-      el.variantInfo.textContent = `Varianta ${state.variant} / ${VARIANT_COUNT}`;
-      el.testCode.textContent = state.testCode;
-      if (q.type === "numeric" && q.constants) {
-        el.question.innerHTML = `${q.q}<br><br><span style="font-size:0.82em;color:#fde68a;font-weight:600;line-height:1.5;display:inline-block;">${q.constants}</span>`;
-      } else {
-        el.question.textContent = q.q;
+    function saveStudent() {
+      localStorage.setItem(STUDENT_KEY, JSON.stringify(student));
+    }
+
+    function loadStudent() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STUDENT_KEY) || "{}");
+        if (saved && typeof saved === "object") {
+          student = { ...student, ...saved };
+          $("schoolInput").value = student.school || "";
+          $("nameInput").value = student.name || "";
+          $("classInput").value = student.className || "";
+        }
+      } catch (e) {}
+    }
+
+    function getAttempts() {
+      try {
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        return Array.isArray(data) ? data : [];
+      } catch (e) {
+        return [];
       }
-      el.feedback.className = "feedback";
-      el.feedback.style.display = "none";
-      el.feedback.innerHTML = "";
-      el.nextBtn.classList.add("hidden");
+    }
 
-      el.inputArea.innerHTML = `
-        <input type="text" id="userAnswer" placeholder="Răspuns..." autocomplete="off" />
-        <button class="btn btn-primary" id="checkBtn">Verifică</button>
-      `;
-
-      const answerInput = document.getElementById("userAnswer");
-      const checkBtn = document.getElementById("checkBtn");
-      checkBtn.addEventListener("click", checkAnswer);
-      answerInput.addEventListener("keydown", (event) => {
-        if (event.key === "Enter") checkAnswer();
+    function saveAttempt(finalScore) {
+      const attempts = getAttempts();
+      attempts.push({
+        score: finalScore,
+        date: new Date().toISOString(),
+        school: student.school,
+        name: student.name,
+        className: student.className
       });
-      answerInput.focus();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(attempts));
     }
 
-    function numericAccepted(userValue, exactAnswer) {
-      if (decimalCount(userValue) > 2) return false;
-      const userNum = parseLocaleNumber(userValue);
-      if (Number.isNaN(userNum)) return false;
-
-      const accepted = new Set([
-        exactAnswer,
-        truncateTo(exactAnswer, 2),
-        roundTo(exactAnswer, 2)
-      ].map((n) => Number(n.toFixed(6))));
-
-      return accepted.has(Number(userNum.toFixed(6)));
+    function resetPractice() {
+      if (confirm("Ștergi exersările salvate?")) {
+        localStorage.removeItem(STORAGE_KEY);
+        updateStartInfo();
+      }
     }
 
-    function evaluateAnswer(userValue, q) {
-      if (q.type === "fill" || q.type === "tf") {
-        const clean = normalizeText(userValue);
-        return q.answers.some((ans) => normalizeText(ans) === clean);
+    function updateStartInfo() {
+      const el = $("startInfo");
+      if (!el) return;
+      const attempts = getAttempts();
+      el.textContent = attempts.length ? `Exersări finalizate: ${attempts.length}/4` : "";
+    }
+
+    function startTest() {
+      student.school = $("schoolInput").value.trim();
+      student.name = $("nameInput").value.trim();
+      student.className = $("classInput").value.trim();
+
+      if (!student.school || !student.name || !student.className) {
+        alert("Completează școala, numele și clasa.");
+        return;
       }
-      if (q.type === "numeric") {
-        return numericAccepted(userValue, q.exactAnswer);
+
+      saveStudent();
+      questions = generateQuestions();
+      current = 0;
+      score = START_SCORE;
+      checked = false;
+      awarded = false;
+      renderQuestion();
+      showScreen("screen-test");
+    }
+
+    function renderQuestion() {
+      const q = questions[current];
+      checked = false;
+      awarded = false;
+
+      $("qCounter").textContent = `Item ${current + 1}/${TOTAL_ITEMS}`;
+      $("scoreNow").textContent = `Punctaj: ${score}`;
+      $("progress").style.width = `${(current / TOTAL_ITEMS) * 100}%`;
+      $("qType").textContent = q.label;
+      $("questionText").innerHTML = q.text;
+
+      $("feedback").className = "feedback";
+      $("feedback").textContent = "";
+      $("nextBtn").disabled = true;
+      $("nextBtn").textContent = current === TOTAL_ITEMS - 1 ? "Finalizează testul" : "Mergi mai departe";
+      $("checkBtn").disabled = false;
+
+      const area = $("answerArea");
+      area.innerHTML = "";
+
+      if (q.type === "mc" || q.type === "dual") {
+        q.options.forEach((opt, idx) => {
+          const id = `opt${idx}`;
+          const label = document.createElement("label");
+          label.className = "option";
+          label.innerHTML = `<input type="radio" name="answer" value="${escapeAttr(opt)}" id="${id}"><span>${opt}</span>`;
+          area.appendChild(label);
+        });
+      } else {
+        const input = document.createElement("input");
+        input.id = "answerInput";
+        input.className = "answer-input";
+        input.type = "text";
+        input.inputMode = q.type === "number" ? "decimal" : "text";
+        input.autocomplete = "off";
+        input.placeholder = "Răspuns";
+        area.appendChild(input);
+        setTimeout(() => input.focus(), 50);
       }
+
+      if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+    }
+
+    function escapeAttr(s) {
+      return String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+    }
+
+    function getAnswer() {
+      const q = questions[current];
+      if (q.type === "mc" || q.type === "dual") {
+        const checkedRadio = document.querySelector("input[name='answer']:checked");
+        return checkedRadio ? checkedRadio.value : "";
+      }
+      return $("answerInput") ? $("answerInput").value : "";
+    }
+
+    function isCorrect(q, ans) {
+      if (q.type === "mc" || q.type === "dual") {
+        return normalizeText(ans) === normalizeText(q.correct);
+      }
+
+      if (q.type === "number") {
+        const n = parseNumber(ans);
+        return Number.isFinite(n) && Math.abs(n - q.answer) <= q.tolerance;
+      }
+
+      if (q.type === "text") {
+        const normalized = normalizeText(ans);
+        return q.answers.some(a => normalizeText(a) === normalized);
+      }
+
       return false;
     }
 
     function checkAnswer() {
-      const q = state.questions[state.currentIdx];
-      const answerInput = document.getElementById("userAnswer");
-      const userValue = answerInput.value;
-      const correct = evaluateAnswer(userValue, q);
+      if (checked) return;
 
-      answerInput.disabled = true;
-      const checkBtn = document.getElementById("checkBtn");
-      checkBtn.disabled = true;
-      checkBtn.classList.add("btn-disabled");
+      const q = questions[current];
+      const ans = getAnswer();
 
-      el.feedback.style.display = "block";
-      if (correct) {
-        state.correctAnswers++;
-        el.feedback.className = "feedback ok";
-        el.feedback.innerHTML = `Corect ✅<br>+${q.points} puncte`;
-      } else {
-        el.feedback.className = "feedback bad";
-        if (q.type === "numeric") {
-          el.feedback.innerHTML = `Greșit ❌<br>Formula: <strong>${q.formula}</strong><br>Rezultat corect: <strong>${q.displayAnswer}</strong>`;
-        } else {
-          el.feedback.innerHTML = `Greșit ❌<br>Răspuns corect: <strong>${q.answers[0]}</strong>`;
-        }
-      }
-      el.nextBtn.classList.remove("hidden");
-    }
-
-    function nextQuestion() {
-      state.currentIdx++;
-      if (state.currentIdx < TOTAL_QUESTIONS) {
-        showQuestion();
-      } else {
-        finishGame();
-      }
-    }
-
-    function finishGame() {
-      const points = state.correctAnswers * POINTS_PER_ITEM;
-      const grade = (1 + (points * 9) / TOTAL_POINTS).toFixed(2);
-
-      showScreen(el.end);
-      el.finalScore.textContent = `${points}p`;
-      el.rawPoints.textContent = `Scor: ${state.correctAnswers} / ${TOTAL_QUESTIONS} răspunsuri corecte • ${points} / ${TOTAL_POINTS} puncte.`;
-      el.finalGrade.textContent = `Notă orientativă: ${grade}`;
-      el.endVariant.textContent = `Varianta ${state.variant} din ${VARIANT_COUNT}`;
-      el.endCode.textContent = `Cod test: ${state.testCode}`;
-
-      const fd = new FormData();
-      fd.append("nume", state.name);
-      fd.append("clasa", `${state.className} - Electrostatică 8`);
-      fd.append("varianta", String(state.variant));
-      fd.append("cod_test", state.testCode);
-      fd.append("scor", String(points));
-      fd.append("corecte", String(state.correctAnswers));
-      fd.append("total_itemi", String(TOTAL_QUESTIONS));
-      fd.append("punctaj_total", String(TOTAL_POINTS));
-
-      fetch(SCRIPT_URL, { method: "POST", body: fd, mode: "no-cors" }).catch(() => {});
-    }
-
-    async function enterFullscreen() {
-      const elem = document.documentElement;
-      try {
-        if (elem.requestFullscreen && !document.fullscreenElement) {
-          await elem.requestFullscreen();
-          return;
-        }
-        if (elem.webkitRequestFullscreen && !document.webkitFullscreenElement) {
-          elem.webkitRequestFullscreen();
-          return;
-        }
-        if (elem.msRequestFullscreen && !document.msFullscreenElement) {
-          elem.msRequestFullscreen();
-          return;
-        }
-      } catch (_) {}
-    }
-
-    async function startGame() {
-      state.name = el.stdName.value.trim();
-      state.className = el.stdClass.value;
-      state.sessionSalt = generateSessionSalt();
-
-      if (!state.name || !state.className) {
-        alert("Completează numele și clasa!");
+      if (!String(ans).trim()) {
+        alert("Alege sau scrie un răspuns.");
         return;
       }
 
-      try {
-        await enterFullscreen();
-      } catch (_) {}
+      const ok = isCorrect(q, ans);
+      checked = true;
+      $("checkBtn").disabled = true;
+      $("nextBtn").disabled = false;
 
-      buildTest();
-      showScreen(el.game);
-      showQuestion();
+      const fb = $("feedback");
+      if (ok) {
+        score += POINTS_PER_ITEM;
+        awarded = true;
+        $("scoreNow").textContent = `Punctaj: ${score}`;
+        fb.className = "feedback good";
+        fb.textContent = `Corect! +${POINTS_PER_ITEM} p.`;
+      } else {
+        fb.className = "feedback bad";
+        fb.textContent = `Greșit. Răspuns: ${q.display}`;
+      }
     }
 
-    function restartApp() {
-      showScreen(el.login);
-      el.stdName.focus();
+    function nextQuestion() {
+      if (!checked) return;
+      current++;
+      if (current >= TOTAL_ITEMS) {
+        finishTest();
+      } else {
+        renderQuestion();
+      }
     }
 
-    function bindEvents() {
-      el.startBtn.addEventListener("click", startGame);
-      el.nextBtn.addEventListener("click", nextQuestion);
-      el.restartBtn.addEventListener("click", restartApp);
+    function finishTest() {
+      $("progress").style.width = "100%";
+      saveAttempt(score);
+      $("finalScore").textContent = `${score} / 100`;
+      updatePracticeInfo();
+      showScreen("screen-final");
     }
 
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", bindEvents);
-    } else {
-      bindEvents();
+    function updatePracticeInfo() {
+      const attempts = getAttempts();
+      const count = attempts.length;
+      const left = Math.max(0, 4 - count);
+      const btn = $("diplomaBtn");
+
+      if (count >= 4) {
+        const best = Math.max(...attempts.map(a => Number(a.score) || 0));
+        $("practiceInfo").textContent = `Exersări: ${count}. Punctaj maxim: ${best}/100.`;
+        btn.disabled = false;
+        btn.style.opacity = "1";
+      } else {
+        $("practiceInfo").textContent = `Exersări: ${count}/4. Mai ai ${left}.`;
+        btn.disabled = true;
+        btn.style.opacity = "0.45";
+      }
     }
+
+    function formatSchoolName(name) {
+      let s = String(name || "").trim();
+      if (!s) return "Școala gimnazială ........";
+      s = s.replace(/^școala\s+gimnazială\s*/i, "");
+      s = s.replace(/^scoala\s+gimnaziala\s*/i, "");
+      return `Școala gimnazială ${s}`.trim();
+    }
+
+    function showDiploma() {
+      const attempts = getAttempts();
+      if (attempts.length < 4) {
+        alert("Diploma se generează după cel puțin 4 exersări.");
+        return;
+      }
+
+      const best = Math.max(...attempts.map(a => Number(a.score) || 0));
+      $("dipSchool").textContent = formatSchoolName(student.school || attempts.at(-1)?.school);
+      $("dipName").textContent = student.name || attempts.at(-1)?.name || "..............";
+      $("dipClass").textContent = student.className ? `clasa ${student.className}` : "";
+      $("dipText").innerHTML =
+        `care a exersat testul final la fizică, capitolul<br>` +
+        `<strong>${CHAPTER}</strong>,<br>` +
+        `și a obținut punctajul maxim <span class="score">${best}/100</span> din patru exersări.`;
+      $("dipDate").textContent = `Data: ${new Date().toLocaleDateString("ro-RO")}`;
+      showScreen("screen-diploma");
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadStudent();
+      updateStartInfo();
+      updatePracticeInfo();
+    });
   </script>
 </body>
 </html>

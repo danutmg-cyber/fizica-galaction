@@ -2,13 +2,23 @@
 <html lang="ro">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Test Final – Statica Fluidelor</title>
 <style>
-body { font-family: Arial; margin: 20px; }
-input { width: 80px; }
+body { font-family: Arial, sans-serif; margin: 20px; }
+button { padding: 10px 15px; font-size: 1em; margin-top: 10px; cursor: pointer; }
+input { width: 80px; max-width: 30%; }
 .correct { color: green; font-weight: bold; }
 .wrong { color: red; font-weight: bold; }
-button { margin-top: 10px; }
+@media (max-width: 768px) {
+  body { font-size: 0.95em; margin: 10px; }
+  input { width: 60px; }
+  button { font-size: 0.9em; padding: 8px; }
+}
+@media (min-width: 1024px) {
+  body { font-size: 1.1em; }
+  input { width: 100px; }
+}
 </style>
 </head>
 
@@ -16,83 +26,98 @@ button { margin-top: 10px; }
 <h2>Test Final – Statica Fluidelor</h2>
 <p>Fiecare elev primește valori numerice diferite, iar ordinea întrebărilor este amestecată.</p>
 
-<div id="test"></div>
-<button onclick="verifica()">Verifică răspunsurile</button>
+<button onclick="deschideTest()">Deschide testul în fereastră separată</button>
 
-<div id="rezultat"></div>
-<div id="diploma" style="margin-top:20px;"></div>
+<div id="continutTest" style="display:none;">
+  <h2>Test Final – Statica Fluidelor</h2>
+  <div id="test"></div>
+  <button onclick="verifica()">Verifică răspunsurile</button>
+  <div id="rezultat"></div>
+  <div id="diploma" style="margin-top:20px;"></div>
+</div>
 
 <script>
-function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
-}
-function rnd(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+// Deschide testul într-o fereastră separată
+function deschideTest() {
+  const w = window.open("", "testFluidelor", "width=800,height=600,scrollbars=yes,resizable=yes");
+  w.document.write(document.getElementById("continutTest").innerHTML);
+  w.document.close();
+  w.focus();
 
-// generăm întrebările direct, fără funcții arrow
-let intrebari = [];
-for (let i = 1; i <= 20; i++) {
-  let m = rnd(1,10), h = rnd(2,15), ρ = rnd(900,1100), F = rnd(20,100), A = rnd(5,20), V = rnd(1,5);
-  let text = "";
-  let raspuns = "";
-  switch(i) {
-    case 1: text = `Calculează greutatea unui corp de ${m} kg.`; raspuns = (m*9.8).toFixed(1); break;
-    case 2: text = `Presiunea la adâncimea ${h} m într-un lichid cu densitatea ${ρ} kg/m³.`; raspuns = (ρ*9.8*h).toFixed(0); break;
-    case 3: text = `Un piston exercită o forță de ${F} N pe o suprafață de ${A} cm².`; raspuns = (F/(A/10000)).toFixed(0); break;
-    case 4: text = `Greutatea unui volum de ${V} m³ de lichid cu densitatea ${ρ} kg/m³.`; raspuns = (ρ*V*9.8).toFixed(0); break;
-    default: text = `Calculează presiunea pentru F=${F} N și A=${A} cm².`; raspuns = (F/(A/10000)).toFixed(0);
-  }
-  intrebari.push({text, raspuns});
-}
-shuffle(intrebari);
+  // Injectăm scriptul testului în fereastra nouă
+  const script = document.createElement("script");
+  script.textContent = `
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+    function rnd(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
 
-let html = "";
-intrebari.forEach((q,i)=>{
-  html += `<p><b>${i+1}.</b> ${q.text}<br>Răspuns: <input id="r${i}"></p>`;
-});
-document.getElementById("test").innerHTML = html;
+    let intrebari = [];
+    for (let i = 1; i <= 20; i++) {
+      let m = rnd(1,10), h = rnd(2,15), ρ = rnd(900,1100), F = rnd(20,100), A = rnd(5,20), V = rnd(1,5);
+      let text = "";
+      let raspuns = "";
+      switch(i) {
+        case 1: text = \`Calculează greutatea unui corp de \${m} kg.\`; raspuns = (m*9.8).toFixed(1); break;
+        case 2: text = \`Presiunea la adâncimea \${h} m într-un lichid cu densitatea \${ρ} kg/m³.\`; raspuns = (ρ*9.8*h).toFixed(0); break;
+        case 3: text = \`Un piston exercită o forță de \${F} N pe o suprafață de \${A} cm².\`; raspuns = (F/(A/10000)).toFixed(0); break;
+        case 4: text = \`Greutatea unui volum de \${V} m³ de lichid cu densitatea \${ρ} kg/m³.\`; raspuns = (ρ*V*9.8).toFixed(0); break;
+        default: text = \`Calculează presiunea pentru F=\${F} N și A=\${A} cm².\`; raspuns = (F/(A/10000)).toFixed(0);
+      }
+      intrebari.push({text, raspuns});
+    }
+    shuffle(intrebari);
 
-function verifica() {
-  let corecte = 0;
-  intrebari.forEach((q,i)=>{
-    let user = document.getElementById("r"+i).value.trim();
-    if(user === q.raspuns){corecte++;document.getElementById("r"+i).className="correct";}
-    else{document.getElementById("r"+i).className="wrong";}
-  });
-  document.getElementById("rezultat").innerHTML = `<h3>Ai obținut ${corecte} din 20.</h3>`;
-  verificaDiploma();
-}
+    let html = "";
+    intrebari.forEach((q,i)=>{
+      html += \`<p><b>\${i+1}.</b> \${q.text}<br>Răspuns: <input id="r\${i}"></p>\`;
+    });
+    document.getElementById("test").innerHTML = html;
 
-// diploma
-if(!localStorage.getItem("statica_rezolvari")) localStorage.setItem("statica_rezolvari",0);
+    function verifica() {
+      let corecte = 0;
+      intrebari.forEach((q,i)=>{
+        let user = document.getElementById("r"+i).value.trim();
+        if(user === q.raspuns){corecte++;document.getElementById("r"+i).className="correct";}
+        else{document.getElementById("r"+i).className="wrong";}
+      });
+      document.getElementById("rezultat").innerHTML = \`<h3>Ai obținut \${corecte} din 20.</h3>\`;
+      verificaDiploma();
+    }
 
-function genereazaDiploma(){
-  const nume = prompt("Introdu numele tău pentru diplomă:");
-  if(!nume) return;
-  const data = new Date().toLocaleDateString("ro-RO");
-  const continut = `<h1 style='text-align:center;'>Diplomă de Merit</h1>
-  <p style='text-align:center;'>Se acordă elevului</p>
-  <h2 style='text-align:center;'>${nume}</h2>
-  <p style='text-align:center;'>pentru finalizarea testului „Statica fluidelor” de 4 ori.</p>
-  <p style='text-align:center;'>Data: ${data}</p>`;
-  const w = window.open("", "_blank");
-  w.document.write(continut);
-  w.print();
-}
+    if(!localStorage.getItem("statica_rezolvari")) localStorage.setItem("statica_rezolvari",0);
 
-function verificaDiploma(){
-  let nr = parseInt(localStorage.getItem("statica_rezolvari")) + 1;
-  localStorage.setItem("statica_rezolvari", nr);
-  if(nr >= 4){
-    document.getElementById("diploma").innerHTML = `<h3>Felicitări! Ai rezolvat testul de ${nr} ori.</h3>
-    <button onclick='genereazaDiploma()'>Descarcă diploma PDF</button>`;
-  } else {
-    document.getElementById("diploma").innerHTML = `Ai rezolvat testul de ${nr} ori. Mai ai nevoie de ${4-nr} rezolvări pentru diplomă.`;
-  }
+    function genereazaDiploma(){
+      const nume = prompt("Introdu numele tău pentru diplomă:");
+      if(!nume) return;
+      const data = new Date().toLocaleDateString("ro-RO");
+      const continut = \`<h1 style='text-align:center;'>Diplomă de Merit</h1>
+      <p style='text-align:center;'>Se acordă elevului</p>
+      <h2 style='text-align:center;'>\${nume}</h2>
+      <p style='text-align:center;'>pentru finalizarea testului „Statica fluidelor” de 4 ori.</p>
+      <p style='text-align:center;'>Data: \${data}</p>\`;
+      const w2 = window.open("", "_blank");
+      w2.document.write(continut);
+      w2.print();
+    }
+
+    function verificaDiploma(){
+      let nr = parseInt(localStorage.getItem("statica_rezolvari")) + 1;
+      localStorage.setItem("statica_rezolvari", nr);
+      if(nr >= 4){
+        document.getElementById("diploma").innerHTML = \`<h3>Felicitări! Ai rezolvat testul de \${nr} ori.</h3>
+        <button onclick='genereazaDiploma()'>Descarcă diploma PDF</button>\`;
+      } else {
+        document.getElementById("diploma").innerHTML = \`Ai rezolvat testul de \${nr} ori. Mai ai nevoie de \${4-nr} rezolvări pentru diplomă.\`;
+      }
+    }
+  `;
+  w.document.body.appendChild(script);
 }
 </script>
 </body>

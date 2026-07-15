@@ -2,433 +2,1341 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lecția 4 | Fenomenul de electrizare (experimental). Sarcina electrică | Fizica Galaction</title>
-  <meta name="description" content="Cum apare electrizarea și ce înseamnă sarcina electrică.">
-  <link rel="stylesheet" href="../../../assets/css/style.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071522">
+  <title>Lecția 4 | Fenomenul de electrizare. Sarcina electrică | Fizica Galaction</title>
+  <meta name="description" content="Lecția 4 pentru clasa a VI-a: fenomenul de electrizare, sarcina electrică, atracția și respingerea sarcinilor și electroscopul.">
 
   <style>
-    .lesson-nav {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-top: 24px;
-      justify-content: space-between;
-    }
-    .nav-button {
-      display: inline-block;
-      padding: 12px 18px;
-      border-radius: 12px;
-      text-decoration: none;
-      font-weight: 700;
-      background: #22d3ee;
-      color: #082f49;
-      border: 2px solid #0891b2;
-      box-shadow: 0 4px 14px rgba(8,145,178,0.18);
-      cursor: pointer;
-    }
-    .nav-button.secondary {
-      background: #e2e8f0;
-      color: #0f172a;
-      border-color: #cbd5e1;
-    }
-    .nav-button.success {
-      background: #22c55e;
-      color: #052e16;
-      border-color: #16a34a;
-    }
-    .nav-button:hover,
-    .nav-button:focus {
-      filter: brightness(1.02);
-      transform: translateY(-1px);
-    }
-    .mini-note {
-      font-size: 0.95rem;
-      color: #cbd5e1;
-      margin-top: 8px;
+    :root {
+      color-scheme: dark;
+      --bg: #06111d;
+      --bg-soft: #0b1d2d;
+      --card: rgba(14, 35, 54, 0.94);
+      --card-strong: #102b43;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --cyan: #38d9f5;
+      --cyan-dark: #082f49;
+      --yellow: #fde047;
+      --green: #4ade80;
+      --red: #fb7185;
+      --blue: #60a5fa;
+      --border: rgba(148, 163, 184, 0.32);
+      --shadow: 0 22px 55px rgba(0, 0, 0, 0.34);
+      --radius: 24px;
+      --nav-height: 88px;
     }
 
-    /* Stiluri pentru imagini */
-    .illustration-container {
-      background: linear-gradient(135deg, rgba(79, 195, 247, 0.05), rgba(1, 87, 155, 0.05));
-      border: 2px solid rgba(79, 195, 247, 0.2);
-      border-radius: 12px;
-      padding: 20px;
-      margin: 20px 0;
-      text-align: center;
+    * {
+      box-sizing: border-box;
     }
 
-    .illustration-container img {
-      max-width: 100%;
-      height: auto;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-      display: block;
+    html {
+      min-height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-width: 280px;
+      min-height: 100%;
+      margin: 0;
+      padding: clamp(10px, 2vw, 22px);
+      padding-bottom: calc(var(--nav-height) + 28px + env(safe-area-inset-bottom));
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(56, 217, 245, 0.17), transparent 34rem),
+        radial-gradient(circle at 92% 14%, rgba(96, 165, 250, 0.11), transparent 28rem),
+        linear-gradient(160deg, #06111d 0%, #0b1728 55%, #06111d 100%);
+      color: var(--text);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: clamp(16px, 0.55vw + 14px, 21px);
+      line-height: 1.58;
+    }
+
+    button,
+    a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .app {
+      width: min(100%, 1040px);
       margin: 0 auto;
     }
 
-    .illustration-container img:hover {
-      transform: scale(1.02);
-      box-shadow: 0 8px 24px rgba(52, 152, 219, 0.3);
-    }
-
-    .image-click-hint {
-      font-size: 0.85rem;
-      color: #64748b;
-      margin-top: 8px;
-      font-style: italic;
-    }
-
-    /* MODAL STYLES */
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
+    .topbar {
+      position: sticky;
       top: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.9);
-      animation: fadeIn 0.3s ease-in;
-    }
-
-    .modal.active {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-      }
-      to {
-        opacity: 1;
-      }
-    }
-
-    .modal-content {
-      position: relative;
-      max-width: 95vw;
-      max-height: 95vh;
-      padding: 20px;
-      animation: slideIn 0.3s ease-out;
-      overflow: auto;
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: scale(0.8);
-        opacity: 0;
-      }
-      to {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
-
-    .modal-content img {
-      width: 100%;
-      height: auto;
-      border-radius: 8px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    }
-
-    .modal-close {
-      position: absolute;
-      top: 20px;
-      right: 35px;
-      color: white;
-      font-size: 40px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: color 0.2s;
-      z-index: 1001;
-    }
-
-    .modal-close:hover,
-    .modal-close:focus {
-      color: #ff6b6b;
-    }
-
-    .modal-info {
-      position: absolute;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.8);
-      color: white;
-      padding: 12px 20px;
-      border-radius: 8px;
-      font-size: 14px;
-      z-index: 1001;
-    }
-
-    .kw {
-      background: rgba(255, 107, 107, 0.1);
-      padding: 2px 6px;
-      border-radius: 4px;
-      color: #ff6b6b;
-    }
-
-    .definition {
-      background: rgba(79, 195, 247, 0.1);
-      border-left: 4px solid #22d3ee;
-      padding: 12px 16px;
-      border-radius: 6px;
-      margin-top: 12px;
-    }
-
-    .images-grid {
+      z-index: 20;
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 20px;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 14px;
+      align-items: center;
+      margin-bottom: clamp(12px, 2vw, 22px);
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(6, 17, 29, 0.82);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      backdrop-filter: blur(14px);
+    }
+
+    .progress-track {
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.2);
+    }
+
+    .progress-bar {
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--cyan), var(--green));
+      transition: width 220ms ease;
+    }
+
+    .top-counter {
+      min-width: 74px;
+      text-align: right;
+      color: #e0f2fe;
+      font-size: 0.88rem;
+      font-weight: 850;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .page {
+      min-height: calc(100svh - var(--nav-height) - 92px);
+      animation: page-in 220ms ease both;
+    }
+
+    .page[hidden] {
+      display: none !important;
+    }
+
+    @keyframes page-in {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .hero,
+    .card,
+    .final-card {
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      position: relative;
+      display: grid;
+      min-height: min(72svh, 700px);
+      place-items: center;
+      padding: clamp(28px, 6vw, 72px) clamp(18px, 5vw, 60px);
+      text-align: center;
+      background:
+        linear-gradient(145deg, rgba(56, 217, 245, 0.18), transparent 52%),
+        linear-gradient(35deg, rgba(74, 222, 128, 0.1), transparent 55%),
+        var(--card);
+    }
+
+    .hero::before,
+    .hero::after {
+      position: absolute;
+      border-radius: 50%;
+      content: "";
+      filter: blur(2px);
+      opacity: 0.55;
+    }
+
+    .hero::before {
+      width: 190px;
+      height: 190px;
+      top: -80px;
+      right: -55px;
+      background: rgba(56, 217, 245, 0.19);
+    }
+
+    .hero::after {
+      width: 150px;
+      height: 150px;
+      bottom: -65px;
+      left: -45px;
+      background: rgba(253, 224, 71, 0.11);
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 820px;
+    }
+
+    .school {
+      margin: 0 0 4px;
+      color: #bae6fd;
+      font-size: clamp(0.9rem, 2vw, 1.08rem);
+      font-weight: 800;
+      letter-spacing: 0.025em;
+    }
+
+    .teacher {
+      margin: 0 0 28px;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      overflow-wrap: anywhere;
+    }
+
+    h1 {
+      max-width: 900px;
+      margin: 0 auto 20px;
+      color: #fff;
+      font-size: clamp(2rem, 3.8vw + 0.5rem, 4rem);
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+    }
+
+    h2 {
+      margin: 0 0 clamp(18px, 3vw, 30px);
+      color: var(--cyan);
+      font-size: clamp(1.7rem, 2vw + 0.65rem, 2.7rem);
+      line-height: 1.15;
+      letter-spacing: -0.025em;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+      color: #fef3c7;
+      font-size: clamp(1.15rem, 1vw + 0.8rem, 1.55rem);
+      line-height: 1.25;
+    }
+
+    p {
+      margin: 0 0 16px;
+    }
+
+    .quote {
+      max-width: 680px;
+      margin: 28px auto 0;
+      padding: 14px 18px;
+      border-left: 4px solid var(--yellow);
+      border-radius: 0 16px 16px 0;
+      background: rgba(15, 23, 42, 0.48);
+      color: #fef9c3;
+      font-style: italic;
+      font-weight: 700;
+    }
+
+    .start-hint {
+      margin-top: 28px;
+      color: #dbeafe;
+      font-size: 0.92rem;
+      font-weight: 750;
+    }
+
+    .card,
+    .final-card {
+      padding: clamp(20px, 4.5vw, 48px);
+    }
+
+    .card + .card {
+      margin-top: 18px;
+    }
+
+    .lead {
+      color: #e2e8f0;
+      font-size: clamp(1.04rem, 0.45vw + 0.96rem, 1.2rem);
+    }
+
+    .keyword {
+      color: var(--yellow);
+      font-weight: 900;
+    }
+
+    .notice,
+    .example,
+    .warning,
+    .remember-box {
+      margin-top: 18px;
+      padding: clamp(15px, 2.6vw, 22px);
+      border-radius: 18px;
+      font-weight: 700;
+    }
+
+    .notice {
+      border: 1px solid rgba(56, 217, 245, 0.42);
+      background: rgba(56, 217, 245, 0.1);
+      color: #e0f2fe;
+    }
+
+    .example {
+      border: 1px solid rgba(74, 222, 128, 0.4);
+      background: rgba(74, 222, 128, 0.09);
+      color: #dcfce7;
+    }
+
+    .warning {
+      border: 1px solid rgba(253, 224, 71, 0.42);
+      background: rgba(253, 224, 71, 0.1);
+      color: #fef9c3;
+    }
+
+    .remember-box {
+      border: 1px solid rgba(96, 165, 250, 0.42);
+      background: rgba(96, 165, 250, 0.1);
+      color: #dbeafe;
+    }
+
+    .content-grid,
+    .mode-grid,
+    .example-grid,
+    .charge-grid,
+    .quiz-grid,
+    .link-grid {
+      display: grid;
+      gap: clamp(12px, 2vw, 20px);
+    }
+
+    .content-grid,
+    .example-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .mode-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .charge-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
       margin: 20px 0;
     }
 
-    @media (max-width: 768px) {
-      .modal-content {
-        padding: 10px;
+    .tile,
+    .mode,
+    .charge,
+    .question {
+      min-width: 0;
+      padding: clamp(16px, 3vw, 24px);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: rgba(7, 21, 36, 0.58);
+    }
+
+    .mode strong,
+    .tile strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #fef08a;
+      font-size: 1.08rem;
+    }
+
+    .charge {
+      text-align: center;
+    }
+
+    .charge-symbol {
+      display: grid;
+      width: clamp(76px, 10vw, 112px);
+      aspect-ratio: 1;
+      margin: 0 auto 14px;
+      place-items: center;
+      border-radius: 50%;
+      font-size: clamp(3.3rem, 6vw, 5rem);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .charge-positive .charge-symbol {
+      background: var(--yellow);
+      color: #422006;
+    }
+
+    .charge-negative .charge-symbol {
+      background: var(--blue);
+      color: #082f49;
+    }
+
+    .charge-title {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 900;
+    }
+
+    .charge-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .diagram {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-width: 760px;
+      margin: 22px auto 10px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      border-radius: 22px;
+      background: #0f172a;
+    }
+
+    .caption {
+      margin: 8px auto 0;
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 1.35em;
+    }
+
+    li {
+      margin: 10px 0;
+      padding-left: 0.2em;
+    }
+
+    .steps {
+      counter-reset: step;
+      display: grid;
+      gap: 12px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .steps li {
+      counter-increment: step;
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      margin: 0;
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: rgba(7, 21, 36, 0.55);
+    }
+
+    .steps li::before {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--cyan);
+      color: var(--cyan-dark);
+      content: counter(step);
+      font-weight: 950;
+    }
+
+    .quiz-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .question > strong {
+      display: block;
+      margin-bottom: 14px;
+      color: #fff;
+      font-size: 1.04rem;
+    }
+
+    .answers {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .answers button {
+      min-height: 54px;
+      padding: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.36);
+      border-radius: 14px;
+      background: #132a40;
+      color: var(--text);
+      cursor: pointer;
+      font-size: 0.92rem;
+      font-weight: 800;
+      line-height: 1.25;
+      transition: transform 120ms ease, border-color 120ms ease, background 120ms ease;
+    }
+
+    .answers button:hover {
+      transform: translateY(-1px);
+      border-color: var(--cyan);
+    }
+
+    .answers button:focus-visible,
+    .nav-button:focus-visible,
+    .toc-button:focus-visible,
+    .link-grid a:focus-visible {
+      outline: 3px solid var(--yellow);
+      outline-offset: 3px;
+    }
+
+    .answers button.correct {
+      border-color: var(--green);
+      background: rgba(74, 222, 128, 0.18);
+      color: #dcfce7;
+    }
+
+    .answers button.wrong {
+      border-color: var(--red);
+      background: rgba(251, 113, 133, 0.16);
+      color: #ffe4e6;
+    }
+
+    .feedback {
+      min-height: 1.6em;
+      margin-top: 10px;
+      font-size: 0.92rem;
+      font-weight: 850;
+    }
+
+    .toc {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .toc-button {
+      min-height: 52px;
+      padding: 12px 14px;
+      border: 1px solid rgba(56, 217, 245, 0.32);
+      border-radius: 15px;
+      background: rgba(56, 217, 245, 0.08);
+      color: #e0f2fe;
+      cursor: pointer;
+      text-align: left;
+      font-size: 0.91rem;
+      font-weight: 780;
+    }
+
+    .final-card {
+      min-height: min(72svh, 680px);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      background:
+        linear-gradient(155deg, rgba(74, 222, 128, 0.13), transparent 50%),
+        var(--card);
+    }
+
+    .final-content {
+      width: min(100%, 780px);
+    }
+
+    .final-name {
+      margin-bottom: 8px;
+      color: #bbf7d0;
+      font-size: clamp(1.7rem, 2vw + 0.8rem, 2.7rem);
+      font-weight: 900;
+    }
+
+    .final-card a {
+      color: var(--cyan);
+      font-weight: 800;
+      text-decoration-thickness: 2px;
+      text-underline-offset: 4px;
+    }
+
+    .visitor {
+      width: min(100%, 470px);
+      margin: 22px auto;
+      padding: 14px;
+      border: 1px solid rgba(56, 217, 245, 0.4);
+      border-radius: 16px;
+      background: rgba(56, 217, 245, 0.09);
+      color: #e0f2fe;
+      font-weight: 850;
+    }
+
+    .link-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 22px;
+    }
+
+    .link-grid a {
+      display: grid;
+      min-height: 54px;
+      place-items: center;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: rgba(7, 21, 36, 0.6);
+      color: var(--text);
+      text-decoration: none;
+      font-size: 0.92rem;
+      font-weight: 800;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 40;
+      padding: 10px clamp(10px, 2vw, 20px) calc(10px + env(safe-area-inset-bottom));
+      border-top: 1px solid rgba(148, 163, 184, 0.25);
+      background: rgba(6, 17, 29, 0.9);
+      backdrop-filter: blur(16px);
+    }
+
+    .bottom-nav-inner {
+      width: min(100%, 1040px);
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: clamp(7px, 1.5vw, 14px);
+      align-items: center;
+    }
+
+    .nav-button {
+      min-width: 0;
+      min-height: 54px;
+      padding: 10px clamp(9px, 2vw, 18px);
+      border: 0;
+      border-radius: 16px;
+      cursor: pointer;
+      font-size: clamp(0.85rem, 0.5vw + 0.78rem, 1rem);
+      font-weight: 900;
+      line-height: 1.15;
+    }
+
+    .nav-button:disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+
+    #prevBtn {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    #nextBtn {
+      background: var(--green);
+      color: #052e16;
+    }
+
+    .nav-counter {
+      min-width: 64px;
+      color: #e0f2fe;
+      text-align: center;
+      font-size: 0.88rem;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+
+    @media (max-width: 760px) {
+      :root {
+        --nav-height: 82px;
       }
-      .modal-close {
-        font-size: 30px;
-        right: 15px;
-        top: 10px;
-      }
-      .images-grid {
+
+      .mode-grid,
+      .content-grid,
+      .example-grid {
         grid-template-columns: 1fr;
+      }
+
+      .answers {
+        grid-template-columns: 1fr;
+      }
+
+      .answers button {
+        min-height: 50px;
+        text-align: left;
+      }
+
+      .page {
+        min-height: auto;
+      }
+    }
+
+    @media (max-width: 540px) {
+      body {
+        padding: 8px;
+        padding-bottom: calc(var(--nav-height) + 24px + env(safe-area-inset-bottom));
+      }
+
+      .topbar {
+        top: 6px;
+        padding: 9px 10px;
+        border-radius: 14px;
+      }
+
+      .hero,
+      .card,
+      .final-card {
+        border-radius: 19px;
+      }
+
+      .hero {
+        min-height: calc(100svh - var(--nav-height) - 60px);
+        padding: 28px 16px;
+      }
+
+      .card,
+      .final-card {
+        padding: 20px 16px;
+      }
+
+      .charge-grid,
+      .toc,
+      .link-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .charge-grid {
+        gap: 12px;
+      }
+
+      .charge {
+        display: grid;
+        grid-template-columns: 70px minmax(0, 1fr);
+        gap: 14px;
+        align-items: center;
+        text-align: left;
+      }
+
+      .charge-symbol {
+        width: 70px;
+        margin: 0;
+        font-size: 3rem;
+      }
+
+      .nav-button {
+        min-height: 50px;
+        border-radius: 14px;
+      }
+
+      .nav-button .long-label {
+        display: none;
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .page {
+        min-height: min(760px, calc(100svh - var(--nav-height) - 98px));
+      }
+
+      .card {
+        min-height: 600px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        background: #fff;
+        color: #111827;
+      }
+
+      .topbar,
+      .bottom-nav {
+        display: none;
+      }
+
+      .page,
+      .page[hidden] {
+        display: block !important;
+        min-height: 0;
+        break-after: page;
+      }
+
+      .hero,
+      .card,
+      .final-card {
+        min-height: 0;
+        border: 1px solid #94a3b8;
+        background: #fff;
+        box-shadow: none;
+        color: #111827;
+      }
+
+      h1,
+      h2,
+      h3,
+      .lead,
+      .school,
+      .teacher,
+      .caption,
+      .charge-note {
+        color: #111827;
       }
     }
   </style>
-
 </head>
+
 <body>
-  <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction</h1>
-    </div>
-  </header>
-
-  <main class="page-content wrapper">
-
-    <section class="card">
-      <h1>Lecția 4 – Fenomenul de electrizare (experimental). Sarcina electrică</h1>
-      <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică"</p>
-    </section>
-
-    <section class="card" id="electrizare">
-      <h2>1. Ce este electrizarea</h2>
-      <p><span class="kw"><strong>Electrizarea</strong></span> este procesul prin care un corp capătă proprietăți electrice.</p>
-      <p>După electrizare, corpul poate atrage bucăți mici de hârtie, poate devia un jet subțire de apă sau poate interacționa cu alte corpuri electrizate.</p>
-
-      <!-- ILUSTRAȚIE ELECTRIZARE 1 - CLICKABLE -->
-      <div class="illustration-container" id="electrizare1Container">
-        <img src="../../../assets/img/electrizarea-corpurilor-si-sarcina-electrica-poza1.png" 
-             alt="Electrizarea corpurilor - metode de electrizare" 
-             style="max-width: 450px;">
-        <div class="image-click-hint">👆 Click pe imagine pentru a o vedea în mărime mare</div>
+  <div class="app">
+    <header class="topbar" aria-label="Progresul lecției">
+      <div class="progress-track" aria-hidden="true">
+        <div class="progress-bar" id="progressBar"></div>
       </div>
+      <div class="top-counter"><span id="topPageNow">1</span> din <span id="topPageTotal">14</span></div>
+    </header>
 
-      <div class="definition">
-        <strong>Explicație:</strong> Imaginea ilustrează procesul de electrizare și cum corpurile electrizate pot interacționa cu alte obiecte mici (hârtie, fir).
-      </div>
-    </section>
+    <main id="lesson" aria-live="polite">
+      <section class="page" data-title="Introducere">
+        <div class="hero">
+          <div class="hero-content">
+            <p class="school">Școala Gimnazială „Gala Galaction” Mangalia</p>
+            <p class="teacher">Prof. Dănuț Andronie</p>
+            <h1>Lecția 4 – Fenomenul de electrizare. Sarcina electrică</h1>
+            <p class="lead">
+              Unele corpuri pot căpăta proprietăți electrice și pot atrage obiecte foarte ușoare.
+            </p>
+            <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică.”</p>
+            <p class="start-hint">Folosește butonul „Mai departe”, săgețile tastaturii sau glisează pe ecran.</p>
+          </div>
+        </div>
+      </section>
 
-    <section class="card" id="procedee">
-      <h2>2. Moduri de electrizare</h2>
-      <p>Electrizarea se poate realiza prin:</p>
-      <ul>
-        <li><strong>Frecare</strong> - frecarea unui material cu altul transferă electronii</li>
-        <li><strong>Contact</strong> - un corp electrizat transmite sarcina unui corp neutru prin contact direct</li>
-        <li><strong>Influență</strong> - apropierea unui corp electrizat rearanjează electronii fără contact fizic</li>
-      </ul>
-      <div class="example">De exemplu, un balon frecat de un material textil poate atrage fire de păr sau bucăți mici de hârtie.</div>
+      <section class="page" data-title="Cuprins" hidden>
+        <div class="card">
+          <h2>Ce vom învăța?</h2>
+          <p class="lead">Lecția este împărțită în pagini scurte, ușor de parcurs pe orice dispozitiv.</p>
+          <div class="toc" aria-label="Cuprinsul lecției">
+            <button class="toc-button" type="button" data-page="2">1. Ce este electrizarea?</button>
+            <button class="toc-button" type="button" data-page="3">2. Observație practică</button>
+            <button class="toc-button" type="button" data-page="4">3. Moduri de electrizare</button>
+            <button class="toc-button" type="button" data-page="5">4. Sarcina electrică</button>
+            <button class="toc-button" type="button" data-page="6">5. Atracție și respingere</button>
+            <button class="toc-button" type="button" data-page="7">6. Electroscopul</button>
+            <button class="toc-button" type="button" data-page="9">7. Experiment simplu</button>
+            <button class="toc-button" type="button" data-page="12">8. Verificare rapidă</button>
+          </div>
+          <div class="notice">
+            Când observăm atragerea sau respingerea unor corpuri electrizate, studiem un fenomen electric.
+          </div>
+        </div>
+      </section>
 
-      <!-- ILUSTRAȚIE ELECTRIZARE 2 - CLICKABLE -->
-      <div class="illustration-container" id="electrizare2Container">
-        <img src="../../../assets/img/electrizarea-corpurilor-si-sarcina-electrica-poza2.png" 
-             alt="Moduri de electrizare - frecare, contact, influență" 
-             style="max-width: 450px;">
-        <div class="image-click-hint">👆 Click pe imagine pentru a o vedea în mărime mare</div>
-      </div>
+      <section class="page" data-title="Ce este electrizarea?" hidden>
+        <div class="card">
+          <h2>1. Ce este electrizarea?</h2>
+          <p class="lead">
+            <span class="keyword">Electrizarea</span> este procesul prin care un corp capătă proprietăți electrice.
+          </p>
+          <div class="content-grid">
+            <article class="tile">
+              <strong>Ce poate face un corp electrizat?</strong>
+              Poate atrage bucăți mici de hârtie, poate devia un jet subțire de apă sau poate interacționa cu alte corpuri electrizate.
+            </article>
+            <article class="tile">
+              <strong>Exemplu cunoscut</strong>
+              Un balon frecat de păr sau de o haină poate atrage fire de păr ori bucățele mici de hârtie.
+            </article>
+          </div>
+          <div class="example">
+            După frecare, balonul sau pieptănul nu devine magnet. El devine <strong>electrizat</strong>.
+          </div>
+        </div>
+      </section>
 
-      <div class="definition">
-        <strong>Explicație:</strong> Imaginea arată cele trei metode principale de electrizare:
-        <ul style="margin: 8px 0; padding-left: 20px;">
-          <li><strong>Frecare</strong> - cel mai comun mod</li>
-          <li><strong>Contact</strong> - transfer direct de sarcină</li>
-          <li><strong>Influență</strong> - rearanjare de electroni fără contact</li>
-        </ul>
-      </div>
-    </section>
+      <section class="page" data-title="Observație practică" hidden>
+        <div class="card">
+          <h2>2. Observație practică</h2>
+          <p class="lead">
+            Când frecăm un pieptăn de plastic de păr, acesta poate atrage bucăți mici de hârtie.
+          </p>
 
-    <section class="card" id="sarcina">
-      <h2>3. Sarcina electrică</h2>
-      <p><span class="kw"><strong>Sarcina electrică</strong></span> este mărimea fizică ce descrie starea de electrizare a unui corp.</p>
-      <p>Corpurile se pot încărca pozitiv sau negativ.</p>
-      <ul>
-        <li><strong>Sarcină pozitivă (+)</strong> - lipsă de electroni</li>
-        <li><strong>Sarcină negativă (-)</strong> - exces de electroni</li>
-      </ul>
-      <div class="notice">Corpurile cu sarcini de același fel se resping, iar cele cu sarcini diferite se atrag.</div>
-    </section>
+          <svg class="diagram" viewBox="0 0 760 390" role="img" aria-labelledby="combTitle combDesc">
+            <title id="combTitle">Electrizarea unui pieptăn prin frecare</title>
+            <desc id="combDesc">Un pieptăn electrizat atrage bucăți mici de hârtie.</desc>
+            <rect width="760" height="390" rx="24" fill="#0f172a"/>
+            <text x="380" y="48" text-anchor="middle" font-size="30" font-weight="800" fill="#e0f2fe">Electrizare prin frecare</text>
+            <rect x="70" y="125" width="330" height="52" rx="17" fill="#38bdf5"/>
+            <g fill="#082f49">
+              <rect x="102" y="174" width="13" height="88" rx="6"/>
+              <rect x="140" y="174" width="13" height="88" rx="6"/>
+              <rect x="178" y="174" width="13" height="88" rx="6"/>
+              <rect x="216" y="174" width="13" height="88" rx="6"/>
+              <rect x="254" y="174" width="13" height="88" rx="6"/>
+              <rect x="292" y="174" width="13" height="88" rx="6"/>
+              <rect x="330" y="174" width="13" height="88" rx="6"/>
+              <rect x="368" y="174" width="13" height="88" rx="6"/>
+            </g>
+            <text x="235" y="105" text-anchor="middle" font-size="25" font-weight="800" fill="#fef08a">pieptăn electrizat</text>
+            <g fill="#fde047" font-size="34" font-weight="900">
+              <text x="420" y="145">−</text>
+              <text x="455" y="195">−</text>
+              <text x="425" y="245">−</text>
+              <text x="485" y="135">−</text>
+            </g>
+            <path d="M430 215 C505 195 550 158 600 122" stroke="#38d9f5" stroke-width="6" fill="none" stroke-dasharray="11 11"/>
+            <path d="M438 240 C520 252 570 285 625 315" stroke="#38d9f5" stroke-width="6" fill="none" stroke-dasharray="11 11"/>
+            <g fill="#f8fafc" stroke="#94a3b8" stroke-width="2">
+              <rect x="594" y="95" width="50" height="38" rx="5" transform="rotate(14 619 114)"/>
+              <rect x="635" y="175" width="52" height="40" rx="5" transform="rotate(-18 661 195)"/>
+              <rect x="565" y="292" width="55" height="39" rx="5" transform="rotate(24 592 311)"/>
+            </g>
+            <text x="620" y="358" text-anchor="middle" font-size="24" font-weight="800" fill="#e0f2fe">hârtie atrasă</text>
+          </svg>
 
-    <section class="card" id="electroscop">
-      <h2>4. Electroscopul</h2>
-      <p><strong>Electroscopul</strong> este un dispozitiv simplu folosit pentru a evidenția electrizarea unui corp.</p>
-      <p>El ne arată dacă un corp este electrizat și ajută la observarea transferului de sarcină electrică.</p>
+          <p class="caption">Corpurile electrizate pot atrage corpuri mici și ușoare.</p>
+        </div>
+      </section>
 
-      <!-- ILUSTRAȚIE ELECTROSCOP - CLICKABLE -->
-      <div class="illustration-container" id="electroscopContainer">
-        <img src="../../../assets/img/electroscop.png" 
-             alt="Electroscopul - instrument de măsurare a sarcinii electrice" 
-             style="max-width: 400px;">
-        <div class="image-click-hint">👆 Click pe imagine pentru a o vedea în mărime mare</div>
-      </div>
+      <section class="page" data-title="Moduri de electrizare" hidden>
+        <div class="card">
+          <h2>3. Moduri de electrizare</h2>
+          <div class="mode-grid">
+            <article class="mode">
+              <strong>Prin frecare</strong>
+              Două corpuri sunt frecate unul de altul. Electronii se pot transfera de la un corp la altul.
+            </article>
+            <article class="mode">
+              <strong>Prin contact</strong>
+              Un corp electrizat atinge un corp neutru și îi poate transmite sarcină electrică.
+            </article>
+            <article class="mode">
+              <strong>Prin influență</strong>
+              Un corp electrizat este apropiat de un corp neutru, fără atingere, iar sarcinile se rearanjează.
+            </article>
+          </div>
+          <div class="notice">
+            În toate cazurile, fenomenul este legat de modul în care sunt distribuite sarcinile electrice.
+          </div>
+        </div>
+      </section>
 
-      <div class="definition">
-        <strong>Cum funcționează electroscopul:</strong>
-        <ul style="margin: 8px 0; padding-left: 20px;">
-          <li>Electroscopul are o sfere metalică la vârf și dou�� foi de aur sau alamă în interior</li>
-          <li>Când un corp electrizat atinge sfera, sarcina se transmite foilor</li>
-          <li>Foile, având aceeași sarcină, se resping și se deschid</li>
-          <li>Unghiul de deschidere indică intensitatea sarcinii electrice</li>
-        </ul>
-      </div>
+      <section class="page" data-title="Sarcina electrică" hidden>
+        <div class="card">
+          <h2>4. Sarcina electrică</h2>
+          <p class="lead">
+            <span class="keyword">Sarcina electrică</span> este mărimea fizică ce descrie starea de electrizare a unui corp.
+          </p>
 
-      <div class="notice">Electroscopul este calitativ - ne arată prezența sarcinii, dar nu măsoară valoarea exactă.</div>
-    </section>
+          <div class="charge-grid">
+            <article class="charge charge-positive">
+              <div class="charge-symbol">+</div>
+              <div>
+                <span class="charge-title">Sarcină pozitivă</span>
+                <p class="charge-note">Corpul are lipsă de electroni.</p>
+              </div>
+            </article>
+            <article class="charge charge-negative">
+              <div class="charge-symbol">−</div>
+              <div>
+                <span class="charge-title">Sarcină negativă</span>
+                <p class="charge-note">Corpul are exces de electroni.</p>
+              </div>
+            </article>
+          </div>
 
-    <section class="card">
-      <h2>5. Experiment: Electrizare prin frecare</h2>
-      <p>Poți realiza un experiment simplu acasă:</p>
-      <ol style="line-height: 1.8;">
-        <li>Ia un balon și freacă-l de o vâscoasă de lână sau bumbac</li>
-        <li>Apropie balonul electrizat de bucăți mici de hârtie</li>
-        <li>Observă cum se atrag bucățile de hârtie de balon</li>
-        <li>Apropie balonul de fire de păr și observă cum se ridică</li>
-      </ol>
-      <div class="warning">
-        ⚠️ Atenție: Electroscopul este fragil - mânuie-l cu grijă!
-      </div>
-    </section>
+          <div class="example">
+            Electronii au sarcină negativă. În electrizarea obișnuită, electronii sunt particulele care se transferă mai ușor.
+          </div>
+        </div>
+      </section>
 
-    <section class="card">
-      <h2>Reține</h2>
-      <ul>
-        <li>Electrizarea este procesul prin care un corp capătă proprietăți electrice</li>
-        <li>Electrizarea se poate face prin frecare, contact sau influență</li>
-        <li>Sarcina electrică descrie starea de electrizare a unui corp</li>
-        <li>Corpurile cu sarcini de același fel se resping, cele cu sarcini opuse se atrag</li>
-        <li>Electroscopul evidențiază existența sarcinii electrice</li>
-        <li>Electrizarea este datorată transferului electronilor</li>
-      </ul>
-    </section>
+      <section class="page" data-title="Atracție și respingere" hidden>
+        <div class="card">
+          <h2>5. Atracție și respingere</h2>
+          <p class="lead">Corpurile cu sarcini electrice se pot atrage sau se pot respinge.</p>
+          <ul>
+            <li>Sarcinile de <span class="keyword">același fel</span> se resping.</li>
+            <li>Sarcinile de <span class="keyword">feluri diferite</span> se atrag.</li>
+          </ul>
 
-    <section class="card">
-      <h2>Navigare</h2>
-      <p class="mini-note">Butonul „Mergi mai departe" te duce direct la lecția următoare.</p>
-      <div class="lesson-nav">
-        <a class="nav-button secondary" href="./index.html">Toate lecțiile</a>
-        <a class="nav-button" href="./lectia-3.html">Lecția anterioară</a>
-        <a class="nav-button success" href="./lectia-5.html">Mergi mai departe</a>
-      </div>
-    </section>
+          <svg class="diagram" viewBox="0 0 760 350" role="img" aria-labelledby="forcesTitle forcesDesc">
+            <title id="forcesTitle">Atracția și respingerea sarcinilor electrice</title>
+            <desc id="forcesDesc">Două sarcini pozitive se resping, iar o sarcină pozitivă și una negativă se atrag.</desc>
+            <rect width="760" height="350" rx="24" fill="#0f172a"/>
+            <text x="190" y="50" text-anchor="middle" font-size="29" font-weight="800" fill="#fef08a">Respingere</text>
+            <circle cx="115" cy="160" r="56" fill="#38bdf8"/>
+            <circle cx="265" cy="160" r="56" fill="#38bdf8"/>
+            <text x="115" y="178" text-anchor="middle" font-size="68" font-weight="900" fill="#082f49">+</text>
+            <text x="265" y="178" text-anchor="middle" font-size="68" font-weight="900" fill="#082f49">+</text>
+            <path d="M170 160 L205 160" stroke="#f8fafc" stroke-width="6"/>
+            <path d="M174 160 L191 146 M174 160 L191 174" stroke="#f8fafc" stroke-width="6"/>
+            <path d="M201 160 L184 146 M201 160 L184 174" stroke="#f8fafc" stroke-width="6"/>
+            <text x="190" y="275" text-anchor="middle" font-size="25" font-weight="800" fill="#e0f2fe">+ cu +</text>
 
-  </main>
+            <text x="570" y="50" text-anchor="middle" font-size="29" font-weight="800" fill="#bbf7d0">Atracție</text>
+            <circle cx="495" cy="160" r="56" fill="#fde047"/>
+            <circle cx="645" cy="160" r="56" fill="#fb7185"/>
+            <text x="495" y="178" text-anchor="middle" font-size="68" font-weight="900" fill="#422006">+</text>
+            <text x="645" y="176" text-anchor="middle" font-size="68" font-weight="900" fill="#450a0a">−</text>
+            <path d="M550 160 L590 160" stroke="#f8fafc" stroke-width="6"/>
+            <path d="M550 160 L568 146 M550 160 L568 174" stroke="#f8fafc" stroke-width="6"/>
+            <path d="M590 160 L572 146 M590 160 L572 174" stroke="#f8fafc" stroke-width="6"/>
+            <text x="570" y="275" text-anchor="middle" font-size="25" font-weight="800" fill="#e0f2fe">+ cu −</text>
+          </svg>
 
-  <!-- MODAL PENTRU IMAGINI PE FULL SCREEN -->
-  <div id="imageModal" class="modal">
-    <span class="modal-close" onclick="closeImageModal()">&times;</span>
-    <div class="modal-content" id="modalContent">
-      <!-- Imaginea va fi clonată aici -->
-    </div>
-    <div class="modal-info">Click oriunde pe ecran pentru a închide | Scroll pentru a mări/micșora</div>
+          <p class="caption">Sarcinile la fel se resping, iar sarcinile diferite se atrag.</p>
+        </div>
+      </section>
+
+      <section class="page" data-title="Electroscopul" hidden>
+        <div class="card">
+          <h2>6. Electroscopul</h2>
+          <p class="lead">
+            <span class="keyword">Electroscopul</span> este un dispozitiv simplu folosit pentru a evidenția electrizarea unui corp.
+          </p>
+          <p>El arată dacă un corp este electrizat, dar nu măsoară exact valoarea sarcinii electrice.</p>
+
+          <svg class="diagram" viewBox="0 0 760 430" role="img" aria-labelledby="scopeTitle scopeDesc">
+            <title id="scopeTitle">Electroscop cu foi metalice</title>
+            <desc id="scopeDesc">Electroscopul are o sferă metalică, o tijă și două foi subțiri de metal care se depărtează.</desc>
+            <rect width="760" height="430" rx="24" fill="#0f172a"/>
+            <text x="380" y="50" text-anchor="middle" font-size="31" font-weight="800" fill="#e0f2fe">Electroscop</text>
+            <circle cx="360" cy="115" r="42" fill="#fde047"/>
+            <rect x="347" y="154" width="26" height="126" rx="12" fill="#fde047"/>
+            <rect x="220" y="265" width="280" height="125" rx="22" fill="#1e293b" stroke="#94a3b8" stroke-width="4"/>
+            <line x1="360" y1="270" x2="305" y2="360" stroke="#fde047" stroke-width="12" stroke-linecap="round"/>
+            <line x1="360" y1="270" x2="415" y2="360" stroke="#fde047" stroke-width="12" stroke-linecap="round"/>
+            <text x="510" y="125" font-size="25" font-weight="800" fill="#fef08a">sferă metalică</text>
+            <path d="M490 118 L405 115" stroke="#fef08a" stroke-width="4"/>
+            <text x="500" y="342" font-size="25" font-weight="800" fill="#fef08a">foi metalice</text>
+            <path d="M480 335 L420 350" stroke="#fef08a" stroke-width="4"/>
+            <g fill="#38bdf8" font-size="29" font-weight="900">
+              <text x="295" y="200">+</text>
+              <text x="410" y="205">+</text>
+              <text x="270" y="365">+</text>
+              <text x="435" y="365">+</text>
+            </g>
+          </svg>
+
+          <div class="notice">Când foile electroscopului se deschid, observăm că există sarcină electrică.</div>
+        </div>
+      </section>
+
+      <section class="page" data-title="Cum funcționează electroscopul?" hidden>
+        <div class="card">
+          <h2>Cum funcționează electroscopul?</h2>
+          <ol class="steps">
+            <li>Electroscopul are o sferă metalică la vârf.</li>
+            <li>În interior are două foi subțiri de metal.</li>
+            <li>Un corp electrizat atinge sfera, iar sarcina se transmite foilor.</li>
+            <li>Foile capătă sarcini de același fel.</li>
+            <li>Fiind încărcate la fel, foile se resping și se îndepărtează.</li>
+          </ol>
+          <div class="remember-box">
+            Electroscopul evidențiază existența sarcinii electrice prin depărtarea foilor metalice.
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-title="Experiment simplu" hidden>
+        <div class="card">
+          <h2>7. Experiment simplu</h2>
+          <p class="lead">Poți observa electrizarea cu materiale ușor de găsit.</p>
+          <ol class="steps">
+            <li>Ia un balon sau un pieptăn din plastic.</li>
+            <li>Freacă-l de păr, de lână sau de bumbac.</li>
+            <li>Apropie-l de bucățele mici de hârtie.</li>
+            <li>Observă dacă hârtia este atrasă.</li>
+          </ol>
+          <div class="warning">
+            Folosește doar obiecte obișnuite și uscate. Nu realiza experimente în apropierea prizelor sau a aparatelor electrice.
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-title="Exemple din viața de zi cu zi" hidden>
+        <div class="card">
+          <h2>8. Electrizarea în viața de zi cu zi</h2>
+          <div class="example-grid">
+            <article class="tile">
+              <strong>Balonul și părul</strong>
+              După frecare, balonul poate atrage firele de păr.
+            </article>
+            <article class="tile">
+              <strong>Hainele sintetice</strong>
+              Uneori se lipesc unele de altele după ce au fost frecate sau uscate.
+            </article>
+            <article class="tile">
+              <strong>Pieptănul și hârtia</strong>
+              Un pieptăn electrizat poate atrage bucățele foarte ușoare de hârtie.
+            </article>
+            <article class="tile">
+              <strong>Jetul de apă</strong>
+              Un corp electrizat poate devia ușor un jet foarte subțire de apă.
+            </article>
+          </div>
+          <div class="notice">Electrizarea este mai ușor de observat când aerul și obiectele sunt uscate.</div>
+        </div>
+      </section>
+
+      <section class="page" data-title="Reține" hidden>
+        <div class="card">
+          <h2>Reține</h2>
+          <ul>
+            <li>Electrizarea este procesul prin care un corp capătă proprietăți electrice.</li>
+            <li>Electrizarea se poate face prin frecare, contact sau influență.</li>
+            <li>Sarcina electrică descrie starea de electrizare a unui corp.</li>
+            <li>Corpurile se pot încărca pozitiv sau negativ.</li>
+            <li>Sarcinile de același fel se resping.</li>
+            <li>Sarcinile de feluri diferite se atrag.</li>
+            <li>Electroscopul evidențiază electrizarea unui corp.</li>
+          </ul>
+          <div class="remember-box">
+            Regula esențială: <strong>la fel se respinge, diferit se atrage.</strong>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-title="Verificare rapidă" hidden>
+        <div class="card">
+          <h2>Verificare rapidă</h2>
+          <p class="lead">Alege varianta corectă. Poți încerca din nou dacă răspunsul nu este corect.</p>
+
+          <div class="quiz-grid">
+            <article class="question">
+              <strong>1. Electrizarea este procesul prin care un corp:</strong>
+              <div class="answers">
+                <button type="button" data-correct="true">capătă proprietăți electrice</button>
+                <button type="button" data-correct="false">își schimbă doar culoarea</button>
+                <button type="button" data-correct="false">devine obligatoriu magnet</button>
+              </div>
+              <div class="feedback" aria-live="polite"></div>
+            </article>
+
+            <article class="question">
+              <strong>2. Două sarcini de același fel:</strong>
+              <div class="answers">
+                <button type="button" data-correct="false">se atrag întotdeauna</button>
+                <button type="button" data-correct="true">se resping</button>
+                <button type="button" data-correct="false">nu interacționează</button>
+              </div>
+              <div class="feedback" aria-live="polite"></div>
+            </article>
+
+            <article class="question">
+              <strong>3. Electroscopul este folosit pentru a evidenția:</strong>
+              <div class="answers">
+                <button type="button" data-correct="false">temperatura</button>
+                <button type="button" data-correct="false">viteza</button>
+                <button type="button" data-correct="true">electrizarea</button>
+              </div>
+              <div class="feedback" aria-live="polite"></div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-title="Final" hidden>
+        <div class="final-card">
+          <div class="final-content">
+            <div class="final-name">Prof. Dănuț Andronie</div>
+            <p>E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a></p>
+            <p>Pentru observații, propuneri și sugestii privind platforma educațională.</p>
+
+            <div class="visitor">Vizitatori pe acest dispozitiv: <span id="visitCount">0</span></div>
+
+            <div class="link-grid">
+              <a href="../index.html">Toate lecțiile</a>
+              <a href="./lectia-3.html">Lecția anterioară</a>
+              <a href="./lectia-5.html">Lecția următoare</a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
 
-  <footer class="site-footer">
-    <div class="wrapper">
-      <p>© Fizica Galaction · Prof. DĂNUȚ ANDRONIE</p>
-      <div style="font-size: 0.9rem; color: #cbd5e1; margin-top: 8px;">
-        E-mail:
-        <a href="mailto:danutmg@gmail.com" style="color: #22d3ee; text-decoration: none;">danutmg@gmail.com</a><br>
-        <span style="font-size: 0.85rem; color: #94a3b8;">
-          Pentru observații, propuneri și sugestii privind platforma educațională.
-        </span>
-      </div>
+  <nav class="bottom-nav" aria-label="Navigarea între paginile lecției">
+    <div class="bottom-nav-inner">
+      <button class="nav-button" id="prevBtn" type="button" aria-label="Pagina anterioară">
+        ← <span class="long-label">Înapoi</span>
+      </button>
+      <div class="nav-counter" aria-live="polite"><span id="pageNow">1</span>/<span id="pageTotal">14</span></div>
+      <button class="nav-button" id="nextBtn" type="button" aria-label="Pagina următoare">
+        <span class="long-label">Mai departe</span> →
+      </button>
     </div>
-  </footer>
-
-  <script src="../../../assets/js/main.js"></script>
+  </nav>
 
   <script>
-    // Modal functionality pentru toate imaginile
-    const containers = [
-      { id: 'electrizare1Container', name: 'Electrizare 1' },
-      { id: 'electrizare2Container', name: 'Electrizare 2' },
-      { id: 'electroscopContainer', name: 'Electroscop' }
-    ];
+    (() => {
+      const pages = Array.from(document.querySelectorAll('.page'));
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      const pageNow = document.getElementById('pageNow');
+      const pageTotal = document.getElementById('pageTotal');
+      const topPageNow = document.getElementById('topPageNow');
+      const topPageTotal = document.getElementById('topPageTotal');
+      const progressBar = document.getElementById('progressBar');
+      const visitCount = document.getElementById('visitCount');
+      let currentPage = 0;
+      let touchStartX = null;
+      let touchStartY = null;
 
-    const imageModal = document.getElementById('imageModal');
-    const modalContent = document.getElementById('modalContent');
+      pageTotal.textContent = pages.length;
+      topPageTotal.textContent = pages.length;
 
-    containers.forEach(container => {
-      const elem = document.getElementById(container.id);
-      if (elem) {
-        const img = elem.querySelector('img');
-        
-        elem.addEventListener('click', function() {
-          const clonedImg = img.cloneNode(true);
-          clonedImg.style.width = '90vw';
-          clonedImg.style.height = 'auto';
-          clonedImg.style.maxWidth = '900px';
-          clonedImg.style.maxHeight = '90vh';
-          clonedImg.style.cursor = 'auto';
-          clonedImg.style.borderRadius = '8px';
-          clonedImg.style.boxShadow = '0 10px 40px rgba(0, 0, 0, 0.5)';
-          
-          modalContent.innerHTML = '';
-          modalContent.appendChild(clonedImg);
-          imageModal.classList.add('active');
-          document.body.style.overflow = 'hidden';
+      function pageFromHash() {
+        const match = window.location.hash.match(/^#pagina-(\d+)$/);
+        if (!match) return 0;
+        return Math.min(Math.max(Number(match[1]) - 1, 0), pages.length - 1);
+      }
+
+      function showPage(pageIndex, options = {}) {
+        currentPage = Math.min(Math.max(pageIndex, 0), pages.length - 1);
+
+        pages.forEach((page, index) => {
+          const isActive = index === currentPage;
+          page.hidden = !isActive;
+          page.setAttribute('aria-hidden', String(!isActive));
         });
-      }
-    });
 
-    function closeImageModal() {
-      imageModal.classList.remove('active');
-      document.body.style.overflow = 'auto';
-    }
+        const displayedPage = currentPage + 1;
+        const progress = (displayedPage / pages.length) * 100;
 
-    // Close modal when clicking outside the content
-    imageModal.addEventListener('click', function(e) {
-      if (e.target === imageModal) {
-        closeImageModal();
-      }
-    });
+        pageNow.textContent = displayedPage;
+        topPageNow.textContent = displayedPage;
+        progressBar.style.width = `${progress}%`;
+        prevBtn.disabled = currentPage === 0;
 
-    // Close modal with Escape key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        closeImageModal();
-      }
-    });
+        const isLastPage = currentPage === pages.length - 1;
+        nextBtn.innerHTML = isLastPage
+          ? '<span class="long-label">La început</span> ↻'
+          : '<span class="long-label">Mai departe</span> →';
+        nextBtn.setAttribute('aria-label', isLastPage ? 'Revenire la prima pagină' : 'Pagina următoare');
 
-    // Zoom functionality with mouse wheel
-    let zoomLevel = 1;
-    modalContent.addEventListener('wheel', function(e) {
-      if (imageModal.classList.contains('active')) {
-        e.preventDefault();
-        const img = modalContent.querySelector('img');
-        if (img) {
-          zoomLevel += (e.deltaY > 0 ? -0.1 : 0.1);
-          zoomLevel = Math.max(0.5, Math.min(3, zoomLevel));
-          img.style.width = (90 * zoomLevel) + 'vw';
-          img.style.height = 'auto';
+        document.title = `${pages[currentPage].dataset.title} | Lecția 4 | Fizica Galaction`;
+
+        if (!options.keepHash) {
+          history.replaceState(null, '', `#pagina-${displayedPage}`);
+        }
+
+        if (!options.noScroll) {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       }
-    });
+
+      prevBtn.addEventListener('click', () => showPage(currentPage - 1));
+      nextBtn.addEventListener('click', () => {
+        showPage(currentPage === pages.length - 1 ? 0 : currentPage + 1);
+      });
+
+      document.querySelectorAll('.toc-button').forEach((button) => {
+        button.addEventListener('click', () => showPage(Number(button.dataset.page)));
+      });
+
+      document.addEventListener('keydown', (event) => {
+        const target = event.target;
+        const isInteractive = target instanceof HTMLButtonElement || target instanceof HTMLAnchorElement || target instanceof HTMLInputElement;
+        if (isInteractive) return;
+
+        if (event.key === 'ArrowRight' || event.key === 'PageDown') {
+          event.preventDefault();
+          showPage(currentPage === pages.length - 1 ? 0 : currentPage + 1);
+        }
+
+        if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+          event.preventDefault();
+          showPage(currentPage - 1);
+        }
+
+        if (event.key === 'Home') {
+          event.preventDefault();
+          showPage(0);
+        }
+
+        if (event.key === 'End') {
+          event.preventDefault();
+          showPage(pages.length - 1);
+        }
+      });
+
+      document.addEventListener('touchstart', (event) => {
+        const touch = event.changedTouches[0];
+        touchStartX = touch.clientX;
+        touchStartY = touch.clientY;
+      }, { passive: true });
+
+      document.addEventListener('touchend', (event) => {
+        if (touchStartX === null || touchStartY === null) return;
+        const touch = event.changedTouches[0];
+        const deltaX = touch.clientX - touchStartX;
+        const deltaY = touch.clientY - touchStartY;
+
+        touchStartX = null;
+        touchStartY = null;
+
+        if (Math.abs(deltaX) < 55 || Math.abs(deltaX) < Math.abs(deltaY) * 1.25) return;
+        if (deltaX < 0) {
+          showPage(currentPage === pages.length - 1 ? 0 : currentPage + 1);
+        } else {
+          showPage(currentPage - 1);
+        }
+      }, { passive: true });
+
+      document.querySelectorAll('.answers button').forEach((button) => {
+        button.addEventListener('click', () => {
+          const question = button.closest('.question');
+          const feedback = question.querySelector('.feedback');
+
+          question.querySelectorAll('.answers button').forEach((answer) => {
+            answer.classList.remove('correct', 'wrong');
+          });
+
+          if (button.dataset.correct === 'true') {
+            button.classList.add('correct');
+            feedback.textContent = 'Corect! Foarte bine.';
+            feedback.style.color = '#86efac';
+          } else {
+            button.classList.add('wrong');
+            feedback.textContent = 'Nu este răspunsul corect. Mai încearcă.';
+            feedback.style.color = '#fda4af';
+          }
+        });
+      });
+
+      function updateVisitCounter() {
+        const key = 'vizite-electrice-magnetice-lectia-4';
+        let current = 1;
+        try {
+          current = Number(localStorage.getItem(key) || '0') + 1;
+          localStorage.setItem(key, String(current));
+        } catch (error) {
+          current = 1;
+        }
+        if (visitCount) visitCount.textContent = current;
+      }
+
+      window.addEventListener('hashchange', () => showPage(pageFromHash(), { keepHash: true }));
+      updateVisitCounter();
+      showPage(pageFromHash(), { keepHash: true, noScroll: true });
+    })();
   </script>
 </body>
 </html>

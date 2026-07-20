@@ -1,1 +1,250 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Autentificare | Fizica Galaction</title>
+  <meta name="description" content="Autentificare și înregistrare pe platforma Fizica Galaction." />
+  <link rel="stylesheet" href="../assets/css/style.css" />
 
+  <style>
+    /* Doar ce NU există deja în style.css — restul (butoane, card, alert,
+       input, label) vine din clasele centralizate ale site-ului. */
+
+    .auth-wrapper {
+      max-width: 420px;
+      margin: var(--spacing-xxl) auto;
+    }
+
+    .auth-tabs {
+      display: flex;
+      gap: var(--spacing-sm);
+      margin-bottom: var(--spacing-lg);
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: var(--spacing-sm) var(--spacing-md);
+      text-align: center;
+      border: none;
+      border-radius: var(--radius-md);
+      background: var(--bg-tertiary);
+      color: var(--text-secondary);
+      font-weight: var(--font-weight-medium);
+      cursor: pointer;
+      transition: var(--transition-fast);
+    }
+
+    .auth-tab.activ {
+      background: var(--primary);
+      color: #ffffff;
+    }
+
+    .auth-form {
+      display: none;
+      flex-direction: column;
+      gap: var(--spacing-md);
+    }
+
+    .auth-form.activ {
+      display: flex;
+    }
+
+    .auth-form .btn {
+      width: 100%;
+    }
+
+    .separator {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-sm);
+      color: var(--text-light);
+      font-size: var(--font-size-sm);
+      margin: var(--spacing-sm) 0;
+    }
+
+    .separator::before,
+    .separator::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    .link-secundar {
+      font-size: var(--font-size-sm);
+      color: var(--primary);
+      cursor: pointer;
+      text-decoration: underline;
+      text-align: center;
+    }
+
+    .auth-titlu {
+      text-align: center;
+    }
+
+    /* .alert (din style.css) e gândit ca bloc permanent; aici îl afișăm
+       doar când are conținut, ca să nu ocupe spațiu inutil. */
+    .alert:empty {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="header-container"></div>
+
+  <main class="auth-wrapper card">
+    <h1 class="auth-titlu">Fizica Galaction</h1>
+
+    <div class="auth-tabs">
+      <button class="auth-tab activ" data-tab="login">Autentificare</button>
+      <button class="auth-tab" data-tab="inregistrare">Cont nou</button>
+    </div>
+
+    <!-- FORMULAR LOGIN -->
+    <form id="form-login" class="auth-form activ">
+      <div>
+        <label for="login-email">Email</label>
+        <input type="email" id="login-email" required autocomplete="email" />
+      </div>
+      <div>
+        <label for="login-parola">Parolă</label>
+        <input type="password" id="login-parola" required autocomplete="current-password" />
+      </div>
+      <p class="alert alert-error" id="login-eroare"></p>
+      <button type="submit" class="btn btn-primary">Intră în cont</button>
+      <span class="link-secundar" id="link-uitat-parola">Ai uitat parola?</span>
+
+      <div class="separator">sau</div>
+      <button type="button" class="btn btn-secondary" id="buton-google-login">
+        Continuă cu Google
+      </button>
+    </form>
+
+    <!-- FORMULAR ÎNREGISTRARE -->
+    <form id="form-inregistrare" class="auth-form">
+      <div>
+        <label for="reg-nume">Nume și prenume</label>
+        <input type="text" id="reg-nume" required autocomplete="name" />
+      </div>
+      <div>
+        <label for="reg-email">Email</label>
+        <input type="email" id="reg-email" required autocomplete="email" />
+      </div>
+      <div>
+        <label for="reg-parola">Parolă (minimum 6 caractere)</label>
+        <input type="password" id="reg-parola" required minlength="6" autocomplete="new-password" />
+      </div>
+      <p class="alert alert-error" id="reg-eroare"></p>
+      <button type="submit" class="btn btn-primary">Creează cont</button>
+
+      <div class="separator">sau</div>
+      <button type="button" class="btn btn-secondary" id="buton-google-reg">
+        Continuă cu Google
+      </button>
+    </form>
+
+    <p class="alert alert-success" id="mesaj-general"></p>
+  </main>
+
+  <div id="footer-container"></div>
+
+  <!-- Firebase (compat SDK) -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+
+  <script src="../assets/js/firebase-config.js"></script>
+  <script src="../assets/js/auth.js"></script>
+  <script src="../assets/js/load-header.js"></script>
+  <script src="../assets/js/load-footer.js"></script>
+
+  <script>
+    // Comutare între tab-urile Login / Înregistrare
+    document.querySelectorAll(".auth-tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        document.querySelectorAll(".auth-tab").forEach((t) => t.classList.remove("activ"));
+        document.querySelectorAll(".auth-form").forEach((f) => f.classList.remove("activ"));
+        tab.classList.add("activ");
+        document.getElementById("form-" + tab.dataset.tab).classList.add("activ");
+      });
+    });
+
+    // Dacă utilizatorul e deja autentificat, îl trimitem direct spre pagina principală
+    onSchimbareAutentificare((info) => {
+      if (info) {
+        window.location.href = "../index.html";
+      }
+    });
+
+    // LOGIN cu email + parolă
+    document.getElementById("form-login").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const eroareEl = document.getElementById("login-eroare");
+      eroareEl.textContent = "";
+      try {
+        await autentificaCuEmail(
+          document.getElementById("login-email").value,
+          document.getElementById("login-parola").value
+        );
+        window.location.href = "../index.html";
+      } catch (err) {
+        eroareEl.textContent = mesajEroareAutentificare(err);
+      }
+    });
+
+    // ÎNREGISTRARE cu email + parolă
+    document.getElementById("form-inregistrare").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const eroareEl = document.getElementById("reg-eroare");
+      eroareEl.textContent = "";
+      try {
+        await inregistreazaCuEmail(
+          document.getElementById("reg-email").value,
+          document.getElementById("reg-parola").value,
+          document.getElementById("reg-nume").value
+        );
+        window.location.href = "../index.html";
+      } catch (err) {
+        eroareEl.textContent = mesajEroareAutentificare(err);
+      }
+    });
+
+    // GOOGLE sign-in (ambele butoane fac același lucru)
+    async function autentificaGoogleSiRedirecteaza(idElementEroare) {
+      try {
+        await autentificaCuGoogle();
+        window.location.href = "../index.html";
+      } catch (err) {
+        document.getElementById(idElementEroare).textContent = mesajEroareAutentificare(err);
+      }
+    }
+    document.getElementById("buton-google-login").addEventListener("click", () => {
+      autentificaGoogleSiRedirecteaza("login-eroare");
+    });
+    document.getElementById("buton-google-reg").addEventListener("click", () => {
+      autentificaGoogleSiRedirecteaza("reg-eroare");
+    });
+
+    // Resetare parolă
+    document.getElementById("link-uitat-parola").addEventListener("click", async () => {
+      const email = document.getElementById("login-email").value;
+      const eroareEl = document.getElementById("login-eroare");
+      const succesEl = document.getElementById("mesaj-general");
+      if (!email) {
+        eroareEl.textContent = "Completează mai întâi câmpul de email.";
+        return;
+      }
+      try {
+        await reseteazaParola(email);
+        eroareEl.textContent = "";
+        succesEl.textContent = "Ți-am trimis un email pentru resetarea parolei.";
+      } catch (err) {
+        succesEl.textContent = "";
+        eroareEl.textContent = mesajEroareAutentificare(err);
+      }
+    });
+  </script>
+</body>
+</html>

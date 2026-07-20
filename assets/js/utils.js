@@ -2,7 +2,7 @@
 // Funcții ajutătoare comune, reutilizabile din orice pagină.
 // IMPORTANT: acest fișier NU rulează nimic automat la încărcare —
 // doar definește funcții. E sigur de inclus oriunde, inclusiv în locul
-// vechii referințe către "assets/js/main.js" (fișier care nu mai există).
+// vechii referințe către "assets/js/utils.js" (fișier care nu mai există).
 
 /**
  * Numără vizitele unei pagini/lecții în localStorage, o singură dată per sesiune

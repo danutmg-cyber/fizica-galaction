@@ -6,7 +6,10 @@
 
 class ThemeManager {
   constructor() {
-    this.HTML = document.documentElement;
+    // IMPORTANT: style.css țintește selectorii "body.dark" / "body[data-theme]",
+    // nu <html> — de-aia clasa trebuie pusă pe <body>, altfel comutatorul
+    // de temă nu schimbă nimic vizual.
+    this.HTML = document.body;
     this.STORAGE_KEY = 'fizica-galaction-theme';
     this.THEME_BUTTON = document.querySelector('.theme-toggle');
     

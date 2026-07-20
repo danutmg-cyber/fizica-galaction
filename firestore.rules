@@ -1,0 +1,64 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function esteAutentificat() {
+      return request.auth != null;
+    }
+
+    function esteProprietar(userId) {
+      return esteAutentificat() && request.auth.uid == userId;
+    }
+
+    function rolUtilizator(userId) {
+      return get(/databases/$(database)/documents/users/$(userId)).data.role;
+    }
+
+    function esteAdmin() {
+      return esteAutentificat() && rolUtilizator(request.auth.uid) == 'admin';
+    }
+
+    function esteProfesor() {
+      return esteAutentificat() &&
+        (rolUtilizator(request.auth.uid) == 'profesor' || esteAdmin());
+    }
+
+    // ===== Colecția "users" =====
+    // Fiecare utilizator are un document cu: email, displayName, role, createdAt
+    match /users/{userId} {
+      // Citire: propriul profil, sau orice profesor/admin poate vedea profilurile
+      // (util pentru dashboard-ul de profesor)
+      allow read: if esteProprietar(userId) || esteProfesor();
+
+      // Creare: doar propriul document, și DOAR cu rolul "elev".
+      // Nimeni nu-și poate crea singur cont de profesor/admin din formular.
+      allow create: if esteProprietar(userId) &&
+        request.resource.data.role == 'elev';
+
+      // Actualizare: proprietarul își poate edita propriul profil (nume, etc.)
+      // dar NU poate schimba câmpul "role" — asta previne auto-promovarea.
+      allow update: if esteProprietar(userId) &&
+        request.resource.data.role == resource.data.role;
+
+      // Adminul poate actualiza orice, inclusiv promovarea la profesor/admin.
+      allow update: if esteAdmin();
+
+      // Ștergere: doar adminul.
+      allow delete: if esteAdmin();
+    }
+
+    // ===== Colecția "progress" (progresul elevilor) =====
+    // Fiecare document conține cel puțin: userId, lectieId, puncte, timestamp
+    match /progress/{progressId} {
+      // Elevul poate citi/scrie DOAR propriile înregistrări de progres.
+      allow read, write: if esteAutentificat() &&
+        request.resource.data.userId == request.auth.uid;
+
+      allow read: if esteAutentificat() &&
+        resource.data.userId == request.auth.uid;
+
+      // Profesorii/adminul pot citi progresul tuturor elevilor (dashboard).
+      allow read: if esteProfesor();
+    }
+  }
+}

@@ -1,6 +1,4 @@
 // firebase-config.js
-// Fizica Galaction — configurația proiectului Firebase
-
 const firebaseConfig = {
   apiKey: "AIzaSyCV66NlRO6XO5OdiQ7QoGceIyiRSzl5NxE",
   authDomain: "fizica-galaction.firebaseapp.com",
@@ -10,6 +8,3 @@ const firebaseConfig = {
   appId: "1:705547484914:web:299e8afa54209764a9da6b",
   measurementId: "G-K2SGZ47S6P"
 };
-
-// Inițializarea este deja apelată în auth.js folosind firebase.initializeApp(firebaseConfig)
-// Asigură-te că acest fișier este încărcat în HTML înainte de auth.js

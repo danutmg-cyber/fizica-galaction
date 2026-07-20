@@ -1,1 +1,2180 @@
-/* tests.css */
+/**
+ * tests.css — Fizica Galaction
+ *
+ * Stiluri comune pentru:
+ * - teste;
+ * - fișe interactive;
+ * - verificări rapide;
+ * - itemi grilă;
+ * - itemi adevărat/fals;
+ * - răspunsuri numerice;
+ * - feedback;
+ * - scor și rezultate;
+ * - secțiunea „Ce trebuie să revezi”.
+ *
+ * Fișierul este limitat la paginile marcate cu:
+ *
+ * <body data-page-type="test">
+ *
+ * sau:
+ *
+ * <body class="test-page">
+ */
+
+
+/* =========================================================
+   1. VARIABILE PENTRU TESTE
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) {
+  --test-bg: #0f172a;
+  --test-surface: #1e293b;
+  --test-surface-soft: #263449;
+  --test-surface-dark: #111827;
+
+  --test-text: #f8fafc;
+  --test-text-secondary: #dbe4f0;
+  --test-muted: #cbd5e1;
+
+  --test-primary: #22d3ee;
+  --test-primary-dark: #0891b2;
+  --test-primary-text: #082f49;
+
+  --test-success: #22c55e;
+  --test-success-dark: #15803d;
+  --test-success-text: #052e16;
+
+  --test-danger: #f87171;
+  --test-danger-dark: #dc2626;
+
+  --test-warning: #fbbf24;
+  --test-warning-dark: #d97706;
+
+  --test-info: #60a5fa;
+  --test-info-dark: #2563eb;
+
+  --test-border: #475569;
+  --test-border-soft: #334155;
+
+  --test-radius-small: 10px;
+  --test-radius: 16px;
+  --test-radius-large: 22px;
+
+  --test-touch-size: 50px;
+  --test-content-width: 760px;
+
+  --test-shadow:
+    0 16px 38px rgba(0, 0, 0, 0.25);
+
+  color: var(--test-text);
+}
+
+
+/* =========================================================
+   2. CONTAINERUL PRINCIPAL
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-container,
+  .quiz-container,
+  [data-test-engine],
+  [data-test-root]
+) {
+  width: min(
+    calc(100% - 24px),
+    var(--test-content-width)
+  );
+
+  margin-inline: auto;
+  padding-block: clamp(16px, 4vw, 34px);
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .test-shell {
+  width: 100%;
+  min-width: 0;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .test-card {
+  width: 100%;
+  margin-block: 18px;
+
+  padding: clamp(18px, 4vw, 28px);
+
+  border: 1px solid var(--test-border-soft);
+  border-radius: var(--test-radius-large);
+
+  background: var(--test-surface);
+  color: var(--test-text);
+
+  box-shadow: var(--test-shadow);
+}
+
+
+/* Compatibilitate cu testele existente */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) > .container,
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) main > .container {
+  width: min(
+    calc(100% - 24px),
+    var(--test-content-width)
+  );
+
+  margin-inline: auto;
+}
+
+
+/* =========================================================
+   3. ANTETUL TESTULUI
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .test-header {
+  margin-bottom: 20px;
+  padding: clamp(18px, 4vw, 28px);
+
+  border: 1px solid var(--test-border-soft);
+  border-radius: var(--test-radius-large);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(34, 211, 238, 0.14),
+      rgba(30, 41, 59, 0.97)
+    );
+
+  box-shadow: var(--test-shadow);
+  text-align: center;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .test-header h1 {
+  margin: 0 0 10px;
+
+  color: #ffffff;
+
+  font-size: clamp(1.55rem, 5vw, 2.35rem);
+  line-height: 1.2;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .test-header p {
+  max-width: 65ch;
+  margin: 0 auto;
+
+  color: var(--test-text-secondary);
+  line-height: 1.6;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .test-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 32px;
+  margin-bottom: 10px;
+  padding: 5px 12px;
+
+  border: 1px solid var(--test-primary-dark);
+  border-radius: 999px;
+
+  background: rgba(34, 211, 238, 0.14);
+  color: #a5f3fc;
+
+  font-size: 0.9rem;
+  font-weight: 850;
+}
+
+
+/* =========================================================
+   4. ECRANUL DE IDENTIFICARE
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-login,
+  .student-identification,
+  #screen-login
+) {
+  width: min(
+    calc(100% - 24px),
+    650px
+  );
+
+  margin-inline: auto;
+  padding: clamp(20px, 5vw, 30px);
+
+  border: 1px solid var(--test-border-soft);
+  border-radius: var(--test-radius-large);
+
+  background: var(--test-surface);
+  color: var(--test-text);
+
+  box-shadow: var(--test-shadow);
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-login,
+  .student-identification,
+  #screen-login
+) h1,
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-login,
+  .student-identification,
+  #screen-login
+) h2 {
+  margin-top: 0;
+
+  color: #ffffff;
+  text-align: center;
+}
+
+
+/* =========================================================
+   5. INFORMAȚIILE TESTULUI
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .test-meta {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(130px, 1fr)
+    );
+
+  gap: 10px;
+
+  margin-bottom: 18px;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .test-meta-item {
+  padding: 10px 12px;
+
+  border: 1px solid var(--test-border-soft);
+  border-radius: var(--test-radius-small);
+
+  background: var(--test-surface-dark);
+  color: var(--test-text-secondary);
+
+  text-align: center;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .test-meta-label {
+  display: block;
+
+  margin-bottom: 3px;
+
+  color: var(--test-muted);
+
+  font-size: 0.85rem;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .test-meta-value {
+  color: #ffffff;
+  font-weight: 850;
+}
+
+
+/* =========================================================
+   6. PROGRES ȘI NUMĂRUL ÎNTREBĂRII
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .test-progress {
+  display: grid;
+  gap: 8px;
+
+  margin-bottom: 18px;
+  padding: 13px;
+
+  border: 1px solid var(--test-border-soft);
+  border-radius: var(--test-radius-small);
+
+  background: var(--test-surface-dark);
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-counter,
+  [data-test-counter],
+  #q-info
+) {
+  color: var(--test-text-secondary);
+
+  font-weight: 800;
+  text-align: center;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) progress[data-test-progress] {
+  width: 100%;
+  height: 14px;
+
+  overflow: hidden;
+
+  border: 0;
+  border-radius: 999px;
+
+  background: #334155;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) progress[data-test-progress]::-webkit-progress-bar {
+  border-radius: 999px;
+  background: #334155;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) progress[data-test-progress]::-webkit-progress-value {
+  border-radius: 999px;
+  background:
+    linear-gradient(
+      90deg,
+      var(--test-primary-dark),
+      var(--test-primary)
+    );
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) progress[data-test-progress]::-moz-progress-bar {
+  border-radius: 999px;
+  background: var(--test-primary);
+}
+
+
+/* Bară de progres realizată cu div */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .test-progress-track {
+  width: 100%;
+  height: 14px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+  background: #334155;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .test-progress-bar {
+  width: var(--test-progress-value, 0%);
+  height: 100%;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      var(--test-primary-dark),
+      var(--test-primary)
+    );
+
+  transition: width 240ms ease;
+}
+
+
+/* =========================================================
+   7. CRONOMETRU
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .test-timer {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+
+  min-height: 38px;
+  padding: 7px 12px;
+
+  border: 1px solid var(--test-border);
+  border-radius: 999px;
+
+  background: var(--test-surface-dark);
+  color: var(--test-text-secondary);
+
+  font-variant-numeric: tabular-nums;
+  font-weight: 850;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .test-timer.is-warning {
+  border-color: var(--test-warning-dark);
+  background: rgba(251, 191, 36, 0.12);
+  color: #fef3c7;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .test-timer.is-danger {
+  border-color: var(--test-danger-dark);
+  background: rgba(248, 113, 113, 0.13);
+  color: #fecaca;
+}
+
+
+/* =========================================================
+   8. CASETA ÎNTREBĂRII
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-question,
+  .question-card,
+  .question-box,
+  [data-test-question]
+) {
+  min-height: 100px;
+  margin-bottom: 18px;
+  padding: clamp(18px, 4vw, 26px);
+
+  border: 1px solid var(--test-border);
+  border-radius: var(--test-radius);
+
+  background: var(--test-surface);
+  color: var(--test-text);
+
+  box-shadow: var(--test-shadow);
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-question,
+  .question-card,
+  .question-box,
+  [data-test-question]
+) h2,
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-question,
+  .question-card,
+  .question-box,
+  [data-test-question]
+) h3 {
+  margin-top: 0;
+  color: #ffffff;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .question-text,
+  [data-question-text]
+) {
+  margin: 0;
+
+  color: #ffffff;
+
+  font-size: clamp(1.05rem, 3vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .question-number {
+  margin-bottom: 9px;
+
+  color: var(--test-primary);
+
+  font-size: 0.92rem;
+  font-weight: 850;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+
+/* =========================================================
+   9. INSTRUCȚIUNI
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-instruction,
+  .instruction-box,
+  [data-test-instruction]
+) {
+  margin-bottom: 14px;
+  padding: 10px 13px;
+
+  border: 1px solid var(--test-warning-dark);
+  border-radius: var(--test-radius-small);
+
+  background: rgba(251, 191, 36, 0.11);
+  color: #fef3c7;
+
+  font-size: 0.94rem;
+  font-weight: 750;
+  line-height: 1.5;
+  text-align: center;
+}
+
+
+/* =========================================================
+   10. VARIANTELE DE RĂSPUNS
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-options,
+  .answer-options,
+  .quiz-options,
+  [data-test-answers],
+  [data-answer-options]
+) {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 11px;
+
+  width: 100%;
+  margin-block: 16px;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-option,
+  .answer-option,
+  .quiz-option,
+  [data-test-option],
+  [data-answer-option]
+) {
+  position: relative;
+
+  display: grid;
+  grid-template-columns: 28px minmax(0, 1fr);
+  align-items: start;
+  gap: 11px;
+
+  width: 100%;
+  min-height: var(--test-touch-size);
+  padding: 13px 15px;
+
+  border: 2px solid var(--test-border);
+  border-radius: 12px;
+
+  background: var(--test-surface-dark);
+  color: var(--test-text-secondary);
+
+  cursor: pointer;
+
+  font-size: 1rem;
+  line-height: 1.5;
+  text-align: left;
+
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease,
+    transform 150ms ease,
+    box-shadow 150ms ease;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-option,
+  .answer-option,
+  .quiz-option,
+  [data-test-option],
+  [data-answer-option]
+):hover {
+  border-color: var(--test-primary);
+  background: rgba(34, 211, 238, 0.08);
+  transform: translateY(-1px);
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-option,
+  .answer-option,
+  .quiz-option,
+  [data-test-option],
+  [data-answer-option]
+):focus-within {
+  border-color: var(--test-primary);
+  outline: 3px solid rgba(34, 211, 238, 0.28);
+  outline-offset: 2px;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-option,
+  .answer-option,
+  .quiz-option
+).is-selected,
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) [data-selected="true"] {
+  border-color: var(--test-primary);
+  background: rgba(34, 211, 238, 0.13);
+  color: #ffffff;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-option,
+  .answer-option,
+  .quiz-option
+).is-correct,
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) [data-answer-status="correct"] {
+  border-color: var(--test-success);
+  background: rgba(34, 197, 94, 0.15);
+  color: #dcfce7;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-option,
+  .answer-option,
+  .quiz-option
+).is-incorrect,
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) [data-answer-status="incorrect"] {
+  border-color: var(--test-danger);
+  background: rgba(248, 113, 113, 0.14);
+  color: #fee2e2;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) input[type="radio"],
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) input[type="checkbox"] {
+  width: 21px;
+  height: 21px;
+  margin: 2px 0 0;
+
+  accent-color: var(--test-primary-dark);
+}
+
+
+/* =========================================================
+   11. VARIANTE ÎN DOUĂ COLOANE
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .test-options--two-columns {
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+}
+
+
+/* =========================================================
+   12. RĂSPUNSURI TEXT ȘI NUMERICE
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  select,
+  textarea
+) {
+  width: 100%;
+  min-height: var(--test-touch-size);
+  padding: 12px 14px;
+
+  border: 2px solid var(--test-border);
+  border-radius: 11px;
+
+  background: #0f172a;
+  color: #ffffff;
+
+  font: inherit;
+  font-size: 1rem;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  textarea
+)::placeholder {
+  color: #94a3b8;
+  opacity: 1;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  select,
+  textarea
+):focus {
+  border-color: var(--test-primary);
+
+  outline: 3px solid rgba(34, 211, 238, 0.28);
+  outline-offset: 2px;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .numeric-answer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .answer-unit {
+  min-width: 55px;
+  padding: 12px;
+
+  border: 1px solid var(--test-border);
+  border-radius: 10px;
+
+  background: var(--test-surface-dark);
+  color: #ffffff;
+
+  font-weight: 850;
+  text-align: center;
+}
+
+
+/* =========================================================
+   13. FORMULE MATHJAX
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-formula,
+  .formula-box,
+  .math-box
+) {
+  max-width: 100%;
+  margin-block: 15px;
+  padding: 15px 12px;
+
+  overflow-x: auto;
+
+  border: 1px solid var(--test-primary-dark);
+  border-radius: var(--test-radius-small);
+
+  background: var(--test-surface-dark);
+  color: var(--test-text);
+
+  text-align: center;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) mjx-container {
+  max-width: 100%;
+  color: var(--test-text);
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) mjx-container[display="true"] {
+  margin-block: 0.75em !important;
+  padding-block: 4px;
+
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+
+/* =========================================================
+   14. BUTOANE
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-button,
+  .check-btn,
+  .check-button,
+  [data-test-check],
+  [data-check-answer]
+) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  width: 100%;
+  min-height: var(--test-touch-size);
+  padding: 13px 18px;
+
+  border: 2px solid var(--test-primary-dark);
+  border-radius: 12px;
+
+  background: var(--test-primary);
+  color: var(--test-primary-text);
+
+  font: inherit;
+  font-weight: 900;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  text-transform: none;
+
+  cursor: pointer;
+  touch-action: manipulation;
+
+  transition:
+    transform 150ms ease,
+    filter 150ms ease,
+    box-shadow 150ms ease;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-button,
+  .check-btn,
+  .check-button,
+  [data-test-check],
+  [data-check-answer]
+):hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 8px 20px rgba(8, 145, 178, 0.25);
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-button,
+  .check-btn,
+  .check-button,
+  [data-test-check],
+  [data-check-answer]
+):focus-visible {
+  outline: 4px solid rgba(165, 243, 252, 0.55);
+  outline-offset: 3px;
+}
+
+
+/* Butonul „Mergi mai departe” */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .next-btn,
+  .next-button,
+  [data-test-next]
+) {
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  width: 100%;
+  min-height: var(--test-touch-size);
+  padding: 13px 18px;
+
+  border: 2px solid var(--test-success-dark);
+  border-radius: 12px;
+
+  background: var(--test-success);
+  color: var(--test-success-text);
+
+  font: inherit;
+  font-weight: 900;
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .next-btn,
+  .next-button,
+  [data-test-next]
+):not([hidden]):not(.hidden) {
+  display: inline-flex;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .next-btn,
+  .next-button,
+  [data-test-next]
+):hover {
+  filter: brightness(1.06);
+}
+
+
+/* Buton secundar */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .secondary-button,
+  .test-button--secondary,
+  [data-test-back]
+) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: var(--test-touch-size);
+  padding: 12px 17px;
+
+  border: 2px solid #64748b;
+  border-radius: 12px;
+
+  background: #e2e8f0;
+  color: #0f172a;
+
+  font: inherit;
+  font-weight: 850;
+  text-decoration: none;
+
+  cursor: pointer;
+}
+
+
+/* Buton dezactivat */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  button:disabled,
+  [aria-disabled="true"],
+  .is-disabled
+) {
+  cursor: not-allowed;
+
+  opacity: 0.58;
+  filter: grayscale(0.45);
+
+  transform: none;
+  box-shadow: none;
+}
+
+
+/* =========================================================
+   15. GRUPURI DE BUTOANE
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-actions,
+  .quiz-actions,
+  .answer-actions
+) {
+  display: grid;
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(180px, 1fr)
+    );
+
+  gap: 10px;
+
+  width: 100%;
+  margin-top: 16px;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-actions,
+  .quiz-actions,
+  .answer-actions
+) > * {
+  width: 100%;
+}
+
+
+/* =========================================================
+   16. FEEDBACK
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-feedback,
+  .feedback,
+  [data-test-feedback],
+  #feedback
+) {
+  min-height: 26px;
+  margin-block: 14px;
+  padding: 0;
+
+  color: var(--test-text-secondary);
+
+  font-weight: 800;
+  line-height: 1.5;
+  text-align: center;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-feedback.is-correct,
+  .feedback.correct,
+  .feedback.corect,
+  [data-feedback-status="correct"]
+) {
+  padding: 13px 15px;
+
+  border: 1px solid var(--test-success-dark);
+  border-radius: var(--test-radius-small);
+
+  background: rgba(34, 197, 94, 0.14);
+  color: #bbf7d0;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-feedback.is-incorrect,
+  .feedback.incorrect,
+  .feedback.gresit,
+  [data-feedback-status="incorrect"]
+) {
+  padding: 13px 15px;
+
+  border: 1px solid var(--test-danger-dark);
+  border-radius: var(--test-radius-small);
+
+  background: rgba(248, 113, 113, 0.14);
+  color: #fecaca;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-feedback.is-warning,
+  .feedback.warning,
+  [data-feedback-status="warning"]
+) {
+  padding: 13px 15px;
+
+  border: 1px solid var(--test-warning-dark);
+  border-radius: var(--test-radius-small);
+
+  background: rgba(251, 191, 36, 0.12);
+  color: #fef3c7;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-feedback.is-info,
+  [data-feedback-status="info"]
+) {
+  padding: 13px 15px;
+
+  border: 1px solid var(--test-info-dark);
+  border-radius: var(--test-radius-small);
+
+  background: rgba(96, 165, 250, 0.13);
+  color: #dbeafe;
+}
+
+
+/* =========================================================
+   17. EXPLICAȚIA DUPĂ RĂSPUNS
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .answer-explanation,
+  .test-explanation,
+  [data-test-explanation]
+) {
+  margin-top: 14px;
+  padding: 14px 16px;
+
+  border-left: 5px solid var(--test-info);
+  border-radius: 0 var(--test-radius-small)
+    var(--test-radius-small) 0;
+
+  background: rgba(96, 165, 250, 0.1);
+  color: var(--test-text-secondary);
+
+  line-height: 1.6;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .answer-explanation,
+  .test-explanation,
+  [data-test-explanation]
+) > :first-child {
+  margin-top: 0;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .answer-explanation,
+  .test-explanation,
+  [data-test-explanation]
+) > :last-child {
+  margin-bottom: 0;
+}
+
+
+/* =========================================================
+   18. ECRANUL DE REZULTAT
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .test-result,
+  .result-screen,
+  [data-test-result],
+  #screen-result
+) {
+  width: min(
+    calc(100% - 24px),
+    var(--test-content-width)
+  );
+
+  margin-inline: auto;
+  padding: clamp(20px, 5vw, 32px);
+
+  border: 1px solid var(--test-border-soft);
+  border-radius: var(--test-radius-large);
+
+  background: var(--test-surface);
+  color: var(--test-text);
+
+  box-shadow: var(--test-shadow);
+  text-align: center;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .result-title {
+  margin-top: 0;
+
+  color: #ffffff;
+  font-size: clamp(1.55rem, 5vw, 2.25rem);
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .result-score {
+  display: grid;
+  place-items: center;
+
+  width: clamp(130px, 35vw, 180px);
+  aspect-ratio: 1;
+  margin: 22px auto;
+
+  border: 8px solid var(--test-primary);
+  border-radius: 50%;
+
+  background: var(--test-surface-dark);
+  color: #ffffff;
+
+  box-shadow:
+    0 0 0 8px rgba(34, 211, 238, 0.1);
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .result-score-value {
+  font-size: clamp(2rem, 8vw, 3.2rem);
+  font-weight: 950;
+  line-height: 1;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .result-score-label {
+  margin-top: 5px;
+
+  color: var(--test-muted);
+  font-size: 0.9rem;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .result-grade {
+  margin-block: 15px;
+
+  color: var(--test-primary);
+
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  font-weight: 950;
+}
+
+
+/* =========================================================
+   19. STATISTICILE REZULTATULUI
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .result-stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(130px, 1fr)
+    );
+
+  gap: 12px;
+
+  margin-block: 20px;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .result-stat {
+  padding: 15px;
+
+  border: 1px solid var(--test-border-soft);
+  border-radius: var(--test-radius-small);
+
+  background: var(--test-surface-dark);
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .result-stat-value {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #ffffff;
+
+  font-size: 1.35rem;
+  font-weight: 950;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .result-stat-label {
+  color: var(--test-muted);
+  font-size: 0.88rem;
+}
+
+
+/* =========================================================
+   20. CE TREBUIE SĂ REVEZI
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .review-section,
+  .topics-to-review,
+  [data-test-review]
+) {
+  margin-top: 22px;
+  padding: clamp(16px, 4vw, 24px);
+
+  border: 1px solid var(--test-warning-dark);
+  border-radius: var(--test-radius);
+
+  background: rgba(251, 191, 36, 0.09);
+  color: var(--test-text-secondary);
+
+  text-align: left;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .review-section,
+  .topics-to-review,
+  [data-test-review]
+) h2,
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :where(
+  .review-section,
+  .topics-to-review,
+  [data-test-review]
+) h3 {
+  margin-top: 0;
+  color: #fde68a;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .review-list {
+  display: grid;
+  gap: 10px;
+
+  margin: 14px 0 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .review-item {
+  padding: 12px 14px;
+
+  border: 1px solid rgba(251, 191, 36, 0.3);
+  border-radius: var(--test-radius-small);
+
+  background: rgba(15, 23, 42, 0.38);
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .review-topic {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: #ffffff;
+  font-weight: 850;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .review-message {
+  color: var(--test-text-secondary);
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   21. ISTORICUL RĂSPUNSURILOR
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .answer-review-list {
+  display: grid;
+  gap: 12px;
+
+  margin-top: 20px;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .answer-review-item {
+  padding: 15px;
+
+  border: 1px solid var(--test-border-soft);
+  border-radius: var(--test-radius-small);
+
+  background: var(--test-surface-dark);
+  text-align: left;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .answer-review-item.is-correct {
+  border-left: 5px solid var(--test-success);
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .answer-review-item.is-incorrect {
+  border-left: 5px solid var(--test-danger);
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .answer-review-question {
+  margin-top: 0;
+
+  color: #ffffff;
+  font-weight: 850;
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   22. MESAJ DE TEST FINALIZAT
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .completion-message {
+  margin-block: 18px;
+  padding: 15px;
+
+  border: 1px solid var(--test-success-dark);
+  border-radius: var(--test-radius);
+
+  background: rgba(34, 197, 94, 0.13);
+  color: #dcfce7;
+
+  font-weight: 800;
+  line-height: 1.55;
+  text-align: center;
+}
+
+
+/* =========================================================
+   23. STĂRI ASCUNSE ȘI ANIMAȚII
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) [hidden],
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .hidden {
+  display: none !important;
+}
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) .test-screen {
+  animation: testScreenAppear 220ms ease-out;
+}
+
+@keyframes testScreenAppear {
+  from {
+    opacity: 0;
+    transform: translateY(7px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =========================================================
+   24. TEMA DESCHISĂ
+   ========================================================= */
+
+:where(
+  body[data-theme="light"][data-page-type="test"],
+  body[data-theme="light"].test-page,
+  body[data-theme="light"].quiz-page
+) {
+  --test-bg: #f1f5f9;
+  --test-surface: #ffffff;
+  --test-surface-soft: #f8fafc;
+  --test-surface-dark: #eaf2f8;
+
+  --test-text: #0f172a;
+  --test-text-secondary: #1e293b;
+  --test-muted: #475569;
+
+  --test-border: #94a3b8;
+  --test-border-soft: #cbd5e1;
+
+  --test-shadow:
+    0 14px 32px rgba(15, 23, 42, 0.11);
+}
+
+:where(
+  body[data-theme="light"][data-page-type="test"],
+  body[data-theme="light"].test-page,
+  body[data-theme="light"].quiz-page
+) :where(
+  .test-header,
+  .test-card,
+  .question-card,
+  .question-box,
+  [data-test-question]
+) {
+  color: #0f172a;
+}
+
+:where(
+  body[data-theme="light"][data-page-type="test"],
+  body[data-theme="light"].test-page,
+  body[data-theme="light"].quiz-page
+) :where(
+  .test-header h1,
+  .test-question h2,
+  .test-question h3,
+  .question-text,
+  .result-title,
+  .review-topic,
+  .answer-review-question
+) {
+  color: #0f172a;
+}
+
+:where(
+  body[data-theme="light"][data-page-type="test"],
+  body[data-theme="light"].test-page,
+  body[data-theme="light"].quiz-page
+) :where(
+  input[type="text"],
+  input[type="number"],
+  input[type="email"],
+  select,
+  textarea
+) {
+  background: #ffffff;
+  color: #0f172a;
+}
+
+:where(
+  body[data-theme="light"][data-page-type="test"],
+  body[data-theme="light"].test-page,
+  body[data-theme="light"].quiz-page
+) :where(
+  .test-option,
+  .answer-option,
+  .quiz-option
+) {
+  color: #1e293b;
+}
+
+
+/* =========================================================
+   25. TABLETĂ
+   ========================================================= */
+
+@media (max-width: 820px) {
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) .test-options--two-columns {
+    grid-template-columns: 1fr;
+  }
+
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) .result-stats {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* =========================================================
+   26. TELEFON
+   ========================================================= */
+
+@media (max-width: 620px) {
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) :where(
+    .test-container,
+    .quiz-container,
+    [data-test-engine],
+    [data-test-root],
+    .test-result,
+    .result-screen,
+    [data-test-result],
+    #screen-result
+  ) {
+    width: calc(100% - 14px);
+  }
+
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) :where(
+    .test-card,
+    .test-question,
+    .question-card,
+    .question-box,
+    [data-test-question]
+  ) {
+    padding: 16px;
+    border-radius: 14px;
+  }
+
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) .test-header {
+    padding: 17px 14px;
+    border-radius: 15px;
+  }
+
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) .test-header h1 {
+    font-size: 1.55rem;
+  }
+
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) :where(
+    input[type="text"],
+    input[type="number"],
+    input[type="email"],
+    select,
+    textarea
+  ) {
+    font-size: 16px;
+  }
+
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) :where(
+    .test-option,
+    .answer-option,
+    .quiz-option,
+    [data-test-option],
+    [data-answer-option]
+  ) {
+    grid-template-columns: 25px minmax(0, 1fr);
+
+    min-height: 52px;
+    padding: 12px;
+  }
+
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) .test-actions {
+    grid-template-columns: 1fr;
+  }
+
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) .test-actions > * {
+    width: 100%;
+    min-height: 52px;
+  }
+
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) .numeric-answer {
+    grid-template-columns: 1fr;
+  }
+
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) .answer-unit {
+    width: 100%;
+  }
+
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) .result-stats {
+    grid-template-columns: 1fr;
+  }
+
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) .result-score {
+    width: 140px;
+  }
+}
+
+
+/* =========================================================
+   27. ECRANE FOARTE MICI
+   ========================================================= */
+
+@media (max-width: 380px) {
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) :where(
+    .test-container,
+    .quiz-container,
+    [data-test-engine],
+    [data-test-root]
+  ) {
+    width: calc(100% - 10px);
+  }
+
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) :where(
+    .test-card,
+    .test-question,
+    .question-card,
+    .question-box
+  ) {
+    padding: 13px;
+  }
+
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) .question-text {
+    font-size: 1rem;
+  }
+}
+
+
+/* =========================================================
+   28. DISPOZITIVE TACTILE
+   ========================================================= */
+
+@media (hover: none) and (pointer: coarse) {
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) :where(
+    .test-option,
+    .answer-option,
+    .quiz-option,
+    button,
+    .test-button,
+    .next-btn
+  ) {
+    min-height: 50px;
+  }
+
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) :where(
+    .test-option,
+    .answer-option,
+    .quiz-option,
+    button
+  ):hover {
+    transform: none;
+  }
+}
+
+
+/* =========================================================
+   29. MIȘCARE REDUSĂ
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) *,
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) *::before,
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+
+    scroll-behavior: auto !important;
+
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* =========================================================
+   30. ACCESIBILITATE ȘI FOCUS
+   ========================================================= */
+
+:where(
+  body[data-page-type="test"],
+  body.test-page,
+  body.quiz-page
+) :focus-visible {
+  outline: 3px solid var(--test-primary);
+  outline-offset: 3px;
+}
+
+@media (prefers-contrast: more) {
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) :where(
+    .test-option,
+    .answer-option,
+    .quiz-option,
+    input,
+    select,
+    textarea,
+    button,
+    .test-card
+  ) {
+    border-width: 3px;
+  }
+}
+
+
+/* =========================================================
+   31. TIPĂRIRE
+   ========================================================= */
+
+@media print {
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) {
+    --test-bg: #ffffff;
+    --test-surface: #ffffff;
+    --test-surface-dark: #ffffff;
+
+    --test-text: #000000;
+    --test-text-secondary: #111111;
+    --test-muted: #333333;
+
+    --test-border: #777777;
+    --test-border-soft: #aaaaaa;
+
+    color: #000000;
+    background: #ffffff;
+  }
+
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) :where(
+    .test-actions,
+    .quiz-actions,
+    .check-btn,
+    .next-btn,
+    [data-test-check],
+    [data-test-next],
+    .test-timer
+  ) {
+    display: none !important;
+  }
+
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) :where(
+    .test-card,
+    .test-question,
+    .question-card,
+    .question-box,
+    .test-result,
+    .review-section
+  ) {
+    break-inside: avoid;
+
+    background: #ffffff;
+    color: #000000;
+
+    box-shadow: none;
+  }
+
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) :where(
+    .question-text,
+    .result-title,
+    .review-topic
+  ) {
+    color: #000000;
+  }
+
+  :where(
+    body[data-page-type="test"],
+    body.test-page,
+    body.quiz-page
+  ) mjx-container {
+    color: #000000;
+  }
+}

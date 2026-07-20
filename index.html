@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fizica Galaction | Platformă Educațională</title>
+<meta name="description" content="Platformă educațională interactivă de fizică pentru elevii din clasele VI, VII și VIII.">
+<link rel="stylesheet" href="assets/css/style.css">
+
+<style>
+  /* Doar ce NU există deja în style.css — restul (culori, spacing,
+     radius, tranziții) vine din variabilele centralizate. */
+
+  .intro {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .intro p.motto {
+    font-style: italic;
+    color: var(--text-secondary);
+  }
+
+  /* Card de autentificare — folosește .card din style.css ca bază */
+  .auth-status {
+    max-width: 480px;
+    margin: var(--spacing-lg) auto;
+    text-align: center;
+  }
+
+  .auth-status .btn {
+    margin-top: var(--spacing-sm);
+  }
+
+  /* Cardurile de clasă reutilizează .card, adăugăm doar accentul de culoare */
+  .class-buttons {
+    margin-top: var(--spacing-xl);
+  }
+
+  .class-card {
+    text-decoration: none;
+    color: inherit;
+    border-left: 6px solid var(--theme-accent, var(--primary));
+    display: block;
+  }
+
+  .class-card:hover {
+    text-decoration: none;
+  }
+
+  .class-card h3 {
+    margin: 0 0 var(--spacing-xs) 0;
+    color: var(--theme-accent, var(--primary));
+  }
+
+  .class-card span {
+    color: var(--text-secondary);
+  }
+
+  .cls6 { --theme-accent: #3498db; }
+  .cls7 { --theme-accent: #2ecc71; }
+  .cls8 { --theme-accent: #e67e22; }
+</style>
+</head>
+<body>
+
+<div id="header-container"></div>
+
+<main class="container wrapper">
+
+  <section class="intro">
+    <h2>Accesează rapid lecțiile și testele interactive</h2>
+    <p class="motto">„Fizica nu este dominată de formule, ci de logică.”</p>
+  </section>
+
+  <!-- Stare autentificare: se completează dinamic din auth.js -->
+  <section class="auth-status card" id="auth-status">
+    <p>Se verifică starea contului…</p>
+  </section>
+
+  <section class="class-buttons grid grid-3">
+    <a href="clasa6/index.html" class="class-card cls6 card">
+      <h3>Clasa a VI-a</h3>
+      <span>Intră în lecții</span>
+    </a>
+
+    <a href="clasa7/index.html" class="class-card cls7 card">
+      <h3>Clasa a VII-a</h3>
+      <span>Intră în lecții</span>
+    </a>
+
+    <a href="clasa8/index.html" class="class-card cls8 card">
+      <h3>Clasa a VIII-a</h3>
+      <span>Intră în lecții</span>
+    </a>
+  </section>
+
+</main>
+
+<div id="footer-container"></div>
+
+<button class="theme-toggle" title="Toggle Dark Mode" aria-label="Schimbă tema">☀️</button>
+
+<!-- Componente comune -->
+<script src="assets/js/load-header.js"></script>
+<script src="assets/js/load-footer.js"></script>
+<script src="assets/js/theme-toggle.js"></script>
+
+<!-- Firebase (compat SDK) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore-compat.js"></script>
+<script src="assets/js/firebase-config.js"></script>
+<script src="assets/js/auth.js"></script>
+
+<script>
+  const rolAfisat = { elev: "Elev", profesor: "Profesor", admin: "Administrator" };
+
+  function afiseazaNeautentificat() {
+    document.getElementById("auth-status").innerHTML = `
+      <p>Autentifică-te ca să-ți salvezi progresul.</p>
+      <a href="login/index.html" class="btn btn-primary">Autentificare</a>
+    `;
+  }
+
+  function afiseazaAutentificat(info) {
+    const nume = info.user.displayName || info.user.email;
+    const rol = rolAfisat[info.rol] || info.rol || "Elev";
+    document.getElementById("auth-status").innerHTML = `
+      <p>Salut, <strong>${nume}</strong>! (${rol})</p>
+      <button class="btn btn-secondary" id="buton-delogare">Ieși din cont</button>
+    `;
+    document.getElementById("buton-delogare").addEventListener("click", delogare);
+  }
+
+  onSchimbareAutentificare((info) => {
+    if (info) {
+      afiseazaAutentificat(info);
+    } else {
+      afiseazaNeautentificat();
+    }
+  });
+</script>
+
+</body>
+</html>

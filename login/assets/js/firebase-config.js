@@ -10,10 +10,11 @@
 // nu din ascunderea acestor valori.
 
 const firebaseConfig = {
-  apiKey: "COMPLETEAZĂ_AICI",
-  authDomain: "COMPLETEAZĂ_AICI.firebaseapp.com",
-  projectId: "COMPLETEAZĂ_AICI",
-  storageBucket: "COMPLETEAZĂ_AICI.appspot.com",
-  messagingSenderId: "COMPLETEAZĂ_AICI",
-  appId: "COMPLETEAZĂ_AICI"
+  apiKey: "AIzaSyCV66NlRO6XO5OdiQ7QoGceIyiRSzl5NxE",
+  authDomain: "fizica-galaction.firebaseapp.com",
+  projectId: "fizica-galaction",
+  storageBucket: "fizica-galaction.firebasestorage.app",
+  messagingSenderId: "705547484914",
+  appId: "1:705547484914:web:299e8afa54209764a9da6b",
+  measurementId: "G-K2SGZ47S6P"
 };

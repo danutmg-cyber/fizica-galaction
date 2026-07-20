@@ -1,1 +1,1238 @@
-/* layout.css */
+/**
+ * layout.css — Fizica Galaction
+ *
+ * Structura generală a platformei:
+ * - dimensiunea și poziționarea conținutului;
+ * - header și footer;
+ * - coloane și grile;
+ * - spațiere;
+ * - navigare generală;
+ * - adaptare pentru telefon, tabletă și PC;
+ * - elemente auxiliare de accesibilitate.
+ *
+ * Stilurile specifice lecțiilor se află în lessons.css.
+ * Stilurile specifice testelor se află în tests.css.
+ */
+
+
+/* =========================================================
+   1. VARIABILE DE LAYOUT
+   ========================================================= */
+
+:root {
+  --layout-page-width: 1200px;
+  --layout-content-width: 900px;
+  --layout-reading-width: 760px;
+  --layout-sidebar-width: 280px;
+
+  --layout-space-1: 0.25rem;
+  --layout-space-2: 0.5rem;
+  --layout-space-3: 0.75rem;
+  --layout-space-4: 1rem;
+  --layout-space-5: 1.5rem;
+  --layout-space-6: 2rem;
+  --layout-space-7: 3rem;
+
+  --layout-radius-small: 8px;
+  --layout-radius: 14px;
+  --layout-radius-large: 20px;
+
+  --layout-header-height: 72px;
+
+  --layout-bg: #0f172a;
+  --layout-surface: #1e293b;
+  --layout-surface-soft: #263449;
+
+  --layout-text: #f8fafc;
+  --layout-text-secondary: #dbe4f0;
+  --layout-muted: #cbd5e1;
+
+  --layout-border: #334155;
+  --layout-border-strong: #475569;
+
+  --layout-primary: #22d3ee;
+  --layout-primary-dark: #0891b2;
+
+  --layout-shadow:
+    0 14px 35px rgba(0, 0, 0, 0.22);
+}
+
+
+/* =========================================================
+   2. RESET STRUCTURAL
+   ========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 320px;
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(
+    var(--layout-header-height) + 20px
+  );
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  overflow-x: hidden;
+
+  background: var(--layout-bg);
+  color: var(--layout-text);
+}
+
+img,
+svg,
+video,
+canvas,
+iframe {
+  max-width: 100%;
+}
+
+img,
+svg,
+video {
+  height: auto;
+}
+
+button,
+input,
+select,
+textarea {
+  max-width: 100%;
+  font: inherit;
+}
+
+main {
+  display: block;
+  width: 100%;
+  flex: 1 0 auto;
+}
+
+header,
+footer,
+nav,
+section,
+article,
+aside {
+  min-width: 0;
+}
+
+
+/* =========================================================
+   3. CONTAINERE GENERALE
+   ========================================================= */
+
+.wrapper,
+.container,
+.site-container {
+  width: min(
+    calc(100% - 32px),
+    var(--layout-page-width)
+  );
+
+  margin-inline: auto;
+}
+
+.content-wrapper {
+  width: min(
+    calc(100% - 32px),
+    var(--layout-content-width)
+  );
+
+  margin-inline: auto;
+}
+
+.reading-wrapper {
+  width: min(
+    calc(100% - 32px),
+    var(--layout-reading-width)
+  );
+
+  margin-inline: auto;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.full-bleed {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+}
+
+
+/* =========================================================
+   4. STRUCTURA PAGINII
+   ========================================================= */
+
+.page-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.page-content {
+  width: 100%;
+  padding-block:
+    clamp(18px, 4vw, 42px);
+}
+
+.page-content > :first-child {
+  margin-top: 0;
+}
+
+.page-content > :last-child {
+  margin-bottom: 0;
+}
+
+.page-header {
+  margin-bottom: var(--layout-space-6);
+}
+
+.page-header h1 {
+  margin-top: 0;
+  margin-bottom: var(--layout-space-3);
+
+  color: var(--layout-text);
+  line-height: 1.2;
+}
+
+.page-header p {
+  max-width: 75ch;
+  margin-top: 0;
+
+  color: var(--layout-text-secondary);
+  line-height: 1.65;
+}
+
+.page-section {
+  margin-block: var(--layout-space-6);
+}
+
+.page-section:first-child {
+  margin-top: 0;
+}
+
+.page-section:last-child {
+  margin-bottom: 0;
+}
+
+
+/* =========================================================
+   5. HEADER
+   ========================================================= */
+
+.site-header {
+  position: relative;
+  z-index: 100;
+
+  width: 100%;
+  min-height: var(--layout-header-height);
+
+  border-bottom: 1px solid var(--layout-border);
+
+  background:
+    rgba(15, 23, 42, 0.96);
+
+  color: var(--layout-text);
+
+  box-shadow:
+    0 5px 18px rgba(0, 0, 0, 0.16);
+}
+
+.site-header.is-sticky,
+.site-header[data-sticky="true"] {
+  position: sticky;
+  top: 0;
+
+  backdrop-filter: blur(12px);
+}
+
+.site-header .wrapper,
+.site-header .container,
+.header-inner {
+  min-height: var(--layout-header-height);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--layout-space-4);
+}
+
+.site-brand,
+.site-title {
+  min-width: 0;
+  margin: 0;
+
+  color: var(--layout-text);
+  font-size: clamp(1.15rem, 3vw, 1.55rem);
+  font-weight: 850;
+  line-height: 1.2;
+  text-decoration: none;
+}
+
+.site-brand a,
+.site-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.site-logo {
+  display: flex;
+  align-items: center;
+  gap: var(--layout-space-3);
+  min-width: 0;
+}
+
+.site-logo img {
+  width: auto;
+  max-height: 48px;
+}
+
+
+/* =========================================================
+   6. NAVIGARE GENERALĂ
+   ========================================================= */
+
+.site-nav {
+  min-width: 0;
+}
+
+.site-nav ul,
+.site-navigation ul {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--layout-space-2);
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.site-nav a,
+.site-navigation a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 44px;
+  padding: 9px 13px;
+
+  border: 1px solid transparent;
+  border-radius: 10px;
+
+  color: var(--layout-text-secondary);
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+
+  transition:
+    color 150ms ease,
+    background-color 150ms ease,
+    border-color 150ms ease;
+}
+
+.site-nav a:hover,
+.site-navigation a:hover {
+  border-color: var(--layout-border-strong);
+  background: rgba(34, 211, 238, 0.08);
+  color: #ffffff;
+}
+
+.site-nav a.is-active,
+.site-navigation a.is-active,
+.site-nav a[aria-current="page"],
+.site-navigation a[aria-current="page"] {
+  border-color: var(--layout-primary-dark);
+  background: rgba(34, 211, 238, 0.15);
+  color: #a5f3fc;
+}
+
+.site-nav a:focus-visible,
+.site-navigation a:focus-visible {
+  outline: 3px solid var(--layout-primary);
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   7. NAVIGARE MOBILĂ
+   ========================================================= */
+
+.menu-toggle,
+.nav-toggle {
+  display: none;
+
+  min-width: 46px;
+  min-height: 46px;
+  padding: 8px;
+
+  border: 1px solid var(--layout-border-strong);
+  border-radius: 10px;
+
+  background: var(--layout-surface);
+  color: var(--layout-text);
+
+  cursor: pointer;
+}
+
+.menu-toggle:focus-visible,
+.nav-toggle:focus-visible {
+  outline: 3px solid var(--layout-primary);
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   8. BREADCRUMBS
+   ========================================================= */
+
+.breadcrumb,
+.breadcrumbs {
+  margin-block:
+    var(--layout-space-3)
+    var(--layout-space-5);
+}
+
+.breadcrumb ol,
+.breadcrumbs ol,
+.breadcrumb ul,
+.breadcrumbs ul {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.breadcrumb li,
+.breadcrumbs li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  color: var(--layout-muted);
+  font-size: 0.92rem;
+}
+
+.breadcrumb li:not(:last-child)::after,
+.breadcrumbs li:not(:last-child)::after {
+  content: "›";
+  color: #94a3b8;
+}
+
+.breadcrumb a,
+.breadcrumbs a {
+  color: #67e8f9;
+  text-underline-offset: 3px;
+}
+
+
+/* =========================================================
+   9. LAYOUT CU SIDEBAR
+   ========================================================= */
+
+.content-layout,
+.page-layout,
+.layout-with-sidebar {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(220px, var(--layout-sidebar-width));
+
+  align-items: start;
+  gap: clamp(20px, 4vw, 38px);
+}
+
+.main-column,
+.content-main {
+  min-width: 0;
+}
+
+.sidebar,
+.content-sidebar {
+  min-width: 0;
+}
+
+.sidebar.is-sticky,
+.content-sidebar.is-sticky {
+  position: sticky;
+  top: calc(
+    var(--layout-header-height) + 20px
+  );
+}
+
+.sidebar-card {
+  padding: var(--layout-space-4);
+
+  border: 1px solid var(--layout-border);
+  border-radius: var(--layout-radius);
+
+  background: var(--layout-surface);
+  color: var(--layout-text-secondary);
+}
+
+.sidebar-card + .sidebar-card {
+  margin-top: var(--layout-space-4);
+}
+
+
+/* =========================================================
+   10. GRILE
+   ========================================================= */
+
+.grid {
+  display: grid;
+  gap: var(--layout-space-4);
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+  gap: var(--layout-space-4);
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+  gap: var(--layout-space-4);
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+  gap: var(--layout-space-4);
+}
+
+.grid-auto {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(min(100%, 240px), 1fr)
+    );
+
+  gap: var(--layout-space-4);
+}
+
+.grid-auto-small {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(min(100%, 180px), 1fr)
+    );
+
+  gap: var(--layout-space-4);
+}
+
+.grid-auto-large {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(min(100%, 300px), 1fr)
+    );
+
+  gap: var(--layout-space-5);
+}
+
+
+/* =========================================================
+   11. FLEX ȘI SPAȚIERE
+   ========================================================= */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+}
+
+.stack > * {
+  margin-block: 0;
+}
+
+.stack > * + * {
+  margin-top: var(--stack-space, 1rem);
+}
+
+.cluster {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--cluster-space, 0.75rem);
+}
+
+.cluster-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--cluster-space, 0.75rem);
+}
+
+.split {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--layout-space-4);
+}
+
+.center {
+  display: grid;
+  place-items: center;
+}
+
+.center-text {
+  text-align: center;
+}
+
+.align-start {
+  align-items: start;
+}
+
+.align-center {
+  align-items: center;
+}
+
+.align-end {
+  align-items: end;
+}
+
+.justify-start {
+  justify-content: flex-start;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+
+/* =========================================================
+   12. CARDURI STRUCTURALE
+   ========================================================= */
+
+.layout-card {
+  min-width: 0;
+  padding:
+    clamp(16px, 3vw, 24px);
+
+  border: 1px solid var(--layout-border);
+  border-radius: var(--layout-radius);
+
+  background: var(--layout-surface);
+  color: var(--layout-text-secondary);
+
+  box-shadow: var(--layout-shadow);
+}
+
+.layout-card > :first-child {
+  margin-top: 0;
+}
+
+.layout-card > :last-child {
+  margin-bottom: 0;
+}
+
+.layout-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--layout-space-3);
+
+  margin-bottom: var(--layout-space-4);
+}
+
+.layout-card-footer {
+  margin-top: var(--layout-space-4);
+  padding-top: var(--layout-space-4);
+
+  border-top: 1px solid var(--layout-border);
+}
+
+
+/* =========================================================
+   13. LISTE DE PAGINI ȘI LECȚII
+   ========================================================= */
+
+.page-list,
+.lesson-list,
+.resource-list {
+  display: grid;
+  gap: var(--layout-space-3);
+
+  margin: 0;
+  padding: 0;
+
+  list-style: none;
+}
+
+.page-list a,
+.lesson-list a,
+.resource-list a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--layout-space-3);
+
+  min-height: 50px;
+  padding: 12px 14px;
+
+  border: 1px solid var(--layout-border);
+  border-radius: 11px;
+
+  background: var(--layout-surface);
+  color: var(--layout-text-secondary);
+
+  font-weight: 700;
+  text-decoration: none;
+
+  transition:
+    transform 150ms ease,
+    border-color 150ms ease,
+    background-color 150ms ease;
+}
+
+.page-list a:hover,
+.lesson-list a:hover,
+.resource-list a:hover {
+  border-color: var(--layout-primary-dark);
+  background: rgba(34, 211, 238, 0.08);
+  transform: translateY(-1px);
+}
+
+.page-list a[aria-current="page"],
+.lesson-list a[aria-current="page"],
+.resource-list a[aria-current="page"] {
+  border-color: var(--layout-primary);
+  background: rgba(34, 211, 238, 0.14);
+  color: #a5f3fc;
+}
+
+
+/* =========================================================
+   14. FOOTER
+   ========================================================= */
+
+.site-footer {
+  width: 100%;
+  margin-top: auto;
+  padding-block: var(--layout-space-6);
+
+  border-top: 1px solid var(--layout-border);
+
+  background: #0b1220;
+  color: var(--layout-muted);
+}
+
+.site-footer .wrapper,
+.site-footer .container,
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  gap: var(--layout-space-4);
+}
+
+.site-footer p {
+  margin: 0;
+  line-height: 1.55;
+}
+
+.site-footer a {
+  color: #67e8f9;
+  text-underline-offset: 3px;
+}
+
+.footer-nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--layout-space-3);
+}
+
+
+/* =========================================================
+   15. MESAJ DE ÎNCĂRCARE ȘI STĂRI
+   ========================================================= */
+
+.loading-container,
+.empty-state,
+.error-state {
+  width: min(
+    100%,
+    var(--layout-content-width)
+  );
+
+  margin: var(--layout-space-6) auto;
+  padding: var(--layout-space-5);
+
+  border: 1px solid var(--layout-border);
+  border-radius: var(--layout-radius);
+
+  background: var(--layout-surface);
+  color: var(--layout-text-secondary);
+
+  text-align: center;
+}
+
+.loading-container {
+  min-height: 120px;
+
+  display: grid;
+  place-items: center;
+}
+
+.error-state {
+  border-color: #dc2626;
+  background: rgba(127, 29, 29, 0.2);
+  color: #fecaca;
+}
+
+.empty-state {
+  border-style: dashed;
+}
+
+
+/* =========================================================
+   16. SEPARATORI
+   ========================================================= */
+
+.divider,
+.section-divider {
+  width: 100%;
+  height: 1px;
+
+  margin-block: var(--layout-space-6);
+
+  border: 0;
+  background: var(--layout-border);
+}
+
+.spacer-small {
+  height: var(--layout-space-3);
+}
+
+.spacer {
+  height: var(--layout-space-5);
+}
+
+.spacer-large {
+  height: var(--layout-space-7);
+}
+
+
+/* =========================================================
+   17. UTILITĂȚI DE DIMENSIUNE
+   ========================================================= */
+
+.max-width-reading {
+  width: min(
+    100%,
+    var(--layout-reading-width)
+  );
+}
+
+.max-width-content {
+  width: min(
+    100%,
+    var(--layout-content-width)
+  );
+}
+
+.max-width-page {
+  width: min(
+    100%,
+    var(--layout-page-width)
+  );
+}
+
+.margin-inline-auto {
+  margin-inline: auto;
+}
+
+.no-margin {
+  margin: 0 !important;
+}
+
+.no-padding {
+  padding: 0 !important;
+}
+
+.overflow-auto {
+  overflow: auto;
+}
+
+.overflow-x-auto {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+
+/* =========================================================
+   18. ACCESIBILITATE
+   ========================================================= */
+
+.skip-link {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  z-index: 9999;
+
+  padding: 12px 16px;
+
+  border: 2px solid var(--layout-primary);
+  border-radius: 10px;
+
+  background: #ffffff;
+  color: #0f172a;
+
+  font-weight: 850;
+  text-decoration: none;
+
+  transform: translateY(-160%);
+  transition: transform 150ms ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
+}
+
+.visually-hidden {
+  position: absolute !important;
+
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+
+  overflow: hidden !important;
+
+  clip: rect(0, 0, 0, 0) !important;
+  clip-path: inset(50%) !important;
+
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+:focus-visible {
+  outline: 3px solid var(--layout-primary);
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   19. TEMA DESCHISĂ
+   ========================================================= */
+
+body[data-theme="light"] {
+  --layout-bg: #f1f5f9;
+  --layout-surface: #ffffff;
+  --layout-surface-soft: #f8fafc;
+
+  --layout-text: #0f172a;
+  --layout-text-secondary: #1e293b;
+  --layout-muted: #475569;
+
+  --layout-border: #cbd5e1;
+  --layout-border-strong: #94a3b8;
+
+  --layout-shadow:
+    0 12px 30px rgba(15, 23, 42, 0.1);
+}
+
+body[data-theme="light"] .site-header {
+  background: rgba(248, 250, 252, 0.96);
+}
+
+body[data-theme="light"] .site-nav a,
+body[data-theme="light"] .site-navigation a {
+  color: #1e293b;
+}
+
+body[data-theme="light"] .site-nav a:hover,
+body[data-theme="light"] .site-navigation a:hover {
+  color: #0f172a;
+}
+
+body[data-theme="light"] .site-footer {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+
+/* =========================================================
+   20. TABLETĂ
+   ========================================================= */
+
+@media (max-width: 960px) {
+  .content-layout,
+  .page-layout,
+  .layout-with-sidebar {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar.is-sticky,
+  .content-sidebar.is-sticky {
+    position: static;
+  }
+
+  .grid-4 {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+  .grid-3 {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+
+/* =========================================================
+   21. TELEFON
+   ========================================================= */
+
+@media (max-width: 720px) {
+  :root {
+    --layout-header-height: 64px;
+  }
+
+  .wrapper,
+  .container,
+  .site-container,
+  .content-wrapper,
+  .reading-wrapper {
+    width: min(
+      calc(100% - 20px),
+      var(--layout-page-width)
+    );
+  }
+
+  .page-content {
+    padding-block: 18px 28px;
+  }
+
+  .site-header .wrapper,
+  .site-header .container,
+  .header-inner {
+    min-height: var(--layout-header-height);
+    flex-wrap: wrap;
+    padding-block: 8px;
+  }
+
+  .menu-toggle,
+  .nav-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .site-nav,
+  .site-navigation {
+    width: 100%;
+  }
+
+  .site-nav[data-collapsible="true"]:not(.is-open),
+  .site-navigation[data-collapsible="true"]:not(.is-open) {
+    display: none;
+  }
+
+  .site-nav ul,
+  .site-navigation ul {
+    flex-direction: column;
+    align-items: stretch;
+
+    width: 100%;
+    padding-block: 8px;
+  }
+
+  .site-nav a,
+  .site-navigation a {
+    width: 100%;
+    justify-content: flex-start;
+    min-height: 48px;
+  }
+
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+
+  .split {
+    flex-direction: column;
+  }
+
+  .cluster-between {
+    align-items: stretch;
+  }
+
+  .site-footer .wrapper,
+  .site-footer .container,
+  .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .layout-card {
+    padding: 16px;
+  }
+}
+
+
+/* =========================================================
+   22. ECRANE FOARTE MICI
+   ========================================================= */
+
+@media (max-width: 390px) {
+  .wrapper,
+  .container,
+  .site-container,
+  .content-wrapper,
+  .reading-wrapper {
+    width: min(
+      calc(100% - 16px),
+      var(--layout-page-width)
+    );
+  }
+
+  .site-brand,
+  .site-title {
+    font-size: 1.05rem;
+  }
+
+  .layout-card {
+    border-radius: 11px;
+  }
+}
+
+
+/* =========================================================
+   23. MIȘCARE REDUSĂ
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* =========================================================
+   24. TIPĂRIRE
+   ========================================================= */
+
+@media print {
+  :root {
+    --layout-bg: #ffffff;
+    --layout-surface: #ffffff;
+    --layout-text: #000000;
+    --layout-text-secondary: #111111;
+    --layout-muted: #333333;
+    --layout-border: #999999;
+  }
+
+  body {
+    display: block;
+    background: #ffffff;
+    color: #000000;
+  }
+
+  .site-header,
+  .site-footer,
+  .site-nav,
+  .site-navigation,
+  .menu-toggle,
+  .nav-toggle,
+  .skip-link {
+    display: none !important;
+  }
+
+  .wrapper,
+  .container,
+  .site-container,
+  .content-wrapper,
+  .reading-wrapper {
+    width: 100%;
+    max-width: none;
+  }
+
+  .page-content {
+    padding: 0;
+  }
+
+  .content-layout,
+  .page-layout,
+  .layout-with-sidebar,
+  .grid-2,
+  .grid-3,
+  .grid-4 {
+    display: block;
+  }
+
+  .sidebar,
+  .content-sidebar {
+    margin-top: 20px;
+  }
+
+  .layout-card,
+  .sidebar-card {
+    break-inside: avoid;
+
+    border-color: #999999;
+    background: #ffffff;
+    color: #000000;
+
+    box-shadow: none;
+  }
+
+  a {
+    color: #000000;
+    text-decoration: underline;
+  }
+}

@@ -1,0 +1,627 @@
+/* ========================================
+   FIZICA GALACTION — LESSON APP CSS
+   Stil comun pentru lecțiile și fișele de lucru
+   paginate (sistem "o pagină, mergi mai departe").
+   Completează stub-ul assets/css/lessons.css din plan.
+   ======================================== */
+
+/* ===== 1. VARIABILE — TEMA ÎNTUNECATĂ (implicită) ===== */
+:root {
+  --bg: #0f172a;
+  --panel: #1e293b;
+  --panel-2: #111827;
+  --text: #f8fafc;
+  --muted: #dbeafe;
+  --accent: #22d3ee;
+  --accent-2: #22c55e;
+  --warning-bg: #422006;
+  --warning-text: #fef3c7;
+  --border: #334155;
+  --button-text: #052e16;
+  --input-bg: rgba(15, 23, 42, 0.55);
+
+  --good-bg: rgba(22, 101, 52, 0.85);
+  --good-border: #86efac;
+  --good-text: #dcfce7;
+  --bad-bg: rgba(127, 29, 29, 0.82);
+  --bad-border: #fca5a5;
+  --bad-text: #fee2e2;
+}
+
+/* ===== 2. TEMA LUMINOASĂ (data-theme="light" pe <body>) ===== */
+body[data-theme="light"] {
+  --bg: #eef2f7;
+  --panel: #ffffff;
+  --panel-2: #f8fafc;
+  --text: #1e293b;
+  --muted: #475569;
+  --accent: #0891b2;
+  --accent-2: #15803d;
+  --warning-bg: #fef3c7;
+  --warning-text: #78350f;
+  --border: #cbd5e1;
+  --button-text: #ffffff;
+  --input-bg: #ffffff;
+
+  --good-bg: #dcfce7;
+  --good-border: #86efac;
+  --good-text: #14532d;
+  --bad-bg: #fee2e2;
+  --bad-border: #fca5a5;
+  --bad-text: #7f1d1d;
+}
+
+/* ===== 3. BAZE ===== */
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at top, rgba(34, 211, 238, 0.16), transparent 32rem),
+    var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  /* Font mare, care se adaptează la lățimea ecranului (telefon/tabletă/PC) */
+  font-size: clamp(20px, 5.2vw, 27px);
+  line-height: 1.55;
+  transition: background-color .25s ease, color .25s ease;
+}
+
+/* Ascundem header/footer-ul standard al site-ului pe paginile care folosesc
+   acest sistem — au propriul banner de sus și banner final. */
+.site-header,
+.site-footer {
+  display: none;
+}
+
+/* ===== 4. COMUTATOR TEMĂ ZI/NOAPTE ===== */
+.theme-switch {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.22);
+  cursor: pointer;
+  font-size: clamp(0.85rem, 3vw, 1rem);
+  font-weight: 800;
+  color: var(--text);
+}
+
+.theme-switch .icon {
+  font-size: 1.2em;
+}
+
+/* ===== 5. CONTAINER PRINCIPAL =====
+   .mobile-lesson (lecții) și .worksheet (fișe) sunt alias-uri — folosesc
+   amândouă exact același comportament, ca să nu fie nevoie să redenumim
+   markup-ul deja existent. */
+.mobile-lesson,
+.worksheet,
+.paged-app {
+  width: min(100%, 860px);
+  margin: 0 auto;
+  padding: 14px 14px 108px;
+}
+
+.worksheet {
+  padding-top: 64px; /* loc pentru comutatorul de temă fix, sus */
+}
+
+/* ===== 6. PAGINARE ===== */
+.lesson-page {
+  display: none;
+  min-height: calc(100vh - 122px);
+  animation: pageFade 0.25s ease;
+}
+
+.lesson-page.active {
+  display: block;
+}
+
+@keyframes pageFade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== 7. CARDURI ===== */
+.lesson-card,
+.first-banner,
+.final-banner {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: clamp(20px, 6vw, 34px);
+  margin: 14px 0;
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+}
+
+.first-banner {
+  text-align: center;
+  background:
+    linear-gradient(135deg, rgba(34, 211, 238, 0.20), rgba(34, 197, 94, 0.12)),
+    var(--panel);
+  border-color: rgba(34, 211, 238, 0.55);
+}
+
+.platform-title {
+  font-size: clamp(1.4rem, 7vw, 2.45rem);
+  font-weight: 950;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.quote {
+  margin: 0;
+  color: var(--muted);
+  font-size: clamp(1rem, 4.8vw, 1.35rem);
+  font-weight: 800;
+  font-style: italic;
+}
+
+.page-chip {
+  display: inline-block;
+  margin-bottom: 12px;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(34, 211, 238, 0.12);
+  border: 1px solid rgba(34, 211, 238, 0.45);
+  color: var(--accent);
+  font-size: clamp(0.82rem, 3.6vw, 1rem);
+  font-weight: 900;
+}
+
+/* ===== 8. TIPOGRAFIE ===== */
+h1, h2, h3 {
+  line-height: 1.15;
+  margin: 0 0 14px;
+  color: var(--text);
+}
+
+h1 {
+  font-size: clamp(1.7rem, 8vw, 2.7rem);
+}
+
+h2 {
+  font-size: clamp(1.4rem, 6.5vw, 2.1rem);
+}
+
+h3 {
+  font-size: clamp(1.15rem, 5vw, 1.5rem);
+  color: var(--accent);
+  margin-top: 18px;
+}
+
+p {
+  margin: 0 0 16px;
+}
+
+ul, ol {
+  margin: 12px 0 0;
+  padding-left: 1.35em;
+}
+
+li {
+  margin: 10px 0;
+  padding-left: 3px;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: clamp(0.95rem, 4vw, 1.15rem);
+}
+
+.kw, strong {
+  color: var(--accent-2);
+  font-weight: 950;
+}
+
+.formula {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.78);
+  color: var(--text);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  font-weight: 950;
+  white-space: nowrap;
+}
+
+/* ===== 9. CASETE EVIDENȚIATE ===== */
+.notice, .example, .tip, .warning {
+  border-radius: 18px;
+  padding: 16px;
+  margin-top: 18px;
+  color: var(--text);
+  border: 1px solid rgba(148, 163, 184, 0.28);
+}
+
+.notice {
+  background: rgba(8, 47, 73, 0.5);
+  border-left: 6px solid var(--accent);
+}
+
+.example {
+  background: rgba(20, 83, 45, 0.4);
+  border-left: 6px solid var(--accent-2);
+}
+
+.tip {
+  background: rgba(49, 46, 129, 0.4);
+  border-left: 6px solid #a5b4fc;
+}
+
+.warning {
+  background: var(--warning-bg);
+  color: var(--warning-text);
+  border-left: 6px solid #f59e0b;
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.tag-row span {
+  display: inline-block;
+  padding: 8px 11px;
+  border-radius: 999px;
+  background: rgba(14, 165, 233, 0.14);
+  border: 1px solid rgba(125, 211, 252, 0.34);
+  color: var(--text);
+  font-size: clamp(0.88rem, 3.8vw, 1.05rem);
+  font-weight: 800;
+}
+
+/* ===== 10. CÂMPURI DE FORMULAR (fișe de lucru) ===== */
+.question-block {
+  margin: 20px 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.question-block:first-of-type {
+  border-top: none;
+  padding-top: 0;
+}
+
+.question-block > p:first-child strong {
+  color: var(--accent);
+}
+
+input[type="text"], textarea, select {
+  width: 100%;
+  font: inherit;
+  color: var(--text);
+  background: var(--input-bg);
+  border: 2px solid var(--border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin: 6px 0;
+}
+
+input[type="text"].inline-input,
+select.inline-input {
+  width: auto;
+  min-width: 40%;
+  display: inline-block;
+  margin: 4px 6px;
+}
+
+textarea {
+  min-height: 90px;
+  resize: vertical;
+}
+
+label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  margin: 8px 0;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--input-bg);
+  cursor: pointer;
+  font-size: clamp(0.98rem, 4.3vw, 1.18rem);
+}
+
+label input[type="radio"] {
+  width: 22px;
+  height: 22px;
+  margin-top: 2px;
+  flex: 0 0 auto;
+  accent-color: var(--accent-2);
+}
+
+/* ===== 11. VERIFICARE RAPIDĂ (lecții) ===== */
+.quick-check {
+  display: grid;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.question {
+  background: rgba(15, 23, 42, 0.3);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 14px;
+}
+
+.question p {
+  margin-bottom: 10px;
+  font-weight: 900;
+}
+
+.answer-row {
+  display: grid;
+  gap: 9px;
+}
+
+/* ===== 12. FEEDBACK ===== */
+.feedback {
+  min-height: 1.3em;
+  margin: 4px 0 14px;
+  font-size: clamp(0.92rem, 3.8vw, 1.08rem);
+  font-weight: 800;
+  display: none;
+  border-radius: 16px;
+}
+
+.feedback.corect, .feedback.good {
+  display: block;
+  color: var(--good-text);
+  background: transparent;
+}
+
+.feedback.gresit, .feedback.bad {
+  display: block;
+  color: var(--bad-text);
+  background: transparent;
+}
+
+.feedback.partial {
+  display: block;
+  color: #fbbf24;
+}
+
+/* Variantă „casetă" a feedback-ului, pentru verificarea rapidă din lecții */
+.feedback.boxed.good {
+  padding: 14px;
+  background: var(--good-bg);
+  border: 1px solid var(--good-border);
+}
+
+.feedback.boxed.bad {
+  padding: 14px;
+  background: var(--bad-bg);
+  border: 1px solid var(--bad-border);
+}
+
+/* ===== 13. BUTOANE ===== */
+.check-button {
+  width: 100%;
+  border: none;
+  border-radius: 16px;
+  padding: 15px;
+  font-size: clamp(1.05rem, 4.8vw, 1.28rem);
+  font-weight: 950;
+  background: var(--accent);
+  color: var(--button-text);
+  cursor: pointer;
+  margin-top: 6px;
+}
+
+.reset-button {
+  width: 100%;
+  border: 2px solid var(--border);
+  border-radius: 16px;
+  padding: 13px;
+  font-size: clamp(0.98rem, 4.4vw, 1.15rem);
+  font-weight: 800;
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.score-box {
+  margin-top: 16px;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(34, 211, 238, 0.1);
+  border: 1px solid rgba(34, 211, 238, 0.4);
+  font-size: clamp(1.05rem, 4.6vw, 1.3rem);
+  font-weight: 900;
+  color: var(--text);
+  text-align: center;
+}
+
+/* ===== 14. BANNER FINAL ===== */
+.final-banner {
+  background:
+    linear-gradient(135deg, rgba(34, 211, 238, 0.16), rgba(59, 130, 246, 0.16)),
+    var(--panel);
+  text-align: center;
+  border-color: rgba(34, 211, 238, 0.55);
+}
+
+.final-banner .name {
+  margin: 0 0 8px;
+  font-size: clamp(1.25rem, 6vw, 1.8rem);
+  font-weight: 950;
+  color: var(--text);
+}
+
+.final-banner .email,
+.final-banner a {
+  color: var(--accent);
+  font-weight: 900;
+  word-break: break-word;
+}
+
+.small-note {
+  color: var(--muted);
+  font-size: clamp(0.92rem, 4vw, 1.05rem);
+  margin-bottom: 0;
+}
+
+.visitor-counter {
+  margin-top: 16px;
+  padding: 14px;
+  border-radius: 18px;
+  background: rgba(15, 23, 42, 0.2);
+  border: 1px solid rgba(148, 163, 184, 0.32);
+}
+
+.visitor-counter span {
+  display: block;
+  color: var(--muted);
+  font-weight: 900;
+  margin-bottom: 4px;
+}
+
+.visitor-counter strong {
+  display: block;
+  color: var(--accent-2);
+  font-size: clamp(2rem, 9vw, 3rem);
+  line-height: 1;
+}
+
+/* ===== 15. ACȚIUNI / LINKURI ===== */
+.actions {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.actions .button,
+.actions a {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 16px;
+  padding: 16px;
+  font-size: clamp(1.05rem, 4.8vw, 1.4rem);
+  font-weight: 900;
+  background: var(--accent);
+  color: var(--button-text);
+  border: 2px solid rgba(34, 211, 238, 0.5);
+}
+
+/* ===== 16. BARA DE NAVIGARE (fixă, jos) ===== */
+.lesson-controls {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  background: var(--panel-2);
+  border-top: 1px solid var(--border);
+  padding: 8px 8px calc(8px + env(safe-area-inset-bottom));
+  display: grid;
+  grid-template-columns: minmax(70px, 0.8fr) auto minmax(132px, 1.35fr);
+  gap: 6px;
+  align-items: center;
+  box-shadow: 0 -12px 32px rgba(0, 0, 0, 0.38);
+}
+
+.nav-button {
+  min-height: 48px;
+  border: none;
+  border-radius: 14px;
+  padding: 9px 8px;
+  font-size: clamp(0.9rem, 3.9vw, 1.18rem);
+  line-height: 1.1;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.22);
+  white-space: normal;
+}
+
+.nav-button.primary {
+  background: var(--accent-2);
+  color: var(--button-text);
+  border: 2px solid rgba(134, 239, 172, 0.6);
+}
+
+.nav-button.secondary {
+  background: transparent;
+  color: var(--text);
+  border: 2px solid var(--border);
+}
+
+.nav-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.progress-pill {
+  color: var(--text);
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 7px 8px;
+  text-align: center;
+  font-weight: 900;
+  font-size: clamp(0.84rem, 3.4vw, 1rem);
+  white-space: nowrap;
+}
+
+/* ===== 17. RESPONSIVE ===== */
+@media (min-width: 760px) {
+  .mobile-lesson,
+  .worksheet,
+  .paged-app {
+    padding-top: 22px;
+  }
+
+  .worksheet {
+    padding-top: 90px;
+  }
+
+  .answer-row {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .lesson-controls {
+    width: min(100%, 860px);
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    border-radius: 22px 22px 0 0;
+  }
+}
+
+/* ===== 18. ACCESIBILITATE ===== */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

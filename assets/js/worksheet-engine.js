@@ -234,6 +234,7 @@ function initWorksheet(optiuni) {
           <button class="reset-button" type="button" id="ws-reseteaza">Resetează fișa</button>
           <div id="ws-scor" class="score-box"></div>
           <p class="hint" id="ws-mesaj-final" style="margin-top:10px;"></p>
+          <div id="ws-greseli"></div>
         </article>
 
         <article class="final-banner" role="contentinfo">
@@ -355,6 +356,26 @@ function initWorksheet(optiuni) {
     el.textContent = mesaj;
   }
 
+  // Textul afișat în recapitulare pentru o întrebare (fără marcajul {input}).
+  function etichetaIntrebare(intrebare) {
+    if (intrebare.intrebare) return intrebare.intrebare;
+    if (intrebare.sablon) return intrebare.sablon.replace("{input}", "___");
+    return intrebare.id;
+  }
+
+  // Răspunsul corect, ca text, afișat în recapitulare.
+  function raspunsCorectText(intrebare) {
+    if (intrebare.tip === "completare") return intrebare.raspunsuriAcceptate[0];
+    if (intrebare.tip === "numeric") return String(intrebare.raspunsCorect);
+    if (intrebare.tip === "alegere") return intrebare.optiuni[intrebare.corect];
+    if (intrebare.tip === "adevarat-fals") return intrebare.corect === "A" ? "Adevărat" : "Fals";
+    if (intrebare.tip === "selectie") return intrebare.corect;
+    if (intrebare.tip === "text-liber") return (intrebare.cuvinteCheie || [])[0] || "";
+    return "";
+  }
+
+  // Verifică o întrebare și întoarce { scor, punctaj } — scor poate fi
+  // 0, parțial sau egal cu punctajul maxim al întrebării.
   function verificaIntrebare(intrebare) {
     const punctaj = typeof intrebare.punctaj === "number" ? intrebare.punctaj : 1;
 
@@ -367,7 +388,7 @@ function initWorksheet(optiuni) {
         corect ? "corect" : "gresit",
         corect ? "Corect." : "Răspuns corect: " + intrebare.raspunsuriAcceptate[0] + "."
       );
-      return corect ? punctaj : 0;
+      return { scor: corect ? punctaj : 0, punctaj };
     }
 
     if (intrebare.tip === "numeric") {
@@ -382,14 +403,14 @@ function initWorksheet(optiuni) {
         corect ? "corect" : "gresit",
         corect ? "Corect." : "Răspuns corect: " + intrebare.raspunsCorect + "."
       );
-      return corect ? punctaj : 0;
+      return { scor: corect ? punctaj : 0, punctaj };
     }
 
     if (intrebare.tip === "alegere") {
       const selectat = document.querySelector(`input[name="${intrebare.id}"]:checked`);
       if (!selectat) {
         setFeedback(intrebare.id, "gresit", "Alege o variantă.");
-        return 0;
+        return { scor: 0, punctaj };
       }
       const corect = Number(selectat.value) === intrebare.corect;
       setFeedback(
@@ -397,14 +418,14 @@ function initWorksheet(optiuni) {
         corect ? "corect" : "gresit",
         corect ? "Corect." : "Răspuns corect: " + intrebare.optiuni[intrebare.corect] + "."
       );
-      return corect ? punctaj : 0;
+      return { scor: corect ? punctaj : 0, punctaj };
     }
 
     if (intrebare.tip === "adevarat-fals") {
       const valoare = document.getElementById(intrebare.id).value;
       if (!valoare) {
         setFeedback(intrebare.id, "gresit", "Alege o variantă.");
-        return 0;
+        return { scor: 0, punctaj };
       }
       const corect = valoare === intrebare.corect;
       setFeedback(
@@ -412,14 +433,14 @@ function initWorksheet(optiuni) {
         corect ? "corect" : "gresit",
         corect ? "Corect." : "Răspuns corect: " + (intrebare.corect === "A" ? "Adevărat." : "Fals.")
       );
-      return corect ? punctaj : 0;
+      return { scor: corect ? punctaj : 0, punctaj };
     }
 
     if (intrebare.tip === "selectie") {
       const valoare = document.getElementById(intrebare.id).value;
       if (!valoare) {
         setFeedback(intrebare.id, "gresit", "Alege o variantă.");
-        return 0;
+        return { scor: 0, punctaj };
       }
       const corect = valoare === intrebare.corect;
       setFeedback(
@@ -427,7 +448,7 @@ function initWorksheet(optiuni) {
         corect ? "corect" : "gresit",
         corect ? "Corect." : "Răspuns corect: " + intrebare.corect + "."
       );
-      return corect ? punctaj : 0;
+      return { scor: corect ? punctaj : 0, punctaj };
     }
 
     if (intrebare.tip === "text-liber") {
@@ -437,10 +458,10 @@ function initWorksheet(optiuni) {
       if (intrebare.acceptaOriceRaspuns) {
         if (!areText) {
           setFeedback(intrebare.id, "gresit", intrebare.mesajGresit || "Scrie un răspuns.");
-          return 0;
+          return { scor: 0, punctaj };
         }
         setFeedback(intrebare.id, "corect", intrebare.mesajCorect || "Corect.");
-        return punctaj;
+        return { scor: punctaj, punctaj };
       }
 
       const cuvinteCheie = intrebare.cuvinteCheie || [];
@@ -450,29 +471,38 @@ function initWorksheet(optiuni) {
 
       if (areCuvantCheie) {
         setFeedback(intrebare.id, "corect", intrebare.mesajCorect || "Corect.");
-        return punctaj;
+        return { scor: punctaj, punctaj };
       }
       if (areText) {
         setFeedback(intrebare.id, "partial", intrebare.mesajPartial || "Răspuns parțial corect.");
-        return punctaj * 0.5;
+        return { scor: punctaj * 0.5, punctaj };
       }
       setFeedback(intrebare.id, "gresit", intrebare.mesajGresit || "Scrie un răspuns.");
-      return 0;
+      return { scor: 0, punctaj };
     }
 
-    return 0;
+    return { scor: 0, punctaj };
   }
 
   function verificaTot(paginiDeContinut) {
     let scor = 0;
     let total = 0;
+    const greseli = [];
 
     paginiDeContinut.forEach((pagina) => {
       if (pagina.tip !== "intrebari") return;
       (pagina.intrebari || []).forEach((intrebare) => {
-        const punctaj = typeof intrebare.punctaj === "number" ? intrebare.punctaj : 1;
-        total += punctaj;
-        scor += verificaIntrebare(intrebare);
+        const rezultat = verificaIntrebare(intrebare);
+        total += rezultat.punctaj;
+        scor += rezultat.scor;
+
+        if (rezultat.scor < rezultat.punctaj) {
+          greseli.push({
+            eticheta: etichetaIntrebare(intrebare),
+            corectAsteptat: raspunsCorectText(intrebare),
+            partial: rezultat.scor > 0
+          });
+        }
       });
     });
 
@@ -481,7 +511,7 @@ function initWorksheet(optiuni) {
 
     const scorEl = document.getElementById("ws-scor");
     if (scorEl) {
-      scorEl.innerHTML = `Scor: ${scor.toFixed(1)} / ${total}<br>Procent: ${procent.toFixed(0)}%<br>Nota orientativă: ${nota.toFixed(2)}`;
+      scorEl.innerHTML = `Scor: ${scor.toFixed(1)} / ${total.toFixed(1)}<br>Procent: ${procent.toFixed(0)}%<br>Nota orientativă: ${nota.toFixed(2)}`;
     }
 
     let mesaj;
@@ -494,6 +524,38 @@ function initWorksheet(optiuni) {
     }
     const mesajEl = document.getElementById("ws-mesaj-final");
     if (mesajEl) mesajEl.textContent = mesaj;
+
+    afiseazaRecapitulare(greseli);
+  }
+
+  // Afișează, la final, o listă cu ce a greșit (sau parțial greșit) elevul,
+  // împreună cu răspunsul corect așteptat — ca să știe exact ce să revadă.
+  function afiseazaRecapitulare(greseli) {
+    const recapEl = document.getElementById("ws-greseli");
+    if (!recapEl) return;
+
+    if (greseli.length === 0) {
+      recapEl.innerHTML = `<div class="notice" style="margin-top:16px;">Toate răspunsurile au fost corecte. Felicitări!</div>`;
+      return;
+    }
+
+    const itemi = greseli
+      .map(
+        (g) => `
+        <li style="margin:10px 0;">
+          <span style="opacity:.85;">${escapeHtml(g.eticheta)}</span><br>
+          <strong style="color:${g.partial ? "#fbbf24" : "#fb7185"};">
+            ${g.partial ? "Parțial corect" : "Greșit"} — răspunsul corect: ${escapeHtml(String(g.corectAsteptat))}
+          </strong>
+        </li>`
+      )
+      .join("");
+
+    recapEl.innerHTML = `
+      <div class="warning" style="margin-top:16px; text-align:left;">
+        <strong>De revăzut (${greseli.length} ${greseli.length === 1 ? "întrebare" : "întrebări"}):</strong>
+        <ul style="margin-top:10px; padding-left:1.1em;">${itemi}</ul>
+      </div>`;
   }
 
   function resetTot() {
@@ -506,8 +568,10 @@ function initWorksheet(optiuni) {
     });
     const scorEl = document.getElementById("ws-scor");
     const mesajEl = document.getElementById("ws-mesaj-final");
+    const recapEl = document.getElementById("ws-greseli");
     if (scorEl) scorEl.textContent = "";
     if (mesajEl) mesajEl.textContent = "";
+    if (recapEl) recapEl.innerHTML = "";
   }
 
   function escapeHtml(text) {

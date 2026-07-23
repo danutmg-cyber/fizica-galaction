@@ -4,225 +4,887 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fișe de lucru | Energia mecanică | Fizica Galaction</title>
-  <meta name="description" content="Fișele de lucru pentru capitolul Energia mecanică, clasa a VII-a.">
+  <meta
+    name="description"
+    content="Fișe de lucru interactive pentru clasa a VII-a: energia cinetică, energia potențială, energia mecanică, conservare și conversii energetice."
+  >
   <link rel="stylesheet" href="../../../assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
   <style>
-    :root{
-      --bg:#0f172a;
-      --panel:#1e293b;
-      --panel-2:#334155;
-      --text:#f8fafc;
-      --muted:#cbd5e1;
-      --accent:#22d3ee;
-      --good:#22c55e;
+    :root {
+      --bg: #071827;
+      --surface: #102a3d;
+      --surface-soft: #17384e;
+      --surface-deep: #0b2233;
+      --text: #f8fafc;
+      --muted: #d5e4ee;
+      --primary: #22d3ee;
+      --success: #4ade80;
+      --border: #4c7185;
+      --focus: #facc15;
     }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:Arial, Helvetica, sans-serif;
-      background:var(--bg);
-      color:var(--text);
-      line-height:1.6;
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body.class-7 {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(34, 211, 238, 0.14), transparent 34rem),
+        radial-gradient(circle at bottom left, rgba(74, 222, 128, 0.08), transparent 28rem),
+        var(--bg);
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
     }
-    .wrapper{
-      max-width:1100px;
-      margin:0 auto;
-      padding:20px;
+
+    a { color: inherit; }
+
+    .wrapper {
+      width: min(100%, 1120px);
+      margin: 0 auto;
     }
-    .site-header,.site-footer{
-      background:#020617;
-      border-bottom:1px solid #1e293b;
+
+    .site-header {
+      padding: 18px 16px;
+      color: #fff;
+      background: linear-gradient(135deg, #075985, #0e7490);
+      border-bottom: 3px solid var(--primary);
     }
-    .site-footer{
-      border-top:1px solid #1e293b;
-      border-bottom:none;
-      margin-top:32px;
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
     }
-    .site-title{
-      margin:0;
-      font-size:1.9rem;
-      color:var(--accent);
+
+    .site-title {
+      margin: 0;
+      color: #fff;
+      font-size: clamp(1.35rem, 4vw, 2rem);
     }
-    .site-subtitle{
-      margin:6px 0 0;
-      color:var(--muted);
+
+    .site-subtitle {
+      margin: 4px 0 0;
+      color: #e0f2fe;
+      font-size: 0.96rem;
     }
-    .card{
-      background:var(--panel);
-      border:1px solid var(--panel-2);
-      border-radius:20px;
-      padding:22px;
-      margin:18px 0;
-      box-shadow:0 12px 30px rgba(0,0,0,.25);
+
+    .class-badge {
+      flex: 0 0 auto;
+      padding: 8px 12px;
+      color: #083344;
+      background: #cffafe;
+      border: 2px solid #67e8f9;
+      border-radius: 999px;
+      font-weight: 850;
     }
-    .quote{
-      margin-top:14px;
-      padding:12px 14px;
-      border-left:4px solid var(--accent);
-      background:rgba(34,211,238,.08);
-      border-radius:10px;
-      color:#e0f2fe;
-      font-style:italic;
+
+    .page-content {
+      width: min(100%, 1120px);
+      margin: 0 auto;
+      padding: 18px 16px 32px;
     }
-    .grid{
-      display:grid;
-      grid-template-columns:repeat(2,minmax(0,1fr));
-      gap:16px;
+
+    .hero,
+    .overview,
+    .sheet-card,
+    .navigation-panel {
+      background: rgba(16, 42, 61, 0.98);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.27);
     }
-    .sheet-card{
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-      text-decoration:none;
-      color:var(--text);
-      background:linear-gradient(180deg, rgba(34,211,238,.08), rgba(15,23,42,.14));
-      border:1px solid #475569;
-      border-radius:18px;
-      padding:18px;
-      min-height:180px;
-      transition:transform .2s ease, border-color .2s ease, box-shadow .2s ease;
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(22px, 5vw, 42px);
     }
-    .sheet-card:hover{
-      transform:translateY(-2px);
-      border-color:var(--accent);
-      box-shadow:0 10px 24px rgba(34,211,238,.12);
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -72px;
+      bottom: -88px;
+      width: 240px;
+      height: 240px;
+      border: 28px solid rgba(34, 211, 238, 0.10);
+      border-radius: 50%;
+      pointer-events: none;
     }
-    .sheet-card h3{
-      margin:0;
-      font-size:1.08rem;
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 5px 10px;
+      color: #cffafe;
+      background: #083344;
+      border: 1px solid #155e75;
+      border-radius: 999px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
     }
-    .sheet-card p{
-      margin:0;
-      color:var(--muted);
+
+    h1, h2, h3, p, li { color: var(--text); }
+
+    h1 {
+      max-width: 820px;
+      margin: 0 0 12px;
+      font-size: clamp(1.8rem, 5vw, 3.1rem);
+      line-height: 1.16;
     }
-    .badge-row{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
+
+    h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 4vw, 1.95rem);
     }
-    .badge{
-      display:inline-block;
-      padding:6px 10px;
-      border-radius:999px;
-      font-size:.84rem;
-      font-weight:700;
+
+    h3 {
+      margin: 0;
+      color: #cffafe;
+      font-size: 1.22rem;
+      line-height: 1.3;
     }
-    .badge-html{
-      background:rgba(56,189,248,.16);
-      color:#bae6fd;
+
+    .hero-text {
+      max-width: 790px;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.5vw, 1.13rem);
     }
-    .badge-sheet{
-      background:rgba(34,197,94,.18);
-      color:#bbf7d0;
+
+    .quote {
+      max-width: 790px;
+      margin: 18px 0 0;
+      padding: 12px 15px;
+      color: #fef9c3;
+      background: var(--surface-deep);
+      border-left: 4px solid var(--primary);
+      border-radius: 9px;
+      font-style: italic;
     }
-    .actions{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      margin-top:16px;
+
+    .overview {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 16px;
+      overflow: hidden;
     }
-    .button{
-      display:inline-block;
-      text-decoration:none;
-      text-align:center;
-      padding:12px 16px;
-      border-radius:12px;
-      background:var(--accent);
-      color:#082f49;
-      font-weight:700;
-      min-width:190px;
+
+    .overview-item {
+      padding: 18px;
+      text-align: center;
+      background: var(--surface);
     }
-    .button.secondary{
-      background:#1d4ed8;
-      color:#eff6ff;
+
+    .overview-number {
+      display: block;
+      color: #a7f3d0;
+      font-size: 1.75rem;
+      font-weight: 900;
+      line-height: 1.1;
     }
-    .notice{
-      padding:14px 16px;
-      border-radius:14px;
-      background:rgba(34,197,94,.12);
-      border:1px solid rgba(34,197,94,.28);
-      color:#dcfce7;
-      margin-top:10px;
+
+    .overview-label {
+      color: var(--muted);
+      font-size: 0.93rem;
     }
-    ol{padding-left:22px}
-    @media (max-width:760px){
-      .grid{grid-template-columns:1fr}
-      .site-title{font-size:1.55rem}
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 30px 0 14px;
+    }
+
+    .section-heading p {
+      max-width: 620px;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .sheet-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .sheet-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      overflow: hidden;
+      transition: transform 0.17s ease, border-color 0.17s ease, box-shadow 0.17s ease;
+    }
+
+    .sheet-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--primary);
+      box-shadow: 0 20px 44px rgba(0, 0, 0, 0.34);
+    }
+
+    .card-top {
+      position: relative;
+      min-height: 150px;
+      padding: 22px 20px;
+      background:
+        linear-gradient(145deg, rgba(14, 116, 144, 0.78), rgba(8, 47, 73, 0.92)),
+        var(--surface-soft);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-number {
+      position: absolute;
+      top: 14px;
+      right: 17px;
+      color: rgba(207, 250, 254, 0.20);
+      font-size: 4.6rem;
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .card-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 48px;
+      height: 48px;
+      margin-bottom: 14px;
+      color: #083344;
+      background: #cffafe;
+      border-radius: 14px;
+      font-size: 1.45rem;
+      font-weight: 900;
+      box-shadow: 0 7px 18px rgba(0, 0, 0, 0.18);
+    }
+
+    .card-body {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .card-description {
+      margin: 10px 0 14px;
+      color: var(--muted);
+    }
+
+    .formula-preview {
+      margin: 0 0 14px;
+      padding: 10px;
+      overflow-x: auto;
+      color: #f8fafc;
+      background: var(--surface-deep);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      text-align: center;
+      font-size: 1rem;
+    }
+
+    .topic-list {
+      margin: 0 0 18px;
+      padding-left: 20px;
+    }
+
+    .topic-list li {
+      margin-bottom: 5px;
+      color: var(--muted);
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: auto;
+      margin-bottom: 16px;
+    }
+
+    .meta-pill,
+    .progress-status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 29px;
+      padding: 4px 9px;
+      color: #dff7ff;
+      background: var(--surface-deep);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+
+    .progress-status.started {
+      color: #052e16;
+      background: #bbf7d0;
+      border-color: #4ade80;
+    }
+
+    .mini-progress {
+      display: none;
+      margin-bottom: 14px;
+    }
+
+    .mini-progress.visible { display: block; }
+
+    .mini-progress-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .mini-track {
+      height: 8px;
+      overflow: hidden;
+      background: #06121e;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+
+    .mini-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #22c55e, var(--primary));
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 52px;
+      padding: 12px 16px;
+      color: #042f3e;
+      background: var(--primary);
+      border: 0;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 850;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+      text-decoration: none;
+    }
+
+    .button.secondary {
+      color: #0f172a;
+      background: #e2e8f0;
+    }
+
+    .button.success {
+      color: #052e16;
+      background: #22c55e;
+    }
+
+    .button:focus,
+    a:focus {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .navigation-panel {
+      margin-top: 28px;
+      padding: 18px;
+    }
+
+    .navigation-panel h2 {
+      margin-bottom: 12px;
+    }
+
+    .navigation-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .site-footer {
+      margin-top: 26px;
+      padding: 20px 16px;
+      color: var(--muted);
+      background: #06121e;
+      border-top: 2px solid var(--border);
+      text-align: center;
+    }
+
+    .site-footer p,
+    .site-footer a {
+      color: var(--muted);
+    }
+
+    .site-footer a { text-decoration: underline; }
+
+    @media (max-width: 940px) {
+      .sheet-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 680px) {
+      body.class-7 { font-size: 15px; }
+
+      .site-header,
+      .page-content {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .header-row {
+        align-items: flex-start;
+      }
+
+      .class-badge {
+        padding: 6px 9px;
+        font-size: 0.83rem;
+      }
+
+      .overview,
+      .sheet-grid,
+      .navigation-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .section-heading {
+        display: block;
+      }
+
+      .section-heading p {
+        margin-top: 7px;
+      }
+
+      .button { min-height: 56px; }
+    }
+
+    @media print {
+      body.class-7 {
+        color: #000;
+        background: #fff;
+      }
+
+      .site-header,
+      .site-footer,
+      .navigation-panel,
+      .button {
+        display: none !important;
+      }
+
+      .hero,
+      .sheet-card,
+      .overview {
+        color: #000 !important;
+        background: #fff !important;
+        box-shadow: none;
+        border-color: #777;
+      }
+
+      h1, h2, h3, p, li,
+      .hero-text, .card-description,
+      .topic-list li, .overview-label {
+        color: #000 !important;
+      }
+
+      .sheet-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
-<body>
+
+<body class="class-7" data-class="7">
   <header class="site-header">
-    <div class="wrapper">
-      <h1 class="site-title">Fizica Galaction</h1>
-      <p class="site-subtitle">Clasa a VII-a • Capitolul 4 • Fișe de lucru</p>
+    <div class="wrapper header-row">
+      <div>
+        <h1 class="site-title">Fizica Galaction</h1>
+        <p class="site-subtitle">Platformă educațională · Școala Gimnazială „Gala Galaction” Mangalia</p>
+      </div>
+      <span class="class-badge">Clasa a VII-a</span>
     </div>
   </header>
 
-  <main class="wrapper">
-    <section class="card">
-      <h2 style="margin-top:0;">Fișe de lucru – Energia mecanică</h2>
-      <p>
-        În această secțiune găsești fișe pentru exersarea relațiilor de calcul,
-        a variațiilor de energie și a problemelor simple despre energia mecanică.
+  <main class="page-content">
+    <section class="hero">
+      <span class="eyebrow">Capitolul 4 · Fișe de lucru</span>
+      <h1>Energia mecanică</h1>
+      <p class="hero-text">
+        Parcurge fișele în ordine pentru a exersa formele energiei mecanice,
+        conservarea acesteia și principalele conversii energetice.
+        Fiecare fișă este organizată în patru pagini și oferă verificare automată.
       </p>
-      <div class="quote">„Fizica nu este o materie dominată de formule, ci de logică.”</div>
-      <div class="actions">
-        <a class="button secondary" href="../index.html">Înapoi la capitol</a>
+      <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică.”</p>
+    </section>
+
+    <section class="overview" aria-label="Prezentarea colecției">
+      <div class="overview-item">
+        <span class="overview-number">6</span>
+        <span class="overview-label">fișe interactive</span>
+      </div>
+      <div class="overview-item">
+        <span class="overview-number">4</span>
+        <span class="overview-label">pagini în fiecare fișă</span>
+      </div>
+      <div class="overview-item">
+        <span class="overview-number">84</span>
+        <span class="overview-label">itemi în total</span>
       </div>
     </section>
 
-    <section class="card">
-      <h2 style="margin-top:0;">Fișele capitolului</h2>
-      <div class="grid">
-        <a class="sheet-card" href="./fisa-1.html">
-          <div class="badge-row">
-            <span class="badge badge-html">HTML</span>
-            <span class="badge badge-sheet">Fișa 1</span>
-          </div>
-          <h3>Fișa 1 – Energia mecanică</h3>
-          <p>
-            Formule esențiale, itemi cu alegere multiplă, calcule simple pentru lucrul mecanic,
-            putere, energie cinetică, energie potențială gravitațională și energie mecanică.
-          </p>
-        </a>
+    <div class="section-heading">
+      <h2>Alege fișa</h2>
+      <p>
+        Ordinea recomandată pornește de la formele energiei și ajunge la
+        conservare și conversii energetice.
+      </p>
+    </div>
 
-        <a class="sheet-card" href="./fisa-2.html">
-          <div class="badge-row">
-            <span class="badge badge-html">HTML</span>
-            <span class="badge badge-sheet">Fișa 2</span>
-          </div>
-          <h3>Fișa 2 – Aplicarea relațiilor de energie</h3>
-          <p>
-            Exerciții despre variația energiilor, conservarea energiei mecanice
-            și variația energiei mecanice în prezența frecării.
+    <section class="sheet-grid" aria-label="Lista fișelor de lucru">
+      <!-- FIȘA 1 -->
+      <article class="sheet-card">
+        <div class="card-top">
+          <span class="card-number" aria-hidden="true">1</span>
+          <span class="card-icon" aria-hidden="true">v²</span>
+          <h3>Energia cinetică</h3>
+        </div>
+        <div class="card-body">
+          <p class="card-description">
+            Exersează energia datorată mișcării și teorema variației energiei cinetice.
           </p>
-        </a>
-      </div>
+          <div class="formula-preview">
+            \[
+              E_c=\frac{mv^2}{2}
+            \]
+          </div>
+          <ul class="topic-list">
+            <li>dependența de masă și viteză;</li>
+            <li>conversii de unități;</li>
+            <li>\(\Delta E_c=L_{\mathrm{total}}\).</li>
+          </ul>
+          <div class="card-meta">
+            <span class="meta-pill">4 pagini</span>
+            <span class="meta-pill">14 itemi</span>
+            <span class="progress-status" id="status-fisa-1">Neîncepută</span>
+          </div>
+          <div class="mini-progress" id="progress-fisa-1">
+            <div class="mini-progress-label">
+              <span>Progres salvat</span>
+              <span id="progress-label-fisa-1">0%</span>
+            </div>
+            <div class="mini-track">
+              <div class="mini-fill" id="progress-fill-fisa-1" style="width:0%"></div>
+            </div>
+          </div>
+          <a class="button" href="fisa-1.html">Deschide fișa 1 ➜</a>
+        </div>
+      </article>
+
+      <!-- FIȘA 2 -->
+      <article class="sheet-card">
+        <div class="card-top">
+          <span class="card-number" aria-hidden="true">2</span>
+          <span class="card-icon" aria-hidden="true">h</span>
+          <h3>Energia potențială gravitațională</h3>
+        </div>
+        <div class="card-body">
+          <p class="card-description">
+            Aplică formula energiei de poziție și analizează nivelul de referință.
+          </p>
+          <div class="formula-preview">
+            \[
+              E_{pg}=mgh
+            \]
+          </div>
+          <ul class="topic-list">
+            <li>nivel de referință;</li>
+            <li>dependența de masă și înălțime;</li>
+            <li>\(\Delta E_{pg}=-L_G\).</li>
+          </ul>
+          <div class="card-meta">
+            <span class="meta-pill">4 pagini</span>
+            <span class="meta-pill">14 itemi</span>
+            <span class="progress-status" id="status-fisa-2">Neîncepută</span>
+          </div>
+          <div class="mini-progress" id="progress-fisa-2">
+            <div class="mini-progress-label">
+              <span>Progres salvat</span>
+              <span id="progress-label-fisa-2">0%</span>
+            </div>
+            <div class="mini-track">
+              <div class="mini-fill" id="progress-fill-fisa-2" style="width:0%"></div>
+            </div>
+          </div>
+          <a class="button" href="fisa-2.html">Deschide fișa 2 ➜</a>
+        </div>
+      </article>
+
+      <!-- FIȘA 3 -->
+      <article class="sheet-card">
+        <div class="card-top">
+          <span class="card-number" aria-hidden="true">3</span>
+          <span class="card-icon" aria-hidden="true">↕</span>
+          <h3>Energia potențială elastică</h3>
+        </div>
+        <div class="card-body">
+          <p class="card-description">
+            Studiază energia acumulată într-un resort alungit sau comprimat.
+          </p>
+          <div class="formula-preview">
+            \[
+              E_{pe}=\frac{k(\Delta l)^2}{2}
+            \]
+          </div>
+          <ul class="topic-list">
+            <li>constanta elastică și deformarea;</li>
+            <li>graficul \(F(\Delta l)\);</li>
+            <li>lucrul forței elastice.</li>
+          </ul>
+          <div class="card-meta">
+            <span class="meta-pill">4 pagini</span>
+            <span class="meta-pill">14 itemi</span>
+            <span class="progress-status" id="status-fisa-3">Neîncepută</span>
+          </div>
+          <div class="mini-progress" id="progress-fisa-3">
+            <div class="mini-progress-label">
+              <span>Progres salvat</span>
+              <span id="progress-label-fisa-3">0%</span>
+            </div>
+            <div class="mini-track">
+              <div class="mini-fill" id="progress-fill-fisa-3" style="width:0%"></div>
+            </div>
+          </div>
+          <a class="button" href="fisa-3.html">Deschide fișa 3 ➜</a>
+        </div>
+      </article>
+
+      <!-- FIȘA 4 -->
+      <article class="sheet-card">
+        <div class="card-top">
+          <span class="card-number" aria-hidden="true">4</span>
+          <span class="card-icon" aria-hidden="true">Σ</span>
+          <h3>Energia mecanică</h3>
+        </div>
+        <div class="card-body">
+          <p class="card-description">
+            Combină formele de energie prezente într-o situație fizică.
+          </p>
+          <div class="formula-preview">
+            \[
+              E_m=E_c+E_p
+            \]
+          </div>
+          <ul class="topic-list">
+            <li>selectarea formelor de energie;</li>
+            <li>calcule mixte;</li>
+            <li>variația energiei mecanice.</li>
+          </ul>
+          <div class="card-meta">
+            <span class="meta-pill">4 pagini</span>
+            <span class="meta-pill">14 itemi</span>
+            <span class="progress-status" id="status-fisa-4">Neîncepută</span>
+          </div>
+          <div class="mini-progress" id="progress-fisa-4">
+            <div class="mini-progress-label">
+              <span>Progres salvat</span>
+              <span id="progress-label-fisa-4">0%</span>
+            </div>
+            <div class="mini-track">
+              <div class="mini-fill" id="progress-fill-fisa-4" style="width:0%"></div>
+            </div>
+          </div>
+          <a class="button" href="fisa-4.html">Deschide fișa 4 ➜</a>
+        </div>
+      </article>
+
+      <!-- FIȘA 5 -->
+      <article class="sheet-card">
+        <div class="card-top">
+          <span class="card-number" aria-hidden="true">5</span>
+          <span class="card-icon" aria-hidden="true">=</span>
+          <h3>Conservarea energiei mecanice</h3>
+        </div>
+        <div class="card-body">
+          <p class="card-description">
+            Urmărește transformarea dintre energia potențială și cea cinetică.
+          </p>
+          <div class="formula-preview">
+            \[
+              E_{m,i}=E_{m,f}
+            \]
+          </div>
+          <ul class="topic-list">
+            <li>cădere liberă fără frecare;</li>
+            <li>viteza obținută din energie;</li>
+            <li>efectul frecării.</li>
+          </ul>
+          <div class="card-meta">
+            <span class="meta-pill">4 pagini</span>
+            <span class="meta-pill">14 itemi</span>
+            <span class="progress-status" id="status-fisa-5">Neîncepută</span>
+          </div>
+          <div class="mini-progress" id="progress-fisa-5">
+            <div class="mini-progress-label">
+              <span>Progres salvat</span>
+              <span id="progress-label-fisa-5">0%</span>
+            </div>
+            <div class="mini-track">
+              <div class="mini-fill" id="progress-fill-fisa-5" style="width:0%"></div>
+            </div>
+          </div>
+          <a class="button" href="fisa-5.html">Deschide fișa 5 ➜</a>
+        </div>
+      </article>
+
+      <!-- FIȘA 6 -->
+      <article class="sheet-card">
+        <div class="card-top">
+          <span class="card-number" aria-hidden="true">6</span>
+          <span class="card-icon" aria-hidden="true">→</span>
+          <h3>Metode de conversie a energiei mecanice</h3>
+        </div>
+        <div class="card-body">
+          <p class="card-description">
+            Identifică transformările energetice din turbine, generatoare și frânare.
+          </p>
+          <div class="formula-preview">
+            \[
+              E_m\longrightarrow E_e,
+              \qquad
+              E_m\longrightarrow E_t
+            \]
+          </div>
+          <ul class="topic-list">
+            <li>turbine și generatoare;</li>
+            <li>energie eoliană și hidroelectrică;</li>
+            <li>lanțuri energetice.</li>
+          </ul>
+          <div class="card-meta">
+            <span class="meta-pill">4 pagini</span>
+            <span class="meta-pill">14 itemi</span>
+            <span class="progress-status" id="status-fisa-6">Neîncepută</span>
+          </div>
+          <div class="mini-progress" id="progress-fisa-6">
+            <div class="mini-progress-label">
+              <span>Progres salvat</span>
+              <span id="progress-label-fisa-6">0%</span>
+            </div>
+            <div class="mini-track">
+              <div class="mini-fill" id="progress-fill-fisa-6" style="width:0%"></div>
+            </div>
+          </div>
+          <a class="button success" href="fisa-6.html">Deschide fișa 6 ➜</a>
+        </div>
+      </article>
     </section>
 
-    <section class="card">
-      <h2 style="margin-top:0;">Ordine recomandată</h2>
-      <ol>
-        <li>Parcurge lecțiile capitolului.</li>
-        <li>Rezolvă fișa 1.</li>
-        <li>Rezolvă fișa 2.</li>
-        <li>Continuă cu recapitularea capitolului.</li>
-      </ol>
-      <div class="notice">
-        După ce finalizezi fișele de lucru, mergi la recapitulare și apoi la testul final.
-      </div>
-      <div class="actions">
-        <a class="button" href="../lectii/index.html">Mergi la lecții</a>
-        <a class="button secondary" href="../recapitulare/index.html">Mergi la recapitulare</a>
+    <section class="navigation-panel">
+      <h2>Continuă în platformă</h2>
+      <div class="navigation-actions">
+        <a class="button secondary" href="../index.html">← Înapoi la capitol</a>
+        <a class="button" href="../lectii/index.html">Vezi lecțiile ➜</a>
+        <a class="button success" href="../recapitulare/index.html">Recapitulare ➜</a>
       </div>
     </section>
   </main>
 
   <footer class="site-footer">
     <div class="wrapper">
-      Fizica Galaction • Clasa a VII-a • Energia mecanică • Fișe de lucru
+      <p>© Fizica Galaction · Prof. DĂNUȚ ANDRONIE</p>
+      <p>
+        E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a><br>
+        Pentru observații, propuneri și sugestii privind platforma educațională.
+      </p>
     </div>
   </footer>
+
+  <script src="../../../assets/js/main.js"></script>
+  <script>
+    const worksheets = [
+      {
+        id: "fisa-1",
+        key: "fizica-galaction-c7-cap4-fisa1-energia-cinetica",
+        pages: 4
+      },
+      {
+        id: "fisa-2",
+        key: "fizica-galaction-c7-cap4-fisa2-energia-potentiala-gravitationala",
+        pages: 4
+      },
+      {
+        id: "fisa-3",
+        key: "fizica-galaction-c7-cap4-fisa3-energia-potentiala-elastica",
+        pages: 4
+      },
+      {
+        id: "fisa-4",
+        key: "fizica-galaction-c7-cap4-fisa4-energia-mecanica",
+        pages: 4
+      },
+      {
+        id: "fisa-5",
+        key: "fizica-galaction-c7-cap4-fisa5-conservarea-energiei-mecanice",
+        pages: 4
+      },
+      {
+        id: "fisa-6",
+        key: "fizica-galaction-c7-cap4-fisa6-conversia-energiei",
+        pages: 4
+      }
+    ];
+
+    function updateSavedProgress() {
+      worksheets.forEach(item => {
+        const status = document.getElementById("status-" + item.id);
+        const progressBox = document.getElementById("progress-" + item.id);
+        const progressLabel = document.getElementById("progress-label-" + item.id);
+        const progressFill = document.getElementById("progress-fill-" + item.id);
+
+        try {
+          const data = JSON.parse(localStorage.getItem(item.key));
+
+          if (!data || typeof data.currentPage !== "number") {
+            return;
+          }
+
+          const pageNumber = Math.max(
+            1,
+            Math.min(item.pages, data.currentPage + 1)
+          );
+          const percent = Math.round(pageNumber / item.pages * 100);
+
+          status.textContent =
+            pageNumber === item.pages ? "Pagina finală" : "Începută";
+          status.classList.add("started");
+          progressBox.classList.add("visible");
+          progressLabel.textContent = percent + "%";
+          progressFill.style.width = percent + "%";
+        } catch {
+          localStorage.removeItem(item.key);
+        }
+      });
+    }
+
+    updateSavedProgress();
+  </script>
 </body>
 </html>

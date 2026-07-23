@@ -1,12 +1,866 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Unde mecanice - Fișe de lucru</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fișe de lucru | Unde mecanice | Fizica Galaction</title>
+  <meta
+    name="description"
+    content="Fișe de lucru interactive pentru clasa a VII-a: unde mecanice, sunete, ecou, caracteristicile sunetului, efectul Doppler și rezonanță."
+  >
+  <link rel="stylesheet" href="../../../assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root {
+      --bg: #071827;
+      --surface: #102a3d;
+      --surface-soft: #17384e;
+      --surface-deep: #0b2233;
+      --text: #f8fafc;
+      --muted: #d5e4ee;
+      --primary: #22d3ee;
+      --success: #4ade80;
+      --border: #4c7185;
+      --focus: #facc15;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body.class-7 {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(34, 211, 238, 0.15), transparent 34rem),
+        radial-gradient(circle at bottom left, rgba(124, 58, 237, 0.10), transparent 30rem),
+        var(--bg);
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    a { color: inherit; }
+
+    .wrapper {
+      width: min(100%, 1160px);
+      margin: 0 auto;
+    }
+
+    .site-header {
+      padding: 18px 16px;
+      color: #fff;
+      background: linear-gradient(135deg, #075985, #0e7490);
+      border-bottom: 3px solid var(--primary);
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .site-title {
+      margin: 0;
+      color: #fff;
+      font-size: clamp(1.35rem, 4vw, 2rem);
+    }
+
+    .site-subtitle {
+      margin: 4px 0 0;
+      color: #e0f2fe;
+      font-size: 0.96rem;
+    }
+
+    .class-badge {
+      flex: 0 0 auto;
+      padding: 8px 12px;
+      color: #083344;
+      background: #cffafe;
+      border: 2px solid #67e8f9;
+      border-radius: 999px;
+      font-weight: 850;
+    }
+
+    .page-content {
+      width: min(100%, 1160px);
+      margin: 0 auto;
+      padding: 18px 16px 32px;
+    }
+
+    .hero,
+    .overview,
+    .sheet-card,
+    .navigation-panel {
+      background: rgba(16, 42, 61, 0.98);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: 0 16px 38px rgba(0, 0, 0, 0.27);
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(22px, 5vw, 42px);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -72px;
+      bottom: -88px;
+      width: 240px;
+      height: 240px;
+      border: 28px solid rgba(34, 211, 238, 0.10);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .hero-wave {
+      position: absolute;
+      right: 26px;
+      top: 22px;
+      width: min(34vw, 330px);
+      opacity: 0.16;
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 10px;
+      padding: 5px 10px;
+      color: #cffafe;
+      background: #083344;
+      border: 1px solid #155e75;
+      border-radius: 999px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+    }
+
+    h1, h2, h3, p, li { color: var(--text); }
+
+    h1 {
+      position: relative;
+      z-index: 1;
+      max-width: 850px;
+      margin: 0 0 12px;
+      font-size: clamp(1.8rem, 5vw, 3.1rem);
+      line-height: 1.16;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 4vw, 1.95rem);
+    }
+
+    h3 {
+      margin: 0;
+      color: #cffafe;
+      font-size: 1.2rem;
+      line-height: 1.3;
+    }
+
+    .hero-text {
+      position: relative;
+      z-index: 1;
+      max-width: 810px;
+      margin: 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.5vw, 1.13rem);
+    }
+
+    .quote {
+      position: relative;
+      z-index: 1;
+      max-width: 790px;
+      margin: 18px 0 0;
+      padding: 12px 15px;
+      color: #fef9c3;
+      background: var(--surface-deep);
+      border-left: 4px solid var(--primary);
+      border-radius: 9px;
+      font-style: italic;
+    }
+
+    .overview {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1px;
+      margin-top: 16px;
+      overflow: hidden;
+    }
+
+    .overview-item {
+      padding: 18px;
+      text-align: center;
+      background: var(--surface);
+    }
+
+    .overview-number {
+      display: block;
+      color: #a7f3d0;
+      font-size: 1.75rem;
+      font-weight: 900;
+      line-height: 1.1;
+    }
+
+    .overview-label {
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 16px;
+      margin: 30px 0 14px;
+    }
+
+    .section-heading p {
+      max-width: 650px;
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .sheet-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .sheet-card {
+      display: flex;
+      flex-direction: column;
+      min-height: 100%;
+      overflow: hidden;
+      transition: transform 0.17s ease, border-color 0.17s ease, box-shadow 0.17s ease;
+    }
+
+    .sheet-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--primary);
+      box-shadow: 0 20px 44px rgba(0, 0, 0, 0.34);
+    }
+
+    .card-top {
+      position: relative;
+      min-height: 148px;
+      padding: 22px 20px;
+      background:
+        linear-gradient(145deg, rgba(14, 116, 144, 0.78), rgba(8, 47, 73, 0.92)),
+        var(--surface-soft);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-number {
+      position: absolute;
+      top: 14px;
+      right: 17px;
+      color: rgba(207, 250, 254, 0.20);
+      font-size: 4.6rem;
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .card-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 50px;
+      height: 48px;
+      margin-bottom: 14px;
+      padding: 0 10px;
+      color: #083344;
+      background: #cffafe;
+      border-radius: 14px;
+      font-size: 1.13rem;
+      font-weight: 900;
+      box-shadow: 0 7px 18px rgba(0, 0, 0, 0.18);
+    }
+
+    .card-body {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .card-description {
+      margin: 10px 0 14px;
+      color: var(--muted);
+    }
+
+    .formula-preview {
+      margin: 0 0 14px;
+      padding: 10px;
+      overflow-x: auto;
+      color: #f8fafc;
+      background: var(--surface-deep);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      text-align: center;
+      font-size: 0.98rem;
+    }
+
+    .topic-list {
+      margin: 0 0 18px;
+      padding-left: 20px;
+    }
+
+    .topic-list li {
+      margin-bottom: 5px;
+      color: var(--muted);
+    }
+
+    .card-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-top: auto;
+      margin-bottom: 14px;
+    }
+
+    .meta-pill,
+    .progress-status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 29px;
+      padding: 4px 9px;
+      color: #dff7ff;
+      background: var(--surface-deep);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 750;
+    }
+
+    .progress-status.started {
+      color: #052e16;
+      background: #bbf7d0;
+      border-color: #4ade80;
+    }
+
+    .mini-progress {
+      display: none;
+      margin-bottom: 14px;
+    }
+
+    .mini-progress.visible { display: block; }
+
+    .mini-progress-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 5px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .mini-track {
+      height: 8px;
+      overflow: hidden;
+      background: #06121e;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+
+    .mini-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #22c55e, var(--primary));
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 52px;
+      padding: 12px 16px;
+      color: #042f3e;
+      background: var(--primary);
+      border: 0;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 850;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .button:hover {
+      filter: brightness(1.06);
+      transform: translateY(-1px);
+      text-decoration: none;
+    }
+
+    .button.secondary {
+      color: #0f172a;
+      background: #e2e8f0;
+    }
+
+    .button.success {
+      color: #052e16;
+      background: #22c55e;
+    }
+
+    .button:focus,
+    a:focus {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .navigation-panel {
+      margin-top: 28px;
+      padding: 18px;
+    }
+
+    .navigation-panel h2 {
+      margin-bottom: 12px;
+    }
+
+    .navigation-actions {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .site-footer {
+      margin-top: 26px;
+      padding: 20px 16px;
+      color: var(--muted);
+      background: #06121e;
+      border-top: 2px solid var(--border);
+      text-align: center;
+    }
+
+    .site-footer p,
+    .site-footer a {
+      color: var(--muted);
+    }
+
+    .site-footer a { text-decoration: underline; }
+
+    @media (max-width: 980px) {
+      .sheet-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 680px) {
+      body.class-7 { font-size: 15px; }
+
+      .site-header,
+      .page-content {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .header-row { align-items: flex-start; }
+
+      .class-badge {
+        padding: 6px 9px;
+        font-size: 0.83rem;
+      }
+
+      .overview,
+      .sheet-grid,
+      .navigation-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .section-heading { display: block; }
+
+      .section-heading p { margin-top: 7px; }
+
+      .hero-wave { display: none; }
+
+      .button { min-height: 56px; }
+    }
+
+    @media print {
+      body.class-7 {
+        color: #000;
+        background: #fff;
+      }
+
+      .site-header,
+      .site-footer,
+      .navigation-panel,
+      .button {
+        display: none !important;
+      }
+
+      .hero,
+      .sheet-card,
+      .overview {
+        color: #000 !important;
+        background: #fff !important;
+        box-shadow: none;
+        border-color: #777;
+      }
+
+      h1, h2, h3, p, li,
+      .hero-text, .card-description,
+      .topic-list li, .overview-label {
+        color: #000 !important;
+      }
+
+      .sheet-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
-<body>
-  <h1>Unde mecanice - Fișe de lucru</h1>
-  <p>Pagina este în lucru.</p>
+
+<body class="class-7" data-class="7">
+  <header class="site-header">
+    <div class="wrapper header-row">
+      <div>
+        <h1 class="site-title">Fizica Galaction</h1>
+        <p class="site-subtitle">Platformă educațională · Școala Gimnazială „Gala Galaction” Mangalia</p>
+      </div>
+      <span class="class-badge">Clasa a VII-a</span>
+    </div>
+  </header>
+
+  <main class="page-content">
+    <section class="hero">
+      <svg class="hero-wave" viewBox="0 0 500 220" aria-hidden="true">
+        <path d="M0,110 C50,10 100,10 150,110 C200,210 250,210 300,110 C350,10 400,10 450,110 C470,150 485,160 500,110"
+              fill="none" stroke="#cffafe" stroke-width="13"/>
+      </svg>
+      <span class="eyebrow">Capitolul 7 · Fișe de lucru</span>
+      <h1>Unde mecanice</h1>
+      <p class="hero-text">
+        Parcurge fișele în ordine pentru a exersa oscilațiile, producerea și
+        propagarea sunetelor, ecoul, caracteristicile sunetului, efectul Doppler
+        și fenomenul de rezonanță.
+      </p>
+      <p class="quote">„Undele mecanice transportă energie printr-un mediu și explică sunetele, ecoul și numeroase fenomene din viața de zi cu zi.”</p>
+    </section>
+
+    <section class="overview" aria-label="Prezentarea colecției">
+      <div class="overview-item">
+        <span class="overview-number">5</span>
+        <span class="overview-label">fișe interactive</span>
+      </div>
+      <div class="overview-item">
+        <span class="overview-number">4</span>
+        <span class="overview-label">pagini în fiecare fișă</span>
+      </div>
+      <div class="overview-item">
+        <span class="overview-number">70</span>
+        <span class="overview-label">itemi în total</span>
+      </div>
+    </section>
+
+    <div class="section-heading">
+      <h2>Alege fișa</h2>
+      <p>
+        Ordinea recomandată începe cu undele mecanice și ajunge la efectul
+        Doppler și rezonanță.
+      </p>
+    </div>
+
+    <section class="sheet-grid" aria-label="Lista fișelor de lucru">
+      <article class="sheet-card">
+        <div class="card-top">
+          <span class="card-number" aria-hidden="true">1</span>
+          <span class="card-icon" aria-hidden="true">λ</span>
+          <h3>Unde mecanice</h3>
+        </div>
+        <div class="card-body">
+          <p class="card-description">
+            Recunoaște oscilațiile, calculează perioada, frecvența și lungimea
+            de undă și diferențiază undele transversale de cele longitudinale.
+          </p>
+          <div class="formula-preview">
+            \[
+              \nu=\frac{1}{T},
+              \qquad
+              \lambda=\frac{v}{\nu}
+            \]
+          </div>
+          <ul class="topic-list">
+            <li>poziție de echilibru și amplitudine;</li>
+            <li>perioadă și frecvență;</li>
+            <li>unde seismice P și S.</li>
+          </ul>
+          <div class="card-meta">
+            <span class="meta-pill">4 pagini</span>
+            <span class="meta-pill">14 itemi</span>
+            <span class="progress-status" id="status-fisa-1">Neîncepută</span>
+          </div>
+          <div class="mini-progress" id="progress-fisa-1">
+            <div class="mini-progress-label">
+              <span>Progres salvat</span>
+              <span id="progress-label-fisa-1">0%</span>
+            </div>
+            <div class="mini-track">
+              <div class="mini-fill" id="progress-fill-fisa-1" style="width:0%"></div>
+            </div>
+          </div>
+          <a class="button" href="fisa-1.html">Deschide fișa 1 ➜</a>
+        </div>
+      </article>
+
+      <article class="sheet-card">
+        <div class="card-top">
+          <span class="card-number" aria-hidden="true">2</span>
+          <span class="card-icon" aria-hidden="true">Hz</span>
+          <h3>Producerea și percepția sunetelor</h3>
+        </div>
+        <div class="card-body">
+          <p class="card-description">
+            Analizează sursele sonore, înălțimea și tăria sunetului, alcătuirea
+            urechii și domeniul audibil.
+          </p>
+          <div class="formula-preview">
+            \[
+              \nu=\frac{N}{t}
+            \]
+          </div>
+          <ul class="topic-list">
+            <li>surse și vibrații sonore;</li>
+            <li>drumul sunetului prin ureche;</li>
+            <li>infrasunete și ultrasunete.</li>
+          </ul>
+          <div class="card-meta">
+            <span class="meta-pill">4 pagini</span>
+            <span class="meta-pill">14 itemi</span>
+            <span class="progress-status" id="status-fisa-2">Neîncepută</span>
+          </div>
+          <div class="mini-progress" id="progress-fisa-2">
+            <div class="mini-progress-label">
+              <span>Progres salvat</span>
+              <span id="progress-label-fisa-2">0%</span>
+            </div>
+            <div class="mini-track">
+              <div class="mini-fill" id="progress-fill-fisa-2" style="width:0%"></div>
+            </div>
+          </div>
+          <a class="button" href="fisa-2.html">Deschide fișa 2 ➜</a>
+        </div>
+      </article>
+
+      <article class="sheet-card">
+        <div class="card-top">
+          <span class="card-number" aria-hidden="true">3</span>
+          <span class="card-icon" aria-hidden="true">↔</span>
+          <h3>Propagarea sunetelor. Ecoul</h3>
+        </div>
+        <div class="card-body">
+          <p class="card-description">
+            Exersează viteza sunetului, compresiile și rarefierile, reflexia,
+            ecoul și măsurarea distanțelor.
+          </p>
+          <div class="formula-preview">
+            \[
+              v=\lambda\nu,
+              \qquad
+              d=\frac{v\Delta t}{2}
+            \]
+          </div>
+          <ul class="topic-list">
+            <li>propagarea în gaze, lichide și solide;</li>
+            <li>reflexia sunetului;</li>
+            <li>ecou, sonar și ecolocație.</li>
+          </ul>
+          <div class="card-meta">
+            <span class="meta-pill">4 pagini</span>
+            <span class="meta-pill">14 itemi</span>
+            <span class="progress-status" id="status-fisa-3">Neîncepută</span>
+          </div>
+          <div class="mini-progress" id="progress-fisa-3">
+            <div class="mini-progress-label">
+              <span>Progres salvat</span>
+              <span id="progress-label-fisa-3">0%</span>
+            </div>
+            <div class="mini-track">
+              <div class="mini-fill" id="progress-fill-fisa-3" style="width:0%"></div>
+            </div>
+          </div>
+          <a class="button" href="fisa-3.html">Deschide fișa 3 ➜</a>
+        </div>
+      </article>
+
+      <article class="sheet-card">
+        <div class="card-top">
+          <span class="card-number" aria-hidden="true">4</span>
+          <span class="card-icon" aria-hidden="true">A</span>
+          <h3>Caracteristici ale sunetului</h3>
+        </div>
+        <div class="card-body">
+          <p class="card-description">
+            Diferențiază înălțimea, tăria și timbrul și explică sunetele produse
+            de coarde, membrane și coloane de aer.
+          </p>
+          <div class="formula-preview">
+            \[
+              \text{înălțime}\leftrightarrow\nu,
+              \qquad
+              \text{tărie}\leftrightarrow A
+            \]
+          </div>
+          <ul class="topic-list">
+            <li>frecvență și înălțime;</li>
+            <li>amplitudine și tărie;</li>
+            <li>timbrul instrumentelor.</li>
+          </ul>
+          <div class="card-meta">
+            <span class="meta-pill">4 pagini</span>
+            <span class="meta-pill">14 itemi</span>
+            <span class="progress-status" id="status-fisa-4">Neîncepută</span>
+          </div>
+          <div class="mini-progress" id="progress-fisa-4">
+            <div class="mini-progress-label">
+              <span>Progres salvat</span>
+              <span id="progress-label-fisa-4">0%</span>
+            </div>
+            <div class="mini-track">
+              <div class="mini-fill" id="progress-fill-fisa-4" style="width:0%"></div>
+            </div>
+          </div>
+          <a class="button" href="fisa-4.html">Deschide fișa 4 ➜</a>
+        </div>
+      </article>
+
+      <article class="sheet-card">
+        <div class="card-top">
+          <span class="card-number" aria-hidden="true">5</span>
+          <span class="card-icon" aria-hidden="true">ν₀</span>
+          <h3>Efectul Doppler. Rezonanța</h3>
+        </div>
+        <div class="card-body">
+          <p class="card-description">
+            Analizează frecvența percepută pentru surse în mișcare și condiția
+            în care oscilațiile sunt amplificate prin rezonanță.
+          </p>
+          <div class="formula-preview">
+            \[
+              \nu=\frac{v}{\lambda},
+              \qquad
+              \nu_{\text{forțare}}\approx\nu_0
+            \]
+          </div>
+          <ul class="topic-list">
+            <li>apropiere și îndepărtare;</li>
+            <li>ecografie Doppler;</li>
+            <li>frecvență proprie și rezonanță.</li>
+          </ul>
+          <div class="card-meta">
+            <span class="meta-pill">4 pagini</span>
+            <span class="meta-pill">14 itemi</span>
+            <span class="progress-status" id="status-fisa-5">Neîncepută</span>
+          </div>
+          <div class="mini-progress" id="progress-fisa-5">
+            <div class="mini-progress-label">
+              <span>Progres salvat</span>
+              <span id="progress-label-fisa-5">0%</span>
+            </div>
+            <div class="mini-track">
+              <div class="mini-fill" id="progress-fill-fisa-5" style="width:0%"></div>
+            </div>
+          </div>
+          <a class="button success" href="fisa-5.html">Deschide fișa 5 ➜</a>
+        </div>
+      </article>
+    </section>
+
+    <section class="navigation-panel">
+      <h2>Continuă în platformă</h2>
+      <div class="navigation-actions">
+        <a class="button secondary" href="../index.html">← Înapoi la capitol</a>
+        <a class="button" href="../lectii/index.html">Vezi lecțiile ➜</a>
+        <a class="button success" href="../recapitulare/index.html">Recapitulare ➜</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrapper">
+      <p>© Fizica Galaction · Prof. DĂNUȚ ANDRONIE</p>
+      <p>
+        E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a><br>
+        Pentru observații, propuneri și sugestii privind platforma educațională.
+      </p>
+    </div>
+  </footer>
+
+  <script src="../../../assets/js/main.js"></script>
+  <script>
+    const worksheets = [
+      {
+        id: "fisa-1",
+        key: "fizica-galaction-c7-cap7-fisa1-unde-mecanice",
+        pages: 4
+      },
+      {
+        id: "fisa-2",
+        key: "fizica-galaction-c7-cap7-fisa2-producerea-perceptia-sunetelor",
+        pages: 4
+      },
+      {
+        id: "fisa-3",
+        key: "fizica-galaction-c7-cap7-fisa3-propagarea-sunetelor-ecoul",
+        pages: 4
+      },
+      {
+        id: "fisa-4",
+        key: "fizica-galaction-c7-cap7-fisa4-caracteristici-sunetului",
+        pages: 4
+      },
+      {
+        id: "fisa-5",
+        key: "fizica-galaction-c7-cap7-fisa5-doppler-rezonanta",
+        pages: 4
+      }
+    ];
+
+    function updateSavedProgress() {
+      worksheets.forEach(item => {
+        const status = document.getElementById("status-" + item.id);
+        const progressBox = document.getElementById("progress-" + item.id);
+        const progressLabel = document.getElementById("progress-label-" + item.id);
+        const progressFill = document.getElementById("progress-fill-" + item.id);
+
+        try {
+          const data = JSON.parse(localStorage.getItem(item.key));
+
+          if (!data || typeof data.currentPage !== "number") {
+            return;
+          }
+
+          const pageNumber = Math.max(
+            1,
+            Math.min(item.pages, data.currentPage + 1)
+          );
+          const percent = Math.round(pageNumber / item.pages * 100);
+
+          status.textContent =
+            pageNumber === item.pages ? "Pagina finală" : "Începută";
+          status.classList.add("started");
+          progressBox.classList.add("visible");
+          progressLabel.textContent = percent + "%";
+          progressFill.style.width = percent + "%";
+        } catch {
+          localStorage.removeItem(item.key);
+        }
+      });
+    }
+
+    updateSavedProgress();
+  </script>
 </body>
 </html>

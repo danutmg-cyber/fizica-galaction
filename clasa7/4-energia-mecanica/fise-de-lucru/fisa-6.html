@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fișa 1 | Energia cinetică | Fizica Galaction</title>
+  <title>Fișa 6 | Metode de conversie a energiei mecanice | Fizica Galaction</title>
   <meta
     name="description"
-    content="Fișă de lucru interactivă pentru clasa a VII-a: energia cinetică și teorema variației energiei cinetice."
+    content="Fișă de lucru interactivă pentru clasa a VII-a: conversia energiei mecanice în energie electrică sau termică și conversii energetice succesive."
   >
   <link rel="stylesheet" href="../../../assets/css/style.css">
 
@@ -175,7 +175,8 @@
     .formula-card,
     .example-card,
     .question-block,
-    .quick-check {
+    .quick-check,
+    .chain-card {
       margin: 14px 0;
       padding: 16px;
       color: var(--text);
@@ -192,33 +193,72 @@
     .formula-large {
       padding: 6px;
       overflow-x: auto;
-      font-size: clamp(1.12rem, 4vw, 1.5rem);
+      font-size: clamp(1.08rem, 4vw, 1.42rem);
     }
 
     .example-card { border-left: 5px solid var(--success); }
 
-    .dependence-grid {
+    .conversion-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .conversion-grid > div {
+      padding: 14px;
+      background: var(--deep);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .conversion-symbol {
+      display: block;
+      margin-top: 8px;
+      color: #cffafe;
+      font-weight: 850;
+    }
+
+    .chain {
+      display: grid;
+      grid-template-columns: repeat(7, auto);
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      overflow-x: auto;
+      padding: 10px 0;
+    }
+
+    .chain-step {
+      min-width: 105px;
+      padding: 11px;
+      color: #f8fafc;
+      background: var(--deep);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      text-align: center;
+      font-weight: 750;
+    }
+
+    .chain-arrow {
+      color: var(--primary);
+      font-size: 1.5rem;
+      font-weight: 900;
+    }
+
+    .role-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 12px;
       margin: 14px 0;
     }
 
-    .dependence-grid > div {
-      padding: 14px;
+    .role-grid > div {
+      padding: 15px;
       background: var(--deep);
       border: 1px solid var(--border);
       border-radius: 12px;
-    }
-
-    .ratio {
-      display: inline-block;
-      margin-top: 6px;
-      padding: 5px 9px;
-      color: #cffafe;
-      background: #061827;
-      border-radius: 8px;
-      font-weight: 800;
     }
 
     fieldset {
@@ -264,15 +304,6 @@
       accent-color: var(--primary-dark);
     }
 
-    .inline-grid {
-      display: grid;
-      grid-template-columns: minmax(150px, 1.2fr) minmax(150px, 0.8fr);
-      gap: 12px;
-      align-items: center;
-      margin: 10px 0;
-    }
-
-    input[type="text"],
     select {
       width: 100%;
       min-height: 48px;
@@ -284,28 +315,16 @@
       font: inherit;
     }
 
-    input::placeholder {
-      color: #c6d7e0;
-      opacity: 1;
-    }
-
     select option {
       color: #fff;
       background: #061827;
     }
 
-    input:focus,
     select:focus,
     button:focus,
     a:focus {
       outline: 3px solid var(--focus);
       outline-offset: 3px;
-    }
-
-    .unit {
-      color: #cffafe;
-      font-weight: 800;
-      white-space: nowrap;
     }
 
     .feedback {
@@ -418,7 +437,7 @@
 
     [hidden] { display: none !important; }
 
-    @media (max-width: 640px) {
+    @media (max-width: 720px) {
       body.class-7 { font-size: 15px; }
       .page-content { padding: 10px; }
 
@@ -427,15 +446,24 @@
         padding: 16px 13px;
       }
 
-      .inline-grid,
-      .dependence-grid {
+      .conversion-grid,
+      .role-grid {
         grid-template-columns: 1fr;
-        gap: 7px;
+      }
+
+      .chain {
+        grid-template-columns: 1fr;
+        overflow: visible;
+      }
+
+      .chain-arrow {
+        text-align: center;
+        transform: rotate(90deg);
       }
 
       .page-actions { grid-template-columns: 1fr; }
       .page-actions .button { min-height: 56px; }
-      .formula-large { font-size: 1.08rem; }
+      .formula-large { font-size: 1.05rem; }
     }
 
     @media print {
@@ -460,7 +488,9 @@
       .question-block,
       .quick-check,
       .panel,
-      .dependence-grid > div {
+      .conversion-grid > div,
+      .role-grid > div,
+      .chain-step {
         display: block !important;
         color: #000 !important;
         background: #fff !important;
@@ -468,7 +498,7 @@
         border-color: #777;
       }
 
-      h1, h2, h3, p, label, legend, li, .hint, .unit {
+      h1, h2, h3, p, label, legend, li {
         color: #000 !important;
       }
     }
@@ -485,11 +515,11 @@
 
   <main class="page-content">
     <section class="hero">
-      <h1>Fișa 1 – Energia cinetică</h1>
-      <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică.”</p>
+      <h1>Fișa 6 – Metode de conversie a energiei mecanice</h1>
+      <p class="quote">„Energia nu dispare; ea se transformă dintr-o formă în alta.”</p>
       <p class="hint">
-        Parcurge cele 4 pagini. Butonul <strong>„Mergi mai departe”</strong> rămâne vizibil jos.
-        La final, apasă <strong>„Verifică fișa”</strong>.
+        Urmărește sensul săgeților din fiecare lanț energetic. La final,
+        apasă <strong>„Verifică fișa”</strong>.
       </p>
 
       <div class="progress-meta">
@@ -504,39 +534,48 @@
     <section class="worksheet-shell" aria-label="Fișă de lucru">
       <!-- PAGINA 1 -->
       <article class="worksheet-page active" data-page="0">
-        <h2>1. Rețin noțiunile esențiale</h2>
+        <h2>1. Ce înseamnă conversia energiei?</h2>
 
         <div class="formula-card">
           <p>
-            <strong>Energia cinetică</strong> este energia pe care o are un corp datorită
-            mișcării sale față de un sistem de referință ales.
+            <strong>Conversia energiei</strong> este transformarea energiei dintr-o
+            formă în altă formă.
           </p>
-          <div class="formula-large">
-            \[
-              E_c=\frac{m v^2}{2}
-            \]
+        </div>
+
+        <div class="conversion-grid">
+          <div>
+            <h3>Mecanică → electrică</h3>
+            <p>Un generator electric este pus în mișcare.</p>
+            <span class="conversion-symbol">\(E_m\longrightarrow E_e\)</span>
           </div>
-          <p>
-            Masa \(m\) se exprimă în \(\mathrm{kg}\), viteza \(v\) în \(\mathrm{m/s}\),
-            iar energia cinetică în jouli \((\mathrm{J})\).
-          </p>
+          <div>
+            <h3>Mecanică → termică</h3>
+            <p>Frecarea produce încălzire.</p>
+            <span class="conversion-symbol">\(E_m\longrightarrow E_t\)</span>
+          </div>
+          <div>
+            <h3>Termică → mecanică</h3>
+            <p>Aburul sub presiune poate roti o turbină.</p>
+            <span class="conversion-symbol">\(E_t\longrightarrow E_m\)</span>
+          </div>
         </div>
 
         <div class="question-block">
           <fieldset>
-            <legend>1. Energia cinetică este energia pe care un corp o are datorită:</legend>
+            <legend>1. Conversia energiei înseamnă:</legend>
             <div class="option-grid">
               <label class="option-row">
-                <input type="radio" name="q1" value="inaltimii">
-                <span>înălțimii sale față de sol</span>
+                <input type="radio" name="q1" value="transformare">
+                <span>transformarea energiei dintr-o formă în alta</span>
               </label>
               <label class="option-row">
-                <input type="radio" name="q1" value="miscarii">
-                <span>mișcării sale</span>
+                <input type="radio" name="q1" value="disparitie">
+                <span>dispariția energiei</span>
               </label>
               <label class="option-row">
-                <input type="radio" name="q1" value="temperaturii">
-                <span>temperaturii sale</span>
+                <input type="radio" name="q1" value="masa">
+                <span>transformarea energiei în masă, în orice situație</span>
               </label>
             </div>
           </fieldset>
@@ -545,19 +584,19 @@
 
         <div class="question-block">
           <fieldset>
-            <legend>2. Alege formula corectă:</legend>
+            <legend>2. Generatorul electric transformă:</legend>
             <div class="option-grid">
               <label class="option-row">
-                <input type="radio" name="q2" value="mv2div2">
-                <span>\(E_c=\frac{m v^2}{2}\)</span>
+                <input type="radio" name="q2" value="mecanica_electrica">
+                <span>energia mecanică în energie electrică</span>
               </label>
               <label class="option-row">
-                <input type="radio" name="q2" value="mvdiv2">
-                <span>\(E_c=\frac{m v}{2}\)</span>
+                <input type="radio" name="q2" value="electrica_masa">
+                <span>energia electrică în masă</span>
               </label>
               <label class="option-row">
-                <input type="radio" name="q2" value="mgh">
-                <span>\(E_c=mgh\)</span>
+                <input type="radio" name="q2" value="temperatura_volum">
+                <span>temperatura în volum</span>
               </label>
             </div>
           </fieldset>
@@ -565,172 +604,229 @@
         </div>
 
         <div class="question-block">
-          <label for="q3">
-            <strong>3. Unitatea de măsură în S.I. pentru energia cinetică este:</strong>
-          </label>
+          <label for="q3"><strong>3. Prin frecare, o parte din energia mecanică devine:</strong></label>
           <select id="q3">
             <option value="">Alege varianta...</option>
-            <option value="W">watt (W)</option>
-            <option value="J">joule (J)</option>
-            <option value="N">newton (N)</option>
-            <option value="ms">metru pe secundă (m/s)</option>
+            <option value="termica">energie termică sau internă</option>
+            <option value="nucleara">energie nucleară</option>
+            <option value="masa">masă</option>
           </select>
           <div id="fb-q3" class="feedback" aria-live="polite"></div>
-        </div>
-
-        <div class="notice">
-          Un corp aflat în repaus față de sistemul de referință ales are \(v=0\),
-          deci \(E_c=0\).
         </div>
       </article>
 
       <!-- PAGINA 2 -->
       <article class="worksheet-page" data-page="1">
-        <h2>2. Calculez energia cinetică</h2>
-        <p class="hint">
-          Transformă mai întâi toate datele în unități S.I. Scrie doar valoarea numerică.
-        </p>
+        <h2>2. Turbina eoliană și hidrocentrala</h2>
 
-        <div class="example-card">
-          <h3>Exemplu numeric</h3>
-          <div class="formula-large">
-            \[
-              E_c=\frac{m v^2}{2}
-              =\frac{2\,\mathrm{kg}\cdot(3\,\mathrm{m/s})^2}{2}
-              =9\,\mathrm{J}
-            \]
+        <div class="role-grid">
+          <div>
+            <h3>Rolul turbinei</h3>
+            <p>
+              Turbina preia energie de la fluidul aflat în mișcare și capătă
+              energie mecanică de rotație.
+            </p>
+          </div>
+          <div>
+            <h3>Rolul generatorului</h3>
+            <p>
+              Generatorul transformă energia mecanică de rotație în energie electrică.
+            </p>
+          </div>
+        </div>
+
+        <div class="chain-card">
+          <h3>Lanțul energetic al turbinei eoliene</h3>
+          <div class="chain" aria-label="Lanț energetic eolian">
+            <span class="chain-step">\(E_c\) a aerului</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-step">\(E_m\) a palelor</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-step">generator</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-step">\(E_e\)</span>
+          </div>
+        </div>
+
+        <div class="chain-card">
+          <h3>Lanțul energetic al hidrocentralei</h3>
+          <div class="chain" aria-label="Lanț energetic hidrocentrală">
+            <span class="chain-step">\(E_{pg}\) a apei</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-step">\(E_c\) a apei</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-step">\(E_m\) a turbinei</span>
+            <span class="chain-arrow">→</span>
+            <span class="chain-step">\(E_e\)</span>
           </div>
         </div>
 
         <div class="question-block">
-          <label for="q4">
-            <strong>4.</strong> Un corp cu masa \(m=400\,\mathrm{g}\) se deplasează cu
-            \(v=10\,\mathrm{m/s}\). Calculează energia cinetică.
-          </label>
-          <div class="inline-grid">
-            <input id="q4" type="text" inputmode="decimal" placeholder="Rezultat numeric">
-            <span class="unit">J</span>
-          </div>
+          <fieldset>
+            <legend>4. Într-o turbină eoliană, lanțul corect este:</legend>
+            <div class="option-grid">
+              <label class="option-row">
+                <input type="radio" name="q4" value="eolian_corect">
+                <span>\(E_c\) a aerului → \(E_m\) a palelor → \(E_e\)</span>
+              </label>
+              <label class="option-row">
+                <input type="radio" name="q4" value="eolian_gresit1">
+                <span>\(E_e\) → masă → volum</span>
+              </label>
+              <label class="option-row">
+                <input type="radio" name="q4" value="eolian_gresit2">
+                <span>căldură → culoare → lungime</span>
+              </label>
+            </div>
+          </fieldset>
           <div id="fb-q4" class="feedback" aria-live="polite"></div>
         </div>
 
         <div class="question-block">
-          <label for="q5">
-            <strong>5.</strong> Un corp cu masa \(m=2\,\mathrm{kg}\) are viteza
-            \(v=6\,\mathrm{m/s}\). Calculează \(E_c\).
-          </label>
-          <div class="inline-grid">
-            <input id="q5" type="text" inputmode="decimal" placeholder="Rezultat numeric">
-            <span class="unit">J</span>
-          </div>
+          <fieldset>
+            <legend>5. Într-o hidrocentrală, turbina este pusă în mișcare de:</legend>
+            <div class="option-grid">
+              <label class="option-row">
+                <input type="radio" name="q5" value="apa">
+                <span>apa aflată în mișcare</span>
+              </label>
+              <label class="option-row">
+                <input type="radio" name="q5" value="culoarea">
+                <span>culoarea apei</span>
+              </label>
+              <label class="option-row">
+                <input type="radio" name="q5" value="cladirea">
+                <span>masa clădirii</span>
+              </label>
+            </div>
+          </fieldset>
           <div id="fb-q5" class="feedback" aria-live="polite"></div>
         </div>
 
         <div class="question-block">
-          <label for="q6">
-            <strong>6.</strong> Un automobil cu masa \(m=1{,}5\,\mathrm{t}\) se deplasează
-            cu viteza \(v=72\,\mathrm{km/h}\). Calculează energia cinetică.
-          </label>
-          <div class="inline-grid">
-            <input id="q6" type="text" inputmode="decimal" placeholder="Rezultat numeric">
-            <span class="unit">J</span>
-          </div>
+          <fieldset>
+            <legend>6. Afirmația corectă despre turbinele eoliene este:</legend>
+            <div class="option-grid">
+              <label class="option-row">
+                <input type="radio" name="q6" value="corect">
+                <span>în timpul funcționării nu ard combustibili și nu emit direct gaze de ardere</span>
+              </label>
+              <label class="option-row">
+                <input type="radio" name="q6" value="absolut">
+                <span>nu au niciodată niciun impact asupra mediului</span>
+              </label>
+              <label class="option-row">
+                <input type="radio" name="q6" value="uniform">
+                <span>funcționează uniform, indiferent de viteza vântului</span>
+              </label>
+            </div>
+          </fieldset>
           <div id="fb-q6" class="feedback" aria-live="polite"></div>
         </div>
 
         <div class="notice">
-          Conversii utile:
-          \(400\,\mathrm{g}=0{,}4\,\mathrm{kg}\),
-          \(1{,}5\,\mathrm{t}=1500\,\mathrm{kg}\),
-          \(72\,\mathrm{km/h}=20\,\mathrm{m/s}\).
+          Producția eoliană depinde de viteza vântului. Fabricarea, transportul,
+          instalarea și întreținerea folosesc materiale și resurse.
         </div>
       </article>
 
       <!-- PAGINA 3 -->
       <article class="worksheet-page" data-page="2">
-        <h2>3. Descopăr dependențele</h2>
+        <h2>3. Conversii prin frecare și prin abur</h2>
 
-        <div class="dependence-grid">
-          <div>
-            <h3>Dependența de masă</h3>
-            <p>La aceeași viteză, energia cinetică este direct proporțională cu masa.</p>
-            <span class="ratio">\(m\) de 2 ori → \(E_c\) de 2 ori</span>
+        <div class="example-card">
+          <h3>Frânarea unei biciclete</h3>
+          <p>
+            Energia cinetică a bicicletei scade, iar frânele și roata se încălzesc.
+          </p>
+          <div class="formula-large">
+            \[
+              E_c\longrightarrow E_t
+            \]
           </div>
-          <div>
-            <h3>Dependența de viteză</h3>
-            <p>
-              La aceeași masă, energia cinetică este proporțională cu pătratul vitezei.
-            </p>
-            <span class="ratio">\(v\) de 2 ori → \(E_c\) de 4 ori</span>
+        </div>
+
+        <div class="example-card">
+          <h3>Turbină pusă în mișcare de abur</h3>
+          <p>
+            Energia termică produce mișcare, iar generatorul poate produce apoi
+            energie electrică.
+          </p>
+          <div class="formula-large">
+            \[
+              E_t\longrightarrow E_m\longrightarrow E_e
+            \]
           </div>
         </div>
 
         <div class="question-block">
-          <label for="q7">
-            <strong>7.</strong> Un corp are \(E_c=100\,\mathrm{J}\) și
-            \(v=10\,\mathrm{m/s}\). Determină masa corpului.
-          </label>
-          <div class="inline-grid">
-            <input id="q7" type="text" inputmode="decimal" placeholder="Rezultat numeric">
-            <span class="unit">kg</span>
-          </div>
+          <fieldset>
+            <legend>7. La frânarea unei biciclete, o parte din energia mecanică devine:</legend>
+            <div class="option-grid">
+              <label class="option-row">
+                <input type="radio" name="q7" value="termica">
+                <span>energie termică</span>
+              </label>
+              <label class="option-row">
+                <input type="radio" name="q7" value="nucleara">
+                <span>energie nucleară</span>
+              </label>
+              <label class="option-row">
+                <input type="radio" name="q7" value="elastica">
+                <span>în principal energie potențială elastică</span>
+              </label>
+            </div>
+          </fieldset>
           <div id="fb-q7" class="feedback" aria-live="polite"></div>
         </div>
 
         <div class="question-block">
-          <label for="q8">
-            <strong>8.</strong> Un corp cu masa \(m=4\,\mathrm{kg}\) are
-            \(E_c=200\,\mathrm{J}\). Determină viteza.
-          </label>
-          <div class="inline-grid">
-            <input id="q8" type="text" inputmode="decimal" placeholder="Rezultat numeric">
-            <span class="unit">m/s</span>
-          </div>
-          <div id="fb-q8" class="feedback" aria-live="polite"></div>
-        </div>
-
-        <div class="quick-check">
           <fieldset>
-            <legend>
-              9. Dacă viteza unui corp se dublează, iar masa rămâne constantă,
-              energia cinetică:
-            </legend>
+            <legend>8. Un exemplu de conversie \(E_t\rightarrow E_m\) este:</legend>
             <div class="option-grid">
               <label class="option-row">
-                <input type="radio" name="q9" value="dubleaza">
-                <span>se dublează</span>
+                <input type="radio" name="q8" value="abur">
+                <span>aburul sub presiune care rotește o turbină</span>
               </label>
               <label class="option-row">
-                <input type="radio" name="q9" value="cvadrupleaza">
-                <span>crește de 4 ori</span>
+                <input type="radio" name="q8" value="carte">
+                <span>o carte nemișcată pe masă</span>
               </label>
               <label class="option-row">
-                <input type="radio" name="q9" value="injumatateste">
-                <span>se înjumătățește</span>
+                <input type="radio" name="q8" value="rigla">
+                <span>o riglă care măsoară lungimea</span>
               </label>
             </div>
           </fieldset>
+          <div id="fb-q8" class="feedback" aria-live="polite"></div>
+        </div>
+
+        <div class="question-block">
+          <label for="q9"><strong>9. Completează lanțul: energie termică → energie mecanică → ...</strong></label>
+          <select id="q9">
+            <option value="">Alege varianta...</option>
+            <option value="electrica">energie electrică</option>
+            <option value="masa">masă</option>
+            <option value="volum">volum</option>
+          </select>
           <div id="fb-q9" class="feedback" aria-live="polite"></div>
         </div>
 
-        <div class="quick-check">
+        <div class="question-block">
           <fieldset>
-            <legend>
-              10. Dacă masa se triplează, iar viteza rămâne constantă,
-              energia cinetică:
-            </legend>
+            <legend>10. În timpul unei conversii reale:</legend>
             <div class="option-grid">
               <label class="option-row">
-                <input type="radio" name="q10" value="noua">
-                <span>crește de 9 ori</span>
+                <input type="radio" name="q10" value="disipare">
+                <span>o parte din energie se poate transforma în căldură disipată în mediul înconjurător</span>
               </label>
               <label class="option-row">
-                <input type="radio" name="q10" value="triplu">
-                <span>crește de 3 ori</span>
+                <input type="radio" name="q10" value="dispare">
+                <span>o parte din energie dispare complet</span>
               </label>
               <label class="option-row">
-                <input type="radio" name="q10" value="neschimbata">
-                <span>rămâne neschimbată</span>
+                <input type="radio" name="q10" value="masa">
+                <span>toată energia devine masă</span>
               </label>
             </div>
           </fieldset>
@@ -740,35 +836,23 @@
 
       <!-- PAGINA 4 -->
       <article class="worksheet-page" data-page="3">
-        <h2>4. Teorema variației energiei cinetice</h2>
-
-        <div class="formula-card">
-          <p>
-            Variația energiei cinetice este egală cu lucrul mecanic total al forțelor
-            care acționează asupra corpului.
-          </p>
-          <div class="formula-large">
-            \[
-              \Delta E_c=E_{c,f}-E_{c,i}=L_{\mathrm{total}}
-            \]
-          </div>
-        </div>
+        <h2>4. Verificare finală – lanțuri energetice</h2>
 
         <div class="quick-check">
           <fieldset>
-            <legend>11. Dacă lucrul mecanic total este pozitiv, energia cinetică:</legend>
+            <legend>11. Într-un lanț energetic, fiecare săgeată indică:</legend>
             <div class="option-grid">
               <label class="option-row">
-                <input type="radio" name="q11" value="creste">
-                <span>crește</span>
+                <input type="radio" name="q11" value="transfer_transformare">
+                <span>o transformare sau un transfer de energie</span>
               </label>
               <label class="option-row">
-                <input type="radio" name="q11" value="scade">
-                <span>scade</span>
+                <input type="radio" name="q11" value="disparitie">
+                <span>dispariția unei cantități de energie</span>
               </label>
               <label class="option-row">
-                <input type="radio" name="q11" value="zero">
-                <span>este întotdeauna zero</span>
+                <input type="radio" name="q11" value="culoare">
+                <span>schimbarea culorii instalației</span>
               </label>
             </div>
           </fieldset>
@@ -776,45 +860,62 @@
         </div>
 
         <div class="question-block">
-          <label for="q12">
-            <strong>12.</strong> Un corp de \(4\,\mathrm{kg}\) își mărește viteza de la
-            \(2\,\mathrm{m/s}\) la \(4\,\mathrm{m/s}\). Calculează lucrul mecanic total.
-          </label>
-          <div class="inline-grid">
-            <input id="q12" type="text" inputmode="decimal" placeholder="Rezultat numeric">
-            <span class="unit">J</span>
-          </div>
+          <fieldset>
+            <legend>12. Care succesiune descrie corect o hidrocentrală?</legend>
+            <div class="option-grid">
+              <label class="option-row">
+                <input type="radio" name="q12" value="hidro">
+                <span>\(E_{pg}\) a apei → \(E_c\) a apei → \(E_m\) a turbinei → \(E_e\)</span>
+              </label>
+              <label class="option-row">
+                <input type="radio" name="q12" value="hidro_gresit1">
+                <span>\(E_e\) → \(E_{pg}\) → culoare</span>
+              </label>
+              <label class="option-row">
+                <input type="radio" name="q12" value="hidro_gresit2">
+                <span>masă → temperatură → volum</span>
+              </label>
+            </div>
+          </fieldset>
           <div id="fb-q12" class="feedback" aria-live="polite"></div>
         </div>
 
         <div class="question-block">
-          <label for="q13">
-            <strong>13.</strong> Un corp de \(10\,\mathrm{kg}\), având viteza
-            \(10\,\mathrm{m/s}\), se oprește. Calculează lucrul mecanic total efectuat
-            asupra corpului.
-          </label>
-          <div class="inline-grid">
-            <input id="q13" type="text" inputmode="decimal" placeholder="Include semnul">
-            <span class="unit">J</span>
-          </div>
+          <fieldset>
+            <legend>13. Turbina și generatorul:</legend>
+            <div class="option-grid">
+              <label class="option-row">
+                <input type="radio" name="q13" value="roluri_diferite">
+                <span>au roluri diferite: turbina primește energie mecanică, generatorul produce energie electrică</span>
+              </label>
+              <label class="option-row">
+                <input type="radio" name="q13" value="acelasi">
+                <span>sunt exact același dispozitiv</span>
+              </label>
+              <label class="option-row">
+                <input type="radio" name="q13" value="fara_energie">
+                <span>nu participă la transferul sau conversia energiei</span>
+              </label>
+            </div>
+          </fieldset>
           <div id="fb-q13" class="feedback" aria-live="polite"></div>
         </div>
 
-        <div class="quick-check">
+        <div class="question-block">
           <fieldset>
-            <legend>14. Dacă \(L_{\mathrm{total}}=0\), atunci:</legend>
+            <legend>14. Concluzia corectă este:</legend>
             <div class="option-grid">
               <label class="option-row">
-                <input type="radio" name="q14" value="ec_constanta">
-                <span>energia cinetică rămâne constantă</span>
+                <input type="radio" name="q14" value="se_transforma">
+                <span>energia nu dispare; se transformă și se transferă</span>
               </label>
               <label class="option-row">
-                <input type="radio" name="q14" value="ec_zero">
-                <span>energia cinetică devine obligatoriu zero</span>
+                <input type="radio" name="q14" value="se_pierde">
+                <span>energia dispare la fiecare conversie</span>
               </label>
               <label class="option-row">
-                <input type="radio" name="q14" value="masa_zero">
-                <span>masa corpului devine zero</span>
+                <input type="radio" name="q14" value="ramane_forma">
+                <span>energia rămâne întotdeauna în aceeași formă</span>
               </label>
             </div>
           </fieldset>
@@ -828,27 +929,15 @@
       </article>
 
       <nav class="page-actions" aria-label="Navigarea în fișă">
-        <button
-          type="button"
-          class="button secondary"
-          id="back-btn"
-          onclick="changePage(-1)"
-        >⬅ Înapoi</button>
-
-        <button
-          type="button"
-          class="button"
-          id="next-btn"
-          onclick="changePage(1)"
-        >Mergi mai departe ➡</button>
-
-        <button
-          type="button"
-          class="button success"
-          id="check-btn"
-          onclick="checkWorksheet()"
-          hidden
-        >Verifică fișa ✓</button>
+        <button type="button" class="button secondary" id="back-btn" onclick="changePage(-1)">
+          ⬅ Înapoi
+        </button>
+        <button type="button" class="button" id="next-btn" onclick="changePage(1)">
+          Mergi mai departe ➡
+        </button>
+        <button type="button" class="button success" id="check-btn" onclick="checkWorksheet()" hidden>
+          Verifică fișa ✓
+        </button>
       </nav>
     </section>
 
@@ -866,7 +955,7 @@
       <h2>Continuă în platformă</h2>
       <div class="page-actions static-actions">
         <a class="button secondary" href="index.html">Înapoi la fișe</a>
-        <a class="button" href="../lectii/lectia-1.html">Vezi lecția 1</a>
+        <a class="button" href="../lectii/lectia-6.html">Vezi lecția 6</a>
       </div>
     </section>
   </main>
@@ -883,23 +972,13 @@
 
   <script src="../../../assets/js/main.js"></script>
   <script>
-    const STORAGE_KEY = "fizica-galaction-c7-cap4-fisa1-energia-cinetica";
+    const STORAGE_KEY = "fizica-galaction-c7-cap4-fisa6-conversia-energiei";
     const pages = [...document.querySelectorAll(".worksheet-page")];
     let currentPage = 0;
 
     function radioValue(name) {
       const item = document.querySelector(`input[name="${name}"]:checked`);
       return item ? item.value : "";
-    }
-
-    function numberValue(id) {
-      const raw = String(document.getElementById(id).value)
-        .trim()
-        .replace(",", ".")
-        .replace(/\s+/g, "")
-        .replace(/[a-zA-ZăâîșțĂÂÎȘȚ]/g, "");
-
-      return Number(raw);
     }
 
     function feedback(id, ok, answer) {
@@ -938,20 +1017,14 @@
 
     function changePage(step) {
       saveProgress();
-      currentPage = Math.max(
-        0,
-        Math.min(pages.length - 1, currentPage + step)
-      );
+      currentPage = Math.max(0, Math.min(pages.length - 1, currentPage + step));
       updateNavigation();
     }
 
     function saveProgress() {
-      const data = {
-        currentPage,
-        fields: {}
-      };
+      const data = { currentPage, fields: {} };
 
-      document.querySelectorAll("input[type='text'], select").forEach(element => {
+      document.querySelectorAll("select").forEach(element => {
         data.fields[element.id] = element.value;
       });
 
@@ -1000,40 +1073,25 @@
     function checkWorksheet() {
       let score = 0;
 
-      const textItems = [
-        ["q1", radioValue("q1"), "miscarii", "mișcării sale"],
-        ["q2", radioValue("q2"), "mv2div2", "Ec = mv² / 2"],
-        ["q3", document.getElementById("q3").value, "J", "joule (J)"],
-        ["q9", radioValue("q9"), "cvadrupleaza", "crește de 4 ori"],
-        ["q10", radioValue("q10"), "triplu", "crește de 3 ori"],
-        ["q11", radioValue("q11"), "creste", "energia cinetică crește"],
-        ["q14", radioValue("q14"), "ec_constanta", "energia cinetică rămâne constantă"]
+      const items = [
+        ["q1", radioValue("q1"), "transformare", "transformarea energiei dintr-o formă în alta"],
+        ["q2", radioValue("q2"), "mecanica_electrica", "energia mecanică în energie electrică"],
+        ["q3", document.getElementById("q3").value, "termica", "energie termică sau internă"],
+        ["q4", radioValue("q4"), "eolian_corect", "Ec a aerului → Em a palelor → Ee"],
+        ["q5", radioValue("q5"), "apa", "apa aflată în mișcare"],
+        ["q6", radioValue("q6"), "corect", "în timpul funcționării nu ard combustibili și nu emit direct gaze de ardere"],
+        ["q7", radioValue("q7"), "termica", "energie termică"],
+        ["q8", radioValue("q8"), "abur", "aburul sub presiune care rotește o turbină"],
+        ["q9", document.getElementById("q9").value, "electrica", "energie electrică"],
+        ["q10", radioValue("q10"), "disipare", "o parte se poate transforma în căldură disipată"],
+        ["q11", radioValue("q11"), "transfer_transformare", "o transformare sau un transfer de energie"],
+        ["q12", radioValue("q12"), "hidro", "Epg → Ec → Em → Ee"],
+        ["q13", radioValue("q13"), "roluri_diferite", "turbina și generatorul au roluri diferite"],
+        ["q14", radioValue("q14"), "se_transforma", "energia nu dispare; se transformă și se transferă"]
       ];
 
-      textItems.forEach(([id, value, expected, answer]) => {
+      items.forEach(([id, value, expected, answer]) => {
         const ok = value === expected;
-
-        if (ok) {
-          score++;
-        }
-
-        feedback(id, ok, answer);
-      });
-
-      const numericItems = [
-        ["q4", 20, "20 J"],
-        ["q5", 36, "36 J"],
-        ["q6", 300000, "300 000 J"],
-        ["q7", 2, "2 kg"],
-        ["q8", 10, "10 m/s"],
-        ["q12", 24, "24 J"],
-        ["q13", -500, "−500 J"]
-      ];
-
-      numericItems.forEach(([id, expected, answer]) => {
-        const value = numberValue(id);
-        const ok = Number.isFinite(value) &&
-          Math.abs(value - expected) < 0.01;
 
         if (ok) {
           score++;
@@ -1047,13 +1105,13 @@
       let message;
 
       if (percent >= 90) {
-        message = "Excelent! Stăpânești foarte bine energia cinetică.";
+        message = "Excelent! Identifici corect conversiile și lanțurile energetice.";
       } else if (percent >= 70) {
         message = "Foarte bine! Mai verifică itemii marcați.";
       } else if (percent >= 50) {
-        message = "Ești pe drumul cel bun. Recitește formula și conversiile.";
+        message = "Ești pe drumul cel bun. Urmărește rolul turbinei și al generatorului.";
       } else {
-        message = "Reia lecția 1 și încearcă din nou, pas cu pas.";
+        message = "Reia lecția 6 și urmărește sensul săgeților din lanțurile energetice.";
       }
 
       document.getElementById("score-number").textContent =
@@ -1076,10 +1134,6 @@
     }
 
     function resetWorksheet() {
-      document.querySelectorAll("input[type='text']").forEach(element => {
-        element.value = "";
-      });
-
       document.querySelectorAll("select").forEach(element => {
         element.value = "";
       });
@@ -1102,7 +1156,6 @@
     }
 
     document.addEventListener("change", saveProgress);
-    document.addEventListener("input", saveProgress);
 
     loadProgress();
     updateNavigation();

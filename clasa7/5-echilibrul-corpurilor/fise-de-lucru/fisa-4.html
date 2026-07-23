@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fișa 4 | Scripetele | Fizica Galaction</title>
+  <meta
+    name="description"
+    content="Fișă de lucru interactivă pentru clasa a VII-a: scripetele fix, mobil și compus."
+  >
+  <link rel="stylesheet" href="../../../assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root {
+      --bg: #071827;
+      --card: #102a3d;
+      --soft: #17384e;
+      --deep: #0b2233;
+      --text: #f8fafc;
+      --muted: #d5e4ee;
+      --primary: #22d3ee;
+      --success: #4ade80;
+      --error: #fda4af;
+      --warning: #fde68a;
+      --border: #4c7185;
+      --focus: #facc15;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(34, 211, 238, 0.14), transparent 32rem),
+        var(--bg);
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .wrapper,
+    .page-content {
+      width: min(100%, 920px);
+      margin: 0 auto;
+    }
+
+    .site-header {
+      padding: 18px 16px;
+      background: linear-gradient(135deg, #075985, #0e7490);
+      border-bottom: 3px solid var(--primary);
+    }
+
+    .site-title {
+      margin: 0;
+      color: #fff;
+      font-size: clamp(1.35rem, 4vw, 2rem);
+    }
+
+    .site-subtitle {
+      margin: 4px 0 0;
+      color: #e0f2fe;
+    }
+
+    .page-content { padding: 16px; }
+
+    .hero,
+    .worksheet-shell,
+    .panel {
+      background: rgba(16, 42, 61, 0.98);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+    }
+
+    .hero {
+      margin-bottom: 16px;
+      padding: clamp(18px, 4vw, 30px);
+    }
+
+    h1, h2, h3, p, label, legend, li { color: var(--text); }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.55rem, 5vw, 2.45rem);
+      line-height: 1.2;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: clamp(1.3rem, 4vw, 1.8rem);
+    }
+
+    h3 { color: #cffafe; }
+
+    .quote {
+      margin: 12px 0;
+      padding: 12px 14px;
+      color: #fef9c3;
+      background: var(--deep);
+      border-left: 4px solid var(--primary);
+      border-radius: 8px;
+      font-style: italic;
+    }
+
+    .hint { color: var(--muted); }
+
+    .notice {
+      margin: 14px 0;
+      padding: 12px 14px;
+      color: #fef9c3;
+      background: #332b0a;
+      border: 1px solid #a16207;
+      border-radius: 12px;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 18px 0 7px;
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .progress-track {
+      height: 12px;
+      overflow: hidden;
+      background: #06121e;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+
+    .progress-fill {
+      width: 25%;
+      height: 100%;
+      background: linear-gradient(90deg, #22c55e, var(--primary));
+      transition: width 0.25s ease;
+    }
+
+    .worksheet-shell { overflow: hidden; }
+
+    .worksheet-page {
+      display: none;
+      min-height: 560px;
+      padding: clamp(18px, 4vw, 30px);
+    }
+
+    .worksheet-page.active {
+      display: block;
+      animation: pageIn 0.22s ease-out;
+    }
+
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .formula-card,
+    .example-card,
+    .question-block,
+    .diagram-card,
+    .type-card {
+      margin: 14px 0;
+      padding: 16px;
+      background: var(--soft);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .formula-card { text-align: center; }
+
+    .formula-large {
+      padding: 6px;
+      overflow-x: auto;
+      font-size: clamp(1.12rem, 4vw, 1.5rem);
+    }
+
+    .example-card { border-left: 5px solid var(--success); }
+
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .type-grid > div {
+      padding: 14px;
+      background: var(--deep);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .type-grid strong {
+      color: #cffafe;
+      font-size: 1.04rem;
+    }
+
+    .diagram-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .pulley-diagram {
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 12px;
+    }
+
+    .pulley-diagram svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .comparison {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+
+    .comparison th,
+    .comparison td {
+      padding: 10px;
+      border: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .comparison th {
+      color: #cffafe;
+      background: var(--deep);
+    }
+
+    .comparison td {
+      color: var(--text);
+      background: var(--soft);
+    }
+
+    fieldset {
+      min-width: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    legend {
+      width: 100%;
+      margin-bottom: 12px;
+      font-weight: 750;
+    }
+
+    .option-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option-row {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      background: var(--deep);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .option-row:hover { border-color: var(--primary); }
+
+    .option-row input {
+      width: 20px;
+      height: 20px;
+      margin: 2px 0 0;
+      accent-color: #0891b2;
+    }
+
+    .inline-grid {
+      display: grid;
+      grid-template-columns: minmax(150px, 1.2fr) minmax(150px, 0.8fr);
+      gap: 12px;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    input[type="text"],
+    select {
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 12px;
+      color: #fff;
+      background: #061827;
+      border: 2px solid #7899aa;
+      border-radius: 11px;
+      font: inherit;
+    }
+
+    input::placeholder {
+      color: #c6d7e0;
+      opacity: 1;
+    }
+
+    select option {
+      color: #fff;
+      background: #061827;
+    }
+
+    input:focus,
+    select:focus,
+    button:focus,
+    a:focus {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .unit {
+      color: #cffafe;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .feedback {
+      min-height: 1.5em;
+      margin-top: 8px;
+      font-weight: 800;
+    }
+
+    .feedback.correct { color: var(--success); }
+    .feedback.incorrect { color: var(--error); }
+
+    .page-actions {
+      position: sticky;
+      bottom: 0;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 12px;
+      padding: 14px;
+      background: rgba(7, 24, 39, 0.97);
+      border-top: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 52px;
+      padding: 12px 16px;
+      color: #042f3e;
+      background: var(--primary);
+      border: 0;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 850;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .button.secondary {
+      color: #0f172a;
+      background: #e2e8f0;
+    }
+
+    .button.success {
+      color: #052e16;
+      background: #22c55e;
+    }
+
+    .button.danger {
+      color: #4c0519;
+      background: #fda4af;
+    }
+
+    .score-box {
+      display: none;
+      margin-top: 18px;
+      padding: 18px;
+      text-align: center;
+      background: #082f49;
+      border: 2px solid var(--primary);
+      border-radius: 14px;
+    }
+
+    .score-box.visible { display: block; }
+
+    .score-number {
+      color: #a7f3d0;
+      font-size: clamp(2.2rem, 9vw, 4rem);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .panel {
+      margin-top: 16px;
+      padding: 18px;
+    }
+
+    .panel[hidden] { display: none; }
+
+    .static-actions {
+      position: static;
+      padding: 0;
+      background: transparent;
+      border: 0;
+    }
+
+    .site-footer {
+      margin-top: 26px;
+      padding: 20px 16px;
+      color: var(--muted);
+      background: #06121e;
+      border-top: 2px solid var(--border);
+      text-align: center;
+    }
+
+    .site-footer p,
+    .site-footer a { color: var(--muted); }
+
+    @media (max-width: 720px) {
+      body { font-size: 15px; }
+      .page-content { padding: 10px; }
+
+      .worksheet-page {
+        min-height: 0;
+        padding: 16px 13px;
+      }
+
+      .type-grid,
+      .diagram-grid,
+      .inline-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .comparison {
+        display: block;
+        overflow-x: auto;
+      }
+
+      .page-actions { grid-template-columns: 1fr; }
+      .page-actions .button { min-height: 56px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="wrapper">
+      <h1 class="site-title">Fizica Galaction</h1>
+      <p class="site-subtitle">Clasa a VII-a · Capitolul 5 – Echilibrul corpurilor · Fișa 4 din 7</p>
+    </div>
+  </header>
+
+  <main class="page-content">
+    <section class="hero">
+      <h1>Fișa 4 – Scripetele</h1>
+      <p class="quote">„Mașinile simple nu creează energie, ci schimbă modul în care folosim forța.”</p>
+      <p class="hint">
+        Compară tipurile de scripeți și folosește relațiile ideale.
+        Parcurge cele 4 pagini, apoi apasă <strong>„Verifică fișa”</strong>.
+      </p>
+
+      <div class="progress-meta">
+        <span id="page-label">Pagina 1 din 4</span>
+        <span id="progress-percent">25%</span>
+      </div>
+      <div class="progress-track" aria-hidden="true">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </section>
+
+    <section class="worksheet-shell" aria-label="Fișă de lucru">
+      <!-- PAGINA 1 -->
+      <article class="worksheet-page active" data-page="0">
+        <h2>1. Ce este scripetele?</h2>
+
+        <div class="formula-card">
+          <p>
+            <strong>Scripetele</strong> este o mașină simplă formată dintr-o roată
+            prevăzută cu un șanț pe care se așază un fir, o frânghie sau un cablu.
+          </p>
+          <p>
+            El poate schimba direcția forței sau poate reduce forța necesară
+            pentru ridicarea unei sarcini.
+          </p>
+        </div>
+
+        <div class="type-grid">
+          <div>
+            <strong>Scripete fix</strong>
+            <p>Axul roții rămâne pe loc.</p>
+          </div>
+          <div>
+            <strong>Scripete mobil</strong>
+            <p>Roata se deplasează împreună cu sarcina.</p>
+          </div>
+          <div>
+            <strong>Scripete compus</strong>
+            <p>Combină scripeți fixați și mobili.</p>
+          </div>
+        </div>
+
+        <div class="diagram-card">
+          <h3>Structura unui scripete</h3>
+          <div class="pulley-diagram">
+            <svg viewBox="0 0 720 330" role="img" aria-label="Scripete simplu cu roată, frânghie și sarcină">
+              <defs>
+                <marker id="arrowF1" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#0369a1"/>
+                </marker>
+              </defs>
+              <line x1="360" y1="20" x2="360" y2="72" stroke="#334155" stroke-width="8"/>
+              <circle cx="360" cy="120" r="52" fill="#bae6fd" stroke="#0f172a" stroke-width="5"/>
+              <circle cx="360" cy="120" r="9" fill="#334155"/>
+              <path d="M315,110 Q360,45 405,110" fill="none" stroke="#a16207" stroke-width="8"/>
+              <line x1="315" y1="110" x2="315" y2="255" stroke="#a16207" stroke-width="8"/>
+              <line x1="405" y1="110" x2="405" y2="255" stroke="#a16207" stroke-width="8"/>
+              <rect x="255" y="250" width="120" height="58" rx="8" fill="#a7f3d0" stroke="#0f172a" stroke-width="4"/>
+              <line x1="405" y1="165" x2="405" y2="285" stroke="#0369a1" stroke-width="6" marker-end="url(#arrowF1)"/>
+              <text x="422" y="245" fill="#0f172a" font-size="24">F</text>
+              <text x="292" y="287" fill="#0f172a" font-size="22">sarcină</text>
+              <text x="424" y="112" fill="#0f172a" font-size="21">roată</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>1. Scripetele este:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q1" value="masina"><span>o mașină simplă cu roată și șanț pentru fir</span></label>
+              <label class="option-row"><input type="radio" name="q1" value="motor"><span>un motor electric obligatoriu</span></label>
+              <label class="option-row"><input type="radio" name="q1" value="energie"><span>o formă de energie</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q1" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>2. La scripetele fix:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q2" value="ax_fix"><span>axul roții rămâne pe loc</span></label>
+              <label class="option-row"><input type="radio" name="q2" value="roata_sarcina"><span>roata se deplasează odată cu sarcina</span></label>
+              <label class="option-row"><input type="radio" name="q2" value="fara_fir"><span>nu se folosește fir sau cablu</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q2" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <label for="q3"><strong>3. Scripetele compus:</strong></label>
+          <select id="q3">
+            <option value="">Alege varianta...</option>
+            <option value="combina">combină mai mulți scripeți fixați și mobili</option>
+            <option value="doar_fix">este întotdeauna un singur scripete fix</option>
+            <option value="fara_avantaj">nu poate produce niciun avantaj mecanic</option>
+          </select>
+          <div id="fb-q3" class="feedback"></div>
+        </div>
+      </article>
+
+      <!-- PAGINA 2 -->
+      <article class="worksheet-page" data-page="1">
+        <h2>2. Scripetele fix și scripetele mobil</h2>
+
+        <div class="diagram-grid">
+          <div class="diagram-card">
+            <h3>Scripete fix</h3>
+            <div class="pulley-diagram">
+              <svg viewBox="0 0 360 330" role="img" aria-label="Scripete fix">
+                <defs>
+                  <marker id="arrFix" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L6,3 z" fill="#0369a1"/>
+                  </marker>
+                </defs>
+                <line x1="180" y1="10" x2="180" y2="55" stroke="#334155" stroke-width="8"/>
+                <circle cx="180" cy="100" r="44" fill="#bae6fd" stroke="#0f172a" stroke-width="4"/>
+                <path d="M142,92 Q180,35 218,92" fill="none" stroke="#a16207" stroke-width="7"/>
+                <line x1="142" y1="92" x2="142" y2="240" stroke="#a16207" stroke-width="7"/>
+                <line x1="218" y1="92" x2="218" y2="250" stroke="#a16207" stroke-width="7"/>
+                <rect x="95" y="235" width="94" height="55" rx="7" fill="#a7f3d0" stroke="#0f172a" stroke-width="3"/>
+                <line x1="218" y1="155" x2="218" y2="260" stroke="#0369a1" stroke-width="5" marker-end="url(#arrFix)"/>
+                <text x="235" y="225" fill="#0f172a" font-size="22">F</text>
+                <text x="118" y="270" fill="#0f172a" font-size="22">R</text>
+              </svg>
+            </div>
+            <div class="formula-large">\[F=R\]</div>
+          </div>
+
+          <div class="diagram-card">
+            <h3>Scripete mobil</h3>
+            <div class="pulley-diagram">
+              <svg viewBox="0 0 360 330" role="img" aria-label="Scripete mobil">
+                <defs>
+                  <marker id="arrMob" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L6,3 z" fill="#0369a1"/>
+                  </marker>
+                </defs>
+                <line x1="95" y1="25" x2="95" y2="60" stroke="#334155" stroke-width="8"/>
+                <line x1="95" y1="60" x2="95" y2="180" stroke="#a16207" stroke-width="7"/>
+                <path d="M95,180 Q180,260 265,180" fill="none" stroke="#a16207" stroke-width="7"/>
+                <line x1="265" y1="180" x2="265" y2="60" stroke="#a16207" stroke-width="7"/>
+                <circle cx="180" cy="210" r="45" fill="#bae6fd" stroke="#0f172a" stroke-width="4"/>
+                <line x1="180" y1="255" x2="180" y2="285" stroke="#334155" stroke-width="7"/>
+                <rect x="130" y="280" width="100" height="40" rx="7" fill="#a7f3d0" stroke="#0f172a" stroke-width="3"/>
+                <line x1="265" y1="145" x2="265" y2="65" stroke="#0369a1" stroke-width="5" marker-end="url(#arrMob)"/>
+                <text x="280" y="112" fill="#0f172a" font-size="22">F</text>
+                <text x="165" y="307" fill="#0f172a" font-size="22">R</text>
+              </svg>
+            </div>
+            <div class="formula-large">\[F=\frac{R}{2}\]</div>
+          </div>
+        </div>
+
+        <table class="comparison">
+          <thead>
+            <tr>
+              <th>Tip</th>
+              <th>Ce face?</th>
+              <th>Relație ideală</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Scripete fix</td>
+              <td>Schimbă direcția forței.</td>
+              <td>\(F=R\)</td>
+            </tr>
+            <tr>
+              <td>Scripete mobil</td>
+              <td>Reduce forța necesară.</td>
+              <td>\(F=\frac{R}{2}\)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>4. În modelul ideal, scripetele fix:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q4" value="directie"><span>schimbă direcția forței, dar nu îi micșorează modulul</span></label>
+              <label class="option-row"><input type="radio" name="q4" value="jumatate"><span>înjumătățește întotdeauna forța</span></label>
+              <label class="option-row"><input type="radio" name="q4" value="dubla"><span>dublează întotdeauna forța</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q4" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>5. În modelul ideal, scripetele mobil necesită:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q5" value="jumatate"><span>o forță egală cu jumătate din rezistență</span></label>
+              <label class="option-row"><input type="radio" name="q5" value="egala"><span>o forță dublă față de rezistență</span></label>
+              <label class="option-row"><input type="radio" name="q5" value="zero"><span>forță nulă</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q5" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>6. Avantajul mecanic al scripetelui mobil se obține, de regulă, cu prețul:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q6" value="drum"><span>unui drum mai mare parcurs de fir</span></label>
+              <label class="option-row"><input type="radio" name="q6" value="energie"><span>creării de energie</span></label>
+              <label class="option-row"><input type="radio" name="q6" value="masa"><span>scăderii masei sarcinii</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q6" class="feedback"></div>
+        </div>
+      </article>
+
+      <!-- PAGINA 3 -->
+      <article class="worksheet-page" data-page="2">
+        <h2>3. Calcule cu scripeți ideali</h2>
+
+        <div class="example-card">
+          <h3>Exemplu numeric</h3>
+          <p>O sarcină are \(R=80\,\mathrm{N}\).</p>
+          <div class="formula-large">
+            \[
+              \text{scripete fix:}\quad F=R=80\,\mathrm{N}
+            \]
+          </div>
+          <div class="formula-large">
+            \[
+              \text{scripete mobil:}\quad
+              F=\frac{R}{2}
+              =\frac{80}{2}
+              =40\,\mathrm{N}
+            \]
+          </div>
+        </div>
+
+        <div class="question-block">
+          <label for="q7">
+            <strong>7.</strong> O sarcină are \(R=100\,\mathrm{N}\).
+            Calculează forța necesară cu un scripete fix ideal.
+          </label>
+          <div class="inline-grid">
+            <input id="q7" type="text" inputmode="decimal" placeholder="Rezultat numeric">
+            <span class="unit">N</span>
+          </div>
+          <div id="fb-q7" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <label for="q8">
+            <strong>8.</strong> Aceeași sarcină, \(R=100\,\mathrm{N}\), este ridicată
+            cu un scripete mobil ideal. Calculează \(F\).
+          </label>
+          <div class="inline-grid">
+            <input id="q8" type="text" inputmode="decimal" placeholder="Rezultat numeric">
+            <span class="unit">N</span>
+          </div>
+          <div id="fb-q8" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <label for="q9">
+            <strong>9.</strong> Cu un scripete mobil ideal se aplică
+            \(F=35\,\mathrm{N}\). Calculează rezistența \(R\).
+          </label>
+          <div class="inline-grid">
+            <input id="q9" type="text" inputmode="decimal" placeholder="Rezultat numeric">
+            <span class="unit">N</span>
+          </div>
+          <div id="fb-q9" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <label for="q10">
+            <strong>10.</strong> O sarcină are masa \(m=12\,\mathrm{kg}\).
+            Consideră \(g=10\,\mathrm{N/kg}\). Calculează forța ideală necesară
+            cu un scripete mobil.
+          </label>
+          <div class="inline-grid">
+            <input id="q10" type="text" inputmode="decimal" placeholder="Rezultat numeric">
+            <span class="unit">N</span>
+          </div>
+          <div id="fb-q10" class="feedback"></div>
+        </div>
+      </article>
+
+      <!-- PAGINA 4 -->
+      <article class="worksheet-page" data-page="3">
+        <h2>4. Scripetele compus și situațiile reale</h2>
+
+        <div class="formula-card">
+          <p>
+            Scripetele compus combină scripeți fixați și mobili pentru a obține
+            un avantaj mecanic mai mare. Relația exactă depinde de montaj.
+          </p>
+        </div>
+
+        <div class="diagram-card">
+          <h3>Sistem compus – reprezentare simplificată</h3>
+          <div class="pulley-diagram">
+            <svg viewBox="0 0 760 370" role="img" aria-label="Sistem compus de scripeți">
+              <defs>
+                <marker id="arrComp" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#0369a1"/>
+                </marker>
+              </defs>
+              <line x1="180" y1="30" x2="580" y2="30" stroke="#334155" stroke-width="10"/>
+              <circle cx="300" cy="105" r="42" fill="#bae6fd" stroke="#0f172a" stroke-width="4"/>
+              <circle cx="460" cy="245" r="42" fill="#a7f3d0" stroke="#0f172a" stroke-width="4"/>
+              <path d="M220,30 L220,105 Q300,30 380,105 L380,245 Q460,320 540,245 L540,90"
+                    fill="none" stroke="#a16207" stroke-width="8"/>
+              <line x1="540" y1="165" x2="540" y2="75" stroke="#0369a1" stroke-width="6" marker-end="url(#arrComp)"/>
+              <line x1="460" y1="287" x2="460" y2="330" stroke="#334155" stroke-width="7"/>
+              <rect x="405" y="325" width="110" height="38" rx="7" fill="#fde68a" stroke="#0f172a" stroke-width="3"/>
+              <text x="558" y="128" fill="#0f172a" font-size="23">F</text>
+              <text x="442" y="352" fill="#0f172a" font-size="21">R</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="notice">
+          În practică apar frecări, iar forța reală poate fi mai mare decât
+          valoarea calculată în modelul ideal.
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>11. Scripetele compus este folosit pentru:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q11" value="avantaj"><span>obținerea unui avantaj mecanic mai mare</span></label>
+              <label class="option-row"><input type="radio" name="q11" value="energie"><span>crearea energiei din nimic</span></label>
+              <label class="option-row"><input type="radio" name="q11" value="masa"><span>schimbarea masei sarcinii</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q11" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>12. Într-un sistem real, față de modelul ideal, forța necesară poate fi:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q12" value="mai_mare"><span>mai mare, din cauza frecărilor</span></label>
+              <label class="option-row"><input type="radio" name="q12" value="zero"><span>întotdeauna zero</span></label>
+              <label class="option-row"><input type="radio" name="q12" value="negativa"><span>întotdeauna negativă</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q12" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>13. Scripeții sunt întâlniți frecvent la:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q13" value="macarale"><span>macarale, lifturi și sisteme de ridicare</span></label>
+              <label class="option-row"><input type="radio" name="q13" value="termometre"><span>numai la termometre</span></label>
+              <label class="option-row"><input type="radio" name="q13" value="rigle"><span>numai la rigle</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q13" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <label for="q14">
+            <strong>14.</strong> O sarcină are \(R=160\,\mathrm{N}\).
+            Calculează diferența dintre forța ideală necesară cu scripetele fix
+            și cea necesară cu scripetele mobil.
+          </label>
+          <div class="inline-grid">
+            <input id="q14" type="text" inputmode="decimal" placeholder="Rezultat numeric">
+            <span class="unit">N</span>
+          </div>
+          <div id="fb-q14" class="feedback"></div>
+        </div>
+
+        <div id="score-box" class="score-box" aria-live="polite">
+          <div class="score-number" id="score-number">0/14</div>
+          <p id="score-message"></p>
+        </div>
+      </article>
+
+      <nav class="page-actions" aria-label="Navigarea în fișă">
+        <button type="button" class="button secondary" id="back-btn" onclick="changePage(-1)">⬅ Înapoi</button>
+        <button type="button" class="button" id="next-btn" onclick="changePage(1)">Mergi mai departe ➡</button>
+        <button type="button" class="button success" id="check-btn" onclick="checkWorksheet()" hidden>Verifică fișa ✓</button>
+      </nav>
+    </section>
+
+    <section class="panel" id="summary-panel" hidden>
+      <h2>Rezultat</h2>
+      <p id="summary-text"></p>
+      <div class="page-actions static-actions" style="grid-template-columns:1fr;">
+        <button type="button" class="button danger" onclick="resetWorksheet()">Resetează fișa</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Continuă în platformă</h2>
+      <div class="page-actions static-actions">
+        <a class="button secondary" href="index.html">Înapoi la fișe</a>
+        <a class="button" href="../lectii/lectia-4.html">Vezi lecția 4</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrapper">
+      <p>© Fizica Galaction · Prof. DĂNUȚ ANDRONIE</p>
+      <p>E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a></p>
+    </div>
+  </footer>
+
+  <script src="../../../assets/js/main.js"></script>
+  <script>
+    const STORAGE_KEY = "fizica-galaction-c7-cap5-fisa4-scripetele";
+    const pages = [...document.querySelectorAll(".worksheet-page")];
+    let currentPage = 0;
+
+    function radioValue(name) {
+      const selected = document.querySelector(`input[name="${name}"]:checked`);
+      return selected ? selected.value : "";
+    }
+
+    function numberValue(id) {
+      const raw = String(document.getElementById(id).value)
+        .trim()
+        .replace(",", ".")
+        .replace(/\s+/g, "")
+        .replace(/[a-zA-ZăâîșțĂÂÎȘȚ]/g, "");
+      return Number(raw);
+    }
+
+    function feedback(id, ok, answer) {
+      const box = document.getElementById("fb-" + id);
+      box.className = "feedback " + (ok ? "correct" : "incorrect");
+      box.textContent = ok ? "Corect! ✓" : "Mai verifică. Răspuns corect: " + answer;
+    }
+
+    function updateNavigation() {
+      pages.forEach((page, index) => page.classList.toggle("active", index === currentPage));
+
+      const percent = Math.round((currentPage + 1) / pages.length * 100);
+      document.getElementById("page-label").textContent = `Pagina ${currentPage + 1} din ${pages.length}`;
+      document.getElementById("progress-percent").textContent = percent + "%";
+      document.getElementById("progress-fill").style.width = percent + "%";
+      document.getElementById("back-btn").style.visibility = currentPage === 0 ? "hidden" : "visible";
+      document.getElementById("next-btn").hidden = currentPage === pages.length - 1;
+      document.getElementById("check-btn").hidden = currentPage !== pages.length - 1;
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([pages[currentPage]]).catch(() => {});
+      }
+    }
+
+    function changePage(step) {
+      saveProgress();
+      currentPage = Math.max(0, Math.min(pages.length - 1, currentPage + step));
+      updateNavigation();
+    }
+
+    function saveProgress() {
+      const data = { currentPage, fields: {} };
+
+      document.querySelectorAll("input[type='text'], select").forEach(el => {
+        data.fields[el.id] = el.value;
+      });
+
+      document.querySelectorAll("input[type='radio']:checked").forEach(el => {
+        data.fields["radio:" + el.name] = el.value;
+      });
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function loadProgress() {
+      try {
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (!data || !data.fields) return;
+
+        Object.entries(data.fields).forEach(([key, value]) => {
+          if (key.startsWith("radio:")) {
+            const name = key.slice(6);
+            const el = document.querySelector(`input[name="${name}"][value="${value}"]`);
+            if (el) el.checked = true;
+          } else {
+            const el = document.getElementById(key);
+            if (el) el.value = value;
+          }
+        });
+
+        currentPage = Number.isInteger(data.currentPage)
+          ? Math.max(0, Math.min(pages.length - 1, data.currentPage))
+          : 0;
+      } catch {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+
+    function checkWorksheet() {
+      let score = 0;
+
+      const textItems = [
+        ["q1", radioValue("q1"), "masina", "o mașină simplă cu roată și șanț pentru fir"],
+        ["q2", radioValue("q2"), "ax_fix", "axul roții rămâne pe loc"],
+        ["q3", document.getElementById("q3").value, "combina", "combină scripeți fixați și mobili"],
+        ["q4", radioValue("q4"), "directie", "schimbă direcția, fără a micșora ideal forța"],
+        ["q5", radioValue("q5"), "jumatate", "o forță egală cu jumătate din rezistență"],
+        ["q6", radioValue("q6"), "drum", "un drum mai mare parcurs de fir"],
+        ["q11", radioValue("q11"), "avantaj", "obținerea unui avantaj mecanic mai mare"],
+        ["q12", radioValue("q12"), "mai_mare", "mai mare, din cauza frecărilor"],
+        ["q13", radioValue("q13"), "macarale", "macarale, lifturi și sisteme de ridicare"]
+      ];
+
+      textItems.forEach(([id, value, expected, answer]) => {
+        const ok = value === expected;
+        if (ok) score++;
+        feedback(id, ok, answer);
+      });
+
+      const numericItems = [
+        ["q7", 100, "100 N"],
+        ["q8", 50, "50 N"],
+        ["q9", 70, "70 N"],
+        ["q10", 60, "60 N"],
+        ["q14", 80, "80 N"]
+      ];
+
+      numericItems.forEach(([id, expected, answer]) => {
+        const value = numberValue(id);
+        const ok = Number.isFinite(value) && Math.abs(value - expected) < 0.01;
+        if (ok) score++;
+        feedback(id, ok, answer);
+      });
+
+      const total = 14;
+      const percent = Math.round(score / total * 100);
+      let message = "Reia comparația dintre scripetele fix, mobil și compus.";
+
+      if (percent >= 90) {
+        message = "Excelent! Stăpânești foarte bine tipurile de scripeți.";
+      } else if (percent >= 70) {
+        message = "Foarte bine! Mai verifică itemii marcați.";
+      } else if (percent >= 50) {
+        message = "Ești pe drumul cel bun. Verifică relațiile ideale.";
+      }
+
+      document.getElementById("score-number").textContent = `${score}/${total}`;
+      document.getElementById("score-message").textContent = `${percent}% · ${message}`;
+      document.getElementById("summary-text").textContent =
+        `Ai obținut ${score} puncte din ${total}. Răspunsurile de revizuit sunt marcate lângă itemi.`;
+
+      document.getElementById("score-box").classList.add("visible");
+      document.getElementById("summary-panel").hidden = false;
+      saveProgress();
+
+      document.getElementById("score-box").scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+
+    function resetWorksheet() {
+      document.querySelectorAll("input[type='text']").forEach(el => el.value = "");
+      document.querySelectorAll("select").forEach(el => el.value = "");
+      document.querySelectorAll("input[type='radio']").forEach(el => el.checked = false);
+      document.querySelectorAll(".feedback").forEach(el => {
+        el.textContent = "";
+        el.className = "feedback";
+      });
+
+      document.getElementById("score-box").classList.remove("visible");
+      document.getElementById("summary-panel").hidden = true;
+      localStorage.removeItem(STORAGE_KEY);
+      currentPage = 0;
+      updateNavigation();
+    }
+
+    document.addEventListener("change", saveProgress);
+    document.addEventListener("input", saveProgress);
+
+    loadProgress();
+    updateNavigation();
+  </script>
+</body>
+</html>

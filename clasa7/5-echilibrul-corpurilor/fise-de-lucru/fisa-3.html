@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fișa 3 | Pârghia | Fizica Galaction</title>
+  <meta name="description" content="Fișă de lucru interactivă pentru clasa a VII-a: pârghia, legea pârghiei și tipurile de pârghii.">
+  <link rel="stylesheet" href="../../../assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root {
+      --bg: #071827;
+      --card: #102a3d;
+      --soft: #17384e;
+      --deep: #0b2233;
+      --text: #f8fafc;
+      --muted: #d5e4ee;
+      --primary: #22d3ee;
+      --success: #4ade80;
+      --error: #fda4af;
+      --warning: #fde68a;
+      --border: #4c7185;
+      --focus: #facc15;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(34, 211, 238, 0.14), transparent 32rem),
+        var(--bg);
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .wrapper,
+    .page-content {
+      width: min(100%, 920px);
+      margin: 0 auto;
+    }
+
+    .site-header {
+      padding: 18px 16px;
+      background: linear-gradient(135deg, #075985, #0e7490);
+      border-bottom: 3px solid var(--primary);
+    }
+
+    .site-title {
+      margin: 0;
+      color: #fff;
+      font-size: clamp(1.35rem, 4vw, 2rem);
+    }
+
+    .site-subtitle {
+      margin: 4px 0 0;
+      color: #e0f2fe;
+    }
+
+    .page-content { padding: 16px; }
+
+    .hero,
+    .worksheet-shell,
+    .panel {
+      background: rgba(16, 42, 61, 0.98);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+    }
+
+    .hero {
+      margin-bottom: 16px;
+      padding: clamp(18px, 4vw, 30px);
+    }
+
+    h1, h2, h3, p, label, legend, li { color: var(--text); }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.55rem, 5vw, 2.45rem);
+      line-height: 1.2;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: clamp(1.3rem, 4vw, 1.8rem);
+    }
+
+    h3 { color: #cffafe; }
+
+    .quote {
+      margin: 12px 0;
+      padding: 12px 14px;
+      color: #fef9c3;
+      background: var(--deep);
+      border-left: 4px solid var(--primary);
+      border-radius: 8px;
+      font-style: italic;
+    }
+
+    .hint { color: var(--muted); }
+
+    .notice {
+      margin: 14px 0;
+      padding: 12px 14px;
+      color: #fef9c3;
+      background: #332b0a;
+      border: 1px solid #a16207;
+      border-radius: 12px;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 18px 0 7px;
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .progress-track {
+      height: 12px;
+      overflow: hidden;
+      background: #06121e;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+
+    .progress-fill {
+      width: 25%;
+      height: 100%;
+      background: linear-gradient(90deg, #22c55e, var(--primary));
+      transition: width 0.25s ease;
+    }
+
+    .worksheet-shell { overflow: hidden; }
+
+    .worksheet-page {
+      display: none;
+      min-height: 560px;
+      padding: clamp(18px, 4vw, 30px);
+    }
+
+    .worksheet-page.active {
+      display: block;
+      animation: pageIn 0.22s ease-out;
+    }
+
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .formula-card,
+    .example-card,
+    .question-block,
+    .diagram-card,
+    .type-card {
+      margin: 14px 0;
+      padding: 16px;
+      background: var(--soft);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .formula-card { text-align: center; }
+
+    .formula-large {
+      padding: 6px;
+      overflow-x: auto;
+      font-size: clamp(1.12rem, 4vw, 1.5rem);
+    }
+
+    .example-card { border-left: 5px solid var(--success); }
+
+    .definition-grid,
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .definition-grid > div,
+    .type-grid > div {
+      padding: 14px;
+      background: var(--deep);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .definition-grid strong,
+    .type-grid strong {
+      color: #cffafe;
+      font-size: 1.04rem;
+    }
+
+    .lever-diagram {
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 12px;
+    }
+
+    .lever-diagram svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    fieldset {
+      min-width: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    legend {
+      width: 100%;
+      margin-bottom: 12px;
+      font-weight: 750;
+    }
+
+    .option-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option-row {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      background: var(--deep);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .option-row:hover { border-color: var(--primary); }
+
+    .option-row input {
+      width: 20px;
+      height: 20px;
+      margin: 2px 0 0;
+      accent-color: #0891b2;
+    }
+
+    .inline-grid {
+      display: grid;
+      grid-template-columns: minmax(150px, 1.2fr) minmax(150px, 0.8fr);
+      gap: 12px;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    input[type="text"],
+    select {
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 12px;
+      color: #fff;
+      background: #061827;
+      border: 2px solid #7899aa;
+      border-radius: 11px;
+      font: inherit;
+    }
+
+    input::placeholder {
+      color: #c6d7e0;
+      opacity: 1;
+    }
+
+    select option {
+      color: #fff;
+      background: #061827;
+    }
+
+    input:focus,
+    select:focus,
+    button:focus,
+    a:focus {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .unit {
+      color: #cffafe;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .feedback {
+      min-height: 1.5em;
+      margin-top: 8px;
+      font-weight: 800;
+    }
+
+    .feedback.correct { color: var(--success); }
+    .feedback.incorrect { color: var(--error); }
+
+    .page-actions {
+      position: sticky;
+      bottom: 0;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 12px;
+      padding: 14px;
+      background: rgba(7, 24, 39, 0.97);
+      border-top: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 52px;
+      padding: 12px 16px;
+      color: #042f3e;
+      background: var(--primary);
+      border: 0;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 850;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .button.secondary {
+      color: #0f172a;
+      background: #e2e8f0;
+    }
+
+    .button.success {
+      color: #052e16;
+      background: #22c55e;
+    }
+
+    .button.danger {
+      color: #4c0519;
+      background: #fda4af;
+    }
+
+    .score-box {
+      display: none;
+      margin-top: 18px;
+      padding: 18px;
+      text-align: center;
+      background: #082f49;
+      border: 2px solid var(--primary);
+      border-radius: 14px;
+    }
+
+    .score-box.visible { display: block; }
+
+    .score-number {
+      color: #a7f3d0;
+      font-size: clamp(2.2rem, 9vw, 4rem);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .panel {
+      margin-top: 16px;
+      padding: 18px;
+    }
+
+    .panel[hidden] { display: none; }
+
+    .static-actions {
+      position: static;
+      padding: 0;
+      background: transparent;
+      border: 0;
+    }
+
+    .site-footer {
+      margin-top: 26px;
+      padding: 20px 16px;
+      color: var(--muted);
+      background: #06121e;
+      border-top: 2px solid var(--border);
+      text-align: center;
+    }
+
+    .site-footer p,
+    .site-footer a { color: var(--muted); }
+
+    @media (max-width: 700px) {
+      body { font-size: 15px; }
+      .page-content { padding: 10px; }
+
+      .worksheet-page {
+        min-height: 0;
+        padding: 16px 13px;
+      }
+
+      .definition-grid,
+      .type-grid,
+      .inline-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page-actions { grid-template-columns: 1fr; }
+      .page-actions .button { min-height: 56px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="wrapper">
+      <h1 class="site-title">Fizica Galaction</h1>
+      <p class="site-subtitle">Clasa a VII-a · Capitolul 5 – Echilibrul corpurilor · Fișa 3 din 7</p>
+    </div>
+  </header>
+
+  <main class="page-content">
+    <section class="hero">
+      <h1>Fișa 3 – Pârghia</h1>
+      <p class="quote">„O forță mai mică poate învinge o rezistență mai mare dacă acționează la o distanță potrivită de sprijin.”</p>
+      <p class="hint">
+        Urmărește pozițiile elementelor \(F\), \(S\) și \(R\).
+        Parcurge cele 4 pagini, apoi apasă <strong>„Verifică fișa”</strong>.
+      </p>
+
+      <div class="progress-meta">
+        <span id="page-label">Pagina 1 din 4</span>
+        <span id="progress-percent">25%</span>
+      </div>
+      <div class="progress-track" aria-hidden="true">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </section>
+
+    <section class="worksheet-shell" aria-label="Fișă de lucru">
+      <!-- PAGINA 1 -->
+      <article class="worksheet-page active" data-page="0">
+        <h2>1. Elementele unei pârghii</h2>
+
+        <div class="formula-card">
+          <p>
+            <strong>Pârghia</strong> este o bară rigidă care se poate roti
+            în jurul unui punct de sprijin.
+          </p>
+        </div>
+
+        <div class="definition-grid">
+          <div>
+            <strong>Forța activă \(F\)</strong>
+            <p>Forța cu care acționăm noi sau un mecanism.</p>
+          </div>
+          <div>
+            <strong>Sprijinul \(S\)</strong>
+            <p>Punctul în jurul căruia se rotește pârghia.</p>
+          </div>
+          <div>
+            <strong>Forța rezistentă \(R\)</strong>
+            <p>Forța pe care dorim să o învingem.</p>
+          </div>
+        </div>
+
+        <div class="diagram-card">
+          <h3>Pârghie simplă</h3>
+          <div class="lever-diagram">
+            <svg viewBox="0 0 760 300" role="img" aria-label="Pârghie cu forță activă, punct de sprijin și forță rezistentă">
+              <defs>
+                <marker id="arrF" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#0369a1"/>
+                </marker>
+                <marker id="arrR" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#be123c"/>
+                </marker>
+              </defs>
+              <line x1="80" y1="150" x2="680" y2="150" stroke="#334155" stroke-width="14"/>
+              <polygon points="350,235 410,235 380,155" fill="#94a3b8" stroke="#0f172a" stroke-width="3"/>
+              <line x1="160" y1="55" x2="160" y2="138" stroke="#0369a1" stroke-width="6" marker-end="url(#arrF)"/>
+              <line x1="590" y1="55" x2="590" y2="138" stroke="#be123c" stroke-width="6" marker-end="url(#arrR)"/>
+              <text x="138" y="42" fill="#0f172a" font-size="25">F</text>
+              <text x="575" y="42" fill="#0f172a" font-size="25">R</text>
+              <text x="370" y="272" fill="#0f172a" font-size="24">S</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>1. Pârghia este:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q1" value="bara"><span>o bară rigidă care se poate roti în jurul unui sprijin</span></label>
+              <label class="option-row"><input type="radio" name="q1" value="lichid"><span>un corp care există numai în lichide</span></label>
+              <label class="option-row"><input type="radio" name="q1" value="forta"><span>o forță fără punct de aplicare</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q1" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>2. Forța activă este:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q2" value="actiune"><span>forța cu care acționăm asupra pârghiei</span></label>
+              <label class="option-row"><input type="radio" name="q2" value="sprijin"><span>punctul de sprijin</span></label>
+              <label class="option-row"><input type="radio" name="q2" value="rezistenta"><span>întotdeauna greutatea pârghiei</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q2" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <label for="q3"><strong>3. Forța pe care vrem să o învingem se numește:</strong></label>
+          <select id="q3">
+            <option value="">Alege varianta...</option>
+            <option value="rezistenta">forță rezistentă</option>
+            <option value="activa">forță activă</option>
+            <option value="normala">reacțiune normală</option>
+          </select>
+          <div id="fb-q3" class="feedback"></div>
+        </div>
+      </article>
+
+      <!-- PAGINA 2 -->
+      <article class="worksheet-page" data-page="1">
+        <h2>2. Legea pârghiei</h2>
+
+        <div class="formula-card">
+          <p>La echilibru, momentele celor două forțe sunt egale:</p>
+          <div class="formula-large">
+            \[
+              F\cdot b_F=R\cdot b_R
+            \]
+          </div>
+          <p>
+            \(b_F\) este brațul forței active, iar \(b_R\) este brațul
+            forței rezistente.
+          </p>
+        </div>
+
+        <div class="example-card">
+          <h3>Exemplu numeric</h3>
+          <p>
+            \(R=30\,\mathrm{N}\), \(b_R=20\,\mathrm{cm}\),
+            \(b_F=60\,\mathrm{cm}\).
+          </p>
+          <div class="formula-large">
+            \[
+              F=\frac{R\cdot b_R}{b_F}
+              =\frac{30\cdot20}{60}
+              =\frac{600}{60}
+              =10\,\mathrm{N}
+            \]
+          </div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>4. Condiția de echilibru a pârghiei este:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q4" value="lege"><span>\(F\cdot b_F=R\cdot b_R\)</span></label>
+              <label class="option-row"><input type="radio" name="q4" value="forte"><span>\(F=R\), în orice situație</span></label>
+              <label class="option-row"><input type="radio" name="q4" value="brate"><span>\(b_F=b_R\), în orice situație</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q4" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <label for="q5">
+            <strong>5.</strong> \(R=30\,\mathrm{N}\), \(b_R=20\,\mathrm{cm}\),
+            \(b_F=60\,\mathrm{cm}\). Calculează \(F\).
+          </label>
+          <div class="inline-grid">
+            <input id="q5" type="text" inputmode="decimal" placeholder="Rezultat numeric">
+            <span class="unit">N</span>
+          </div>
+          <div id="fb-q5" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <label for="q6">
+            <strong>6.</strong> \(F=15\,\mathrm{N}\), \(b_F=40\,\mathrm{cm}\),
+            \(b_R=20\,\mathrm{cm}\). Calculează \(R\).
+          </label>
+          <div class="inline-grid">
+            <input id="q6" type="text" inputmode="decimal" placeholder="Rezultat numeric">
+            <span class="unit">N</span>
+          </div>
+          <div id="fb-q6" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <label for="q7">
+            <strong>7.</strong> \(F=12\,\mathrm{N}\), \(b_F=50\,\mathrm{cm}\),
+            \(R=20\,\mathrm{N}\). Calculează \(b_R\).
+          </label>
+          <div class="inline-grid">
+            <input id="q7" type="text" inputmode="decimal" placeholder="Rezultat numeric">
+            <span class="unit">cm</span>
+          </div>
+          <div id="fb-q7" class="feedback"></div>
+        </div>
+
+        <div class="notice">
+          Brațele pot fi exprimate în aceeași unitate în ambii membri ai legii
+          pârghiei. Pentru momentul forței se folosesc unitățile S.I.
+        </div>
+      </article>
+
+      <!-- PAGINA 3 -->
+      <article class="worksheet-page" data-page="2">
+        <h2>3. Pârghii de ordinul I, II și III</h2>
+
+        <div class="type-grid">
+          <div>
+            <strong>Ordinul I</strong>
+            <p><b>S</b> este la mijloc.</p>
+            <p>Exemple: balansoar, foarfecă, rangă.</p>
+          </div>
+          <div>
+            <strong>Ordinul II</strong>
+            <p><b>R</b> este la mijloc.</p>
+            <p>Exemple: roabă, clește de spart nuci.</p>
+          </div>
+          <div>
+            <strong>Ordinul III</strong>
+            <p><b>F</b> este la mijloc.</p>
+            <p>Exemple: pensetă, antebraț.</p>
+          </div>
+        </div>
+
+        <div class="formula-card">
+          <div class="formula-large">
+            \[
+              \text{I: }F-S-R
+              \qquad
+              \text{II: }S-R-F
+              \qquad
+              \text{III: }S-F-R
+            \]
+          </div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>8. La pârghia de ordinul I, elementul aflat la mijloc este:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q8" value="S"><span>punctul de sprijin \(S\)</span></label>
+              <label class="option-row"><input type="radio" name="q8" value="R"><span>forța rezistentă \(R\)</span></label>
+              <label class="option-row"><input type="radio" name="q8" value="F"><span>forța activă \(F\)</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q8" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>9. Roaba este o pârghie de:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q9" value="II"><span>ordinul II</span></label>
+              <label class="option-row"><input type="radio" name="q9" value="I"><span>ordinul I</span></label>
+              <label class="option-row"><input type="radio" name="q9" value="III"><span>ordinul III</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q9" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>10. Penseta este o pârghie de:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q10" value="III"><span>ordinul III</span></label>
+              <label class="option-row"><input type="radio" name="q10" value="I"><span>ordinul I</span></label>
+              <label class="option-row"><input type="radio" name="q10" value="II"><span>ordinul II</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q10" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>11. Foarfeca este o pârghie de:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q11" value="I"><span>ordinul I</span></label>
+              <label class="option-row"><input type="radio" name="q11" value="II"><span>ordinul II</span></label>
+              <label class="option-row"><input type="radio" name="q11" value="III"><span>ordinul III</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q11" class="feedback"></div>
+        </div>
+      </article>
+
+      <!-- PAGINA 4 -->
+      <article class="worksheet-page" data-page="3">
+        <h2>4. Pârghii în corpul omenesc și aplicații</h2>
+
+        <div class="type-grid">
+          <div>
+            <strong>Capul pe coloană</strong>
+            <p>Pârghie de ordinul I.</p>
+          </div>
+          <div>
+            <strong>Piciorul pe vârfuri</strong>
+            <p>Pârghie de ordinul II.</p>
+          </div>
+          <div>
+            <strong>Antebrațul în flexiune</strong>
+            <p>Pârghie de ordinul III.</p>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>12. Antebrațul care ridică o greutate este o pârghie de:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q12" value="III"><span>ordinul III</span></label>
+              <label class="option-row"><input type="radio" name="q12" value="I"><span>ordinul I</span></label>
+              <label class="option-row"><input type="radio" name="q12" value="II"><span>ordinul II</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q12" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>13. O rangă mai lungă ajută deoarece:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q13" value="brat"><span>mărește brațul forței active</span></label>
+              <label class="option-row"><input type="radio" name="q13" value="masa"><span>micșorează masa obiectului</span></label>
+              <label class="option-row"><input type="radio" name="q13" value="rezistenta"><span>face forța rezistentă să dispară</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q13" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <label for="q14">
+            <strong>14.</strong> O pârghie trebuie să învingă
+            \(R=120\,\mathrm{N}\). \(b_R=25\,\mathrm{cm}\), iar
+            \(b_F=75\,\mathrm{cm}\). Calculează \(F\).
+          </label>
+          <div class="inline-grid">
+            <input id="q14" type="text" inputmode="decimal" placeholder="Rezultat numeric">
+            <span class="unit">N</span>
+          </div>
+          <div id="fb-q14" class="feedback"></div>
+        </div>
+
+        <div id="score-box" class="score-box" aria-live="polite">
+          <div class="score-number" id="score-number">0/14</div>
+          <p id="score-message"></p>
+        </div>
+      </article>
+
+      <nav class="page-actions" aria-label="Navigarea în fișă">
+        <button type="button" class="button secondary" id="back-btn" onclick="changePage(-1)">⬅ Înapoi</button>
+        <button type="button" class="button" id="next-btn" onclick="changePage(1)">Mergi mai departe ➡</button>
+        <button type="button" class="button success" id="check-btn" onclick="checkWorksheet()" hidden>Verifică fișa ✓</button>
+      </nav>
+    </section>
+
+    <section class="panel" id="summary-panel" hidden>
+      <h2>Rezultat</h2>
+      <p id="summary-text"></p>
+      <div class="page-actions static-actions" style="grid-template-columns:1fr;">
+        <button type="button" class="button danger" onclick="resetWorksheet()">Resetează fișa</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Continuă în platformă</h2>
+      <div class="page-actions static-actions">
+        <a class="button secondary" href="index.html">Înapoi la fișe</a>
+        <a class="button" href="../lectii/lectia-3.html">Vezi lecția 3</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrapper">
+      <p>© Fizica Galaction · Prof. DĂNUȚ ANDRONIE</p>
+      <p>E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a></p>
+    </div>
+  </footer>
+
+  <script src="../../../assets/js/main.js"></script>
+  <script>
+    const STORAGE_KEY = "fizica-galaction-c7-cap5-fisa3-parghia";
+    const pages = [...document.querySelectorAll(".worksheet-page")];
+    let currentPage = 0;
+
+    function radioValue(name) {
+      const selected = document.querySelector(`input[name="${name}"]:checked`);
+      return selected ? selected.value : "";
+    }
+
+    function numberValue(id) {
+      const raw = String(document.getElementById(id).value)
+        .trim()
+        .replace(",", ".")
+        .replace(/\s+/g, "")
+        .replace(/[a-zA-ZăâîșțĂÂÎȘȚ]/g, "");
+      return Number(raw);
+    }
+
+    function feedback(id, ok, answer) {
+      const box = document.getElementById("fb-" + id);
+      box.className = "feedback " + (ok ? "correct" : "incorrect");
+      box.textContent = ok ? "Corect! ✓" : "Mai verifică. Răspuns corect: " + answer;
+    }
+
+    function updateNavigation() {
+      pages.forEach((page, index) => page.classList.toggle("active", index === currentPage));
+
+      const percent = Math.round((currentPage + 1) / pages.length * 100);
+      document.getElementById("page-label").textContent = `Pagina ${currentPage + 1} din ${pages.length}`;
+      document.getElementById("progress-percent").textContent = percent + "%";
+      document.getElementById("progress-fill").style.width = percent + "%";
+      document.getElementById("back-btn").style.visibility = currentPage === 0 ? "hidden" : "visible";
+      document.getElementById("next-btn").hidden = currentPage === pages.length - 1;
+      document.getElementById("check-btn").hidden = currentPage !== pages.length - 1;
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([pages[currentPage]]).catch(() => {});
+      }
+    }
+
+    function changePage(step) {
+      saveProgress();
+      currentPage = Math.max(0, Math.min(pages.length - 1, currentPage + step));
+      updateNavigation();
+    }
+
+    function saveProgress() {
+      const data = { currentPage, fields: {} };
+
+      document.querySelectorAll("input[type='text'], select").forEach(el => {
+        data.fields[el.id] = el.value;
+      });
+
+      document.querySelectorAll("input[type='radio']:checked").forEach(el => {
+        data.fields["radio:" + el.name] = el.value;
+      });
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function loadProgress() {
+      try {
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (!data || !data.fields) return;
+
+        Object.entries(data.fields).forEach(([key, value]) => {
+          if (key.startsWith("radio:")) {
+            const name = key.slice(6);
+            const el = document.querySelector(`input[name="${name}"][value="${value}"]`);
+            if (el) el.checked = true;
+          } else {
+            const el = document.getElementById(key);
+            if (el) el.value = value;
+          }
+        });
+
+        currentPage = Number.isInteger(data.currentPage)
+          ? Math.max(0, Math.min(pages.length - 1, data.currentPage))
+          : 0;
+      } catch {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+
+    function checkWorksheet() {
+      let score = 0;
+
+      const textItems = [
+        ["q1", radioValue("q1"), "bara", "o bară rigidă care se rotește în jurul unui sprijin"],
+        ["q2", radioValue("q2"), "actiune", "forța cu care acționăm"],
+        ["q3", document.getElementById("q3").value, "rezistenta", "forță rezistentă"],
+        ["q4", radioValue("q4"), "lege", "F · bF = R · bR"],
+        ["q8", radioValue("q8"), "S", "punctul de sprijin S"],
+        ["q9", radioValue("q9"), "II", "ordinul II"],
+        ["q10", radioValue("q10"), "III", "ordinul III"],
+        ["q11", radioValue("q11"), "I", "ordinul I"],
+        ["q12", radioValue("q12"), "III", "ordinul III"],
+        ["q13", radioValue("q13"), "brat", "mărește brațul forței active"]
+      ];
+
+      textItems.forEach(([id, value, expected, answer]) => {
+        const ok = value === expected;
+        if (ok) score++;
+        feedback(id, ok, answer);
+      });
+
+      const numericItems = [
+        ["q5", 10, "10 N"],
+        ["q6", 30, "30 N"],
+        ["q7", 30, "30 cm"],
+        ["q14", 40, "40 N"]
+      ];
+
+      numericItems.forEach(([id, expected, answer]) => {
+        const value = numberValue(id);
+        const ok = Number.isFinite(value) && Math.abs(value - expected) < 0.01;
+        if (ok) score++;
+        feedback(id, ok, answer);
+      });
+
+      const total = 14;
+      const percent = Math.round(score / total * 100);
+      let message = "Reia legea pârghiei și urmărește elementul aflat la mijloc.";
+
+      if (percent >= 90) {
+        message = "Excelent! Stăpânești foarte bine pârghiile.";
+      } else if (percent >= 70) {
+        message = "Foarte bine! Mai verifică itemii marcați.";
+      } else if (percent >= 50) {
+        message = "Ești pe drumul cel bun. Verifică brațele și tipurile pârghiilor.";
+      }
+
+      document.getElementById("score-number").textContent = `${score}/${total}`;
+      document.getElementById("score-message").textContent = `${percent}% · ${message}`;
+      document.getElementById("summary-text").textContent =
+        `Ai obținut ${score} puncte din ${total}. Răspunsurile de revizuit sunt marcate lângă itemi.`;
+
+      document.getElementById("score-box").classList.add("visible");
+      document.getElementById("summary-panel").hidden = false;
+      saveProgress();
+
+      document.getElementById("score-box").scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+
+    function resetWorksheet() {
+      document.querySelectorAll("input[type='text']").forEach(el => el.value = "");
+      document.querySelectorAll("select").forEach(el => el.value = "");
+      document.querySelectorAll("input[type='radio']").forEach(el => el.checked = false);
+      document.querySelectorAll(".feedback").forEach(el => {
+        el.textContent = "";
+        el.className = "feedback";
+      });
+
+      document.getElementById("score-box").classList.remove("visible");
+      document.getElementById("summary-panel").hidden = true;
+      localStorage.removeItem(STORAGE_KEY);
+      currentPage = 0;
+      updateNavigation();
+    }
+
+    document.addEventListener("change", saveProgress);
+    document.addEventListener("input", saveProgress);
+
+    loadProgress();
+    updateNavigation();
+  </script>
+</body>
+</html>

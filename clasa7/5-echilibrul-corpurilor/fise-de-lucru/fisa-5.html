@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fișa 5 | Centrul de greutate | Fizica Galaction</title>
+  <meta
+    name="description"
+    content="Fișă de lucru interactivă pentru clasa a VII-a: centrul de greutate, baza de sprijin și tipurile de echilibru."
+  >
+  <link rel="stylesheet" href="../../../assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root {
+      --bg: #071827;
+      --card: #102a3d;
+      --soft: #17384e;
+      --deep: #0b2233;
+      --text: #f8fafc;
+      --muted: #d5e4ee;
+      --primary: #22d3ee;
+      --success: #4ade80;
+      --error: #fda4af;
+      --warning: #fde68a;
+      --border: #4c7185;
+      --focus: #facc15;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(34, 211, 238, 0.14), transparent 32rem),
+        var(--bg);
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .wrapper,
+    .page-content {
+      width: min(100%, 920px);
+      margin: 0 auto;
+    }
+
+    .site-header {
+      padding: 18px 16px;
+      background: linear-gradient(135deg, #075985, #0e7490);
+      border-bottom: 3px solid var(--primary);
+    }
+
+    .site-title {
+      margin: 0;
+      color: #fff;
+      font-size: clamp(1.35rem, 4vw, 2rem);
+    }
+
+    .site-subtitle {
+      margin: 4px 0 0;
+      color: #e0f2fe;
+    }
+
+    .page-content { padding: 16px; }
+
+    .hero,
+    .worksheet-shell,
+    .panel {
+      background: rgba(16, 42, 61, 0.98);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+    }
+
+    .hero {
+      margin-bottom: 16px;
+      padding: clamp(18px, 4vw, 30px);
+    }
+
+    h1, h2, h3, p, label, legend, li { color: var(--text); }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.55rem, 5vw, 2.45rem);
+      line-height: 1.2;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: clamp(1.3rem, 4vw, 1.8rem);
+    }
+
+    h3 { color: #cffafe; }
+
+    .quote {
+      margin: 12px 0;
+      padding: 12px 14px;
+      color: #fef9c3;
+      background: var(--deep);
+      border-left: 4px solid var(--primary);
+      border-radius: 8px;
+      font-style: italic;
+    }
+
+    .hint { color: var(--muted); }
+
+    .notice {
+      margin: 14px 0;
+      padding: 12px 14px;
+      color: #fef9c3;
+      background: #332b0a;
+      border: 1px solid #a16207;
+      border-radius: 12px;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 18px 0 7px;
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .progress-track {
+      height: 12px;
+      overflow: hidden;
+      background: #06121e;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+
+    .progress-fill {
+      width: 25%;
+      height: 100%;
+      background: linear-gradient(90deg, #22c55e, var(--primary));
+      transition: width 0.25s ease;
+    }
+
+    .worksheet-shell { overflow: hidden; }
+
+    .worksheet-page {
+      display: none;
+      min-height: 560px;
+      padding: clamp(18px, 4vw, 30px);
+    }
+
+    .worksheet-page.active {
+      display: block;
+      animation: pageIn 0.22s ease-out;
+    }
+
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .formula-card,
+    .question-block,
+    .diagram-card,
+    .info-card,
+    .example-card {
+      margin: 14px 0;
+      padding: 16px;
+      background: var(--soft);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .formula-card { text-align: center; }
+
+    .formula-large {
+      padding: 6px;
+      overflow-x: auto;
+      font-size: clamp(1.12rem, 4vw, 1.5rem);
+    }
+
+    .example-card { border-left: 5px solid var(--success); }
+
+    .concept-grid,
+    .type-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .concept-grid > div,
+    .type-grid > div {
+      padding: 14px;
+      background: var(--deep);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .concept-grid strong,
+    .type-grid strong {
+      color: #cffafe;
+      font-size: 1.04rem;
+    }
+
+    .diagram-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .cg-diagram {
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 12px;
+    }
+
+    .cg-diagram svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .comparison {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+
+    .comparison th,
+    .comparison td {
+      padding: 10px;
+      border: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .comparison th {
+      color: #cffafe;
+      background: var(--deep);
+    }
+
+    .comparison td {
+      color: var(--text);
+      background: var(--soft);
+    }
+
+    fieldset {
+      min-width: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    legend {
+      width: 100%;
+      margin-bottom: 12px;
+      font-weight: 750;
+    }
+
+    .option-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option-row {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      background: var(--deep);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .option-row:hover { border-color: var(--primary); }
+
+    .option-row input {
+      width: 20px;
+      height: 20px;
+      margin: 2px 0 0;
+      accent-color: #0891b2;
+    }
+
+    select {
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 12px;
+      color: #fff;
+      background: #061827;
+      border: 2px solid #7899aa;
+      border-radius: 11px;
+      font: inherit;
+    }
+
+    select option {
+      color: #fff;
+      background: #061827;
+    }
+
+    select:focus,
+    button:focus,
+    a:focus {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .feedback {
+      min-height: 1.5em;
+      margin-top: 8px;
+      font-weight: 800;
+    }
+
+    .feedback.correct { color: var(--success); }
+    .feedback.incorrect { color: var(--error); }
+
+    .page-actions {
+      position: sticky;
+      bottom: 0;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 12px;
+      padding: 14px;
+      background: rgba(7, 24, 39, 0.97);
+      border-top: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 52px;
+      padding: 12px 16px;
+      color: #042f3e;
+      background: var(--primary);
+      border: 0;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 850;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .button.secondary {
+      color: #0f172a;
+      background: #e2e8f0;
+    }
+
+    .button.success {
+      color: #052e16;
+      background: #22c55e;
+    }
+
+    .button.danger {
+      color: #4c0519;
+      background: #fda4af;
+    }
+
+    .score-box {
+      display: none;
+      margin-top: 18px;
+      padding: 18px;
+      text-align: center;
+      background: #082f49;
+      border: 2px solid var(--primary);
+      border-radius: 14px;
+    }
+
+    .score-box.visible { display: block; }
+
+    .score-number {
+      color: #a7f3d0;
+      font-size: clamp(2.2rem, 9vw, 4rem);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .panel {
+      margin-top: 16px;
+      padding: 18px;
+    }
+
+    .panel[hidden] { display: none; }
+
+    .static-actions {
+      position: static;
+      padding: 0;
+      background: transparent;
+      border: 0;
+    }
+
+    .site-footer {
+      margin-top: 26px;
+      padding: 20px 16px;
+      color: var(--muted);
+      background: #06121e;
+      border-top: 2px solid var(--border);
+      text-align: center;
+    }
+
+    .site-footer p,
+    .site-footer a { color: var(--muted); }
+
+    @media (max-width: 720px) {
+      body { font-size: 15px; }
+      .page-content { padding: 10px; }
+
+      .worksheet-page {
+        min-height: 0;
+        padding: 16px 13px;
+      }
+
+      .concept-grid,
+      .type-grid,
+      .diagram-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .comparison {
+        display: block;
+        overflow-x: auto;
+      }
+
+      .page-actions { grid-template-columns: 1fr; }
+      .page-actions .button { min-height: 56px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="wrapper">
+      <h1 class="site-title">Fizica Galaction</h1>
+      <p class="site-subtitle">Clasa a VII-a · Capitolul 5 – Echilibrul corpurilor · Fișa 5 din 7</p>
+    </div>
+  </header>
+
+  <main class="page-content">
+    <section class="hero">
+      <h1>Fișa 5 – Centrul de greutate</h1>
+      <p class="quote">„Nu contează doar cât de greu este un corp, ci și unde se află centrul lui de greutate.”</p>
+      <p class="hint">
+        Urmărește poziția centrului de greutate și a bazei de sprijin.
+        Parcurge cele 4 pagini, apoi apasă <strong>„Verifică fișa”</strong>.
+      </p>
+
+      <div class="progress-meta">
+        <span id="page-label">Pagina 1 din 4</span>
+        <span id="progress-percent">25%</span>
+      </div>
+      <div class="progress-track" aria-hidden="true">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </section>
+
+    <section class="worksheet-shell" aria-label="Fișă de lucru">
+      <!-- PAGINA 1 -->
+      <article class="worksheet-page active" data-page="0">
+        <h2>1. Ce este centrul de greutate?</h2>
+
+        <div class="formula-card">
+          <p>
+            <strong>Centrul de greutate</strong> este punctul în care putem considera
+            aplicată rezultanta forțelor de greutate ale tuturor părților unui corp.
+          </p>
+          <p>
+            În acest punct putem considera că „acționează” greutatea totală a corpului.
+          </p>
+        </div>
+
+        <div class="concept-grid">
+          <div>
+            <strong>Corp omogen și simetric</strong>
+            <p>Centrul de greutate se află în centrul geometric.</p>
+          </div>
+          <div>
+            <strong>Corp neomogen sau neregulat</strong>
+            <p>Centrul de greutate poate fi deplasat față de centrul geometric.</p>
+          </div>
+          <div>
+            <strong>Corp concav</strong>
+            <p>Centrul de greutate poate fi chiar în afara materialului corpului.</p>
+          </div>
+        </div>
+
+        <div class="diagram-grid">
+          <div class="diagram-card">
+            <h3>Placă omogenă și simetrică</h3>
+            <div class="cg-diagram">
+              <svg viewBox="0 0 360 260" role="img" aria-label="Placă dreptunghiulară cu centrul de greutate în centrul geometric">
+                <rect x="70" y="45" width="220" height="160" rx="8" fill="#bae6fd" stroke="#0f172a" stroke-width="4"/>
+                <line x1="180" y1="45" x2="180" y2="205" stroke="#64748b" stroke-width="2" stroke-dasharray="8 6"/>
+                <line x1="70" y1="125" x2="290" y2="125" stroke="#64748b" stroke-width="2" stroke-dasharray="8 6"/>
+                <circle cx="180" cy="125" r="11" fill="#be123c"/>
+                <text x="197" y="132" fill="#0f172a" font-size="24">G</text>
+              </svg>
+            </div>
+          </div>
+
+          <div class="diagram-card">
+            <h3>Inel</h3>
+            <div class="cg-diagram">
+              <svg viewBox="0 0 360 260" role="img" aria-label="Inel cu centrul de greutate în centrul gol">
+                <circle cx="180" cy="125" r="83" fill="#bae6fd" stroke="#0f172a" stroke-width="4"/>
+                <circle cx="180" cy="125" r="47" fill="#f8fafc" stroke="#0f172a" stroke-width="3"/>
+                <circle cx="180" cy="125" r="11" fill="#be123c"/>
+                <text x="197" y="132" fill="#0f172a" font-size="24">G</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>1. Centrul de greutate este:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q1" value="punct"><span>punctul în care putem considera aplicată greutatea totală</span></label>
+              <label class="option-row"><input type="radio" name="q1" value="masa"><span>masa totală a corpului</span></label>
+              <label class="option-row"><input type="radio" name="q1" value="suprafata"><span>întotdeauna un punct de pe suprafața corpului</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q1" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>2. Pentru un corp omogen și simetric, centrul de greutate se află:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q2" value="geometric"><span>în centrul geometric</span></label>
+              <label class="option-row"><input type="radio" name="q2" value="margine"><span>obligatoriu pe margine</span></label>
+              <label class="option-row"><input type="radio" name="q2" value="jos"><span>întotdeauna în punctul cel mai de jos</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q2" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <label for="q3"><strong>3. La un inel, centrul de greutate:</strong></label>
+          <select id="q3">
+            <option value="">Alege varianta...</option>
+            <option value="centru">se află în centrul geometric, deși acolo nu există material</option>
+            <option value="material">trebuie să fie într-un punct în care există material</option>
+            <option value="margine">se află întotdeauna pe marginea exterioară</option>
+          </select>
+          <div id="fb-q3" class="feedback"></div>
+        </div>
+      </article>
+
+      <!-- PAGINA 2 -->
+      <article class="worksheet-page" data-page="1">
+        <h2>2. Determinarea experimentală</h2>
+
+        <div class="formula-card">
+          <p>
+            Pentru un corp subțire și neregulat, centrul de greutate poate fi
+            determinat prin suspendare.
+          </p>
+        </div>
+
+        <div class="concept-grid">
+          <div>
+            <strong>Pasul 1</strong>
+            <p>Se suspendă corpul dintr-un punct și se trasează verticala firului cu plumb.</p>
+          </div>
+          <div>
+            <strong>Pasul 2</strong>
+            <p>Se suspendă corpul din alt punct și se trasează o nouă verticală.</p>
+          </div>
+          <div>
+            <strong>Concluzie</strong>
+            <p>Intersecția verticalelor reprezintă centrul de greutate.</p>
+          </div>
+        </div>
+
+        <div class="diagram-card">
+          <h3>Metoda suspendării</h3>
+          <div class="cg-diagram">
+            <svg viewBox="0 0 720 370" role="img" aria-label="Determinarea centrului de greutate prin două suspendări">
+              <path d="M190,70 L300,45 L360,115 L330,270 L180,300 L105,205 Z"
+                    fill="#bae6fd" stroke="#0f172a" stroke-width="4"/>
+              <circle cx="190" cy="70" r="8" fill="#334155"/>
+              <circle cx="330" cy="270" r="8" fill="#334155"/>
+              <line x1="190" y1="70" x2="190" y2="330" stroke="#be123c" stroke-width="4" stroke-dasharray="9 7"/>
+              <line x1="330" y1="270" x2="85" y2="70" stroke="#0369a1" stroke-width="4" stroke-dasharray="9 7"/>
+              <circle cx="190" cy="156" r="11" fill="#22c55e"/>
+              <text x="207" y="164" fill="#0f172a" font-size="24">G</text>
+              <text x="420" y="120" fill="#0f172a" font-size="22">Intersecția celor două</text>
+              <text x="420" y="153" fill="#0f172a" font-size="22">verticale indică centrul</text>
+              <text x="420" y="186" fill="#0f172a" font-size="22">de greutate.</text>
+            </svg>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>4. Metoda suspendării se folosește pentru:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q4" value="neregulat"><span>corpuri subțiri, de formă neregulată</span></label>
+              <label class="option-row"><input type="radio" name="q4" value="gaz"><span>numai pentru gaze</span></label>
+              <label class="option-row"><input type="radio" name="q4" value="viteza"><span>măsurarea vitezei corpului</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q4" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>5. La fiecare suspendare se trasează:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q5" value="verticala"><span>verticala firului cu plumb</span></label>
+              <label class="option-row"><input type="radio" name="q5" value="orizontala"><span>numai o linie orizontală</span></label>
+              <label class="option-row"><input type="radio" name="q5" value="cerc"><span>un cerc în jurul corpului</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q5" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>6. Centrul de greutate este:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q6" value="intersectie"><span>punctul de intersecție al verticalelor</span></label>
+              <label class="option-row"><input type="radio" name="q6" value="suspendare"><span>primul punct de suspendare</span></label>
+              <label class="option-row"><input type="radio" name="q6" value="margine"><span>cel mai apropiat punct de margine</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q6" class="feedback"></div>
+        </div>
+      </article>
+
+      <!-- PAGINA 3 -->
+      <article class="worksheet-page" data-page="2">
+        <h2>3. Centrul de greutate și echilibrul</h2>
+
+        <div class="formula-card">
+          <p>
+            Un corp rămâne în echilibru cât timp verticala dusă prin centrul de
+            greutate cade în interiorul bazei de sprijin.
+          </p>
+          <div class="formula-large">
+            \[
+              \text{echilibru}
+              \Rightarrow
+              \text{verticala prin }G
+              \text{ cade în baza de sprijin}
+            \]
+          </div>
+        </div>
+
+        <div class="diagram-grid">
+          <div class="diagram-card">
+            <h3>Corpul rămâne în echilibru</h3>
+            <div class="cg-diagram">
+              <svg viewBox="0 0 360 300" role="img" aria-label="Verticala centrului de greutate cade în baza de sprijin">
+                <polygon points="120,55 250,75 235,230 105,215" fill="#bae6fd" stroke="#0f172a" stroke-width="4"/>
+                <circle cx="177" cy="140" r="10" fill="#be123c"/>
+                <line x1="177" y1="140" x2="177" y2="258" stroke="#be123c" stroke-width="4" stroke-dasharray="8 6"/>
+                <line x1="80" y1="240" x2="270" y2="240" stroke="#334155" stroke-width="7"/>
+                <line x1="105" y1="260" x2="235" y2="260" stroke="#0369a1" stroke-width="5"/>
+                <text x="195" y="145" fill="#0f172a" font-size="22">G</text>
+                <text x="110" y="288" fill="#0f172a" font-size="19">baza de sprijin</text>
+              </svg>
+            </div>
+          </div>
+
+          <div class="diagram-card">
+            <h3>Corpul se răstoarnă</h3>
+            <div class="cg-diagram">
+              <svg viewBox="0 0 360 300" role="img" aria-label="Verticala centrului de greutate iese în afara bazei de sprijin">
+                <polygon points="175,40 300,95 220,235 95,180" fill="#fde68a" stroke="#0f172a" stroke-width="4"/>
+                <circle cx="220" cy="135" r="10" fill="#be123c"/>
+                <line x1="220" y1="135" x2="220" y2="265" stroke="#be123c" stroke-width="4" stroke-dasharray="8 6"/>
+                <line x1="65" y1="240" x2="285" y2="240" stroke="#334155" stroke-width="7"/>
+                <line x1="95" y1="260" x2="165" y2="260" stroke="#0369a1" stroke-width="5"/>
+                <text x="238" y="140" fill="#0f172a" font-size="22">G</text>
+                <text x="75" y="288" fill="#0f172a" font-size="19">baza de sprijin</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <table class="comparison">
+          <thead>
+            <tr>
+              <th>Tip de echilibru</th>
+              <th>Comportare după o mică deplasare</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Stabil</td>
+              <td>Corpul revine la poziția inițială.</td>
+            </tr>
+            <tr>
+              <td>Instabil</td>
+              <td>Corpul se îndepărtează de poziția inițială.</td>
+            </tr>
+            <tr>
+              <td>Indiferent</td>
+              <td>Corpul rămâne în noua poziție.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>7. Corpul rămâne în echilibru dacă verticala prin \(G\):</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q7" value="interior"><span>cade în interiorul bazei de sprijin</span></label>
+              <label class="option-row"><input type="radio" name="q7" value="exterior"><span>cade obligatoriu în afara bazei</span></label>
+              <label class="option-row"><input type="radio" name="q7" value="orizontal"><span>devine orizontală</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q7" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>8. În echilibru stabil, după o mică deplasare, corpul:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q8" value="revine"><span>revine la poziția inițială</span></label>
+              <label class="option-row"><input type="radio" name="q8" value="se_departeaza"><span>se îndepărtează de poziția inițială</span></label>
+              <label class="option-row"><input type="radio" name="q8" value="noua"><span>rămâne în noua poziție</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q8" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>9. În echilibru indiferent, după o mică deplasare, corpul:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q9" value="noua"><span>rămâne în noua poziție</span></label>
+              <label class="option-row"><input type="radio" name="q9" value="revine"><span>revine obligatoriu la poziția inițială</span></label>
+              <label class="option-row"><input type="radio" name="q9" value="cade"><span>se răstoarnă în orice situație</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q9" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>10. În echilibru instabil, după o mică deplasare, corpul:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q10" value="departeaza"><span>se îndepărtează de poziția inițială</span></label>
+              <label class="option-row"><input type="radio" name="q10" value="revine"><span>revine la poziția inițială</span></label>
+              <label class="option-row"><input type="radio" name="q10" value="noua"><span>rămâne mereu în noua poziție</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q10" class="feedback"></div>
+        </div>
+      </article>
+
+      <!-- PAGINA 4 -->
+      <article class="worksheet-page" data-page="3">
+        <h2>4. Cum creștem stabilitatea?</h2>
+
+        <div class="formula-card">
+          <p>Stabilitatea unui corp crește dacă:</p>
+          <div class="concept-grid">
+            <div>
+              <strong>Centrul de greutate este mai jos</strong>
+              <p>Corpul se răstoarnă mai greu.</p>
+            </div>
+            <div>
+              <strong>Baza de sprijin este mai mare</strong>
+              <p>Verticala prin \(G\) rămâne mai ușor în interiorul bazei.</p>
+            </div>
+            <div>
+              <strong>Ambele condiții sunt îndeplinite</strong>
+              <p>Stabilitatea devine mai mare.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="example-card">
+          <h3>Raport vizual</h3>
+          <div class="formula-large">
+            \[
+              \frac{\text{stabilitate}_{2}}
+                   {\text{stabilitate}_{1}}>1
+            \]
+          </div>
+          <p>Exemplu numeric de raport mai mare decât 1:</p>
+          <div class="formula-large">
+            \[
+              \frac{3}{2}>1
+            \]
+          </div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>11. Stabilitatea unui corp crește dacă:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q11" value="jos_mare"><span>centrul de greutate coboară și baza de sprijin crește</span></label>
+              <label class="option-row"><input type="radio" name="q11" value="sus_mica"><span>centrul de greutate urcă și baza se micșorează</span></label>
+              <label class="option-row"><input type="radio" name="q11" value="masa"><span>masa dispare</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q11" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>12. O persoană își depărtează picioarele pentru a:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q12" value="baza"><span>mări baza de sprijin și stabilitatea</span></label>
+              <label class="option-row"><input type="radio" name="q12" value="masa"><span>micșora masa corpului</span></label>
+              <label class="option-row"><input type="radio" name="q12" value="greutate"><span>anula greutatea</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q12" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>13. Gimnaștii și luptătorii coboară centrul de greutate pentru a fi:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q13" value="stabili"><span>mai stabili</span></label>
+              <label class="option-row"><input type="radio" name="q13" value="mai_usori"><span>mai ușori</span></label>
+              <label class="option-row"><input type="radio" name="q13" value="fara_greutate"><span>fără greutate</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q13" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>14. Un autobuz cu centrul de greutate mai sus:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q14" value="rasturnare"><span>se poate răsturna mai ușor decât un autoturism jos</span></label>
+              <label class="option-row"><input type="radio" name="q14" value="mai_stabil"><span>este întotdeauna mai stabil</span></label>
+              <label class="option-row"><input type="radio" name="q14" value="fara_baza"><span>nu are bază de sprijin</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q14" class="feedback"></div>
+        </div>
+
+        <div id="score-box" class="score-box" aria-live="polite">
+          <div class="score-number" id="score-number">0/14</div>
+          <p id="score-message"></p>
+        </div>
+      </article>
+
+      <nav class="page-actions" aria-label="Navigarea în fișă">
+        <button type="button" class="button secondary" id="back-btn" onclick="changePage(-1)">⬅ Înapoi</button>
+        <button type="button" class="button" id="next-btn" onclick="changePage(1)">Mergi mai departe ➡</button>
+        <button type="button" class="button success" id="check-btn" onclick="checkWorksheet()" hidden>Verifică fișa ✓</button>
+      </nav>
+    </section>
+
+    <section class="panel" id="summary-panel" hidden>
+      <h2>Rezultat</h2>
+      <p id="summary-text"></p>
+      <div class="page-actions static-actions" style="grid-template-columns:1fr;">
+        <button type="button" class="button danger" onclick="resetWorksheet()">Resetează fișa</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Continuă în platformă</h2>
+      <div class="page-actions static-actions">
+        <a class="button secondary" href="index.html">Înapoi la fișe</a>
+        <a class="button" href="../lectii/lectia-5.html">Vezi lecția 5</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrapper">
+      <p>© Fizica Galaction · Prof. DĂNUȚ ANDRONIE</p>
+      <p>E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a></p>
+    </div>
+  </footer>
+
+  <script src="../../../assets/js/main.js"></script>
+  <script>
+    const STORAGE_KEY = "fizica-galaction-c7-cap5-fisa5-centrul-de-greutate";
+    const pages = [...document.querySelectorAll(".worksheet-page")];
+    let currentPage = 0;
+
+    function radioValue(name) {
+      const selected = document.querySelector(`input[name="${name}"]:checked`);
+      return selected ? selected.value : "";
+    }
+
+    function feedback(id, ok, answer) {
+      const box = document.getElementById("fb-" + id);
+      box.className = "feedback " + (ok ? "correct" : "incorrect");
+      box.textContent = ok ? "Corect! ✓" : "Mai verifică. Răspuns corect: " + answer;
+    }
+
+    function updateNavigation() {
+      pages.forEach((page, index) => page.classList.toggle("active", index === currentPage));
+
+      const percent = Math.round((currentPage + 1) / pages.length * 100);
+      document.getElementById("page-label").textContent = `Pagina ${currentPage + 1} din ${pages.length}`;
+      document.getElementById("progress-percent").textContent = percent + "%";
+      document.getElementById("progress-fill").style.width = percent + "%";
+      document.getElementById("back-btn").style.visibility = currentPage === 0 ? "hidden" : "visible";
+      document.getElementById("next-btn").hidden = currentPage === pages.length - 1;
+      document.getElementById("check-btn").hidden = currentPage !== pages.length - 1;
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([pages[currentPage]]).catch(() => {});
+      }
+    }
+
+    function changePage(step) {
+      saveProgress();
+      currentPage = Math.max(0, Math.min(pages.length - 1, currentPage + step));
+      updateNavigation();
+    }
+
+    function saveProgress() {
+      const data = { currentPage, fields: {} };
+
+      document.querySelectorAll("select").forEach(el => {
+        data.fields[el.id] = el.value;
+      });
+
+      document.querySelectorAll("input[type='radio']:checked").forEach(el => {
+        data.fields["radio:" + el.name] = el.value;
+      });
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function loadProgress() {
+      try {
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (!data || !data.fields) return;
+
+        Object.entries(data.fields).forEach(([key, value]) => {
+          if (key.startsWith("radio:")) {
+            const name = key.slice(6);
+            const el = document.querySelector(`input[name="${name}"][value="${value}"]`);
+            if (el) el.checked = true;
+          } else {
+            const el = document.getElementById(key);
+            if (el) el.value = value;
+          }
+        });
+
+        currentPage = Number.isInteger(data.currentPage)
+          ? Math.max(0, Math.min(pages.length - 1, data.currentPage))
+          : 0;
+      } catch {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+
+    function checkWorksheet() {
+      let score = 0;
+
+      const items = [
+        ["q1", radioValue("q1"), "punct", "punctul în care putem considera aplicată greutatea totală"],
+        ["q2", radioValue("q2"), "geometric", "în centrul geometric"],
+        ["q3", document.getElementById("q3").value, "centru", "în centrul geometric, chiar dacă acolo nu există material"],
+        ["q4", radioValue("q4"), "neregulat", "corpuri subțiri, de formă neregulată"],
+        ["q5", radioValue("q5"), "verticala", "verticala firului cu plumb"],
+        ["q6", radioValue("q6"), "intersectie", "punctul de intersecție al verticalelor"],
+        ["q7", radioValue("q7"), "interior", "cade în interiorul bazei de sprijin"],
+        ["q8", radioValue("q8"), "revine", "revine la poziția inițială"],
+        ["q9", radioValue("q9"), "noua", "rămâne în noua poziție"],
+        ["q10", radioValue("q10"), "departeaza", "se îndepărtează de poziția inițială"],
+        ["q11", radioValue("q11"), "jos_mare", "centrul de greutate coboară și baza crește"],
+        ["q12", radioValue("q12"), "baza", "mărește baza de sprijin și stabilitatea"],
+        ["q13", radioValue("q13"), "stabili", "mai stabili"],
+        ["q14", radioValue("q14"), "rasturnare", "se poate răsturna mai ușor"]
+      ];
+
+      items.forEach(([id, value, expected, answer]) => {
+        const ok = value === expected;
+        if (ok) score++;
+        feedback(id, ok, answer);
+      });
+
+      const total = 14;
+      const percent = Math.round(score / total * 100);
+      let message = "Reia poziția centrului de greutate și condiția bazei de sprijin.";
+
+      if (percent >= 90) {
+        message = "Excelent! Stăpânești foarte bine centrul de greutate și stabilitatea.";
+      } else if (percent >= 70) {
+        message = "Foarte bine! Mai verifică itemii marcați.";
+      } else if (percent >= 50) {
+        message = "Ești pe drumul cel bun. Verifică tipurile de echilibru.";
+      }
+
+      document.getElementById("score-number").textContent = `${score}/${total}`;
+      document.getElementById("score-message").textContent = `${percent}% · ${message}`;
+      document.getElementById("summary-text").textContent =
+        `Ai obținut ${score} puncte din ${total}. Răspunsurile de revizuit sunt marcate lângă itemi.`;
+
+      document.getElementById("score-box").classList.add("visible");
+      document.getElementById("summary-panel").hidden = false;
+      saveProgress();
+
+      document.getElementById("score-box").scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+
+    function resetWorksheet() {
+      document.querySelectorAll("select").forEach(el => el.value = "");
+      document.querySelectorAll("input[type='radio']").forEach(el => el.checked = false);
+      document.querySelectorAll(".feedback").forEach(el => {
+        el.textContent = "";
+        el.className = "feedback";
+      });
+
+      document.getElementById("score-box").classList.remove("visible");
+      document.getElementById("summary-panel").hidden = true;
+      localStorage.removeItem(STORAGE_KEY);
+      currentPage = 0;
+      updateNavigation();
+    }
+
+    document.addEventListener("change", saveProgress);
+
+    loadProgress();
+    updateNavigation();
+  </script>
+</body>
+</html>

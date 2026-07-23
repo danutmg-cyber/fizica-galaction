@@ -1,12 +1,992 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interacțiuni - Fișe de lucru</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="description" content="Fișe de lucru interactive pentru capitolul Interacțiuni, Fizică, clasa a VII-a.">
+  <meta name="theme-color" content="#0f172a">
+  <title>Interacțiuni – Fișe de lucru | Fizica Galaction</title>
+
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0f172a;
+      --bg-soft: #111c31;
+      --surface: #1e293b;
+      --surface-2: #25334a;
+      --border: #3b4a62;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --primary: #22d3ee;
+      --primary-dark: #0e7490;
+      --primary-text: #083344;
+      --success: #4ade80;
+      --success-dark: #166534;
+      --warning: #fde68a;
+      --shadow: 0 18px 45px rgba(0, 0, 0, 0.28);
+      --radius-lg: 22px;
+      --radius-md: 14px;
+    }
+
+    body[data-theme="light"] {
+      color-scheme: light;
+      --bg: #eef6fb;
+      --bg-soft: #f8fafc;
+      --surface: #ffffff;
+      --surface-2: #f1f5f9;
+      --border: #cbd5e1;
+      --text: #0f172a;
+      --muted: #475569;
+      --primary: #0891b2;
+      --primary-dark: #155e75;
+      --primary-text: #ffffff;
+      --success: #16a34a;
+      --success-dark: #166534;
+      --warning: #854d0e;
+      --shadow: 0 16px 36px rgba(15, 23, 42, 0.11);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(34, 211, 238, 0.11), transparent 32rem),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+    }
+
+    button,
+    input,
+    a {
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: 8px;
+      left: 8px;
+      z-index: 100;
+      padding: 10px 14px;
+      border-radius: 10px;
+      background: var(--primary);
+      color: var(--primary-text);
+      font-weight: 800;
+      transform: translateY(-150%);
+      transition: transform 0.2s ease;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .site-header {
+      border-bottom: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.84);
+      backdrop-filter: blur(12px);
+    }
+
+    body[data-theme="light"] .site-header {
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    .wrapper {
+      width: min(1120px, calc(100% - 28px));
+      margin: 0 auto;
+    }
+
+    .topbar {
+      min-height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand {
+      text-decoration: none;
+      font-size: clamp(1.1rem, 4vw, 1.35rem);
+      font-weight: 900;
+      letter-spacing: 0.01em;
+    }
+
+    .brand span {
+      color: var(--primary);
+    }
+
+    .theme-switch {
+      min-height: 44px;
+      padding: 10px 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--surface);
+      color: var(--text);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .theme-switch:hover,
+    .theme-switch:focus-visible {
+      border-color: var(--primary);
+      outline: 3px solid rgba(34, 211, 238, 0.18);
+    }
+
+    main {
+      padding: 30px 0 50px;
+    }
+
+    .hero {
+      padding: clamp(22px, 5vw, 42px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(135deg, rgba(34, 211, 238, 0.11), transparent 55%),
+        var(--surface);
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      color: var(--primary);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.82rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 7vw, 3.7rem);
+      line-height: 1.08;
+    }
+
+    .subtitle {
+      max-width: 760px;
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: clamp(1rem, 2.5vw, 1.18rem);
+    }
+
+    .quote {
+      margin: 20px 0 0;
+      padding: 12px 14px;
+      border-left: 4px solid var(--primary);
+      border-radius: 8px;
+      background: rgba(34, 211, 238, 0.08);
+      color: var(--warning);
+      font-weight: 800;
+    }
+
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 22px;
+    }
+
+    .stat {
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: var(--bg-soft);
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 10px;
+      z-index: 20;
+      margin: 24px 0;
+      padding: 12px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: color-mix(in srgb, var(--surface) 92%, transparent);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.16);
+      backdrop-filter: blur(12px);
+    }
+
+    .search-wrap {
+      position: relative;
+    }
+
+    .search-wrap span {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    #searchInput {
+      width: 100%;
+      min-height: 48px;
+      padding: 11px 14px 11px 44px;
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    #searchInput::placeholder {
+      color: var(--muted);
+      opacity: 1;
+    }
+
+    #searchInput:focus {
+      border-color: var(--primary);
+      outline: 3px solid rgba(34, 211, 238, 0.16);
+    }
+
+    .clear-button {
+      min-height: 48px;
+      padding: 10px 16px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--surface-2);
+      color: var(--text);
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .clear-button:hover,
+    .clear-button:focus-visible {
+      border-color: var(--primary);
+      outline: 3px solid rgba(34, 211, 238, 0.16);
+    }
+
+    .section {
+      margin-top: 34px;
+    }
+
+    .section-heading {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    .section-heading h2 {
+      margin: 0;
+      font-size: clamp(1.35rem, 4vw, 1.8rem);
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .worksheet-card {
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      background: var(--surface);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+      transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .worksheet-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--primary);
+      box-shadow: var(--shadow);
+    }
+
+    .card-body {
+      flex: 1;
+      padding: 18px;
+    }
+
+    .card-topline {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .number {
+      display: inline-flex;
+      width: 42px;
+      height: 42px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 13px;
+      background: var(--primary);
+      color: var(--primary-text);
+      font-weight: 950;
+      font-size: 1.05rem;
+    }
+
+    .visited {
+      display: none;
+      padding: 5px 9px;
+      border: 1px solid rgba(74, 222, 128, 0.5);
+      border-radius: 999px;
+      color: var(--success);
+      font-size: 0.78rem;
+      font-weight: 900;
+    }
+
+    .worksheet-card.is-visited .visited {
+      display: inline-block;
+    }
+
+    .worksheet-card h3 {
+      margin: 0;
+      font-size: 1.12rem;
+      line-height: 1.35;
+    }
+
+    .worksheet-card p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .card-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 9px;
+      padding: 14px;
+      border-top: 1px solid var(--border);
+      background: var(--bg-soft);
+    }
+
+    .button {
+      min-height: 45px;
+      padding: 10px 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid transparent;
+      border-radius: 11px;
+      text-align: center;
+      text-decoration: none;
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .button.primary {
+      background: var(--primary);
+      color: var(--primary-text);
+    }
+
+    .button.secondary {
+      border-color: var(--border);
+      background: var(--surface);
+      color: var(--text);
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      filter: brightness(1.06);
+      outline: 3px solid rgba(34, 211, 238, 0.2);
+    }
+
+    .empty-state {
+      display: none;
+      margin-top: 22px;
+      padding: 24px;
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-md);
+      text-align: center;
+      color: var(--muted);
+      background: var(--surface);
+    }
+
+    .bottom-actions {
+      margin-top: 36px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .bottom-actions .button {
+      min-width: 210px;
+    }
+
+    .site-footer {
+      padding: 26px 0 36px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .site-footer p {
+      margin: 4px 0;
+    }
+
+    .site-footer a {
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    @media (max-width: 900px) {
+      .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 620px) {
+      .wrapper {
+        width: min(100% - 20px, 1120px);
+      }
+
+      .topbar {
+        min-height: 64px;
+      }
+
+      .theme-switch span:last-child {
+        display: none;
+      }
+
+      .toolbar {
+        position: static;
+        grid-template-columns: 1fr;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .section-heading {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+      }
+
+      .card-actions {
+        grid-template-columns: 1fr;
+      }
+
+      .bottom-actions {
+        flex-direction: column;
+      }
+
+      .bottom-actions .button {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+  </style>
 </head>
+
 <body>
-  <h1>Interacțiuni - Fișe de lucru</h1>
-  <p>Pagina este în lucru.</p>
+  <a class="skip-link" href="#lista-fise">Sari la lista fișelor</a>
+
+  <header class="site-header">
+    <div class="wrapper topbar">
+      <a class="brand" href="../../../index.html">Fizica <span>Galaction</span></a>
+
+      <button class="theme-switch" id="themeSwitch" type="button" aria-label="Comută tema paginii">
+        <span id="themeIcon" aria-hidden="true">☀️</span>
+        <span id="themeLabel">Mod zi</span>
+      </button>
+    </div>
+  </header>
+
+  <main class="wrapper">
+    <section class="hero">
+      <p class="eyebrow">Fizică · Clasa a VII-a · Capitolul 2</p>
+      <h1>Interacțiuni – Fișe de lucru</h1>
+      <p class="subtitle">
+        Exersează noțiunile despre forțe, principiile mecanicii, compunerea și
+        descompunerea forțelor. Fiecare fișă este interactivă și adaptată pentru
+        telefon, tabletă și PC.
+      </p>
+
+      <p class="quote">„Fizica nu este o materie dominată de formule, ci de logică”</p>
+
+      <div class="stats" aria-label="Informații despre colecție">
+        <span class="stat">16 fișe interactive</span>
+        <span class="stat">Verificare automată</span>
+        <span class="stat">Navigare pe pagini</span>
+      </div>
+    </section>
+
+    <section class="toolbar" aria-label="Instrumente de filtrare">
+      <div class="search-wrap">
+        <span aria-hidden="true">🔎</span>
+        <label for="searchInput" class="skip-link">Caută o fișă</label>
+        <input
+          id="searchInput"
+          type="search"
+          autocomplete="off"
+          placeholder="Caută după număr sau titlu..."
+          aria-describedby="resultCount"
+        >
+      </div>
+      <button class="clear-button" id="clearSearch" type="button">Șterge căutarea</button>
+    </section>
+
+    <p id="resultCount" aria-live="polite">Sunt afișate toate cele 16 fișe.</p>
+
+    <div id="lista-fise">
+      <section class="section worksheet-group" data-group>
+        <div class="section-heading">
+          <h2>A. Principiile mecanicii</h2>
+          <p>Fișele 1–5</p>
+        </div>
+
+        <div class="cards">
+          <article class="worksheet-card" data-card data-number="1" data-title="Interacțiunea. Efectele interacțiunii">
+            <div class="card-body">
+              <div class="card-topline">
+                <span class="number">1</span>
+                <span class="visited">Parcursă</span>
+              </div>
+              <h3>Interacțiunea. Efectele interacțiunii</h3>
+              <p>Identificarea interacțiunilor și a efectelor statice și dinamice.</p>
+            </div>
+            <div class="card-actions">
+              <a class="button primary worksheet-link" href="fisa-1.html" data-worksheet="1">Deschide fișa</a>
+              <a class="button secondary" href="../lectii/lectia-1.html">Vezi lecția</a>
+            </div>
+          </article>
+
+          <article class="worksheet-card" data-card data-number="2" data-title="Forța, măsură a interacțiunii">
+            <div class="card-body">
+              <div class="card-topline">
+                <span class="number">2</span>
+                <span class="visited">Parcursă</span>
+              </div>
+              <h3>Forța, măsură a interacțiunii</h3>
+              <p>Caracteristicile forței și reprezentarea sa vectorială.</p>
+            </div>
+            <div class="card-actions">
+              <a class="button primary worksheet-link" href="fisa-2.html" data-worksheet="2">Deschide fișa</a>
+              <a class="button secondary" href="../lectii/lectia-2.html">Vezi lecția</a>
+            </div>
+          </article>
+
+          <article class="worksheet-card" data-card data-number="3" data-title="Principiul inerției">
+            <div class="card-body">
+              <div class="card-topline">
+                <span class="number">3</span>
+                <span class="visited">Parcursă</span>
+              </div>
+              <h3>Principiul inerției</h3>
+              <p>Repausul, mișcarea rectilinie uniformă și inerția corpurilor.</p>
+            </div>
+            <div class="card-actions">
+              <a class="button primary worksheet-link" href="fisa-3.html" data-worksheet="3">Deschide fișa</a>
+              <a class="button secondary" href="../lectii/lectia-3.html">Vezi lecția</a>
+            </div>
+          </article>
+
+          <article class="worksheet-card" data-card data-number="4" data-title="Principiul fundamental al mecanicii clasice">
+            <div class="card-body">
+              <div class="card-topline">
+                <span class="number">4</span>
+                <span class="visited">Parcursă</span>
+              </div>
+              <h3>Principiul fundamental al mecanicii clasice</h3>
+              <p>Legătura dintre forța rezultantă, masă și accelerație.</p>
+            </div>
+            <div class="card-actions">
+              <a class="button primary worksheet-link" href="fisa-4.html" data-worksheet="4">Deschide fișa</a>
+              <a class="button secondary" href="../lectii/lectia-4.html">Vezi lecția</a>
+            </div>
+          </article>
+
+          <article class="worksheet-card" data-card data-number="5" data-title="Principiul acțiunii și reacțiunii">
+            <div class="card-body">
+              <div class="card-topline">
+                <span class="number">5</span>
+                <span class="visited">Parcursă</span>
+              </div>
+              <h3>Principiul acțiunii și reacțiunii</h3>
+              <p>Perechi de forțe egale ca modul și opuse ca sens.</p>
+            </div>
+            <div class="card-actions">
+              <a class="button primary worksheet-link" href="fisa-5.html" data-worksheet="5">Deschide fișa</a>
+              <a class="button secondary" href="../lectii/lectia-5.html">Vezi lecția</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section worksheet-group" data-group>
+        <div class="section-heading">
+          <h2>B. Forțe întâlnite în mecanică</h2>
+          <p>Fișele 6–11</p>
+        </div>
+
+        <div class="cards">
+          <article class="worksheet-card" data-card data-number="6" data-title="Forța de greutate">
+            <div class="card-body">
+              <div class="card-topline">
+                <span class="number">6</span>
+                <span class="visited">Parcursă</span>
+              </div>
+              <h3>Forța de greutate</h3>
+              <p>Greutatea corpului, direcția verticală și relația dintre masă și greutate.</p>
+            </div>
+            <div class="card-actions">
+              <a class="button primary worksheet-link" href="fisa-6.html" data-worksheet="6">Deschide fișa</a>
+              <a class="button secondary" href="../lectii/lectia-6.html">Vezi lecția</a>
+            </div>
+          </article>
+
+          <article class="worksheet-card" data-card data-number="7" data-title="Forța de apăsare normală">
+            <div class="card-body">
+              <div class="card-topline">
+                <span class="number">7</span>
+                <span class="visited">Parcursă</span>
+              </div>
+              <h3>Forța de apăsare normală</h3>
+              <p>Acțiunea corpului asupra suprafeței de sprijin.</p>
+            </div>
+            <div class="card-actions">
+              <a class="button primary worksheet-link" href="fisa-7.html" data-worksheet="7">Deschide fișa</a>
+              <a class="button secondary" href="../lectii/lectia-7.html">Vezi lecția</a>
+            </div>
+          </article>
+
+          <article class="worksheet-card" data-card data-number="8" data-title="Forța de frecare">
+            <div class="card-body">
+              <div class="card-topline">
+                <span class="number">8</span>
+                <span class="visited">Parcursă</span>
+              </div>
+              <h3>Forța de frecare</h3>
+              <p>Sensul frecării și factorii care influențează mărimea ei.</p>
+            </div>
+            <div class="card-actions">
+              <a class="button primary worksheet-link" href="fisa-8.html" data-worksheet="8">Deschide fișa</a>
+              <a class="button secondary" href="../lectii/lectia-8.html">Vezi lecția</a>
+            </div>
+          </article>
+
+          <article class="worksheet-card" data-card data-number="9" data-title="Tensiunea în fir">
+            <div class="card-body">
+              <div class="card-topline">
+                <span class="number">9</span>
+                <span class="visited">Parcursă</span>
+              </div>
+              <h3>Tensiunea în fir</h3>
+              <p>Transmiterea forței prin fire ideale și reprezentarea tensiunii.</p>
+            </div>
+            <div class="card-actions">
+              <a class="button primary worksheet-link" href="fisa-9.html" data-worksheet="9">Deschide fișa</a>
+              <a class="button secondary" href="../lectii/lectia-9.html">Vezi lecția</a>
+            </div>
+          </article>
+
+          <article class="worksheet-card" data-card data-number="10" data-title="Forța elastică">
+            <div class="card-body">
+              <div class="card-topline">
+                <span class="number">10</span>
+                <span class="visited">Parcursă</span>
+              </div>
+              <h3>Forța elastică</h3>
+              <p>Deformarea elastică și dependența forței de alungire.</p>
+            </div>
+            <div class="card-actions">
+              <a class="button primary worksheet-link" href="fisa-10.html" data-worksheet="10">Deschide fișa</a>
+              <a class="button secondary" href="../lectii/lectia-10.html">Vezi lecția</a>
+            </div>
+          </article>
+
+          <article class="worksheet-card" data-card data-number="11" data-title="Măsurarea forțelor. Dinamometrul">
+            <div class="card-body">
+              <div class="card-topline">
+                <span class="number">11</span>
+                <span class="visited">Parcursă</span>
+              </div>
+              <h3>Măsurarea forțelor. Dinamometrul</h3>
+              <p>Citirea și utilizarea dinamometrului pentru măsurarea forțelor.</p>
+            </div>
+            <div class="card-actions">
+              <a class="button primary worksheet-link" href="fisa-11.html" data-worksheet="11">Deschide fișa</a>
+              <a class="button secondary" href="../lectii/lectia-11.html">Vezi lecția</a>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section worksheet-group" data-group>
+        <div class="section-heading">
+          <h2>C. Rezultanta și descompunerea forțelor</h2>
+          <p>Fișele 12–16</p>
+        </div>
+
+        <div class="cards">
+          <article class="worksheet-card" data-card data-number="12" data-title="Mișcarea unui corp sub acțiunea mai multor forțe">
+            <div class="card-body">
+              <div class="card-topline">
+                <span class="number">12</span>
+                <span class="visited">Parcursă</span>
+              </div>
+              <h3>Mișcarea unui corp sub acțiunea mai multor forțe</h3>
+              <p>Forța rezultantă, echilibrul și modificarea stării de mișcare.</p>
+            </div>
+            <div class="card-actions">
+              <a class="button primary worksheet-link" href="fisa-12.html" data-worksheet="12">Deschide fișa</a>
+              <a class="button secondary" href="../lectii/lectia-12.html">Vezi lecția</a>
+            </div>
+          </article>
+
+          <article class="worksheet-card" data-card data-number="13" data-title="Compunerea forțelor. Regula paralelogramului">
+            <div class="card-body">
+              <div class="card-topline">
+                <span class="number">13</span>
+                <span class="visited">Parcursă</span>
+              </div>
+              <h3>Compunerea forțelor. Regula paralelogramului</h3>
+              <p>Determinarea grafică și numerică a rezultantei a două forțe.</p>
+            </div>
+            <div class="card-actions">
+              <a class="button primary worksheet-link" href="fisa-13.html" data-worksheet="13">Deschide fișa</a>
+              <a class="button secondary" href="../lectii/lectia-13.html">Vezi lecția</a>
+            </div>
+          </article>
+
+          <article class="worksheet-card" data-card data-number="14" data-title="Regula poligonului pentru compunerea mai multor vectori">
+            <div class="card-body">
+              <div class="card-topline">
+                <span class="number">14</span>
+                <span class="visited">Parcursă</span>
+              </div>
+              <h3>Regula poligonului pentru compunerea mai multor vectori</h3>
+              <p>Așezarea vectorilor cap-la-coadă și trasarea rezultantei.</p>
+            </div>
+            <div class="card-actions">
+              <a class="button primary worksheet-link" href="fisa-14.html" data-worksheet="14">Deschide fișa</a>
+              <a class="button secondary" href="../lectii/lectia-14.html">Vezi lecția</a>
+            </div>
+          </article>
+
+          <article class="worksheet-card" data-card data-number="15" data-title="Mișcarea unui corp pe un plan înclinat">
+            <div class="card-body">
+              <div class="card-topline">
+                <span class="number">15</span>
+                <span class="visited">Parcursă</span>
+              </div>
+              <h3>Mișcarea unui corp pe un plan înclinat</h3>
+              <p>Componentele greutății, reacțiunea normală și frecarea.</p>
+            </div>
+            <div class="card-actions">
+              <a class="button primary worksheet-link" href="fisa-15.html" data-worksheet="15">Deschide fișa</a>
+              <a class="button secondary" href="../lectii/lectia-15.html">Vezi lecția</a>
+            </div>
+          </article>
+
+          <article class="worksheet-card" data-card data-number="16" data-title="Descompunerea unei forțe după două direcții reciproc perpendiculare">
+            <div class="card-body">
+              <div class="card-topline">
+                <span class="number">16</span>
+                <span class="visited">Parcursă</span>
+              </div>
+              <h3>Descompunerea unei forțe după două direcții reciproc perpendiculare</h3>
+              <p>Componentele unei forțe și relațiile dintre modulele lor.</p>
+            </div>
+            <div class="card-actions">
+              <a class="button primary worksheet-link" href="fisa-16.html" data-worksheet="16">Deschide fișa</a>
+              <a class="button secondary" href="../lectii/lectia-16.html">Vezi lecția</a>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+
+    <div class="empty-state" id="emptyState">
+      <strong>Nu am găsit nicio fișă.</strong>
+      <p>Încearcă un alt număr sau un alt cuvânt-cheie.</p>
+    </div>
+
+    <nav class="bottom-actions" aria-label="Navigare în platformă">
+      <a class="button secondary" href="../lectii/index.html">← Înapoi la lecții</a>
+      <a class="button primary" href="../../index.html">Clasa a VII-a</a>
+      <a class="button secondary" href="../../../index.html">Pagina principală</a>
+    </nav>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrapper">
+      <p>© Fizica Galaction · Prof. DĂNUȚ ANDRONIE</p>
+      <p>
+        Pentru observații și sugestii:
+        <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+      </p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      const THEME_KEY = "fizica-galaction-index-theme";
+      const VISITED_KEY = "fizica-galaction-fise-vizitate";
+      const body = document.body;
+      const themeSwitch = document.getElementById("themeSwitch");
+      const themeIcon = document.getElementById("themeIcon");
+      const themeLabel = document.getElementById("themeLabel");
+      const searchInput = document.getElementById("searchInput");
+      const clearSearch = document.getElementById("clearSearch");
+      const resultCount = document.getElementById("resultCount");
+      const emptyState = document.getElementById("emptyState");
+      const cards = Array.from(document.querySelectorAll("[data-card]"));
+      const groups = Array.from(document.querySelectorAll("[data-group]"));
+
+      function normalizeText(value) {
+        return String(value || "")
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
+
+      function applyTheme(theme) {
+        const isLight = theme === "light";
+
+        if (isLight) {
+          body.setAttribute("data-theme", "light");
+          themeIcon.textContent = "🌙";
+          themeLabel.textContent = "Mod noapte";
+        } else {
+          body.removeAttribute("data-theme");
+          themeIcon.textContent = "☀️";
+          themeLabel.textContent = "Mod zi";
+        }
+
+        document
+          .querySelector('meta[name="theme-color"]')
+          .setAttribute("content", isLight ? "#eef6fb" : "#0f172a");
+      }
+
+      function getVisited() {
+        try {
+          const stored = JSON.parse(localStorage.getItem(VISITED_KEY) || "[]");
+          return Array.isArray(stored) ? stored.map(String) : [];
+        } catch (error) {
+          return [];
+        }
+      }
+
+      function saveVisited(number) {
+        const visited = new Set(getVisited());
+        visited.add(String(number));
+        localStorage.setItem(VISITED_KEY, JSON.stringify(Array.from(visited)));
+      }
+
+      function refreshVisited() {
+        const visited = new Set(getVisited());
+
+        cards.forEach(function (card) {
+          card.classList.toggle(
+            "is-visited",
+            visited.has(String(card.dataset.number))
+          );
+        });
+      }
+
+      function filterCards() {
+        const query = normalizeText(searchInput.value);
+        let visibleCount = 0;
+
+        cards.forEach(function (card) {
+          const haystack = normalizeText(
+            card.dataset.number + " " +
+            card.dataset.title + " " +
+            card.textContent
+          );
+
+          const visible = query === "" || haystack.includes(query);
+          card.hidden = !visible;
+
+          if (visible) {
+            visibleCount += 1;
+          }
+        });
+
+        groups.forEach(function (group) {
+          const hasVisibleCards = Array.from(
+            group.querySelectorAll("[data-card]")
+          ).some(function (card) {
+            return !card.hidden;
+          });
+
+          group.hidden = !hasVisibleCards;
+        });
+
+        emptyState.style.display = visibleCount === 0 ? "block" : "none";
+
+        if (query === "") {
+          resultCount.textContent = "Sunt afișate toate cele 16 fișe.";
+        } else if (visibleCount === 1) {
+          resultCount.textContent = "A fost găsită o fișă.";
+        } else {
+          resultCount.textContent = "Au fost găsite " + visibleCount + " fișe.";
+        }
+      }
+
+      applyTheme(localStorage.getItem(THEME_KEY) || "dark");
+      refreshVisited();
+      filterCards();
+
+      themeSwitch.addEventListener("click", function () {
+        const nextTheme =
+          body.getAttribute("data-theme") === "light" ? "dark" : "light";
+
+        localStorage.setItem(THEME_KEY, nextTheme);
+        applyTheme(nextTheme);
+      });
+
+      searchInput.addEventListener("input", filterCards);
+
+      clearSearch.addEventListener("click", function () {
+        searchInput.value = "";
+        filterCards();
+        searchInput.focus();
+      });
+
+      document.querySelectorAll(".worksheet-link").forEach(function (link) {
+        link.addEventListener("click", function () {
+          saveVisited(link.dataset.worksheet);
+        });
+      });
+
+      window.addEventListener("pageshow", refreshVisited);
+    })();
+  </script>
 </body>
 </html>

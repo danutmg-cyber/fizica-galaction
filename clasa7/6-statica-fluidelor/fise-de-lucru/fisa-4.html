@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fișa 4 | Legea lui Arhimede | Fizica Galaction</title>
+  <meta
+    name="description"
+    content="Fișă de lucru interactivă pentru clasa a VII-a: forța arhimedică, greutatea aparentă și condițiile de plutire."
+  >
+  <link rel="stylesheet" href="../../../assets/css/style.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]'], ['$$', '$$']]
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root {
+      --bg: #071827;
+      --card: #102a3d;
+      --soft: #17384e;
+      --deep: #0b2233;
+      --text: #f8fafc;
+      --muted: #d5e4ee;
+      --primary: #22d3ee;
+      --success: #4ade80;
+      --error: #fda4af;
+      --warning: #fde68a;
+      --border: #4c7185;
+      --focus: #facc15;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(34, 211, 238, 0.14), transparent 32rem),
+        var(--bg);
+      font-family: "Segoe UI", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .wrapper,
+    .page-content {
+      width: min(100%, 940px);
+      margin: 0 auto;
+    }
+
+    .site-header {
+      padding: 18px 16px;
+      background: linear-gradient(135deg, #075985, #0e7490);
+      border-bottom: 3px solid var(--primary);
+    }
+
+    .site-title {
+      margin: 0;
+      color: #fff;
+      font-size: clamp(1.35rem, 4vw, 2rem);
+    }
+
+    .site-subtitle {
+      margin: 4px 0 0;
+      color: #e0f2fe;
+    }
+
+    .page-content { padding: 16px; }
+
+    .hero,
+    .worksheet-shell,
+    .panel {
+      background: rgba(16, 42, 61, 0.98);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.28);
+    }
+
+    .hero {
+      margin-bottom: 16px;
+      padding: clamp(18px, 4vw, 30px);
+    }
+
+    h1, h2, h3, p, label, legend, li { color: var(--text); }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(1.55rem, 5vw, 2.45rem);
+      line-height: 1.2;
+    }
+
+    h2 {
+      margin-top: 0;
+      font-size: clamp(1.3rem, 4vw, 1.8rem);
+    }
+
+    h3 { color: #cffafe; }
+
+    .quote {
+      margin: 12px 0;
+      padding: 12px 14px;
+      color: #fef9c3;
+      background: var(--deep);
+      border-left: 4px solid var(--primary);
+      border-radius: 8px;
+      font-style: italic;
+    }
+
+    .hint { color: var(--muted); }
+
+    .notice {
+      margin: 14px 0;
+      padding: 12px 14px;
+      color: #fef9c3;
+      background: #332b0a;
+      border: 1px solid #a16207;
+      border-radius: 12px;
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 18px 0 7px;
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .progress-track {
+      height: 12px;
+      overflow: hidden;
+      background: #06121e;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+    }
+
+    .progress-fill {
+      width: 25%;
+      height: 100%;
+      background: linear-gradient(90deg, #22c55e, var(--primary));
+      transition: width 0.25s ease;
+    }
+
+    .worksheet-shell { overflow: hidden; }
+
+    .worksheet-page {
+      display: none;
+      min-height: 570px;
+      padding: clamp(18px, 4vw, 30px);
+    }
+
+    .worksheet-page.active {
+      display: block;
+      animation: pageIn 0.22s ease-out;
+    }
+
+    @keyframes pageIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .formula-card,
+    .question-block,
+    .diagram-card,
+    .example-card,
+    .summary-card {
+      margin: 14px 0;
+      padding: 16px;
+      background: var(--soft);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+    }
+
+    .formula-card { text-align: center; }
+
+    .formula-large {
+      padding: 6px;
+      overflow-x: auto;
+      font-size: clamp(1.1rem, 4vw, 1.48rem);
+    }
+
+    .example-card { border-left: 5px solid var(--success); }
+
+    .concept-grid,
+    .application-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin: 14px 0;
+    }
+
+    .concept-grid > div,
+    .application-grid > div {
+      padding: 14px;
+      background: var(--deep);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .concept-grid strong,
+    .application-grid strong {
+      color: #cffafe;
+      font-size: 1.04rem;
+    }
+
+    .diagram-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .archimedes-diagram {
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 12px;
+    }
+
+    .archimedes-diagram svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    fieldset {
+      min-width: 0;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    legend {
+      width: 100%;
+      margin-bottom: 12px;
+      font-weight: 750;
+    }
+
+    .option-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .option-row {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
+      background: var(--deep);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+    }
+
+    .option-row:hover { border-color: var(--primary); }
+
+    .option-row input {
+      width: 20px;
+      height: 20px;
+      margin: 2px 0 0;
+      accent-color: #0891b2;
+    }
+
+    .inline-grid {
+      display: grid;
+      grid-template-columns: minmax(150px, 1.2fr) minmax(150px, 0.8fr);
+      gap: 12px;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    input[type="text"],
+    select {
+      width: 100%;
+      min-height: 48px;
+      padding: 10px 12px;
+      color: #fff;
+      background: #061827;
+      border: 2px solid #7899aa;
+      border-radius: 11px;
+      font: inherit;
+    }
+
+    input::placeholder {
+      color: #c6d7e0;
+      opacity: 1;
+    }
+
+    select option {
+      color: #fff;
+      background: #061827;
+    }
+
+    input:focus,
+    select:focus,
+    button:focus,
+    a:focus {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
+    }
+
+    .unit {
+      color: #cffafe;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .feedback {
+      min-height: 1.5em;
+      margin-top: 8px;
+      font-weight: 800;
+    }
+
+    .feedback.correct { color: var(--success); }
+    .feedback.incorrect { color: var(--error); }
+
+    .page-actions {
+      position: sticky;
+      bottom: 0;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: 1fr 1.25fr;
+      gap: 12px;
+      padding: 14px;
+      background: rgba(7, 24, 39, 0.97);
+      border-top: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 52px;
+      padding: 12px 16px;
+      color: #042f3e;
+      background: var(--primary);
+      border: 0;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 850;
+      text-align: center;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .button.secondary {
+      color: #0f172a;
+      background: #e2e8f0;
+    }
+
+    .button.success {
+      color: #052e16;
+      background: #22c55e;
+    }
+
+    .button.danger {
+      color: #4c0519;
+      background: #fda4af;
+    }
+
+    .score-box {
+      display: none;
+      margin-top: 18px;
+      padding: 18px;
+      text-align: center;
+      background: #082f49;
+      border: 2px solid var(--primary);
+      border-radius: 14px;
+    }
+
+    .score-box.visible { display: block; }
+
+    .score-number {
+      color: #a7f3d0;
+      font-size: clamp(2.2rem, 9vw, 4rem);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .panel {
+      margin-top: 16px;
+      padding: 18px;
+    }
+
+    .panel[hidden] { display: none; }
+
+    .static-actions {
+      position: static;
+      padding: 0;
+      background: transparent;
+      border: 0;
+    }
+
+    .site-footer {
+      margin-top: 26px;
+      padding: 20px 16px;
+      color: var(--muted);
+      background: #06121e;
+      border-top: 2px solid var(--border);
+      text-align: center;
+    }
+
+    .site-footer p,
+    .site-footer a { color: var(--muted); }
+
+    @media (max-width: 720px) {
+      body { font-size: 15px; }
+      .page-content { padding: 10px; }
+
+      .worksheet-page {
+        min-height: 0;
+        padding: 16px 13px;
+      }
+
+      .concept-grid,
+      .application-grid,
+      .diagram-grid,
+      .inline-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .page-actions { grid-template-columns: 1fr; }
+      .page-actions .button { min-height: 56px; }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="site-header">
+    <div class="wrapper">
+      <h1 class="site-title">Fizica Galaction</h1>
+      <p class="site-subtitle">Clasa a VII-a · Capitolul 6 – Statica fluidelor · Fișa 4 din 5</p>
+    </div>
+  </header>
+
+  <main class="page-content">
+    <section class="hero">
+      <h1>Fișa 4 – Legea lui Arhimede</h1>
+      <p class="quote">„Un corp scufundat într-un fluid este împins de jos în sus.”</p>
+      <p class="hint">
+        Folosește \(g=10\,\mathrm{N/kg}\), dacă nu se precizează altfel.
+        Parcurge cele 4 pagini, apoi apasă <strong>„Verifică fișa”</strong>.
+      </p>
+
+      <div class="progress-meta">
+        <span id="page-label">Pagina 1 din 4</span>
+        <span id="progress-percent">25%</span>
+      </div>
+      <div class="progress-track" aria-hidden="true">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </section>
+
+    <section class="worksheet-shell" aria-label="Fișă de lucru">
+      <!-- PAGINA 1 -->
+      <article class="worksheet-page active" data-page="0">
+        <h2>1. Observ experimentul și formulez legea</h2>
+
+        <div class="diagram-grid">
+          <div class="diagram-card">
+            <h3>Corp în aer</h3>
+            <div class="archimedes-diagram">
+              <svg viewBox="0 0 360 310" role="img" aria-label="Corp suspendat de dinamometru în aer">
+                <line x1="180" y1="25" x2="180" y2="70" stroke="#334155" stroke-width="7"/>
+                <rect x="145" y="70" width="70" height="105" rx="14" fill="#e0f2fe" stroke="#0f172a" stroke-width="4"/>
+                <line x1="180" y1="175" x2="180" y2="220" stroke="#334155" stroke-width="5"/>
+                <rect x="135" y="220" width="90" height="60" rx="8" fill="#94a3b8" stroke="#0f172a" stroke-width="4"/>
+                <text x="150" y="125" fill="#0f172a" font-size="24">4 N</text>
+                <text x="135" y="300" fill="#0f172a" font-size="20">greutate în aer</text>
+              </svg>
+            </div>
+          </div>
+
+          <div class="diagram-card">
+            <h3>Corp introdus în apă</h3>
+            <div class="archimedes-diagram">
+              <svg viewBox="0 0 360 310" role="img" aria-label="Corp suspendat de dinamometru și introdus în apă">
+                <defs>
+                  <marker id="upA4" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L6,3 z" fill="#0369a1"/>
+                  </marker>
+                  <marker id="downG4" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto">
+                    <path d="M0,0 L0,6 L6,3 z" fill="#be123c"/>
+                  </marker>
+                </defs>
+                <line x1="180" y1="20" x2="180" y2="55" stroke="#334155" stroke-width="7"/>
+                <rect x="145" y="55" width="70" height="90" rx="14" fill="#e0f2fe" stroke="#0f172a" stroke-width="4"/>
+                <line x1="180" y1="145" x2="180" y2="182" stroke="#334155" stroke-width="5"/>
+                <rect x="40" y="160" width="280" height="135" fill="#7dd3fc" stroke="#0f172a" stroke-width="4"/>
+                <rect x="140" y="195" width="80" height="60" rx="8" fill="#94a3b8" stroke="#0f172a" stroke-width="4"/>
+                <line x1="180" y1="220" x2="180" y2="170" stroke="#0369a1" stroke-width="5" marker-end="url(#upA4)"/>
+                <line x1="180" y1="230" x2="180" y2="280" stroke="#be123c" stroke-width="5" marker-end="url(#downG4)"/>
+                <text x="196" y="188" fill="#0f172a" font-size="22">Fₐ</text>
+                <text x="196" y="278" fill="#0f172a" font-size="22">G</text>
+                <text x="153" y="110" fill="#0f172a" font-size="22">1 N</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="example-card">
+          <h3>Experiment numeric</h3>
+          <div class="formula-large">
+            \[
+              F_A=G-G_a
+              =4\,\mathrm{N}-1\,\mathrm{N}
+              =3\,\mathrm{N}
+            \]
+          </div>
+        </div>
+
+        <div class="formula-card">
+          <p>
+            Un corp scufundat într-un fluid aflat în repaus este împins
+            de jos în sus cu o forță verticală numeric egală cu greutatea
+            fluidului dezlocuit.
+          </p>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>1. Sensul forței arhimedice este:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q1" value="sus"><span>de jos în sus</span></label>
+              <label class="option-row"><input type="radio" name="q1" value="jos"><span>de sus în jos</span></label>
+              <label class="option-row"><input type="radio" name="q1" value="orizontal"><span>orizontal</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q1" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>2. Conform legii lui Arhimede, \(F_A\) este egală cu:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q2" value="greutate_fluid"><span>greutatea fluidului dezlocuit</span></label>
+              <label class="option-row"><input type="radio" name="q2" value="masa_corp"><span>masa corpului</span></label>
+              <label class="option-row"><input type="radio" name="q2" value="volum_vas"><span>volumul vasului</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q2" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <label for="q3"><strong>3. În experiment, pentru \(G=4\,\mathrm{N}\) și \(G_a=1\,\mathrm{N}\), rezultă:</strong></label>
+          <select id="q3">
+            <option value="">Alege varianta...</option>
+            <option value="3">\(F_A=3\,\mathrm{N}\)</option>
+            <option value="1">\(F_A=1\,\mathrm{N}\)</option>
+            <option value="5">\(F_A=5\,\mathrm{N}\)</option>
+          </select>
+          <div id="fb-q3" class="feedback"></div>
+        </div>
+      </article>
+
+      <!-- PAGINA 2 -->
+      <article class="worksheet-page" data-page="1">
+        <h2>2. Formula forței arhimedice</h2>
+
+        <div class="formula-card">
+          <div class="formula-large">
+            \[
+              F_A
+              =G_{\text{fluid dezlocuit}}
+              =m_{\text{fluid dezlocuit}}\cdot g
+              =\rho_lV_{\text{dezloc}}g
+            \]
+          </div>
+        </div>
+
+        <div class="concept-grid">
+          <div>
+            <strong>\(\rho_l\)</strong>
+            <p>Densitatea lichidului, în \(\mathrm{kg/m^3}\).</p>
+          </div>
+          <div>
+            <strong>\(V_{\text{dezloc}}\)</strong>
+            <p>Volumul fluidului dezlocuit, în \(\mathrm{m^3}\).</p>
+          </div>
+          <div>
+            <strong>\(g\)</strong>
+            <p>Accelerația gravitațională, în \(\mathrm{N/kg}\).</p>
+          </div>
+        </div>
+
+        <div class="notice">
+          Dacă un corp este complet scufundat:
+          \[
+            V_{\text{dezloc}}=V_{\text{corp}}
+          \]
+          Dacă plutește parțial, se ia numai volumul părții aflate în fluid.
+        </div>
+
+        <div class="example-card">
+          <h3>Exemplu numeric cu fracție</h3>
+          <div class="formula-large">
+            \[
+              V_c=\frac{m}{\rho_c}
+              =\frac{1}{2600}\,\mathrm{m^3}
+            \]
+          </div>
+          <div class="formula-large">
+            \[
+              F_A
+              =1300\cdot\frac{1}{2600}\cdot10
+              =5\,\mathrm{N}
+            \]
+          </div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>4. Formula corectă a forței arhimedice este:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q4" value="formula"><span>\(F_A=\rho_lV_{\text{dezloc}}g\)</span></label>
+              <label class="option-row"><input type="radio" name="q4" value="presiune"><span>\(F_A=\frac{F}{S}\)</span></label>
+              <label class="option-row"><input type="radio" name="q4" value="masa"><span>\(F_A=\frac{m}{V}\)</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q4" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <label for="q5">
+            <strong>5.</strong> Un corp dezlocuiește
+            \(0{,}002\,\mathrm{m^3}\) de apă. Calculează \(F_A\).
+          </label>
+          <div class="inline-grid">
+            <input id="q5" type="text" inputmode="decimal" placeholder="Rezultat numeric">
+            <span class="unit">N</span>
+          </div>
+          <div id="fb-q5" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <label for="q6">
+            <strong>6.</strong> Într-un lichid cu
+            \(\rho_l=800\,\mathrm{kg/m^3}\), forța arhimedică este
+            \(24\,\mathrm{N}\). Calculează volumul dezlocuit.
+          </label>
+          <div class="inline-grid">
+            <input id="q6" type="text" inputmode="decimal" placeholder="Rezultat numeric">
+            <span class="unit">m³</span>
+          </div>
+          <div id="fb-q6" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <label for="q7">
+            <strong>7.</strong> Un corp are \(G=50\,\mathrm{N}\), iar în lichid
+            acționează \(F_A=15\,\mathrm{N}\). Calculează greutatea aparentă.
+          </label>
+          <div class="inline-grid">
+            <input id="q7" type="text" inputmode="decimal" placeholder="Rezultat numeric">
+            <span class="unit">N</span>
+          </div>
+          <div id="fb-q7" class="feedback"></div>
+        </div>
+      </article>
+
+      <!-- PAGINA 3 -->
+      <article class="worksheet-page" data-page="2">
+        <h2>3. Ce se întâmplă cu un corp în lichid?</h2>
+
+        <div class="concept-grid">
+          <div>
+            <strong>\(G>F_A\)</strong>
+            <p>Rezultanta este în jos. Corpul se scufundă.</p>
+          </div>
+          <div>
+            <strong>\(G=F_A\)</strong>
+            <p>Rezultanta este nulă. Corpul este în echilibru.</p>
+          </div>
+          <div>
+            <strong>\(G<F_A\)</strong>
+            <p>Rezultanta este în sus. Corpul urcă spre suprafață.</p>
+          </div>
+        </div>
+
+        <div class="diagram-card">
+          <h3>Presiunea de jos este mai mare</h3>
+          <div class="archimedes-diagram">
+            <svg viewBox="0 0 720 340" role="img" aria-label="Corp în lichid cu presiune mai mare pe fața de jos">
+              <defs>
+                <marker id="upP4" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#0369a1"/>
+                </marker>
+                <marker id="downP4" markerWidth="10" markerHeight="10" refX="5" refY="3" orient="auto">
+                  <path d="M0,0 L0,6 L6,3 z" fill="#be123c"/>
+                </marker>
+              </defs>
+              <rect x="70" y="40" width="580" height="260" fill="#7dd3fc" stroke="#0f172a" stroke-width="4"/>
+              <rect x="285" y="115" width="150" height="100" rx="8" fill="#94a3b8" stroke="#0f172a" stroke-width="4"/>
+              <line x1="360" y1="270" x2="360" y2="220" stroke="#0369a1" stroke-width="10" marker-end="url(#upP4)"/>
+              <line x1="360" y1="70" x2="360" y2="108" stroke="#be123c" stroke-width="6" marker-end="url(#downP4)"/>
+              <text x="390" y="262" fill="#0f172a" font-size="23">forță de jos mai mare</text>
+              <text x="390" y="85" fill="#0f172a" font-size="23">forță de sus mai mică</text>
+            </svg>
+          </div>
+          <div class="formula-large">
+            \[
+              F_A=F_{\text{jos}}-F_{\text{sus}}
+            \]
+          </div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>8. Dacă \(G>F_A\), corpul:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q8" value="scufunda"><span>se scufundă</span></label>
+              <label class="option-row"><input type="radio" name="q8" value="ridica"><span>se ridică</span></label>
+              <label class="option-row"><input type="radio" name="q8" value="echilibru"><span>este sigur în echilibru</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q8" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>9. Dacă \(G=F_A\), corpul:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q9" value="echilibru"><span>este în echilibru</span></label>
+              <label class="option-row"><input type="radio" name="q9" value="scufunda"><span>se scufundă accelerat</span></label>
+              <label class="option-row"><input type="radio" name="q9" value="iese"><span>iese complet din lichid</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q9" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>10. Dacă \(G<F_A\), corpul:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q10" value="urca"><span>urcă spre suprafață</span></label>
+              <label class="option-row"><input type="radio" name="q10" value="scufunda"><span>se scufundă</span></label>
+              <label class="option-row"><input type="radio" name="q10" value="dispare"><span>dispare</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q10" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>11. Pentru un corp complet scufundat:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q11" value="volume_egale"><span>\(V_{\text{dezloc}}=V_{\text{corp}}\)</span></label>
+              <label class="option-row"><input type="radio" name="q11" value="zero"><span>\(V_{\text{dezloc}}=0\)</span></label>
+              <label class="option-row"><input type="radio" name="q11" value="vas"><span>\(V_{\text{dezloc}}=V_{\text{vas}}\)</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q11" class="feedback"></div>
+        </div>
+      </article>
+
+      <!-- PAGINA 4 -->
+      <article class="worksheet-page" data-page="3">
+        <h2>4. Plutirea și aplicațiile</h2>
+
+        <div class="formula-card">
+          <p>Condiția de plutire în echilibru este:</p>
+          <div class="formula-large">
+            \[
+              F_A=G
+            \]
+          </div>
+          <div class="formula-large">
+            \[
+              \frac{V_{\text{scufundat}}}{V_{\text{corp}}}
+              =\frac{\rho_c}{\rho_l}
+            \]
+          </div>
+        </div>
+
+        <div class="application-grid">
+          <div>
+            <strong>Nave</strong>
+            <p>Dezlocuiesc un volum mare de apă, astfel încât \(F_A\) poate egala greutatea navei.</p>
+          </div>
+          <div>
+            <strong>Submarine</strong>
+            <p>Își modifică densitatea medie prin umplerea sau golirea tancurilor cu apă.</p>
+          </div>
+          <div>
+            <strong>Baloane cu aer cald</strong>
+            <p>Și în aer apare forță arhimedică.</p>
+          </div>
+        </div>
+
+        <div class="question-block">
+          <label for="q12">
+            <strong>12.</strong> Un corp cu densitatea
+            \(800\,\mathrm{kg/m^3}\) plutește în apă.
+            Calculează fracția din volum aflată sub apă.
+          </label>
+          <div class="inline-grid">
+            <input id="q12" type="text" inputmode="decimal" placeholder="Rezultat numeric">
+            <span class="unit">fracție zecimală</span>
+          </div>
+          <div id="fb-q12" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <fieldset>
+            <legend>13. Submarinul se scufundă sau se ridică prin:</legend>
+            <div class="option-grid">
+              <label class="option-row"><input type="radio" name="q13" value="densitate"><span>modificarea densității medii cu ajutorul tancurilor</span></label>
+              <label class="option-row"><input type="radio" name="q13" value="culoare"><span>schimbarea culorii</span></label>
+              <label class="option-row"><input type="radio" name="q13" value="forma"><span>schimbarea instantanee a formei exterioare</span></label>
+            </div>
+          </fieldset>
+          <div id="fb-q13" class="feedback"></div>
+        </div>
+
+        <div class="question-block">
+          <label for="q14">
+            <strong>14.</strong> Un corp are \(m=1\,\mathrm{kg}\),
+            \(\rho_c=2600\,\mathrm{kg/m^3}\) și este complet scufundat
+            într-un lichid cu \(\rho_l=1300\,\mathrm{kg/m^3}\).
+            Calculează \(F_A\).
+          </label>
+          <div class="inline-grid">
+            <input id="q14" type="text" inputmode="decimal" placeholder="Rezultat numeric">
+            <span class="unit">N</span>
+          </div>
+          <div id="fb-q14" class="feedback"></div>
+        </div>
+
+        <div id="score-box" class="score-box" aria-live="polite">
+          <div class="score-number" id="score-number">0/14</div>
+          <p id="score-message"></p>
+        </div>
+      </article>
+
+      <nav class="page-actions" aria-label="Navigarea în fișă">
+        <button type="button" class="button secondary" id="back-btn" onclick="changePage(-1)">⬅ Înapoi</button>
+        <button type="button" class="button" id="next-btn" onclick="changePage(1)">Mergi mai departe ➡</button>
+        <button type="button" class="button success" id="check-btn" onclick="checkWorksheet()" hidden>Verifică fișa ✓</button>
+      </nav>
+    </section>
+
+    <section class="panel" id="summary-panel" hidden>
+      <h2>Rezultat</h2>
+      <p id="summary-text"></p>
+      <div class="page-actions static-actions" style="grid-template-columns:1fr;">
+        <button type="button" class="button danger" onclick="resetWorksheet()">Resetează fișa</button>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Continuă în platformă</h2>
+      <div class="page-actions static-actions">
+        <a class="button secondary" href="index.html">Înapoi la fișe</a>
+        <a class="button" href="../lectii/lectia-4.html">Vezi lecția 4</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrapper">
+      <p>© Fizica Galaction · Prof. DĂNUȚ ANDRONIE</p>
+      <p>E-mail: <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a></p>
+    </div>
+  </footer>
+
+  <script src="../../../assets/js/main.js"></script>
+  <script>
+    const STORAGE_KEY = "fizica-galaction-c7-cap6-fisa4-legea-lui-arhimede";
+    const pages = [...document.querySelectorAll(".worksheet-page")];
+    let currentPage = 0;
+
+    function radioValue(name) {
+      const selected = document.querySelector(`input[name="${name}"]:checked`);
+      return selected ? selected.value : "";
+    }
+
+    function numberValue(id) {
+      const raw = String(document.getElementById(id).value)
+        .trim()
+        .replace(",", ".")
+        .replace(/\s+/g, "")
+        .replace(/[a-zA-ZăâîșțĂÂÎȘȚ³]/g, "");
+      return Number(raw);
+    }
+
+    function feedback(id, ok, answer) {
+      const box = document.getElementById("fb-" + id);
+      box.className = "feedback " + (ok ? "correct" : "incorrect");
+      box.textContent = ok ? "Corect! ✓" : "Mai verifică. Răspuns corect: " + answer;
+    }
+
+    function updateNavigation() {
+      pages.forEach((page, index) => page.classList.toggle("active", index === currentPage));
+
+      const percent = Math.round((currentPage + 1) / pages.length * 100);
+      document.getElementById("page-label").textContent = `Pagina ${currentPage + 1} din ${pages.length}`;
+      document.getElementById("progress-percent").textContent = percent + "%";
+      document.getElementById("progress-fill").style.width = percent + "%";
+      document.getElementById("back-btn").style.visibility = currentPage === 0 ? "hidden" : "visible";
+      document.getElementById("next-btn").hidden = currentPage === pages.length - 1;
+      document.getElementById("check-btn").hidden = currentPage !== pages.length - 1;
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        window.MathJax.typesetPromise([pages[currentPage]]).catch(() => {});
+      }
+    }
+
+    function changePage(step) {
+      saveProgress();
+      currentPage = Math.max(0, Math.min(pages.length - 1, currentPage + step));
+      updateNavigation();
+    }
+
+    function saveProgress() {
+      const data = { currentPage, fields: {} };
+
+      document.querySelectorAll("input[type='text'], select").forEach(el => {
+        data.fields[el.id] = el.value;
+      });
+
+      document.querySelectorAll("input[type='radio']:checked").forEach(el => {
+        data.fields["radio:" + el.name] = el.value;
+      });
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function loadProgress() {
+      try {
+        const data = JSON.parse(localStorage.getItem(STORAGE_KEY));
+        if (!data || !data.fields) return;
+
+        Object.entries(data.fields).forEach(([key, value]) => {
+          if (key.startsWith("radio:")) {
+            const name = key.slice(6);
+            const el = document.querySelector(`input[name="${name}"][value="${value}"]`);
+            if (el) el.checked = true;
+          } else {
+            const el = document.getElementById(key);
+            if (el) el.value = value;
+          }
+        });
+
+        currentPage = Number.isInteger(data.currentPage)
+          ? Math.max(0, Math.min(pages.length - 1, data.currentPage))
+          : 0;
+      } catch {
+        localStorage.removeItem(STORAGE_KEY);
+      }
+    }
+
+    function checkWorksheet() {
+      let score = 0;
+
+      const textItems = [
+        ["q1", radioValue("q1"), "sus", "de jos în sus"],
+        ["q2", radioValue("q2"), "greutate_fluid", "greutatea fluidului dezlocuit"],
+        ["q3", document.getElementById("q3").value, "3", "Fₐ = 3 N"],
+        ["q4", radioValue("q4"), "formula", "Fₐ = ρₗ · Vdezloc · g"],
+        ["q8", radioValue("q8"), "scufunda", "se scufundă"],
+        ["q9", radioValue("q9"), "echilibru", "este în echilibru"],
+        ["q10", radioValue("q10"), "urca", "urcă spre suprafață"],
+        ["q11", radioValue("q11"), "volume_egale", "Vdezloc = Vcorp"],
+        ["q13", radioValue("q13"), "densitate", "modificarea densității medii cu ajutorul tancurilor"]
+      ];
+
+      textItems.forEach(([id, value, expected, answer]) => {
+        const ok = value === expected;
+        if (ok) score++;
+        feedback(id, ok, answer);
+      });
+
+      const numericItems = [
+        ["q5", 20, "20 N"],
+        ["q6", 0.003, "0,003 m³"],
+        ["q7", 35, "35 N"],
+        ["q12", 0.8, "0,8"],
+        ["q14", 5, "5 N"]
+      ];
+
+      numericItems.forEach(([id, expected, answer]) => {
+        const value = numberValue(id);
+        const tolerance = Math.max(0.0001, Math.abs(expected) * 0.00001);
+        const ok = Number.isFinite(value) && Math.abs(value - expected) <= tolerance;
+        if (ok) score++;
+        feedback(id, ok, answer);
+      });
+
+      const total = 14;
+      const percent = Math.round(score / total * 100);
+      let message = "Reia formula forței arhimedice și compară Fₐ cu greutatea corpului.";
+
+      if (percent >= 90) {
+        message = "Excelent! Stăpânești foarte bine legea lui Arhimede și plutirea.";
+      } else if (percent >= 70) {
+        message = "Foarte bine! Mai verifică itemii marcați.";
+      } else if (percent >= 50) {
+        message = "Ești pe drumul cel bun. Verifică volumul dezlocuit și condițiile de mișcare.";
+      }
+
+      document.getElementById("score-number").textContent = `${score}/${total}`;
+      document.getElementById("score-message").textContent = `${percent}% · ${message}`;
+      document.getElementById("summary-text").textContent =
+        `Ai obținut ${score} puncte din ${total}. Răspunsurile de revizuit sunt marcate lângă itemi.`;
+
+      document.getElementById("score-box").classList.add("visible");
+      document.getElementById("summary-panel").hidden = false;
+      saveProgress();
+
+      document.getElementById("score-box").scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+
+    function resetWorksheet() {
+      document.querySelectorAll("input[type='text']").forEach(el => el.value = "");
+      document.querySelectorAll("select").forEach(el => el.value = "");
+      document.querySelectorAll("input[type='radio']").forEach(el => el.checked = false);
+      document.querySelectorAll(".feedback").forEach(el => {
+        el.textContent = "";
+        el.className = "feedback";
+      });
+
+      document.getElementById("score-box").classList.remove("visible");
+      document.getElementById("summary-panel").hidden = true;
+      localStorage.removeItem(STORAGE_KEY);
+      currentPage = 0;
+      updateNavigation();
+    }
+
+    document.addEventListener("change", saveProgress);
+    document.addEventListener("input", saveProgress);
+
+    loadProgress();
+    updateNavigation();
+  </script>
+</body>
+</html>

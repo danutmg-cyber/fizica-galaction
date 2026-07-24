@@ -1,0 +1,1721 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Fișă de lucru interactivă pentru clasa a VIII-a: topirea gheții, călduri latente și bilanț termic.">
+  <meta name="theme-color" content="#0891b2">
+  <title>Fișa 8 | Topirea gheții. Călduri latente</title>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root {
+      --bg: #06131f;
+      --card: #11283a;
+      --card-2: #0c2031;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --cyan: #67e8f9;
+      --cyan-dark: #0891b2;
+      --blue: #60a5fa;
+      --ice: #dbeafe;
+      --green: #22c55e;
+      --green-dark: #16a34a;
+      --yellow: #facc15;
+      --orange: #fb923c;
+      --red: #fb7185;
+      --violet: #c084fc;
+      --border: rgba(148, 163, 184, 0.30);
+      --good: #bbf7d0;
+      --bad: #fecaca;
+      --warn: #fde68a;
+      --nav-height: 92px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100dvh;
+      margin: 0;
+      padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom));
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(8, 145, 178, 0.22), transparent 36%),
+        radial-gradient(circle at bottom right, rgba(96, 165, 250, 0.12), transparent 30%),
+        var(--bg);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      font-size: clamp(17px, 2.35vw, 20px);
+      line-height: 1.55;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
+
+    .skip-link {
+      position: fixed;
+      top: -80px;
+      left: 12px;
+      z-index: 3000;
+      padding: 11px 15px;
+      border-radius: 10px;
+      background: #ffffff;
+      color: #0f172a;
+      font-weight: 900;
+      transition: top 0.2s ease;
+    }
+
+    .skip-link:focus {
+      top: 12px;
+    }
+
+    .app {
+      width: min(100%, 980px);
+      margin: auto;
+      padding: 14px 12px 24px;
+    }
+
+    .banner {
+      margin: 8px 0 14px;
+      padding: 16px;
+      border: 1px solid rgba(103, 232, 249, 0.38);
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(8, 145, 178, 0.96), rgba(15, 23, 42, 0.96));
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+      text-align: center;
+    }
+
+    .school {
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .teacher {
+      margin-top: 4px;
+      color: #cffafe;
+      font-weight: 750;
+    }
+
+    .motto {
+      max-width: 760px;
+      margin: 12px auto 0;
+      padding: 10px;
+      border-left: 4px solid var(--yellow);
+      border-radius: 12px;
+      background: rgba(2, 6, 23, 0.32);
+      color: #fef9c3;
+      font-style: italic;
+      font-weight: 700;
+    }
+
+    .progress-card {
+      position: sticky;
+      top: 6px;
+      z-index: 40;
+      margin-bottom: 14px;
+      padding: 11px 13px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(6, 19, 31, 0.95);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.24);
+      backdrop-filter: blur(8px);
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 850;
+    }
+
+    .progress-track {
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #27344b;
+    }
+
+    .progress-fill {
+      width: 16.6667%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--cyan-dark), var(--ice));
+      transition: width 0.3s ease;
+    }
+
+    .page {
+      display: none;
+      animation: page-in 0.22s ease-out;
+    }
+
+    .page.active {
+      display: block;
+    }
+
+    @keyframes page-in {
+      from {
+        opacity: 0.45;
+        transform: translateY(7px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .card {
+      min-height: calc(100dvh - 205px);
+      padding: clamp(18px, 4vw, 32px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(17, 40, 58, 0.98), rgba(9, 27, 43, 0.98));
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+    }
+
+    .badge {
+      display: inline-flex;
+      margin-bottom: 12px;
+      padding: 6px 10px;
+      border: 1px solid rgba(103, 232, 249, 0.34);
+      border-radius: 999px;
+      background: rgba(8, 145, 178, 0.12);
+      color: #cffafe;
+      font-size: 0.86rem;
+      font-weight: 850;
+    }
+
+    h1,
+    h2,
+    h3 {
+      line-height: 1.18;
+    }
+
+    h1 {
+      margin: 0 0 14px;
+      color: #ecfeff;
+      font-size: clamp(1.52rem, 5vw, 2.65rem);
+      letter-spacing: -0.025em;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      color: var(--cyan);
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
+    }
+
+    h3 {
+      margin: 18px 0 10px;
+      color: #bfdbfe;
+      font-size: clamp(1.08rem, 3vw, 1.4rem);
+    }
+
+    .lead {
+      color: #ecfeff;
+      font-size: clamp(1.02rem, 2.8vw, 1.22rem);
+      font-weight: 650;
+    }
+
+    .idea,
+    .note,
+    .instruction {
+      margin: 14px 0;
+      padding: 14px 15px;
+      border-radius: 17px;
+    }
+
+    .idea {
+      border: 1px solid rgba(34, 197, 94, 0.36);
+      background: rgba(34, 197, 94, 0.12);
+      font-weight: 750;
+    }
+
+    .note {
+      border: 1px solid rgba(251, 191, 36, 0.38);
+      background: rgba(251, 191, 36, 0.10);
+      color: #fff7d6;
+    }
+
+    .instruction {
+      border: 1px solid rgba(103, 232, 249, 0.28);
+      background: rgba(34, 211, 238, 0.08);
+      color: #e0f2fe;
+    }
+
+    .identity-grid,
+    .question-grid,
+    .concept-grid,
+    .result-grid,
+    .latent-grid {
+      display: grid;
+      gap: 13px;
+    }
+
+    .identity-grid {
+      grid-template-columns: 1.4fr 0.8fr;
+      margin: 18px 0;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      color: #dbeafe;
+      font-weight: 850;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px 13px;
+      border: 2px solid #475569;
+      border-radius: 12px;
+      background: #061525;
+      color: #ffffff;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--cyan);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(103, 232, 249, 0.12);
+    }
+
+    textarea {
+      min-height: 105px;
+      resize: vertical;
+    }
+
+    .concept-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin: 18px 0;
+    }
+
+    .concept {
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: rgba(15, 23, 42, 0.42);
+    }
+
+    .concept strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #a5f3fc;
+    }
+
+    .ice-scene {
+      display: grid;
+      grid-template-columns: 1fr 70px 1fr;
+      gap: 13px;
+      align-items: center;
+      margin: 18px 0;
+    }
+
+    .thermal-box {
+      min-height: 155px;
+      padding: 17px;
+      border: 2px solid var(--border);
+      border-radius: 18px;
+      text-align: center;
+    }
+
+    .thermal-box.drink {
+      border-color: var(--orange);
+      background: rgba(251, 146, 60, 0.12);
+    }
+
+    .thermal-box.ice {
+      border-color: var(--blue);
+      background: rgba(96, 165, 250, 0.12);
+    }
+
+    .thermal-box span {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 2.5rem;
+    }
+
+    .heat-arrow {
+      color: var(--yellow);
+      text-align: center;
+      font-size: 1.9rem;
+      font-weight: 950;
+    }
+
+    .formula {
+      overflow-x: auto;
+      margin: 15px 0;
+      padding: 14px;
+      border: 1px solid rgba(103, 232, 249, 0.25);
+      border-radius: 17px;
+      background: rgba(2, 6, 23, 0.38);
+      text-align: center;
+    }
+
+    .latent-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin: 18px 0;
+    }
+
+    .latent-card {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: #061525;
+      text-align: center;
+    }
+
+    .latent-card span {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 2.1rem;
+    }
+
+    .latent-card strong {
+      display: block;
+      color: #ffffff;
+    }
+
+    .question-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .question {
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.42);
+    }
+
+    .question.full {
+      grid-column: 1 / -1;
+    }
+
+    .question-title {
+      margin: 0 0 11px;
+      color: #ffffff;
+      font-weight: 900;
+    }
+
+    .points {
+      color: var(--yellow);
+      font-size: 0.86rem;
+    }
+
+    .choices {
+      display: grid;
+      gap: 8px;
+    }
+
+    .choice {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+      align-items: center;
+      min-height: 48px;
+      padding: 10px;
+      border: 2px solid rgba(226, 232, 240, 0.20);
+      border-radius: 13px;
+      background: rgba(15, 23, 42, 0.35);
+      cursor: pointer;
+    }
+
+    .choice:hover,
+    .choice:focus-within {
+      border-color: rgba(103, 232, 249, 0.60);
+    }
+
+    .choice input {
+      width: 1.12em;
+      height: 1.12em;
+      margin: 0;
+      accent-color: var(--green);
+    }
+
+    .choice.correct-answer {
+      border-color: var(--green);
+      background: rgba(34, 197, 94, 0.12);
+    }
+
+    .choice.wrong-answer {
+      border-color: var(--red);
+      background: rgba(251, 113, 133, 0.12);
+    }
+
+    .feedback {
+      min-height: 1.55em;
+      margin-top: 9px;
+      font-size: 0.92rem;
+      font-weight: 850;
+    }
+
+    .feedback.good {
+      color: var(--good);
+    }
+
+    .feedback.bad {
+      color: var(--bad);
+    }
+
+    .feedback.warn {
+      color: var(--warn);
+    }
+
+    .balance-scene {
+      display: grid;
+      grid-template-columns: 1fr 70px 1fr;
+      gap: 13px;
+      align-items: center;
+      margin: 18px 0;
+    }
+
+    .balance-box {
+      min-height: 150px;
+      padding: 17px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: #061525;
+      text-align: center;
+    }
+
+    .balance-box.give {
+      border-top: 5px solid var(--orange);
+    }
+
+    .balance-box.receive {
+      border-top: 5px solid var(--blue);
+    }
+
+    .balance-box strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .balance-equals {
+      color: var(--yellow);
+      text-align: center;
+      font-size: 2rem;
+      font-weight: 950;
+    }
+
+    .energy-steps {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 13px;
+      margin: 18px 0;
+    }
+
+    .step-card {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: rgba(15, 23, 42, 0.42);
+    }
+
+    .step-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .calculator {
+      margin: 18px 0;
+      padding: 17px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: #061525;
+    }
+
+    .calculator-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 11px;
+    }
+
+    .calculator label {
+      display: block;
+      color: #dbeafe;
+      font-weight: 850;
+    }
+
+    .calc-button {
+      width: 100%;
+      min-height: 48px;
+      margin-top: 13px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--cyan);
+      color: #083344;
+      font-weight: 950;
+      cursor: pointer;
+    }
+
+    .calc-result {
+      margin-top: 13px;
+      padding: 13px;
+      border-left: 4px solid var(--yellow);
+      border-radius: 10px;
+      background: rgba(250, 204, 21, 0.08);
+      color: #fef9c3;
+      font-weight: 850;
+    }
+
+    .plateau-chart {
+      position: relative;
+      min-height: 250px;
+      margin: 18px 0;
+      padding: 18px 14px 34px 45px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background:
+        repeating-linear-gradient(to top, transparent 0 44px, rgba(148, 163, 184, 0.12) 45px),
+        #061525;
+    }
+
+    .axis-y,
+    .axis-x {
+      position: absolute;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 800;
+    }
+
+    .axis-y {
+      left: 8px;
+      top: 10px;
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+    }
+
+    .axis-x {
+      right: 12px;
+      bottom: 6px;
+    }
+
+    .segment {
+      position: absolute;
+      height: 5px;
+      border-radius: 999px;
+      transform-origin: left center;
+    }
+
+    .segment.warm {
+      left: 55px;
+      top: 176px;
+      width: 34%;
+      background: var(--blue);
+      transform: rotate(-20deg);
+    }
+
+    .segment.melt {
+      left: 35%;
+      top: 123px;
+      width: 36%;
+      background: var(--yellow);
+    }
+
+    .segment.water {
+      left: 68%;
+      top: 123px;
+      width: 25%;
+      background: var(--orange);
+      transform: rotate(-18deg);
+    }
+
+    .plateau-label {
+      position: absolute;
+      left: 41%;
+      top: 82px;
+      padding: 7px 9px;
+      border-radius: 9px;
+      background: rgba(2, 6, 23, 0.78);
+      color: #fef08a;
+      font-size: 0.82rem;
+      font-weight: 850;
+    }
+
+    .experiment-table {
+      width: 100%;
+      margin: 16px 0;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 14px;
+      background: #061525;
+    }
+
+    .experiment-table th,
+    .experiment-table td {
+      padding: 11px;
+      border: 1px solid #334155;
+      text-align: center;
+    }
+
+    .experiment-table th {
+      color: #cffafe;
+      background: #155e75;
+    }
+
+    .result-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin: 18px 0;
+    }
+
+    .result-card {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: rgba(15, 23, 42, 0.42);
+      text-align: center;
+    }
+
+    .result-card span {
+      display: block;
+      color: #a5f3fc;
+      font-size: 2rem;
+      font-weight: 950;
+    }
+
+    .check-page-button,
+    .reset-button {
+      min-height: 49px;
+      padding: 12px 17px;
+      border: 0;
+      border-radius: 13px;
+      font-weight: 950;
+      cursor: pointer;
+    }
+
+    .check-page-button {
+      background: var(--cyan);
+      color: #083344;
+    }
+
+    .reset-button {
+      border: 2px solid #64748b;
+      background: #1e293b;
+      color: #ffffff;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 17px;
+    }
+
+    .score-box {
+      margin-top: 18px;
+      padding: 18px;
+      border: 2px solid var(--cyan);
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(8, 145, 178, 0.95), rgba(15, 23, 42, 0.95));
+      text-align: center;
+    }
+
+    .score-big {
+      color: #fef08a;
+      font-size: clamp(2.2rem, 8vw, 4rem);
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .navigation-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 17px;
+    }
+
+    .navigation-links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 10px 14px;
+      border: 1px solid rgba(103, 232, 249, 0.32);
+      border-radius: 12px;
+      background: rgba(8, 145, 178, 0.09);
+      color: #cffafe;
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    .footer {
+      padding: 23px 12px 6px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .footer a {
+      color: var(--cyan);
+    }
+
+    .nav {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1000;
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      background: linear-gradient(180deg, rgba(6, 19, 31, 0), rgba(6, 19, 31, 0.96) 28%, rgba(6, 19, 31, 0.99));
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-inner {
+      display: grid;
+      grid-template-columns: minmax(100px, 1fr) auto minmax(150px, 1fr);
+      gap: 10px;
+      align-items: center;
+      width: min(100%, 980px);
+      margin: auto;
+      padding: 9px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(17, 35, 51, 0.97);
+      box-shadow: 0 18px 38px rgba(0, 0, 0, 0.35);
+    }
+
+    .nav button {
+      min-height: 50px;
+      padding: 10px 12px;
+      border: 0;
+      border-radius: 14px;
+      font-size: clamp(0.92rem, 2.6vw, 1.03rem);
+      font-weight: 950;
+      cursor: pointer;
+    }
+
+    .back {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .next {
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      color: #052e16;
+    }
+
+    .nav button:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    .counter {
+      min-width: 64px;
+      padding: 9px 10px;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 12px;
+      background: rgba(2, 6, 23, 0.36);
+      text-align: center;
+      font-weight: 950;
+    }
+
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    @media (max-width: 820px) {
+      .latent-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .identity-grid,
+      .question-grid,
+      .concept-grid,
+      .result-grid,
+      .ice-scene,
+      .balance-scene {
+        grid-template-columns: 1fr;
+      }
+
+      .heat-arrow,
+      .balance-equals {
+        transform: rotate(90deg);
+      }
+
+      .energy-steps,
+      .calculator-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        min-height: calc(100dvh - 190px);
+        border-radius: 20px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      :root {
+        --nav-height: 88px;
+      }
+
+      .app {
+        padding-inline: 9px;
+      }
+
+      .banner {
+        border-radius: 18px;
+      }
+
+      .card {
+        padding: 17px 13px;
+      }
+
+      .nav-inner {
+        grid-template-columns: 0.8fr auto 1.2fr;
+        gap: 7px;
+        padding: 7px;
+      }
+
+      .nav button {
+        padding-inline: 8px;
+      }
+
+      .counter {
+        min-width: 52px;
+        padding-inline: 7px;
+      }
+
+      .experiment-table {
+        font-size: 0.85rem;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .page {
+        animation: none;
+      }
+    }
+
+    @media print {
+      body {
+        padding-bottom: 0;
+        color: #111827;
+        background: #ffffff;
+      }
+
+      .banner,
+      .card,
+      .question,
+      .concept,
+      .result-card,
+      .latent-card,
+      .step-card {
+        color: #111827;
+        background: #ffffff;
+        box-shadow: none;
+      }
+
+      .banner {
+        border: 2px solid #0891b2;
+      }
+
+      .school,
+      .teacher,
+      .motto,
+      h1,
+      h2,
+      h3,
+      .lead,
+      .question-title {
+        color: #111827;
+      }
+
+      .progress-card,
+      .nav,
+      .button-row,
+      .calculator {
+        display: none !important;
+      }
+
+      .page {
+        display: block !important;
+        break-after: page;
+      }
+
+      .card {
+        min-height: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#worksheet">Sari la fișă</a>
+
+  <div class="app">
+    <header class="banner">
+      <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+      <div class="teacher">Prof. Dănuț Andronie</div>
+      <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+    </header>
+
+    <section class="progress-card" aria-label="Progresul fișei">
+      <div class="progress-meta">
+        <span id="page-label">Pagina 1 din 6</span>
+        <span id="page-topic">Date și recapitulare</span>
+      </div>
+      <div class="progress-track" role="progressbar" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </section>
+
+    <main id="worksheet">
+      <!-- PAGINA 1 -->
+      <section class="page active" data-topic="Date și recapitulare">
+        <div class="card">
+          <span class="badge">Clasa a VIII-a · Fenomene termice · Fișa 8</span>
+          <h1>Studiul schimburilor de căldură implicate de topirea gheții</h1>
+          <p class="lead">Completează fișa după parcurgerea Lecției 8. Scorul maxim este de 20 de puncte, iar nota se calculează automat.</p>
+
+          <div class="identity-grid">
+            <div class="field">
+              <label for="student-name">Numele și prenumele</label>
+              <input id="student-name" type="text" autocomplete="name" placeholder="Scrie numele elevului">
+            </div>
+            <div class="field">
+              <label for="student-class">Clasa</label>
+              <select id="student-class">
+                <option value="">Alege...</option>
+                <option>8A</option>
+                <option>8B</option>
+                <option>8C</option>
+                <option>8D</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="idea">Ideea-cheie: gheața primește energie în timpul topirii, dar temperatura ei poate rămâne constantă până când transformarea se încheie.</div>
+
+          <div class="concept-grid">
+            <div class="concept">
+              <strong>Căldură latentă</strong>
+              Energia folosită pentru schimbarea stării de agregare fără variația temperaturii.
+            </div>
+            <div class="concept">
+              <strong>Căldură latentă specifică \(\lambda\)</strong>
+              Energia necesară topirii unui kilogram dintr-o substanță.
+            </div>
+            <div class="concept">
+              <strong>Bilanț termic</strong>
+              Într-un sistem izolat, căldura cedată este egală cu cea primită.
+            </div>
+          </div>
+
+          <div class="instruction">Fișa conține relațiile \(Q_{\text{topire}}=m\lambda\), \(m=\frac{Q_{\text{topire}}}{\lambda}\) și \(Q_{\text{primit}}=m\lambda+mc\Delta T\).</div>
+        </div>
+      </section>
+
+      <!-- PAGINA 2 -->
+      <section class="page" data-topic="Căldura latentă de topire" hidden>
+        <div class="card">
+          <span class="badge">I. Noțiuni și formulă · 5 puncte</span>
+          <h2>Topirea gheții și energia primită</h2>
+
+          <div class="ice-scene">
+            <div class="thermal-box drink">
+              <span aria-hidden="true">🥤</span>
+              <strong>Băutură mai caldă</strong>
+              cedează energie
+            </div>
+            <div class="heat-arrow" aria-hidden="true">→</div>
+            <div class="thermal-box ice">
+              <span aria-hidden="true">🧊</span>
+              <strong>Gheață</strong>
+              primește energie și se topește
+            </div>
+          </div>
+
+          <div class="formula">
+            \[
+              Q_{\text{topire}}=m\lambda
+            \]
+            \[
+              [\lambda]_{\mathrm{SI}}=\frac{\mathrm{J}}{\mathrm{kg}}
+            \]
+          </div>
+
+          <div class="latent-grid">
+            <div class="latent-card">
+              <span aria-hidden="true">⚖️</span>
+              <strong>\(m\)</strong>
+              masa gheții
+            </div>
+            <div class="latent-card">
+              <span aria-hidden="true">❄️</span>
+              <strong>\(\lambda\)</strong>
+              căldura latentă specifică de topire
+            </div>
+            <div class="latent-card">
+              <span aria-hidden="true">⚡</span>
+              <strong>\(Q_{\text{topire}}\)</strong>
+              energia necesară topirii
+            </div>
+          </div>
+
+          <div class="question-grid">
+            <div class="question" data-kind="radio" data-answer="a" data-points="2">
+              <p class="question-title">1. Formula pentru topirea gheții este: <span class="points">(2 p)</span></p>
+              <div class="choices">
+                <label class="choice"><input type="radio" name="q1" value="a"> \(Q=m\lambda\)</label>
+                <label class="choice"><input type="radio" name="q1" value="b"> \(Q=\frac{\lambda}{m}\)</label>
+                <label class="choice"><input type="radio" name="q1" value="c"> \(Q=\frac{m}{\lambda}\)</label>
+              </div>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+
+            <div class="question" data-kind="radio" data-answer="c" data-points="1">
+              <p class="question-title">2. În timpul topirii gheții pure, temperatura: <span class="points">(1 p)</span></p>
+              <div class="choices">
+                <label class="choice"><input type="radio" name="q2" value="a"> crește obligatoriu</label>
+                <label class="choice"><input type="radio" name="q2" value="b"> scade obligatoriu</label>
+                <label class="choice"><input type="radio" name="q2" value="c"> poate rămâne constantă</label>
+              </div>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+
+            <div class="question full" data-kind="text" data-answers="caldura latenta|schimbarea starii|fara schimbarea temperaturii|temperatura constanta" data-min-keywords="3" data-points="2">
+              <p class="question-title">3. Explică ce reprezintă căldura latentă. <span class="points">(2 p)</span></p>
+              <textarea placeholder="Folosește ideile: energie, schimbarea stării, temperatură"></textarea>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button class="check-page-button" type="button" data-check-page="1">Verifică pagina</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGINA 3 -->
+      <section class="page" data-topic="Bilanțul termic" hidden>
+        <div class="card">
+          <span class="badge">II. Conservarea energiei · 5 puncte</span>
+          <h2>Căldura cedată și căldura primită</h2>
+
+          <div class="balance-scene">
+            <div class="balance-box give">
+              <strong>Lichidul mai cald</strong>
+              cedează căldură<br>\(Q_{\text{cedat}}\)
+            </div>
+            <div class="balance-equals">=</div>
+            <div class="balance-box receive">
+              <strong>Gheața și apa rezultată</strong>
+              primesc căldură<br>\(Q_{\text{primit}}\)
+            </div>
+          </div>
+
+          <div class="formula">
+            Pentru un sistem izolat:
+            \[
+              Q_{\text{cedat}}=Q_{\text{primit}}
+            \]
+          </div>
+
+          <div class="energy-steps">
+            <div class="step-card">
+              <strong>Pasul 1: topirea gheții</strong>
+              \[
+                Q_1=m\lambda
+              \]
+            </div>
+            <div class="step-card">
+              <strong>Pasul 2: încălzirea apei rezultate</strong>
+              \[
+                Q_2=mc\Delta T
+              \]
+            </div>
+          </div>
+
+          <div class="formula">
+            Dacă apa rezultată își schimbă temperatura:
+            \[
+              Q_{\text{primit}}=m\lambda+mc\Delta T
+            \]
+          </div>
+
+          <div class="question-grid">
+            <div class="question" data-kind="radio" data-answer="b" data-points="2">
+              <p class="question-title">4. Într-un sistem izolat, bilanțul corect este: <span class="points">(2 p)</span></p>
+              <div class="choices">
+                <label class="choice"><input type="radio" name="q4" value="a"> \(Q_{\text{cedat}}&gt;Q_{\text{primit}}\)</label>
+                <label class="choice"><input type="radio" name="q4" value="b"> \(Q_{\text{cedat}}=Q_{\text{primit}}\)</label>
+                <label class="choice"><input type="radio" name="q4" value="c"> energia dispare</label>
+              </div>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+
+            <div class="question" data-kind="select" data-answer="suma" data-points="1">
+              <p class="question-title">5. Dacă gheața se topește și apa rezultată se încălzește, căldura primită este: <span class="points">(1 p)</span></p>
+              <select aria-label="Expresia căldurii primite">
+                <option value="">Alege...</option>
+                <option value="doar-topire">numai \(m\lambda\)</option>
+                <option value="suma">\(m\lambda+mc\Delta T\)</option>
+                <option value="diferenta">\(m\lambda-mc\Delta T\)</option>
+              </select>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+
+            <div class="question full" data-kind="text" data-answers="lichidul cald cedeaza|gheata primeste|apa rezultata se incalzeste|conservarea energiei" data-min-keywords="3" data-points="2">
+              <p class="question-title">6. Descrie schimbul de energie când introducem gheață într-o băutură mai caldă. <span class="points">(2 p)</span></p>
+              <textarea placeholder="Menționează corpul care cedează și corpul care primește energie"></textarea>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button class="check-page-button" type="button" data-check-page="2">Verifică pagina</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGINA 4 -->
+      <section class="page" data-topic="Calcule cu căldura latentă" hidden>
+        <div class="card">
+          <span class="badge">III. Aplicare numerică · 5 puncte</span>
+          <h2>Calculează energia sau masa gheții</h2>
+
+          <div class="formula">
+            Pentru \(m=0{,}1\,\text{kg}\) și \(\lambda=334000\,\text{J/kg}\):
+            \[
+              Q_{\text{topire}}
+              =m\lambda
+              =0{,}1\cdot334000
+              =33400\,\text{J}.
+            \]
+          </div>
+
+          <div class="calculator">
+            <h3>Calculator pentru topirea gheții</h3>
+            <div class="calculator-grid">
+              <label>Masa \(m\) (kg)
+                <input id="calc-m" type="number" min="0.0001" step="0.01" value="0.1">
+              </label>
+              <label>\(\lambda\) (J/kg)
+                <input id="calc-lambda" type="number" min="0.0001" step="1" value="334000">
+              </label>
+            </div>
+            <button class="calc-button" type="button" id="calculate-heat">Calculează \(Q_{\text{topire}}\)</button>
+            <div class="calc-result" id="calc-result" aria-live="polite">Rezultatul va apărea aici.</div>
+          </div>
+
+          <div class="question-grid">
+            <div class="question" data-kind="number" data-answer="33400" data-tolerance="0.01" data-points="2">
+              <p class="question-title">7. Ce energie este necesară pentru topirea a \(0{,}1\,\text{kg}\) de gheață, dacă \(\lambda=334000\,\text{J/kg}\)? <span class="points">(2 p)</span></p>
+              <input type="number" step="1" placeholder="Rezultatul în J">
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+
+            <div class="question" data-kind="number" data-answer="0.05" data-tolerance="0.0001" data-points="2">
+              <p class="question-title">8. Calculează masa gheții care se topește primind \(16700\,\text{J}\). <span class="points">(2 p)</span></p>
+              <div class="formula">
+                \[
+                  m=\frac{Q_{\text{topire}}}{\lambda}
+                  =\frac{16700}{334000}
+                \]
+              </div>
+              <input type="number" step="0.01" placeholder="Rezultatul în kg">
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+
+            <div class="question full" data-kind="radio" data-answer="a" data-points="1">
+              <p class="question-title">9. Dacă masa gheții se dublează, pentru aceeași substanță, \(Q_{\text{topire}}\): <span class="points">(1 p)</span></p>
+              <div class="choices">
+                <label class="choice"><input type="radio" name="q9" value="a"> se dublează</label>
+                <label class="choice"><input type="radio" name="q9" value="b"> rămâne aceeași</label>
+                <label class="choice"><input type="radio" name="q9" value="c"> se înjumătățește</label>
+              </div>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button class="check-page-button" type="button" data-check-page="3">Verifică pagina</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGINA 5 -->
+      <section class="page" data-topic="Experiment și interpretare" hidden>
+        <div class="card">
+          <span class="badge">IV. Studiu interdisciplinar · 5 puncte</span>
+          <h2>Ce observăm în timpul topirii?</h2>
+
+          <div class="plateau-chart" aria-label="Grafic calitativ al temperaturii gheții și apei în timpul încălzirii">
+            <span class="axis-y">temperatură</span>
+            <span class="axis-x">timp / energie primită</span>
+            <span class="segment warm"></span>
+            <span class="segment melt"></span>
+            <span class="segment water"></span>
+            <span class="plateau-label">topire: temperatura rămâne constantă</span>
+          </div>
+
+          <table class="experiment-table">
+            <thead>
+              <tr>
+                <th>Etapă</th>
+                <th>Starea sistemului</th>
+                <th>Temperatura</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>1</td><td>gheață care se încălzește</td><td>crește</td></tr>
+              <tr><td>2</td><td>gheață + apă, în topire</td><td>poate rămâne constantă</td></tr>
+              <tr><td>3</td><td>apă după topire</td><td>poate crește</td></tr>
+            </tbody>
+          </table>
+
+          <div class="question-grid">
+            <div class="question" data-kind="radio" data-answer="c" data-points="2">
+              <p class="question-title">10. Energia primită în timpul platoului de topire este folosită pentru: <span class="points">(2 p)</span></p>
+              <div class="choices">
+                <label class="choice"><input type="radio" name="q10" value="a"> dispariția masei</label>
+                <label class="choice"><input type="radio" name="q10" value="b"> creșterea continuă a temperaturii</label>
+                <label class="choice"><input type="radio" name="q10" value="c"> schimbarea stării de agregare</label>
+              </div>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+
+            <div class="question" data-kind="select" data-answer="dupa" data-points="1">
+              <p class="question-title">11. Termenul \(mc\Delta T\) pentru apa rezultată este necesar: <span class="points">(1 p)</span></p>
+              <select aria-label="Momentul folosirii termenului mc delta T">
+                <option value="">Alege...</option>
+                <option value="inainte">numai înainte de topire</option>
+                <option value="dupa">dacă apa se încălzește după topire</option>
+                <option value="niciodata">niciodată</option>
+              </select>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+
+            <div class="question full" data-kind="text" data-answers="temperatura constanta|energie primita|schimbarea starii|topirea ghetii" data-min-keywords="3" data-points="2">
+              <p class="question-title">12. Explică de ce gheața poate primi energie fără ca temperatura să crească în timpul topirii. <span class="points">(2 p)</span></p>
+              <textarea placeholder="Leagă energia primită de schimbarea stării de agregare"></textarea>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+          </div>
+
+          <div class="note">Siguranță: experimentul se realizează cu apă la temperaturi moderate și fără surse electrice în apropierea vaselor cu lichid.</div>
+
+          <div class="button-row">
+            <button class="check-page-button" type="button" data-check-page="4">Verifică pagina</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- PAGINA 6 -->
+      <section class="page" data-topic="Rezultatul final" hidden>
+        <div class="card">
+          <span class="badge">V. Rezultat final</span>
+          <h2>Verifică întreaga fișă</h2>
+
+          <div class="instruction">Poți reveni la paginile anterioare pentru a completa răspunsurile lipsă. Apasă apoi pe butonul de verificare.</div>
+
+          <div class="button-row">
+            <button class="check-page-button" type="button" id="check-all">Verifică fișa</button>
+            <button class="reset-button" type="button" id="reset-all">Resetează</button>
+          </div>
+
+          <div class="score-box" id="score-box" aria-live="polite">
+            <div class="score-big" id="score-points">0/20</div>
+            <p id="score-grade">Nota: –</p>
+            <p id="score-message">Completează fișa, apoi verifică rezultatul.</p>
+          </div>
+
+          <div class="result-grid">
+            <div class="result-card">
+              <span id="result-correct">0</span>
+              răspunsuri corecte
+            </div>
+            <div class="result-card">
+              <span id="result-wrong">0</span>
+              răspunsuri de revizuit
+            </div>
+            <div class="result-card">
+              <span id="result-empty">0</span>
+              răspunsuri necompletate
+            </div>
+          </div>
+
+          <div class="idea" id="student-summary">Elev: necompletat · Clasa: necompletată</div>
+
+          <div class="navigation-links">
+            <a href="../lectii/lectia-8.html">← Reia Lecția 8</a>
+            <a href="index.html">Lista fișelor</a>
+            <a href="fisa-9.html">Fișa următoare →</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      © Fizica Galaction · Prof. DĂNUȚ ANDRONIE<br>
+      <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+    </footer>
+  </div>
+
+  <nav class="nav" aria-label="Navigarea între paginile fișei">
+    <div class="nav-inner">
+      <button class="back" type="button" id="back-button">← Înapoi</button>
+      <div class="counter" id="counter">1 / 6</div>
+      <button class="next" type="button" id="next-button">Mergi mai departe →</button>
+    </div>
+  </nav>
+
+  <div class="sr-only" id="announcement" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const pages = Array.from(document.querySelectorAll(".page"));
+      const backButton = document.getElementById("back-button");
+      const nextButton = document.getElementById("next-button");
+      const counter = document.getElementById("counter");
+      const pageLabel = document.getElementById("page-label");
+      const pageTopic = document.getElementById("page-topic");
+      const progressFill = document.getElementById("progress-fill");
+      const progressTrack = document.querySelector(".progress-track");
+      const announcement = document.getElementById("announcement");
+      let currentPage = 0;
+
+      function showPage(index, focusHeading) {
+        currentPage = Math.max(0, Math.min(index, pages.length - 1));
+
+        pages.forEach(function (page, pageIndex) {
+          const active = pageIndex === currentPage;
+          page.classList.toggle("active", active);
+          page.hidden = !active;
+          page.setAttribute("aria-hidden", String(!active));
+        });
+
+        const pageNumber = currentPage + 1;
+        const topic = pages[currentPage].dataset.topic || "Fișă";
+
+        counter.textContent = pageNumber + " / " + pages.length;
+        pageLabel.textContent = "Pagina " + pageNumber + " din " + pages.length;
+        pageTopic.textContent = topic;
+        progressFill.style.width = (pageNumber / pages.length * 100) + "%";
+        progressTrack.setAttribute("aria-valuenow", String(pageNumber));
+
+        backButton.disabled = currentPage === 0;
+        nextButton.textContent = currentPage === pages.length - 1
+          ? "Vezi rezultatul ✓"
+          : "Mergi mai departe →";
+
+        announcement.textContent = "Pagina " + pageNumber + ": " + topic;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        if (focusHeading) {
+          const heading = pages[currentPage].querySelector("h1, h2");
+          if (heading) {
+            heading.setAttribute("tabindex", "-1");
+            heading.focus({ preventScroll: true });
+          }
+        }
+
+        if (window.MathJax && window.MathJax.typesetPromise) {
+          window.MathJax.typesetPromise([pages[currentPage]]).catch(function () {});
+        }
+      }
+
+      backButton.addEventListener("click", function () {
+        if (currentPage > 0) {
+          showPage(currentPage - 1, true);
+        }
+      });
+
+      nextButton.addEventListener("click", function () {
+        if (currentPage < pages.length - 1) {
+          showPage(currentPage + 1, true);
+        } else {
+          evaluateAll();
+          document.getElementById("score-box").scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.altKey && event.key === "ArrowRight" && currentPage < pages.length - 1) {
+          showPage(currentPage + 1, true);
+        }
+
+        if (event.altKey && event.key === "ArrowLeft" && currentPage > 0) {
+          showPage(currentPage - 1, true);
+        }
+      });
+
+      function normalizeText(text) {
+        return String(text || "")
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[.,!?;:()]/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
+
+      function clearQuestionStyles(question) {
+        question.querySelectorAll(".choice").forEach(function (choice) {
+          choice.classList.remove("correct-answer", "wrong-answer");
+        });
+      }
+
+      function evaluateQuestion(question, showFeedback) {
+        const kind = question.dataset.kind;
+        const points = Number(question.dataset.points || 0);
+        const feedback = question.querySelector(".feedback");
+        let correct = false;
+        let empty = false;
+
+        clearQuestionStyles(question);
+
+        if (kind === "radio") {
+          const selected = question.querySelector("input[type='radio']:checked");
+          const correctValue = question.dataset.answer;
+          const correctInput = question.querySelector("input[value='" + correctValue + "']");
+          const correctChoice = correctInput ? correctInput.closest(".choice") : null;
+
+          if (!selected) {
+            empty = true;
+          } else {
+            correct = selected.value === correctValue;
+            const selectedChoice = selected.closest(".choice");
+            selectedChoice.classList.add(correct ? "correct-answer" : "wrong-answer");
+
+            if (!correct && correctChoice) {
+              correctChoice.classList.add("correct-answer");
+            }
+          }
+        }
+
+        if (kind === "select") {
+          const select = question.querySelector("select");
+          const value = select ? select.value : "";
+          empty = !value;
+          correct = value === question.dataset.answer;
+        }
+
+        if (kind === "number") {
+          const input = question.querySelector("input[type='number']");
+          const raw = input ? input.value.trim() : "";
+          empty = raw === "";
+
+          if (!empty) {
+            const value = Number(raw);
+            const answer = Number(question.dataset.answer);
+            const tolerance = Number(question.dataset.tolerance || 0);
+            correct = Number.isFinite(value) && Math.abs(value - answer) <= tolerance;
+          }
+        }
+
+        if (kind === "text") {
+          const input = question.querySelector("input[type='text'], textarea");
+          const value = normalizeText(input ? input.value : "");
+          empty = value === "";
+
+          if (!empty) {
+            const keywords = String(question.dataset.answers || "")
+              .split("|")
+              .map(normalizeText)
+              .filter(Boolean);
+            const matches = keywords.filter(function (keyword) {
+              return value.includes(keyword);
+            }).length;
+            const minimum = Number(question.dataset.minKeywords || 1);
+            correct = matches >= minimum;
+          }
+        }
+
+        if (showFeedback && feedback) {
+          feedback.className = "feedback";
+
+          if (empty) {
+            feedback.textContent = "Completează răspunsul.";
+            feedback.classList.add("warn");
+          } else if (correct) {
+            feedback.textContent = "Corect.";
+            feedback.classList.add("good");
+          } else {
+            feedback.textContent = "Mai verifică noțiunea și încearcă din nou.";
+            feedback.classList.add("bad");
+          }
+        }
+
+        return {
+          correct: correct,
+          empty: empty,
+          points: correct ? points : 0
+        };
+      }
+
+      function evaluatePage(pageIndex) {
+        const questions = Array.from(pages[pageIndex].querySelectorAll(".question"));
+        questions.forEach(function (question) {
+          evaluateQuestion(question, true);
+        });
+      }
+
+      document.querySelectorAll("[data-check-page]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          evaluatePage(Number(button.dataset.checkPage));
+        });
+      });
+
+      function evaluateAll() {
+        const questions = Array.from(document.querySelectorAll(".question"));
+        let totalPoints = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let emptyCount = 0;
+
+        questions.forEach(function (question) {
+          const result = evaluateQuestion(question, true);
+          totalPoints += result.points;
+
+          if (result.empty) {
+            emptyCount += 1;
+          } else if (result.correct) {
+            correctCount += 1;
+          } else {
+            wrongCount += 1;
+          }
+        });
+
+        const grade = totalPoints / 2;
+        let message = "";
+
+        if (emptyCount > 0) {
+          message = "Mai ai răspunsuri necompletate. Revino la paginile anterioare.";
+        } else if (grade >= 9) {
+          message = "Excelent! Aplici corect căldura latentă și bilanțul termic.";
+        } else if (grade >= 7) {
+          message = "Foarte bine! Revizuiește răspunsurile evidențiate.";
+        } else if (grade >= 5) {
+          message = "Ai înțeles ideile de bază. Mai exersează calculele cu Q=mλ.";
+        } else {
+          message = "Reia Lecția 8 și încearcă din nou.";
+        }
+
+        document.getElementById("score-points").textContent = totalPoints + "/20";
+        document.getElementById("score-grade").textContent = "Nota: " + grade.toFixed(2);
+        document.getElementById("score-message").textContent = message;
+        document.getElementById("result-correct").textContent = correctCount;
+        document.getElementById("result-wrong").textContent = wrongCount;
+        document.getElementById("result-empty").textContent = emptyCount;
+
+        const studentName = document.getElementById("student-name").value.trim() || "necompletat";
+        const studentClass = document.getElementById("student-class").value || "necompletată";
+        document.getElementById("student-summary").textContent =
+          "Elev: " + studentName + " · Clasa: " + studentClass;
+      }
+
+      document.getElementById("check-all").addEventListener("click", evaluateAll);
+
+      document.getElementById("calculate-heat").addEventListener("click", function () {
+        const mass = Number(document.getElementById("calc-m").value);
+        const lambda = Number(document.getElementById("calc-lambda").value);
+        const output = document.getElementById("calc-result");
+
+        if (!Number.isFinite(mass) || !Number.isFinite(lambda) || mass <= 0 || lambda <= 0) {
+          output.textContent = "Introdu valori numerice pozitive pentru masă și căldura latentă specifică.";
+          return;
+        }
+
+        const heat = mass * lambda;
+        output.textContent = "Q_topire = " + heat.toFixed(2) + " J.";
+      });
+
+      document.getElementById("reset-all").addEventListener("click", function () {
+        document.querySelectorAll("input").forEach(function (input) {
+          if (input.type === "radio") {
+            input.checked = false;
+          } else if (!["calc-m", "calc-lambda"].includes(input.id)) {
+            input.value = "";
+          }
+        });
+
+        document.querySelectorAll("select").forEach(function (select) {
+          select.selectedIndex = 0;
+        });
+
+        document.querySelectorAll("textarea").forEach(function (textarea) {
+          textarea.value = "";
+        });
+
+        document.querySelectorAll(".feedback").forEach(function (feedback) {
+          feedback.textContent = "";
+          feedback.className = "feedback";
+        });
+
+        document.querySelectorAll(".choice").forEach(function (choice) {
+          choice.classList.remove("correct-answer", "wrong-answer");
+        });
+
+        document.getElementById("calc-m").value = "0.1";
+        document.getElementById("calc-lambda").value = "334000";
+        document.getElementById("calc-result").textContent = "Rezultatul va apărea aici.";
+        document.getElementById("score-points").textContent = "0/20";
+        document.getElementById("score-grade").textContent = "Nota: –";
+        document.getElementById("score-message").textContent = "Completează fișa, apoi verifică rezultatul.";
+        document.getElementById("result-correct").textContent = "0";
+        document.getElementById("result-wrong").textContent = "0";
+        document.getElementById("result-empty").textContent =
+          String(document.querySelectorAll(".question").length);
+        document.getElementById("student-summary").textContent =
+          "Elev: necompletat · Clasa: necompletată";
+        showPage(0, true);
+      });
+
+      document.getElementById("result-empty").textContent =
+        String(document.querySelectorAll(".question").length);
+
+      showPage(0, false);
+    })();
+  </script>
+</body>
+</html>

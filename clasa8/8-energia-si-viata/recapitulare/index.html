@@ -1,12 +1,831 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Energia și viața - Recapitulare</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De la E = mc² la energia din jurul tău — Lecție clasa a VIII-a</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0B1220;
+    --bg-elevated: #131C30;
+    --bg-card: #101828;
+    --line: #23304A;
+    --text: #EDEFF5;
+    --text-muted: #8B93A7;
+    --amber: #F5A623;
+    --cyan: #4FD8EB;
+    --crimson: #E85D4C;
+    --radius: 14px;
+    --max-w: 780px;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+
+  body{
+    margin:0;
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(79,216,235,0.10), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(245,166,35,0.08), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  ::selection{ background:var(--amber); color:#101828; }
+
+  .wrap{
+    max-width:var(--max-w);
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  /* ---------- energy current: the signature spine ---------- */
+  .spine-track{
+    position:absolute;
+    left:calc(50% - var(--max-w)/2 - 34px);
+    top:0;
+    bottom:0;
+    width:2px;
+    background:linear-gradient(180deg, transparent, var(--line) 4%, var(--line) 96%, transparent);
+  }
+  .spine-glow{
+    position:absolute;
+    left:calc(50% - var(--max-w)/2 - 35px);
+    top:0;
+    width:4px;
+    height:120px;
+    border-radius:4px;
+    background:linear-gradient(180deg, transparent, var(--cyan), var(--amber), transparent);
+    filter:blur(1px);
+    animation:flow 9s linear infinite;
+    opacity:0.85;
+  }
+  @keyframes flow{
+    0%{ transform:translateY(-10%); }
+    100%{ transform:translateY(2400%); }
+  }
+  @media (max-width:900px){
+    .spine-track, .spine-glow{ display:none; }
+  }
+
+  /* ---------- hero ---------- */
+  header.hero{
+    position:relative;
+    padding:96px 24px 64px;
+    text-align:center;
+    overflow:hidden;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--cyan);
+    margin-bottom:22px;
+  }
+  .equation-hero{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:clamp(52px, 12vw, 96px);
+    line-height:1;
+    margin:0 0 26px;
+    letter-spacing:-0.01em;
+    background:linear-gradient(120deg, #fff 20%, var(--amber) 55%, var(--cyan) 90%);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .equation-hero sup{ font-size:0.55em; top:-0.5em; }
+  h1.title{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-style:italic;
+    font-size:clamp(24px, 4.4vw, 34px);
+    max-width:600px;
+    margin:0 auto 18px;
+    color:var(--text);
+  }
+  .subtitle{
+    color:var(--text-muted);
+    max-width:520px;
+    margin:0 auto;
+    font-size:15.5px;
+  }
+  .meta-row{
+    display:flex;
+    gap:22px;
+    justify-content:center;
+    margin-top:34px;
+    flex-wrap:wrap;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--text-muted);
+  }
+  .meta-row span{ color:var(--text); }
+
+  /* ---------- generic section shell ---------- */
+  section{
+    position:relative;
+    padding:44px 0;
+  }
+  section + section{ border-top:1px solid var(--line); }
+
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    gap:14px;
+    margin-bottom:22px;
+  }
+  .section-num{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:13px;
+    color:var(--amber);
+    border:1px solid rgba(245,166,35,0.35);
+    border-radius:100px;
+    padding:3px 11px;
+    white-space:nowrap;
+  }
+  h2.section-title{
+    font-family:'Fraunces', serif;
+    font-weight:600;
+    font-size:24px;
+    margin:0;
+    color:var(--text);
+  }
+  h3.sub-title{
+    font-family:'Fraunces', serif;
+    font-size:18px;
+    font-weight:600;
+    margin:28px 0 10px;
+    color:var(--text);
+  }
+  p{ color:#C9CEDB; margin:0 0 14px; }
+  p:last-child{ margin-bottom:0; }
+  strong{ color:var(--text); }
+
+  /* ---------- objectives ---------- */
+  .obj-list{
+    list-style:none;
+    margin:0;
+    padding:0;
+    display:grid;
+    gap:10px;
+  }
+  .obj-list li{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    color:#C9CEDB;
+    font-size:15px;
+  }
+  .obj-list li::before{
+    content:'';
+    flex:0 0 6px;
+    width:6px; height:6px;
+    border-radius:50%;
+    background:var(--cyan);
+    margin-top:8px;
+  }
+
+  /* ---------- timeline (structura lecției) ---------- */
+  .timeline{
+    display:grid;
+    gap:0;
+  }
+  .t-row{
+    display:grid;
+    grid-template-columns:56px 1fr;
+    gap:16px;
+    padding:14px 0;
+    border-top:1px solid var(--line);
+  }
+  .t-row:first-child{ border-top:none; }
+  .t-time{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+    color:var(--amber);
+    padding-top:2px;
+  }
+  .t-body b{ color:var(--text); font-size:14.5px; }
+  .t-body span{ display:block; color:var(--text-muted); font-size:13.5px; margin-top:2px; }
+
+  /* ---------- callouts ---------- */
+  .callout{
+    border-left:3px solid var(--amber);
+    background:rgba(245,166,35,0.06);
+    border-radius:0 10px 10px 0;
+    padding:14px 18px;
+    margin:20px 0;
+  }
+  .callout .tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.1em;
+    color:var(--amber);
+    text-transform:uppercase;
+    display:block;
+    margin-bottom:6px;
+  }
+  .callout p{ color:#D8DBE6; font-size:14.5px; }
+
+  .callout.cyan{ border-left-color:var(--cyan); background:rgba(79,216,235,0.06); }
+  .callout.cyan .tag{ color:var(--cyan); }
+
+  blockquote{
+    margin:20px 0;
+    padding:16px 20px;
+    border-left:3px solid var(--line);
+    font-family:'Fraunces', serif;
+    font-style:italic;
+    font-size:16.5px;
+    color:#DCDFE9;
+  }
+
+  /* ---------- energy-types illustration ---------- */
+  .orbit-figure{
+    background:var(--bg-elevated);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:28px 12px 20px;
+    margin:8px 0 36px;
+  }
+  .orbit-caption{
+    text-align:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11.5px;
+    color:var(--text-muted);
+    letter-spacing:0.05em;
+    margin-top:10px;
+  }
+
+  /* ---------- form tables ---------- */
+  .form-table{
+    width:100%;
+    border-collapse:collapse;
+    margin:14px 0 26px;
+    font-size:14px;
+  }
+  .form-table th{
+    text-align:left;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    color:var(--text-muted);
+    padding:0 12px 10px 0;
+    border-bottom:1px solid var(--line);
+    font-weight:500;
+  }
+  .form-table td{
+    padding:11px 12px 11px 0;
+    border-bottom:1px solid var(--line);
+    color:#D2D5E1;
+    vertical-align:top;
+  }
+  .form-table tr:last-child td{ border-bottom:none; }
+  .formula{
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--cyan);
+    font-size:13.5px;
+    white-space:nowrap;
+  }
+  .form-block{
+    background:var(--bg-card);
+    border:1px solid var(--line);
+    border-radius:12px;
+  }
+  .form-block-head{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:14px 18px;
+    border-bottom:1px solid var(--line);
+  }
+  .dot{ width:9px; height:9px; border-radius:50%; flex:0 0 9px; }
+  .form-block-head b{ font-size:14.5px; color:var(--text); font-weight:600; }
+  .form-block table{ margin:0; }
+  .form-block td, .form-block th{ padding-left:18px; }
+
+  /* ---------- big formula display ---------- */
+  .formula-display{
+    text-align:center;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:clamp(22px, 5vw, 30px);
+    color:var(--text);
+    background:var(--bg-elevated);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:26px 12px;
+    margin:20px 0;
+    letter-spacing:0.02em;
+  }
+  .formula-display .step{ color:var(--text-muted); font-size:0.55em; display:block; margin-top:8px; }
+  .formula-display sup{ font-size:0.6em; }
+
+  /* ---------- problem box ---------- */
+  .problem{
+    background:var(--bg-elevated);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:22px 22px 6px;
+    margin:18px 0 28px;
+  }
+  .problem-tag{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    color:var(--crimson);
+    display:block;
+    margin-bottom:10px;
+  }
+  .solve-step{
+    display:grid;
+    grid-template-columns:24px 1fr;
+    gap:10px;
+    margin:0 0 16px;
+    font-size:14.5px;
+  }
+  .solve-step b{ color:var(--amber); font-family:'IBM Plex Mono', monospace; }
+  .solve-step .formula{ display:block; margin-top:4px; font-size:14.5px; }
+
+  /* ---------- exit ticket ---------- */
+  .ticket-list{ list-style:none; margin:0; padding:0; counter-reset:q; }
+  .ticket-list li{
+    counter-increment:q;
+    padding:16px 0 16px 40px;
+    position:relative;
+    border-top:1px solid var(--line);
+    color:#D2D5E1;
+    font-size:14.5px;
+  }
+  .ticket-list li:first-child{ border-top:none; }
+  .ticket-list li::before{
+    content:counter(q);
+    position:absolute;
+    left:0; top:16px;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12.5px;
+    color:var(--cyan);
+    border:1px solid var(--line);
+    border-radius:50%;
+    width:22px; height:22px;
+    display:flex; align-items:center; justify-content:center;
+  }
+
+  /* ---------- platform ideas ---------- */
+  .idea-grid{
+    display:grid;
+    gap:12px;
+    grid-template-columns:1fr;
+  }
+  .idea-card{
+    background:var(--bg-elevated);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:16px 18px;
+    font-size:14px;
+    color:#C9CEDB;
+  }
+  .idea-card b{ color:var(--amber); display:block; margin-bottom:4px; font-size:14px; }
+
+  /* ---------- earth energy extension ---------- */
+  .earth-section{
+    background:linear-gradient(180deg, rgba(232,93,76,0.05), transparent);
+  }
+  .earth-table{
+    width:100%;
+    border-collapse:collapse;
+    margin:18px 0 10px;
+    font-size:13.5px;
+  }
+  .earth-table th{
+    text-align:left;
+    font-family:'IBM Plex Mono', monospace;
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    color:var(--text-muted);
+    padding:0 10px 10px 0;
+    border-bottom:1px solid var(--line);
+    font-weight:500;
+  }
+  .earth-table td{
+    padding:12px 10px 12px 0;
+    border-bottom:1px solid var(--line);
+    color:#D2D5E1;
+  }
+  .earth-table td.val{
+    font-family:'IBM Plex Mono', monospace;
+    color:var(--crimson);
+    white-space:nowrap;
+  }
+
+  footer{
+    padding:40px 24px 60px;
+    text-align:center;
+    color:var(--text-muted);
+    font-family:'IBM Plex Mono', monospace;
+    font-size:12px;
+  }
+
+  /* fade-in on scroll */
+  .reveal{ opacity:0; transform:translateY(14px); transition:opacity .6s ease, transform .6s ease; }
+  .reveal.in{ opacity:1; transform:translateY(0); }
+  @media (prefers-reduced-motion: reduce){
+    .reveal{ opacity:1; transform:none; transition:none; }
+    .spine-glow{ animation:none; }
+    html{ scroll-behavior:auto; }
+  }
+
+  @media (max-width:600px){
+    header.hero{ padding:64px 20px 44px; }
+    .wrap{ padding:0 18px; }
+  }
+</style>
 </head>
 <body>
-  <h1>Energia și viața - Recapitulare</h1>
-  <p>Pagina este în lucru.</p>
+
+<div class="spine-track"></div>
+<div class="spine-glow"></div>
+
+<header class="hero">
+  <div class="eyebrow">Fizică · clasa a VIII-a · lecție de sinteză</div>
+  <div class="equation-hero">E&nbsp;=&nbsp;mc<sup>2</sup></div>
+  <h1 class="title">De la formula lui Einstein la energia din jurul tău</h1>
+  <p class="subtitle">O lecție de recapitulare care leagă toate formele de energie studiate în gimnaziu de o singură idee unificatoare: masa și energia sunt aceeași monedă.</p>
+  <div class="meta-row">
+    <div>Durată <span>50 min</span></div>
+    <div>Nivel <span>clasa a VIII-a</span></div>
+    <div>Tip <span>sinteză / recapitulare</span></div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="reveal" id="obiective">
+    <div class="section-head">
+      <span class="section-num">Obiective</span>
+    </div>
+    <ul class="obj-list">
+      <li>Elevii enumeră principalele forme de energie studiate în gimnaziu (VI–VIII).</li>
+      <li>Elevii explică, la nivel intuitiv, relația E = mc² și ce spune ea despre energie și masă.</li>
+      <li>Elevii identifică, pentru un fenomen dat, ce transformare de energie are loc.</li>
+      <li>Elevii aplică formule de calcul pentru diferite forme de energie într-o problemă integrată.</li>
+    </ul>
+  </section>
+
+  <section class="reveal">
+    <div class="section-head">
+      <span class="section-num">Structura lecției</span>
+    </div>
+    <div class="timeline">
+      <div class="t-row">
+        <div class="t-time">5 min</div>
+        <div class="t-body"><b>1 · Captarea atenției</b><span>Ce este, de fapt, energia? — introducere E=mc²</span></div>
+      </div>
+      <div class="t-row">
+        <div class="t-time">15 min</div>
+        <div class="t-body"><b>2 · Recapitulare dirijată</b><span>Harta formelor de energie, construită împreună cu elevii</span></div>
+      </div>
+      <div class="t-row">
+        <div class="t-time">15 min</div>
+        <div class="t-body"><b>3 · Sinteză</b><span>De la masă la energie — unificarea conceptului</span></div>
+      </div>
+      <div class="t-row">
+        <div class="t-time">10 min</div>
+        <div class="t-body"><b>4 · Aplicație integrată</b><span>Problemă cu lanțul energetic: combustibil → mișcare → căldură</span></div>
+      </div>
+      <div class="t-row">
+        <div class="t-time">5 min</div>
+        <div class="t-body"><b>5 · Evaluare rapidă</b><span>Exit ticket</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ETAPA 1 -->
+  <section class="reveal">
+    <div class="section-head">
+      <span class="section-num">Etapa 1 · 5 min</span>
+      <h2 class="section-title">Captarea atenției</h2>
+    </div>
+    <p><strong>Întrebare deschisă către clasă:</strong></p>
+    <blockquote>„Dacă v-aș întreba ce este energia, ați putea să mi-o arătați? Sau doar îi vedem efectele?"</blockquote>
+    <p>Se discută pe scurt: energia nu se „vede" direct, se observă doar prin <strong>efectele</strong> ei (mișcare, căldură, lumină, deformare).</p>
+
+    <h3 class="sub-title">Introducere E = mc²</h3>
+    <p>Se scrie pe tablă formula lui Einstein, cu explicația simplă:</p>
+    <blockquote>„Einstein a arătat că masa și energia sunt, în fond, aceeași monedă, doar cu o rată de schimb uriașă: c² ≈ 9 × 10¹⁶ (m/s)²."</blockquote>
+    <p><strong>Analogie utilă:</strong> dacă ai putea transforma complet masa unei monede de 1 gram în energie, ai obține cam cât produce România în câteva ore de consum electric.</p>
+
+    <div class="callout">
+      <span class="tag">Notă didactică</span>
+      <p>Se subliniază clar că, în viața de zi cu zi (mecanică, căldură, chimie), masa <strong>nu</strong> se transformă vizibil în energie — E=mc² devine relevantă doar în reacții nucleare (fisiune, fuziune, dezintegrare radioactivă). Elevii nu trebuie să creadă că orice ardere „transformă masă în energie" în sens relativist.</p>
+    </div>
+  </section>
+
+  <!-- IMAGINE TIPURI DE ENERGIE -->
+  <section class="reveal">
+    <div class="section-head">
+      <span class="section-num">Etapa 2 · 15 min</span>
+      <h2 class="section-title">Recapitulare dirijată — harta formelor de energie</h2>
+    </div>
+
+    <div class="orbit-figure">
+      <svg viewBox="0 0 640 420" width="100%" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Diagramă cu cele cinci tipuri de energie orbitând în jurul lui E">
+        <defs>
+          <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#F5A623" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#F5A623" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+
+        <!-- orbit rings -->
+        <ellipse cx="320" cy="210" rx="255" ry="150" fill="none" stroke="#23304A" stroke-width="1"/>
+        <ellipse cx="320" cy="210" rx="180" ry="105" fill="none" stroke="#23304A" stroke-width="1"/>
+
+        <!-- core -->
+        <circle cx="320" cy="210" r="70" fill="url(#coreGlow)"/>
+        <circle cx="320" cy="210" r="38" fill="#131C30" stroke="#F5A623" stroke-width="1.5"/>
+        <text x="320" y="203" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="19" fill="#F5A623" font-weight="600">E</text>
+        <text x="320" y="222" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="9" fill="#8B93A7">= mc²</text>
+
+        <!-- MECANICA - top -->
+        <g transform="translate(320,50)">
+          <circle r="26" fill="#101828" stroke="#4FD8EB" stroke-width="1.5"/>
+          <circle cx="-7" cy="4" r="5" fill="#4FD8EB"/>
+          <path d="M -2 4 h16" stroke="#4FD8EB" stroke-width="2" stroke-linecap="round"/>
+          <path d="M 8 -1 l6 5 l-6 5" fill="none" stroke="#4FD8EB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <text x="0" y="46" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#D2D5E1" font-weight="600">Mecanică</text>
+        </g>
+
+        <!-- TERMICA - right upper -->
+        <g transform="translate(535,120)">
+          <circle r="26" fill="#101828" stroke="#F5A623" stroke-width="1.5"/>
+          <rect x="-3" y="-10" width="6" height="16" rx="3" fill="none" stroke="#F5A623" stroke-width="1.6"/>
+          <circle cx="0" cy="9" r="5" fill="#F5A623"/>
+          <text x="0" y="46" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#D2D5E1" font-weight="600">Termică</text>
+        </g>
+
+        <!-- ELECTRICA - right lower -->
+        <g transform="translate(535,300)">
+          <circle r="26" fill="#101828" stroke="#4FD8EB" stroke-width="1.5"/>
+          <path d="M 3 -11 L -7 3 L -1 3 L -4 12 L 8 -3 L 1 -3 Z" fill="#4FD8EB"/>
+          <text x="0" y="46" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#D2D5E1" font-weight="600">Electrică</text>
+        </g>
+
+        <!-- CHIMICA - bottom -->
+        <g transform="translate(320,370)">
+          <circle r="26" fill="#101828" stroke="#F5A623" stroke-width="1.5"/>
+          <path d="M -4 -11 v8 l-7 12 a3 3 0 0 0 3 5 h16 a3 3 0 0 0 3 -5 l-7 -12 v-8" fill="none" stroke="#F5A623" stroke-width="1.6" stroke-linejoin="round"/>
+          <line x1="-7" y1="-11" x2="3" y2="-11" stroke="#F5A623" stroke-width="1.6"/>
+          <text x="0" y="46" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#D2D5E1" font-weight="600">Chimică</text>
+        </g>
+
+        <!-- NUCLEARA - left lower -->
+        <g transform="translate(105,300)">
+          <circle r="26" fill="#101828" stroke="#E85D4C" stroke-width="1.5"/>
+          <circle cx="0" cy="0" r="3" fill="#E85D4C"/>
+          <ellipse cx="0" cy="0" rx="14" ry="6" fill="none" stroke="#E85D4C" stroke-width="1.3"/>
+          <ellipse cx="0" cy="0" rx="14" ry="6" fill="none" stroke="#E85D4C" stroke-width="1.3" transform="rotate(60)"/>
+          <ellipse cx="0" cy="0" rx="14" ry="6" fill="none" stroke="#E85D4C" stroke-width="1.3" transform="rotate(120)"/>
+          <text x="0" y="46" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#D2D5E1" font-weight="600">Nucleară</text>
+        </g>
+
+        <!-- LEGATURI - left upper -->
+        <g transform="translate(105,120)">
+          <circle r="26" fill="#101828" stroke="#8B93A7" stroke-width="1.5"/>
+          <circle cx="-6" cy="0" r="4" fill="none" stroke="#8B93A7" stroke-width="1.5"/>
+          <circle cx="6" cy="0" r="4" fill="none" stroke="#8B93A7" stroke-width="1.5"/>
+          <text x="0" y="46" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" fill="#D2D5E1" font-weight="600">De repaus</text>
+        </g>
+      </svg>
+      <div class="orbit-caption">TOATE FORMELE DE ENERGIE — VARIAȚII ALE ACELEIAȘI MĂRIMI FIZICE</div>
+    </div>
+
+    <p>Se construiește pe tablă (sau ca activitate pe grupe) o hartă cu toate formele de energie studiate, organizată pe categorii:</p>
+
+    <h3 class="sub-title">A. Energie mecanică</h3>
+    <div class="form-block">
+      <div class="form-block-head"><span class="dot" style="background:var(--cyan)"></span><b>Cinetică · potențială · elastică</b></div>
+      <table class="form-table">
+        <tr><th>Formă</th><th>Formulă</th><th>Exemplu</th></tr>
+        <tr><td>Cinetică</td><td class="formula">E꜀ = ½mv²</td><td>o minge în mișcare</td></tr>
+        <tr><td>Potențială gravitațională</td><td class="formula">Ep = mgh</td><td>o carte pe raft</td></tr>
+        <tr><td>Potențială elastică</td><td class="formula">Ee = ½kx²</td><td>un resort comprimat</td></tr>
+      </table>
+    </div>
+
+    <h3 class="sub-title">B. Energie termică (internă)</h3>
+    <div class="form-block">
+      <div class="form-block-head"><span class="dot" style="background:var(--amber)"></span><b>Sensibilă · latentă</b></div>
+      <table class="form-table">
+        <tr><th>Formă</th><th>Formulă</th><th>Exemplu</th></tr>
+        <tr><td>Căldură sensibilă</td><td class="formula">Q = mcΔT</td><td>încălzirea apei</td></tr>
+        <tr><td>Căldură latentă</td><td class="formula">Q = mL</td><td>topirea gheții</td></tr>
+      </table>
+    </div>
+
+    <h3 class="sub-title">C. Energie electrică</h3>
+    <div class="form-block">
+      <div class="form-block-head"><span class="dot" style="background:var(--cyan)"></span><b>Consum electric</b></div>
+      <table class="form-table">
+        <tr><th>Formă</th><th>Formulă</th><th>Exemplu</th></tr>
+        <tr><td>Consum electric</td><td class="formula">E = Pt = UIt</td><td>un bec aprins</td></tr>
+      </table>
+    </div>
+
+    <h3 class="sub-title">D. Energie chimică</h3>
+    <div class="form-block">
+      <div class="form-block-head"><span class="dot" style="background:var(--amber)"></span><b>Putere calorifică</b></div>
+      <table class="form-table">
+        <tr><th>Formă</th><th>Formulă</th><th>Exemplu</th></tr>
+        <tr><td>Putere calorifică</td><td class="formula">Q = mq</td><td>arderea lemnului</td></tr>
+      </table>
+    </div>
+
+    <h3 class="sub-title">E. Energie nucleară / de repaus</h3>
+    <div class="form-block">
+      <div class="form-block-head"><span class="dot" style="background:var(--crimson)"></span><b>Echivalența masă-energie</b></div>
+      <table class="form-table">
+        <tr><th>Formă</th><th>Formulă</th><th>Exemplu</th></tr>
+        <tr><td>Echivalența masă-energie</td><td class="formula">E = mc²</td><td>Soarele, reactoare nucleare</td></tr>
+      </table>
+    </div>
+
+    <div class="callout cyan">
+      <span class="tag">Activitate pe grupe</span>
+      <p>În grupe de 3-4, fiecare grupă primește 2-3 „bilețele" cu fenomene (ex: „un schior coboară o pârtie", „un fier de călcat funcționează", „o baterie alimentează o lanternă", „Soarele strălucește") și trebuie să identifice ce forme de energie sunt implicate și cum se transformă una în alta.</p>
+    </div>
+  </section>
+
+  <!-- ETAPA 3 -->
+  <section class="reveal">
+    <div class="section-head">
+      <span class="section-num">Etapa 3 · 15 min</span>
+      <h2 class="section-title">Sinteză — de la masă la energie</h2>
+    </div>
+    <p><strong>Ideea centrală de transmis:</strong></p>
+    <blockquote>Toate formele de energie de mai sus sunt, de fapt, manifestări ale aceleiași mărimi fizice fundamentale — energia — dar la scări și în contexte diferite. E=mc² ne arată că, la limită, chiar și masa este o formă „înghețată" de energie.</blockquote>
+
+    <h3 class="sub-title">Analogie cu banii</h3>
+    <p>Energia e ca banii — poate „schimba forma" (cinetică → termică → electrică etc.), dar cantitatea totală se conservă (legea conservării energiei). E=mc² adaugă o formă suplimentară pe listă: masa însăși este o „depunere" uriașă de energie, care rămâne de obicei blocată, dar poate fi eliberată parțial în procese nucleare.</p>
+
+    <h3 class="sub-title">Exemplu concret — Soarele</h3>
+    <ol style="color:#C9CEDB; padding-left:20px;">
+      <li>În nucleul Soarelui, prin fuziune nucleară, o mică parte din masa nucleelor de hidrogen „dispare" (aprox. 0,7%).</li>
+      <li>Această masă lipsă se transformă în energie, conform E=mc².</li>
+      <li>Energia ajunge pe Pământ ca radiație electromagnetică (lumină, căldură).</li>
+      <li>Plantele o transformă în energie chimică (fotosinteză).</li>
+      <li>Omul o consumă → energie cinetică, termică etc.</li>
+    </ol>
+    <p>Aici se poate desena pe tablă un <strong>lanț energetic complet</strong>, de la E=mc² până la mișcarea unui elev care aleargă — arătând că, în ultimă instanță, toată energia folosită de om vine (aproape în totalitate) din fuziunea nucleară solară.</p>
+  </section>
+
+  <!-- ETAPA 4 -->
+  <section class="reveal">
+    <div class="section-head">
+      <span class="section-num">Etapa 4 · 10 min</span>
+      <h2 class="section-title">Aplicație integrată</h2>
+    </div>
+
+    <div class="problem">
+      <span class="problem-tag">Problemă · lanțul energetic</span>
+      <p>Un rezervor conține 2 kg de benzină (putere calorifică q = 44 MJ/kg). Benzina este arsă complet într-un motor cu randament de 25%.</p>
+      <p>a) Ce cantitate de energie chimică este eliberată prin ardere?<br>
+      b) Ce cantitate de energie este transformată efectiv în energie mecanică utilă?<br>
+      c) Dacă toată energia mecanică utilă ar accelera o mașină de 1000 kg pornind din repaus, ce viteză finală ar atinge (teoretic, fără frecări)?</p>
+    </div>
+
+    <h3 class="sub-title">Rezolvare ghidată</h3>
+    <div class="solve-step">
+      <b>a)</b>
+      <div><span class="formula">Q = mq = 2 × 44×10⁶ = 88×10⁶ J = 88 MJ</span></div>
+    </div>
+    <div class="solve-step">
+      <b>b)</b>
+      <div><span class="formula">E_util = 0,25 × 88 MJ = 22 MJ</span></div>
+    </div>
+    <div class="solve-step">
+      <b>c)</b>
+      <div><span class="formula">v = √(2E꜀/m) = √(2×22×10⁶ / 1000) ≈ 210 m/s</span></div>
+    </div>
+
+    <div class="callout">
+      <span class="tag">Discuție</span>
+      <p>De ce e rezultatul nerealist de mare? Se poate discuta frecarea, rezistența aerului, energia pierdută ca zgomot — bun prilej de a introduce randamentul real (~20-30%) al motoarelor cu ardere internă.</p>
+    </div>
+  </section>
+
+  <!-- ETAPA 5 -->
+  <section class="reveal">
+    <div class="section-head">
+      <span class="section-num">Etapa 5 · 5 min</span>
+      <h2 class="section-title">Evaluare rapidă — exit ticket</h2>
+    </div>
+    <ul class="ticket-list">
+      <li>Explică, în cuvintele tale, ce spune formula E=mc².</li>
+      <li>Dă un exemplu de transformare energetică din viața de zi cu zi, precizând forma inițială și forma finală de energie.</li>
+      <li>De ce nu putem „vedea" masa transformându-se în energie când ardem lemne pentru foc, deși și acolo se degajă energie?</li>
+    </ul>
+    <div class="callout cyan" style="margin-top:20px;">
+      <span class="tag">Răspuns așteptat la întrebarea 3</span>
+      <p>Masa „lipsă" transformată în reacții chimice este atât de mică — de ordinul a 10⁻¹⁰ din masa totală — încât e complet nemăsurabilă cu instrumente obișnuite; energia degajată provine din rearanjarea legăturilor chimice, nu dintr-o pierdere semnificativă de masă.</p>
+    </div>
+  </section>
+
+  <!-- MATERIALE PLATFORMA -->
+  <section class="reveal">
+    <div class="section-head">
+      <span class="section-num">Extra</span>
+      <h2 class="section-title">Materiale pentru platformă</h2>
+    </div>
+    <div class="idea-grid">
+      <div class="idea-card"><b>Worksheet interactiv</b>„Lanțul energetic" — elevii trag/conectează formele de energie în ordine corectă.</div>
+      <div class="idea-card"><b>Test grilă</b>Bazat pe exit ticket-ul de mai sus, la finalul capitolului.</div>
+      <div class="idea-card"><b>Applet JS</b>Simulare a transformării energiei într-un lanț ales de elev, cu formule și rezultate afișate live.</div>
+    </div>
+  </section>
+
+  <!-- EXTENSIE: ENERGIA PAMANTULUI -->
+  <section class="reveal earth-section">
+    <div class="section-head">
+      <span class="section-num">Extensie</span>
+      <h2 class="section-title">Se poate calcula energia totală a Pământului?</h2>
+    </div>
+    <p>Pentru elevii avansați sau ca temă de portofoliu: pornind de la E=mc², putem întreba ce înseamnă „energia totală" a unui corp uriaș precum Pământul. Răspunsul scurt: <strong>da, dar depinde ce înțelegem prin asta</strong> — Pământul are mai multe forme de energie, unele mult mai ușor de calculat decât altele.</p>
+
+    <div class="formula-display">
+      E = mc²
+      <span class="step">(5,97×10²⁴ kg) × (3×10⁸ m/s)² ≈ 5,4×10⁴¹ J</span>
+    </div>
+
+    <table class="earth-table">
+      <tr><th>Componentă</th><th>Descriere</th><th>Valoare aproximativă</th></tr>
+      <tr>
+        <td>Energie de repaus</td>
+        <td>E = mc² — cea mai directă, dar cel mai puțin „utilă" fizic</td>
+        <td class="val">≈ 5,4×10⁴¹ J</td>
+      </tr>
+      <tr>
+        <td>Energie cinetică orbitală</td>
+        <td>mișcarea în jurul Soarelui, v ≈ 29,8 km/s</td>
+        <td class="val">≈ 2,65×10³³ J</td>
+      </tr>
+      <tr>
+        <td>Energie cinetică de rotație</td>
+        <td>rotația în jurul axei proprii, I ≈ 0,33·M·R²</td>
+        <td class="val">≈ 2,14×10²⁹ J</td>
+      </tr>
+      <tr>
+        <td>Energie potențială gravitațională de legătură</td>
+        <td>cât ar costa să „dezasamblezi" Pământul la infinit</td>
+        <td class="val">≈ 2,24×10³² J</td>
+      </tr>
+      <tr>
+        <td>Energie termică internă</td>
+        <td>cea mai greu de estimat — depinde de temperatura la fiecare adâncime</td>
+        <td class="val">variabilă</td>
+      </tr>
+    </table>
+
+    <h3 class="sub-title">De ce nu există un singur număr simplu</h3>
+    <p>Aceste energii nu se adună într-un mod banal, pentru că:</p>
+    <ul class="obj-list">
+      <li>sunt măsurate față de referințe diferite (energia potențială e negativă și depinde de punctul de referință ales);</li>
+      <li>unele variază constant (energia orbitală se schimbă ușor din cauza interacțiunilor cu alte planete);</li>
+      <li>energia termică se pierde treptat prin radiație.</li>
+    </ul>
+
+    <div class="callout" style="border-left-color:var(--crimson); background:rgba(232,93,76,0.06);">
+      <span class="tag" style="color:var(--crimson);">Ce se calculează în practică</span>
+      <p>Cel mai relevant pentru fizică este de obicei <strong>energia de legătură gravitațională</strong> (câtă energie ar trebui investită pentru a „desface" planeta) sau <strong>bilanțul energetic termic</strong> — căldura internă pierdută prin scoarță, importantă în geofizică (aproximativ 4,7×10¹³ W în prezent).</p>
+    </div>
+
+    <p style="margin-top:22px;"><strong>Idee de discuție pentru elevi:</strong> care dintre aceste forme de energie ar fi „recuperabilă" tehnologic și care rămâne mereu inaccesibilă? De ce energia de repaus (E=mc²) nu poate fi practic folosită?</p>
+  </section>
+
+</div>
+
+<footer>fizica-galaction · lecție de sinteză · clasa a VIII-a</footer>
+
+<script>
+  if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const els = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+    els.forEach(el => io.observe(el));
+  } else {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+  }
+</script>
+
 </body>
 </html>

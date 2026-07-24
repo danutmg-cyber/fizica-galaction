@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Fișă interactivă pentru clasa a VIII-a: gruparea generatoarelor identice.">
+<meta name="theme-color" content="#0f766e">
+<title>Fișa 10 | Gruparea generatoarelor identice</title>
+
+<script>
+window.MathJax={
+  tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]']]},
+  options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+:root{
+  --bg:#07131f;--panel:#132b3e;--deep:#0b2030;--text:#f8fafc;--muted:#cbd5e1;
+  --teal:#5eead4;--teal2:#0f766e;--cyan:#67e8f9;--blue:#60a5fa;
+  --green:#22c55e;--green2:#15803d;--yellow:#facc15;--orange:#fb923c;
+  --red:#fb7185;--violet:#c4b5fd;--border:rgba(148,163,184,.3);
+  --good:#bbf7d0;--bad:#fecaca;--warn:#fde68a;--nav:94px
+}
+*{box-sizing:border-box}
+html{min-height:100%;scroll-behavior:smooth}
+body{
+  min-height:100dvh;margin:0;padding-bottom:calc(var(--nav) + env(safe-area-inset-bottom));
+  color:var(--text);
+  background:
+    radial-gradient(circle at top left,rgba(15,118,110,.23),transparent 36%),
+    radial-gradient(circle at bottom right,rgba(96,165,250,.1),transparent 30%),
+    var(--bg);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:clamp(17px,2.35vw,20px);line-height:1.55
+}
+button,input,select,textarea{font:inherit}
+.app{width:min(100%,980px);margin:auto;padding:14px 12px 24px}
+.banner{
+  margin:8px 0 14px;padding:16px;border:1px solid rgba(94,234,212,.38);
+  border-radius:22px;background:linear-gradient(135deg,rgba(15,118,110,.97),rgba(15,23,42,.97));
+  box-shadow:0 16px 40px rgba(0,0,0,.35);text-align:center
+}
+.school{font-weight:900;letter-spacing:.03em;text-transform:uppercase}
+.teacher{margin-top:4px;color:#ccfbf1;font-weight:750}
+.motto{
+  max-width:760px;margin:12px auto 0;padding:10px;border-left:4px solid var(--yellow);
+  border-radius:12px;background:rgba(2,6,23,.32);color:#fef9c3;font-style:italic;font-weight:700
+}
+.progress{
+  position:sticky;top:6px;z-index:40;margin-bottom:14px;padding:11px 13px;
+  border:1px solid var(--border);border-radius:16px;background:rgba(7,19,31,.95);
+  box-shadow:0 8px 22px rgba(0,0,0,.24);backdrop-filter:blur(8px)
+}
+.progress-meta{display:flex;justify-content:space-between;gap:12px;margin-bottom:7px;color:var(--muted);font-size:.9rem;font-weight:850}
+.track{height:10px;overflow:hidden;border-radius:999px;background:#27344b}
+.fill{width:16.67%;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--teal2),var(--cyan));transition:width .3s}
+.page{display:none}.page.active{display:block;animation:show .22s ease-out}
+@keyframes show{from{opacity:.45;transform:translateY(7px)}}
+.card{
+  min-height:calc(100dvh - 205px);padding:clamp(18px,4vw,32px);border:1px solid var(--border);
+  border-radius:24px;background:linear-gradient(180deg,rgba(19,43,62,.98),rgba(11,32,48,.98));
+  box-shadow:0 18px 45px rgba(0,0,0,.35)
+}
+.badge{
+  display:inline-flex;margin-bottom:12px;padding:6px 10px;border:1px solid rgba(94,234,212,.34);
+  border-radius:999px;background:rgba(15,118,110,.13);color:#ccfbf1;font-size:.86rem;font-weight:850
+}
+h1,h2,h3{line-height:1.18}
+h1{margin:0 0 14px;color:#f0fdfa;font-size:clamp(1.5rem,5vw,2.7rem)}
+h2{margin:0 0 14px;color:var(--teal);font-size:clamp(1.4rem,4vw,2.2rem)}
+h3{margin:18px 0 10px;color:#bae6fd;font-size:clamp(1.08rem,3vw,1.4rem)}
+.lead{color:#f0fdfa;font-size:clamp(1.02rem,2.8vw,1.22rem);font-weight:650}
+.idea,.note,.instruction,.danger{margin:14px 0;padding:14px 15px;border-radius:17px}
+.idea{border:1px solid rgba(34,197,94,.36);background:rgba(34,197,94,.12);font-weight:750}
+.note{border:1px solid rgba(250,204,21,.38);background:rgba(250,204,21,.09);color:#fef9c3}
+.instruction{border:1px solid rgba(103,232,249,.28);background:rgba(34,211,238,.08);color:#e0f2fe}
+.danger{border:1px solid rgba(251,113,133,.42);background:rgba(244,63,94,.11);color:#ffe4e6;font-weight:750}
+.identity,.concepts,.questions,.results,.battery-grid,.group-grid,.compare-grid,.steps{display:grid;gap:13px}
+.identity{grid-template-columns:1.4fr .8fr;margin:18px 0}
+label{display:block;margin-bottom:6px;color:#dbeafe;font-weight:850}
+input[type=text],input[type=number],select,textarea{
+  width:100%;padding:12px 13px;border:2px solid #475569;border-radius:12px;background:#071525;color:#fff
+}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(103,232,249,.12)}
+textarea{min-height:105px;resize:vertical}
+.concepts{grid-template-columns:repeat(3,1fr);margin:18px 0}
+.concept{padding:15px;border:1px solid var(--border);border-radius:17px;background:rgba(15,23,42,.42)}
+.concept strong{display:block;margin-bottom:6px;color:#ccfbf1}
+.battery-grid,.group-grid,.compare-grid{grid-template-columns:1fr 1fr;margin:18px 0}
+.info-card{padding:17px;border:1px solid var(--border);border-radius:18px;background:#071525}
+.info-card.emf{border-top:5px solid var(--orange)}.info-card.internal{border-top:5px solid var(--red)}
+.info-card.series{border-top:5px solid var(--green)}.info-card.parallel{border-top:5px solid var(--blue)}
+.info-card strong{display:block;margin-bottom:8px;color:#fff}
+.battery-scene{
+  display:grid;grid-template-columns:1fr 65px 1fr;gap:12px;align-items:center;margin:18px 0
+}
+.scene-box{padding:17px;border:1px solid var(--border);border-radius:18px;background:#071525;text-align:center}
+.scene-box span{display:block;font-size:2.3rem;margin-bottom:8px}.scene-arrow{text-align:center;color:var(--yellow);font-weight:950}
+.series-visual,.parallel-visual{
+  min-height:145px;margin:18px 0;padding:20px;border:1px solid var(--border);border-radius:20px;background:#071525
+}
+.series-line{display:flex;align-items:center;justify-content:center;gap:10px;min-height:100px}
+.cell{padding:10px 12px;border:3px solid var(--yellow);border-radius:9px;font-weight:950}
+.wire{color:#cbd5e1;font-size:1.4rem;font-weight:950}
+.parallel-visual{position:relative}
+.parallel-visual .top,.parallel-visual .bottom{position:absolute;left:13%;right:13%;height:4px;background:#cbd5e1}
+.parallel-visual .top{top:35px}.parallel-visual .bottom{bottom:35px}
+.parallel-visual .branch-left,.parallel-visual .branch-right{position:absolute;top:35px;bottom:35px;width:4px;background:#cbd5e1}
+.parallel-visual .branch-left{left:34%}.parallel-visual .branch-right{right:34%}
+.parallel-visual .cell-a,.parallel-visual .cell-b{
+  position:absolute;top:50%;padding:8px 10px;border:3px solid var(--blue);border-radius:9px;background:#071525;
+  transform:translate(-50%,-50%);font-weight:950
+}
+.parallel-visual .cell-a{left:34%}.parallel-visual .cell-b{left:66%}
+.formula{overflow-x:auto;margin:15px 0;padding:14px;border:1px solid rgba(94,234,212,.25);border-radius:17px;background:rgba(2,6,23,.38);text-align:center}
+.steps{grid-template-columns:repeat(3,1fr);margin:18px 0}
+.step{padding:14px;border:1px solid var(--border);border-radius:16px;background:#071525;text-align:center}
+.step span{display:grid;place-items:center;width:34px;height:34px;margin:0 auto 8px;border-radius:50%;background:var(--teal);color:#042f2e;font-weight:950}
+.questions{grid-template-columns:repeat(2,1fr)}
+.question{padding:15px;border:1px solid var(--border);border-radius:18px;background:rgba(15,23,42,.42)}
+.question.full{grid-column:1/-1}.question-title{margin:0 0 11px;color:#fff;font-weight:900}.points{color:var(--yellow);font-size:.86rem}
+.choices{display:grid;gap:8px}.choice{
+  display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;min-height:48px;padding:10px;
+  border:2px solid rgba(226,232,240,.2);border-radius:13px;background:rgba(15,23,42,.35);cursor:pointer
+}
+.choice input{width:1.12em;height:1.12em;margin:0;accent-color:var(--green)}
+.choice.correct{border-color:var(--green);background:rgba(34,197,94,.12)}
+.choice.wrong{border-color:var(--red);background:rgba(251,113,133,.12)}
+.feedback{min-height:1.55em;margin-top:9px;font-size:.92rem;font-weight:850}
+.feedback.good{color:var(--good)}.feedback.bad{color:var(--bad)}.feedback.warn{color:var(--warn)}
+.calculator{margin:18px 0;padding:17px;border:1px solid var(--border);border-radius:18px;background:#071525}
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+.calc-button{width:100%;min-height:48px;margin-top:13px;border:0;border-radius:12px;background:var(--teal);color:#042f2e;font-weight:950;cursor:pointer}
+.calc-result{margin-top:13px;padding:13px;border-left:4px solid var(--yellow);border-radius:10px;background:rgba(250,204,21,.08);color:#fef9c3;font-weight:850}
+.results{grid-template-columns:repeat(3,1fr);margin:18px 0}
+.result{padding:16px;border:1px solid var(--border);border-radius:17px;background:rgba(15,23,42,.42);text-align:center}
+.result span{display:block;color:var(--teal);font-size:2rem;font-weight:950}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:17px}
+.check,.reset{min-height:49px;padding:12px 17px;border:0;border-radius:13px;font-weight:950;cursor:pointer}
+.check{background:var(--cyan);color:#083344}.reset{border:2px solid #64748b;background:#1e293b;color:#fff}
+.score{margin-top:18px;padding:18px;border:2px solid var(--teal);border-radius:18px;background:linear-gradient(135deg,rgba(15,118,110,.95),rgba(15,23,42,.95));text-align:center}
+.score-big{color:#fef08a;font-size:clamp(2.2rem,8vw,4rem);font-weight:950;line-height:1}
+.links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:17px}
+.links a{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 14px;border:1px solid rgba(94,234,212,.32);border-radius:12px;background:rgba(15,118,110,.09);color:#ccfbf1;font-weight:850;text-decoration:none}
+.footer{padding:23px 12px 6px;color:var(--muted);text-align:center;font-size:.9rem}.footer a{color:var(--cyan)}
+.nav{position:fixed;right:0;bottom:0;left:0;z-index:1000;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(7,19,31,0),rgba(7,19,31,.96) 28%,rgba(7,19,31,.99));backdrop-filter:blur(8px)}
+.nav-inner{display:grid;grid-template-columns:minmax(100px,1fr) auto minmax(150px,1fr);gap:10px;align-items:center;width:min(100%,980px);margin:auto;padding:9px;border:1px solid var(--border);border-radius:18px;background:rgba(19,43,62,.97);box-shadow:0 18px 38px rgba(0,0,0,.35)}
+.nav button{min-height:50px;padding:10px 12px;border:0;border-radius:14px;font-weight:950;cursor:pointer}
+.back{background:#e2e8f0;color:#0f172a}.next{background:linear-gradient(135deg,var(--green),var(--green2));color:#052e16}
+.nav button:disabled{opacity:.45;cursor:not-allowed}.counter{min-width:64px;padding:9px 10px;border:1px solid rgba(148,163,184,.22);border-radius:12px;background:rgba(2,6,23,.36);text-align:center;font-weight:950}
+.sr{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important}
+@media(max-width:950px){.calc-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){
+  .identity,.concepts,.questions,.results,.battery-grid,.group-grid,.compare-grid,.battery-scene{grid-template-columns:1fr}
+  .scene-arrow{transform:rotate(90deg)}.steps{grid-template-columns:1fr 1fr}.card{border-radius:20px}
+}
+@media(max-width:520px){
+  :root{--nav:90px}.app{padding-inline:9px}.banner{border-radius:18px}.card{padding:17px 13px}
+  .steps,.calc-grid{grid-template-columns:1fr}.nav-inner{grid-template-columns:.8fr auto 1.2fr;gap:7px;padding:7px}.counter{min-width:52px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.page.active{animation:none}.fill{transition:none}}
+@media print{body{padding:0;color:#111827;background:#fff}.page{display:block!important;break-after:page}.card{min-height:auto;background:#fff;box-shadow:none}.progress,.nav,.actions,.calculator{display:none!important}}
+</style>
+</head>
+
+<body>
+<div class="app">
+<header class="banner">
+  <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+  <div class="teacher">Prof. Dănuț Andronie</div>
+  <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+</header>
+
+<section class="progress" aria-label="Progres">
+  <div class="progress-meta"><span id="pageLabel">Pagina 1 din 6</span><span id="topic">Date și recapitulare</span></div>
+  <div class="track" id="bar" role="progressbar" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1"><div class="fill" id="fill"></div></div>
+</section>
+
+<main>
+<section class="page active" data-topic="Date și recapitulare">
+<div class="card">
+  <span class="badge">Clasa a VIII-a · Electrocinetică · Fișa 10</span>
+  <h1>Gruparea generatoarelor identice</h1>
+  <p class="lead">Serie, paralel, sursă echivalentă și rezistență internă. Scor maxim: 20 de puncte.</p>
+
+  <div class="identity">
+    <div><label for="name">Numele și prenumele</label><input id="name" type="text" placeholder="Scrie numele elevului"></div>
+    <div><label for="class">Clasa</label><select id="class"><option value="">Alege...</option><option>8A</option><option>8B</option><option>8C</option><option>8D</option></select></div>
+  </div>
+
+  <div class="idea">Ideea-cheie: mai multe baterii identice pot forma o singură sursă echivalentă, aleasă după tensiunea și alimentarea necesare.</div>
+
+  <div class="concepts">
+    <div class="concept"><strong>Serie</strong>Tensiunile electromotoare și rezistențele interne se adună.</div>
+    <div class="concept"><strong>Paralel</strong>Tensiunea electromotoare rămâne aceeași, iar rezistența internă echivalentă scade.</div>
+    <div class="concept"><strong>Sursă reală</strong>Este caracterizată prin tensiunea electromotoare \(E\) și rezistența internă \(r\).</div>
+  </div>
+
+  <div class="instruction">Fișa conține determinarea parametrilor bateriei, grupări în serie și paralel, comparații, aplicații și siguranță.</div>
+</div>
+</section>
+
+<section class="page" data-topic="Bateria reală și experimentul" hidden>
+<div class="card">
+  <span class="badge">I. Parametrii unei baterii · 5 puncte</span>
+  <h2>Cum aflăm \(E\) și \(r\)?</h2>
+
+  <div class="battery-grid">
+    <div class="info-card emf"><strong>Tensiunea electromotoare \(E\)</strong>Se măsoară cel mai simplu în „mers în gol”, când bateria nu alimentează un consumator.</div>
+    <div class="info-card internal"><strong>Rezistența internă \(r\)</strong>Face ca tensiunea la borne să fie mai mică atunci când bateria alimentează circuitul.</div>
+  </div>
+
+  <div class="battery-scene">
+    <div class="scene-box"><span>🔋 V</span><strong>Mers în gol</strong><br>măsurăm aproximativ \(E\)</div>
+    <div class="scene-arrow">→</div>
+    <div class="scene-box"><span>🔋 A 💡 V</span><strong>În sarcină</strong><br>măsurăm \(I\) și \(U\)</div>
+  </div>
+
+  <div class="formula">
+    \[
+      E=U+u,\qquad u=Ir
+    \]
+    \[
+      r=\frac{E-U}{I}
+    \]
+    Pentru \(E=4{,}65\,V\), \(U=3{,}50\,V\), \(I=0{,}24\,A\):
+    \[
+      r=\frac{4{,}65-3{,}50}{0{,}24}\,\Omega
+      \approx4{,}79\,\Omega.
+    \]
+  </div>
+
+  <div class="questions">
+    <div class="question" data-kind="radio" data-answer="a" data-points="2">
+      <p class="question-title">1. Tensiunea electromotoare se măsoară cel mai simplu: <span class="points">(2 p)</span></p>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="q1" value="a"> în mers în gol</label>
+        <label class="choice"><input type="radio" name="q1" value="b"> prin scurtcircuitarea bateriei</label>
+        <label class="choice"><input type="radio" name="q1" value="c"> fără voltmetru</label>
+      </div><div class="feedback"></div>
+    </div>
+
+    <div class="question" data-kind="number" data-answer="4.79" data-tolerance=".03" data-points="1">
+      <p class="question-title">2. În exemplul numeric, rezistența internă este aproximativ: <span class="points">(1 p)</span></p>
+      <input type="number" step=".01" placeholder="Rezultatul în Ω"><div class="feedback"></div>
+    </div>
+
+    <div class="question full" data-kind="text" data-answers="mers in gol masuram e|in sarcina masuram u si i|voltmetrul in paralel|ampermetrul in serie|r egal e minus u impartit la i" data-min="3" data-points="2">
+      <p class="question-title">3. Descrie experimentul pentru determinarea lui \(E\) și \(r\). <span class="points">(2 p)</span></p>
+      <textarea></textarea><div class="feedback"></div>
+    </div>
+  </div>
+
+  <div class="actions"><button class="check" data-check="1">Verifică pagina</button></div>
+</div>
+</section>
+
+<section class="page" data-topic="Generatoare în serie" hidden>
+<div class="card">
+  <span class="badge">II. Tensiune mai mare · 5 puncte</span>
+  <h2>Gruparea în serie</h2>
+
+  <div class="series-visual" aria-label="Trei generatoare legate în serie">
+    <div class="series-line"><span class="wire">──</span><span class="cell">− \(E,r\) +</span><span class="wire">──</span><span class="cell">− \(E,r\) +</span><span class="wire">──</span><span class="cell">− \(E,r\) +</span><span class="wire">──</span></div>
+  </div>
+
+  <div class="formula">
+    \[
+      E_s=E_1+E_2+\dots,\qquad r_s=r_1+r_2+\dots
+    \]
+    Pentru \(n\) generatoare identice:
+    \[
+      E_s=nE,\qquad r_s=nr.
+    \]
+    Trei baterii de \(1{,}5\,V\):
+    \[
+      E_s=3\cdot1{,}5\,V=4{,}5\,V.
+    \]
+  </div>
+
+  <div class="formula">
+    Două baterii cu \(E=1{,}5\,V\), \(r=0{,}5\,\Omega\), conectate la \(R=5\,\Omega\):
+    \[
+      E_s=3\,V,\qquad r_s=1\,\Omega
+    \]
+    \[
+      I=\frac{E_s}{R+r_s}=\frac{3}{5+1}\,A=0{,}5\,A.
+    \]
+  </div>
+
+  <div class="questions">
+    <div class="question" data-kind="radio" data-answer="c" data-points="2">
+      <p class="question-title">4. În serie, tensiunea electromotoare echivalentă: <span class="points">(2 p)</span></p>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="q4" value="a"> rămâne \(E\)</label>
+        <label class="choice"><input type="radio" name="q4" value="b"> devine zero</label>
+        <label class="choice"><input type="radio" name="q4" value="c"> devine \(nE\)</label>
+      </div><div class="feedback"></div>
+    </div>
+
+    <div class="question" data-kind="number" data-answer=".5" data-tolerance=".01" data-points="1">
+      <p class="question-title">5. În exemplul cu două baterii și \(R=5\,\Omega\), curentul este: <span class="points">(1 p)</span></p>
+      <input type="number" step=".1" placeholder="Rezultatul în A"><div class="feedback"></div>
+    </div>
+
+    <div class="question full" data-kind="text" data-answers="plusul unei baterii la minusul urmatoarei|e se aduna|r se aduna|es egal n ori e|rs egal n ori r|alegem pentru tensiune mai mare" data-min="3" data-points="2">
+      <p class="question-title">6. Prezintă regulile grupării în serie. <span class="points">(2 p)</span></p>
+      <textarea></textarea><div class="feedback"></div>
+    </div>
+  </div>
+
+  <div class="actions"><button class="check" data-check="2">Verifică pagina</button></div>
+</div>
+</section>
+
+<section class="page" data-topic="Generatoare în paralel" hidden>
+<div class="card">
+  <span class="badge">III. Rezistență internă mai mică · 5 puncte</span>
+  <h2>Gruparea în paralel</h2>
+
+  <div class="parallel-visual" aria-label="Două generatoare identice legate în paralel">
+    <div class="top"></div><div class="bottom"></div><div class="branch-left"></div><div class="branch-right"></div>
+    <div class="cell-a">− \(E,r\) +</div><div class="cell-b">− \(E,r\) +</div>
+  </div>
+
+  <div class="formula">
+    Pentru \(n\) generatoare identice:
+    \[
+      E_p=E,\qquad r_p=\frac{r}{n}.
+    \]
+    Două baterii cu \(E=1{,}5\,V\), \(r=0{,}6\,\Omega\):
+    \[
+      E_p=1{,}5\,V,\qquad r_p=\frac{0{,}6}{2}\,\Omega=0{,}3\,\Omega.
+    \]
+    Dacă \(R=3\,\Omega\):
+    \[
+      I=\frac{1{,}5}{3+0{,}3}\,A\approx0{,}45\,A.
+    \]
+  </div>
+
+  <div class="note">În paralel folosim numai surse identice, conectate corect: bornele pozitive împreună și bornele negative împreună.</div>
+
+  <div class="questions">
+    <div class="question" data-kind="radio" data-answer="b" data-points="2">
+      <p class="question-title">7. În paralel, pentru surse identice, \(E_p\): <span class="points">(2 p)</span></p>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="q7" value="a"> devine \(nE\)</label>
+        <label class="choice"><input type="radio" name="q7" value="b"> rămâne \(E\)</label>
+        <label class="choice"><input type="radio" name="q7" value="c"> devine zero</label>
+      </div><div class="feedback"></div>
+    </div>
+
+    <div class="question" data-kind="number" data-answer=".3" data-tolerance=".01" data-points="1">
+      <p class="question-title">8. Pentru două baterii cu \(r=0{,}6\,\Omega\) în paralel, \(r_p=\): <span class="points">(1 p)</span></p>
+      <input type="number" step=".1" placeholder="Rezultatul în Ω"><div class="feedback"></div>
+    </div>
+
+    <div class="question full" data-kind="text" data-answers="bornele pozitive impreuna|bornele negative impreuna|ep egal e|rp egal r impartit la n|rezistenta interna scade|surse identice" data-min="3" data-points="2">
+      <p class="question-title">9. Prezintă regulile grupării în paralel. <span class="points">(2 p)</span></p>
+      <textarea></textarea><div class="feedback"></div>
+    </div>
+  </div>
+
+  <div class="actions"><button class="check" data-check="3">Verifică pagina</button></div>
+</div>
+</section>
+
+<section class="page" data-topic="Comparație, calcul și siguranță" hidden>
+<div class="card">
+  <span class="badge">IV. Alegerea grupării · 5 puncte</span>
+  <h2>Serie sau paralel?</h2>
+
+  <div class="compare-grid">
+    <div class="info-card series"><strong>Serie</strong>\(E_s=nE\), \(r_s=nr\). Alegem seria când vrem tensiune mai mare.</div>
+    <div class="info-card parallel"><strong>Paralel</strong>\(E_p=E\), \(r_p=\frac{r}{n}\). Alegem paralelul când vrem rezistență internă mai mică.</div>
+  </div>
+
+  <div class="steps">
+    <div class="step"><span>1</span>Identifică numărul \(n\) de generatoare.</div>
+    <div class="step"><span>2</span>Alege formula pentru serie sau paralel.</div>
+    <div class="step"><span>3</span>Calculează \(E_{\text{echiv}}\) și \(r_{\text{echiv}}\).</div>
+    <div class="step"><span>4</span>Folosește \(I=\frac{E_{\text{echiv}}}{R+r_{\text{echiv}}}\).</div>
+    <div class="step"><span>5</span>Verifică unitățile.</div>
+    <div class="step"><span>6</span>Verifică dacă rezultatul are sens.</div>
+  </div>
+
+  <div class="calculator">
+    <h3>Calculator pentru generatoare identice</h3>
+    <div class="calc-grid">
+      <label>Numărul \(n\)<input id="calcN" type="number" min="1" step="1" value="2"></label>
+      <label>\(E\) pentru un generator (V)<input id="calcE" type="number" min="0" step=".1" value="1.5"></label>
+      <label>\(r\) pentru un generator (\(\Omega\))<input id="calcRint" type="number" min="0" step=".1" value=".5"></label>
+      <label>Rezistența exterioară \(R\) (\(\Omega\))<input id="calcRext" type="number" min="0" step=".1" value="5"></label>
+    </div>
+    <button class="calc-button" id="calculate">Compară seria cu paralelul</button>
+    <div class="calc-result" id="calcResult">Rezultatul va apărea aici.</div>
+  </div>
+
+  <div class="questions">
+    <div class="question" data-kind="number" data-answer="4.5" data-tolerance=".01" data-points="2">
+      <p class="question-title">10. Trei baterii de \(1{,}5\,V\) în serie au \(E_s=\): <span class="points">(2 p)</span></p>
+      <input type="number" step=".1" placeholder="Rezultatul în V"><div class="feedback"></div>
+    </div>
+
+    <div class="question" data-kind="select" data-answer="serie" data-points="1">
+      <p class="question-title">11. Pentru tensiune mai mare alegem de obicei gruparea: <span class="points">(1 p)</span></p>
+      <select><option value="">Alege...</option><option value="paralel">în paralel</option><option value="serie">în serie</option><option value="scurt">în scurtcircuit</option></select>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="question full" data-kind="text" data-answers="nu scurtcircuitam bateria|nu amestecam baterii diferite in paralel|respectam plus si minus|curent mare produce incalzire|folosim surse identice" data-min="3" data-points="2">
+      <p class="question-title">12. Scrie trei reguli de siguranță pentru gruparea bateriilor. <span class="points">(2 p)</span></p>
+      <textarea></textarea><div class="feedback"></div>
+    </div>
+  </div>
+
+  <div class="danger">Nu conecta direct bornele unei baterii între ele. Nu lega în paralel baterii diferite sau montate cu polaritatea greșită.</div>
+
+  <div class="actions"><button class="check" data-check="4">Verifică pagina</button></div>
+</div>
+</section>
+
+<section class="page" data-topic="Rezultatul final" hidden>
+<div class="card">
+  <span class="badge">V. Rezultat final</span>
+  <h2>Verifică întreaga fișă</h2>
+
+  <div class="instruction">Revino la paginile anterioare pentru răspunsurile lipsă, apoi verifică fișa.</div>
+
+  <div class="actions">
+    <button class="check" id="checkAll">Verifică fișa</button>
+    <button class="reset" id="reset">Resetează</button>
+  </div>
+
+  <div class="score">
+    <div class="score-big" id="score">0/20</div>
+    <p id="grade">Nota: –</p>
+    <p id="message">Completează fișa, apoi verifică rezultatul.</p>
+  </div>
+
+  <div class="results">
+    <div class="result"><span id="correct">0</span>corecte</div>
+    <div class="result"><span id="wrong">0</span>de revizuit</div>
+    <div class="result"><span id="empty">12</span>necompletate</div>
+  </div>
+
+  <div class="idea" id="student">Elev: necompletat · Clasa: necompletată</div>
+
+  <div class="links">
+    <a href="../lectii/lectia-10.html">← Reia Lecția 10</a>
+    <a href="index.html">Lista fișelor</a>
+    <a href="fisa-11.html">Fișa 11 →</a>
+  </div>
+</div>
+</section>
+</main>
+
+<footer class="footer">© Fizica Galaction · Prof. DĂNUȚ ANDRONIE<br><a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a></footer>
+</div>
+
+<nav class="nav" aria-label="Navigarea între pagini">
+  <div class="nav-inner">
+    <button class="back" id="back">← Înapoi</button>
+    <div class="counter" id="counter">1 / 6</div>
+    <button class="next" id="next">Mergi mai departe →</button>
+  </div>
+</nav>
+
+<div class="sr" id="announce" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+const pages=[...document.querySelectorAll(".page")],back=document.getElementById("back"),next=document.getElementById("next"),
+counter=document.getElementById("counter"),pageLabel=document.getElementById("pageLabel"),topic=document.getElementById("topic"),
+fill=document.getElementById("fill"),bar=document.getElementById("bar"),announce=document.getElementById("announce");
+let current=0;
+
+function show(index,focus){
+  current=Math.max(0,Math.min(index,pages.length-1));
+  pages.forEach((page,i)=>{const active=i===current;page.classList.toggle("active",active);page.hidden=!active;page.setAttribute("aria-hidden",String(!active))});
+  const number=current+1,name=pages[current].dataset.topic;
+  counter.textContent=number+" / "+pages.length;
+  pageLabel.textContent="Pagina "+number+" din "+pages.length;
+  topic.textContent=name;
+  fill.style.width=(number/pages.length*100)+"%";
+  bar.setAttribute("aria-valuenow",String(number));
+  back.disabled=current===0;
+  next.textContent=current===pages.length-1?"Vezi rezultatul ✓":"Mergi mai departe →";
+  announce.textContent="Pagina "+number+": "+name;
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(focus){const h=pages[current].querySelector("h1,h2");if(h){h.tabIndex=-1;h.focus({preventScroll:true})}}
+  if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([pages[current]]).catch(()=>{});
+}
+
+back.addEventListener("click",()=>{if(current>0)show(current-1,true)});
+next.addEventListener("click",()=>{if(current<pages.length-1)show(current+1,true);else{evaluateAll();document.querySelector(".score").scrollIntoView({behavior:"smooth"})}});
+document.addEventListener("keydown",event=>{if(event.altKey&&event.key==="ArrowRight"&&current<pages.length-1)show(current+1,true);if(event.altKey&&event.key==="ArrowLeft"&&current>0)show(current-1,true)});
+
+function normalize(text){
+  return String(text||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[.,!?;:()]/g," ").replace(/\s+/g," ").trim();
+}
+
+function evaluate(question,showFeedback){
+  const kind=question.dataset.kind,points=Number(question.dataset.points||0),feedback=question.querySelector(".feedback");
+  let correct=false,empty=false;
+  question.querySelectorAll(".choice").forEach(choice=>choice.classList.remove("correct","wrong"));
+
+  if(kind==="radio"){
+    const selected=question.querySelector("input:checked"),answer=question.dataset.answer,correctInput=question.querySelector("input[value='"+answer+"']");
+    if(!selected)empty=true;
+    else{
+      correct=selected.value===answer;
+      selected.closest(".choice").classList.add(correct?"correct":"wrong");
+      if(!correct&&correctInput)correctInput.closest(".choice").classList.add("correct");
+    }
+  }
+
+  if(kind==="select"){
+    const value=question.querySelector("select").value;
+    empty=!value;
+    correct=value===question.dataset.answer;
+  }
+
+  if(kind==="number"){
+    const raw=question.querySelector("input[type=number]").value.trim();
+    empty=raw==="";
+    if(!empty)correct=Math.abs(Number(raw)-Number(question.dataset.answer))<=Number(question.dataset.tolerance||0);
+  }
+
+  if(kind==="text"){
+    const value=normalize(question.querySelector("textarea,input[type=text]").value);
+    empty=!value;
+    if(!empty){
+      const keywords=question.dataset.answers.split("|").map(normalize);
+      correct=keywords.filter(keyword=>value.includes(keyword)).length>=Number(question.dataset.min||1);
+    }
+  }
+
+  if(showFeedback&&feedback){
+    feedback.className="feedback";
+    if(empty){feedback.textContent="Completează răspunsul.";feedback.classList.add("warn")}
+    else if(correct){feedback.textContent="Corect.";feedback.classList.add("good")}
+    else{feedback.textContent="Mai verifică noțiunea.";feedback.classList.add("bad")}
+  }
+
+  return{correct,empty,points:correct?points:0};
+}
+
+document.querySelectorAll("[data-check]").forEach(button=>{
+  button.addEventListener("click",()=>pages[Number(button.dataset.check)].querySelectorAll(".question").forEach(question=>evaluate(question,true)));
+});
+
+function evaluateAll(){
+  let points=0,correctCount=0,wrongCount=0,emptyCount=0;
+
+  document.querySelectorAll(".question").forEach(question=>{
+    const result=evaluate(question,true);
+    points+=result.points;
+    if(result.empty)emptyCount++;
+    else if(result.correct)correctCount++;
+    else wrongCount++;
+  });
+
+  const grade=points/2;
+  document.getElementById("score").textContent=points+"/20";
+  document.getElementById("grade").textContent="Nota: "+grade.toFixed(2);
+  document.getElementById("correct").textContent=correctCount;
+  document.getElementById("wrong").textContent=wrongCount;
+  document.getElementById("empty").textContent=emptyCount;
+  document.getElementById("message").textContent=
+    emptyCount?"Mai ai răspunsuri necompletate.":
+    grade>=9?"Excelent! Alegi și calculezi corect grupările de generatoare.":
+    grade>=7?"Foarte bine! Revizuiește răspunsurile evidențiate.":
+    grade>=5?"Ai înțeles ideile de bază. Mai exersează seria și paralelul.":
+    "Reia Lecția 10 și încearcă din nou.";
+
+  document.getElementById("student").textContent=
+    "Elev: "+(document.getElementById("name").value.trim()||"necompletat")+
+    " · Clasa: "+(document.getElementById("class").value||"necompletată");
+}
+
+document.getElementById("checkAll").addEventListener("click",evaluateAll);
+
+document.getElementById("calculate").addEventListener("click",()=>{
+  const n=Number(document.getElementById("calcN").value),
+        E=Number(document.getElementById("calcE").value),
+        r=Number(document.getElementById("calcRint").value),
+        R=Number(document.getElementById("calcRext").value),
+        output=document.getElementById("calcResult");
+
+  if(![n,E,r,R].every(Number.isFinite)||n<1||!Number.isInteger(n)||E<0||r<0||R<0){
+    output.textContent="Introdu valori valide; numărul de generatoare trebuie să fie un întreg pozitiv.";
+    return;
+  }
+
+  const Es=n*E,rs=n*r,Is=Es/(R+rs);
+  const Ep=E,rp=r/n,Ip=Ep/(R+rp);
+  output.textContent=
+    "Serie: Eₛ="+Es.toFixed(2)+" V, rₛ="+rs.toFixed(2)+" Ω, Iₛ="+Is.toFixed(3)+" A. "+
+    "Paralel: Eₚ="+Ep.toFixed(2)+" V, rₚ="+rp.toFixed(3)+" Ω, Iₚ="+Ip.toFixed(3)+" A.";
+});
+
+document.getElementById("reset").addEventListener("click",()=>{
+  document.querySelectorAll("input").forEach(input=>{if(input.type==="radio")input.checked=false;else if(!["calcN","calcE","calcRint","calcRext"].includes(input.id))input.value=""});
+  document.querySelectorAll("select").forEach(select=>select.selectedIndex=0);
+  document.querySelectorAll("textarea").forEach(textarea=>textarea.value="");
+  document.querySelectorAll(".feedback").forEach(feedback=>{feedback.textContent="";feedback.className="feedback"});
+  document.querySelectorAll(".choice").forEach(choice=>choice.classList.remove("correct","wrong"));
+  document.getElementById("calcN").value="2";
+  document.getElementById("calcE").value="1.5";
+  document.getElementById("calcRint").value=".5";
+  document.getElementById("calcRext").value="5";
+  document.getElementById("calcResult").textContent="Rezultatul va apărea aici.";
+  document.getElementById("score").textContent="0/20";
+  document.getElementById("grade").textContent="Nota: –";
+  document.getElementById("message").textContent="Completează fișa, apoi verifică rezultatul.";
+  document.getElementById("correct").textContent="0";
+  document.getElementById("wrong").textContent="0";
+  document.getElementById("empty").textContent="12";
+  document.getElementById("student").textContent="Elev: necompletat · Clasa: necompletată";
+  show(0,true);
+});
+
+show(0,false);
+})();
+</script>
+</body>
+</html>

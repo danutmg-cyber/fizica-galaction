@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Fișă interactivă pentru clasa a VIII-a: ampermetrul, voltmetrul și citirea aparatelor de măsură.">
+<meta name="theme-color" content="#0f766e">
+<title>Fișa 3 | Instrumente de măsură</title>
+
+<script>
+window.MathJax={
+  tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]']]},
+  options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+:root{
+  --bg:#07131f;--panel:#132b3e;--deep:#0b2030;--text:#f8fafc;--muted:#cbd5e1;
+  --teal:#5eead4;--teal2:#0f766e;--cyan:#67e8f9;--blue:#60a5fa;
+  --green:#22c55e;--green2:#15803d;--yellow:#facc15;--orange:#fb923c;
+  --red:#fb7185;--violet:#c4b5fd;--border:rgba(148,163,184,.3);
+  --good:#bbf7d0;--bad:#fecaca;--warn:#fde68a;--nav:94px
+}
+*{box-sizing:border-box}
+html{min-height:100%;scroll-behavior:smooth}
+body{
+  min-height:100dvh;margin:0;padding-bottom:calc(var(--nav) + env(safe-area-inset-bottom));
+  color:var(--text);
+  background:
+    radial-gradient(circle at top left,rgba(15,118,110,.23),transparent 36%),
+    radial-gradient(circle at bottom right,rgba(96,165,250,.1),transparent 30%),
+    var(--bg);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:clamp(17px,2.35vw,20px);line-height:1.55
+}
+button,input,select,textarea{font:inherit}
+.app{width:min(100%,980px);margin:auto;padding:14px 12px 24px}
+.banner{
+  margin:8px 0 14px;padding:16px;border:1px solid rgba(94,234,212,.38);
+  border-radius:22px;background:linear-gradient(135deg,rgba(15,118,110,.97),rgba(15,23,42,.97));
+  box-shadow:0 16px 40px rgba(0,0,0,.35);text-align:center
+}
+.school{font-weight:900;letter-spacing:.03em;text-transform:uppercase}
+.teacher{margin-top:4px;color:#ccfbf1;font-weight:750}
+.motto{
+  max-width:760px;margin:12px auto 0;padding:10px;border-left:4px solid var(--yellow);
+  border-radius:12px;background:rgba(2,6,23,.32);color:#fef9c3;font-style:italic;font-weight:700
+}
+.progress{
+  position:sticky;top:6px;z-index:40;margin-bottom:14px;padding:11px 13px;
+  border:1px solid var(--border);border-radius:16px;background:rgba(7,19,31,.95);
+  box-shadow:0 8px 22px rgba(0,0,0,.24);backdrop-filter:blur(8px)
+}
+.progress-meta{display:flex;justify-content:space-between;gap:12px;margin-bottom:7px;color:var(--muted);font-size:.9rem;font-weight:850}
+.track{height:10px;overflow:hidden;border-radius:999px;background:#27344b}
+.fill{width:16.67%;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--teal2),var(--cyan));transition:width .3s}
+.page{display:none}.page.active{display:block;animation:show .22s ease-out}
+@keyframes show{from{opacity:.45;transform:translateY(7px)}}
+.card{
+  min-height:calc(100dvh - 205px);padding:clamp(18px,4vw,32px);border:1px solid var(--border);
+  border-radius:24px;background:linear-gradient(180deg,rgba(19,43,62,.98),rgba(11,32,48,.98));
+  box-shadow:0 18px 45px rgba(0,0,0,.35)
+}
+.badge{
+  display:inline-flex;margin-bottom:12px;padding:6px 10px;border:1px solid rgba(94,234,212,.34);
+  border-radius:999px;background:rgba(15,118,110,.13);color:#ccfbf1;font-size:.86rem;font-weight:850
+}
+h1,h2,h3{line-height:1.18}h1{margin:0 0 14px;color:#f0fdfa;font-size:clamp(1.55rem,5vw,2.7rem)}
+h2{margin:0 0 14px;color:var(--teal);font-size:clamp(1.4rem,4vw,2.2rem)}
+h3{margin:18px 0 10px;color:#bae6fd;font-size:clamp(1.08rem,3vw,1.4rem)}
+.lead{color:#f0fdfa;font-size:clamp(1.02rem,2.8vw,1.22rem);font-weight:650}
+.idea,.note,.instruction,.danger{margin:14px 0;padding:14px 15px;border-radius:17px}
+.idea{border:1px solid rgba(34,197,94,.36);background:rgba(34,197,94,.12);font-weight:750}
+.note{border:1px solid rgba(250,204,21,.38);background:rgba(250,204,21,.09);color:#fef9c3}
+.instruction{border:1px solid rgba(103,232,249,.28);background:rgba(34,211,238,.08);color:#e0f2fe}
+.danger{border:1px solid rgba(251,113,133,.42);background:rgba(244,63,94,.11);color:#ffe4e6;font-weight:750}
+.identity,.concepts,.questions,.results,.meters,.connection-grid,.steps{display:grid;gap:13px}
+.identity{grid-template-columns:1.4fr .8fr;margin:18px 0}
+label{display:block;margin-bottom:6px;color:#dbeafe;font-weight:850}
+input[type=text],input[type=number],select,textarea{
+  width:100%;padding:12px 13px;border:2px solid #475569;border-radius:12px;background:#071525;color:#fff
+}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(103,232,249,.12)}
+textarea{min-height:105px;resize:vertical}
+.concepts{grid-template-columns:repeat(3,1fr);margin:18px 0}
+.concept{padding:15px;border:1px solid var(--border);border-radius:17px;background:rgba(15,23,42,.42)}
+.concept strong{display:block;margin-bottom:6px;color:#ccfbf1}
+.meters{grid-template-columns:1fr 1fr;margin:18px 0}
+.meter-card{padding:17px;border:1px solid var(--border);border-radius:18px;background:#071525}
+.meter-card.amp{border-top:5px solid var(--blue)}.meter-card.volt{border-top:5px solid var(--orange)}
+.meter-card strong{display:block;margin-bottom:8px;color:#fff}
+.meter-symbol{
+  display:grid;place-items:center;width:88px;height:88px;margin:0 auto 12px;border:5px solid #cbd5e1;
+  border-radius:50%;font-size:2rem;font-weight:950;color:#fff
+}
+.connection-grid{grid-template-columns:1fr 1fr;margin:18px 0}
+.connection{padding:16px;border:1px solid var(--border);border-radius:18px;background:#071525;text-align:center}
+.connection strong{display:block;color:#fff;margin-bottom:8px}
+.circuit-line{display:flex;align-items:center;justify-content:center;gap:10px;min-height:95px;font-size:1.35rem}
+.series-line span{padding:10px;border-radius:50%;border:3px solid var(--blue)}
+.parallel{position:relative;min-height:100px}
+.parallel .top,.parallel .bottom{position:absolute;left:15%;right:15%;height:4px;background:#cbd5e1}
+.parallel .top{top:28px}.parallel .bottom{bottom:28px}
+.parallel .branch{position:absolute;left:50%;top:28px;bottom:28px;width:4px;background:#cbd5e1}
+.parallel .v{position:absolute;left:50%;top:50%;display:grid;place-items:center;width:48px;height:48px;transform:translate(-50%,-50%);border:3px solid var(--orange);border-radius:50%;background:#071525;font-weight:950}
+.formula{overflow-x:auto;margin:15px 0;padding:14px;border:1px solid rgba(94,234,212,.25);border-radius:17px;background:rgba(2,6,23,.38);text-align:center}
+.scale{
+  position:relative;max-width:650px;height:190px;margin:18px auto;border:1px solid var(--border);border-radius:20px;
+  background:#071525;overflow:hidden
+}
+.arc{position:absolute;left:50%;bottom:-130px;width:440px;height:280px;transform:translateX(-50%);border:4px solid #cbd5e1;border-radius:50% 50% 0 0}
+.needle{position:absolute;left:50%;bottom:28px;width:155px;height:5px;background:var(--red);transform-origin:left center;transform:rotate(-24deg)}
+.pivot{position:absolute;left:50%;bottom:17px;width:26px;height:26px;transform:translateX(-50%);border-radius:50%;background:var(--yellow)}
+.mark{position:absolute;bottom:55px;color:#fff;font-weight:850}.m0{left:11%}.m30{left:29%}.m60{left:49%}.m90{right:27%}.m120{right:8%}
+.steps{grid-template-columns:repeat(4,1fr);margin:18px 0}
+.step{padding:14px;border:1px solid var(--border);border-radius:16px;background:#071525;text-align:center}
+.step span{display:grid;place-items:center;width:34px;height:34px;margin:0 auto 8px;border-radius:50%;background:var(--teal);color:#042f2e;font-weight:950}
+.questions{grid-template-columns:repeat(2,1fr)}
+.question{padding:15px;border:1px solid var(--border);border-radius:18px;background:rgba(15,23,42,.42)}
+.question.full{grid-column:1/-1}.question-title{margin:0 0 11px;color:#fff;font-weight:900}.points{color:var(--yellow);font-size:.86rem}
+.choices{display:grid;gap:8px}.choice{
+  display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;min-height:48px;padding:10px;
+  border:2px solid rgba(226,232,240,.2);border-radius:13px;background:rgba(15,23,42,.35);cursor:pointer
+}
+.choice input{width:1.12em;height:1.12em;margin:0;accent-color:var(--green)}
+.choice.correct{border-color:var(--green);background:rgba(34,197,94,.12)}
+.choice.wrong{border-color:var(--red);background:rgba(251,113,133,.12)}
+.feedback{min-height:1.55em;margin-top:9px;font-size:.92rem;font-weight:850}
+.feedback.good{color:var(--good)}.feedback.bad{color:var(--bad)}.feedback.warn{color:var(--warn)}
+.calculator{margin:18px 0;padding:17px;border:1px solid var(--border);border-radius:18px;background:#071525}
+.calc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.calc-button{width:100%;min-height:48px;margin-top:13px;border:0;border-radius:12px;background:var(--teal);color:#042f2e;font-weight:950;cursor:pointer}
+.calc-result{margin-top:13px;padding:13px;border-left:4px solid var(--yellow);border-radius:10px;background:rgba(250,204,21,.08);color:#fef9c3;font-weight:850}
+.results{grid-template-columns:repeat(3,1fr);margin:18px 0}
+.result{padding:16px;border:1px solid var(--border);border-radius:17px;background:rgba(15,23,42,.42);text-align:center}
+.result span{display:block;color:var(--teal);font-size:2rem;font-weight:950}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:17px}
+.check,.reset{min-height:49px;padding:12px 17px;border:0;border-radius:13px;font-weight:950;cursor:pointer}
+.check{background:var(--cyan);color:#083344}.reset{border:2px solid #64748b;background:#1e293b;color:#fff}
+.score{margin-top:18px;padding:18px;border:2px solid var(--teal);border-radius:18px;background:linear-gradient(135deg,rgba(15,118,110,.95),rgba(15,23,42,.95));text-align:center}
+.score-big{color:#fef08a;font-size:clamp(2.2rem,8vw,4rem);font-weight:950;line-height:1}
+.links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:17px}
+.links a{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 14px;border:1px solid rgba(94,234,212,.32);border-radius:12px;background:rgba(15,118,110,.09);color:#ccfbf1;font-weight:850;text-decoration:none}
+.footer{padding:23px 12px 6px;color:var(--muted);text-align:center;font-size:.9rem}.footer a{color:var(--cyan)}
+.nav{position:fixed;right:0;bottom:0;left:0;z-index:1000;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(7,19,31,0),rgba(7,19,31,.96) 28%,rgba(7,19,31,.99));backdrop-filter:blur(8px)}
+.nav-inner{display:grid;grid-template-columns:minmax(100px,1fr) auto minmax(150px,1fr);gap:10px;align-items:center;width:min(100%,980px);margin:auto;padding:9px;border:1px solid var(--border);border-radius:18px;background:rgba(19,43,62,.97);box-shadow:0 18px 38px rgba(0,0,0,.35)}
+.nav button{min-height:50px;padding:10px 12px;border:0;border-radius:14px;font-weight:950;cursor:pointer}
+.back{background:#e2e8f0;color:#0f172a}.next{background:linear-gradient(135deg,var(--green),var(--green2));color:#052e16}
+.nav button:disabled{opacity:.45;cursor:not-allowed}.counter{min-width:64px;padding:9px 10px;border:1px solid rgba(148,163,184,.22);border-radius:12px;background:rgba(2,6,23,.36);text-align:center;font-weight:950}
+.sr{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important}
+@media(max-width:820px){.steps{grid-template-columns:repeat(2,1fr)}.calc-grid{grid-template-columns:1fr}}
+@media(max-width:760px){
+  .identity,.concepts,.questions,.results,.meters,.connection-grid{grid-template-columns:1fr}
+  .card{border-radius:20px}
+}
+@media(max-width:520px){
+  :root{--nav:90px}.app{padding-inline:9px}.banner{border-radius:18px}.card{padding:17px 13px}
+  .steps{grid-template-columns:1fr}.nav-inner{grid-template-columns:.8fr auto 1.2fr;gap:7px;padding:7px}.counter{min-width:52px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.page.active{animation:none}.fill{transition:none}}
+@media print{body{padding:0;color:#111827;background:#fff}.page{display:block!important;break-after:page}.card{min-height:auto;background:#fff;box-shadow:none}.progress,.nav,.actions,.calculator{display:none!important}}
+</style>
+</head>
+
+<body>
+<div class="app">
+<header class="banner">
+  <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+  <div class="teacher">Prof. Dănuț Andronie</div>
+  <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+</header>
+
+<section class="progress" aria-label="Progres">
+  <div class="progress-meta"><span id="pageLabel">Pagina 1 din 6</span><span id="topic">Date și recapitulare</span></div>
+  <div class="track" id="bar" role="progressbar" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1"><div class="fill" id="fill"></div></div>
+</section>
+
+<main>
+<section class="page active" data-topic="Date și recapitulare">
+<div class="card">
+  <span class="badge">Clasa a VIII-a · Electrocinetică · Fișa 3</span>
+  <h1>Instrumente de măsură electrice</h1>
+  <p class="lead">Ampermetrul, voltmetrul și citirea corectă a indicațiilor. Scor maxim: 20 de puncte.</p>
+
+  <div class="identity">
+    <div><label for="name">Numele și prenumele</label><input id="name" type="text" placeholder="Scrie numele elevului"></div>
+    <div><label for="class">Clasa</label><select id="class"><option value="">Alege...</option><option>8A</option><option>8B</option><option>8C</option><option>8D</option></select></div>
+  </div>
+
+  <div class="idea">Ideea-cheie: ampermetrul se leagă în serie pentru a măsura intensitatea, iar voltmetrul se leagă în paralel pentru a măsura tensiunea.</div>
+
+  <div class="concepts">
+    <div class="concept"><strong>Ampermetru</strong>Măsoară intensitatea curentului electric, în amperi.</div>
+    <div class="concept"><strong>Voltmetru</strong>Măsoară tensiunea electrică, în volți.</div>
+    <div class="concept"><strong>Domeniu de măsurare</strong>Valoarea maximă pe care o poate indica aparatul pe domeniul ales.</div>
+  </div>
+
+  <div class="instruction">Fișa conține legarea aparatelor, polaritatea, citirea unei scări și alegerea domeniului potrivit.</div>
+</div>
+</section>
+
+<section class="page" data-topic="Ampermetru și voltmetru" hidden>
+<div class="card">
+  <span class="badge">I. Rol și unități · 5 puncte</span>
+  <h2>Ce măsoară fiecare aparat?</h2>
+
+  <div class="meters">
+    <div class="meter-card amp">
+      <div class="meter-symbol">A</div>
+      <strong>Ampermetrul</strong>
+      Măsoară intensitatea \(I\). Unitatea este amperul \((A)\).
+    </div>
+    <div class="meter-card volt">
+      <div class="meter-symbol">V</div>
+      <strong>Voltmetrul</strong>
+      Măsoară tensiunea \(U\). Unitatea este voltul \((V)\).
+    </div>
+  </div>
+
+  <div class="formula">
+    \[
+      I=\frac{\Delta q}{\Delta t},\qquad [I]_{SI}=A
+    \]
+    \[
+      U=\frac{W}{q},\qquad [U]_{SI}=V
+    \]
+  </div>
+
+  <div class="questions">
+    <div class="question" data-kind="radio" data-answer="a" data-points="2">
+      <p class="question-title">1. Intensitatea curentului se măsoară cu: <span class="points">(2 p)</span></p>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="q1" value="a"> ampermetrul</label>
+        <label class="choice"><input type="radio" name="q1" value="b"> voltmetrul</label>
+        <label class="choice"><input type="radio" name="q1" value="c"> termometrul</label>
+      </div><div class="feedback"></div>
+    </div>
+
+    <div class="question" data-kind="select" data-answer="volt" data-points="1">
+      <p class="question-title">2. Tensiunea electrică se măsoară în: <span class="points">(1 p)</span></p>
+      <select><option value="">Alege...</option><option value="amper">amperi</option><option value="volt">volți</option><option value="coulomb">coulombi</option></select>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="question full" data-kind="text" data-answers="ampermetrul masoara intensitatea|unitatea amper|voltmetrul masoara tensiunea|unitatea volt" data-min="3" data-points="2">
+      <p class="question-title">3. Compară ampermetrul cu voltmetrul. <span class="points">(2 p)</span></p>
+      <textarea placeholder="Menționează mărimea și unitatea fiecărui aparat"></textarea><div class="feedback"></div>
+    </div>
+  </div>
+
+  <div class="actions"><button class="check" data-check="1">Verifică pagina</button></div>
+</div>
+</section>
+
+<section class="page" data-topic="Legarea în circuit" hidden>
+<div class="card">
+  <span class="badge">II. Serie și paralel · 5 puncte</span>
+  <h2>Cum conectăm corect aparatele?</h2>
+
+  <div class="connection-grid">
+    <div class="connection">
+      <strong>Ampermetru în serie</strong>
+      <div class="circuit-line series-line">🔋 ─ <span>A</span> ─ 💡</div>
+      Prin aparat trece același curent ca prin consumator.
+    </div>
+    <div class="connection">
+      <strong>Voltmetru în paralel</strong>
+      <div class="parallel"><div class="top"></div><div class="bottom"></div><div class="branch"></div><div class="v">V</div></div>
+      Se conectează la bornele elementului măsurat.
+    </div>
+  </div>
+
+  <div class="note">În circuitele de curent continuu, borna \(+\) a aparatului se leagă spre borna \(+\) a sursei. La început se alege domeniul maxim.</div>
+
+  <div class="questions">
+    <div class="question" data-kind="radio" data-answer="b" data-points="2">
+      <p class="question-title">4. Ampermetrul se leagă: <span class="points">(2 p)</span></p>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="q4" value="a"> în paralel</label>
+        <label class="choice"><input type="radio" name="q4" value="b"> în serie</label>
+        <label class="choice"><input type="radio" name="q4" value="c"> în afara circuitului</label>
+      </div><div class="feedback"></div>
+    </div>
+
+    <div class="question" data-kind="select" data-answer="paralel" data-points="1">
+      <p class="question-title">5. Voltmetrul se leagă față de consumator: <span class="points">(1 p)</span></p>
+      <select><option value="">Alege...</option><option value="serie">în serie</option><option value="paralel">în paralel</option><option value="scurt">în scurtcircuit</option></select>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="question full" data-kind="text" data-answers="respectam polaritatea|plus la plus|alegem domeniul maxim|ampermetru in serie|voltmetru in paralel" data-min="3" data-points="2">
+      <p class="question-title">6. Scrie trei reguli pentru conectarea corectă a aparatelor. <span class="points">(2 p)</span></p>
+      <textarea></textarea><div class="feedback"></div>
+    </div>
+  </div>
+
+  <div class="actions"><button class="check" data-check="2">Verifică pagina</button></div>
+</div>
+</section>
+
+<section class="page" data-topic="Citirea unei scări" hidden>
+<div class="card">
+  <span class="badge">III. Diviziuni și domeniu · 5 puncte</span>
+  <h2>Cum citim un aparat analogic?</h2>
+
+  <div class="scale" aria-label="Scară analogică de la 0 la 120 de diviziuni">
+    <div class="arc"></div><div class="needle"></div><div class="pivot"></div>
+    <span class="mark m0">0</span><span class="mark m30">30</span><span class="mark m60">60</span><span class="mark m90">90</span><span class="mark m120">120</span>
+  </div>
+
+  <div class="formula">
+    Dacă aparatul are domeniul \(I_{\max}=3\,A\), scala are \(N=120\) diviziuni, iar acul indică \(n=80\) diviziuni:
+    \[
+      I=\frac{n}{N}\cdot I_{\max}
+      =\frac{80}{120}\cdot3\,A
+      =2\,A.
+    \]
+    Valoarea unei diviziuni este:
+    \[
+      c=\frac{I_{\max}}{N}=\frac{3\,A}{120}=0{,}025\,A.
+    \]
+  </div>
+
+  <div class="questions">
+    <div class="question" data-kind="number" data-answer="2" data-tolerance=".01" data-points="2">
+      <p class="question-title">7. Pentru datele din exemplu, indicația este: <span class="points">(2 p)</span></p>
+      <input type="number" step=".01" placeholder="Rezultatul în A"><div class="feedback"></div>
+    </div>
+
+    <div class="question" data-kind="number" data-answer=".025" data-tolerance=".001" data-points="1">
+      <p class="question-title">8. Valoarea unei diviziuni este: <span class="points">(1 p)</span></p>
+      <input type="number" step=".001" placeholder="A/diviziune"><div class="feedback"></div>
+    </div>
+
+    <div class="question full" data-kind="text" data-answers="numaram diviziunile|identificam domeniul maxim|impartim domeniul la diviziuni|inmultim cu diviziunile indicate" data-min="3" data-points="2">
+      <p class="question-title">9. Descrie metoda de citire a unui aparat analogic. <span class="points">(2 p)</span></p>
+      <textarea></textarea><div class="feedback"></div>
+    </div>
+  </div>
+
+  <div class="actions"><button class="check" data-check="3">Verifică pagina</button></div>
+</div>
+</section>
+
+<section class="page" data-topic="Domeniu și siguranță" hidden>
+<div class="card">
+  <span class="badge">IV. Alegerea domeniului · 5 puncte</span>
+  <h2>Măsurare sigură și precisă</h2>
+
+  <div class="steps">
+    <div class="step"><span>1</span>Oprește sau deschide circuitul înainte de modificarea legăturilor.</div>
+    <div class="step"><span>2</span>Alege inițial domeniul maxim al aparatului.</div>
+    <div class="step"><span>3</span>Respectă polaritatea în curent continuu.</div>
+    <div class="step"><span>4</span>Micșorează domeniul numai dacă indicația este prea mică.</div>
+  </div>
+
+  <div class="calculator">
+    <h3>Calculator pentru citirea scării</h3>
+    <div class="calc-grid">
+      <label>Domeniul maxim<input id="calcMax" type="number" min="0" step=".1" value="3"></label>
+      <label>Numărul total de diviziuni<input id="calcTotal" type="number" min="1" step="1" value="120"></label>
+      <label>Diviziuni indicate<input id="calcShown" type="number" min="0" step="1" value="80"></label>
+    </div>
+    <button class="calc-button" id="calculate">Calculează indicația</button>
+    <div class="calc-result" id="calcResult">Rezultatul va apărea aici.</div>
+  </div>
+
+  <div class="questions">
+    <div class="question" data-kind="radio" data-answer="c" data-points="2">
+      <p class="question-title">10. La începutul măsurării alegem: <span class="points">(2 p)</span></p>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="q10" value="a"> domeniul minim</label>
+        <label class="choice"><input type="radio" name="q10" value="b"> orice domeniu, fără verificare</label>
+        <label class="choice"><input type="radio" name="q10" value="c"> domeniul maxim</label>
+      </div><div class="feedback"></div>
+    </div>
+
+    <div class="question" data-kind="select" data-answer="deschis" data-points="1">
+      <p class="question-title">11. Înainte de schimbarea legăturilor, circuitul trebuie: <span class="points">(1 p)</span></p>
+      <select><option value="">Alege...</option><option value="inchis">închis</option><option value="deschis">deschis sau oprit</option><option value="scurt">scurtcircuitat</option></select>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="question full" data-kind="text" data-answers="ampermetrul in paralel poate fi deteriorat|voltmetrul in serie masoara gresit|domeniul prea mic suprasolicita aparatul|nu folosim reteaua locuintei" data-min="3" data-points="2">
+      <p class="question-title">12. Explică două greșeli de conectare și consecințele lor. <span class="points">(2 p)</span></p>
+      <textarea placeholder="Exemple: ampermetru în paralel, domeniu prea mic"></textarea><div class="feedback"></div>
+    </div>
+  </div>
+
+  <div class="danger">Nu conecta ampermetrul direct la bornele unei surse. Experimentele se fac numai cu surse didactice de joasă tensiune, sub supravegherea profesorului.</div>
+
+  <div class="actions"><button class="check" data-check="4">Verifică pagina</button></div>
+</div>
+</section>
+
+<section class="page" data-topic="Rezultatul final" hidden>
+<div class="card">
+  <span class="badge">V. Rezultat final</span>
+  <h2>Verifică întreaga fișă</h2>
+
+  <div class="instruction">Revino la paginile anterioare pentru răspunsurile lipsă, apoi verifică fișa.</div>
+
+  <div class="actions">
+    <button class="check" id="checkAll">Verifică fișa</button>
+    <button class="reset" id="reset">Resetează</button>
+  </div>
+
+  <div class="score">
+    <div class="score-big" id="score">0/20</div>
+    <p id="grade">Nota: –</p>
+    <p id="message">Completează fișa, apoi verifică rezultatul.</p>
+  </div>
+
+  <div class="results">
+    <div class="result"><span id="correct">0</span>corecte</div>
+    <div class="result"><span id="wrong">0</span>de revizuit</div>
+    <div class="result"><span id="empty">12</span>necompletate</div>
+  </div>
+
+  <div class="idea" id="student">Elev: necompletat · Clasa: necompletată</div>
+
+  <div class="links">
+    <a href="../lectii/lectia-3.html">← Lecția 3</a>
+    <a href="index.html">Lista fișelor</a>
+    <a href="fisa-4.html">Fișa 4 →</a>
+  </div>
+</div>
+</section>
+</main>
+
+<footer class="footer">© Fizica Galaction · Prof. DĂNUȚ ANDRONIE<br><a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a></footer>
+</div>
+
+<nav class="nav" aria-label="Navigarea între pagini">
+  <div class="nav-inner">
+    <button class="back" id="back">← Înapoi</button>
+    <div class="counter" id="counter">1 / 6</div>
+    <button class="next" id="next">Mergi mai departe →</button>
+  </div>
+</nav>
+
+<div class="sr" id="announce" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+const pages=[...document.querySelectorAll(".page")],back=document.getElementById("back"),next=document.getElementById("next"),
+counter=document.getElementById("counter"),pageLabel=document.getElementById("pageLabel"),topic=document.getElementById("topic"),
+fill=document.getElementById("fill"),bar=document.getElementById("bar"),announce=document.getElementById("announce");
+let current=0;
+
+function show(index,focus){
+  current=Math.max(0,Math.min(index,pages.length-1));
+  pages.forEach((page,i)=>{const active=i===current;page.classList.toggle("active",active);page.hidden=!active;page.setAttribute("aria-hidden",String(!active))});
+  const number=current+1,name=pages[current].dataset.topic;
+  counter.textContent=number+" / "+pages.length;
+  pageLabel.textContent="Pagina "+number+" din "+pages.length;
+  topic.textContent=name;
+  fill.style.width=(number/pages.length*100)+"%";
+  bar.setAttribute("aria-valuenow",String(number));
+  back.disabled=current===0;
+  next.textContent=current===pages.length-1?"Vezi rezultatul ✓":"Mergi mai departe →";
+  announce.textContent="Pagina "+number+": "+name;
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(focus){const h=pages[current].querySelector("h1,h2");if(h){h.tabIndex=-1;h.focus({preventScroll:true})}}
+  if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([pages[current]]).catch(()=>{});
+}
+
+back.addEventListener("click",()=>{if(current>0)show(current-1,true)});
+next.addEventListener("click",()=>{if(current<pages.length-1)show(current+1,true);else{evaluateAll();document.querySelector(".score").scrollIntoView({behavior:"smooth"})}});
+document.addEventListener("keydown",event=>{if(event.altKey&&event.key==="ArrowRight"&&current<pages.length-1)show(current+1,true);if(event.altKey&&event.key==="ArrowLeft"&&current>0)show(current-1,true)});
+
+function normalize(text){
+  return String(text||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[.,!?;:()]/g," ").replace(/\s+/g," ").trim();
+}
+
+function evaluate(question,showFeedback){
+  const kind=question.dataset.kind,points=Number(question.dataset.points||0),feedback=question.querySelector(".feedback");
+  let correct=false,empty=false;
+  question.querySelectorAll(".choice").forEach(choice=>choice.classList.remove("correct","wrong"));
+
+  if(kind==="radio"){
+    const selected=question.querySelector("input:checked"),answer=question.dataset.answer,correctInput=question.querySelector("input[value='"+answer+"']");
+    if(!selected)empty=true;
+    else{
+      correct=selected.value===answer;
+      selected.closest(".choice").classList.add(correct?"correct":"wrong");
+      if(!correct&&correctInput)correctInput.closest(".choice").classList.add("correct");
+    }
+  }
+
+  if(kind==="select"){
+    const value=question.querySelector("select").value;
+    empty=!value;
+    correct=value===question.dataset.answer;
+  }
+
+  if(kind==="number"){
+    const raw=question.querySelector("input[type=number]").value.trim();
+    empty=raw==="";
+    if(!empty)correct=Math.abs(Number(raw)-Number(question.dataset.answer))<=Number(question.dataset.tolerance||0);
+  }
+
+  if(kind==="text"){
+    const value=normalize(question.querySelector("textarea,input[type=text]").value);
+    empty=!value;
+    if(!empty){
+      const keywords=question.dataset.answers.split("|").map(normalize);
+      correct=keywords.filter(keyword=>value.includes(keyword)).length>=Number(question.dataset.min||1);
+    }
+  }
+
+  if(showFeedback&&feedback){
+    feedback.className="feedback";
+    if(empty){feedback.textContent="Completează răspunsul.";feedback.classList.add("warn")}
+    else if(correct){feedback.textContent="Corect.";feedback.classList.add("good")}
+    else{feedback.textContent="Mai verifică noțiunea.";feedback.classList.add("bad")}
+  }
+
+  return{correct,empty,points:correct?points:0};
+}
+
+document.querySelectorAll("[data-check]").forEach(button=>{
+  button.addEventListener("click",()=>pages[Number(button.dataset.check)].querySelectorAll(".question").forEach(question=>evaluate(question,true)));
+});
+
+function evaluateAll(){
+  let points=0,correctCount=0,wrongCount=0,emptyCount=0;
+
+  document.querySelectorAll(".question").forEach(question=>{
+    const result=evaluate(question,true);
+    points+=result.points;
+    if(result.empty)emptyCount++;
+    else if(result.correct)correctCount++;
+    else wrongCount++;
+  });
+
+  const grade=points/2;
+  document.getElementById("score").textContent=points+"/20";
+  document.getElementById("grade").textContent="Nota: "+grade.toFixed(2);
+  document.getElementById("correct").textContent=correctCount;
+  document.getElementById("wrong").textContent=wrongCount;
+  document.getElementById("empty").textContent=emptyCount;
+  document.getElementById("message").textContent=
+    emptyCount?"Mai ai răspunsuri necompletate.":
+    grade>=9?"Excelent! Conectezi și citești corect instrumentele electrice.":
+    grade>=7?"Foarte bine! Revizuiește răspunsurile evidențiate.":
+    grade>=5?"Ai înțeles ideile de bază. Mai exersează citirea scării.":
+    "Reia noțiunile despre instrumentele de măsură.";
+
+  document.getElementById("student").textContent=
+    "Elev: "+(document.getElementById("name").value.trim()||"necompletat")+
+    " · Clasa: "+(document.getElementById("class").value||"necompletată");
+}
+
+document.getElementById("checkAll").addEventListener("click",evaluateAll);
+
+document.getElementById("calculate").addEventListener("click",()=>{
+  const max=Number(document.getElementById("calcMax").value),
+        total=Number(document.getElementById("calcTotal").value),
+        shown=Number(document.getElementById("calcShown").value),
+        output=document.getElementById("calcResult");
+
+  if(![max,total,shown].every(Number.isFinite)||max<0||total<=0||shown<0||shown>total){
+    output.textContent="Introdu valori valide; diviziunile indicate nu pot depăși scala.";
+    return;
+  }
+
+  const value=shown/total*max;
+  const division=max/total;
+  output.textContent="Indicația este "+value.toFixed(3)+", iar o diviziune valorează "+division.toFixed(4)+".";
+});
+
+document.getElementById("reset").addEventListener("click",()=>{
+  document.querySelectorAll("input").forEach(input=>{if(input.type==="radio")input.checked=false;else if(!["calcMax","calcTotal","calcShown"].includes(input.id))input.value=""});
+  document.querySelectorAll("select").forEach(select=>select.selectedIndex=0);
+  document.querySelectorAll("textarea").forEach(textarea=>textarea.value="");
+  document.querySelectorAll(".feedback").forEach(feedback=>{feedback.textContent="";feedback.className="feedback"});
+  document.querySelectorAll(".choice").forEach(choice=>choice.classList.remove("correct","wrong"));
+  document.getElementById("calcMax").value="3";
+  document.getElementById("calcTotal").value="120";
+  document.getElementById("calcShown").value="80";
+  document.getElementById("calcResult").textContent="Rezultatul va apărea aici.";
+  document.getElementById("score").textContent="0/20";
+  document.getElementById("grade").textContent="Nota: –";
+  document.getElementById("message").textContent="Completează fișa, apoi verifică rezultatul.";
+  document.getElementById("correct").textContent="0";
+  document.getElementById("wrong").textContent="0";
+  document.getElementById("empty").textContent="12";
+  document.getElementById("student").textContent="Elev: necompletat · Clasa: necompletată";
+  show(0,true);
+});
+
+show(0,false);
+})();
+</script>
+</body>
+</html>

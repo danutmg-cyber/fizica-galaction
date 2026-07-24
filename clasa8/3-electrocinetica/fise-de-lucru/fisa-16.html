@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Fișă interactivă pentru clasa a VIII-a: forța exercitată de un electromagnet.">
+<meta name="theme-color" content="#0f766e">
+<title>Fișa 16 | Forța exercitată de un electromagnet</title>
+
+<script>
+window.MathJax={
+  tex:{inlineMath:[['\\(','\\)'],['$','$']],displayMath:[['\\[','\\]']]},
+  options:{skipHtmlTags:['script','noscript','style','textarea','pre','code']}
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<style>
+:root{
+  --bg:#07131f;--panel:#132b3e;--deep:#0b2030;--text:#f8fafc;--muted:#cbd5e1;
+  --teal:#5eead4;--teal2:#0f766e;--cyan:#67e8f9;--blue:#60a5fa;
+  --green:#22c55e;--green2:#15803d;--yellow:#facc15;--orange:#fb923c;
+  --red:#fb7185;--violet:#c4b5fd;--border:rgba(148,163,184,.3);
+  --good:#bbf7d0;--bad:#fecaca;--warn:#fde68a;--nav:94px
+}
+*{box-sizing:border-box}
+html{min-height:100%;scroll-behavior:smooth}
+body{
+  min-height:100dvh;margin:0;padding-bottom:calc(var(--nav) + env(safe-area-inset-bottom));
+  color:var(--text);
+  background:
+    radial-gradient(circle at top left,rgba(15,118,110,.23),transparent 36%),
+    radial-gradient(circle at bottom right,rgba(96,165,250,.1),transparent 30%),
+    var(--bg);
+  font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:clamp(17px,2.35vw,20px);line-height:1.55
+}
+button,input,select,textarea{font:inherit}
+.app{width:min(100%,980px);margin:auto;padding:14px 12px 24px}
+.banner{
+  margin:8px 0 14px;padding:16px;border:1px solid rgba(94,234,212,.38);
+  border-radius:22px;background:linear-gradient(135deg,rgba(15,118,110,.97),rgba(15,23,42,.97));
+  box-shadow:0 16px 40px rgba(0,0,0,.35);text-align:center
+}
+.school{font-weight:900;letter-spacing:.03em;text-transform:uppercase}
+.teacher{margin-top:4px;color:#ccfbf1;font-weight:750}
+.motto{
+  max-width:760px;margin:12px auto 0;padding:10px;border-left:4px solid var(--yellow);
+  border-radius:12px;background:rgba(2,6,23,.32);color:#fef9c3;font-style:italic;font-weight:700
+}
+.progress{
+  position:sticky;top:6px;z-index:40;margin-bottom:14px;padding:11px 13px;
+  border:1px solid var(--border);border-radius:16px;background:rgba(7,19,31,.95);
+  box-shadow:0 8px 22px rgba(0,0,0,.24);backdrop-filter:blur(8px)
+}
+.progress-meta{display:flex;justify-content:space-between;gap:12px;margin-bottom:7px;color:var(--muted);font-size:.9rem;font-weight:850}
+.track{height:10px;overflow:hidden;border-radius:999px;background:#27344b}
+.fill{width:16.67%;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--teal2),var(--cyan));transition:width .3s}
+.page{display:none}.page.active{display:block;animation:show .22s ease-out}
+@keyframes show{from{opacity:.45;transform:translateY(7px)}}
+.card{
+  min-height:calc(100dvh - 205px);padding:clamp(18px,4vw,32px);border:1px solid var(--border);
+  border-radius:24px;background:linear-gradient(180deg,rgba(19,43,62,.98),rgba(11,32,48,.98));
+  box-shadow:0 18px 45px rgba(0,0,0,.35)
+}
+.badge{
+  display:inline-flex;margin-bottom:12px;padding:6px 10px;border:1px solid rgba(94,234,212,.34);
+  border-radius:999px;background:rgba(15,118,110,.13);color:#ccfbf1;font-size:.86rem;font-weight:850
+}
+h1,h2,h3{line-height:1.18}
+h1{margin:0 0 14px;color:#f0fdfa;font-size:clamp(1.5rem,5vw,2.7rem)}
+h2{margin:0 0 14px;color:var(--teal);font-size:clamp(1.4rem,4vw,2.2rem)}
+h3{margin:18px 0 10px;color:#bae6fd;font-size:clamp(1.08rem,3vw,1.4rem)}
+.lead{color:#f0fdfa;font-size:clamp(1.02rem,2.8vw,1.22rem);font-weight:650}
+.idea,.note,.instruction,.danger{margin:14px 0;padding:14px 15px;border-radius:17px}
+.idea{border:1px solid rgba(34,197,94,.36);background:rgba(34,197,94,.12);font-weight:750}
+.note{border:1px solid rgba(250,204,21,.38);background:rgba(250,204,21,.09);color:#fef9c3}
+.instruction{border:1px solid rgba(103,232,249,.28);background:rgba(34,211,238,.08);color:#e0f2fe}
+.danger{border:1px solid rgba(251,113,133,.42);background:rgba(244,63,94,.11);color:#ffe4e6;font-weight:750}
+.identity,.concepts,.questions,.results,.strength-grid,.factor-grid,.experiment-grid,.application-grid{display:grid;gap:13px}
+.identity{grid-template-columns:1.4fr .8fr;margin:18px 0}
+label{display:block;margin-bottom:6px;color:#dbeafe;font-weight:850}
+input[type=text],input[type=number],select,textarea{
+  width:100%;padding:12px 13px;border:2px solid #475569;border-radius:12px;background:#071525;color:#fff
+}
+input:focus,select:focus,textarea:focus{outline:0;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(103,232,249,.12)}
+textarea{min-height:105px;resize:vertical}
+.concepts{grid-template-columns:repeat(3,1fr);margin:18px 0}
+.concept,.info-card,.factor,.step,.application-card{
+  padding:15px;border:1px solid var(--border);border-radius:17px;background:#071525
+}
+.concept{background:rgba(15,23,42,.42)}
+.concept strong,.info-card strong,.factor strong,.application-card strong{display:block;margin-bottom:6px;color:#ccfbf1}
+.strength-grid{grid-template-columns:1fr 1fr;margin:18px 0}
+.info-card.weak{border-top:5px solid var(--blue)}.info-card.strong{border-top:5px solid var(--green)}
+.info-card.core{border-top:5px solid var(--orange)}.info-card.control{border-top:5px solid var(--violet)}
+.clip-scene{
+  display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0
+}
+.clip-box{
+  min-height:190px;padding:18px;border:1px solid var(--border);border-radius:20px;background:#071525;text-align:center
+}
+.nail{width:24px;height:105px;margin:0 auto 10px;border-radius:8px;background:#94a3b8;box-shadow:0 0 0 8px rgba(103,232,249,.25)}
+.clips{font-size:1.5rem;letter-spacing:.2em}
+.formula{overflow-x:auto;margin:15px 0;padding:14px;border:1px solid rgba(94,234,212,.25);border-radius:17px;background:rgba(2,6,23,.38);text-align:center}
+.factor-grid{grid-template-columns:repeat(4,1fr);margin:18px 0}
+.factor{text-align:center}
+.factor span{display:grid;place-items:center;width:38px;height:38px;margin:0 auto 8px;border-radius:50%;background:var(--teal);color:#042f2e;font-weight:950}
+.experiment-grid{grid-template-columns:repeat(5,1fr);margin:18px 0}
+.step{text-align:center}
+.step span{display:grid;place-items:center;width:34px;height:34px;margin:0 auto 8px;border-radius:50%;background:var(--yellow);color:#422006;font-weight:950}
+.application-grid{grid-template-columns:repeat(3,1fr);margin:18px 0}
+.application-card{text-align:center}
+.application-card span{display:block;margin-bottom:8px;font-size:2rem}
+.questions{grid-template-columns:repeat(2,1fr)}
+.question{padding:15px;border:1px solid var(--border);border-radius:18px;background:rgba(15,23,42,.42)}
+.question.full{grid-column:1/-1}.question-title{margin:0 0 11px;color:#fff;font-weight:900}.points{color:var(--yellow);font-size:.86rem}
+.choices{display:grid;gap:8px}.choice{
+  display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;min-height:48px;padding:10px;
+  border:2px solid rgba(226,232,240,.2);border-radius:13px;background:rgba(15,23,42,.35);cursor:pointer
+}
+.choice input{width:1.12em;height:1.12em;margin:0;accent-color:var(--green)}
+.choice.correct{border-color:var(--green);background:rgba(34,197,94,.12)}
+.choice.wrong{border-color:var(--red);background:rgba(251,113,133,.12)}
+.feedback{min-height:1.55em;margin-top:9px;font-size:.92rem;font-weight:850}
+.feedback.good{color:var(--good)}.feedback.bad{color:var(--bad)}.feedback.warn{color:var(--warn)}
+.calculator{margin:18px 0;padding:17px;border:1px solid var(--border);border-radius:18px;background:#071525}
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:11px}
+.calc-button{width:100%;min-height:48px;margin-top:13px;border:0;border-radius:12px;background:var(--teal);color:#042f2e;font-weight:950;cursor:pointer}
+.calc-result{margin-top:13px;padding:13px;border-left:4px solid var(--yellow);border-radius:10px;background:rgba(250,204,21,.08);color:#fef9c3;font-weight:850}
+.results{grid-template-columns:repeat(3,1fr);margin:18px 0}
+.result{padding:16px;border:1px solid var(--border);border-radius:17px;background:rgba(15,23,42,.42);text-align:center}
+.result span{display:block;color:var(--teal);font-size:2rem;font-weight:950}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:17px}
+.check,.reset{min-height:49px;padding:12px 17px;border:0;border-radius:13px;font-weight:950;cursor:pointer}
+.check{background:var(--cyan);color:#083344}.reset{border:2px solid #64748b;background:#1e293b;color:#fff}
+.score{margin-top:18px;padding:18px;border:2px solid var(--teal);border-radius:18px;background:linear-gradient(135deg,rgba(15,118,110,.95),rgba(15,23,42,.95));text-align:center}
+.score-big{color:#fef08a;font-size:clamp(2.2rem,8vw,4rem);font-weight:950;line-height:1}
+.links{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:17px}
+.links a{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:10px 14px;border:1px solid rgba(94,234,212,.32);border-radius:12px;background:rgba(15,118,110,.09);color:#ccfbf1;font-weight:850;text-decoration:none}
+.footer{padding:23px 12px 6px;color:var(--muted);text-align:center;font-size:.9rem}.footer a{color:var(--cyan)}
+.nav{position:fixed;right:0;bottom:0;left:0;z-index:1000;padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(7,19,31,0),rgba(7,19,31,.96) 28%,rgba(7,19,31,.99));backdrop-filter:blur(8px)}
+.nav-inner{display:grid;grid-template-columns:minmax(100px,1fr) auto minmax(150px,1fr);gap:10px;align-items:center;width:min(100%,980px);margin:auto;padding:9px;border:1px solid var(--border);border-radius:18px;background:rgba(19,43,62,.97);box-shadow:0 18px 38px rgba(0,0,0,.35)}
+.nav button{min-height:50px;padding:10px 12px;border:0;border-radius:14px;font-weight:950;cursor:pointer}
+.back{background:#e2e8f0;color:#0f172a}.next{background:linear-gradient(135deg,var(--green),var(--green2));color:#052e16}
+.nav button:disabled{opacity:.45;cursor:not-allowed}.counter{min-width:64px;padding:9px 10px;border:1px solid rgba(148,163,184,.22);border-radius:12px;background:rgba(2,6,23,.36);text-align:center;font-weight:950}
+.sr{position:absolute!important;width:1px!important;height:1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important}
+@media(max-width:950px){.factor-grid,.experiment-grid{grid-template-columns:repeat(2,1fr)}.calc-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){
+  .identity,.concepts,.questions,.results,.strength-grid,.clip-scene,.application-grid{grid-template-columns:1fr}
+  .card{border-radius:20px}
+}
+@media(max-width:520px){
+  :root{--nav:90px}.app{padding-inline:9px}.banner{border-radius:18px}.card{padding:17px 13px}
+  .factor-grid,.experiment-grid,.calc-grid{grid-template-columns:1fr}
+  .nav-inner{grid-template-columns:.8fr auto 1.2fr;gap:7px;padding:7px}.counter{min-width:52px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.page.active{animation:none}.fill{transition:none}}
+@media print{body{padding:0;color:#111827;background:#fff}.page{display:block!important;break-after:page}.card{min-height:auto;background:#fff;box-shadow:none}.progress,.nav,.actions,.calculator{display:none!important}}
+</style>
+</head>
+
+<body>
+<div class="app">
+<header class="banner">
+  <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+  <div class="teacher">Prof. Dănuț Andronie</div>
+  <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+</header>
+
+<section class="progress" aria-label="Progres">
+  <div class="progress-meta"><span id="pageLabel">Pagina 1 din 6</span><span id="topic">Date și recapitulare</span></div>
+  <div class="track" id="bar" role="progressbar" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1"><div class="fill" id="fill"></div></div>
+</section>
+
+<main>
+<section class="page active" data-topic="Date și recapitulare">
+<div class="card">
+  <span class="badge">Clasa a VIII-a · Electrocinetică · Fișa 16</span>
+  <h1>Forța exercitată de un electromagnet</h1>
+  <p class="lead">Câmp magnetic, factori de influență și experiment controlat. Scor maxim: 20 de puncte.</p>
+
+  <div class="identity">
+    <div><label for="name">Numele și prenumele</label><input id="name" type="text" placeholder="Scrie numele elevului"></div>
+    <div><label for="class">Clasa</label><select id="class"><option value="">Alege...</option><option>8A</option><option>8B</option><option>8C</option><option>8D</option></select></div>
+  </div>
+
+  <div class="idea">Ideea-cheie: forța unui electromagnet depinde de intensitatea câmpului magnetic produs de bobină.</div>
+
+  <div class="concepts">
+    <div class="concept"><strong>Curent mai mare</strong>Produce, în condiții similare, un câmp magnetic mai intens.</div>
+    <div class="concept"><strong>Mai multe spire</strong>Fac efectele magnetice ale spirelor să se adune.</div>
+    <div class="concept"><strong>Miez de fier</strong>Concentrează câmpul și intensifică atracția.</div>
+  </div>
+
+  <div class="instruction">Fișa conține comparația prin numărul de agrafe ridicate, factorii \(I,N,l,\mu\), formula bobinei, experimentul corect și aplicațiile.</div>
+</div>
+</section>
+
+<section class="page" data-topic="Forța și câmpul magnetic" hidden>
+<div class="card">
+  <span class="badge">I. Electromagnet slab sau puternic · 5 puncte</span>
+  <h2>Cum comparăm practic forța?</h2>
+
+  <div class="clip-scene">
+    <div class="clip-box"><div class="nail"></div><strong>Electromagnet slab</strong><div class="clips">📎📎📎</div><p>Ridică mai puține agrafe.</p></div>
+    <div class="clip-box"><div class="nail"></div><strong>Electromagnet puternic</strong><div class="clips">📎📎📎📎📎📎</div><p>Ridică mai multe agrafe.</p></div>
+  </div>
+
+  <div class="formula">
+    \[
+      B\text{ mai mare}\Longrightarrow F_{\text{atracție}}\text{ mai mare}.
+    \]
+    Unitatea pentru \(B\) în S.I. este tesla:
+    \[
+      [B]=T.
+    \]
+  </div>
+
+  <div class="strength-grid">
+    <div class="info-card weak"><strong>Circuit deschis</strong>Când curentul nu trece, efectul magnetic scade foarte mult.</div>
+    <div class="info-card strong"><strong>Circuit închis</strong>Când curentul trece prin bobină, apare atracția magnetică.</div>
+  </div>
+
+  <div class="questions">
+    <div class="question" data-kind="radio" data-answer="b" data-points="2">
+      <p class="question-title">1. Practic, forța se poate compara după: <span class="points">(2 p)</span></p>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="q1" value="a"> culoarea cuiului</label>
+        <label class="choice"><input type="radio" name="q1" value="b"> numărul de agrafe ridicate</label>
+        <label class="choice"><input type="radio" name="q1" value="c"> ora experimentului</label>
+      </div><div class="feedback"></div>
+    </div>
+
+    <div class="question" data-kind="select" data-answer="tesla" data-points="1">
+      <p class="question-title">2. Unitatea pentru \(B\) este: <span class="points">(1 p)</span></p>
+      <select><option value="">Alege...</option><option value="tesla">tesla</option><option value="volt">volt</option><option value="ohm">ohm</option></select>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="question full" data-kind="text" data-answers="electromagnetul atrage fierul|mai multe agrafe inseamna forta mai mare|b mai mare forta mai mare|cand curentul trece apare efectul|cand circuitul se intrerupe efectul scade" data-min="3" data-points="2">
+      <p class="question-title">3. Explică legătura dintre câmp, forță și curent. <span class="points">(2 p)</span></p>
+      <textarea></textarea><div class="feedback"></div>
+    </div>
+  </div>
+
+  <div class="actions"><button class="check" data-check="1">Verifică pagina</button></div>
+</div>
+</section>
+
+<section class="page" data-topic="Factorii electromagnetului" hidden>
+<div class="card">
+  <span class="badge">II. Curent, spire, lungime și miez · 5 puncte</span>
+  <h2>Cum facem electromagnetul mai puternic?</h2>
+
+  <div class="factor-grid">
+    <div class="factor"><span>1</span><strong>Curent \(I\)</strong>\(B\sim I\)</div>
+    <div class="factor"><span>2</span><strong>Spire \(N\)</strong>\(B\sim N\)</div>
+    <div class="factor"><span>3</span><strong>Lungime \(l\)</strong>\(B\sim\frac{1}{l}\)</div>
+    <div class="factor"><span>4</span><strong>Miez \(\mu\)</strong>Fierul moale intensifică efectul.</div>
+  </div>
+
+  <div class="formula">
+    Dacă \(I_1=0{,}2\,A\) și \(I_2=0{,}4\,A\):
+    \[
+      \frac{I_2}{I_1}=\frac{0{,}4}{0{,}2}=2.
+    \]
+    În condiții asemănătoare, câmpul poate deveni aproximativ de două ori mai intens.
+  </div>
+
+  <div class="formula">
+    Dacă lungimea se reduce de la \(10\,cm\) la \(5\,cm\):
+    \[
+      \frac{10}{5}=2.
+    \]
+    În modelul simplificat, câmpul poate deveni aproximativ de două ori mai intens.
+  </div>
+
+  <div class="strength-grid">
+    <div class="info-card core"><strong>Miez feromagnetic</strong>Ajută liniile câmpului să se concentreze prin material.</div>
+    <div class="info-card control"><strong>Control experimental</strong>Schimbăm un singur factor o dată.</div>
+  </div>
+
+  <div class="questions">
+    <div class="question" data-kind="number" data-answer="2" data-tolerance=".01" data-points="2">
+      <p class="question-title">4. Raportul \(\frac{0{,}4}{0{,}2}\) este: <span class="points">(2 p)</span></p>
+      <input type="number" step=".1" placeholder="Scrie raportul"><div class="feedback"></div>
+    </div>
+
+    <div class="question" data-kind="radio" data-answer="c" data-points="1">
+      <p class="question-title">5. Într-un experiment corect modificăm: <span class="points">(1 p)</span></p>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="q5" value="a"> toți factorii simultan</label>
+        <label class="choice"><input type="radio" name="q5" value="b"> numai culoarea firelor</label>
+        <label class="choice"><input type="radio" name="q5" value="c"> un singur factor o dată</label>
+      </div><div class="feedback"></div>
+    </div>
+
+    <div class="question full" data-kind="text" data-answers="b creste cand i creste|b creste cand n creste|b creste cand l scade|miezul de fier intensifica|schimbam un singur factor" data-min="3" data-points="2">
+      <p class="question-title">6. Prezintă factorii și regula experimentului controlat. <span class="points">(2 p)</span></p>
+      <textarea></textarea><div class="feedback"></div>
+    </div>
+  </div>
+
+  <div class="actions"><button class="check" data-check="2">Verifică pagina</button></div>
+</div>
+</section>
+
+<section class="page" data-topic="Formula bobinei și comparații" hidden>
+<div class="card">
+  <span class="badge">III. Modelul simplificat · 5 puncte</span>
+  <h2>Ce confirmă formula?</h2>
+
+  <div class="formula">
+    Pentru o bobină lungă:
+    \[
+      B=\mu\cdot\frac{N\cdot I}{l}.
+    \]
+    \(B\) este intensitatea câmpului, \(\mu\) descrie mediul, \(N\) este numărul de spire, \(I\) este intensitatea curentului, iar \(l\) este lungimea bobinei.
+  </div>
+
+  <div class="formula">
+    Două bobine au același miez, aceeași lungime și același curent:
+    \[
+      N_1=50,\qquad N_2=100.
+    \]
+    \[
+      \frac{B_2}{B_1}=\frac{N_2}{N_1}
+      =\frac{100}{50}=2.
+    \]
+  </div>
+
+  <div class="note">Formula confirmă observația: \(B\) crește când cresc \(N\) și \(I\), dar scade când lungimea \(l\) devine mai mare.</div>
+
+  <div class="questions">
+    <div class="question" data-kind="select" data-answer="spire" data-points="2">
+      <p class="question-title">7. În formula \(B=\mu\frac{NI}{l}\), \(N\) reprezintă: <span class="points">(2 p)</span></p>
+      <select><option value="">Alege...</option><option value="lungime">lungimea</option><option value="spire">numărul de spire</option><option value="tensiune">tensiunea bateriei</option></select>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="question" data-kind="number" data-answer="2" data-tolerance=".01" data-points="1">
+      <p class="question-title">8. Pentru 100 de spire față de 50 de spire, raportul câmpurilor este: <span class="points">(1 p)</span></p>
+      <input type="number" step=".1" placeholder="Scrie raportul"><div class="feedback"></div>
+    </div>
+
+    <div class="question full" data-kind="text" data-answers="b intensitatea campului|mu descrie mediul|n numarul de spire|i intensitatea curentului|l lungimea bobinei|b proportional cu n i si invers cu l" data-min="4" data-points="2">
+      <p class="question-title">9. Explică fiecare simbol și dependența din formulă. <span class="points">(2 p)</span></p>
+      <textarea></textarea><div class="feedback"></div>
+    </div>
+  </div>
+
+  <div class="actions"><button class="check" data-check="3">Verifică pagina</button></div>
+</div>
+</section>
+
+<section class="page" data-topic="Experiment, aplicații și siguranță" hidden>
+<div class="card">
+  <span class="badge">IV. Observăm și aplicăm · 5 puncte</span>
+  <h2>Cum studiem forța în laborator?</h2>
+
+  <div class="experiment-grid">
+    <div class="step"><span>1</span>Construiește o bobină pe un cui de fier.</div>
+    <div class="step"><span>2</span>Conectează pentru timp scurt la sursă.</div>
+    <div class="step"><span>3</span>Numără agrafele ridicate.</div>
+    <div class="step"><span>4</span>Schimbă numai \(N\) sau numai \(I\).</div>
+    <div class="step"><span>5</span>Compară rezultatele.</div>
+  </div>
+
+  <div class="application-grid">
+    <div class="application-card"><span>🔔</span><strong>Sonerie</strong>Electromagnetul atrage o lamelă.</div>
+    <div class="application-card"><span>⚡</span><strong>Releu</strong>Un curent mic comandă un circuit mai puternic.</div>
+    <div class="application-card"><span>🏗️</span><strong>Macara</strong>Ridică obiecte metalice cu electromagnet puternic.</div>
+  </div>
+
+  <div class="calculator">
+    <h3>Comparație între două bobine</h3>
+    <div class="calc-grid">
+      <label>\(N_1\)<input id="n1" type="number" min="1" step="1" value="50"></label>
+      <label>\(I_1\) (A)<input id="i1" type="number" min=".001" step=".1" value=".2"></label>
+      <label>\(N_2\)<input id="n2" type="number" min="1" step="1" value="100"></label>
+      <label>\(I_2\) (A)<input id="i2" type="number" min=".001" step=".1" value=".2"></label>
+    </div>
+    <button class="calc-button" id="calculate">Calculează raportul \(\frac{B_2}{B_1}\)</button>
+    <div class="calc-result" id="calcResult">Presupunem același miez și aceeași lungime.</div>
+  </div>
+
+  <div class="questions">
+    <div class="question" data-kind="radio" data-answer="a" data-points="2">
+      <p class="question-title">10. Pentru a mări forța electromagnetului putem: <span class="points">(2 p)</span></p>
+      <div class="choices">
+        <label class="choice"><input type="radio" name="q10" value="a"> mări controlat curentul sau numărul de spire</label>
+        <label class="choice"><input type="radio" name="q10" value="b"> întrerupe permanent circuitul</label>
+        <label class="choice"><input type="radio" name="q10" value="c"> elimina bobina</label>
+      </div><div class="feedback"></div>
+    </div>
+
+    <div class="question" data-kind="select" data-answer="releu" data-points="1">
+      <p class="question-title">11. Dispozitivul în care un curent mic comandă alt circuit este: <span class="points">(1 p)</span></p>
+      <select><option value="">Alege...</option><option value="releu">releul</option><option value="rigla">rigla</option><option value="termometrul">termometrul</option></select>
+      <div class="feedback"></div>
+    </div>
+
+    <div class="question full" data-kind="text" data-answers="conectam timp scurt|numaram agrafele|schimbam un singur factor|firul se poate incalzi|nu scurtcircuitam bateria|nu atingem firul incalzit" data-min="3" data-points="2">
+      <p class="question-title">12. Descrie experimentul și regulile de siguranță. <span class="points">(2 p)</span></p>
+      <textarea></textarea><div class="feedback"></div>
+    </div>
+  </div>
+
+  <div class="danger">Conductorul se poate încălzi. Conectează montajul numai pentru timp scurt, evită scurtcircuitul și nu atinge firul încălzit.</div>
+
+  <div class="actions"><button class="check" data-check="4">Verifică pagina</button></div>
+</div>
+</section>
+
+<section class="page" data-topic="Rezultatul final" hidden>
+<div class="card">
+  <span class="badge">V. Rezultat final</span>
+  <h2>Verifică întreaga fișă</h2>
+
+  <div class="instruction">Revino la paginile anterioare pentru răspunsurile lipsă, apoi verifică fișa.</div>
+
+  <div class="actions">
+    <button class="check" id="checkAll">Verifică fișa</button>
+    <button class="reset" id="reset">Resetează</button>
+  </div>
+
+  <div class="score">
+    <div class="score-big" id="score">0/20</div>
+    <p id="grade">Nota: –</p>
+    <p id="message">Completează fișa, apoi verifică rezultatul.</p>
+  </div>
+
+  <div class="results">
+    <div class="result"><span id="correct">0</span>corecte</div>
+    <div class="result"><span id="wrong">0</span>de revizuit</div>
+    <div class="result"><span id="empty">12</span>necompletate</div>
+  </div>
+
+  <div class="idea" id="student">Elev: necompletat · Clasa: necompletată</div>
+
+  <div class="links">
+    <a href="../lectii/lectia-16.html">← Reia Lecția 16</a>
+    <a href="index.html">Lista fișelor</a>
+    <a href="fisa-17.html">Fișa 17 →</a>
+  </div>
+</div>
+</section>
+</main>
+
+<footer class="footer">© Fizica Galaction · Prof. DĂNUȚ ANDRONIE<br><a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a></footer>
+</div>
+
+<nav class="nav" aria-label="Navigarea între pagini">
+  <div class="nav-inner">
+    <button class="back" id="back">← Înapoi</button>
+    <div class="counter" id="counter">1 / 6</div>
+    <button class="next" id="next">Mergi mai departe →</button>
+  </div>
+</nav>
+
+<div class="sr" id="announce" aria-live="polite"></div>
+
+<script>
+(function(){
+"use strict";
+const pages=[...document.querySelectorAll(".page")],back=document.getElementById("back"),next=document.getElementById("next"),
+counter=document.getElementById("counter"),pageLabel=document.getElementById("pageLabel"),topic=document.getElementById("topic"),
+fill=document.getElementById("fill"),bar=document.getElementById("bar"),announce=document.getElementById("announce");
+let current=0;
+
+function show(index,focus){
+  current=Math.max(0,Math.min(index,pages.length-1));
+  pages.forEach((page,i)=>{const active=i===current;page.classList.toggle("active",active);page.hidden=!active;page.setAttribute("aria-hidden",String(!active))});
+  const number=current+1,name=pages[current].dataset.topic;
+  counter.textContent=number+" / "+pages.length;
+  pageLabel.textContent="Pagina "+number+" din "+pages.length;
+  topic.textContent=name;
+  fill.style.width=(number/pages.length*100)+"%";
+  bar.setAttribute("aria-valuenow",String(number));
+  back.disabled=current===0;
+  next.textContent=current===pages.length-1?"Vezi rezultatul ✓":"Mergi mai departe →";
+  announce.textContent="Pagina "+number+": "+name;
+  window.scrollTo({top:0,behavior:"smooth"});
+  if(focus){const h=pages[current].querySelector("h1,h2");if(h){h.tabIndex=-1;h.focus({preventScroll:true})}}
+  if(window.MathJax&&MathJax.typesetPromise)MathJax.typesetPromise([pages[current]]).catch(()=>{});
+}
+
+back.addEventListener("click",()=>{if(current>0)show(current-1,true)});
+next.addEventListener("click",()=>{if(current<pages.length-1)show(current+1,true);else{evaluateAll();document.querySelector(".score").scrollIntoView({behavior:"smooth"})}});
+document.addEventListener("keydown",event=>{if(event.altKey&&event.key==="ArrowRight"&&current<pages.length-1)show(current+1,true);if(event.altKey&&event.key==="ArrowLeft"&&current>0)show(current-1,true)});
+
+function normalize(text){
+  return String(text||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[.,!?;:()]/g," ").replace(/\s+/g," ").trim();
+}
+
+function evaluate(question,showFeedback){
+  const kind=question.dataset.kind,points=Number(question.dataset.points||0),feedback=question.querySelector(".feedback");
+  let correct=false,empty=false;
+  question.querySelectorAll(".choice").forEach(choice=>choice.classList.remove("correct","wrong"));
+
+  if(kind==="radio"){
+    const selected=question.querySelector("input:checked"),answer=question.dataset.answer,correctInput=question.querySelector("input[value='"+answer+"']");
+    if(!selected)empty=true;
+    else{
+      correct=selected.value===answer;
+      selected.closest(".choice").classList.add(correct?"correct":"wrong");
+      if(!correct&&correctInput)correctInput.closest(".choice").classList.add("correct");
+    }
+  }
+
+  if(kind==="select"){
+    const value=question.querySelector("select").value;
+    empty=!value;
+    correct=value===question.dataset.answer;
+  }
+
+  if(kind==="number"){
+    const raw=question.querySelector("input[type=number]").value.trim();
+    empty=raw==="";
+    if(!empty)correct=Math.abs(Number(raw)-Number(question.dataset.answer))<=Number(question.dataset.tolerance||0);
+  }
+
+  if(kind==="text"){
+    const value=normalize(question.querySelector("textarea,input[type=text]").value);
+    empty=!value;
+    if(!empty){
+      const keywords=question.dataset.answers.split("|").map(normalize);
+      correct=keywords.filter(keyword=>value.includes(keyword)).length>=Number(question.dataset.min||1);
+    }
+  }
+
+  if(showFeedback&&feedback){
+    feedback.className="feedback";
+    if(empty){feedback.textContent="Completează răspunsul.";feedback.classList.add("warn")}
+    else if(correct){feedback.textContent="Corect.";feedback.classList.add("good")}
+    else{feedback.textContent="Mai verifică noțiunea.";feedback.classList.add("bad")}
+  }
+
+  return{correct,empty,points:correct?points:0};
+}
+
+document.querySelectorAll("[data-check]").forEach(button=>{
+  button.addEventListener("click",()=>pages[Number(button.dataset.check)].querySelectorAll(".question").forEach(question=>evaluate(question,true)));
+});
+
+function evaluateAll(){
+  let points=0,correctCount=0,wrongCount=0,emptyCount=0;
+
+  document.querySelectorAll(".question").forEach(question=>{
+    const result=evaluate(question,true);
+    points+=result.points;
+    if(result.empty)emptyCount++;
+    else if(result.correct)correctCount++;
+    else wrongCount++;
+  });
+
+  const grade=points/2;
+  document.getElementById("score").textContent=points+"/20";
+  document.getElementById("grade").textContent="Nota: "+grade.toFixed(2);
+  document.getElementById("correct").textContent=correctCount;
+  document.getElementById("wrong").textContent=wrongCount;
+  document.getElementById("empty").textContent=emptyCount;
+  document.getElementById("message").textContent=
+    emptyCount?"Mai ai răspunsuri necompletate.":
+    grade>=9?"Excelent! Explici corect factorii care determină forța electromagnetului.":
+    grade>=7?"Foarte bine! Revizuiește răspunsurile evidențiate.":
+    grade>=5?"Ai înțeles ideile de bază. Mai exersează formula bobinei și experimentul controlat.":
+    "Reia Lecția 16 și încearcă din nou.";
+
+  document.getElementById("student").textContent=
+    "Elev: "+(document.getElementById("name").value.trim()||"necompletat")+
+    " · Clasa: "+(document.getElementById("class").value||"necompletată");
+}
+
+document.getElementById("checkAll").addEventListener("click",evaluateAll);
+
+document.getElementById("calculate").addEventListener("click",()=>{
+  const N1=Number(document.getElementById("n1").value),
+        I1=Number(document.getElementById("i1").value),
+        N2=Number(document.getElementById("n2").value),
+        I2=Number(document.getElementById("i2").value),
+        output=document.getElementById("calcResult");
+
+  if(![N1,I1,N2,I2].every(Number.isFinite)||N1<=0||I1<=0||N2<=0||I2<=0){
+    output.textContent="Introdu valori strict pozitive.";
+    return;
+  }
+
+  const ratio=(N2*I2)/(N1*I1);
+  output.textContent="Pentru același miez și aceeași lungime, B₂/B₁ ≈ "+ratio.toFixed(2)+".";
+});
+
+document.getElementById("reset").addEventListener("click",()=>{
+  document.querySelectorAll("input").forEach(input=>{if(input.type==="radio")input.checked=false;else if(!["n1","i1","n2","i2"].includes(input.id))input.value=""});
+  document.querySelectorAll("select").forEach(select=>select.selectedIndex=0);
+  document.querySelectorAll("textarea").forEach(textarea=>textarea.value="");
+  document.querySelectorAll(".feedback").forEach(feedback=>{feedback.textContent="";feedback.className="feedback"});
+  document.querySelectorAll(".choice").forEach(choice=>choice.classList.remove("correct","wrong"));
+  document.getElementById("n1").value="50";
+  document.getElementById("i1").value=".2";
+  document.getElementById("n2").value="100";
+  document.getElementById("i2").value=".2";
+  document.getElementById("calcResult").textContent="Presupunem același miez și aceeași lungime.";
+  document.getElementById("score").textContent="0/20";
+  document.getElementById("grade").textContent="Nota: –";
+  document.getElementById("message").textContent="Completează fișa, apoi verifică rezultatul.";
+  document.getElementById("correct").textContent="0";
+  document.getElementById("wrong").textContent="0";
+  document.getElementById("empty").textContent="12";
+  document.getElementById("student").textContent="Elev: necompletat · Clasa: necompletată";
+  show(0,true);
+});
+
+show(0,false);
+})();
+</script>
+</body>
+</html>

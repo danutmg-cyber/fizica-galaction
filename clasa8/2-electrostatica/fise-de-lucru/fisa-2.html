@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="description" content="Fișă de lucru interactivă pentru clasa a VIII-a: interacțiunea dintre corpurile electrizate.">
+  <meta name="theme-color" content="#4338ca">
+  <title>Fișa 2 | Interacțiunea dintre corpurile electrizate</title>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]']]
+      },
+      options: {
+        skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+  <style>
+    :root {
+      --bg: #09111f;
+      --card: #1a2740;
+      --card-deep: #101b31;
+      --text: #f8fafc;
+      --muted: #cbd5e1;
+      --indigo: #a5b4fc;
+      --indigo-dark: #4338ca;
+      --violet: #c4b5fd;
+      --cyan: #67e8f9;
+      --blue: #60a5fa;
+      --green: #22c55e;
+      --green-dark: #15803d;
+      --yellow: #facc15;
+      --orange: #fb923c;
+      --red: #fb7185;
+      --border: rgba(148, 163, 184, 0.30);
+      --good: #bbf7d0;
+      --bad: #fecaca;
+      --warn: #fde68a;
+      --nav-height: 94px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      min-height: 100%;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100dvh;
+      margin: 0;
+      padding-bottom: calc(var(--nav-height) + env(safe-area-inset-bottom));
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(67, 56, 202, 0.22), transparent 36%),
+        radial-gradient(circle at bottom right, rgba(103, 232, 249, 0.10), transparent 30%),
+        var(--bg);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+      font-size: clamp(17px, 2.35vw, 20px);
+      line-height: 1.55;
+    }
+
+    button, input, select, textarea { font: inherit; }
+
+    .skip-link {
+      position: fixed;
+      top: -80px;
+      left: 12px;
+      z-index: 3000;
+      padding: 11px 15px;
+      border-radius: 10px;
+      background: #fff;
+      color: #0f172a;
+      font-weight: 900;
+      transition: top 0.2s ease;
+    }
+
+    .skip-link:focus { top: 12px; }
+
+    .app {
+      width: min(100%, 980px);
+      margin: auto;
+      padding: 14px 12px 24px;
+    }
+
+    .banner {
+      margin: 8px 0 14px;
+      padding: 16px;
+      border: 1px solid rgba(165, 180, 252, 0.38);
+      border-radius: 22px;
+      background: linear-gradient(135deg, rgba(55, 48, 163, 0.97), rgba(15, 23, 42, 0.97));
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+      text-align: center;
+    }
+
+    .school {
+      font-weight: 900;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .teacher {
+      margin-top: 4px;
+      color: #e0e7ff;
+      font-weight: 750;
+    }
+
+    .motto {
+      max-width: 760px;
+      margin: 12px auto 0;
+      padding: 10px;
+      border-left: 4px solid var(--cyan);
+      border-radius: 12px;
+      background: rgba(2, 6, 23, 0.32);
+      color: #fef9c3;
+      font-style: italic;
+      font-weight: 700;
+    }
+
+    .progress-card {
+      position: sticky;
+      top: 6px;
+      z-index: 40;
+      margin-bottom: 14px;
+      padding: 11px 13px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: rgba(9, 17, 31, 0.95);
+      box-shadow: 0 8px 22px rgba(0, 0, 0, 0.24);
+      backdrop-filter: blur(8px);
+    }
+
+    .progress-meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-weight: 850;
+    }
+
+    .progress-track {
+      height: 10px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #27344b;
+    }
+
+    .progress-fill {
+      width: 16.6667%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--indigo-dark), var(--cyan));
+      transition: width 0.3s ease;
+    }
+
+    .page {
+      display: none;
+      animation: page-in 0.22s ease-out;
+    }
+
+    .page.active { display: block; }
+
+    @keyframes page-in {
+      from { opacity: 0.45; transform: translateY(7px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    .card {
+      min-height: calc(100dvh - 205px);
+      padding: clamp(18px, 4vw, 32px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      background: linear-gradient(180deg, rgba(26, 39, 64, 0.98), rgba(16, 27, 49, 0.98));
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+    }
+
+    .badge {
+      display: inline-flex;
+      margin-bottom: 12px;
+      padding: 6px 10px;
+      border: 1px solid rgba(165, 180, 252, 0.34);
+      border-radius: 999px;
+      background: rgba(67, 56, 202, 0.12);
+      color: #e0e7ff;
+      font-size: 0.86rem;
+      font-weight: 850;
+    }
+
+    h1, h2, h3 { line-height: 1.18; }
+
+    h1 {
+      margin: 0 0 14px;
+      color: #eef2ff;
+      font-size: clamp(1.52rem, 5vw, 2.65rem);
+      letter-spacing: -0.025em;
+    }
+
+    h2 {
+      margin: 0 0 14px;
+      color: var(--indigo);
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
+    }
+
+    h3 {
+      margin: 18px 0 10px;
+      color: #bfdbfe;
+      font-size: clamp(1.08rem, 3vw, 1.4rem);
+    }
+
+    .lead {
+      color: #eef2ff;
+      font-size: clamp(1.02rem, 2.8vw, 1.22rem);
+      font-weight: 650;
+    }
+
+    .idea, .note, .instruction, .danger {
+      margin: 14px 0;
+      padding: 14px 15px;
+      border-radius: 17px;
+    }
+
+    .idea {
+      border: 1px solid rgba(34, 197, 94, 0.36);
+      background: rgba(34, 197, 94, 0.12);
+      font-weight: 750;
+    }
+
+    .note {
+      border: 1px solid rgba(250, 204, 21, 0.38);
+      background: rgba(250, 204, 21, 0.09);
+      color: #fef9c3;
+    }
+
+    .instruction {
+      border: 1px solid rgba(103, 232, 249, 0.28);
+      background: rgba(34, 211, 238, 0.08);
+      color: #e0f2fe;
+    }
+
+    .danger {
+      border: 1px solid rgba(251, 113, 133, 0.42);
+      background: rgba(244, 63, 94, 0.11);
+      color: #ffe4e6;
+      font-weight: 750;
+    }
+
+    .identity-grid, .question-grid, .concept-grid, .result-grid,
+    .interaction-grid, .material-grid, .step-grid {
+      display: grid;
+      gap: 13px;
+    }
+
+    .identity-grid {
+      grid-template-columns: 1.4fr 0.8fr;
+      margin: 18px 0;
+    }
+
+    .field label {
+      display: block;
+      margin-bottom: 6px;
+      color: #dbeafe;
+      font-weight: 850;
+    }
+
+    input[type="text"], input[type="number"], select, textarea {
+      width: 100%;
+      padding: 12px 13px;
+      border: 2px solid #475569;
+      border-radius: 12px;
+      background: #071525;
+      color: #fff;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--cyan);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(103, 232, 249, 0.12);
+    }
+
+    textarea {
+      min-height: 105px;
+      resize: vertical;
+    }
+
+    .concept-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin: 18px 0;
+    }
+
+    .concept {
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: rgba(15, 23, 42, 0.42);
+    }
+
+    .concept strong {
+      display: block;
+      margin-bottom: 6px;
+      color: #c7d2fe;
+    }
+
+    .interaction-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin: 18px 0;
+    }
+
+    .interaction-card {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: #071525;
+      text-align: center;
+    }
+
+    .charges {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 9px 0;
+      font-size: 2.1rem;
+      font-weight: 950;
+    }
+
+    .plus { color: var(--orange); }
+    .minus { color: var(--blue); }
+    .neutral { color: #e2e8f0; }
+
+    .interaction-card strong {
+      display: block;
+      color: #fff;
+    }
+
+    .polarization-scene {
+      display: grid;
+      grid-template-columns: 1fr 80px 1fr;
+      gap: 14px;
+      align-items: center;
+      margin: 18px 0;
+    }
+
+    .charged-rod, .neutral-body {
+      min-height: 165px;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      border: 2px solid var(--border);
+      border-radius: 18px;
+      background: #071525;
+      text-align: center;
+    }
+
+    .charged-rod {
+      border-color: var(--blue);
+    }
+
+    .neutral-body {
+      border-color: var(--violet);
+    }
+
+    .symbols {
+      font-size: 2rem;
+      font-weight: 950;
+      letter-spacing: 0.2em;
+    }
+
+    .polar-arrow {
+      color: var(--yellow);
+      text-align: center;
+      font-size: 1.8rem;
+      font-weight: 950;
+    }
+
+    .material-grid {
+      grid-template-columns: 1fr 1fr;
+      margin: 18px 0;
+    }
+
+    .material-card {
+      padding: 17px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: #071525;
+    }
+
+    .material-card.conductor {
+      border-top: 5px solid var(--cyan);
+    }
+
+    .material-card.insulator {
+      border-top: 5px solid var(--violet);
+    }
+
+    .material-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+
+    .electroscope-scene {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin: 18px 0;
+    }
+
+    .electroscope {
+      position: relative;
+      min-height: 260px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: #071525;
+      overflow: hidden;
+    }
+
+    .electroscope .ball {
+      position: absolute;
+      left: 50%;
+      top: 20px;
+      width: 62px;
+      height: 62px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      background: #cbd5e1;
+      border: 4px solid #64748b;
+    }
+
+    .electroscope .rod {
+      position: absolute;
+      left: 50%;
+      top: 80px;
+      width: 10px;
+      height: 105px;
+      transform: translateX(-50%);
+      background: #cbd5e1;
+    }
+
+    .leaf {
+      position: absolute;
+      top: 174px;
+      width: 8px;
+      height: 70px;
+      background: var(--yellow);
+      transform-origin: top center;
+    }
+
+    .neutral-scope .leaf.left {
+      left: calc(50% - 8px);
+      transform: rotate(5deg);
+    }
+
+    .neutral-scope .leaf.right {
+      left: calc(50% + 1px);
+      transform: rotate(-5deg);
+    }
+
+    .charged-scope .leaf.left {
+      left: calc(50% - 8px);
+      transform: rotate(28deg);
+    }
+
+    .charged-scope .leaf.right {
+      left: calc(50% + 1px);
+      transform: rotate(-28deg);
+    }
+
+    .scope-label {
+      position: absolute;
+      right: 0;
+      bottom: 8px;
+      left: 0;
+      color: var(--muted);
+      text-align: center;
+      font-weight: 850;
+    }
+
+    .formula {
+      overflow-x: auto;
+      margin: 15px 0;
+      padding: 14px;
+      border: 1px solid rgba(165, 180, 252, 0.25);
+      border-radius: 17px;
+      background: rgba(2, 6, 23, 0.38);
+      text-align: center;
+    }
+
+    .question-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .question {
+      padding: 15px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(15, 23, 42, 0.42);
+    }
+
+    .question.full { grid-column: 1 / -1; }
+
+    .question-title {
+      margin: 0 0 11px;
+      color: #fff;
+      font-weight: 900;
+    }
+
+    .points {
+      color: var(--yellow);
+      font-size: 0.86rem;
+    }
+
+    .choices {
+      display: grid;
+      gap: 8px;
+    }
+
+    .choice {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 10px;
+      align-items: center;
+      min-height: 48px;
+      padding: 10px;
+      border: 2px solid rgba(226, 232, 240, 0.20);
+      border-radius: 13px;
+      background: rgba(15, 23, 42, 0.35);
+      cursor: pointer;
+    }
+
+    .choice:hover, .choice:focus-within {
+      border-color: rgba(103, 232, 249, 0.60);
+    }
+
+    .choice input {
+      width: 1.12em;
+      height: 1.12em;
+      margin: 0;
+      accent-color: var(--green);
+    }
+
+    .choice.correct-answer {
+      border-color: var(--green);
+      background: rgba(34, 197, 94, 0.12);
+    }
+
+    .choice.wrong-answer {
+      border-color: var(--red);
+      background: rgba(251, 113, 133, 0.12);
+    }
+
+    .feedback {
+      min-height: 1.55em;
+      margin-top: 9px;
+      font-size: 0.92rem;
+      font-weight: 850;
+    }
+
+    .feedback.good { color: var(--good); }
+    .feedback.bad { color: var(--bad); }
+    .feedback.warn { color: var(--warn); }
+
+    .step-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin: 18px 0;
+    }
+
+    .step-card {
+      padding: 14px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: #071525;
+      text-align: center;
+    }
+
+    .step-card span {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      margin: 0 auto 8px;
+      border-radius: 50%;
+      background: var(--indigo);
+      color: #1e1b4b;
+      font-weight: 950;
+    }
+
+    .calculator {
+      margin: 18px 0;
+      padding: 17px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: #071525;
+    }
+
+    .calculator-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 11px;
+    }
+
+    .calculator label {
+      display: block;
+      color: #dbeafe;
+      font-weight: 850;
+    }
+
+    .calc-button {
+      width: 100%;
+      min-height: 48px;
+      margin-top: 13px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--indigo);
+      color: #1e1b4b;
+      font-weight: 950;
+      cursor: pointer;
+    }
+
+    .calc-result {
+      margin-top: 13px;
+      padding: 13px;
+      border-left: 4px solid var(--cyan);
+      border-radius: 10px;
+      background: rgba(34, 211, 238, 0.08);
+      color: #e0f2fe;
+      font-weight: 850;
+    }
+
+    .result-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin: 18px 0;
+    }
+
+    .result-card {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 17px;
+      background: rgba(15, 23, 42, 0.42);
+      text-align: center;
+    }
+
+    .result-card span {
+      display: block;
+      color: var(--indigo);
+      font-size: 2rem;
+      font-weight: 950;
+    }
+
+    .check-page-button, .reset-button {
+      min-height: 49px;
+      padding: 12px 17px;
+      border: 0;
+      border-radius: 13px;
+      font-weight: 950;
+      cursor: pointer;
+    }
+
+    .check-page-button {
+      background: var(--cyan);
+      color: #083344;
+    }
+
+    .reset-button {
+      border: 2px solid #64748b;
+      background: #1e293b;
+      color: #fff;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 17px;
+    }
+
+    .score-box {
+      margin-top: 18px;
+      padding: 18px;
+      border: 2px solid var(--indigo);
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(55, 48, 163, 0.95), rgba(15, 23, 42, 0.95));
+      text-align: center;
+    }
+
+    .score-big {
+      color: #fef08a;
+      font-size: clamp(2.2rem, 8vw, 4rem);
+      font-weight: 950;
+      line-height: 1;
+    }
+
+    .navigation-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 17px;
+    }
+
+    .navigation-links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 46px;
+      padding: 10px 14px;
+      border: 1px solid rgba(165, 180, 252, 0.32);
+      border-radius: 12px;
+      background: rgba(67, 56, 202, 0.09);
+      color: #e0e7ff;
+      font-weight: 850;
+      text-decoration: none;
+    }
+
+    .footer {
+      padding: 23px 12px 6px;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .footer a { color: var(--cyan); }
+
+    .nav {
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 1000;
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+      background: linear-gradient(180deg, rgba(9, 17, 31, 0), rgba(9, 17, 31, 0.96) 28%, rgba(9, 17, 31, 0.99));
+      backdrop-filter: blur(8px);
+    }
+
+    .nav-inner {
+      display: grid;
+      grid-template-columns: minmax(100px, 1fr) auto minmax(150px, 1fr);
+      gap: 10px;
+      align-items: center;
+      width: min(100%, 980px);
+      margin: auto;
+      padding: 9px;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: rgba(26, 39, 64, 0.97);
+      box-shadow: 0 18px 38px rgba(0, 0, 0, 0.35);
+    }
+
+    .nav button {
+      min-height: 50px;
+      padding: 10px 12px;
+      border: 0;
+      border-radius: 14px;
+      font-size: clamp(0.92rem, 2.6vw, 1.03rem);
+      font-weight: 950;
+      cursor: pointer;
+    }
+
+    .back {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    .next {
+      background: linear-gradient(135deg, var(--green), var(--green-dark));
+      color: #052e16;
+    }
+
+    .nav button:disabled {
+      cursor: not-allowed;
+      opacity: 0.45;
+    }
+
+    .counter {
+      min-width: 64px;
+      padding: 9px 10px;
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 12px;
+      background: rgba(2, 6, 23, 0.36);
+      text-align: center;
+      font-weight: 950;
+    }
+
+    .sr-only {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    @media (max-width: 850px) {
+      .interaction-grid,
+      .step-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 760px) {
+      .identity-grid, .question-grid, .concept-grid, .result-grid,
+      .polarization-scene, .material-grid, .electroscope-scene {
+        grid-template-columns: 1fr;
+      }
+
+      .polar-arrow {
+        transform: rotate(90deg);
+      }
+
+      .calculator-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        min-height: calc(100dvh - 190px);
+        border-radius: 20px;
+      }
+    }
+
+    @media (max-width: 520px) {
+      :root { --nav-height: 90px; }
+
+      .app { padding-inline: 9px; }
+      .banner { border-radius: 18px; }
+      .card { padding: 17px 13px; }
+
+      .interaction-grid,
+      .step-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .nav-inner {
+        grid-template-columns: 0.8fr auto 1.2fr;
+        gap: 7px;
+        padding: 7px;
+      }
+
+      .nav button { padding-inline: 8px; }
+
+      .counter {
+        min-width: 52px;
+        padding-inline: 7px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+
+      .page,
+      .progress-fill {
+        animation: none;
+        transition: none;
+      }
+    }
+
+    @media print {
+      body {
+        padding-bottom: 0;
+        color: #111827;
+        background: #fff;
+      }
+
+      .banner, .card, .question, .concept, .result-card,
+      .interaction-card, .material-card, .step-card {
+        color: #111827;
+        background: #fff;
+        box-shadow: none;
+      }
+
+      .banner { border: 2px solid #4338ca; }
+
+      .school, .teacher, .motto, h1, h2, h3, .lead, .question-title {
+        color: #111827;
+      }
+
+      .progress-card, .nav, .button-row, .calculator {
+        display: none !important;
+      }
+
+      .page {
+        display: block !important;
+        break-after: page;
+      }
+
+      .card { min-height: auto; }
+    }
+  </style>
+</head>
+
+<body>
+  <a class="skip-link" href="#worksheet">Sari la fișă</a>
+
+  <div class="app">
+    <header class="banner">
+      <div class="school">Școala Gimnazială „Gala Galaction” Mangalia</div>
+      <div class="teacher">Prof. Dănuț Andronie</div>
+      <div class="motto">„Fizica nu este dominată de formule, ci de logică.”</div>
+    </header>
+
+    <section class="progress-card" aria-label="Progresul fișei">
+      <div class="progress-meta">
+        <span id="page-label">Pagina 1 din 6</span>
+        <span id="page-topic">Date și recapitulare</span>
+      </div>
+      <div class="progress-track" role="progressbar" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+    </section>
+
+    <main id="worksheet">
+      <section class="page active" data-topic="Date și recapitulare">
+        <div class="card">
+          <span class="badge">Clasa a VIII-a · Electrostatică · Fișa 2 din 3</span>
+          <h1>Interacțiunea dintre corpurile electrizate</h1>
+          <p class="lead">Completează fișa după parcurgerea Lecției 2. Scorul maxim este de 20 de puncte, iar nota se calculează automat.</p>
+
+          <div class="identity-grid">
+            <div class="field">
+              <label for="student-name">Numele și prenumele</label>
+              <input id="student-name" type="text" autocomplete="name" placeholder="Scrie numele elevului">
+            </div>
+            <div class="field">
+              <label for="student-class">Clasa</label>
+              <select id="student-class">
+                <option value="">Alege...</option>
+                <option>8A</option>
+                <option>8B</option>
+                <option>8C</option>
+                <option>8D</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="idea">Ideea-cheie: pentru a explica o interacțiune electrostatică analizăm semnul sarcinii, tipul materialului și existența contactului.</div>
+
+          <div class="concept-grid">
+            <div class="concept">
+              <strong>Sarcini de același semn</strong>
+              Se resping: \(+\) cu \(+\) sau \(−\) cu \(−\).
+            </div>
+            <div class="concept">
+              <strong>Sarcini de semne contrare</strong>
+              Se atrag: \(+\) cu \(−\).
+            </div>
+            <div class="concept">
+              <strong>Corp neutru</strong>
+              Are sarcini pozitive și negative care se compensează.
+            </div>
+          </div>
+
+          <div class="instruction">Fișa conține atracție și respingere, redistribuirea sarcinilor, conductoare și izolatoare, electroscopul și electrizarea prin influență.</div>
+        </div>
+      </section>
+
+      <section class="page" data-topic="Atracție și respingere" hidden>
+        <div class="card">
+          <span class="badge">I. Regula interacțiunii · 5 puncte</span>
+          <h2>Ce se întâmplă când apropiem corpurile?</h2>
+
+          <div class="interaction-grid">
+            <div class="interaction-card">
+              <div class="charges"><span class="plus">+</span><span class="plus">+</span></div>
+              <strong>Respingere</strong>
+              sarcini pozitive de același semn
+            </div>
+            <div class="interaction-card">
+              <div class="charges"><span class="minus">−</span><span class="minus">−</span></div>
+              <strong>Respingere</strong>
+              sarcini negative de același semn
+            </div>
+            <div class="interaction-card">
+              <div class="charges"><span class="plus">+</span><span class="minus">−</span></div>
+              <strong>Atracție</strong>
+              sarcini de semne contrare
+            </div>
+          </div>
+
+          <div class="question-grid">
+            <div class="question" data-kind="radio" data-answer="b" data-points="2">
+              <p class="question-title">1. Două corpuri cu sarcini de același semn: <span class="points">(2 p)</span></p>
+              <div class="choices">
+                <label class="choice"><input type="radio" name="q1" value="a"> se atrag</label>
+                <label class="choice"><input type="radio" name="q1" value="b"> se resping</label>
+                <label class="choice"><input type="radio" name="q1" value="c"> devin automat neutre</label>
+              </div>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+
+            <div class="question" data-kind="select" data-answer="atractie" data-points="1">
+              <p class="question-title">2. Între o sarcină pozitivă și una negativă apare: <span class="points">(1 p)</span></p>
+              <select aria-label="Interacțiunea dintre sarcini de semne contrare">
+                <option value="">Alege...</option>
+                <option value="respingere">respingere</option>
+                <option value="atractie">atracție</option>
+                <option value="niciuna">nicio interacțiune</option>
+              </select>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+
+            <div class="question full" data-kind="text" data-answers="acelasi semn se resping|semne contrare se atrag|plus cu plus|minus cu minus|plus cu minus" data-min-keywords="3" data-points="2">
+              <p class="question-title">3. Formulează regula atracției și respingerii. <span class="points">(2 p)</span></p>
+              <textarea placeholder="Menționează sarcinile de același semn și de semne contrare"></textarea>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button class="check-page-button" type="button" data-check-page="1">Verifică pagina</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-topic="Corp neutru și materiale" hidden>
+        <div class="card">
+          <span class="badge">II. Redistribuirea sarcinilor · 5 puncte</span>
+          <h2>De ce un corp neutru poate fi atras?</h2>
+
+          <div class="polarization-scene">
+            <div class="charged-rod">
+              <div>
+                <div class="symbols minus">− − −</div>
+                <strong>Baghetă negativă</strong>
+              </div>
+            </div>
+            <div class="polar-arrow" aria-hidden="true">→ atrage →</div>
+            <div class="neutral-body">
+              <div>
+                <div class="symbols"><span class="plus">+ +</span>&nbsp;&nbsp;<span class="minus">− −</span></div>
+                <strong>Corp neutru în total</strong><br>
+                partea pozitivă este mai aproape
+              </div>
+            </div>
+          </div>
+
+          <div class="note">Un corp neutru nu este lipsit de sarcini. Sarcinile pozitive și negative se compensează, dar se pot redistribui sub influența unui corp electrizat.</div>
+
+          <div class="material-grid">
+            <div class="material-card conductor">
+              <strong>Conductor</strong>
+              Electronii se deplasează ușor, iar sarcina se redistribuie rapid.<br>
+              Exemple: metale, folie de aluminiu, corpul omenesc.
+            </div>
+            <div class="material-card insulator">
+              <strong>Izolator</strong>
+              Electronii nu se deplasează ușor prin întregul corp, iar sarcina rămâne mai locală.<br>
+              Exemple: plastic, sticlă, polistiren, cauciuc uscat.
+            </div>
+          </div>
+
+          <div class="question-grid">
+            <div class="question" data-kind="radio" data-answer="c" data-points="2">
+              <p class="question-title">4. Un corp neutru poate fi atras deoarece: <span class="points">(2 p)</span></p>
+              <div class="choices">
+                <label class="choice"><input type="radio" name="q4" value="a"> nu conține sarcini</label>
+                <label class="choice"><input type="radio" name="q4" value="b"> își pierde toată masa</label>
+                <label class="choice"><input type="radio" name="q4" value="c"> sarcinile se redistribuie, iar partea opusă este mai aproape</label>
+              </div>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+
+            <div class="question" data-kind="select" data-answer="conductor" data-points="1">
+              <p class="question-title">5. Materialul în care electronii se deplasează ușor este: <span class="points">(1 p)</span></p>
+              <select aria-label="Material cu electroni mobili">
+                <option value="">Alege...</option>
+                <option value="conductor">conductorul</option>
+                <option value="izolator">izolatorul</option>
+                <option value="vid">vidul</option>
+              </select>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+
+            <div class="question full" data-kind="text" data-answers="conductor sarcina se redistribuie|electronii se deplaseaza usor|izolator sarcina ramane locala|electronii nu se deplaseaza usor" data-min-keywords="3" data-points="2">
+              <p class="question-title">6. Compară un conductor cu un izolator. <span class="points">(2 p)</span></p>
+              <textarea placeholder="Menționează deplasarea electronilor și distribuția sarcinii"></textarea>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button class="check-page-button" type="button" data-check-page="2">Verifică pagina</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-topic="Electroscop și contact" hidden>
+        <div class="card">
+          <span class="badge">III. Detectarea electrizării · 5 puncte</span>
+          <h2>Cum funcționează electroscopul?</h2>
+
+          <div class="electroscope-scene">
+            <div class="electroscope neutral-scope" aria-label="Electroscop cu lamele apropiate">
+              <div class="ball"></div>
+              <div class="rod"></div>
+              <div class="leaf left"></div>
+              <div class="leaf right"></div>
+              <div class="scope-label">neutru sau slab electrizat</div>
+            </div>
+
+            <div class="electroscope charged-scope" aria-label="Electroscop cu lamele depărtate">
+              <div class="ball"></div>
+              <div class="rod"></div>
+              <div class="leaf left"></div>
+              <div class="leaf right"></div>
+              <div class="scope-label">electrizat: lamelele se resping</div>
+            </div>
+          </div>
+
+          <div class="formula">
+            Când lamelele primesc sarcini de același semn:
+            \[
+              \text{același semn}\Rightarrow\text{respingere}\Rightarrow\text{depărtarea lamelelor}
+            \]
+          </div>
+
+          <div class="question-grid">
+            <div class="question" data-kind="radio" data-answer="a" data-points="2">
+              <p class="question-title">7. Electroscopul este folosit pentru: <span class="points">(2 p)</span></p>
+              <div class="choices">
+                <label class="choice"><input type="radio" name="q7" value="a"> punerea în evidență a electrizării</label>
+                <label class="choice"><input type="radio" name="q7" value="b"> măsurarea temperaturii</label>
+                <label class="choice"><input type="radio" name="q7" value="c"> măsurarea masei</label>
+              </div>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+
+            <div class="question" data-kind="select" data-answer="acelasi-semn" data-points="1">
+              <p class="question-title">8. Lamelele electroscopului se depărtează deoarece primesc sarcini: <span class="points">(1 p)</span></p>
+              <select aria-label="Sarcinile de pe lamelele electroscopului">
+                <option value="">Alege...</option>
+                <option value="acelasi-semn">de același semn</option>
+                <option value="semne-contrare">de semne contrare</option>
+                <option value="zero">nule</option>
+              </select>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+
+            <div class="question full" data-kind="text" data-answers="dupa contact transfer de sarcina|bila primeste acelasi semn|la inceput atractie|dupa contact respingere" data-min-keywords="3" data-points="2">
+              <p class="question-title">9. Explică de ce o bilă neutră poate fi atrasă înainte de contact și respinsă după contact. <span class="points">(2 p)</span></p>
+              <textarea placeholder="Menționează redistribuirea și transferul de sarcină"></textarea>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+          </div>
+
+          <div class="button-row">
+            <button class="check-page-button" type="button" data-check-page="3">Verifică pagina</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-topic="Influență și calcul" hidden>
+        <div class="card">
+          <span class="badge">IV. Fără contact direct · 5 puncte</span>
+          <h2>Electrizarea prin influență</h2>
+
+          <div class="step-grid">
+            <div class="step-card"><span>1</span>Apropiem bagheta de tija metalică, fără atingere.</div>
+            <div class="step-card"><span>2</span>Electronii din tijă se redistribuie.</div>
+            <div class="step-card"><span>3</span>Atingem capătul opus și apoi îndepărtăm degetul.</div>
+            <div class="step-card"><span>4</span>Îndepărtăm bagheta; tija poate rămâne electrizată.</div>
+          </div>
+
+          <div class="note">Ordinea contează: întâi se îndepărtează degetul, apoi bagheta electrizată.</div>
+
+          <div class="formula">
+            \[
+              |Q|=n\cdot e
+              \qquad\Rightarrow\qquad
+              n=\frac{|Q|}{e}
+            \]
+            \[
+              e=1{,}6\cdot10^{-19}\,\text{C},
+              \qquad
+              n=\frac{4{,}8\cdot10^{-19}}{1{,}6\cdot10^{-19}}=3.
+            \]
+          </div>
+
+          <div class="calculator">
+            <h3>Calculator pentru numărul de electroni</h3>
+            <div class="calculator-grid">
+              <label>Coeficientul lui \(|Q|\), în \(10^{-19}\,\text{C}\)
+                <input id="calc-q" type="number" min="0" step="0.1" value="4.8">
+              </label>
+              <label>Coeficientul lui \(e\), în \(10^{-19}\,\text{C}\)
+                <input id="calc-e" type="number" min="0.0001" step="0.1" value="1.6">
+              </label>
+            </div>
+            <button class="calc-button" type="button" id="calculate-electrons">Calculează \(n\)</button>
+            <div class="calc-result" id="calc-result" aria-live="polite">Rezultatul va apărea aici.</div>
+          </div>
+
+          <div class="question-grid">
+            <div class="question" data-kind="radio" data-answer="c" data-points="2">
+              <p class="question-title">10. Electrizarea prin influență are loc: <span class="points">(2 p)</span></p>
+              <div class="choices">
+                <label class="choice"><input type="radio" name="q10" value="a"> numai prin încălzire</label>
+                <label class="choice"><input type="radio" name="q10" value="b"> numai prin frecare</label>
+                <label class="choice"><input type="radio" name="q10" value="c"> fără contact direct cu corpul electrizat</label>
+              </div>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+
+            <div class="question" data-kind="number" data-answer="3" data-tolerance="0.001" data-points="1">
+              <p class="question-title">11. Câți electroni corespund lui \(|Q|=4{,}8\cdot10^{-19}\,\text{C}\)? <span class="points">(1 p)</span></p>
+              <input type="number" step="1" placeholder="Numărul de electroni">
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+
+            <div class="question full" data-kind="text" data-answers="identific semnul|identific materialul|caut contactul|atractie respingere redistribuire descarcare" data-min-keywords="3" data-points="2">
+              <p class="question-title">12. Scrie pașii principali pentru interpretarea unei situații electrostatice. <span class="points">(2 p)</span></p>
+              <textarea placeholder="Semnul, materialul, contactul și concluzia"></textarea>
+              <div class="feedback" aria-live="polite"></div>
+            </div>
+          </div>
+
+          <div class="danger">Experimentele de electrostatică se fac cu obiecte simple. Nu se experimentează cu prize, cabluri sau instalații electrice.</div>
+
+          <div class="button-row">
+            <button class="check-page-button" type="button" data-check-page="4">Verifică pagina</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="page" data-topic="Rezultatul final" hidden>
+        <div class="card">
+          <span class="badge">V. Rezultat final</span>
+          <h2>Verifică întreaga fișă</h2>
+
+          <div class="instruction">Poți reveni la paginile anterioare pentru a completa răspunsurile lipsă. Apasă apoi pe butonul de verificare.</div>
+
+          <div class="button-row">
+            <button class="check-page-button" type="button" id="check-all">Verifică fișa</button>
+            <button class="reset-button" type="button" id="reset-all">Resetează</button>
+          </div>
+
+          <div class="score-box" id="score-box" aria-live="polite">
+            <div class="score-big" id="score-points">0/20</div>
+            <p id="score-grade">Nota: –</p>
+            <p id="score-message">Completează fișa, apoi verifică rezultatul.</p>
+          </div>
+
+          <div class="result-grid">
+            <div class="result-card">
+              <span id="result-correct">0</span>
+              răspunsuri corecte
+            </div>
+            <div class="result-card">
+              <span id="result-wrong">0</span>
+              răspunsuri de revizuit
+            </div>
+            <div class="result-card">
+              <span id="result-empty">0</span>
+              răspunsuri necompletate
+            </div>
+          </div>
+
+          <div class="idea" id="student-summary">Elev: necompletat · Clasa: necompletată</div>
+
+          <div class="navigation-links">
+            <a href="../lectii/lectia-2.html">← Reia Lecția 2</a>
+            <a href="index.html">Lista celor 3 fișe</a>
+            <a href="fisa-3.html">Fișa 3 →</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      © Fizica Galaction · Prof. DĂNUȚ ANDRONIE<br>
+      <a href="mailto:danutmg@gmail.com">danutmg@gmail.com</a>
+    </footer>
+  </div>
+
+  <nav class="nav" aria-label="Navigarea între paginile fișei">
+    <div class="nav-inner">
+      <button class="back" type="button" id="back-button">← Înapoi</button>
+      <div class="counter" id="counter">1 / 6</div>
+      <button class="next" type="button" id="next-button">Mergi mai departe →</button>
+    </div>
+  </nav>
+
+  <div class="sr-only" id="announcement" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      const pages = Array.from(document.querySelectorAll(".page"));
+      const backButton = document.getElementById("back-button");
+      const nextButton = document.getElementById("next-button");
+      const counter = document.getElementById("counter");
+      const pageLabel = document.getElementById("page-label");
+      const pageTopic = document.getElementById("page-topic");
+      const progressFill = document.getElementById("progress-fill");
+      const progressTrack = document.querySelector(".progress-track");
+      const announcement = document.getElementById("announcement");
+      let currentPage = 0;
+
+      function showPage(index, focusHeading) {
+        currentPage = Math.max(0, Math.min(index, pages.length - 1));
+
+        pages.forEach(function (page, pageIndex) {
+          const active = pageIndex === currentPage;
+          page.classList.toggle("active", active);
+          page.hidden = !active;
+          page.setAttribute("aria-hidden", String(!active));
+        });
+
+        const pageNumber = currentPage + 1;
+        const topic = pages[currentPage].dataset.topic || "Fișă";
+
+        counter.textContent = pageNumber + " / " + pages.length;
+        pageLabel.textContent = "Pagina " + pageNumber + " din " + pages.length;
+        pageTopic.textContent = topic;
+        progressFill.style.width = (pageNumber / pages.length * 100) + "%";
+        progressTrack.setAttribute("aria-valuenow", String(pageNumber));
+
+        backButton.disabled = currentPage === 0;
+        nextButton.textContent = currentPage === pages.length - 1
+          ? "Vezi rezultatul ✓"
+          : "Mergi mai departe →";
+
+        announcement.textContent = "Pagina " + pageNumber + ": " + topic;
+        window.scrollTo({ top: 0, behavior: "smooth" });
+
+        if (focusHeading) {
+          const heading = pages[currentPage].querySelector("h1, h2");
+          if (heading) {
+            heading.setAttribute("tabindex", "-1");
+            heading.focus({ preventScroll: true });
+          }
+        }
+
+        if (window.MathJax && window.MathJax.typesetPromise) {
+          window.MathJax.typesetPromise([pages[currentPage]]).catch(function () {});
+        }
+      }
+
+      backButton.addEventListener("click", function () {
+        if (currentPage > 0) {
+          showPage(currentPage - 1, true);
+        }
+      });
+
+      nextButton.addEventListener("click", function () {
+        if (currentPage < pages.length - 1) {
+          showPage(currentPage + 1, true);
+        } else {
+          evaluateAll();
+          document.getElementById("score-box").scrollIntoView({
+            behavior: "smooth",
+            block: "center"
+          });
+        }
+      });
+
+      document.addEventListener("keydown", function (event) {
+        if (event.altKey && event.key === "ArrowRight" && currentPage < pages.length - 1) {
+          showPage(currentPage + 1, true);
+        }
+
+        if (event.altKey && event.key === "ArrowLeft" && currentPage > 0) {
+          showPage(currentPage - 1, true);
+        }
+      });
+
+      function normalizeText(text) {
+        return String(text || "")
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "")
+          .replace(/[.,!?;:()]/g, " ")
+          .replace(/\s+/g, " ")
+          .trim();
+      }
+
+      function clearQuestionStyles(question) {
+        question.querySelectorAll(".choice").forEach(function (choice) {
+          choice.classList.remove("correct-answer", "wrong-answer");
+        });
+      }
+
+      function evaluateQuestion(question, showFeedback) {
+        const kind = question.dataset.kind;
+        const points = Number(question.dataset.points || 0);
+        const feedback = question.querySelector(".feedback");
+        let correct = false;
+        let empty = false;
+
+        clearQuestionStyles(question);
+
+        if (kind === "radio") {
+          const selected = question.querySelector("input[type='radio']:checked");
+          const correctValue = question.dataset.answer;
+          const correctInput = question.querySelector("input[value='" + correctValue + "']");
+          const correctChoice = correctInput ? correctInput.closest(".choice") : null;
+
+          if (!selected) {
+            empty = true;
+          } else {
+            correct = selected.value === correctValue;
+            const selectedChoice = selected.closest(".choice");
+            selectedChoice.classList.add(correct ? "correct-answer" : "wrong-answer");
+
+            if (!correct && correctChoice) {
+              correctChoice.classList.add("correct-answer");
+            }
+          }
+        }
+
+        if (kind === "select") {
+          const select = question.querySelector("select");
+          const value = select ? select.value : "";
+          empty = !value;
+          correct = value === question.dataset.answer;
+        }
+
+        if (kind === "number") {
+          const input = question.querySelector("input[type='number']");
+          const raw = input ? input.value.trim() : "";
+          empty = raw === "";
+
+          if (!empty) {
+            const value = Number(raw);
+            const answer = Number(question.dataset.answer);
+            const tolerance = Number(question.dataset.tolerance || 0);
+            correct = Number.isFinite(value) && Math.abs(value - answer) <= tolerance;
+          }
+        }
+
+        if (kind === "text") {
+          const input = question.querySelector("input[type='text'], textarea");
+          const value = normalizeText(input ? input.value : "");
+          empty = value === "";
+
+          if (!empty) {
+            const keywords = String(question.dataset.answers || "")
+              .split("|")
+              .map(normalizeText)
+              .filter(Boolean);
+
+            const matches = keywords.filter(function (keyword) {
+              return value.includes(keyword);
+            }).length;
+
+            const minimum = Number(question.dataset.minKeywords || 1);
+            correct = matches >= minimum;
+          }
+        }
+
+        if (showFeedback && feedback) {
+          feedback.className = "feedback";
+
+          if (empty) {
+            feedback.textContent = "Completează răspunsul.";
+            feedback.classList.add("warn");
+          } else if (correct) {
+            feedback.textContent = "Corect.";
+            feedback.classList.add("good");
+          } else {
+            feedback.textContent = "Mai verifică noțiunea și încearcă din nou.";
+            feedback.classList.add("bad");
+          }
+        }
+
+        return {
+          correct: correct,
+          empty: empty,
+          points: correct ? points : 0
+        };
+      }
+
+      function evaluatePage(pageIndex) {
+        Array.from(pages[pageIndex].querySelectorAll(".question")).forEach(function (question) {
+          evaluateQuestion(question, true);
+        });
+      }
+
+      document.querySelectorAll("[data-check-page]").forEach(function (button) {
+        button.addEventListener("click", function () {
+          evaluatePage(Number(button.dataset.checkPage));
+        });
+      });
+
+      function evaluateAll() {
+        const questions = Array.from(document.querySelectorAll(".question"));
+        let totalPoints = 0;
+        let correctCount = 0;
+        let wrongCount = 0;
+        let emptyCount = 0;
+
+        questions.forEach(function (question) {
+          const result = evaluateQuestion(question, true);
+          totalPoints += result.points;
+
+          if (result.empty) {
+            emptyCount += 1;
+          } else if (result.correct) {
+            correctCount += 1;
+          } else {
+            wrongCount += 1;
+          }
+        });
+
+        const grade = totalPoints / 2;
+        let message = "";
+
+        if (emptyCount > 0) {
+          message = "Mai ai răspunsuri necompletate. Revino la paginile anterioare.";
+        } else if (grade >= 9) {
+          message = "Excelent! Explici corect interacțiunile, materialele și electroscopul.";
+        } else if (grade >= 7) {
+          message = "Foarte bine! Revizuiește răspunsurile evidențiate.";
+        } else if (grade >= 5) {
+          message = "Ai înțeles ideile de bază. Mai exersează redistribuirea sarcinilor.";
+        } else {
+          message = "Reia Lecția 2 și încearcă din nou.";
+        }
+
+        document.getElementById("score-points").textContent = totalPoints + "/20";
+        document.getElementById("score-grade").textContent = "Nota: " + grade.toFixed(2);
+        document.getElementById("score-message").textContent = message;
+        document.getElementById("result-correct").textContent = correctCount;
+        document.getElementById("result-wrong").textContent = wrongCount;
+        document.getElementById("result-empty").textContent = emptyCount;
+
+        const studentName = document.getElementById("student-name").value.trim() || "necompletat";
+        const studentClass = document.getElementById("student-class").value || "necompletată";
+        document.getElementById("student-summary").textContent =
+          "Elev: " + studentName + " · Clasa: " + studentClass;
+      }
+
+      document.getElementById("check-all").addEventListener("click", evaluateAll);
+
+      document.getElementById("calculate-electrons").addEventListener("click", function () {
+        const qCoefficient = Number(document.getElementById("calc-q").value);
+        const eCoefficient = Number(document.getElementById("calc-e").value);
+        const output = document.getElementById("calc-result");
+
+        if (
+          !Number.isFinite(qCoefficient) ||
+          !Number.isFinite(eCoefficient) ||
+          qCoefficient < 0 ||
+          eCoefficient <= 0
+        ) {
+          output.textContent = "Introdu valori numerice valide; coeficientul lui e trebuie să fie pozitiv.";
+          return;
+        }
+
+        const electrons = qCoefficient / eCoefficient;
+        output.textContent = "n = " + electrons.toFixed(2) + " electroni.";
+      });
+
+      document.getElementById("reset-all").addEventListener("click", function () {
+        document.querySelectorAll("input").forEach(function (input) {
+          if (input.type === "radio") {
+            input.checked = false;
+          } else if (!["calc-q", "calc-e"].includes(input.id)) {
+            input.value = "";
+          }
+        });
+
+        document.querySelectorAll("select").forEach(function (select) {
+          select.selectedIndex = 0;
+        });
+
+        document.querySelectorAll("textarea").forEach(function (textarea) {
+          textarea.value = "";
+        });
+
+        document.querySelectorAll(".feedback").forEach(function (feedback) {
+          feedback.textContent = "";
+          feedback.className = "feedback";
+        });
+
+        document.querySelectorAll(".choice").forEach(function (choice) {
+          choice.classList.remove("correct-answer", "wrong-answer");
+        });
+
+        document.getElementById("calc-q").value = "4.8";
+        document.getElementById("calc-e").value = "1.6";
+        document.getElementById("calc-result").textContent = "Rezultatul va apărea aici.";
+        document.getElementById("score-points").textContent = "0/20";
+        document.getElementById("score-grade").textContent = "Nota: –";
+        document.getElementById("score-message").textContent =
+          "Completează fișa, apoi verifică rezultatul.";
+        document.getElementById("result-correct").textContent = "0";
+        document.getElementById("result-wrong").textContent = "0";
+        document.getElementById("result-empty").textContent =
+          String(document.querySelectorAll(".question").length);
+        document.getElementById("student-summary").textContent =
+          "Elev: necompletat · Clasa: necompletată";
+
+        showPage(0, true);
+      });
+
+      document.getElementById("result-empty").textContent =
+        String(document.querySelectorAll(".question").length);
+
+      showPage(0, false);
+    })();
+  </script>
+</body>
+</html>

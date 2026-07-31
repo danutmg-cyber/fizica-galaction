@@ -1,1 +1,81 @@
-{"capitole": []}
+from pathlib import Path
+import json
+
+source_path = Path("/mnt/data/assets/data/structura-site.json")
+source = json.loads(source_path.read_text(encoding="utf-8"))
+
+clase_output = []
+capitole_flat = []
+index_pe_clasa = {}
+
+for clasa in source["clase"]:
+    capitole = []
+    ids = []
+
+    for ordine, capitol in enumerate(clasa.get("capitole", []), start=1):
+        item = {
+            "id": capitol["id"],
+            "clasaId": clasa["id"],
+            "nivel": clasa["nivel"],
+            "numar": capitol["numar"],
+            "ordine": ordine,
+            "slug": capitol["slug"],
+            "titlu": capitol["titlu"],
+            "eticheta": f"{capitol['numar']}. {capitol['titlu']}",
+            "tip": capitol["tip"],
+            "ruta": capitol["ruta"],
+            "director": capitol["director"]
+        }
+
+        capitole.append(item)
+        capitole_flat.append(item.copy())
+        ids.append(item["id"])
+
+    clasa_item = {
+        "id": clasa["id"],
+        "nivel": clasa["nivel"],
+        "titlu": clasa["titlu"],
+        "ruta": clasa["ruta"],
+        "numarElemente": len(capitole),
+        "capitole": capitole
+    }
+
+    if clasa.get("observatii"):
+        clasa_item["observatii"] = clasa["observatii"]
+
+    clase_output.append(clasa_item)
+    index_pe_clasa[clasa["id"]] = ids
+
+output_data = {
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "versiune": "1.0.0",
+    "actualizatLa": source.get("actualizatLa", "2026-07-31"),
+    "limba": source.get("limba", "ro"),
+    "descriere": "Lista centralizată a capitolelor și secțiunilor educaționale pentru clasele a VI-a, a VII-a și a VIII-a.",
+    "sursa": "assets/data/structura-site.json",
+    "numarClase": len(clase_output),
+    "numarTotalElemente": len(capitole_flat),
+    "tipuri": {
+        "capitol": "Capitol de conținut",
+        "evaluare": "Evaluare finală",
+        "jocuri": "Jocuri și activități educaționale"
+    },
+    "clase": clase_output,
+    "capitole": capitole_flat,
+    "indexPeClasa": index_pe_clasa
+}
+
+output_path = Path("/mnt/data/assets/data/capitole.json")
+output_path.parent.mkdir(parents=True, exist_ok=True)
+output_path.write_text(
+    json.dumps(output_data, ensure_ascii=False, indent=2) + "\n",
+    encoding="utf-8"
+)
+
+# Validare finală
+validated = json.loads(output_path.read_text(encoding="utf-8"))
+
+print(f"Creat: {output_path}")
+print(f"Clase: {validated['numarClase']}")
+print(f"Capitole și secțiuni: {validated['numarTotalElemente']}")
+print("JSON valid: da")

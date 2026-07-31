@@ -1,8 +1,4 @@
-from pathlib import Path
-import subprocess
-import textwrap
-
-code = r'''/**
+/**
  * progress.js — Fizica Galaction
  *
  * Modul central pentru salvarea progresului elevului.
@@ -2719,34 +2715,3 @@ code = r'''/**
     return api.init(options);
   };
 })();
-'''
-
-path = Path("/mnt/data/assets/js/progress.js")
-path.parent.mkdir(parents=True, exist_ok=True)
-path.write_text(code, encoding="utf-8")
-
-# Verificare de sintaxă cu Node, dacă este disponibil.
-syntax_status = "neverificat"
-syntax_output = ""
-
-try:
-    result = subprocess.run(
-        ["node", "--check", str(path)],
-        capture_output=True,
-        text=True,
-        timeout=30
-    )
-    if result.returncode == 0:
-        syntax_status = "valid"
-    else:
-        syntax_status = "eroare"
-        syntax_output = (result.stderr or result.stdout).strip()
-except Exception as exc:
-    syntax_status = f"node indisponibil: {exc}"
-
-print(f"Creat: {path}")
-print(f"Linii: {len(code.splitlines())}")
-print(f"Caractere: {len(code)}")
-print(f"Sintaxă JavaScript: {syntax_status}")
-if syntax_output:
-    print(syntax_output)

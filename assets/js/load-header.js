@@ -581,6 +581,8 @@ function ensureLayoutStyles() {
   async function loadHeader(
     options = {}
   ) {
+    ensureLayoutStyles();
+    
     const container =
       document.querySelector(
         CONTAINER_SELECTOR

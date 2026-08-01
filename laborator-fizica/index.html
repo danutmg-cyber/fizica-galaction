@@ -1,122 +1,1298 @@
-from pathlib import Path
-import re
-import subprocess
-import zipfile
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
 
-source = Path("/mnt/data/laborator-fizica/index.html")
-html = source.read_text(encoding="utf-8")
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
-replacements = [
-    (
-        "Laboratorul virtual Fizica Galaction: experimente și simulări interactive pentru clasele a VI-a și a VII-a.",
-        "Laboratorul virtual Fizica Galaction: experimente și simulări interactive organizate pe capitole de fizică."
-    ),
-    (
-        """            Experimente, simulări și fișe interactive pentru
-            studiul fenomenelor fizice. Activitățile sunt
-            adaptate pentru telefon, tabletă și calculator.""",
-        """            Experimente, simulări și fișe interactive
+  <meta
+    name="description"
+    content="Laboratorul virtual Fizica Galaction: experimente și simulări interactive organizate pe capitole de fizică.">
+
+  <title>
+    Laborator virtual de fizică | Fizica Galaction
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="../assets/css/layout.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["\\(", "\\)"]],
+        displayMath: [["\\[", "\\]"]]
+      },
+      options: {
+        skipHtmlTags: [
+          "script",
+          "noscript",
+          "style",
+          "textarea",
+          "pre",
+          "code"
+        ]
+      }
+    };
+  </script>
+
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    :root {
+      --page-bg: #07111f;
+      --surface: #0e1b31;
+      --surface-2: #122742;
+      --surface-soft: #183653;
+      --border: #315a7e;
+      --text: #f3f8ff;
+      --muted: #c6d8eb;
+      --primary: #67e8f9;
+      --primary-strong: #22d3ee;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --violet: #a78bfa;
+      --focus: #fde047;
+      --shadow: 0 20px 48px rgba(0, 0, 0, 0.34);
+      --radius: 24px;
+    }
+
+    body.light,
+    body[data-theme="light"] {
+      --page-bg: #eef6ff;
+      --surface: #ffffff;
+      --surface-2: #f3f8fd;
+      --surface-soft: #e5f1fb;
+      --border: #98b7d1;
+      --text: #10243a;
+      --muted: #36516b;
+      --primary: #0369a1;
+      --primary-strong: #0284c7;
+      --success: #047857;
+      --warning: #a16207;
+      --violet: #6d28d9;
+      --focus: #a16207;
+      --shadow: 0 18px 42px rgba(15, 35, 55, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 18px;
+      scroll-behavior: smooth;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+
+      color: var(--text);
+
+      font-family:
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+      font-size:
+        clamp(
+          1rem,
+          0.96rem + 0.25vw,
+          1.16rem
+        );
+
+      line-height: 1.62;
+
+      background:
+        radial-gradient(
+          circle at 7% 0%,
+          rgba(34, 211, 238, 0.14),
+          transparent 25%
+        ),
+        radial-gradient(
+          circle at 93% 3%,
+          rgba(52, 211, 153, 0.12),
+          transparent 24%
+        ),
+        var(--page-bg);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .page-shell {
+      width:
+        min(
+          1240px,
+          calc(100% - 24px)
+        );
+
+      margin:
+        clamp(8px, 2vw, 28px)
+        auto
+        30px;
+    }
+
+    #header-container,
+    #footer-container {
+      width: 100%;
+    }
+
+    #header-container {
+      margin-bottom:
+        clamp(
+          18px,
+          3vw,
+          34px
+        );
+    }
+
+    #footer-container {
+      margin-top:
+        clamp(
+          26px,
+          4vw,
+          48px
+        );
+    }
+
+    #header-container .site-header,
+    #footer-container .site-footer {
+      width: 100%;
+    }
+
+    .main-card {
+      overflow: hidden;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        var(--radius);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--surface) 96%,
+          transparent
+        );
+
+      box-shadow:
+        var(--shadow);
+    }
+
+    .hero {
+      display: grid;
+      gap:
+        clamp(
+          18px,
+          3vw,
+          32px
+        );
+
+      align-items: center;
+
+      padding:
+        clamp(30px, 5vw, 62px)
+        clamp(18px, 5vw, 60px);
+
+      border-bottom:
+        1px solid
+        var(--border);
+
+      background:
+        linear-gradient(
+          135deg,
+          color-mix(
+            in srgb,
+            var(--primary) 13%,
+            var(--surface)
+          ),
+          color-mix(
+            in srgb,
+            var(--success) 8%,
+            var(--surface)
+          )
+        );
+    }
+
+    .hero-icon {
+      display: grid;
+      place-items: center;
+
+      width:
+        clamp(
+          92px,
+          12vw,
+          136px
+        );
+
+      aspect-ratio: 1;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 30px;
+
+      background:
+        color-mix(
+          in srgb,
+          var(--surface-soft) 90%,
+          transparent
+        );
+
+      font-size:
+        clamp(
+          3.4rem,
+          6vw,
+          5.4rem
+        );
+
+      box-shadow:
+        0 14px 32px
+        rgba(0, 0, 0, 0.18);
+    }
+
+    .hero-kicker {
+      margin: 0 0 8px;
+
+      color: var(--primary);
+
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 0 0 14px;
+
+      color: var(--text);
+
+      font-size:
+        clamp(
+          2rem,
+          1.35rem + 2.2vw,
+          3.8rem
+        );
+
+      line-height: 1.08;
+    }
+
+    .hero-description {
+      max-width: 820px;
+
+      margin: 0;
+
+      color: var(--muted);
+
+      font-size:
+        clamp(
+          1.08rem,
+          1rem + 0.38vw,
+          1.38rem
+        );
+    }
+
+    .statistics {
+      display: grid;
+      grid-template-columns:
+        repeat(
+          2,
+          minmax(0, 1fr)
+        );
+
+      gap: 12px;
+
+      margin-top: 24px;
+    }
+
+    .stat-card {
+      padding: 14px 16px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 16px;
+
+      background:
+        color-mix(
+          in srgb,
+          var(--surface-soft) 88%,
+          transparent
+        );
+    }
+
+    .stat-value {
+      display: block;
+
+      color: var(--warning);
+
+      font-size:
+        clamp(
+          1.45rem,
+          1.2rem + 0.8vw,
+          2rem
+        );
+
+      font-weight: 950;
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      display: block;
+
+      margin-top: 5px;
+
+      color: var(--muted);
+
+      font-size: 0.94rem;
+      font-weight: 750;
+    }
+
+    .content {
+      padding:
+        clamp(22px, 4vw, 48px)
+        clamp(16px, 4vw, 48px)
+        clamp(30px, 5vw, 58px);
+    }
+
+    .section-heading {
+      margin-bottom:
+        clamp(
+          18px,
+          3vw,
+          28px
+        );
+    }
+
+    .section-heading h2 {
+      margin: 0 0 8px;
+
+      color: var(--text);
+
+      font-size:
+        clamp(
+          1.62rem,
+          1.3rem + 1vw,
+          2.4rem
+        );
+
+      line-height: 1.18;
+    }
+
+    .section-heading p {
+      margin: 0;
+      color: var(--muted);
+    }
+
+    .category-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+
+      gap:
+        clamp(
+          16px,
+          2.5vw,
+          26px
+        );
+
+      margin-bottom:
+        clamp(
+          32px,
+          5vw,
+          56px
+        );
+    }
+
+    .category-card {
+      display: flex;
+      flex-direction: column;
+
+      min-height: 100%;
+      overflow: hidden;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 22px;
+
+      background:
+        var(--surface-2);
+
+      box-shadow:
+        0 12px 28px
+        rgba(0, 0, 0, 0.16);
+    }
+
+    .category-visual {
+      display: grid;
+      grid-template-columns:
+        auto
+        1fr;
+
+      align-items: center;
+      gap: 16px;
+
+      min-height: 132px;
+
+      padding:
+        22px
+        22px
+        18px;
+
+      background:
+        linear-gradient(
+          135deg,
+          color-mix(
+            in srgb,
+            var(--primary) 11%,
+            var(--surface-soft)
+          ),
+          var(--surface-2)
+        );
+    }
+
+    .category-icon {
+      display: grid;
+      place-items: center;
+
+      width: 72px;
+      height: 72px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 20px;
+
+      background:
+        var(--surface-soft);
+
+      font-size: 2.7rem;
+    }
+
+    .category-card h3 {
+      margin: 0 0 5px;
+
+      color: var(--text);
+
+      font-size:
+        clamp(
+          1.42rem,
+          1.2rem + 0.7vw,
+          1.9rem
+        );
+
+      line-height: 1.22;
+    }
+
+    .category-count {
+      color: var(--primary);
+      font-weight: 850;
+    }
+
+    .category-body {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+
+      padding:
+        18px
+        22px
+        22px;
+    }
+
+    .category-body p {
+      margin: 0 0 17px;
+      color: var(--muted);
+    }
+
+    .topic-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+
+      margin:
+        0
+        0
+        20px;
+
+      padding: 0;
+
+      list-style: none;
+    }
+
+    .topic-list li {
+      padding:
+        7px
+        10px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 999px;
+
+      color: var(--text);
+
+      background:
+        var(--surface-soft);
+
+      font-size: 0.9rem;
+      font-weight: 750;
+    }
+
+    .category-button,
+    .lab-button,
+    .navigation-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-height: 54px;
+
+      padding:
+        14px
+        18px;
+
+      border-radius: 14px;
+
+      font-weight: 900;
+      text-align: center;
+      text-decoration: none;
+    }
+
+    .category-button {
+      width: 100%;
+      margin-top: auto;
+
+      color: #062132;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          var(--success)
+        );
+    }
+
+    .toolbar {
+      display: grid;
+      gap: 14px;
+
+      margin-bottom:
+        clamp(
+          20px,
+          3vw,
+          30px
+        );
+    }
+
+    .search-box {
+      position: relative;
+    }
+
+    .search-box span {
+      position: absolute;
+      left: 15px;
+      top: 50%;
+
+      transform:
+        translateY(-50%);
+
+      font-size: 1.2rem;
+      pointer-events: none;
+    }
+
+    .search-input {
+      width: 100%;
+      min-height: 54px;
+
+      padding:
+        13px
+        16px
+        13px
+        48px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 15px;
+
+      color: var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    .search-input::placeholder {
+      color: var(--muted);
+      opacity: 1;
+    }
+
+    .filter-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .filter-button {
+      min-height: 48px;
+
+      padding:
+        12px
+        17px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 14px;
+
+      color: var(--text);
+
+      background:
+        var(--surface-soft);
+
+      font-weight: 850;
+      cursor: pointer;
+    }
+
+    .filter-button.active {
+      border-color:
+        var(--primary);
+
+      color: #062132;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          var(--success)
+        );
+    }
+
+    .results-line {
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .lab-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+
+      gap:
+        clamp(
+          16px,
+          2vw,
+          24px
+        );
+    }
+
+    .lab-card {
+      display: flex;
+      flex-direction: column;
+
+      min-height: 100%;
+      overflow: hidden;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 21px;
+
+      background:
+        var(--surface-2);
+
+      box-shadow:
+        0 12px 28px
+        rgba(0, 0, 0, 0.15);
+
+      transition:
+        transform
+        150ms
+        ease,
+        border-color
+        150ms
+        ease,
+        box-shadow
+        150ms
+        ease;
+    }
+
+    .lab-card:hover {
+      transform:
+        translateY(-4px);
+
+      border-color:
+        var(--primary);
+
+      box-shadow:
+        0 18px 36px
+        rgba(0, 0, 0, 0.23);
+    }
+
+    .lab-card[hidden] {
+      display: none;
+    }
+
+    .lab-top {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+
+      padding:
+        19px
+        19px
+        0;
+    }
+
+    .lab-icon {
+      display: grid;
+      place-items: center;
+
+      flex: 0 0 56px;
+
+      width: 56px;
+      height: 56px;
+
+      border-radius: 16px;
+
+      background:
+        color-mix(
+          in srgb,
+          var(--primary) 15%,
+          var(--surface-soft)
+        );
+
+      font-size: 1.9rem;
+    }
+
+    .lab-heading {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+
+      margin-bottom: 8px;
+    }
+
+    .badge {
+      display: inline-block;
+
+      padding:
+        5px
+        9px;
+
+      border-radius: 999px;
+
+      color: var(--primary);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--primary) 13%,
+          transparent
+        );
+
+      font-size: 0.84rem;
+      font-weight: 900;
+    }
+
+    .badge.special {
+      color: var(--violet);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--violet) 13%,
+          transparent
+        );
+    }
+
+    .lab-card h3 {
+      margin: 0;
+
+      color: var(--text);
+
+      font-size:
+        clamp(
+          1.22rem,
+          1.12rem + 0.4vw,
+          1.58rem
+        );
+
+      line-height: 1.25;
+    }
+
+    .lab-body {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+
+      padding:
+        15px
+        19px
+        19px;
+    }
+
+    .lab-description {
+      margin:
+        0
+        0
+        15px;
+
+      color: var(--muted);
+    }
+
+    .formula {
+      margin:
+        auto
+        0
+        16px;
+
+      padding:
+        11px
+        12px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 13px;
+
+      color: var(--warning);
+
+      background:
+        var(--surface-soft);
+
+      font-size: 1.04rem;
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .lab-button {
+      width: 100%;
+
+      color: #062132;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          var(--success)
+        );
+    }
+
+    .empty-state {
+      display: none;
+
+      margin-top: 18px;
+      padding: 26px;
+
+      border:
+        1px dashed
+        var(--border);
+
+      border-radius: 18px;
+
+      color: var(--muted);
+
+      background:
+        var(--surface-2);
+
+      text-align: center;
+    }
+
+    .empty-state.visible {
+      display: block;
+    }
+
+    .bottom-navigation {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+
+      margin-top:
+        clamp(
+          28px,
+          5vw,
+          48px
+        );
+    }
+
+    .navigation-link {
+      border:
+        1px solid
+        var(--border);
+
+      color: var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    .filter-button:focus-visible,
+    .search-input:focus-visible,
+    .category-button:focus-visible,
+    .lab-button:focus-visible,
+    .navigation-link:focus-visible {
+      outline:
+        4px solid
+        var(--focus);
+
+      outline-offset: 4px;
+    }
+
+    @media (min-width: 720px) {
+      .hero {
+        grid-template-columns:
+          auto
+          1fr;
+      }
+
+      .statistics {
+        grid-template-columns:
+          repeat(
+            4,
+            minmax(0, 1fr)
+          );
+      }
+
+      .category-grid {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+      }
+
+      .toolbar {
+        grid-template-columns:
+          minmax(260px, 1fr)
+          auto;
+
+        align-items: center;
+      }
+
+      .results-line {
+        grid-column:
+          1 /
+          -1;
+      }
+
+      .lab-grid {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+      }
+    }
+
+    @media (min-width: 1080px) {
+      .lab-grid {
+        grid-template-columns:
+          repeat(
+            3,
+            minmax(0, 1fr)
+          );
+      }
+    }
+
+    @media (max-width: 600px) {
+      html {
+        font-size: 17px;
+      }
+
+      .page-shell {
+        width:
+          calc(100% - 12px);
+
+        margin:
+          6px
+          auto
+          20px;
+      }
+
+      .main-card {
+        border-radius: 19px;
+      }
+
+      .hero {
+        padding:
+          24px
+          16px;
+      }
+
+      .content {
+        padding:
+          20px
+          14px
+          30px;
+      }
+
+      .filter-row {
+        width: 100%;
+      }
+
+      .filter-button {
+        flex: 1 1 auto;
+      }
+    }
+
+    @media (
+      prefers-reduced-motion:
+      reduce
+    ) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .lab-card {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body data-page-type="laboratory-index">
+  <div class="page-shell">
+    <div id="header-container"></div>
+
+    <main
+      id="main-content"
+      class="main-card">
+
+      <section class="hero">
+        <div
+          class="hero-icon"
+          aria-hidden="true">
+          🧪
+        </div>
+
+        <div>
+          <p class="hero-kicker">
+            Fizica Galaction
+          </p>
+
+          <h1>
+            Laborator virtual de fizică
+          </h1>
+
+          <p class="hero-description">
+            Experimente, simulări și fișe interactive
             organizate pe capitole de fizică. Activitățile sunt
-            adaptate pentru telefon, tabletă și calculator."""
-    ),
-    (
-        """              <span class="stat-label">
-                niveluri de clasă
-              </span>""",
-        """              <span class="stat-label">
-                capitole
-              </span>"""
-    ),
-    (
-        """            <h2 id="categoriesTitle">
-              Categorii
-            </h2>
+            adaptate pentru telefon, tabletă și calculator.
+          </p>
 
-            <p>
-              Deschide o colecție sau alege direct un laborator.
-            </p>""",
-        """            <h2 id="categoriesTitle">
+          <div class="statistics">
+            <div class="stat-card">
+              <span class="stat-value">
+                7
+              </span>
+
+              <span class="stat-label">
+                laboratoare
+              </span>
+            </div>
+
+            <div class="stat-card">
+              <span class="stat-value">
+                2
+              </span>
+
+              <span class="stat-label">
+                capitole
+              </span>
+            </div>
+
+            <div class="stat-card">
+              <span class="stat-value">
+                6
+              </span>
+
+              <span class="stat-label">
+                laboratoare de mecanică
+              </span>
+            </div>
+
+            <div class="stat-card">
+              <span class="stat-value">
+                1
+              </span>
+
+              <span class="stat-label">
+                proiect interdisciplinar
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="content">
+        <section
+          aria-labelledby="categoriesTitle">
+
+          <div class="section-heading">
+            <h2 id="categoriesTitle">
               Capitole
             </h2>
 
             <p>
               Alege capitolul, apoi deschide laboratorul dorit.
-            </p>"""
-    ),
-    (
-        """                  href="mecanica/index.html">
-                  Deschide mecanica""",
-        """                  href="mecanica/index.html">
-                  Deschide capitolul Mecanică"""
-    ),
-    (
-        """                  href="misiunea-artemis-2/index.html">
-                  Deschide Artemis II""",
-        """                  href="#capitol-astronomie">
-                  Mergi la capitolul Astronomie aplicată"""
-    ),
-    (
-        'aria-label="Filtrează laboratoarele"',
-        'aria-label="Filtrează laboratoarele după capitol"'
-    ),
-    (
-        'placeholder="Caută un laborator..."',
-        'placeholder="Caută după titlu, temă sau capitol..."'
-    ),
-    (
-        """            Nu a fost găsit niciun laborator pentru căutarea sau
-            filtrul selectat.""",
-        """            Nu a fost găsit niciun laborator pentru căutarea sau
-            capitolul selectat."""
-    ),
-    (
-        """          const matchesFilter =
-            activeFilter === "all" ||
-            card.dataset.grade ===
-              activeFilter;""",
-        """          const matchesFilter =
-            activeFilter === "all" ||
-            card.dataset.chapter ===
-              activeFilter;"""
-    ),
-]
+            </p>
+          </div>
 
-for old, new in replacements:
-    html = html.replace(old, new)
+          <div class="category-grid">
+            <article class="category-card">
+              <div class="category-visual">
+                <div
+                  class="category-icon"
+                  aria-hidden="true">
+                  ⚙️
+                </div>
 
-old_filters = """              <button
-                type="button"
-                class="filter-button active"
-                data-filter="all"
-                aria-pressed="true">
-                Toate
-              </button>
+                <div>
+                  <h3>
+                    Mecanică
+                  </h3>
+
+                  <div class="category-count">
+                    6 laboratoare
+                  </div>
+                </div>
+              </div>
+
+              <div class="category-body">
+                <p>
+                  Mișcare, forțe, frecare, elasticitate,
+                  oscilații și energie mecanică.
+                </p>
+
+                <ul class="topic-list">
+                  <li>inerție</li>
+                  <li>mișcare</li>
+                  <li>frecare</li>
+                  <li>legea lui Hooke</li>
+                  <li>pendul</li>
+                  <li>energie</li>
+                </ul>
+
+                <a
+                  class="category-button"
+                  href="mecanica/index.html">
+                  Deschide capitolul Mecanică
+                </a>
+              </div>
+            </article>
+
+            <article class="category-card">
+              <div class="category-visual">
+                <div
+                  class="category-icon"
+                  aria-hidden="true">
+                  🚀
+                </div>
+
+                <div>
+                  <h3>
+                    Astronomie aplicată
+                  </h3>
+
+                  <div class="category-count">
+                    1 laborator special
+                  </div>
+                </div>
+              </div>
+
+              <div class="category-body">
+                <p>
+                  Misiunea Artemis II: mișcare orbitală,
+                  energie și aplicații ale mecanicii în
+                  explorarea spațiului.
+                </p>
+
+                <ul class="topic-list">
+                  <li>Luna</li>
+                  <li>traiectorie</li>
+                  <li>energie</li>
+                  <li>explorare spațială</li>
+                </ul>
+
+                <a
+                  class="category-button"
+                  href="#capitol-astronomie">
+                  Mergi la capitolul Astronomie aplicată
+                </a>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section
+          aria-labelledby="laboratoriesTitle">
+
+          <div class="section-heading">
+            <h2 id="laboratoriesTitle">
+              Toate laboratoarele
+            </h2>
+
+            <p>
+              Folosește filtrele sau caută după titlu și temă.
+            </p>
+          </div>
+
+          <div class="toolbar">
+            <label class="search-box">
+              <span aria-hidden="true">
+                🔎
+              </span>
+
+              <input
+                type="search"
+                class="search-input"
+                id="labSearch"
+                placeholder="Caută după titlu, temă sau capitol..."
+                autocomplete="off"
+                aria-label="Caută un laborator">
+            </label>
+
+            <div
+              class="filter-row"
+              role="group"
+              aria-label="Filtrează laboratoarele după capitol">
 
               <button
-                type="button"
-                class="filter-button"
-                data-filter="6"
-                aria-pressed="false">
-                Clasa a VI-a
-              </button>
-
-              <button
-                type="button"
-                class="filter-button"
-                data-filter="7"
-                aria-pressed="false">
-                Clasa a VII-a
-              </button>
-
-              <button
-                type="button"
-                class="filter-button"
-                data-filter="special"
-                aria-pressed="false">
-                Proiect special
-              </button>"""
-
-new_filters = """              <button
                 type="button"
                 class="filter-button active"
                 data-filter="all"
@@ -138,134 +1314,667 @@ new_filters = """              <button
                 data-filter="astronomie"
                 aria-pressed="false">
                 Astronomie aplicată
-              </button>"""
+              </button>
+            </div>
 
-if old_filters not in html:
-    raise RuntimeError("Nu am găsit blocul original al filtrelor.")
+            <div
+              class="results-line"
+              id="resultCount"
+              aria-live="polite">
+              7 laboratoare afișate
+            </div>
+          </div>
 
-html = html.replace(old_filters, new_filters)
+          <div
+            class="lab-grid"
+            id="labGrid">
 
-html = html.replace('data-grade="6"', 'data-chapter="mecanica"')
-html = html.replace('data-grade="7"', 'data-chapter="mecanica"')
-html = html.replace(
-    'data-grade="special"',
-    'id="capitol-astronomie"\n              data-chapter="astronomie"'
-)
+            <article
+              class="lab-card"
+              data-chapter="mecanica"
+              data-search="inertia corpurilor masa autobuz moneda mecanica">
 
-html = html.replace(
-    "inertia corpurilor masa autobuz moneda clasa a vi-a mecanica",
-    "inertia corpurilor masa autobuz moneda mecanica"
-)
+              <div class="lab-top">
+                <div
+                  class="lab-icon"
+                  aria-hidden="true">
+                  🚌
+                </div>
 
-class6_badges = """                  <div class="badges">
-                    <span class="badge">
-                      Clasa a VI-a
-                    </span>
-
-                    <span class="badge">
-                      Mecanică
-                    </span>
-                  </div>"""
-
-class7_badges = """                  <div class="badges">
-                    <span class="badge">
-                      Clasa a VII-a
-                    </span>
-
-                    <span class="badge">
-                      Mecanică
-                    </span>
-                  </div>"""
-
-mechanics_badge = """                  <div class="badges">
+                <div class="lab-heading">
+                  <div class="badges">
                     <span class="badge">
                       Capitolul Mecanică
                     </span>
-                  </div>"""
+                  </div>
 
-html = html.replace(class6_badges, mechanics_badge)
-html = html.replace(class7_badges, mechanics_badge)
+                  <h3>
+                    Inerția corpurilor
+                  </h3>
+                </div>
+              </div>
 
-artemis_badges = """                  <div class="badges">
-                    <span class="badge special">
-                      Proiect special
-                    </span>
+              <div class="lab-body">
+                <p class="lab-description">
+                  Studiul tendinței corpurilor de a-și păstra
+                  starea de repaus sau de mișcare.
+                </p>
 
+                <div class="formula">
+                  \[
+                    \frac{m_2}{m_1}
+                    =
+                    \frac{4\,\mathrm{kg}}{1\,\mathrm{kg}}
+                    =
+                    4
+                  \]
+                </div>
+
+                <a
+                  class="lab-button"
+                  href="inertia-corpurilor/index.html">
+                  Deschide laboratorul
+                </a>
+              </div>
+            </article>
+
+            <article
+              class="lab-card"
+              data-chapter="mecanica"
+              data-search="miscarea rectilinie uniforma uniform variata mru mruv viteza acceleratie grafice x t v t mecanica">
+
+              <div class="lab-top">
+                <div
+                  class="lab-icon"
+                  aria-hidden="true">
+                  🚗
+                </div>
+
+                <div class="lab-heading">
+                  <div class="badges">
                     <span class="badge">
-                      Astronomie
+                      Capitolul Mecanică
                     </span>
-                  </div>"""
+                  </div>
 
-astronomy_badge = """                  <div class="badges">
+                  <h3>
+                    Mișcarea rectilinie uniformă și uniform variată
+                  </h3>
+                </div>
+              </div>
+
+              <div class="lab-body">
+                <p class="lab-description">
+                  Analiza poziției, vitezei, accelerației și
+                  trasarea graficelor \(x(t)\) și \(v(t)\).
+                </p>
+
+                <div class="formula">
+                  \[
+                    x=x_0+v_0t+\frac{at^2}{2}
+                  \]
+                </div>
+
+                <a
+                  class="lab-button"
+                  href="miscarea-rectilinie-uniforma-si-uniform-variata/index.html">
+                  Deschide laboratorul
+                </a>
+              </div>
+            </article>
+
+            <article
+              class="lab-card"
+              data-chapter="mecanica"
+              data-search="masurarea coeficientului de frecare forta alunecare plan inclinat dinamometru mecanica">
+
+              <div class="lab-top">
+                <div
+                  class="lab-icon"
+                  aria-hidden="true">
+                  📐
+                </div>
+
+                <div class="lab-heading">
+                  <div class="badges">
+                    <span class="badge">
+                      Capitolul Mecanică
+                    </span>
+                  </div>
+
+                  <h3>
+                    Măsurarea coeficientului de frecare
+                  </h3>
+                </div>
+              </div>
+
+              <div class="lab-body">
+                <p class="lab-description">
+                  Determinarea forței de frecare la alunecare și
+                  a coeficientului de frecare pe plan înclinat.
+                </p>
+
+                <div class="formula">
+                  \[
+                    \mu=\frac{F_f}{N}
+                  \]
+                </div>
+
+                <a
+                  class="lab-button"
+                  href="masurarea-coeficientului-de-frecare/index.html">
+                  Deschide laboratorul
+                </a>
+              </div>
+            </article>
+
+            <article
+              class="lab-card"
+              data-chapter="mecanica"
+              data-search="legea lui hooke alungirea elastica resort constanta elastica k forta mecanica">
+
+              <div class="lab-top">
+                <div
+                  class="lab-icon"
+                  aria-hidden="true">
+                  🌀
+                </div>
+
+                <div class="lab-heading">
+                  <div class="badges">
+                    <span class="badge">
+                      Capitolul Mecanică
+                    </span>
+                  </div>
+
+                  <h3>
+                    Legea lui Hooke și alungirea elastică
+                  </h3>
+                </div>
+              </div>
+
+              <div class="lab-body">
+                <p class="lab-description">
+                  Studiul deformării elastice a unui resort și
+                  determinarea constantei elastice \(k\).
+                </p>
+
+                <div class="formula">
+                  \[
+                    k=\frac{F}{\Delta l}
+                  \]
+                </div>
+
+                <a
+                  class="lab-button"
+                  href="legea-lui-hooke/index.html">
+                  Deschide laboratorul
+                </a>
+              </div>
+            </article>
+
+            <article
+              class="lab-card"
+              data-chapter="mecanica"
+              data-search="pendulul gravitational simplu perioada oscilatie acceleratia gravitationala g mecanica">
+
+              <div class="lab-top">
+                <div
+                  class="lab-icon"
+                  aria-hidden="true">
+                  🕰️
+                </div>
+
+                <div class="lab-heading">
+                  <div class="badges">
+                    <span class="badge">
+                      Capitolul Mecanică
+                    </span>
+                  </div>
+
+                  <h3>
+                    Pendulul gravitațional simplu
+                  </h3>
+                </div>
+              </div>
+
+              <div class="lab-body">
+                <p class="lab-description">
+                  Determinarea accelerației gravitaționale prin
+                  măsurarea perioadei de oscilație.
+                </p>
+
+                <div class="formula">
+                  \[
+                    g=\frac{4\pi^2l}{T^2}
+                  \]
+                </div>
+
+                <a
+                  class="lab-button"
+                  href="pendulul-gravitational-simplu/index.html">
+                  Deschide laboratorul
+                </a>
+              </div>
+            </article>
+
+            <article
+              class="lab-card"
+              data-chapter="mecanica"
+              data-search="conservarea energiei mecanice potentiala cinetica jgheab plan inclinat mecanica">
+
+              <div class="lab-top">
+                <div
+                  class="lab-icon"
+                  aria-hidden="true">
+                  🛝
+                </div>
+
+                <div class="lab-heading">
+                  <div class="badges">
+                    <span class="badge">
+                      Capitolul Mecanică
+                    </span>
+                  </div>
+
+                  <h3>
+                    Conservarea energiei mecanice
+                  </h3>
+                </div>
+              </div>
+
+              <div class="lab-body">
+                <p class="lab-description">
+                  Transformarea energiei potențiale în energie
+                  cinetică pe un jgheab sau plan înclinat.
+                </p>
+
+                <div class="formula">
+                  \[
+                    E_c=\frac{mv^2}{2},
+                    \qquad
+                    E_m=E_p+E_c
+                  \]
+                </div>
+
+                <a
+                  class="lab-button"
+                  href="conservarea-energiei-mecanice/index.html">
+                  Deschide laboratorul
+                </a>
+              </div>
+            </article>
+
+            <article
+              class="lab-card"
+              id="capitol-astronomie"
+              data-chapter="astronomie"
+              data-search="misiunea artemis ii luna astronomie orbita traiectorie energie proiect special">
+
+              <div class="lab-top">
+                <div
+                  class="lab-icon"
+                  aria-hidden="true">
+                  🚀
+                </div>
+
+                <div class="lab-heading">
+                  <div class="badges">
                     <span class="badge special">
                       Capitolul Astronomie aplicată
                     </span>
-                  </div>"""
+                  </div>
 
-html = html.replace(artemis_badges, astronomy_badge)
+                  <h3>
+                    Misiunea Artemis II
+                  </h3>
+                </div>
+              </div>
 
-# Verificări.
-assert html.count('id="header-container"') == 1
-assert html.count('id="footer-container"') == 1
-assert html.count('src="../assets/js/load-header.js"') == 1
-assert html.count('src="../assets/js/load-footer.js"') == 1
-assert html.count('class="lab-card"') == 7
-assert html.count('data-chapter="mecanica"') == 6
-assert html.count('data-chapter="astronomie"') == 1
-assert 'data-filter="6"' not in html
-assert 'data-filter="7"' not in html
-assert 'data-grade=' not in html
-assert "Clasa a VI-a" not in html
-assert "Clasa a VII-a" not in html
-assert 'href="mecanica/index.html"' in html
-assert 'href="#capitol-astronomie"' in html
+              <div class="lab-body">
+                <p class="lab-description">
+                  Aplicații ale mecanicii și energiei în analiza
+                  unei misiuni spațiale în jurul Lunii.
+                </p>
 
-output_dir = Path("/mnt/data/laborator-fizica-capitole")
-output_dir.mkdir(parents=True, exist_ok=True)
-output = output_dir / "index.html"
-output.write_text(html, encoding="utf-8")
+                <div class="formula">
+                  \[
+                    E_m=E_c+E_p
+                  \]
+                </div>
 
-scripts = re.findall(
-    r"<script(?:\s[^>]*)?>(.*?)</script>",
-    html,
-    flags=re.DOTALL
-)
+                <a
+                  class="lab-button"
+                  href="misiunea-artemis-2/index.html">
+                  Deschide laboratorul
+                </a>
+              </div>
+            </article>
+          </div>
 
-check_file = Path("/mnt/data/laborator-index-capitole-check.js")
-check_file.write_text(
-    "\n".join(script for script in scripts if script.strip()),
-    encoding="utf-8"
-)
+          <div
+            class="empty-state"
+            id="emptyState">
+            Nu a fost găsit niciun laborator pentru căutarea sau
+            capitolul selectat.
+          </div>
+        </section>
 
-result = subprocess.run(
-    ["node", "--check", str(check_file)],
-    capture_output=True,
-    text=True,
-    timeout=30
-)
+        <nav
+          class="bottom-navigation"
+          aria-label="Navigare generală">
 
-if result.returncode != 0:
-    raise RuntimeError(result.stderr or result.stdout)
+          <a
+            class="navigation-link"
+            href="../index.html">
+            Înapoi la pagina principală
+          </a>
 
-zip_path = Path("/mnt/data/laborator-fizica-index-capitole.zip")
-if zip_path.exists():
-    zip_path.unlink()
+          <a
+            class="navigation-link"
+            href="mecanica/index.html">
+            Vezi colecția de mecanică
+          </a>
+        </nav>
+      </div>
+    </main>
 
-with zipfile.ZipFile(
-    zip_path,
-    "w",
-    compression=zipfile.ZIP_DEFLATED
-) as archive:
-    archive.write(
-        output,
-        "laborator-fizica/index.html"
-    )
+    <div id="footer-container"></div>
+  </div>
 
-print("Fișier:", output)
-print("Arhivă:", zip_path)
-print("Capitole: Mecanică, Astronomie aplicată")
-print("Carduri:", html.count('class=\"lab-card\"'))
-print("Header:", html.count('id=\"header-container\"'))
-print("Footer:", html.count('id=\"footer-container\"'))
-print("Filtre pe clase:", 0)
-print("JavaScript valid:", True)
+  <script>
+    "use strict";
+
+    const filterButtons =
+      Array.from(
+        document.querySelectorAll(
+          ".filter-button"
+        )
+      );
+
+    const cards =
+      Array.from(
+        document.querySelectorAll(
+          ".lab-card"
+        )
+      );
+
+    const searchInput =
+      document.getElementById(
+        "labSearch"
+      );
+
+    const resultCount =
+      document.getElementById(
+        "resultCount"
+      );
+
+    const emptyState =
+      document.getElementById(
+        "emptyState"
+      );
+
+    let activeFilter = "all";
+
+    function normalizeText(value) {
+      return String(value)
+        .normalize("NFD")
+        .replace(
+          /[\u0300-\u036f]/g,
+          ""
+        )
+        .toLowerCase()
+        .trim();
+    }
+
+    function updateLaboratories() {
+      const query =
+        normalizeText(
+          searchInput.value
+        );
+
+      let visibleCount = 0;
+
+      cards.forEach(
+        (card) => {
+          const matchesFilter =
+            activeFilter === "all" ||
+            card.dataset.chapter ===
+              activeFilter;
+
+          const searchSource =
+            normalizeText(
+              [
+                card.dataset.search,
+                card.textContent
+              ].join(" ")
+            );
+
+          const matchesSearch =
+            !query ||
+            searchSource.includes(
+              query
+            );
+
+          const visible =
+            matchesFilter &&
+            matchesSearch;
+
+          card.hidden =
+            !visible;
+
+          if (visible) {
+            visibleCount += 1;
+          }
+        }
+      );
+
+      resultCount.textContent =
+        visibleCount === 1
+          ? "1 laborator afișat"
+          : `${visibleCount} laboratoare afișate`;
+
+      emptyState.classList.toggle(
+        "visible",
+        visibleCount === 0
+      );
+    }
+
+    filterButtons.forEach(
+      (button) => {
+        button.addEventListener(
+          "click",
+          () => {
+            activeFilter =
+              button.dataset.filter;
+
+            filterButtons.forEach(
+              (currentButton) => {
+                const active =
+                  currentButton ===
+                  button;
+
+                currentButton
+                  .classList
+                  .toggle(
+                    "active",
+                    active
+                  );
+
+                currentButton
+                  .setAttribute(
+                    "aria-pressed",
+                    String(active)
+                  );
+              }
+            );
+
+            updateLaboratories();
+          }
+        );
+      }
+    );
+
+    searchInput.addEventListener(
+      "input",
+      updateLaboratories
+    );
+
+    /*
+     * Temă locală robustă pentru headerul încărcat dinamic.
+     */
+    const THEME_KEY =
+      "fizica-galaction-theme";
+
+    function applyTheme(theme) {
+      const light =
+        theme === "light";
+
+      document.body
+        .classList
+        .toggle(
+          "light",
+          light
+        );
+
+      document.body
+        .classList
+        .toggle(
+          "dark",
+          !light
+        );
+
+      document.body.dataset.theme =
+        light
+          ? "light"
+          : "dark";
+
+      document
+        .querySelectorAll(
+          ".theme-toggle"
+        )
+        .forEach(
+          (button) => {
+            button.textContent =
+              light
+                ? "🌙"
+                : "☀️";
+
+            button.setAttribute(
+              "aria-label",
+              light
+                ? "Activează tema întunecată"
+                : "Activează tema luminoasă"
+            );
+          }
+        );
+    }
+
+    function savedTheme() {
+      const saved =
+        localStorage.getItem(
+          THEME_KEY
+        );
+
+      if (
+        saved === "light" ||
+        saved === "dark"
+      ) {
+        return saved;
+      }
+
+      return window.matchMedia(
+        "(prefers-color-scheme: light)"
+      ).matches
+        ? "light"
+        : "dark";
+    }
+
+    applyTheme(
+      savedTheme()
+    );
+
+    document.addEventListener(
+      "click",
+      (event) => {
+        const button =
+          event.target.closest(
+            ".theme-toggle"
+          );
+
+        if (!button) {
+          return;
+        }
+
+        event.preventDefault();
+
+        const nextTheme =
+          document.body.dataset.theme ===
+          "light"
+            ? "dark"
+            : "light";
+
+        localStorage.setItem(
+          THEME_KEY,
+          nextTheme
+        );
+
+        applyTheme(
+          nextTheme
+        );
+      }
+    );
+
+    document.addEventListener(
+      "headerLoaded",
+      () => {
+        applyTheme(
+          document.body.dataset.theme ||
+          savedTheme()
+        );
+      }
+    );
+
+    /*
+     * Observerul acoperă și loader-ele care nu emit
+     * evenimentul headerLoaded.
+     */
+    const headerContainer =
+      document.getElementById(
+        "header-container"
+      );
+
+    if (headerContainer) {
+      const observer =
+        new MutationObserver(
+          () => {
+            applyTheme(
+              document.body.dataset.theme ||
+              savedTheme()
+            );
+          }
+        );
+
+      observer.observe(
+        headerContainer,
+        {
+          childList: true,
+          subtree: true
+        }
+      );
+    }
+
+    updateLaboratories();
+  </script>
+
+  <script
+    defer
+    src="../assets/js/load-header.js">
+  </script>
+
+  <script
+    defer
+    src="../assets/js/load-footer.js">
+  </script>
+</body>
+</html>

@@ -1,1 +1,3650 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
 
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="Laborator interactiv de fizică pentru clasa a VII-a despre mișcarea rectilinie uniformă și uniform variată, analiza vitezei și accelerației și trasarea graficelor x(t) și v(t).">
+
+  <title>
+    Mișcarea rectilinie uniformă și uniform variată | Laborator de fizică
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="../../assets/css/layout.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["\\(", "\\)"]],
+        displayMath: [["\\[", "\\]"]]
+      },
+      options: {
+        skipHtmlTags: [
+          "script",
+          "noscript",
+          "style",
+          "textarea",
+          "pre",
+          "code"
+        ]
+      }
+    };
+  </script>
+
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    :root {
+      --bg: #07111f;
+      --surface: #0e1b31;
+      --surface-2: #122742;
+      --surface-soft: #183653;
+      --border: #315a7e;
+      --text: #f3f8ff;
+      --muted: #c5d8ec;
+      --primary: #67e8f9;
+      --primary-strong: #22d3ee;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --danger: #fb7185;
+      --violet: #a78bfa;
+      --focus: #fde047;
+      --shadow: 0 22px 54px rgba(0, 0, 0, 0.34);
+      --radius: 24px;
+    }
+
+    body.light,
+    body[data-theme="light"] {
+      --bg: #eef6ff;
+      --surface: #ffffff;
+      --surface-2: #f2f8fd;
+      --surface-soft: #e5f1fb;
+      --border: #96b6d0;
+      --text: #10243a;
+      --muted: #36516b;
+      --primary: #0369a1;
+      --primary-strong: #0284c7;
+      --success: #047857;
+      --warning: #a16207;
+      --danger: #be123c;
+      --violet: #6d28d9;
+      --focus: #a16207;
+      --shadow: 0 18px 44px rgba(15, 35, 55, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 18px;
+      scroll-behavior: smooth;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+
+      font-family:
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+      font-size:
+        clamp(
+          1rem,
+          0.94rem + 0.34vw,
+          1.22rem
+        );
+
+      line-height: 1.68;
+
+      background:
+        radial-gradient(
+          circle at 8% 0%,
+          rgba(34, 211, 238, 0.13),
+          transparent 24%
+        ),
+        radial-gradient(
+          circle at 92% 4%,
+          rgba(167, 139, 250, 0.12),
+          transparent 24%
+        ),
+        var(--bg);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .lab-shell {
+      width:
+        min(
+          1180px,
+          calc(100% - 24px)
+        );
+
+      margin:
+        clamp(10px, 2vw, 28px)
+        auto;
+
+      padding-bottom: 28px;
+    }
+
+    .lab-card {
+      overflow: hidden;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        var(--radius);
+
+      background:
+        var(--surface);
+
+      box-shadow:
+        var(--shadow);
+    }
+
+    .lab-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+
+      padding:
+        clamp(15px, 2.2vw, 23px)
+        clamp(18px, 3vw, 34px);
+
+      border-bottom:
+        1px solid
+        var(--border);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--surface) 92%,
+          transparent
+        );
+
+      backdrop-filter: blur(10px);
+    }
+
+    .lab-kicker {
+      color: var(--primary);
+
+      font-size:
+        clamp(
+          0.88rem,
+          0.84rem + 0.18vw,
+          1rem
+        );
+
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .lab-title {
+      margin: 6px 0 12px;
+
+      color: var(--text);
+
+      font-size:
+        clamp(
+          1.35rem,
+          1.05rem + 1vw,
+          2rem
+        );
+
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .progress-track {
+      flex: 1;
+
+      height: 12px;
+      overflow: hidden;
+
+      border-radius: 999px;
+
+      background:
+        color-mix(
+          in srgb,
+          var(--text) 12%,
+          transparent
+        );
+    }
+
+    .progress-fill {
+      display: block;
+
+      width: 0;
+      height: 100%;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          var(--success)
+        );
+
+      transition:
+        width
+        180ms
+        ease;
+    }
+
+    .page-counter {
+      color: var(--muted);
+
+      font-size: 1rem;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .lab-pages {
+      min-height:
+        calc(100svh - 160px);
+    }
+
+    .lab-page {
+      display: none;
+
+      padding:
+        clamp(24px, 4vw, 46px)
+        clamp(18px, 4.5vw, 54px)
+        clamp(28px, 4vw, 48px);
+
+      animation:
+        page-in
+        180ms
+        ease;
+    }
+
+    .lab-page.active {
+      display: block;
+    }
+
+    @keyframes page-in {
+      from {
+        opacity: 0.3;
+        transform:
+          translateY(7px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    #header-container,
+    #footer-container {
+      width: 100%;
+    }
+
+    #header-container {
+      margin:
+        calc(-1 * clamp(24px, 4vw, 46px))
+        calc(-1 * clamp(18px, 4.5vw, 54px))
+        clamp(28px, 4vw, 42px);
+
+      width:
+        calc(
+          100% +
+          2 * clamp(18px, 4.5vw, 54px)
+        );
+    }
+
+    #footer-container {
+      margin:
+        clamp(30px, 4vw, 48px)
+        calc(-1 * clamp(18px, 4.5vw, 54px))
+        calc(-1 * clamp(28px, 4vw, 48px));
+
+      width:
+        calc(
+          100% +
+          2 * clamp(18px, 4.5vw, 54px)
+        );
+    }
+
+    h2 {
+      margin: 0 0 14px;
+
+      color: var(--text);
+
+      font-size:
+        clamp(
+          1.72rem,
+          1.28rem + 1.34vw,
+          2.75rem
+        );
+
+      line-height: 1.18;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+
+      color: var(--text);
+
+      font-size:
+        clamp(
+          1.18rem,
+          1.05rem + 0.44vw,
+          1.55rem
+        );
+
+      line-height: 1.3;
+    }
+
+    p {
+      margin: 0 0 16px;
+    }
+
+    .lead {
+      color: var(--text);
+
+      font-size:
+        clamp(
+          1.12rem,
+          1rem + 0.45vw,
+          1.42rem
+        );
+
+      line-height: 1.65;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .highlight {
+      color: var(--success);
+      font-weight: 850;
+    }
+
+    .page-badge {
+      display: inline-block;
+
+      margin-bottom: 14px;
+      padding: 8px 13px;
+
+      border-radius: 999px;
+
+      color: var(--primary);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--primary) 13%,
+          transparent
+        );
+
+      font-size: 1rem;
+      font-weight: 850;
+    }
+
+    .large-icon {
+      margin-bottom: 14px;
+
+      font-size:
+        clamp(
+          2.8rem,
+          2.2rem + 1.7vw,
+          4.2rem
+        );
+
+      line-height: 1;
+    }
+
+    .grid {
+      display: grid;
+      gap:
+        clamp(
+          14px,
+          2vw,
+          22px
+        );
+    }
+
+    .grid.two {
+      grid-template-columns: 1fr;
+    }
+
+    .grid.three {
+      grid-template-columns: 1fr;
+    }
+
+    .panel,
+    .quick-check,
+    details {
+      padding:
+        clamp(
+          17px,
+          2.4vw,
+          25px
+        );
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 20px;
+
+      background:
+        var(--surface-2);
+    }
+
+    .remember {
+      margin-top: 18px;
+
+      padding:
+        clamp(
+          16px,
+          2.2vw,
+          22px
+        );
+
+      border-left:
+        6px solid
+        var(--success);
+
+      border-radius: 15px;
+
+      color: var(--text);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--success) 12%,
+          var(--surface)
+        );
+    }
+
+    .warning {
+      margin-top: 18px;
+
+      padding:
+        clamp(
+          16px,
+          2.2vw,
+          22px
+        );
+
+      border-left:
+        6px solid
+        var(--warning);
+
+      border-radius: 15px;
+
+      color: var(--text);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--warning) 12%,
+          var(--surface)
+        );
+    }
+
+    .formula-box {
+      margin: 14px 0;
+      padding: 16px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 16px;
+
+      color: var(--warning);
+
+      background:
+        var(--surface-soft);
+
+      font-size:
+        clamp(
+          1.25rem,
+          1.05rem + 0.65vw,
+          1.85rem
+        );
+
+      font-weight: 850;
+      text-align: center;
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 26px;
+    }
+
+    li {
+      margin-bottom: 12px;
+      line-height: 1.62;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+
+      margin-top: 16px;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 12px 13px;
+
+      border:
+        1px solid
+        var(--border);
+
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .comparison-table th {
+      background:
+        var(--surface-soft);
+    }
+
+    /* =====================================================
+       SIMULATOR
+       ===================================================== */
+
+    .simulator {
+      padding:
+        clamp(
+          15px,
+          2vw,
+          22px
+        );
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 22px;
+
+      background:
+        var(--surface-2);
+    }
+
+    .motion-scene {
+      position: relative;
+
+      min-height: 270px;
+      overflow: hidden;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 18px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #9bd8ff 0%,
+          #e7f5ff 65%,
+          #708090 66%,
+          #374151 100%
+        );
+    }
+
+    .road-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 48px;
+
+      height: 7px;
+
+      background:
+        repeating-linear-gradient(
+          90deg,
+          #ffffff 0 46px,
+          transparent 46px 80px
+        );
+    }
+
+    .origin-mark {
+      position: absolute;
+      left: 7%;
+      bottom: 31px;
+
+      width: 4px;
+      height: 68px;
+
+      background: #111827;
+    }
+
+    .origin-label {
+      position: absolute;
+      left: 4%;
+      bottom: 105px;
+
+      color: #111827;
+      font-weight: 900;
+    }
+
+    .vehicle {
+      position: absolute;
+      left: 7%;
+      bottom: 66px;
+
+      width: 92px;
+      height: 48px;
+
+      border:
+        4px solid
+        #111827;
+
+      border-radius:
+        15px
+        20px
+        10px
+        10px;
+
+      background:
+        linear-gradient(
+          135deg,
+          #fbbf24,
+          #f97316
+        );
+
+      transform:
+        translateX(0);
+    }
+
+    .vehicle::before,
+    .vehicle::after {
+      content: "";
+
+      position: absolute;
+      bottom: -17px;
+
+      width: 22px;
+      height: 22px;
+
+      border:
+        5px solid
+        #111827;
+
+      border-radius: 50%;
+
+      background:
+        #64748b;
+    }
+
+    .vehicle::before {
+      left: 10px;
+    }
+
+    .vehicle::after {
+      right: 10px;
+    }
+
+    .position-readout {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+
+      padding: 10px 13px;
+
+      border-radius: 12px;
+
+      color: #0f172a;
+
+      background:
+        rgba(255, 255, 255, 0.92);
+
+      font-weight: 900;
+    }
+
+    .control-grid {
+      display: grid;
+      gap: 14px;
+
+      margin-top: 18px;
+    }
+
+    .control-card {
+      padding:
+        14px
+        15px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 15px;
+
+      background:
+        var(--surface-soft);
+    }
+
+    .control-card label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+
+      margin-bottom: 10px;
+
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .mode-control {
+      display: grid;
+      grid-template-columns:
+        1fr
+        1fr;
+
+      gap: 10px;
+    }
+
+    .mode-control button {
+      min-height: 50px;
+      padding: 12px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 13px;
+
+      color: var(--text);
+
+      background:
+        var(--surface);
+    }
+
+    .mode-control button.active {
+      border-color:
+        var(--primary);
+
+      color: #062132;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          var(--success)
+        );
+    }
+
+    input[type="range"] {
+      width: 100%;
+      min-height: 34px;
+
+      accent-color:
+        var(--primary-strong);
+    }
+
+    .results-grid {
+      display: grid;
+      gap: 12px;
+
+      margin-top: 16px;
+    }
+
+    .result-card {
+      padding:
+        14px
+        15px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 15px;
+
+      background:
+        var(--surface-soft);
+    }
+
+    .result-card strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .result-value {
+      color: var(--primary);
+
+      font-size: 1.2rem;
+      font-weight: 900;
+    }
+
+    .sim-message {
+      min-height: 84px;
+
+      margin-top: 16px;
+      padding: 16px;
+
+      border-left:
+        5px solid
+        var(--primary);
+
+      border-radius: 14px;
+
+      color: var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    /* =====================================================
+       GRAFICE ȘI TABEL
+       ===================================================== */
+
+    .chart-grid {
+      display: grid;
+      gap: 18px;
+
+      margin-top: 18px;
+    }
+
+    .chart-wrap {
+      padding:
+        clamp(
+          14px,
+          2vw,
+          20px
+        );
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 18px;
+
+      background:
+        var(--surface-2);
+    }
+
+    .chart-canvas {
+      display: block;
+
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 14px;
+
+      background: #ffffff;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+
+      margin-top: 18px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 17px;
+    }
+
+    .measure-table {
+      width: 100%;
+      min-width: 780px;
+
+      border-collapse: collapse;
+    }
+
+    .measure-table th,
+    .measure-table td {
+      padding: 12px 11px;
+
+      border-bottom:
+        1px solid
+        var(--border);
+
+      border-right:
+        1px solid
+        var(--border);
+
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .measure-table th:last-child,
+    .measure-table td:last-child {
+      border-right: 0;
+    }
+
+    .measure-table tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .measure-table th {
+      color: var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    .measure-table output {
+      display: inline-block;
+
+      min-width: 72px;
+
+      color: var(--primary);
+      font-weight: 850;
+    }
+
+    /* =====================================================
+       VERIFICARE RAPIDĂ
+       ===================================================== */
+
+    .quick-check {
+      margin-bottom: 16px;
+    }
+
+    .quick-check fieldset {
+      display: grid;
+      gap: 11px;
+
+      margin: 14px 0 0;
+      padding: 0;
+
+      border: 0;
+    }
+
+    .quick-check legend {
+      margin-bottom: 12px;
+      padding: 0;
+
+      color: var(--text);
+
+      font-size: 1.08rem;
+      font-weight: 850;
+    }
+
+    .answer-option {
+      display: grid;
+      grid-template-columns:
+        auto
+        1fr;
+
+      align-items: start;
+      gap: 12px;
+
+      min-height: 54px;
+      padding: 13px 15px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 14px;
+
+      color: var(--text);
+
+      background:
+        var(--surface-soft);
+
+      cursor: pointer;
+    }
+
+    .answer-option:hover {
+      border-color:
+        var(--primary);
+    }
+
+    .answer-option input {
+      width: 22px;
+      height: 22px;
+
+      margin-top: 2px;
+
+      accent-color:
+        var(--primary-strong);
+    }
+
+    .answer-option.correct {
+      border-color:
+        var(--success);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--success) 14%,
+          var(--surface)
+        );
+    }
+
+    .answer-option.incorrect {
+      border-color:
+        var(--danger);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--danger) 12%,
+          var(--surface)
+        );
+    }
+
+    .feedback {
+      min-height: 30px;
+      margin-top: 12px;
+
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .score-box {
+      display: none;
+
+      margin-top: 18px;
+      padding: 18px;
+
+      border:
+        2px solid
+        var(--success);
+
+      border-radius: 17px;
+
+      color: var(--text);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--success) 11%,
+          var(--surface)
+        );
+
+      font-size: 1.1rem;
+      font-weight: 850;
+    }
+
+    .score-box.visible {
+      display: block;
+    }
+
+    /* =====================================================
+       BUTOANE
+       ===================================================== */
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      margin-top: 24px;
+    }
+
+    .button,
+    button {
+      appearance: none;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-height: 56px;
+      padding: 16px 22px;
+
+      border: 0;
+      border-radius: 15px;
+
+      font-size:
+        clamp(
+          1.04rem,
+          1rem + 0.18vw,
+          1.18rem
+        );
+
+      font-weight: 900;
+      text-align: center;
+      text-decoration: none;
+
+      cursor: pointer;
+
+      transition:
+        transform
+        120ms
+        ease,
+        filter
+        120ms
+        ease;
+    }
+
+    .button:hover,
+    button:hover {
+      filter:
+        brightness(1.05);
+    }
+
+    .button:active,
+    button:active {
+      transform:
+        scale(0.98);
+    }
+
+    .button:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    summary:focus-visible {
+      outline:
+        4px solid
+        var(--focus);
+
+      outline-offset: 4px;
+    }
+
+    .button-primary {
+      width: 100%;
+
+      color: #062132;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          var(--success)
+        );
+    }
+
+    .button-secondary {
+      width: 100%;
+
+      border:
+        1px solid
+        var(--border);
+
+      color: var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    .button-calculate {
+      width: 100%;
+
+      color: #ffffff;
+
+      background:
+        linear-gradient(
+          90deg,
+          #7c3aed,
+          #a855f7
+        );
+    }
+
+    .button-home {
+      width: 100%;
+
+      color: #062132;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          #38bdf8
+        );
+    }
+
+    @media (min-width: 820px) {
+      .grid.two {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+      }
+
+      .grid.three {
+        grid-template-columns:
+          repeat(
+            3,
+            minmax(0, 1fr)
+          );
+      }
+
+      .control-grid {
+        grid-template-columns:
+          repeat(
+            4,
+            minmax(0, 1fr)
+          );
+      }
+
+      .results-grid {
+        grid-template-columns:
+          repeat(
+            4,
+            minmax(0, 1fr)
+          );
+      }
+
+      .chart-grid {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+      }
+
+      .controls
+      .button-secondary {
+        width: auto;
+        min-width: 170px;
+      }
+
+      .controls
+      .button-primary {
+        width: auto;
+        min-width: 240px;
+        margin-left: auto;
+      }
+
+      .controls
+      .button-calculate {
+        width: auto;
+        min-width: 250px;
+      }
+
+      .controls.end {
+        justify-content: center;
+      }
+
+      .controls.end
+      .button-home {
+        width: auto;
+        min-width: 360px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      html {
+        font-size: 17px;
+      }
+
+      .lab-shell {
+        width:
+          calc(100% - 12px);
+
+        margin: 6px auto;
+      }
+
+      .lab-card {
+        border-radius: 19px;
+      }
+
+      .lab-page {
+        padding:
+          22px
+          14px
+          28px;
+      }
+
+      #header-container {
+        margin:
+          -22px
+          -14px
+          24px;
+
+        width:
+          calc(100% + 28px);
+      }
+
+      #footer-container {
+        margin:
+          28px
+          -14px
+          -28px;
+
+        width:
+          calc(100% + 28px);
+      }
+
+      .lab-topbar {
+        padding:
+          14px
+          15px;
+      }
+
+      .progress-row {
+        align-items: flex-start;
+      }
+
+      .page-counter {
+        white-space: normal;
+      }
+
+      .mode-control {
+        grid-template-columns: 1fr;
+      }
+
+      .vehicle {
+        width: 78px;
+      }
+    }
+
+    @media (
+      prefers-reduced-motion:
+      reduce
+    ) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .lab-page,
+      .progress-fill,
+      .button,
+      button {
+        animation: none;
+        transition: none;
+      }
+    }
+
+    @media print {
+      .lab-topbar,
+      .controls,
+      #header-container,
+      #footer-container {
+        display: none !important;
+      }
+
+      .lab-page {
+        display: block !important;
+        break-after: page;
+      }
+
+      body {
+        color: #000000;
+        background: #ffffff;
+      }
+
+      .lab-card,
+      .panel,
+      .quick-check,
+      .simulator,
+      .chart-wrap {
+        color: #000000;
+        background: #ffffff;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+
+<body data-page-type="lab">
+  <div class="lab-shell">
+    <div class="lab-card">
+      <div class="lab-topbar">
+        <div class="lab-kicker">
+          Laborator de fizică • Clasa a VII-a
+        </div>
+
+        <div
+          class="lab-title"
+          id="topTitle">
+          Mișcarea rectilinie uniformă și uniform variată
+        </div>
+
+        <div class="progress-row">
+          <div
+            class="progress-track"
+            aria-hidden="true">
+            <span
+              class="progress-fill"
+              id="progressFill">
+            </span>
+          </div>
+
+          <div
+            class="page-counter"
+            id="pageCounter"
+            aria-live="polite">
+            Pagina 1 din 7
+          </div>
+        </div>
+      </div>
+
+      <main
+        id="main-content"
+        class="lab-pages">
+
+        <!-- PAGINA 1: headerul comun apare numai aici -->
+        <section
+          class="lab-page active"
+          data-title="Mișcarea rectilinie – introducere"
+          aria-hidden="false">
+
+          <div id="header-container"></div>
+
+          <div class="page-badge">
+            Pagina 1 • Întrebarea laboratorului
+          </div>
+
+          <div
+            class="large-icon"
+            aria-hidden="true">
+            🚗
+          </div>
+
+          <h2>
+            Cum descriem mișcarea unui corp pe o linie dreaptă?
+          </h2>
+
+          <p class="lead">
+            Vom analiza poziția, viteza și accelerația unui corp
+            care se deplasează rectiliniu. Vom compara
+            <span class="highlight">
+              mișcarea uniformă
+            </span>
+            cu
+            <span class="highlight">
+              mișcarea uniform variată
+            </span>.
+          </p>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Ce vei observa</h3>
+
+              <ul>
+                <li>
+                  cum se schimbă poziția în timp;
+                </li>
+
+                <li>
+                  când viteza este constantă;
+                </li>
+
+                <li>
+                  când viteza se modifică uniform;
+                </li>
+
+                <li>
+                  cum se interpretează accelerația.
+                </li>
+              </ul>
+            </article>
+
+            <article class="panel">
+              <h3>Ce vei realiza</h3>
+
+              <ul>
+                <li>
+                  tabel de valori;
+                </li>
+
+                <li>
+                  graficul poziției \(x(t)\);
+                </li>
+
+                <li>
+                  graficul vitezei \(v(t)\);
+                </li>
+
+                <li>
+                  comparație între MRU și MRUV.
+                </li>
+              </ul>
+            </article>
+          </div>
+
+          <div class="remember">
+            Mișcarea este descrisă față de un reper. În acest
+            laborator folosim o axă rectilinie \(Ox\).
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="1">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 2 -->
+        <section
+          class="lab-page"
+          data-title="Mișcarea rectilinie uniformă"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 2 • MRU
+          </div>
+
+          <h2>
+            Mișcarea rectilinie uniformă
+          </h2>
+
+          <p class="lead">
+            În MRU, corpul se deplasează pe o linie dreaptă cu
+            viteză constantă.
+          </p>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Ecuația poziției</h3>
+
+              <div class="formula-box">
+                \[
+                  x=x_0+vt
+                \]
+              </div>
+
+              <p>
+                \(x_0\) este poziția inițială, \(v\) este viteza,
+                iar \(t\) este timpul.
+              </p>
+            </article>
+
+            <article class="panel">
+              <h3>Viteza și accelerația</h3>
+
+              <div class="formula-box">
+                \[
+                  v=\mathrm{constant}
+                \]
+              </div>
+
+              <div class="formula-box">
+                \[
+                  a=0
+                \]
+              </div>
+            </article>
+          </div>
+
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Grafic</th>
+                <th>Formă</th>
+                <th>Interpretare</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>
+                  \(x(t)\)
+                </td>
+
+                <td>
+                  dreaptă oblică
+                </td>
+
+                <td>
+                  panta dreptei reprezintă viteza;
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  \(v(t)\)
+                </td>
+
+                <td>
+                  dreaptă orizontală
+                </td>
+
+                <td>
+                  viteza este constantă.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="0">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="2">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 3 -->
+        <section
+          class="lab-page"
+          data-title="Mișcarea rectilinie uniform variată"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 3 • MRUV
+          </div>
+
+          <h2>
+            Mișcarea rectilinie uniform variată
+          </h2>
+
+          <p class="lead">
+            În MRUV, accelerația este constantă, iar viteza se
+            schimbă uniform în timp.
+          </p>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Legea vitezei</h3>
+
+              <div class="formula-box">
+                \[
+                  v=v_0+at
+                \]
+              </div>
+
+              <p>
+                Dacă \(a&gt;0\), viteza crește. Dacă \(a&lt;0\),
+                viteza scade.
+              </p>
+            </article>
+
+            <article class="panel">
+              <h3>Ecuația poziției</h3>
+
+              <div class="formula-box">
+                \[
+                  x=x_0+v_0t+\frac{at^2}{2}
+                \]
+              </div>
+
+              <p>
+                Termenul \(\frac{at^2}{2}\) produce forma
+                parabolică a graficului \(x(t)\).
+              </p>
+            </article>
+          </div>
+
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Grafic</th>
+                <th>Formă</th>
+                <th>Interpretare</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>
+                  \(x(t)\)
+                </td>
+
+                <td>
+                  curbă parabolică
+                </td>
+
+                <td>
+                  poziția nu mai variază liniar;
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  \(v(t)\)
+                </td>
+
+                <td>
+                  dreaptă oblică
+                </td>
+
+                <td>
+                  panta dreptei reprezintă accelerația.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="remember">
+            Accelerația medie se poate calcula prin:
+          </div>
+
+          <div class="formula-box">
+            \[
+              a=\frac{\Delta v}{\Delta t}
+            \]
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="1">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="3">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 4 -->
+        <section
+          class="lab-page"
+          data-title="Simulatorul mișcării"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 4 • Simulează
+          </div>
+
+          <h2>
+            Simulator: poziție, viteză și accelerație
+          </h2>
+
+          <div class="simulator">
+            <div class="mode-control">
+              <button
+                type="button"
+                id="modeMru"
+                class="active">
+                MRU
+              </button>
+
+              <button
+                type="button"
+                id="modeMruv">
+                MRUV
+              </button>
+            </div>
+
+            <div
+              class="motion-scene"
+              aria-label="Vehicul care se deplasează pe o axă rectilinie">
+
+              <div class="road-line"></div>
+              <div class="origin-mark"></div>
+              <div class="origin-label">
+                \(O\)
+              </div>
+
+              <div
+                class="position-readout"
+                id="positionReadout">
+                \(t=0\,\mathrm{s}\),
+                \(x=0\,\mathrm{m}\)
+              </div>
+
+              <div
+                class="vehicle"
+                id="vehicle">
+              </div>
+            </div>
+
+            <div class="control-grid">
+              <div class="control-card">
+                <label for="x0Slider">
+                  <span>Poziția inițială \(x_0\)</span>
+                  <output id="x0Output">
+                    0 m
+                  </output>
+                </label>
+
+                <input
+                  type="range"
+                  id="x0Slider"
+                  min="-10"
+                  max="20"
+                  step="1"
+                  value="0">
+              </div>
+
+              <div class="control-card">
+                <label for="v0Slider">
+                  <span>Viteza inițială \(v_0\)</span>
+                  <output id="v0Output">
+                    4 m/s
+                  </output>
+                </label>
+
+                <input
+                  type="range"
+                  id="v0Slider"
+                  min="-5"
+                  max="12"
+                  step="1"
+                  value="4">
+              </div>
+
+              <div class="control-card">
+                <label for="aSlider">
+                  <span>Accelerația \(a\)</span>
+                  <output id="aOutput">
+                    0 m/s²
+                  </output>
+                </label>
+
+                <input
+                  type="range"
+                  id="aSlider"
+                  min="-3"
+                  max="3"
+                  step="0.5"
+                  value="0"
+                  disabled>
+              </div>
+
+              <div class="control-card">
+                <label for="timeSlider">
+                  <span>Timpul \(t\)</span>
+                  <output id="timeOutput">
+                    0 s
+                  </output>
+                </label>
+
+                <input
+                  type="range"
+                  id="timeSlider"
+                  min="0"
+                  max="10"
+                  step="0.1"
+                  value="0">
+              </div>
+            </div>
+
+            <div class="results-grid">
+              <div class="result-card">
+                <strong>
+                  Poziția
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="positionValue">
+                  0,00 m
+                </span>
+              </div>
+
+              <div class="result-card">
+                <strong>
+                  Viteza
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="velocityValue">
+                  4,00 m/s
+                </span>
+              </div>
+
+              <div class="result-card">
+                <strong>
+                  Accelerația
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="accelerationValue">
+                  0,00 m/s²
+                </span>
+              </div>
+
+              <div class="result-card">
+                <strong>
+                  Tipul mișcării
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="motionTypeValue">
+                  MRU
+                </span>
+              </div>
+            </div>
+
+            <div class="controls">
+              <button
+                type="button"
+                class="button-calculate"
+                id="playSimulation">
+                Pornește animația
+              </button>
+
+              <button
+                type="button"
+                class="button-secondary"
+                id="resetSimulation">
+                Resetează
+              </button>
+            </div>
+
+            <div
+              class="sim-message"
+              id="simMessage"
+              role="status"
+              aria-live="polite">
+              În MRU, viteza este constantă și accelerația este
+              zero.
+            </div>
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="2">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="4">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 5 -->
+        <section
+          class="lab-page"
+          data-title="Tabel și grafice"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 5 • Analizează
+          </div>
+
+          <h2>
+            Tabelul valorilor și graficele \(x(t)\), \(v(t)\)
+          </h2>
+
+          <p class="lead">
+            Valorile sunt calculate din parametrii aleși în
+            simulator, pentru intervalul \(0\)–\(10\,\mathrm{s}\).
+          </p>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-calculate"
+              id="generateData">
+              Generează tabelul și graficele
+            </button>
+          </div>
+
+          <div class="table-wrap">
+            <table class="measure-table">
+              <thead>
+                <tr>
+                  <th>
+                    \(t\)
+                    (s)
+                  </th>
+                  <th>
+                    \(x(t)\)
+                    (m)
+                  </th>
+                  <th>
+                    \(v(t)\)
+                    (m/s)
+                  </th>
+                  <th>
+                    \(a\)
+                    (m/s²)
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody id="dataTableBody">
+              </tbody>
+            </table>
+          </div>
+
+          <div class="chart-grid">
+            <div class="chart-wrap">
+              <h3>
+                Graficul poziției \(x(t)\)
+              </h3>
+
+              <canvas
+                id="positionChart"
+                class="chart-canvas"
+                width="820"
+                height="470"
+                aria-label="Graficul poziției în funcție de timp">
+              </canvas>
+            </div>
+
+            <div class="chart-wrap">
+              <h3>
+                Graficul vitezei \(v(t)\)
+              </h3>
+
+              <canvas
+                id="velocityChart"
+                class="chart-canvas"
+                width="820"
+                height="470"
+                aria-label="Graficul vitezei în funcție de timp">
+              </canvas>
+            </div>
+          </div>
+
+          <div class="remember">
+            Pentru MRU, graficul \(x(t)\) este o dreaptă, iar
+            graficul \(v(t)\) este orizontal. Pentru MRUV,
+            \(x(t)\) este o parabolă, iar \(v(t)\) este o dreaptă
+            cu pantă egală cu accelerația.
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="3">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="5">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 6 -->
+        <section
+          class="lab-page"
+          data-title="Exemplu numeric și verificare rapidă"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 6 • Aplică
+          </div>
+
+          <h2>
+            Exemplu numeric pentru MRUV
+          </h2>
+
+          <div class="panel">
+            <p>
+              Un corp pornește de la
+              \(x_0=2\,\mathrm{m}\),
+              cu viteza inițială
+              \(v_0=3\,\mathrm{m/s}\)
+              și accelerația
+              \(a=2\,\mathrm{m/s^2}\).
+              Determinăm poziția și viteza la
+              \(t=4\,\mathrm{s}\).
+            </p>
+
+            <div class="formula-box">
+              \[
+                v
+                =
+                v_0+at
+                =
+                3+2\cdot4
+                =
+                11\,\mathrm{m/s}
+              \]
+            </div>
+
+            <div class="formula-box">
+              \[
+                x
+                =
+                x_0+v_0t+\frac{at^2}{2}
+                =
+                2+3\cdot4+\frac{2\cdot4^2}{2}
+                =
+                30\,\mathrm{m}
+              \]
+            </div>
+          </div>
+
+          <h2 style="margin-top: 28px;">
+            Verificare rapidă
+          </h2>
+
+          <form id="quickCheckForm">
+            <section
+              class="quick-check"
+              data-question="q1"
+              data-correct="b">
+
+              <fieldset>
+                <legend>
+                  1. În MRU, accelerația este:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q1"
+                    value="a">
+
+                  <span>
+                    constantă și diferită de zero;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q1"
+                    value="b">
+
+                  <span>
+                    zero;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q1"
+                    value="c">
+
+                  <span>
+                    mereu negativă.
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <section
+              class="quick-check"
+              data-question="q2"
+              data-correct="c">
+
+              <fieldset>
+                <legend>
+                  2. Ecuația vitezei în MRUV este:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q2"
+                    value="a">
+
+                  <span>
+                    \(v=x_0+at\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q2"
+                    value="b">
+
+                  <span>
+                    \(v=v_0t\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q2"
+                    value="c">
+
+                  <span>
+                    \(v=v_0+at\)
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <section
+              class="quick-check"
+              data-question="q3"
+              data-correct="a">
+
+              <fieldset>
+                <legend>
+                  3. Graficul \(v(t)\) în MRU este:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q3"
+                    value="a">
+
+                  <span>
+                    o dreaptă orizontală;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q3"
+                    value="b">
+
+                  <span>
+                    o parabolă;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q3"
+                    value="c">
+
+                  <span>
+                    un cerc.
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <section
+              class="quick-check"
+              data-question="q4"
+              data-correct="b">
+
+              <fieldset>
+                <legend>
+                  4. Panta graficului \(v(t)\) în MRUV reprezintă:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q4"
+                    value="a">
+
+                  <span>
+                    poziția inițială;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q4"
+                    value="b">
+
+                  <span>
+                    accelerația;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q4"
+                    value="c">
+
+                  <span>
+                    masa corpului.
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <button
+              type="submit"
+              class="button-primary">
+              Verifică răspunsurile
+            </button>
+
+            <div
+              class="score-box"
+              id="scoreBox"
+              role="status"
+              aria-live="polite">
+            </div>
+          </form>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="4">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="6">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 7: footerul comun apare numai aici -->
+        <section
+          class="lab-page"
+          data-title="Concluzii"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 7 • Concluzie
+          </div>
+
+          <h2>
+            Ce ai descoperit?
+          </h2>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>MRU</h3>
+
+              <div class="formula-box">
+                \[
+                  x=x_0+vt
+                \]
+              </div>
+
+              <p>
+                Viteza este constantă, iar accelerația este zero.
+              </p>
+            </article>
+
+            <article class="panel">
+              <h3>MRUV</h3>
+
+              <div class="formula-box">
+                \[
+                  v=v_0+at
+                \]
+              </div>
+
+              <div class="formula-box">
+                \[
+                  x=x_0+v_0t+\frac{at^2}{2}
+                \]
+              </div>
+            </article>
+
+            <article class="panel">
+              <h3>Graficul \(x(t)\)</h3>
+
+              <p>
+                Este o dreaptă în MRU și o parabolă în MRUV.
+              </p>
+            </article>
+
+            <article class="panel">
+              <h3>Graficul \(v(t)\)</h3>
+
+              <p>
+                Este orizontal în MRU și o dreaptă oblică în MRUV.
+              </p>
+            </article>
+          </div>
+
+          <div class="remember">
+            <strong>Ideea finală:</strong>
+            viteza descrie cât de repede se schimbă poziția, iar
+            accelerația descrie cât de repede se schimbă viteza.
+          </div>
+
+          <div class="warning">
+            La interpretarea graficelor verifică întotdeauna
+            mărimile de pe axe, unitățile de măsură și sensul
+            mișcării.
+          </div>
+
+          <div class="controls end">
+            <button
+              type="button"
+              class="button-calculate"
+              onclick="window.print()">
+              Tipărește fișa laboratorului
+            </button>
+
+            <a
+              class="button button-home"
+              href="../index.html">
+              Înapoi la laborator
+            </a>
+
+            <a
+              class="button button-secondary"
+              href="../../index.html">
+              Pagina principală
+            </a>
+          </div>
+
+          <div id="footer-container"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    "use strict";
+
+    const pages = Array.from(
+      document.querySelectorAll(
+        ".lab-page"
+      )
+    );
+
+    const progressFill =
+      document.getElementById(
+        "progressFill"
+      );
+
+    const pageCounter =
+      document.getElementById(
+        "pageCounter"
+      );
+
+    const topTitle =
+      document.getElementById(
+        "topTitle"
+      );
+
+    function formatNumber(
+      value,
+      decimals = 2
+    ) {
+      return Number(value)
+        .toFixed(decimals)
+        .replace(".", ",");
+    }
+
+    function typesetMath(root) {
+      window.MathJax
+        ?.typesetPromise
+        ?.([root]);
+    }
+
+    function goToPage(index) {
+      const target =
+        Math.min(
+          Math.max(
+            Number(index) || 0,
+            0
+          ),
+          pages.length - 1
+        );
+
+      pages.forEach(
+        (page, pageIndex) => {
+          const active =
+            pageIndex === target;
+
+          page.classList.toggle(
+            "active",
+            active
+          );
+
+          page.setAttribute(
+            "aria-hidden",
+            String(!active)
+          );
+        }
+      );
+
+      const current =
+        pages[target];
+
+      topTitle.textContent =
+        current.dataset.title ||
+        "Mișcarea rectilinie uniformă și uniform variată";
+
+      pageCounter.textContent =
+        `Pagina ${target + 1} din ${pages.length}`;
+
+      progressFill.style.width =
+        `${((target + 1) / pages.length) * 100}%`;
+
+      history.replaceState(
+        null,
+        "",
+        `#pagina-${target + 1}`
+      );
+
+      window.scrollTo({
+        top: 0,
+        behavior:
+          window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+          ).matches
+            ? "auto"
+            : "smooth"
+      });
+
+      typesetMath(current);
+
+      if (target === 4) {
+        generateDataAndCharts();
+      }
+    }
+
+    document.addEventListener(
+      "click",
+      (event) => {
+        const navigationButton =
+          event.target.closest(
+            "[data-go-page]"
+          );
+
+        if (!navigationButton) {
+          return;
+        }
+
+        goToPage(
+          navigationButton.dataset
+            .goPage
+        );
+      }
+    );
+
+    /* =====================================================
+       SIMULATOR
+       ===================================================== */
+
+    let motionMode = "mru";
+    let animationId = null;
+
+    const modeMru =
+      document.getElementById(
+        "modeMru"
+      );
+
+    const modeMruv =
+      document.getElementById(
+        "modeMruv"
+      );
+
+    const x0Slider =
+      document.getElementById(
+        "x0Slider"
+      );
+
+    const v0Slider =
+      document.getElementById(
+        "v0Slider"
+      );
+
+    const aSlider =
+      document.getElementById(
+        "aSlider"
+      );
+
+    const timeSlider =
+      document.getElementById(
+        "timeSlider"
+      );
+
+    const x0Output =
+      document.getElementById(
+        "x0Output"
+      );
+
+    const v0Output =
+      document.getElementById(
+        "v0Output"
+      );
+
+    const aOutput =
+      document.getElementById(
+        "aOutput"
+      );
+
+    const timeOutput =
+      document.getElementById(
+        "timeOutput"
+      );
+
+    const vehicle =
+      document.getElementById(
+        "vehicle"
+      );
+
+    const positionReadout =
+      document.getElementById(
+        "positionReadout"
+      );
+
+    const positionValue =
+      document.getElementById(
+        "positionValue"
+      );
+
+    const velocityValue =
+      document.getElementById(
+        "velocityValue"
+      );
+
+    const accelerationValue =
+      document.getElementById(
+        "accelerationValue"
+      );
+
+    const motionTypeValue =
+      document.getElementById(
+        "motionTypeValue"
+      );
+
+    const simMessage =
+      document.getElementById(
+        "simMessage"
+      );
+
+    function currentParameters() {
+      const x0 =
+        Number(x0Slider.value);
+
+      const v0 =
+        Number(v0Slider.value);
+
+      const a =
+        motionMode === "mru"
+          ? 0
+          : Number(aSlider.value);
+
+      const t =
+        Number(timeSlider.value);
+
+      const velocity =
+        v0 + a * t;
+
+      const position =
+        x0 +
+        v0 * t +
+        a * t * t / 2;
+
+      return {
+        x0,
+        v0,
+        a,
+        t,
+        velocity,
+        position
+      };
+    }
+
+    function updateModeButtons() {
+      const isMru =
+        motionMode === "mru";
+
+      modeMru.classList.toggle(
+        "active",
+        isMru
+      );
+
+      modeMruv.classList.toggle(
+        "active",
+        !isMru
+      );
+
+      aSlider.disabled =
+        isMru;
+
+      if (isMru) {
+        aSlider.value = 0;
+      }
+
+      motionTypeValue.textContent =
+        isMru
+          ? "MRU"
+          : "MRUV";
+    }
+
+    function updateSimulation() {
+      const data =
+        currentParameters();
+
+      x0Output.value =
+        `${formatNumber(
+          data.x0,
+          0
+        )} m`;
+
+      v0Output.value =
+        `${formatNumber(
+          data.v0,
+          0
+        )} m/s`;
+
+      aOutput.value =
+        `${formatNumber(
+          data.a,
+          1
+        )} m/s²`;
+
+      timeOutput.value =
+        `${formatNumber(
+          data.t,
+          1
+        )} s`;
+
+      positionValue.textContent =
+        `${formatNumber(
+          data.position,
+          2
+        )} m`;
+
+      velocityValue.textContent =
+        `${formatNumber(
+          data.velocity,
+          2
+        )} m/s`;
+
+      accelerationValue.textContent =
+        `${formatNumber(
+          data.a,
+          2
+        )} m/s²`;
+
+      positionReadout.textContent =
+        `t = ${formatNumber(
+          data.t,
+          1
+        )} s, x = ${formatNumber(
+          data.position,
+          1
+        )} m`;
+
+      const minPosition = -20;
+      const maxPosition = 100;
+
+      const ratio =
+        Math.max(
+          0,
+          Math.min(
+            1,
+            (
+              data.position -
+              minPosition
+            ) /
+            (
+              maxPosition -
+              minPosition
+            )
+          )
+        );
+
+      vehicle.style.transform =
+        `translateX(calc(${ratio * 100}% * 8.2))`;
+
+      if (motionMode === "mru") {
+        simMessage.textContent =
+          `MRU: viteza rămâne ${formatNumber(
+            data.v0,
+            1
+          )} m/s, iar accelerația este zero.`;
+      } else if (data.a > 0) {
+        simMessage.textContent =
+          `MRUV accelerată: viteza crește cu ${formatNumber(
+            data.a,
+            1
+          )} m/s în fiecare secundă.`;
+      } else if (data.a < 0) {
+        simMessage.textContent =
+          `MRUV încetinită: viteza scade cu ${formatNumber(
+            Math.abs(data.a),
+            1
+          )} m/s în fiecare secundă.`;
+      } else {
+        simMessage.textContent =
+          "Accelerația este zero, deci mișcarea are caracter uniform.";
+      }
+
+      typesetMath(
+        document.querySelector(
+          ".simulator"
+        )
+      );
+    }
+
+    modeMru
+      ?.addEventListener(
+        "click",
+        () => {
+          motionMode = "mru";
+
+          updateModeButtons();
+          updateSimulation();
+        }
+      );
+
+    modeMruv
+      ?.addEventListener(
+        "click",
+        () => {
+          motionMode = "mruv";
+
+          if (
+            Number(
+              aSlider.value
+            ) === 0
+          ) {
+            aSlider.value = 1;
+          }
+
+          updateModeButtons();
+          updateSimulation();
+        }
+      );
+
+    [
+      x0Slider,
+      v0Slider,
+      aSlider,
+      timeSlider
+    ].forEach(
+      (control) => {
+        control?.addEventListener(
+          "input",
+          updateSimulation
+        );
+      }
+    );
+
+    document
+      .getElementById(
+        "playSimulation"
+      )
+      ?.addEventListener(
+        "click",
+        () => {
+          if (animationId) {
+            cancelAnimationFrame(
+              animationId
+            );
+
+            animationId = null;
+
+            document.getElementById(
+              "playSimulation"
+            ).textContent =
+              "Pornește animația";
+
+            return;
+          }
+
+          const button =
+            document.getElementById(
+              "playSimulation"
+            );
+
+          button.textContent =
+            "Oprește animația";
+
+          let previousTime =
+            performance.now();
+
+          function step(now) {
+            const delta =
+              (now - previousTime) /
+              1000;
+
+            previousTime = now;
+
+            let nextTime =
+              Number(
+                timeSlider.value
+              ) +
+              delta;
+
+            if (nextTime >= 10) {
+              nextTime = 10;
+
+              timeSlider.value =
+                nextTime;
+
+              updateSimulation();
+
+              animationId = null;
+
+              button.textContent =
+                "Pornește animația";
+
+              return;
+            }
+
+            timeSlider.value =
+              nextTime;
+
+            updateSimulation();
+
+            animationId =
+              requestAnimationFrame(
+                step
+              );
+          }
+
+          animationId =
+            requestAnimationFrame(
+              step
+            );
+        }
+      );
+
+    document
+      .getElementById(
+        "resetSimulation"
+      )
+      ?.addEventListener(
+        "click",
+        () => {
+          if (animationId) {
+            cancelAnimationFrame(
+              animationId
+            );
+
+            animationId = null;
+          }
+
+          timeSlider.value = 0;
+
+          document.getElementById(
+            "playSimulation"
+          ).textContent =
+            "Pornește animația";
+
+          updateSimulation();
+        }
+      );
+
+    /* =====================================================
+       TABEL ȘI GRAFICE
+       ===================================================== */
+
+    const positionCanvas =
+      document.getElementById(
+        "positionChart"
+      );
+
+    const velocityCanvas =
+      document.getElementById(
+        "velocityChart"
+      );
+
+    function generateData() {
+      const parameters =
+        currentParameters();
+
+      const points = [];
+
+      for (
+        let t = 0;
+        t <= 10;
+        t += 1
+      ) {
+        const velocity =
+          parameters.v0 +
+          parameters.a * t;
+
+        const position =
+          parameters.x0 +
+          parameters.v0 * t +
+          parameters.a * t * t / 2;
+
+        points.push({
+          t,
+          position,
+          velocity,
+          acceleration:
+            parameters.a
+        });
+      }
+
+      return points;
+    }
+
+    function fillDataTable(
+      points
+    ) {
+      const body =
+        document.getElementById(
+          "dataTableBody"
+        );
+
+      body.innerHTML =
+        points
+          .map(
+            (point) => `
+              <tr>
+                <td>
+                  ${formatNumber(
+                    point.t,
+                    0
+                  )}
+                </td>
+
+                <td>
+                  ${formatNumber(
+                    point.position,
+                    2
+                  )}
+                </td>
+
+                <td>
+                  ${formatNumber(
+                    point.velocity,
+                    2
+                  )}
+                </td>
+
+                <td>
+                  ${formatNumber(
+                    point.acceleration,
+                    2
+                  )}
+                </td>
+              </tr>
+            `
+          )
+          .join("");
+    }
+
+    function drawGraph({
+      canvas,
+      points,
+      valueKey,
+      yLabel,
+      strokeColor
+    }) {
+      const ctx =
+        canvas.getContext("2d");
+
+      const width =
+        canvas.width;
+
+      const height =
+        canvas.height;
+
+      ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+      );
+
+      ctx.fillStyle =
+        "#ffffff";
+
+      ctx.fillRect(
+        0,
+        0,
+        width,
+        height
+      );
+
+      const margin = {
+        left: 86,
+        right: 36,
+        top: 38,
+        bottom: 72
+      };
+
+      const plotWidth =
+        width -
+        margin.left -
+        margin.right;
+
+      const plotHeight =
+        height -
+        margin.top -
+        margin.bottom;
+
+      const values =
+        points.map(
+          (point) =>
+            point[valueKey]
+        );
+
+      let minY =
+        Math.min(
+          0,
+          ...values
+        );
+
+      let maxY =
+        Math.max(
+          1,
+          ...values
+        );
+
+      if (
+        maxY === minY
+      ) {
+        maxY += 1;
+        minY -= 1;
+      }
+
+      const paddingY =
+        (
+          maxY -
+          minY
+        ) *
+        0.1;
+
+      maxY += paddingY;
+      minY -= paddingY;
+
+      ctx.strokeStyle =
+        "#cbd5e1";
+
+      ctx.lineWidth = 1;
+
+      for (
+        let index = 0;
+        index <= 5;
+        index += 1
+      ) {
+        const x =
+          margin.left +
+          plotWidth *
+          index /
+          5;
+
+        const y =
+          margin.top +
+          plotHeight *
+          index /
+          5;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+          x,
+          margin.top
+        );
+
+        ctx.lineTo(
+          x,
+          margin.top +
+          plotHeight
+        );
+
+        ctx.stroke();
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+          margin.left,
+          y
+        );
+
+        ctx.lineTo(
+          margin.left +
+          plotWidth,
+          y
+        );
+
+        ctx.stroke();
+      }
+
+      ctx.strokeStyle =
+        "#172033";
+
+      ctx.lineWidth = 3;
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        margin.left,
+        margin.top
+      );
+
+      ctx.lineTo(
+        margin.left,
+        margin.top +
+        plotHeight
+      );
+
+      ctx.lineTo(
+        margin.left +
+        plotWidth,
+        margin.top +
+        plotHeight
+      );
+
+      ctx.stroke();
+
+      ctx.fillStyle =
+        "#172033";
+
+      ctx.font =
+        "bold 19px Segoe UI";
+
+      ctx.fillText(
+        yLabel,
+        18,
+        margin.top + 8
+      );
+
+      ctx.fillText(
+        "t (s)",
+        width - 78,
+        height - 20
+      );
+
+      ctx.font =
+        "15px Segoe UI";
+
+      for (
+        let index = 0;
+        index <= 5;
+        index += 1
+      ) {
+        const xValue =
+          10 *
+          index /
+          5;
+
+        const yValue =
+          maxY -
+          (
+            maxY -
+            minY
+          ) *
+          index /
+          5;
+
+        const x =
+          margin.left +
+          plotWidth *
+          index /
+          5;
+
+        const y =
+          margin.top +
+          plotHeight *
+          index /
+          5;
+
+        ctx.fillText(
+          formatNumber(
+            xValue,
+            0
+          ),
+          x - 7,
+          margin.top +
+          plotHeight +
+          27
+        );
+
+        ctx.fillText(
+          formatNumber(
+            yValue,
+            1
+          ),
+          34,
+          y + 5
+        );
+      }
+
+      ctx.strokeStyle =
+        strokeColor;
+
+      ctx.lineWidth = 4;
+
+      ctx.beginPath();
+
+      points.forEach(
+        (point, index) => {
+          const x =
+            margin.left +
+            (
+              point.t /
+              10
+            ) *
+            plotWidth;
+
+          const y =
+            margin.top +
+            plotHeight -
+            (
+              (
+                point[valueKey] -
+                minY
+              ) /
+              (
+                maxY -
+                minY
+              )
+            ) *
+            plotHeight;
+
+          if (index === 0) {
+            ctx.moveTo(
+              x,
+              y
+            );
+          } else {
+            ctx.lineTo(
+              x,
+              y
+            );
+          }
+        }
+      );
+
+      ctx.stroke();
+
+      points.forEach(
+        (point) => {
+          const x =
+            margin.left +
+            (
+              point.t /
+              10
+            ) *
+            plotWidth;
+
+          const y =
+            margin.top +
+            plotHeight -
+            (
+              (
+                point[valueKey] -
+                minY
+              ) /
+              (
+                maxY -
+                minY
+              )
+            ) *
+            plotHeight;
+
+          ctx.fillStyle =
+            "#e11d48";
+
+          ctx.beginPath();
+
+          ctx.arc(
+            x,
+            y,
+            6,
+            0,
+            Math.PI * 2
+          );
+
+          ctx.fill();
+        }
+      );
+    }
+
+    function generateDataAndCharts() {
+      const points =
+        generateData();
+
+      fillDataTable(
+        points
+      );
+
+      drawGraph({
+        canvas:
+          positionCanvas,
+
+        points,
+
+        valueKey:
+          "position",
+
+        yLabel:
+          "x (m)",
+
+        strokeColor:
+          "#0284c7"
+      });
+
+      drawGraph({
+        canvas:
+          velocityCanvas,
+
+        points,
+
+        valueKey:
+          "velocity",
+
+        yLabel:
+          "v (m/s)",
+
+        strokeColor:
+          "#7c3aed"
+      });
+    }
+
+    document
+      .getElementById(
+        "generateData"
+      )
+      ?.addEventListener(
+        "click",
+        generateDataAndCharts
+      );
+
+    /* =====================================================
+       VERIFICARE RAPIDĂ
+       ===================================================== */
+
+    const quickCheckForm =
+      document.getElementById(
+        "quickCheckForm"
+      );
+
+    quickCheckForm
+      ?.addEventListener(
+        "submit",
+        (event) => {
+          event.preventDefault();
+
+          const questions =
+            Array.from(
+              quickCheckForm
+                .querySelectorAll(
+                  "[data-question]"
+                )
+            );
+
+          let correctAnswers = 0;
+          let answered = 0;
+
+          questions.forEach(
+            (question) => {
+              const selected =
+                question.querySelector(
+                  "input:checked"
+                );
+
+              const feedback =
+                question.querySelector(
+                  ".feedback"
+                );
+
+              question
+                .querySelectorAll(
+                  ".answer-option"
+                )
+                .forEach(
+                  (option) => {
+                    option.classList.remove(
+                      "correct",
+                      "incorrect"
+                    );
+                  }
+                );
+
+              if (!selected) {
+                feedback.textContent =
+                  "Alege un răspuns.";
+
+                return;
+              }
+
+              answered += 1;
+
+              const correct =
+                selected.value ===
+                question.dataset.correct;
+
+              const selectedLabel =
+                selected.closest(
+                  ".answer-option"
+                );
+
+              selectedLabel
+                ?.classList
+                .add(
+                  correct
+                    ? "correct"
+                    : "incorrect"
+                );
+
+              if (correct) {
+                correctAnswers += 1;
+                feedback.textContent =
+                  "✓ Corect.";
+              } else {
+                feedback.textContent =
+                  "✗ Răspuns incorect. Recitește explicația și încearcă din nou.";
+              }
+            }
+          );
+
+          const scoreBox =
+            document.getElementById(
+              "scoreBox"
+            );
+
+          scoreBox.classList.add(
+            "visible"
+          );
+
+          if (
+            answered <
+            questions.length
+          ) {
+            scoreBox.textContent =
+              `Ai răspuns la ${answered} din ${questions.length} întrebări. Completează toate răspunsurile.`;
+
+            return;
+          }
+
+          scoreBox.textContent =
+            correctAnswers ===
+            questions.length
+              ? `Excelent! Ai ${correctAnswers} răspunsuri corecte din ${questions.length}.`
+              : `Ai ${correctAnswers} răspunsuri corecte din ${questions.length}. Poți corecta răspunsurile și verifica din nou.`;
+
+          typesetMath(
+            quickCheckForm
+          );
+        }
+      );
+
+    /* =====================================================
+       PORNIRE
+       ===================================================== */
+
+    const hashMatch =
+      window.location.hash.match(
+        /^#pagina-(\d+)$/
+      );
+
+    updateModeButtons();
+    updateSimulation();
+    generateDataAndCharts();
+
+    goToPage(
+      hashMatch
+        ? Number(
+            hashMatch[1]
+          ) - 1
+        : 0
+    );
+  </script>
+
+  <script
+    defer
+    src="../../assets/js/config.js">
+  </script>
+
+  <script
+    defer
+    src="../../assets/js/theme-toggle.js">
+  </script>
+
+  <script
+    defer
+    src="../../assets/js/load-header.js">
+  </script>
+
+  <script
+    defer
+    src="../../assets/js/load-footer.js">
+  </script>
+</body>
+</html>

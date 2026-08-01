@@ -124,7 +124,42 @@
       configured || COMPONENT_PATH
     );
   }
+/**
+ * Încarcă o singură dată stilurile structurale necesare
+ * headerului și footerului.
+ */
+function ensureLayoutStyles() {
+  const stylesheetId =
+    "fizica-galaction-layout-css";
 
+  if (
+    document.getElementById(
+      stylesheetId
+    )
+  ) {
+    return;
+  }
+
+  const link =
+    document.createElement("link");
+
+  link.id = stylesheetId;
+  link.rel = "stylesheet";
+
+  link.href =
+    typeof app.config?.resolve ===
+      "function"
+      ? app.config.resolve(
+          "assets/css/layout.css"
+        )
+      : new URL(
+          "../css/layout.css",
+          scriptUrl ||
+            document.baseURI
+        ).href;
+
+  document.head.appendChild(link);
+}
   /**
    * Normalizează o cale pentru compararea rutelor.
    *

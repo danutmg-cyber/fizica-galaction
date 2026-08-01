@@ -1,1 +1,3561 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
 
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="Laborator interactiv de fizică pentru clasa a VII-a: măsurarea forței de frecare la alunecare și determinarea coeficientului de frecare pe plan înclinat.">
+
+  <title>
+    Măsurarea coeficientului de frecare | Laborator de fizică
+  </title>
+
+  <!-- Stilurile componentelor comune -->
+  <link
+    rel="stylesheet"
+    href="../../assets/css/layout.css">
+
+  <!-- MathJax pentru formule și fracții vizuale -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["\\(", "\\)"]],
+        displayMath: [["\\[", "\\]"]]
+      },
+      options: {
+        skipHtmlTags: [
+          "script",
+          "noscript",
+          "style",
+          "textarea",
+          "pre",
+          "code"
+        ]
+      }
+    };
+  </script>
+
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    :root {
+      --bg: #07111f;
+      --surface: #0e1b31;
+      --surface-2: #122742;
+      --surface-soft: #183653;
+      --border: #315a7e;
+      --text: #f3f8ff;
+      --muted: #c5d8ec;
+      --primary: #67e8f9;
+      --primary-strong: #22d3ee;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --danger: #fb7185;
+      --focus: #fde047;
+      --shadow: 0 22px 54px rgba(0, 0, 0, 0.34);
+      --radius: 24px;
+    }
+
+    body.light,
+    body[data-theme="light"] {
+      --bg: #eef6ff;
+      --surface: #ffffff;
+      --surface-2: #f2f8fd;
+      --surface-soft: #e5f1fb;
+      --border: #96b6d0;
+      --text: #10243a;
+      --muted: #36516b;
+      --primary: #0369a1;
+      --primary-strong: #0284c7;
+      --success: #047857;
+      --warning: #a16207;
+      --danger: #be123c;
+      --focus: #a16207;
+      --shadow: 0 18px 44px rgba(15, 35, 55, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 18px;
+      scroll-behavior: smooth;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+
+      color: var(--text);
+
+      font-family:
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+      font-size:
+        clamp(
+          1rem,
+          0.94rem + 0.34vw,
+          1.22rem
+        );
+
+      line-height: 1.68;
+
+      background:
+        radial-gradient(
+          circle at 8% 0%,
+          rgba(34, 211, 238, 0.13),
+          transparent 24%
+        ),
+        radial-gradient(
+          circle at 92% 4%,
+          rgba(52, 211, 153, 0.12),
+          transparent 24%
+        ),
+        var(--bg);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .lab-shell {
+      width:
+        min(
+          1180px,
+          calc(100% - 24px)
+        );
+
+      margin:
+        clamp(10px, 2vw, 28px)
+        auto;
+
+      padding-bottom: 28px;
+    }
+
+    .lab-card {
+      overflow: hidden;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        var(--radius);
+
+      background:
+        var(--surface);
+
+      box-shadow:
+        var(--shadow);
+    }
+
+    .lab-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+
+      padding:
+        clamp(15px, 2.2vw, 23px)
+        clamp(18px, 3vw, 34px);
+
+      border-bottom:
+        1px solid
+        var(--border);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--surface) 92%,
+          transparent
+        );
+
+      backdrop-filter:
+        blur(10px);
+    }
+
+    .lab-kicker {
+      color:
+        var(--primary);
+
+      font-size:
+        clamp(
+          0.88rem,
+          0.84rem + 0.18vw,
+          1rem
+        );
+
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .lab-title {
+      margin:
+        6px
+        0
+        12px;
+
+      color:
+        var(--text);
+
+      font-size:
+        clamp(
+          1.35rem,
+          1.05rem + 1vw,
+          2rem
+        );
+
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .progress-track {
+      flex: 1;
+
+      height: 12px;
+      overflow: hidden;
+
+      border-radius: 999px;
+
+      background:
+        color-mix(
+          in srgb,
+          var(--text) 12%,
+          transparent
+        );
+    }
+
+    .progress-fill {
+      display: block;
+
+      width: 0;
+      height: 100%;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          var(--success)
+        );
+
+      transition:
+        width
+        180ms
+        ease;
+    }
+
+    .page-counter {
+      color:
+        var(--muted);
+
+      font-size: 1rem;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .lab-pages {
+      min-height:
+        calc(100svh - 160px);
+    }
+
+    .lab-page {
+      display: none;
+
+      padding:
+        clamp(24px, 4vw, 46px)
+        clamp(18px, 4.5vw, 54px)
+        clamp(28px, 4vw, 48px);
+
+      animation:
+        page-in
+        180ms
+        ease;
+    }
+
+    .lab-page.active {
+      display: block;
+    }
+
+    @keyframes page-in {
+      from {
+        opacity: 0.3;
+        transform:
+          translateY(7px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /*
+     * Headerul apare numai în pagina 1,
+     * iar footerul numai în pagina 7.
+     */
+    #header-container,
+    #footer-container {
+      width: 100%;
+    }
+
+    #header-container {
+      margin:
+        calc(-1 * clamp(24px, 4vw, 46px))
+        calc(-1 * clamp(18px, 4.5vw, 54px))
+        clamp(28px, 4vw, 42px);
+
+      width:
+        calc(
+          100% +
+          2 * clamp(18px, 4.5vw, 54px)
+        );
+    }
+
+    #footer-container {
+      margin:
+        clamp(30px, 4vw, 48px)
+        calc(-1 * clamp(18px, 4.5vw, 54px))
+        calc(-1 * clamp(28px, 4vw, 48px));
+
+      width:
+        calc(
+          100% +
+          2 * clamp(18px, 4.5vw, 54px)
+        );
+    }
+
+    h2 {
+      margin:
+        0
+        0
+        14px;
+
+      color:
+        var(--text);
+
+      font-size:
+        clamp(
+          1.72rem,
+          1.28rem + 1.34vw,
+          2.75rem
+        );
+
+      line-height: 1.18;
+    }
+
+    h3 {
+      margin:
+        0
+        0
+        10px;
+
+      color:
+        var(--text);
+
+      font-size:
+        clamp(
+          1.18rem,
+          1.05rem + 0.44vw,
+          1.55rem
+        );
+
+      line-height: 1.3;
+    }
+
+    p {
+      margin:
+        0
+        0
+        16px;
+    }
+
+    .lead {
+      color:
+        var(--text);
+
+      font-size:
+        clamp(
+          1.12rem,
+          1rem + 0.45vw,
+          1.42rem
+        );
+
+      line-height: 1.65;
+    }
+
+    .muted {
+      color:
+        var(--muted);
+    }
+
+    .highlight {
+      color:
+        var(--success);
+
+      font-weight: 850;
+    }
+
+    .page-badge {
+      display: inline-block;
+
+      margin-bottom: 14px;
+      padding:
+        8px
+        13px;
+
+      border-radius:
+        999px;
+
+      color:
+        var(--primary);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--primary) 13%,
+          transparent
+        );
+
+      font-size: 1rem;
+      font-weight: 850;
+    }
+
+    .large-icon {
+      margin-bottom: 14px;
+
+      font-size:
+        clamp(
+          2.8rem,
+          2.2rem + 1.7vw,
+          4.2rem
+        );
+
+      line-height: 1;
+    }
+
+    .grid {
+      display: grid;
+      gap:
+        clamp(
+          14px,
+          2vw,
+          22px
+        );
+    }
+
+    .grid.two {
+      grid-template-columns: 1fr;
+    }
+
+    .grid.three {
+      grid-template-columns: 1fr;
+    }
+
+    .panel,
+    .quick-check,
+    details {
+      padding:
+        clamp(
+          17px,
+          2.4vw,
+          25px
+        );
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        20px;
+
+      background:
+        var(--surface-2);
+    }
+
+    .remember {
+      margin-top: 18px;
+
+      padding:
+        clamp(
+          16px,
+          2.2vw,
+          22px
+        );
+
+      border-left:
+        6px solid
+        var(--success);
+
+      border-radius:
+        15px;
+
+      color:
+        var(--text);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--success) 12%,
+          var(--surface)
+        );
+    }
+
+    .warning {
+      margin-top: 18px;
+
+      padding:
+        clamp(
+          16px,
+          2.2vw,
+          22px
+        );
+
+      border-left:
+        6px solid
+        var(--warning);
+
+      border-radius:
+        15px;
+
+      color:
+        var(--text);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--warning) 12%,
+          var(--surface)
+        );
+    }
+
+    .formula-box {
+      margin:
+        14px
+        0;
+
+      padding:
+        16px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        16px;
+
+      color:
+        var(--warning);
+
+      background:
+        var(--surface-soft);
+
+      font-size:
+        clamp(
+          1.25rem,
+          1.05rem + 0.65vw,
+          1.85rem
+        );
+
+      font-weight: 850;
+
+      text-align: center;
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 26px;
+    }
+
+    li {
+      margin-bottom: 12px;
+      line-height: 1.62;
+    }
+
+    .setup-list {
+      display: grid;
+      gap: 10px;
+
+      margin-top: 14px;
+    }
+
+    .setup-item {
+      display: grid;
+      grid-template-columns:
+        42px
+        1fr;
+
+      align-items: start;
+      gap: 12px;
+
+      padding:
+        12px
+        14px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        14px;
+
+      background:
+        var(--surface-soft);
+    }
+
+    .setup-icon {
+      display: grid;
+      place-items: center;
+
+      width: 42px;
+      height: 42px;
+
+      border-radius: 12px;
+
+      background:
+        color-mix(
+          in srgb,
+          var(--primary) 16%,
+          transparent
+        );
+
+      font-size: 1.45rem;
+    }
+
+    /* =====================================================
+       SIMULATOR
+       ===================================================== */
+
+    .simulator {
+      padding:
+        clamp(
+          15px,
+          2vw,
+          22px
+        );
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        22px;
+
+      background:
+        var(--surface-2);
+    }
+
+    .incline-scene {
+      position: relative;
+
+      min-height: 360px;
+      overflow: hidden;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        18px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #9bd8ff 0%,
+          #e7f5ff 58%,
+          #cbd5e1 59%,
+          #64748b 100%
+        );
+    }
+
+    .incline-board {
+      position: absolute;
+      left: 13%;
+      bottom: 70px;
+
+      width: 72%;
+      height: 20px;
+
+      border:
+        3px solid
+        #4a2d17;
+
+      border-radius:
+        8px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #d8a66a,
+          #a86d35
+        );
+
+      transform-origin:
+        left center;
+
+      transform:
+        rotate(-20deg);
+    }
+
+    .block {
+      position: absolute;
+      left: 36%;
+      bottom: 144px;
+
+      width: 86px;
+      height: 62px;
+
+      border:
+        4px solid
+        #10243a;
+
+      border-radius:
+        12px;
+
+      color: #10243a;
+
+      background:
+        linear-gradient(
+          135deg,
+          #fbbf24,
+          #f59e0b
+        );
+
+      font-size: 1rem;
+      font-weight: 900;
+
+      text-align: center;
+      line-height: 54px;
+
+      transform:
+        rotate(-20deg);
+    }
+
+    .dynamometer {
+      position: absolute;
+      right: 9%;
+      top: 88px;
+
+      min-width: 165px;
+
+      padding:
+        12px
+        14px;
+
+      border:
+        4px solid
+        #10243a;
+
+      border-radius:
+        15px;
+
+      color: #10243a;
+
+      background:
+        #ecfeff;
+
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .rope {
+      position: absolute;
+      left: 51%;
+      top: 145px;
+
+      width: 31%;
+      height: 5px;
+
+      border-radius: 999px;
+
+      background: #334155;
+
+      transform-origin: left center;
+      transform: rotate(-20deg);
+    }
+
+    .force-arrow {
+      position: absolute;
+
+      display: none;
+
+      min-width: 110px;
+      padding:
+        8px
+        10px;
+
+      border-radius: 12px;
+
+      color: #ffffff;
+
+      font-size: 0.95rem;
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .show-forces
+    .force-arrow {
+      display: block;
+    }
+
+    .arrow-pull {
+      right: 23%;
+      top: 152px;
+
+      background: #0284c7;
+    }
+
+    .arrow-friction {
+      left: 21%;
+      bottom: 121px;
+
+      background: #e11d48;
+    }
+
+    .arrow-weight {
+      left: 40%;
+      bottom: 36px;
+
+      background: #7c3aed;
+    }
+
+    .arrow-normal {
+      left: 42%;
+      top: 88px;
+
+      background: #047857;
+    }
+
+    .control-grid {
+      display: grid;
+      gap: 14px;
+
+      margin-top: 18px;
+    }
+
+    .control-card {
+      padding:
+        14px
+        15px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        15px;
+
+      background:
+        var(--surface-soft);
+    }
+
+    .control-card label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+
+      margin-bottom: 10px;
+
+      color:
+        var(--text);
+
+      font-weight: 800;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      min-height: 34px;
+
+      accent-color:
+        var(--primary-strong);
+    }
+
+    .results-grid {
+      display: grid;
+      gap: 12px;
+
+      margin-top: 16px;
+    }
+
+    .result-card {
+      padding:
+        14px
+        15px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        15px;
+
+      background:
+        var(--surface-soft);
+    }
+
+    .result-card strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .result-value {
+      color:
+        var(--primary);
+
+      font-size: 1.2rem;
+      font-weight: 900;
+    }
+
+    .sim-message {
+      min-height: 84px;
+
+      margin-top: 16px;
+
+      padding: 16px;
+
+      border-left:
+        5px solid
+        var(--primary);
+
+      border-radius:
+        14px;
+
+      color:
+        var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    /* =====================================================
+       TABEL DE MĂSURĂTORI
+       ===================================================== */
+
+    .table-wrap {
+      overflow-x: auto;
+
+      margin-top: 16px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        17px;
+    }
+
+    .measure-table {
+      width: 100%;
+      min-width: 920px;
+
+      border-collapse:
+        collapse;
+    }
+
+    .measure-table th,
+    .measure-table td {
+      padding:
+        12px
+        11px;
+
+      border-bottom:
+        1px solid
+        var(--border);
+
+      border-right:
+        1px solid
+        var(--border);
+
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .measure-table th:last-child,
+    .measure-table td:last-child {
+      border-right: 0;
+    }
+
+    .measure-table tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .measure-table th {
+      color:
+        var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    .measure-table input {
+      width: 94px;
+      min-height: 44px;
+
+      padding:
+        8px
+        9px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        10px;
+
+      color:
+        var(--text);
+
+      background:
+        var(--surface);
+    }
+
+    .measure-table output {
+      display: inline-block;
+
+      min-width: 72px;
+
+      color:
+        var(--primary);
+
+      font-weight: 850;
+    }
+
+    .average-box {
+      margin-top: 17px;
+
+      padding:
+        16px;
+
+      border:
+        2px solid
+        var(--success);
+
+      border-radius:
+        16px;
+
+      color:
+        var(--text);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--success) 11%,
+          var(--surface)
+        );
+
+      font-size: 1.1rem;
+      font-weight: 850;
+    }
+
+    /* =====================================================
+       VERIFICARE RAPIDĂ
+       ===================================================== */
+
+    .quick-check {
+      margin-bottom: 16px;
+    }
+
+    .quick-check fieldset {
+      display: grid;
+      gap: 11px;
+
+      margin: 14px 0 0;
+      padding: 0;
+
+      border: 0;
+    }
+
+    .quick-check legend {
+      margin-bottom: 12px;
+      padding: 0;
+
+      color:
+        var(--text);
+
+      font-size: 1.08rem;
+      font-weight: 850;
+    }
+
+    .answer-option {
+      display: grid;
+      grid-template-columns:
+        auto
+        1fr;
+
+      align-items: start;
+      gap: 12px;
+
+      min-height: 54px;
+
+      padding:
+        13px
+        15px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        14px;
+
+      color:
+        var(--text);
+
+      background:
+        var(--surface-soft);
+
+      cursor: pointer;
+    }
+
+    .answer-option:hover {
+      border-color:
+        var(--primary);
+    }
+
+    .answer-option input {
+      width: 22px;
+      height: 22px;
+
+      margin-top: 2px;
+
+      accent-color:
+        var(--primary-strong);
+    }
+
+    .answer-option.correct {
+      border-color:
+        var(--success);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--success) 14%,
+          var(--surface)
+        );
+    }
+
+    .answer-option.incorrect {
+      border-color:
+        var(--danger);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--danger) 12%,
+          var(--surface)
+        );
+    }
+
+    .feedback {
+      min-height: 30px;
+
+      margin-top: 12px;
+
+      color:
+        var(--text);
+
+      font-weight: 800;
+    }
+
+    .score-box {
+      display: none;
+
+      margin-top: 18px;
+
+      padding: 18px;
+
+      border:
+        2px solid
+        var(--success);
+
+      border-radius:
+        17px;
+
+      color:
+        var(--text);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--success) 11%,
+          var(--surface)
+        );
+
+      font-size: 1.1rem;
+      font-weight: 850;
+    }
+
+    .score-box.visible {
+      display: block;
+    }
+
+    /* =====================================================
+       BUTOANE
+       ===================================================== */
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      margin-top: 24px;
+    }
+
+    .button,
+    button {
+      appearance: none;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-height: 56px;
+
+      padding:
+        16px
+        22px;
+
+      border: 0;
+      border-radius: 15px;
+
+      font-size:
+        clamp(
+          1.04rem,
+          1rem + 0.18vw,
+          1.18rem
+        );
+
+      font-weight: 900;
+      text-align: center;
+      text-decoration: none;
+
+      cursor: pointer;
+
+      transition:
+        transform
+        120ms
+        ease,
+        filter
+        120ms
+        ease;
+    }
+
+    .button:hover,
+    button:hover {
+      filter:
+        brightness(1.05);
+    }
+
+    .button:active,
+    button:active {
+      transform:
+        scale(0.98);
+    }
+
+    .button:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    summary:focus-visible {
+      outline:
+        4px solid
+        var(--focus);
+
+      outline-offset: 4px;
+    }
+
+    .button-primary {
+      width: 100%;
+
+      color: #062132;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          var(--success)
+        );
+    }
+
+    .button-secondary {
+      width: 100%;
+
+      border:
+        1px solid
+        var(--border);
+
+      color:
+        var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    .button-calculate {
+      width: 100%;
+
+      color: #ffffff;
+
+      background:
+        linear-gradient(
+          90deg,
+          #7c3aed,
+          #a855f7
+        );
+    }
+
+    .button-home {
+      width: 100%;
+
+      color: #062132;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          #38bdf8
+        );
+    }
+
+    @media (min-width: 820px) {
+      .grid.two {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+      }
+
+      .grid.three {
+        grid-template-columns:
+          repeat(
+            3,
+            minmax(0, 1fr)
+          );
+      }
+
+      .control-grid {
+        grid-template-columns:
+          repeat(
+            3,
+            minmax(0, 1fr)
+          );
+      }
+
+      .results-grid {
+        grid-template-columns:
+          repeat(
+            4,
+            minmax(0, 1fr)
+          );
+      }
+
+      .controls
+      .button-secondary {
+        width: auto;
+        min-width: 170px;
+      }
+
+      .controls
+      .button-primary {
+        width: auto;
+        min-width: 240px;
+        margin-left: auto;
+      }
+
+      .controls
+      .button-calculate {
+        width: auto;
+        min-width: 250px;
+      }
+
+      .controls.end {
+        justify-content: center;
+      }
+
+      .controls.end
+      .button-home {
+        width: auto;
+        min-width: 360px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      html {
+        font-size: 17px;
+      }
+
+      .lab-shell {
+        width:
+          calc(100% - 12px);
+
+        margin:
+          6px
+          auto;
+      }
+
+      .lab-card {
+        border-radius: 19px;
+      }
+
+      .lab-page {
+        padding:
+          22px
+          14px
+          28px;
+      }
+
+      #header-container {
+        margin:
+          -22px
+          -14px
+          24px;
+
+        width:
+          calc(100% + 28px);
+      }
+
+      #footer-container {
+        margin:
+          28px
+          -14px
+          -28px;
+
+        width:
+          calc(100% + 28px);
+      }
+
+      .lab-topbar {
+        padding:
+          14px
+          15px;
+      }
+
+      .progress-row {
+        align-items:
+          flex-start;
+      }
+
+      .page-counter {
+        white-space: normal;
+      }
+
+      .incline-scene {
+        min-height: 300px;
+      }
+
+      .incline-board {
+        left: 7%;
+        bottom: 70px;
+        width: 84%;
+      }
+
+      .block {
+        left: 31%;
+        bottom: 135px;
+        width: 74px;
+        height: 56px;
+        line-height: 48px;
+      }
+
+      .dynamometer {
+        right: 5%;
+        top: 62px;
+        min-width: 132px;
+        font-size: 0.88rem;
+      }
+
+      .rope {
+        left: 50%;
+        top: 129px;
+        width: 34%;
+      }
+    }
+
+    @media (
+      prefers-reduced-motion:
+      reduce
+    ) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .lab-page,
+      .progress-fill,
+      .button,
+      button {
+        animation: none;
+        transition: none;
+      }
+    }
+
+    @media print {
+      .lab-topbar,
+      .controls,
+      #header-container,
+      #footer-container {
+        display: none !important;
+      }
+
+      .lab-page {
+        display: block !important;
+        break-after: page;
+      }
+
+      body {
+        color: #000000;
+        background: #ffffff;
+      }
+
+      .lab-card,
+      .panel,
+      .quick-check,
+      .simulator {
+        color: #000000;
+        background: #ffffff;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+
+<body data-page-type="lab">
+  <div class="lab-shell">
+    <div class="lab-card">
+      <div class="lab-topbar">
+        <div class="lab-kicker">
+          Laborator de fizică • Clasa a VII-a
+        </div>
+
+        <div
+          class="lab-title"
+          id="topTitle">
+          Măsurarea coeficientului de frecare
+        </div>
+
+        <div class="progress-row">
+          <div
+            class="progress-track"
+            aria-hidden="true">
+            <span
+              class="progress-fill"
+              id="progressFill">
+            </span>
+          </div>
+
+          <div
+            class="page-counter"
+            id="pageCounter"
+            aria-live="polite">
+            Pagina 1 din 7
+          </div>
+        </div>
+      </div>
+
+      <main
+        id="main-content"
+        class="lab-pages">
+
+        <!-- PAGINA 1: headerul comun apare numai aici -->
+        <section
+          class="lab-page active"
+          data-title="Măsurarea coeficientului de frecare – introducere"
+          aria-hidden="false">
+
+          <div id="header-container"></div>
+
+          <div class="page-badge">
+            Pagina 1 • Întrebarea laboratorului
+          </div>
+
+          <div
+            class="large-icon"
+            aria-hidden="true">
+            📐
+          </div>
+
+          <h2>
+            Cum măsurăm frecarea dintre un corp și un plan înclinat?
+          </h2>
+
+          <p class="lead">
+            Vom deplasa un corp
+            <span class="highlight">
+              în sus pe un plan înclinat, cu viteză constantă
+            </span>,
+            folosind un dinamometru. Din indicația dinamometrului
+            vom calcula forța de frecare la alunecare și
+            coeficientul de frecare.
+          </p>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Ce vei determina</h3>
+
+              <ul>
+                <li>
+                  componenta greutății paralelă cu planul;
+                </li>
+
+                <li>
+                  reacțiunea normală a planului;
+                </li>
+
+                <li>
+                  forța de frecare la alunecare;
+                </li>
+
+                <li>
+                  coeficientul de frecare \(\mu\).
+                </li>
+              </ul>
+            </article>
+
+            <article class="panel">
+              <h3>Ideea experimentală</h3>
+
+              <p>
+                La viteză constantă, rezultanta forțelor pe
+                direcția planului este zero. Forța indicată de
+                dinamometru echilibrează componenta greutății
+                și forța de frecare.
+              </p>
+            </article>
+          </div>
+
+          <div class="warning">
+            Folosește corpuri ușoare, fixează bine planul și nu
+            ridica planul la un unghi la care corpul poate cădea.
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="1">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 2 -->
+        <section
+          class="lab-page"
+          data-title="Forțele pe planul înclinat"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 2 • Teorie
+          </div>
+
+          <h2>
+            Forțele care acționează asupra corpului
+          </h2>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Pe direcția planului</h3>
+
+              <p>
+                Corpul este tras în sus cu forța \(F\).
+                În josul planului acționează componenta
+                greutății și forța de frecare.
+              </p>
+
+              <div class="formula-box">
+                \[
+                  G_{\parallel}=mg\sin\alpha
+                \]
+              </div>
+
+              <div class="formula-box">
+                \[
+                  F_f=F-mg\sin\alpha
+                \]
+              </div>
+            </article>
+
+            <article class="panel">
+              <h3>Perpendicular pe plan</h3>
+
+              <p>
+                Reacțiunea normală a planului este egală cu
+                componenta greutății perpendiculară pe plan.
+              </p>
+
+              <div class="formula-box">
+                \[
+                  N=mg\cos\alpha
+                \]
+              </div>
+
+              <div class="formula-box">
+                \[
+                  \mu=\frac{F_f}{N}
+                \]
+              </div>
+            </article>
+          </div>
+
+          <div class="remember">
+            Relațiile de mai sus sunt valabile când corpul este
+            tras <strong>în sus pe plan</strong>, iar viteza sa
+            este constantă.
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="0">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="2">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 3 -->
+        <section
+          class="lab-page"
+          data-title="Montajul experimental"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 3 • Pregătește experimentul
+          </div>
+
+          <h2>
+            Materiale și montaj
+          </h2>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Materiale necesare</h3>
+
+              <div class="setup-list">
+                <div class="setup-item">
+                  <span
+                    class="setup-icon"
+                    aria-hidden="true">
+                    📏
+                  </span>
+
+                  <span>
+                    plan înclinat cu unghi reglabil;
+                  </span>
+                </div>
+
+                <div class="setup-item">
+                  <span
+                    class="setup-icon"
+                    aria-hidden="true">
+                    🧱
+                  </span>
+
+                  <span>
+                    corp paralelipipedic cu masă cunoscută;
+                  </span>
+                </div>
+
+                <div class="setup-item">
+                  <span
+                    class="setup-icon"
+                    aria-hidden="true">
+                    ⚖️
+                  </span>
+
+                  <span>
+                    balanță sau valoarea masei inscripționată;
+                  </span>
+                </div>
+
+                <div class="setup-item">
+                  <span
+                    class="setup-icon"
+                    aria-hidden="true">
+                    🪝
+                  </span>
+
+                  <span>
+                    dinamometru;
+                  </span>
+                </div>
+
+                <div class="setup-item">
+                  <span
+                    class="setup-icon"
+                    aria-hidden="true">
+                    📐
+                  </span>
+
+                  <span>
+                    raportor sau inclinometru.
+                  </span>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <h3>Mod de lucru</h3>
+
+              <ol>
+                <li>
+                  Măsoară masa corpului \(m\).
+                </li>
+
+                <li>
+                  Reglează unghiul planului \(\alpha\).
+                </li>
+
+                <li>
+                  Leagă corpul de dinamometru.
+                </li>
+
+                <li>
+                  Trage corpul în sus, paralel cu planul.
+                </li>
+
+                <li>
+                  Citește forța \(F\) numai când viteza este
+                  aproximativ constantă.
+                </li>
+
+                <li>
+                  Repetă măsurarea de cel puțin trei ori.
+                </li>
+              </ol>
+            </article>
+          </div>
+
+          <div class="warning">
+            Nu folosi valoarea maximă apărută la pornire.
+            Aceasta poate fi influențată de frecarea statică.
+            Pentru frecarea la alunecare se citește forța în
+            timpul mișcării uniforme.
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="1">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="3">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 4 -->
+        <section
+          class="lab-page"
+          data-title="Simulatorul planului înclinat"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 4 • Simulează
+          </div>
+
+          <h2>
+            Simulator: corp tras în sus cu viteză constantă
+          </h2>
+
+          <p class="lead">
+            Modifică masa, unghiul și coeficientul de frecare.
+            Simulatorul calculează forța pe care ar indica-o
+            dinamometrul.
+          </p>
+
+          <div
+            class="simulator"
+            id="simulator">
+
+            <div
+              class="incline-scene"
+              id="inclineScene"
+              aria-label="Corp pe un plan înclinat, tras cu un dinamometru">
+
+              <div
+                class="incline-board"
+                id="inclineBoard">
+              </div>
+
+              <div
+                class="block"
+                id="block">
+                corp
+              </div>
+
+              <div
+                class="rope"
+                id="rope">
+              </div>
+
+              <div
+                class="dynamometer"
+                id="dynamometer">
+                Dinamometru:
+                <span id="dynamometerValue">
+                  3,40 N
+                </span>
+              </div>
+
+              <div class="force-arrow arrow-pull">
+                \(F\) în sus
+              </div>
+
+              <div class="force-arrow arrow-friction">
+                \(F_f\) în jos
+              </div>
+
+              <div class="force-arrow arrow-weight">
+                \(G=mg\)
+              </div>
+
+              <div class="force-arrow arrow-normal">
+                \(N\)
+              </div>
+            </div>
+
+            <div class="control-grid">
+              <div class="control-card">
+                <label for="massSlider">
+                  <span>Masă</span>
+                  <output id="massOutput">
+                    0,50 kg
+                  </output>
+                </label>
+
+                <input
+                  type="range"
+                  id="massSlider"
+                  min="0.20"
+                  max="1.50"
+                  step="0.05"
+                  value="0.50">
+              </div>
+
+              <div class="control-card">
+                <label for="angleSlider">
+                  <span>Unghiul planului</span>
+                  <output id="angleOutput">
+                    20°
+                  </output>
+                </label>
+
+                <input
+                  type="range"
+                  id="angleSlider"
+                  min="5"
+                  max="40"
+                  step="1"
+                  value="20">
+              </div>
+
+              <div class="control-card">
+                <label for="muSlider">
+                  <span>Coeficient real</span>
+                  <output id="muOutput">
+                    0,36
+                  </output>
+                </label>
+
+                <input
+                  type="range"
+                  id="muSlider"
+                  min="0.10"
+                  max="0.80"
+                  step="0.01"
+                  value="0.36">
+              </div>
+            </div>
+
+            <label
+              class="control-card"
+              style="display:flex; gap:12px; align-items:center; margin-top:14px;">
+
+              <input
+                type="checkbox"
+                id="showForces"
+                style="width:24px; height:24px;">
+
+              <span>
+                Afișează forțele
+              </span>
+            </label>
+
+            <div class="results-grid">
+              <div class="result-card">
+                <strong>
+                  \(mg\sin\alpha\)
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="parallelValue">
+                  1,71 N
+                </span>
+              </div>
+
+              <div class="result-card">
+                <strong>
+                  \(N=mg\cos\alpha\)
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="normalValue">
+                  4,70 N
+                </span>
+              </div>
+
+              <div class="result-card">
+                <strong>
+                  \(F_f=\mu N\)
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="frictionValue">
+                  1,69 N
+                </span>
+              </div>
+
+              <div class="result-card">
+                <strong>
+                  \(F=mg\sin\alpha+F_f\)
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="pullValue">
+                  3,40 N
+                </span>
+              </div>
+            </div>
+
+            <div
+              class="sim-message"
+              id="simMessage"
+              role="status"
+              aria-live="polite">
+              Pentru viteză constantă, dinamometrul trebuie să
+              echilibreze componenta greutății și frecarea.
+            </div>
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="2">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="4">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 5 -->
+        <section
+          class="lab-page"
+          data-title="Tabelul de măsurători"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 5 • Măsoară și calculează
+          </div>
+
+          <h2>
+            Introdu valorile experimentale
+          </h2>
+
+          <p class="lead">
+            Pentru fiecare determinare completează masa,
+            unghiul și forța indicată de dinamometru.
+            Calculatorul folosește \(g=10\,\mathrm{N/kg}\).
+          </p>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-calculate"
+              id="copySimulation">
+              Preia valorile simulatorului în rândul 1
+            </button>
+          </div>
+
+          <div class="table-wrap">
+            <table class="measure-table">
+              <thead>
+                <tr>
+                  <th>Nr.</th>
+                  <th>
+                    \(m\)
+                    (kg)
+                  </th>
+                  <th>
+                    \(\alpha\)
+                    (°)
+                  </th>
+                  <th>
+                    \(F\)
+                    (N)
+                  </th>
+                  <th>
+                    \(mg\sin\alpha\)
+                    (N)
+                  </th>
+                  <th>
+                    \(F_f\)
+                    (N)
+                  </th>
+                  <th>
+                    \(N\)
+                    (N)
+                  </th>
+                  <th>
+                    \(\mu\)
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody id="measurementBody">
+                <tr data-row="1">
+                  <td>1</td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                      value="0.50"
+                      data-field="mass"
+                      aria-label="Masa pentru determinarea 1">
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      max="60"
+                      step="1"
+                      value="20"
+                      data-field="angle"
+                      aria-label="Unghiul pentru determinarea 1">
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value="3.40"
+                      data-field="force"
+                      aria-label="Forța pentru determinarea 1">
+                  </td>
+
+                  <td>
+                    <output data-output="parallel">
+                      —
+                    </output>
+                  </td>
+
+                  <td>
+                    <output data-output="friction">
+                      —
+                    </output>
+                  </td>
+
+                  <td>
+                    <output data-output="normal">
+                      —
+                    </output>
+                  </td>
+
+                  <td>
+                    <output data-output="mu">
+                      —
+                    </output>
+                  </td>
+                </tr>
+
+                <tr data-row="2">
+                  <td>2</td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                      value="0.50"
+                      data-field="mass"
+                      aria-label="Masa pentru determinarea 2">
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      max="60"
+                      step="1"
+                      value="25"
+                      data-field="angle"
+                      aria-label="Unghiul pentru determinarea 2">
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value="3.74"
+                      data-field="force"
+                      aria-label="Forța pentru determinarea 2">
+                  </td>
+
+                  <td>
+                    <output data-output="parallel">
+                      —
+                    </output>
+                  </td>
+
+                  <td>
+                    <output data-output="friction">
+                      —
+                    </output>
+                  </td>
+
+                  <td>
+                    <output data-output="normal">
+                      —
+                    </output>
+                  </td>
+
+                  <td>
+                    <output data-output="mu">
+                      —
+                    </output>
+                  </td>
+                </tr>
+
+                <tr data-row="3">
+                  <td>3</td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                      value="0.50"
+                      data-field="mass"
+                      aria-label="Masa pentru determinarea 3">
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      max="60"
+                      step="1"
+                      value="30"
+                      data-field="angle"
+                      aria-label="Unghiul pentru determinarea 3">
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      value="4.06"
+                      data-field="force"
+                      aria-label="Forța pentru determinarea 3">
+                  </td>
+
+                  <td>
+                    <output data-output="parallel">
+                      —
+                    </output>
+                  </td>
+
+                  <td>
+                    <output data-output="friction">
+                      —
+                    </output>
+                  </td>
+
+                  <td>
+                    <output data-output="normal">
+                      —
+                    </output>
+                  </td>
+
+                  <td>
+                    <output data-output="mu">
+                      —
+                    </output>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-calculate"
+              id="calculateMeasurements">
+              Calculează rezultatele
+            </button>
+          </div>
+
+          <div
+            class="average-box"
+            id="averageBox"
+            role="status"
+            aria-live="polite">
+            Coeficientul mediu va apărea aici.
+          </div>
+
+          <div class="warning">
+            Dacă rezultă \(F_f&lt;0\), măsurarea nu este validă:
+            forța citită este prea mică pentru a trage corpul în
+            sus cu viteză constantă.
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="3">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="5">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 6 -->
+        <section
+          class="lab-page"
+          data-title="Calcul numeric și verificare rapidă"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 6 • Aplică
+          </div>
+
+          <h2>
+            Exemplu numeric
+          </h2>
+
+          <div class="panel">
+            <p>
+              Pentru
+              \(m=0{,}50\,\mathrm{kg}\),
+              \(\alpha=20^\circ\),
+              \(F=3{,}40\,\mathrm{N}\)
+              și
+              \(g=10\,\mathrm{N/kg}\):
+            </p>
+
+            <div class="formula-box">
+              \[
+                mg\sin\alpha
+                =
+                0{,}50\cdot10\cdot\sin20^\circ
+                \approx
+                1{,}71\,\mathrm{N}
+              \]
+            </div>
+
+            <div class="formula-box">
+              \[
+                F_f
+                =
+                F-mg\sin\alpha
+                =
+                3{,}40-1{,}71
+                =
+                1{,}69\,\mathrm{N}
+              \]
+            </div>
+
+            <div class="formula-box">
+              \[
+                N
+                =
+                mg\cos\alpha
+                =
+                0{,}50\cdot10\cdot\cos20^\circ
+                \approx
+                4{,}70\,\mathrm{N}
+              \]
+            </div>
+
+            <div class="formula-box">
+              \[
+                \mu
+                =
+                \frac{F_f}{N}
+                =
+                \frac{1{,}69}{4{,}70}
+                \approx
+                0{,}36
+              \]
+            </div>
+          </div>
+
+          <h2 style="margin-top: 28px;">
+            Verificare rapidă
+          </h2>
+
+          <form id="quickCheckForm">
+            <section
+              class="quick-check"
+              data-question="q1"
+              data-correct="b">
+
+              <fieldset>
+                <legend>
+                  1. De ce citim dinamometrul când corpul se
+                  deplasează cu viteză constantă?
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q1"
+                    value="a">
+
+                  <span>
+                    Pentru că greutatea corpului devine zero.
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q1"
+                    value="b">
+
+                  <span>
+                    Pentru că rezultanta forțelor pe direcția
+                    planului este zero.
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q1"
+                    value="c">
+
+                  <span>
+                    Pentru că planul nu mai exercită reacțiune.
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <section
+              class="quick-check"
+              data-question="q2"
+              data-correct="c">
+
+              <fieldset>
+                <legend>
+                  2. Pentru corpul tras în sus, forța de frecare
+                  se calculează cu:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q2"
+                    value="a">
+
+                  <span>
+                    \(F_f=F+mg\sin\alpha\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q2"
+                    value="b">
+
+                  <span>
+                    \(F_f=mg\cos\alpha-F\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q2"
+                    value="c">
+
+                  <span>
+                    \(F_f=F-mg\sin\alpha\)
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <section
+              class="quick-check"
+              data-question="q3"
+              data-correct="a">
+
+              <fieldset>
+                <legend>
+                  3. Reacțiunea normală a planului este:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q3"
+                    value="a">
+
+                  <span>
+                    \(N=mg\cos\alpha\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q3"
+                    value="b">
+
+                  <span>
+                    \(N=mg\sin\alpha\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q3"
+                    value="c">
+
+                  <span>
+                    \(N=F_f+F\)
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <section
+              class="quick-check"
+              data-question="q4"
+              data-correct="b">
+
+              <fieldset>
+                <legend>
+                  4. Coeficientul de frecare la alunecare este:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q4"
+                    value="a">
+
+                  <span>
+                    \(\mu=F_f\cdot N\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q4"
+                    value="b">
+
+                  <span>
+                    \(\mu=\frac{F_f}{N}\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q4"
+                    value="c">
+
+                  <span>
+                    \(\mu=\frac{N}{F_f}\)
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <button
+              type="submit"
+              class="button-primary">
+              Verifică răspunsurile
+            </button>
+
+            <div
+              class="score-box"
+              id="scoreBox"
+              role="status"
+              aria-live="polite">
+            </div>
+          </form>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="4">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="6">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 7: footerul comun apare numai aici -->
+        <section
+          class="lab-page"
+          data-title="Concluzii"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 7 • Concluzie
+          </div>
+
+          <h2>
+            Ce ai determinat?
+          </h2>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Forța de frecare</h3>
+
+              <p>
+                La deplasarea uniformă în sus pe plan:
+              </p>
+
+              <div class="formula-box">
+                \[
+                  F_f=F-mg\sin\alpha
+                \]
+              </div>
+            </article>
+
+            <article class="panel">
+              <h3>Reacțiunea normală</h3>
+
+              <p>
+                Pentru un corp pe planul înclinat:
+              </p>
+
+              <div class="formula-box">
+                \[
+                  N=mg\cos\alpha
+                \]
+              </div>
+            </article>
+
+            <article class="panel">
+              <h3>Coeficientul de frecare</h3>
+
+              <p>
+                Pentru fiecare determinare:
+              </p>
+
+              <div class="formula-box">
+                \[
+                  \mu=\frac{F_f}{N}
+                \]
+              </div>
+            </article>
+
+            <article class="panel">
+              <h3>Rezultatul final</h3>
+
+              <p>
+                Valoarea experimentală este media coeficienților
+                calculați din măsurările valide.
+              </p>
+            </article>
+          </div>
+
+          <div class="remember">
+            <strong>Concluzie:</strong>
+            coeficientul de frecare depinde de natura și starea
+            suprafețelor aflate în contact. În limitele
+            experimentului școlar, el nu depinde de aria
+            aparentă de contact.
+          </div>
+
+          <div class="warning">
+            Surse de eroare: citirea dinamometrului, variația
+            vitezei, măsurarea unghiului, neuniformitatea
+            suprafețelor și tragerea într-o direcție care nu este
+            perfect paralelă cu planul.
+          </div>
+
+          <div class="controls end">
+            <button
+              type="button"
+              class="button-calculate"
+              onclick="window.print()">
+              Tipărește fișa laboratorului
+            </button>
+
+            <a
+              class="button button-home"
+              href="../index.html">
+              Înapoi la laborator
+            </a>
+
+            <a
+              class="button button-secondary"
+              href="../../index.html">
+              Pagina principală
+            </a>
+          </div>
+
+          <div id="footer-container"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    "use strict";
+
+    const G = 10;
+
+    const pages = Array.from(
+      document.querySelectorAll(
+        ".lab-page"
+      )
+    );
+
+    const progressFill =
+      document.getElementById(
+        "progressFill"
+      );
+
+    const pageCounter =
+      document.getElementById(
+        "pageCounter"
+      );
+
+    const topTitle =
+      document.getElementById(
+        "topTitle"
+      );
+
+    function toRadians(degrees) {
+      return (
+        Number(degrees) *
+        Math.PI /
+        180
+      );
+    }
+
+    function formatNumber(
+      value,
+      decimals = 2
+    ) {
+      return Number(value)
+        .toFixed(decimals)
+        .replace(".", ",");
+    }
+
+    function typesetMath(root) {
+      window.MathJax
+        ?.typesetPromise
+        ?.([root]);
+    }
+
+    function goToPage(index) {
+      const target =
+        Math.min(
+          Math.max(
+            Number(index) || 0,
+            0
+          ),
+          pages.length - 1
+        );
+
+      pages.forEach(
+        (page, pageIndex) => {
+          const active =
+            pageIndex === target;
+
+          page.classList.toggle(
+            "active",
+            active
+          );
+
+          page.setAttribute(
+            "aria-hidden",
+            String(!active)
+          );
+        }
+      );
+
+      const current =
+        pages[target];
+
+      topTitle.textContent =
+        current.dataset.title ||
+        "Măsurarea coeficientului de frecare";
+
+      pageCounter.textContent =
+        `Pagina ${target + 1} din ${pages.length}`;
+
+      progressFill.style.width =
+        `${((target + 1) / pages.length) * 100}%`;
+
+      history.replaceState(
+        null,
+        "",
+        `#pagina-${target + 1}`
+      );
+
+      window.scrollTo({
+        top: 0,
+        behavior:
+          window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+          ).matches
+            ? "auto"
+            : "smooth"
+      });
+
+      typesetMath(current);
+    }
+
+    document.addEventListener(
+      "click",
+      (event) => {
+        const navigationButton =
+          event.target.closest(
+            "[data-go-page]"
+          );
+
+        if (!navigationButton) {
+          return;
+        }
+
+        goToPage(
+          navigationButton.dataset
+            .goPage
+        );
+      }
+    );
+
+    /* =====================================================
+       SIMULATOR
+       ===================================================== */
+
+    const simulator =
+      document.getElementById(
+        "simulator"
+      );
+
+    const inclineBoard =
+      document.getElementById(
+        "inclineBoard"
+      );
+
+    const block =
+      document.getElementById(
+        "block"
+      );
+
+    const rope =
+      document.getElementById(
+        "rope"
+      );
+
+    const massSlider =
+      document.getElementById(
+        "massSlider"
+      );
+
+    const angleSlider =
+      document.getElementById(
+        "angleSlider"
+      );
+
+    const muSlider =
+      document.getElementById(
+        "muSlider"
+      );
+
+    const massOutput =
+      document.getElementById(
+        "massOutput"
+      );
+
+    const angleOutput =
+      document.getElementById(
+        "angleOutput"
+      );
+
+    const muOutput =
+      document.getElementById(
+        "muOutput"
+      );
+
+    const dynamometerValue =
+      document.getElementById(
+        "dynamometerValue"
+      );
+
+    const parallelValue =
+      document.getElementById(
+        "parallelValue"
+      );
+
+    const normalValue =
+      document.getElementById(
+        "normalValue"
+      );
+
+    const frictionValue =
+      document.getElementById(
+        "frictionValue"
+      );
+
+    const pullValue =
+      document.getElementById(
+        "pullValue"
+      );
+
+    const simMessage =
+      document.getElementById(
+        "simMessage"
+      );
+
+    function currentSimulation() {
+      const mass =
+        Number(massSlider.value);
+
+      const angle =
+        Number(angleSlider.value);
+
+      const mu =
+        Number(muSlider.value);
+
+      const radians =
+        toRadians(angle);
+
+      const parallel =
+        mass *
+        G *
+        Math.sin(radians);
+
+      const normal =
+        mass *
+        G *
+        Math.cos(radians);
+
+      const friction =
+        mu *
+        normal;
+
+      const pull =
+        parallel +
+        friction;
+
+      return {
+        mass,
+        angle,
+        mu,
+        parallel,
+        normal,
+        friction,
+        pull
+      };
+    }
+
+    function updateSimulation() {
+      const data =
+        currentSimulation();
+
+      massOutput.value =
+        `${formatNumber(
+          data.mass,
+          2
+        )} kg`;
+
+      angleOutput.value =
+        `${formatNumber(
+          data.angle,
+          0
+        )}°`;
+
+      muOutput.value =
+        formatNumber(
+          data.mu,
+          2
+        );
+
+      parallelValue.textContent =
+        `${formatNumber(
+          data.parallel,
+          2
+        )} N`;
+
+      normalValue.textContent =
+        `${formatNumber(
+          data.normal,
+          2
+        )} N`;
+
+      frictionValue.textContent =
+        `${formatNumber(
+          data.friction,
+          2
+        )} N`;
+
+      pullValue.textContent =
+        `${formatNumber(
+          data.pull,
+          2
+        )} N`;
+
+      dynamometerValue.textContent =
+        `${formatNumber(
+          data.pull,
+          2
+        )} N`;
+
+      const rotation =
+        `rotate(-${data.angle}deg)`;
+
+      inclineBoard.style.transform =
+        rotation;
+
+      block.style.transform =
+        rotation;
+
+      rope.style.transform =
+        rotation;
+
+      simMessage.textContent =
+        `La unghiul de ${formatNumber(
+          data.angle,
+          0
+        )}°, corpul de ${formatNumber(
+          data.mass,
+          2
+        )} kg trebuie tras cu aproximativ ${formatNumber(
+          data.pull,
+          2
+        )} N pentru a urca uniform.`;
+
+      block.textContent =
+        `${formatNumber(
+          data.mass,
+          2
+        )} kg`;
+    }
+
+    [
+      massSlider,
+      angleSlider,
+      muSlider
+    ].forEach(
+      (control) => {
+        control?.addEventListener(
+          "input",
+          updateSimulation
+        );
+      }
+    );
+
+    document
+      .getElementById(
+        "showForces"
+      )
+      ?.addEventListener(
+        "change",
+        (event) => {
+          simulator.classList.toggle(
+            "show-forces",
+            event.target.checked
+          );
+        }
+      );
+
+    /* =====================================================
+       TABELUL DE MĂSURĂTORI
+       ===================================================== */
+
+    function calculateRow(row) {
+      const mass =
+        Number(
+          row.querySelector(
+            '[data-field="mass"]'
+          )?.value
+        );
+
+      const angle =
+        Number(
+          row.querySelector(
+            '[data-field="angle"]'
+          )?.value
+        );
+
+      const force =
+        Number(
+          row.querySelector(
+            '[data-field="force"]'
+          )?.value
+        );
+
+      const outputs = {
+        parallel:
+          row.querySelector(
+            '[data-output="parallel"]'
+          ),
+
+        friction:
+          row.querySelector(
+            '[data-output="friction"]'
+          ),
+
+        normal:
+          row.querySelector(
+            '[data-output="normal"]'
+          ),
+
+        mu:
+          row.querySelector(
+            '[data-output="mu"]'
+          )
+      };
+
+      if (
+        !Number.isFinite(mass) ||
+        !Number.isFinite(angle) ||
+        !Number.isFinite(force) ||
+        mass <= 0 ||
+        angle < 0 ||
+        angle >= 90 ||
+        force < 0
+      ) {
+        Object.values(outputs)
+          .forEach(
+            (output) => {
+              output.textContent =
+                "invalid";
+            }
+          );
+
+        return null;
+      }
+
+      const radians =
+        toRadians(angle);
+
+      const parallel =
+        mass *
+        G *
+        Math.sin(radians);
+
+      const friction =
+        force -
+        parallel;
+
+      const normal =
+        mass *
+        G *
+        Math.cos(radians);
+
+      const mu =
+        normal > 0
+          ? friction / normal
+          : Number.NaN;
+
+      outputs.parallel.textContent =
+        formatNumber(
+          parallel,
+          2
+        );
+
+      outputs.friction.textContent =
+        friction >= 0
+          ? formatNumber(
+              friction,
+              2
+            )
+          : "invalid";
+
+      outputs.normal.textContent =
+        formatNumber(
+          normal,
+          2
+        );
+
+      outputs.mu.textContent =
+        (
+          friction >= 0 &&
+          Number.isFinite(mu)
+        )
+          ? formatNumber(
+              mu,
+              3
+            )
+          : "invalid";
+
+      if (
+        friction < 0 ||
+        !Number.isFinite(mu)
+      ) {
+        return null;
+      }
+
+      return mu;
+    }
+
+    function calculateMeasurements() {
+      const rows =
+        Array.from(
+          document.querySelectorAll(
+            "#measurementBody tr"
+          )
+        );
+
+      const values =
+        rows
+          .map(
+            calculateRow
+          )
+          .filter(
+            (value) =>
+              Number.isFinite(value)
+          );
+
+      const averageBox =
+        document.getElementById(
+          "averageBox"
+        );
+
+      if (!values.length) {
+        averageBox.textContent =
+          "Nu există determinări valide. Verifică masa, unghiul și forța.";
+
+        return;
+      }
+
+      const average =
+        values.reduce(
+          (sum, value) =>
+            sum + value,
+          0
+        ) /
+        values.length;
+
+      const spread =
+        Math.max(...values) -
+        Math.min(...values);
+
+      averageBox.textContent =
+        `Coeficient mediu: μmed = ${formatNumber(
+          average,
+          3
+        )}. Număr de determinări valide: ${values.length}. Intervalul valorilor: ${formatNumber(
+          spread,
+          3
+        )}.`;
+    }
+
+    document
+      .getElementById(
+        "calculateMeasurements"
+      )
+      ?.addEventListener(
+        "click",
+        calculateMeasurements
+      );
+
+    document
+      .getElementById(
+        "copySimulation"
+      )
+      ?.addEventListener(
+        "click",
+        () => {
+          const data =
+            currentSimulation();
+
+          const firstRow =
+            document.querySelector(
+              '#measurementBody tr[data-row="1"]'
+            );
+
+          firstRow.querySelector(
+            '[data-field="mass"]'
+          ).value =
+            data.mass.toFixed(2);
+
+          firstRow.querySelector(
+            '[data-field="angle"]'
+          ).value =
+            data.angle.toFixed(0);
+
+          firstRow.querySelector(
+            '[data-field="force"]'
+          ).value =
+            data.pull.toFixed(2);
+
+          calculateMeasurements();
+        }
+      );
+
+    /* =====================================================
+       VERIFICARE RAPIDĂ
+       ===================================================== */
+
+    const quickCheckForm =
+      document.getElementById(
+        "quickCheckForm"
+      );
+
+    quickCheckForm
+      ?.addEventListener(
+        "submit",
+        (event) => {
+          event.preventDefault();
+
+          const questions =
+            Array.from(
+              quickCheckForm
+                .querySelectorAll(
+                  "[data-question]"
+                )
+            );
+
+          let correctAnswers = 0;
+          let answered = 0;
+
+          questions.forEach(
+            (question) => {
+              const selected =
+                question.querySelector(
+                  "input:checked"
+                );
+
+              const feedback =
+                question.querySelector(
+                  ".feedback"
+                );
+
+              question
+                .querySelectorAll(
+                  ".answer-option"
+                )
+                .forEach(
+                  (option) => {
+                    option.classList.remove(
+                      "correct",
+                      "incorrect"
+                    );
+                  }
+                );
+
+              if (!selected) {
+                feedback.textContent =
+                  "Alege un răspuns.";
+
+                return;
+              }
+
+              answered += 1;
+
+              const correct =
+                selected.value ===
+                question.dataset.correct;
+
+              const selectedLabel =
+                selected.closest(
+                  ".answer-option"
+                );
+
+              selectedLabel
+                ?.classList
+                .add(
+                  correct
+                    ? "correct"
+                    : "incorrect"
+                );
+
+              if (correct) {
+                correctAnswers += 1;
+                feedback.textContent =
+                  "✓ Corect.";
+              } else {
+                feedback.textContent =
+                  "✗ Răspuns incorect. Recitește explicația și încearcă din nou.";
+              }
+            }
+          );
+
+          const scoreBox =
+            document.getElementById(
+              "scoreBox"
+            );
+
+          scoreBox.classList.add(
+            "visible"
+          );
+
+          if (
+            answered <
+            questions.length
+          ) {
+            scoreBox.textContent =
+              `Ai răspuns la ${answered} din ${questions.length} întrebări. Completează toate răspunsurile.`;
+
+            return;
+          }
+
+          scoreBox.textContent =
+            correctAnswers ===
+            questions.length
+              ? `Excelent! Ai ${correctAnswers} răspunsuri corecte din ${questions.length}.`
+              : `Ai ${correctAnswers} răspunsuri corecte din ${questions.length}. Poți corecta răspunsurile și verifica din nou.`;
+
+          typesetMath(
+            quickCheckForm
+          );
+        }
+      );
+
+    /* =====================================================
+       PORNIRE
+       ===================================================== */
+
+    const hashMatch =
+      window.location.hash.match(
+        /^#pagina-(\d+)$/
+      );
+
+    updateSimulation();
+    calculateMeasurements();
+
+    goToPage(
+      hashMatch
+        ? Number(
+            hashMatch[1]
+          ) - 1
+        : 0
+    );
+  </script>
+
+  <!--
+    Loader-ele sunt încărcate o singură dată.
+    Containerul headerului există numai în pagina 1.
+    Containerul footerului există numai în pagina 7.
+  -->
+  <script
+    defer
+    src="../../assets/js/config.js">
+  </script>
+
+  <script
+    defer
+    src="../../assets/js/theme-toggle.js">
+  </script>
+
+  <script
+    defer
+    src="../../assets/js/load-header.js">
+  </script>
+
+  <script
+    defer
+    src="../../assets/js/load-footer.js">
+  </script>
+</body>
+</html>

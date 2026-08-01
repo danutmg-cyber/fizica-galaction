@@ -1,1 +1,4139 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
 
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="Laborator interactiv de fizică pentru clasa a VIII-a: verificarea legii lui Joule și studiul efectului termic al curentului electric.">
+
+  <title>
+    Legea lui Joule | Laborator de fizică
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="../../../assets/css/layout.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["\\(", "\\)"]],
+        displayMath: [["\\[", "\\]"]]
+      },
+      options: {
+        skipHtmlTags: [
+          "script",
+          "noscript",
+          "style",
+          "textarea",
+          "pre",
+          "code"
+        ]
+      }
+    };
+  </script>
+
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    :root {
+      --bg: #07111f;
+      --surface: #0e1b31;
+      --surface-2: #122742;
+      --surface-soft: #183653;
+      --border: #315a7e;
+      --text: #f3f8ff;
+      --muted: #c5d8ec;
+      --primary: #67e8f9;
+      --primary-strong: #22d3ee;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --danger: #fb7185;
+      --violet: #a78bfa;
+      --focus: #fde047;
+      --shadow: 0 22px 54px rgba(0, 0, 0, 0.34);
+      --radius: 24px;
+    }
+
+    body.light,
+    body[data-theme="light"] {
+      --bg: #eef6ff;
+      --surface: #ffffff;
+      --surface-2: #f2f8fd;
+      --surface-soft: #e5f1fb;
+      --border: #96b6d0;
+      --text: #10243a;
+      --muted: #36516b;
+      --primary: #0369a1;
+      --primary-strong: #0284c7;
+      --success: #047857;
+      --warning: #a16207;
+      --danger: #be123c;
+      --violet: #6d28d9;
+      --focus: #a16207;
+      --shadow: 0 18px 44px rgba(15, 35, 55, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-width: 320px;
+      font-size: 18px;
+      scroll-behavior: smooth;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+
+      font-family:
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+      font-size:
+        clamp(
+          1rem,
+          0.94rem + 0.34vw,
+          1.22rem
+        );
+
+      line-height: 1.68;
+
+      background:
+        radial-gradient(
+          circle at 8% 0%,
+          rgba(34, 211, 238, 0.13),
+          transparent 24%
+        ),
+        radial-gradient(
+          circle at 92% 4%,
+          rgba(251, 113, 133, 0.11),
+          transparent 24%
+        ),
+        var(--bg);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .lab-shell {
+      width:
+        min(
+          1180px,
+          calc(100% - 24px)
+        );
+
+      margin:
+        clamp(10px, 2vw, 28px)
+        auto;
+
+      padding-bottom: 28px;
+    }
+
+    .lab-card {
+      overflow: hidden;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        var(--radius);
+
+      background:
+        var(--surface);
+
+      box-shadow:
+        var(--shadow);
+    }
+
+    .lab-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+
+      padding:
+        clamp(15px, 2.2vw, 23px)
+        clamp(18px, 3vw, 34px);
+
+      border-bottom:
+        1px solid
+        var(--border);
+
+      background:
+        rgba(14, 27, 49, 0.94);
+
+      backdrop-filter: blur(10px);
+    }
+
+    body.light .lab-topbar,
+    body[data-theme="light"] .lab-topbar {
+      background:
+        rgba(255, 255, 255, 0.94);
+    }
+
+    .lab-kicker {
+      color: var(--primary);
+
+      font-size:
+        clamp(
+          0.88rem,
+          0.84rem + 0.18vw,
+          1rem
+        );
+
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .lab-title {
+      margin: 6px 0 12px;
+
+      color: var(--text);
+
+      font-size:
+        clamp(
+          1.35rem,
+          1.05rem + 1vw,
+          2rem
+        );
+
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 12px;
+      overflow: hidden;
+
+      border-radius: 999px;
+
+      background:
+        rgba(255, 255, 255, 0.12);
+    }
+
+    body.light .progress-track,
+    body[data-theme="light"] .progress-track {
+      background:
+        rgba(16, 36, 58, 0.12);
+    }
+
+    .progress-fill {
+      display: block;
+      width: 0;
+      height: 100%;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          var(--success)
+        );
+
+      transition:
+        width
+        180ms
+        ease;
+    }
+
+    .page-counter {
+      color: var(--muted);
+
+      font-size: 1rem;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .lab-pages {
+      min-height:
+        calc(100svh - 160px);
+    }
+
+    .lab-page {
+      display: none;
+
+      padding:
+        clamp(24px, 4vw, 46px)
+        clamp(18px, 4.5vw, 54px)
+        clamp(28px, 4vw, 48px);
+
+      animation:
+        page-in
+        180ms
+        ease;
+    }
+
+    .lab-page.active {
+      display: block;
+    }
+
+    @keyframes page-in {
+      from {
+        opacity: 0.3;
+        transform:
+          translateY(7px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    #header-container,
+    #footer-container {
+      width: 100%;
+    }
+
+    #header-container {
+      margin:
+        calc(-1 * clamp(24px, 4vw, 46px))
+        calc(-1 * clamp(18px, 4.5vw, 54px))
+        clamp(28px, 4vw, 42px);
+
+      width:
+        calc(
+          100% +
+          2 * clamp(18px, 4.5vw, 54px)
+        );
+    }
+
+    #footer-container {
+      margin:
+        clamp(30px, 4vw, 48px)
+        calc(-1 * clamp(18px, 4.5vw, 54px))
+        calc(-1 * clamp(28px, 4vw, 48px));
+
+      width:
+        calc(
+          100% +
+          2 * clamp(18px, 4.5vw, 54px)
+        );
+    }
+
+    h2 {
+      margin: 0 0 14px;
+
+      color: var(--text);
+
+      font-size:
+        clamp(
+          1.72rem,
+          1.28rem + 1.34vw,
+          2.75rem
+        );
+
+      line-height: 1.18;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+
+      color: var(--text);
+
+      font-size:
+        clamp(
+          1.18rem,
+          1.05rem + 0.44vw,
+          1.55rem
+        );
+
+      line-height: 1.3;
+    }
+
+    p {
+      margin: 0 0 16px;
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 26px;
+    }
+
+    li {
+      margin-bottom: 12px;
+      line-height: 1.62;
+    }
+
+    .lead {
+      color: var(--text);
+
+      font-size:
+        clamp(
+          1.12rem,
+          1rem + 0.45vw,
+          1.42rem
+        );
+
+      line-height: 1.65;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .highlight {
+      color: var(--success);
+      font-weight: 850;
+    }
+
+    .page-badge {
+      display: inline-block;
+
+      margin-bottom: 14px;
+      padding: 8px 13px;
+
+      border-radius: 999px;
+
+      color: var(--primary);
+
+      background:
+        rgba(103, 232, 249, 0.12);
+
+      font-size: 1rem;
+      font-weight: 850;
+    }
+
+    body.light .page-badge,
+    body[data-theme="light"] .page-badge {
+      background:
+        rgba(3, 105, 161, 0.12);
+    }
+
+    .large-icon {
+      margin-bottom: 14px;
+
+      font-size:
+        clamp(
+          2.8rem,
+          2.2rem + 1.7vw,
+          4.2rem
+        );
+
+      line-height: 1;
+    }
+
+    .grid {
+      display: grid;
+      gap:
+        clamp(
+          14px,
+          2vw,
+          22px
+        );
+    }
+
+    .grid.two {
+      grid-template-columns: 1fr;
+    }
+
+    .grid.three {
+      grid-template-columns: 1fr;
+    }
+
+    .panel,
+    .quick-check {
+      padding:
+        clamp(
+          17px,
+          2.4vw,
+          25px
+        );
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 20px;
+
+      background:
+        var(--surface-2);
+    }
+
+    .remember {
+      margin-top: 18px;
+
+      padding:
+        clamp(
+          16px,
+          2.2vw,
+          22px
+        );
+
+      border-left:
+        6px solid
+        var(--success);
+
+      border-radius: 15px;
+
+      color: var(--text);
+
+      background:
+        rgba(52, 211, 153, 0.11);
+    }
+
+    .warning {
+      margin-top: 18px;
+
+      padding:
+        clamp(
+          16px,
+          2.2vw,
+          22px
+        );
+
+      border-left:
+        6px solid
+        var(--warning);
+
+      border-radius: 15px;
+
+      color: var(--text);
+
+      background:
+        rgba(251, 191, 36, 0.11);
+    }
+
+    .danger-box {
+      margin-top: 18px;
+
+      padding:
+        clamp(
+          16px,
+          2.2vw,
+          22px
+        );
+
+      border-left:
+        6px solid
+        var(--danger);
+
+      border-radius: 15px;
+
+      color: var(--text);
+
+      background:
+        rgba(251, 113, 133, 0.11);
+    }
+
+    .formula-box {
+      margin: 14px 0;
+      padding: 16px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 16px;
+
+      color: var(--warning);
+
+      background:
+        var(--surface-soft);
+
+      font-size:
+        clamp(
+          1.25rem,
+          1.05rem + 0.65vw,
+          1.85rem
+        );
+
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+
+      margin-top: 16px;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 12px 13px;
+
+      border:
+        1px solid
+        var(--border);
+
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .comparison-table th {
+      background:
+        var(--surface-soft);
+    }
+
+    /* =====================================================
+       SIMULATOR
+       ===================================================== */
+
+    .simulator {
+      padding:
+        clamp(
+          15px,
+          2vw,
+          22px
+        );
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 22px;
+
+      background:
+        var(--surface-2);
+    }
+
+    .scene-wrap {
+      overflow: hidden;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 18px;
+
+      background:
+        #ffffff;
+    }
+
+    #jouleScene {
+      display: block;
+
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+
+      background:
+        #ffffff;
+    }
+
+    .control-grid {
+      display: grid;
+      gap: 14px;
+
+      margin-top: 18px;
+    }
+
+    .control-card {
+      padding:
+        14px
+        15px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 15px;
+
+      background:
+        var(--surface-soft);
+    }
+
+    .control-card label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+
+      margin-bottom: 10px;
+
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      min-height: 34px;
+
+      accent-color:
+        var(--primary-strong);
+    }
+
+    .switch-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .switch-row input {
+      width: 24px;
+      height: 24px;
+
+      accent-color:
+        var(--primary-strong);
+    }
+
+    .results-grid {
+      display: grid;
+      gap: 12px;
+
+      margin-top: 16px;
+    }
+
+    .result-card {
+      padding:
+        14px
+        15px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 15px;
+
+      background:
+        var(--surface-soft);
+    }
+
+    .result-card strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .result-value {
+      color: var(--primary);
+
+      font-size: 1.2rem;
+      font-weight: 900;
+    }
+
+    .thermal-meter {
+      margin-top: 17px;
+      padding: 16px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 16px;
+
+      background:
+        var(--surface-soft);
+    }
+
+    .thermal-meter header {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+
+      margin-bottom: 10px;
+
+      font-weight: 850;
+    }
+
+    .thermal-track {
+      height: 22px;
+      overflow: hidden;
+
+      border-radius: 999px;
+
+      background:
+        rgba(255, 255, 255, 0.12);
+    }
+
+    body.light .thermal-track,
+    body[data-theme="light"] .thermal-track {
+      background:
+        rgba(16, 36, 58, 0.12);
+    }
+
+    .thermal-fill {
+      display: block;
+      width: 0;
+      height: 100%;
+
+      border-radius: 999px;
+
+      background:
+        linear-gradient(
+          90deg,
+          #38bdf8,
+          #fbbf24,
+          #fb7185
+        );
+
+      transition:
+        width
+        150ms
+        ease;
+    }
+
+    .sim-message {
+      min-height: 84px;
+
+      margin-top: 16px;
+      padding: 16px;
+
+      border-left:
+        5px solid
+        var(--primary);
+
+      border-radius: 14px;
+
+      color: var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    /* =====================================================
+       TABEL ȘI GRAFIC
+       ===================================================== */
+
+    .table-wrap {
+      overflow-x: auto;
+
+      margin-top: 18px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 17px;
+    }
+
+    .measure-table {
+      width: 100%;
+      min-width: 980px;
+
+      border-collapse: collapse;
+    }
+
+    .measure-table th,
+    .measure-table td {
+      padding: 12px 11px;
+
+      border-bottom:
+        1px solid
+        var(--border);
+
+      border-right:
+        1px solid
+        var(--border);
+
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .measure-table th:last-child,
+    .measure-table td:last-child {
+      border-right: 0;
+    }
+
+    .measure-table tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .measure-table th {
+      color: var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    .measure-table input {
+      width: 100px;
+      min-height: 44px;
+
+      padding: 8px 9px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 10px;
+
+      color: var(--text);
+
+      background:
+        var(--surface);
+    }
+
+    .measure-table output {
+      display: inline-block;
+
+      min-width: 78px;
+
+      color: var(--primary);
+      font-weight: 850;
+    }
+
+    .average-box {
+      margin-top: 17px;
+      padding: 16px;
+
+      border:
+        2px solid
+        var(--success);
+
+      border-radius: 16px;
+
+      color: var(--text);
+
+      background:
+        rgba(52, 211, 153, 0.1);
+
+      font-size: 1.1rem;
+      font-weight: 850;
+    }
+
+    .chart-wrap {
+      margin-top: 18px;
+      padding:
+        clamp(
+          14px,
+          2vw,
+          20px
+        );
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 18px;
+
+      background:
+        var(--surface-2);
+    }
+
+    #jouleChart {
+      display: block;
+
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 14px;
+
+      background:
+        #ffffff;
+    }
+
+    /* =====================================================
+       VERIFICARE RAPIDĂ
+       ===================================================== */
+
+    .quick-check {
+      margin-bottom: 16px;
+    }
+
+    .quick-check fieldset {
+      display: grid;
+      gap: 11px;
+
+      margin: 14px 0 0;
+      padding: 0;
+
+      border: 0;
+    }
+
+    .quick-check legend {
+      margin-bottom: 12px;
+      padding: 0;
+
+      color: var(--text);
+
+      font-size: 1.08rem;
+      font-weight: 850;
+    }
+
+    .answer-option {
+      display: grid;
+      grid-template-columns:
+        auto
+        1fr;
+
+      align-items: start;
+      gap: 12px;
+
+      min-height: 54px;
+      padding: 13px 15px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 14px;
+
+      color: var(--text);
+
+      background:
+        var(--surface-soft);
+
+      cursor: pointer;
+    }
+
+    .answer-option:hover {
+      border-color:
+        var(--primary);
+    }
+
+    .answer-option input {
+      width: 22px;
+      height: 22px;
+
+      margin-top: 2px;
+
+      accent-color:
+        var(--primary-strong);
+    }
+
+    .answer-option.correct {
+      border-color:
+        var(--success);
+
+      background:
+        rgba(52, 211, 153, 0.13);
+    }
+
+    .answer-option.incorrect {
+      border-color:
+        var(--danger);
+
+      background:
+        rgba(251, 113, 133, 0.12);
+    }
+
+    .feedback {
+      min-height: 30px;
+      margin-top: 12px;
+
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .score-box {
+      display: none;
+
+      margin-top: 18px;
+      padding: 18px;
+
+      border:
+        2px solid
+        var(--success);
+
+      border-radius: 17px;
+
+      color: var(--text);
+
+      background:
+        rgba(52, 211, 153, 0.1);
+
+      font-size: 1.1rem;
+      font-weight: 850;
+    }
+
+    .score-box.visible {
+      display: block;
+    }
+
+    /* =====================================================
+       BUTOANE
+       ===================================================== */
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      margin-top: 24px;
+    }
+
+    .button,
+    button {
+      appearance: none;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-height: 56px;
+      padding: 16px 22px;
+
+      border: 0;
+      border-radius: 15px;
+
+      font-size:
+        clamp(
+          1.04rem,
+          1rem + 0.18vw,
+          1.18rem
+        );
+
+      font-weight: 900;
+      text-align: center;
+      text-decoration: none;
+
+      cursor: pointer;
+
+      transition:
+        transform
+        120ms
+        ease,
+        filter
+        120ms
+        ease;
+    }
+
+    .button:hover,
+    button:hover {
+      filter:
+        brightness(1.05);
+    }
+
+    .button:active,
+    button:active {
+      transform:
+        scale(0.98);
+    }
+
+    .button:focus-visible,
+    button:focus-visible,
+    input:focus-visible {
+      outline:
+        4px solid
+        var(--focus);
+
+      outline-offset: 4px;
+    }
+
+    .button-primary {
+      width: 100%;
+
+      color: #062132;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          var(--success)
+        );
+    }
+
+    .button-secondary {
+      width: 100%;
+
+      border:
+        1px solid
+        var(--border);
+
+      color: var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    .button-calculate {
+      width: 100%;
+
+      color: #ffffff;
+
+      background:
+        linear-gradient(
+          90deg,
+          #7c3aed,
+          #a855f7
+        );
+    }
+
+    .button-home {
+      width: 100%;
+
+      color: #062132;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          #38bdf8
+        );
+    }
+
+    @media (min-width: 820px) {
+      .grid.two {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+      }
+
+      .grid.three {
+        grid-template-columns:
+          repeat(
+            3,
+            minmax(0, 1fr)
+          );
+      }
+
+      .control-grid {
+        grid-template-columns:
+          repeat(
+            4,
+            minmax(0, 1fr)
+          );
+      }
+
+      .results-grid {
+        grid-template-columns:
+          repeat(
+            4,
+            minmax(0, 1fr)
+          );
+      }
+
+      .controls
+      .button-secondary {
+        width: auto;
+        min-width: 170px;
+      }
+
+      .controls
+      .button-primary {
+        width: auto;
+        min-width: 240px;
+        margin-left: auto;
+      }
+
+      .controls
+      .button-calculate {
+        width: auto;
+        min-width: 250px;
+      }
+
+      .controls.end {
+        justify-content: center;
+      }
+
+      .controls.end
+      .button-home {
+        width: auto;
+        min-width: 360px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      html {
+        font-size: 17px;
+      }
+
+      .lab-shell {
+        width:
+          calc(100% - 12px);
+
+        margin:
+          6px
+          auto;
+      }
+
+      .lab-card {
+        border-radius: 19px;
+      }
+
+      .lab-page {
+        padding:
+          22px
+          14px
+          28px;
+      }
+
+      #header-container {
+        margin:
+          -22px
+          -14px
+          24px;
+
+        width:
+          calc(100% + 28px);
+      }
+
+      #footer-container {
+        margin:
+          28px
+          -14px
+          -28px;
+
+        width:
+          calc(100% + 28px);
+      }
+
+      .lab-topbar {
+        padding:
+          14px
+          15px;
+      }
+
+      .progress-row {
+        align-items: flex-start;
+      }
+
+      .page-counter {
+        white-space: normal;
+      }
+    }
+
+    @media (
+      prefers-reduced-motion:
+      reduce
+    ) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .lab-page,
+      .progress-fill,
+      .button,
+      button,
+      .thermal-fill {
+        animation: none;
+        transition: none;
+      }
+    }
+
+    @media print {
+      .lab-topbar,
+      .controls,
+      #header-container,
+      #footer-container {
+        display: none !important;
+      }
+
+      .lab-page {
+        display: block !important;
+        break-after: page;
+      }
+
+      body {
+        color: #000000;
+        background: #ffffff;
+      }
+
+      .lab-card,
+      .panel,
+      .quick-check,
+      .simulator,
+      .chart-wrap {
+        color: #000000;
+        background: #ffffff;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+
+<body data-page-type="lab">
+  <div class="lab-shell">
+    <div class="lab-card">
+      <div class="lab-topbar">
+        <div class="lab-kicker">
+          Laborator de fizică • Clasa a VIII-a
+        </div>
+
+        <div
+          class="lab-title"
+          id="topTitle">
+          Legea lui Joule
+        </div>
+
+        <div class="progress-row">
+          <div
+            class="progress-track"
+            aria-hidden="true">
+            <span
+              class="progress-fill"
+              id="progressFill">
+            </span>
+          </div>
+
+          <div
+            class="page-counter"
+            id="pageCounter"
+            aria-live="polite">
+            Pagina 1 din 7
+          </div>
+        </div>
+      </div>
+
+      <main
+        id="main-content"
+        class="lab-pages">
+
+        <!-- PAGINA 1: headerul comun apare numai aici -->
+        <section
+          class="lab-page active"
+          data-title="Legea lui Joule – introducere"
+          aria-hidden="false">
+
+          <div id="header-container"></div>
+
+          <div class="page-badge">
+            Pagina 1 • Întrebarea laboratorului
+          </div>
+
+          <div
+            class="large-icon"
+            aria-hidden="true">
+            🔥
+          </div>
+
+          <h2>
+            De ce se încălzește un rezistor străbătut de curent?
+          </h2>
+
+          <p class="lead">
+            Curentul electric transferă energie rezistorului.
+            Această energie se transformă în
+            <span class="highlight">
+              căldură
+            </span>,
+            fenomen numit efect Joule.
+          </p>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Ce vei modifica</h3>
+
+              <ul>
+                <li>
+                  tensiunea \(U\);
+                </li>
+
+                <li>
+                  rezistența \(R\);
+                </li>
+
+                <li>
+                  timpul \(t\);
+                </li>
+
+                <li>
+                  starea întrerupătorului.
+                </li>
+              </ul>
+            </article>
+
+            <article class="panel">
+              <h3>Ce vei calcula</h3>
+
+              <div class="formula-box">
+                \[
+                  Q=I^2Rt
+                \]
+              </div>
+
+              <p>
+                Căldura degajată de rezistor.
+              </p>
+            </article>
+          </div>
+
+          <div class="warning">
+            În laborator se folosesc numai surse de joasă
+            tensiune. Rezistorul poate deveni fierbinte.
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="1">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 2 -->
+        <section
+          class="lab-page"
+          data-title="Legea lui Joule"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 2 • Teorie
+          </div>
+
+          <h2>
+            Legea lui Joule
+          </h2>
+
+          <p class="lead">
+            Căldura degajată de un conductor este proporțională
+            cu pătratul intensității, cu rezistența și cu timpul.
+          </p>
+
+          <div class="grid three">
+            <article class="panel">
+              <h3>Forma principală</h3>
+
+              <div class="formula-box">
+                \[
+                  Q=I^2Rt
+                \]
+              </div>
+            </article>
+
+            <article class="panel">
+              <h3>Cu tensiune și curent</h3>
+
+              <div class="formula-box">
+                \[
+                  Q=UIt
+                \]
+              </div>
+            </article>
+
+            <article class="panel">
+              <h3>Cu tensiune și rezistență</h3>
+
+              <div class="formula-box">
+                \[
+                  Q=\frac{U^2}{R}t
+                \]
+              </div>
+            </article>
+          </div>
+
+          <div class="panel" style="margin-top: 18px;">
+            <h3>Puterea electrică</h3>
+
+            <div class="formula-box">
+              \[
+                P=\frac{Q}{t}
+                =
+                UI
+                =
+                I^2R
+                =
+                \frac{U^2}{R}
+              \]
+            </div>
+          </div>
+
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Mărime</th>
+                <th>Simbol</th>
+                <th>Unitate</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>Căldură / energie</td>
+                <td>\(Q\)</td>
+                <td>joule \((\mathrm{J})\)</td>
+              </tr>
+
+              <tr>
+                <td>Putere</td>
+                <td>\(P\)</td>
+                <td>watt \((\mathrm{W})\)</td>
+              </tr>
+
+              <tr>
+                <td>Timp</td>
+                <td>\(t\)</td>
+                <td>secundă \((\mathrm{s})\)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="remember">
+            Dacă intensitatea se dublează, iar \(R\) și \(t\)
+            rămân constante, căldura crește de patru ori.
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="0">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="2">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 3 -->
+        <section
+          class="lab-page"
+          data-title="Montajul experimental"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 3 • Montaj și măsurare
+          </div>
+
+          <h2>
+            Cum verificăm efectul Joule?
+          </h2>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Materiale</h3>
+
+              <ul>
+                <li>
+                  sursă de joasă tensiune;
+                </li>
+
+                <li>
+                  rezistor de putere;
+                </li>
+
+                <li>
+                  ampermetru și voltmetru;
+                </li>
+
+                <li>
+                  termometru sau senzor de temperatură;
+                </li>
+
+                <li>
+                  cronometru, întrerupător și fire.
+                </li>
+              </ul>
+            </article>
+
+            <article class="panel">
+              <h3>Mod de lucru</h3>
+
+              <ol>
+                <li>
+                  Măsoară temperatura inițială.
+                </li>
+
+                <li>
+                  Închide circuitul.
+                </li>
+
+                <li>
+                  Notează \(U\), \(I\) și timpul.
+                </li>
+
+                <li>
+                  Măsoară temperatura finală.
+                </li>
+
+                <li>
+                  Calculează \(Q=UIt\).
+                </li>
+
+                <li>
+                  Repetă pentru alte valori.
+                </li>
+              </ol>
+            </article>
+          </div>
+
+          <div class="panel" style="margin-top: 18px;">
+            <h3>Estimarea încălzirii</h3>
+
+            <p>
+              Pentru un corp cu masa \(m\) și căldura specifică
+              \(c\), în modelul ideal:
+            </p>
+
+            <div class="formula-box">
+              \[
+                Q=mc\Delta T
+              \]
+            </div>
+
+            <div class="formula-box">
+              \[
+                \Delta T=\frac{Q}{mc}
+              \]
+            </div>
+          </div>
+
+          <div class="danger-box">
+            Nu atinge rezistorul imediat după măsurare. Așteaptă
+            răcirea lui.
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="1">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="3">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 4 -->
+        <section
+          class="lab-page"
+          data-title="Simulatorul efectului Joule"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 4 • Simulează
+          </div>
+
+          <h2>
+            Simulator: încălzirea rezistorului
+          </h2>
+
+          <div class="simulator">
+            <div class="scene-wrap">
+              <canvas
+                id="jouleScene"
+                width="960"
+                height="430"
+                aria-label="Circuit electric cu sursă și rezistor care se încălzește">
+              </canvas>
+            </div>
+
+            <div class="control-grid">
+              <div class="control-card">
+                <label for="voltageSlider">
+                  <span>Tensiune \(U\)</span>
+                  <output id="voltageOutput">
+                    12,0 V
+                  </output>
+                </label>
+
+                <input
+                  type="range"
+                  id="voltageSlider"
+                  min="1"
+                  max="24"
+                  step="0.5"
+                  value="12">
+              </div>
+
+              <div class="control-card">
+                <label for="resistanceSlider">
+                  <span>Rezistență \(R\)</span>
+                  <output id="resistanceOutput">
+                    12,0 Ω
+                  </output>
+                </label>
+
+                <input
+                  type="range"
+                  id="resistanceSlider"
+                  min="2"
+                  max="100"
+                  step="2"
+                  value="12">
+              </div>
+
+              <div class="control-card">
+                <label for="timeSlider">
+                  <span>Timp \(t\)</span>
+                  <output id="timeOutput">
+                    60 s
+                  </output>
+                </label>
+
+                <input
+                  type="range"
+                  id="timeSlider"
+                  min="0"
+                  max="300"
+                  step="10"
+                  value="60">
+              </div>
+
+              <div class="control-card">
+                <div class="switch-row">
+                  <input
+                    type="checkbox"
+                    id="switchControl"
+                    checked>
+
+                  <label for="switchControl">
+                    Circuit închis
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            <div class="results-grid">
+              <div class="result-card">
+                <strong>
+                  Intensitate \(I\)
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="currentValue">
+                  1,000 A
+                </span>
+              </div>
+
+              <div class="result-card">
+                <strong>
+                  Putere \(P\)
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="powerValue">
+                  12,00 W
+                </span>
+              </div>
+
+              <div class="result-card">
+                <strong>
+                  Căldură \(Q\)
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="heatValue">
+                  720 J
+                </span>
+              </div>
+
+              <div class="result-card">
+                <strong>
+                  Creștere estimată \(\Delta T\)
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="temperatureRiseValue">
+                  17,1 °C
+                </span>
+              </div>
+            </div>
+
+            <div class="thermal-meter">
+              <header>
+                <span>Nivel termic relativ</span>
+                <span id="thermalLabel">
+                  moderat
+                </span>
+              </header>
+
+              <div class="thermal-track">
+                <span
+                  class="thermal-fill"
+                  id="thermalFill">
+                </span>
+              </div>
+            </div>
+
+            <div
+              class="sim-message"
+              id="simMessage"
+              role="status"
+              aria-live="polite">
+              Circuitul este închis. Rezistorul transformă
+              energia electrică în căldură.
+            </div>
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="2">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="4">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 5 -->
+        <section
+          class="lab-page"
+          data-title="Măsurători și grafic"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 5 • Măsoară și calculează
+          </div>
+
+          <h2>
+            Completează tabelul de măsurători
+          </h2>
+
+          <p class="lead">
+            Introdu tensiunea, rezistența și timpul. Laboratorul
+            calculează intensitatea, puterea și căldura degajată.
+          </p>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-calculate"
+              id="copySimulation">
+              Preia simulatorul în rândul 1
+            </button>
+          </div>
+
+          <div class="table-wrap">
+            <table class="measure-table">
+              <thead>
+                <tr>
+                  <th>Nr.</th>
+                  <th>\(U\) (V)</th>
+                  <th>\(R\) (Ω)</th>
+                  <th>\(t\) (s)</th>
+                  <th>\(I=\frac{U}{R}\) (A)</th>
+                  <th>\(P=UI\) (W)</th>
+                  <th>\(Q=Pt\) (J)</th>
+                </tr>
+              </thead>
+
+              <tbody id="measurementBody">
+                <tr data-row="1">
+                  <td>1</td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="6"
+                      data-field="voltage"
+                      aria-label="Tensiunea pentru determinarea 1">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="12"
+                      data-field="resistance"
+                      aria-label="Rezistența pentru determinarea 1">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="1"
+                      value="30"
+                      data-field="time"
+                      aria-label="Timpul pentru determinarea 1">
+                  </td>
+                  <td><output data-output="current">—</output></td>
+                  <td><output data-output="power">—</output></td>
+                  <td><output data-output="heat">—</output></td>
+                </tr>
+
+                <tr data-row="2">
+                  <td>2</td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="6"
+                      data-field="voltage"
+                      aria-label="Tensiunea pentru determinarea 2">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="12"
+                      data-field="resistance"
+                      aria-label="Rezistența pentru determinarea 2">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="1"
+                      value="60"
+                      data-field="time"
+                      aria-label="Timpul pentru determinarea 2">
+                  </td>
+                  <td><output data-output="current">—</output></td>
+                  <td><output data-output="power">—</output></td>
+                  <td><output data-output="heat">—</output></td>
+                </tr>
+
+                <tr data-row="3">
+                  <td>3</td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="6"
+                      data-field="voltage"
+                      aria-label="Tensiunea pentru determinarea 3">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="12"
+                      data-field="resistance"
+                      aria-label="Rezistența pentru determinarea 3">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="1"
+                      value="90"
+                      data-field="time"
+                      aria-label="Timpul pentru determinarea 3">
+                  </td>
+                  <td><output data-output="current">—</output></td>
+                  <td><output data-output="power">—</output></td>
+                  <td><output data-output="heat">—</output></td>
+                </tr>
+
+                <tr data-row="4">
+                  <td>4</td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="6"
+                      data-field="voltage"
+                      aria-label="Tensiunea pentru determinarea 4">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="12"
+                      data-field="resistance"
+                      aria-label="Rezistența pentru determinarea 4">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      step="1"
+                      value="120"
+                      data-field="time"
+                      aria-label="Timpul pentru determinarea 4">
+                  </td>
+                  <td><output data-output="current">—</output></td>
+                  <td><output data-output="power">—</output></td>
+                  <td><output data-output="heat">—</output></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-calculate"
+              id="calculateMeasurements">
+              Calculează și trasează graficul
+            </button>
+          </div>
+
+          <div
+            class="average-box"
+            id="averageBox"
+            role="status"
+            aria-live="polite">
+            Rezultatele vor apărea aici.
+          </div>
+
+          <div class="chart-wrap">
+            <h3>
+              Graficul \(Q(t)\)
+            </h3>
+
+            <canvas
+              id="jouleChart"
+              width="900"
+              height="470"
+              aria-label="Graficul căldurii degajate în funcție de timp">
+            </canvas>
+
+            <p class="muted">
+              La putere constantă, căldura crește liniar cu
+              timpul.
+            </p>
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="3">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="5">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 6 -->
+        <section
+          class="lab-page"
+          data-title="Exemplu numeric și verificare rapidă"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 6 • Aplică
+          </div>
+
+          <h2>
+            Exemplu numeric
+          </h2>
+
+          <div class="panel">
+            <p>
+              Un rezistor cu \(R=20\,\Omega\) este străbătut de
+              curentul \(I=0{,}5\,\mathrm{A}\) timp de
+              \(t=120\,\mathrm{s}\).
+            </p>
+
+            <div class="formula-box">
+              \[
+                Q
+                =
+                I^2Rt
+                =
+                (0{,}5)^2\cdot20\cdot120
+                =
+                600\,\mathrm{J}
+              \]
+            </div>
+
+            <p>
+              Puterea disipată este:
+            </p>
+
+            <div class="formula-box">
+              \[
+                P
+                =
+                I^2R
+                =
+                (0{,}5)^2\cdot20
+                =
+                5\,\mathrm{W}
+              \]
+            </div>
+
+            <p>
+              Verificare:
+            </p>
+
+            <div class="formula-box">
+              \[
+                Q=Pt=5\cdot120=600\,\mathrm{J}
+              \]
+            </div>
+          </div>
+
+          <h2 style="margin-top: 28px;">
+            Verificare rapidă
+          </h2>
+
+          <form id="quickCheckForm">
+            <section
+              class="quick-check"
+              data-question="q1"
+              data-correct="b">
+
+              <fieldset>
+                <legend>
+                  1. Legea lui Joule se scrie:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q1"
+                    value="a">
+
+                  <span>
+                    \(Q=IRt\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q1"
+                    value="b">
+
+                  <span>
+                    \(Q=I^2Rt\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q1"
+                    value="c">
+
+                  <span>
+                    \(Q=\frac{I}{Rt}\)
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <section
+              class="quick-check"
+              data-question="q2"
+              data-correct="c">
+
+              <fieldset>
+                <legend>
+                  2. Unitatea pentru căldura degajată este:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q2"
+                    value="a">
+
+                  <span>
+                    voltul;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q2"
+                    value="b">
+
+                  <span>
+                    wattul;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q2"
+                    value="c">
+
+                  <span>
+                    joule-ul.
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <section
+              class="quick-check"
+              data-question="q3"
+              data-correct="a">
+
+              <fieldset>
+                <legend>
+                  3. Dacă intensitatea se dublează, iar \(R\) și
+                  \(t\) rămân constante, căldura:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q3"
+                    value="a">
+
+                  <span>
+                    crește de patru ori;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q3"
+                    value="b">
+
+                  <span>
+                    se dublează;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q3"
+                    value="c">
+
+                  <span>
+                    rămâne neschimbată.
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <section
+              class="quick-check"
+              data-question="q4"
+              data-correct="b">
+
+              <fieldset>
+                <legend>
+                  4. Relația corectă pentru putere este:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q4"
+                    value="a">
+
+                  <span>
+                    \(P=Qt\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q4"
+                    value="b">
+
+                  <span>
+                    \(P=\frac{Q}{t}\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q4"
+                    value="c">
+
+                  <span>
+                    \(P=\frac{t}{Q}\)
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <button
+              type="submit"
+              class="button-primary">
+              Verifică răspunsurile
+            </button>
+
+            <div
+              class="score-box"
+              id="scoreBox"
+              role="status"
+              aria-live="polite">
+            </div>
+          </form>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="4">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="6">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 7: footerul comun apare numai aici -->
+        <section
+          class="lab-page"
+          data-title="Concluzii"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 7 • Concluzie
+          </div>
+
+          <h2>
+            Ce ai verificat?
+          </h2>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Energia termică</h3>
+
+              <div class="formula-box">
+                \[
+                  Q=I^2Rt
+                \]
+              </div>
+
+              <p>
+                Depinde de intensitate, rezistență și timp.
+              </p>
+            </article>
+
+            <article class="panel">
+              <h3>Puterea</h3>
+
+              <div class="formula-box">
+                \[
+                  P=UI=I^2R=\frac{U^2}{R}
+                \]
+              </div>
+
+              <p>
+                Arată câtă energie se transformă în fiecare
+                secundă.
+              </p>
+            </article>
+
+            <article class="panel">
+              <h3>Dependența de timp</h3>
+
+              <div class="formula-box">
+                \[
+                  Q=Pt
+                \]
+              </div>
+
+              <p>
+                La putere constantă, graficul \(Q(t)\) este o
+                dreaptă care trece prin origine.
+              </p>
+            </article>
+
+            <article class="panel">
+              <h3>Aplicații</h3>
+
+              <p>
+                Efectul Joule este folosit în radiatoare,
+                plite, boilere, prăjitoare și siguranțe fuzibile.
+              </p>
+            </article>
+          </div>
+
+          <div class="remember">
+            <strong>Concluzie:</strong>
+            energia electrică disipată într-un rezistor se
+            transformă în căldură.
+          </div>
+
+          <div class="warning">
+            Surse de eroare: pierderile de căldură, variația
+            rezistenței cu temperatura, contactele, citirea
+            aparatelor și măsurarea timpului.
+          </div>
+
+          <div class="controls end">
+            <button
+              type="button"
+              class="button-calculate"
+              onclick="window.print()">
+              Tipărește fișa laboratorului
+            </button>
+
+            <a
+              class="button button-home"
+              href="../index.html">
+              Înapoi la capitol
+            </a>
+
+            <a
+              class="button button-secondary"
+              href="../../index.html">
+              Toate capitolele
+            </a>
+          </div>
+
+          <div id="footer-container"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    "use strict";
+
+    const pages =
+      Array.from(
+        document.querySelectorAll(
+          ".lab-page"
+        )
+      );
+
+    const progressFill =
+      document.getElementById(
+        "progressFill"
+      );
+
+    const pageCounter =
+      document.getElementById(
+        "pageCounter"
+      );
+
+    const topTitle =
+      document.getElementById(
+        "topTitle"
+      );
+
+    function formatNumber(
+      value,
+      decimals = 2
+    ) {
+      return Number(value)
+        .toFixed(decimals)
+        .replace(".", ",");
+    }
+
+    function typesetMath(root) {
+      window.MathJax
+        ?.typesetPromise
+        ?.([root]);
+    }
+
+    function goToPage(index) {
+      const target =
+        Math.min(
+          Math.max(
+            Number(index) || 0,
+            0
+          ),
+          pages.length - 1
+        );
+
+      pages.forEach(
+        (page, pageIndex) => {
+          const active =
+            pageIndex === target;
+
+          page.classList.toggle(
+            "active",
+            active
+          );
+
+          page.setAttribute(
+            "aria-hidden",
+            String(!active)
+          );
+        }
+      );
+
+      const current =
+        pages[target];
+
+      topTitle.textContent =
+        current.dataset.title ||
+        "Legea lui Joule";
+
+      pageCounter.textContent =
+        `Pagina ${target + 1} din ${pages.length}`;
+
+      progressFill.style.width =
+        `${((target + 1) / pages.length) * 100}%`;
+
+      history.replaceState(
+        null,
+        "",
+        `#pagina-${target + 1}`
+      );
+
+      window.scrollTo({
+        top: 0,
+        behavior:
+          window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+          ).matches
+            ? "auto"
+            : "smooth"
+      });
+
+      typesetMath(current);
+
+      if (target === 4) {
+        calculateMeasurements();
+      }
+    }
+
+    document.addEventListener(
+      "click",
+      (event) => {
+        const navigationButton =
+          event.target.closest(
+            "[data-go-page]"
+          );
+
+        if (!navigationButton) {
+          return;
+        }
+
+        goToPage(
+          navigationButton.dataset
+            .goPage
+        );
+      }
+    );
+
+    /* =====================================================
+       SIMULATOR
+       ===================================================== */
+
+    const sceneCanvas =
+      document.getElementById(
+        "jouleScene"
+      );
+
+    const sceneContext =
+      sceneCanvas?.getContext(
+        "2d"
+      );
+
+    const voltageSlider =
+      document.getElementById(
+        "voltageSlider"
+      );
+
+    const resistanceSlider =
+      document.getElementById(
+        "resistanceSlider"
+      );
+
+    const timeSlider =
+      document.getElementById(
+        "timeSlider"
+      );
+
+    const switchControl =
+      document.getElementById(
+        "switchControl"
+      );
+
+    function currentSimulation() {
+      const voltage =
+        Number(
+          voltageSlider.value
+        );
+
+      const resistance =
+        Number(
+          resistanceSlider.value
+        );
+
+      const time =
+        Number(
+          timeSlider.value
+        );
+
+      const closed =
+        switchControl.checked;
+
+      const current =
+        closed && resistance > 0
+          ? voltage /
+            resistance
+          : 0;
+
+      const power =
+        voltage *
+        current;
+
+      const heat =
+        power *
+        time;
+
+      /*
+       * Model termic simplificat:
+       * rezistor metalic de 0,1 kg, c = 420 J/(kg·°C).
+       */
+      const mass = 0.1;
+      const specificHeat = 420;
+
+      const temperatureRise =
+        heat /
+        (
+          mass *
+          specificHeat
+        );
+
+      return {
+        voltage,
+        resistance,
+        time,
+        closed,
+        current,
+        power,
+        heat,
+        temperatureRise
+      };
+    }
+
+    function updateSimulation() {
+      const data =
+        currentSimulation();
+
+      document.getElementById(
+        "voltageOutput"
+      ).value =
+        `${formatNumber(
+          data.voltage,
+          1
+        )} V`;
+
+      document.getElementById(
+        "resistanceOutput"
+      ).value =
+        `${formatNumber(
+          data.resistance,
+          1
+        )} Ω`;
+
+      document.getElementById(
+        "timeOutput"
+      ).value =
+        `${formatNumber(
+          data.time,
+          0
+        )} s`;
+
+      document.getElementById(
+        "currentValue"
+      ).textContent =
+        `${formatNumber(
+          data.current,
+          3
+        )} A`;
+
+      document.getElementById(
+        "powerValue"
+      ).textContent =
+        `${formatNumber(
+          data.power,
+          2
+        )} W`;
+
+      document.getElementById(
+        "heatValue"
+      ).textContent =
+        `${formatNumber(
+          data.heat,
+          0
+        )} J`;
+
+      document.getElementById(
+        "temperatureRiseValue"
+      ).textContent =
+        `${formatNumber(
+          data.temperatureRise,
+          1
+        )} °C`;
+
+      const thermalPercent =
+        Math.min(
+          data.temperatureRise /
+          80 *
+          100,
+          100
+        );
+
+      document.getElementById(
+        "thermalFill"
+      ).style.width =
+        `${thermalPercent}%`;
+
+      const thermalLabel =
+        document.getElementById(
+          "thermalLabel"
+        );
+
+      if (!data.closed) {
+        thermalLabel.textContent =
+          "fără încălzire";
+      } else if (
+        data.temperatureRise <
+        10
+      ) {
+        thermalLabel.textContent =
+          "redus";
+      } else if (
+        data.temperatureRise <
+        40
+      ) {
+        thermalLabel.textContent =
+          "moderat";
+      } else {
+        thermalLabel.textContent =
+          "ridicat";
+      }
+
+      const simMessage =
+        document.getElementById(
+          "simMessage"
+        );
+
+      if (!data.closed) {
+        simMessage.textContent =
+          "Circuitul este deschis. Curentul, puterea și căldura degajată sunt zero.";
+      } else if (
+        data.temperatureRise >
+        60
+      ) {
+        simMessage.textContent =
+          "Încălzire foarte mare în model. În experimentul real, oprește circuitul și lasă rezistorul să se răcească.";
+      } else {
+        simMessage.textContent =
+          `Q = UIt = ${formatNumber(
+            data.heat,
+            0
+          )} J. La putere constantă, căldura crește proporțional cu timpul.`;
+      }
+
+      drawScene(
+        data
+      );
+    }
+
+    function drawScene(data) {
+      if (!sceneContext) {
+        return;
+      }
+
+      const ctx =
+        sceneContext;
+
+      const width =
+        sceneCanvas.width;
+
+      const height =
+        sceneCanvas.height;
+
+      ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+      );
+
+      ctx.fillStyle =
+        "#ffffff";
+
+      ctx.fillRect(
+        0,
+        0,
+        width,
+        height
+      );
+
+      const left = 120;
+      const right =
+        width - 110;
+
+      const top = 105;
+      const bottom =
+        height - 105;
+
+      ctx.strokeStyle =
+        "#172033";
+
+      ctx.lineWidth = 6;
+      ctx.lineCap =
+        "round";
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        left,
+        top
+      );
+
+      ctx.lineTo(
+        right,
+        top
+      );
+
+      ctx.lineTo(
+        right,
+        bottom
+      );
+
+      ctx.lineTo(
+        left,
+        bottom
+      );
+
+      ctx.lineTo(
+        left,
+        top
+      );
+
+      ctx.stroke();
+
+      /*
+       * Sursa.
+       */
+      ctx.strokeStyle =
+        "#172033";
+
+      ctx.lineWidth = 5;
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        left - 28,
+        170
+      );
+
+      ctx.lineTo(
+        left + 28,
+        170
+      );
+
+      ctx.moveTo(
+        left - 16,
+        225
+      );
+
+      ctx.lineTo(
+        left + 16,
+        225
+      );
+
+      ctx.stroke();
+
+      ctx.fillStyle =
+        "#172033";
+
+      ctx.font =
+        "bold 18px Segoe UI";
+
+      ctx.textAlign =
+        "center";
+
+      ctx.fillText(
+        `${formatNumber(
+          data.voltage,
+          1
+        )} V`,
+        left,
+        260
+      );
+
+      /*
+       * Rezistor încălzit.
+       */
+      const heatRatio =
+        Math.min(
+          data.temperatureRise /
+          80,
+          1
+        );
+
+      const red =
+        Math.round(
+          225 +
+          30 *
+          heatRatio
+        );
+
+      const green =
+        Math.round(
+          70 -
+          40 *
+          heatRatio
+        );
+
+      ctx.strokeStyle =
+        `rgb(${red}, ${Math.max(green, 20)}, 60)`;
+
+      ctx.lineWidth = 9;
+
+      ctx.beginPath();
+
+      let x = 470;
+
+      ctx.moveTo(
+        x,
+        top
+      );
+
+      for (
+        let index = 0;
+        index < 9;
+        index += 1
+      ) {
+        x += 34;
+
+        ctx.lineTo(
+          x,
+          top +
+          (
+            index % 2 === 0
+              ? -25
+              : 25
+          )
+        );
+      }
+
+      x += 34;
+
+      ctx.lineTo(
+        x,
+        top
+      );
+
+      ctx.stroke();
+
+      ctx.fillStyle =
+        "#172033";
+
+      ctx.font =
+        "bold 18px Segoe UI";
+
+      ctx.fillText(
+        `R = ${formatNumber(
+          data.resistance,
+          1
+        )} Ω`,
+        640,
+        55
+      );
+
+      /*
+       * Unde termice decorative.
+       */
+      if (
+        data.closed &&
+        data.power >
+        0
+      ) {
+        ctx.strokeStyle =
+          "#fb7185";
+
+        ctx.lineWidth = 3;
+
+        for (
+          let index = 0;
+          index < 4;
+          index += 1
+        ) {
+          const baseX =
+            540 +
+            index *
+            80;
+
+          ctx.beginPath();
+
+          ctx.moveTo(
+            baseX,
+            180
+          );
+
+          ctx.bezierCurveTo(
+            baseX - 20,
+            155,
+            baseX + 20,
+            130,
+            baseX,
+            105
+          );
+
+          ctx.stroke();
+        }
+      }
+
+      /*
+       * Întrerupător.
+       */
+      ctx.strokeStyle =
+        data.closed
+          ? "#047857"
+          : "#e11d48";
+
+      ctx.lineWidth = 7;
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        360,
+        bottom
+      );
+
+      ctx.lineTo(
+        450,
+        data.closed
+          ? bottom
+          : bottom - 48
+      );
+
+      ctx.stroke();
+
+      ctx.fillStyle =
+        "#172033";
+
+      ctx.font =
+        "bold 16px Segoe UI";
+
+      ctx.fillText(
+        data.closed
+          ? "închis"
+          : "deschis",
+        405,
+        bottom + 40
+      );
+
+      /*
+       * Informații.
+       */
+      ctx.textAlign =
+        "left";
+
+      ctx.font =
+        "bold 18px Segoe UI";
+
+      ctx.fillText(
+        `I = ${formatNumber(
+          data.current,
+          3
+        )} A`,
+        560,
+        bottom + 35
+      );
+
+      ctx.fillText(
+        `P = ${formatNumber(
+          data.power,
+          2
+        )} W`,
+        700,
+        bottom + 35
+      );
+
+      ctx.fillText(
+        `Q = ${formatNumber(
+          data.heat,
+          0
+        )} J`,
+        820,
+        bottom + 35
+      );
+    }
+
+    [
+      voltageSlider,
+      resistanceSlider,
+      timeSlider
+    ].forEach(
+      (control) => {
+        control?.addEventListener(
+          "input",
+          updateSimulation
+        );
+      }
+    );
+
+    switchControl
+      ?.addEventListener(
+        "change",
+        updateSimulation
+      );
+
+    /* =====================================================
+       TABELUL DE MĂSURĂTORI
+       ===================================================== */
+
+    function calculateRow(row) {
+      const voltage =
+        Number(
+          row.querySelector(
+            '[data-field="voltage"]'
+          )?.value
+        );
+
+      const resistance =
+        Number(
+          row.querySelector(
+            '[data-field="resistance"]'
+          )?.value
+        );
+
+      const time =
+        Number(
+          row.querySelector(
+            '[data-field="time"]'
+          )?.value
+        );
+
+      const currentOutput =
+        row.querySelector(
+          '[data-output="current"]'
+        );
+
+      const powerOutput =
+        row.querySelector(
+          '[data-output="power"]'
+        );
+
+      const heatOutput =
+        row.querySelector(
+          '[data-output="heat"]'
+        );
+
+      if (
+        !Number.isFinite(voltage) ||
+        !Number.isFinite(resistance) ||
+        !Number.isFinite(time) ||
+        voltage <= 0 ||
+        resistance <= 0 ||
+        time < 0
+      ) {
+        currentOutput.textContent =
+          "invalid";
+
+        powerOutput.textContent =
+          "invalid";
+
+        heatOutput.textContent =
+          "invalid";
+
+        return null;
+      }
+
+      const current =
+        voltage /
+        resistance;
+
+      const power =
+        voltage *
+        current;
+
+      const heat =
+        power *
+        time;
+
+      currentOutput.textContent =
+        formatNumber(
+          current,
+          3
+        );
+
+      powerOutput.textContent =
+        formatNumber(
+          power,
+          3
+        );
+
+      heatOutput.textContent =
+        formatNumber(
+          heat,
+          1
+        );
+
+      return {
+        voltage,
+        resistance,
+        time,
+        current,
+        power,
+        heat
+      };
+    }
+
+    function calculateMeasurements() {
+      const rows =
+        Array.from(
+          document.querySelectorAll(
+            "#measurementBody tr"
+          )
+        );
+
+      const values =
+        rows
+          .map(
+            calculateRow
+          )
+          .filter(
+            Boolean
+          );
+
+      const averageBox =
+        document.getElementById(
+          "averageBox"
+        );
+
+      if (!values.length) {
+        averageBox.textContent =
+          "Nu există determinări valide. Verifică valorile U, R și t.";
+
+        drawChart([]);
+
+        return;
+      }
+
+      const averagePower =
+        values.reduce(
+          (sum, item) =>
+            sum +
+            item.power,
+          0
+        ) /
+        values.length;
+
+      const totalHeat =
+        values.reduce(
+          (sum, item) =>
+            sum +
+            item.heat,
+          0
+        );
+
+      averageBox.textContent =
+        `Puterea medie: ${formatNumber(
+          averagePower,
+          3
+        )} W. Suma valorilor Q din tabel: ${formatNumber(
+          totalHeat,
+          1
+        )} J.`;
+
+      drawChart(
+        values
+      );
+    }
+
+    document
+      .getElementById(
+        "calculateMeasurements"
+      )
+      ?.addEventListener(
+        "click",
+        calculateMeasurements
+      );
+
+    document
+      .getElementById(
+        "copySimulation"
+      )
+      ?.addEventListener(
+        "click",
+        () => {
+          const data =
+            currentSimulation();
+
+          const firstRow =
+            document.querySelector(
+              '#measurementBody tr[data-row="1"]'
+            );
+
+          firstRow.querySelector(
+            '[data-field="voltage"]'
+          ).value =
+            data.voltage.toFixed(2);
+
+          firstRow.querySelector(
+            '[data-field="resistance"]'
+          ).value =
+            data.resistance.toFixed(2);
+
+          firstRow.querySelector(
+            '[data-field="time"]'
+          ).value =
+            data.time.toFixed(0);
+
+          calculateMeasurements();
+        }
+      );
+
+    /* =====================================================
+       GRAFICUL Q(t)
+       ===================================================== */
+
+    const chartCanvas =
+      document.getElementById(
+        "jouleChart"
+      );
+
+    const chartContext =
+      chartCanvas?.getContext(
+        "2d"
+      );
+
+    function drawChart(points) {
+      if (!chartContext) {
+        return;
+      }
+
+      const ctx =
+        chartContext;
+
+      const width =
+        chartCanvas.width;
+
+      const height =
+        chartCanvas.height;
+
+      ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+      );
+
+      ctx.fillStyle =
+        "#ffffff";
+
+      ctx.fillRect(
+        0,
+        0,
+        width,
+        height
+      );
+
+      const margin = {
+        left: 92,
+        right: 42,
+        top: 42,
+        bottom: 72
+      };
+
+      const plotWidth =
+        width -
+        margin.left -
+        margin.right;
+
+      const plotHeight =
+        height -
+        margin.top -
+        margin.bottom;
+
+      const maxTime =
+        points.length
+          ? Math.max(
+              120,
+              ...points.map(
+                (point) =>
+                  point.time
+              )
+            )
+          : 120;
+
+      const maxHeat =
+        points.length
+          ? Math.max(
+              1000,
+              ...points.map(
+                (point) =>
+                  point.heat
+              )
+            )
+          : 1000;
+
+      ctx.strokeStyle =
+        "#cbd5e1";
+
+      ctx.lineWidth = 1;
+
+      for (
+        let index = 0;
+        index <= 5;
+        index += 1
+      ) {
+        const x =
+          margin.left +
+          plotWidth *
+          index /
+          5;
+
+        const y =
+          margin.top +
+          plotHeight *
+          index /
+          5;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+          x,
+          margin.top
+        );
+
+        ctx.lineTo(
+          x,
+          margin.top +
+          plotHeight
+        );
+
+        ctx.stroke();
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+          margin.left,
+          y
+        );
+
+        ctx.lineTo(
+          margin.left +
+          plotWidth,
+          y
+        );
+
+        ctx.stroke();
+      }
+
+      ctx.strokeStyle =
+        "#172033";
+
+      ctx.lineWidth = 3;
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        margin.left,
+        margin.top
+      );
+
+      ctx.lineTo(
+        margin.left,
+        margin.top +
+        plotHeight
+      );
+
+      ctx.lineTo(
+        margin.left +
+        plotWidth,
+        margin.top +
+        plotHeight
+      );
+
+      ctx.stroke();
+
+      ctx.fillStyle =
+        "#172033";
+
+      ctx.font =
+        "bold 19px Segoe UI";
+
+      ctx.fillText(
+        "Q (J)",
+        28,
+        margin.top
+      );
+
+      ctx.fillText(
+        "t (s)",
+        width - 82,
+        height - 20
+      );
+
+      ctx.font =
+        "16px Segoe UI";
+
+      for (
+        let index = 0;
+        index <= 5;
+        index += 1
+      ) {
+        const time =
+          maxTime *
+          index /
+          5;
+
+        const heat =
+          maxHeat *
+          (5 - index) /
+          5;
+
+        const x =
+          margin.left +
+          plotWidth *
+          index /
+          5;
+
+        const y =
+          margin.top +
+          plotHeight *
+          index /
+          5;
+
+        ctx.fillText(
+          formatNumber(
+            time,
+            0
+          ),
+          x - 12,
+          margin.top +
+          plotHeight +
+          28
+        );
+
+        ctx.fillText(
+          formatNumber(
+            heat,
+            0
+          ),
+          34,
+          y + 6
+        );
+      }
+
+      if (!points.length) {
+        ctx.fillStyle =
+          "#475569";
+
+        ctx.font =
+          "bold 22px Segoe UI";
+
+        ctx.fillText(
+          "Completează tabelul pentru a afișa graficul.",
+          205,
+          235
+        );
+
+        return;
+      }
+
+      const sorted =
+        [...points].sort(
+          (first, second) =>
+            first.time -
+            second.time
+        );
+
+      ctx.strokeStyle =
+        "#e11d48";
+
+      ctx.lineWidth = 4;
+
+      ctx.beginPath();
+
+      sorted.forEach(
+        (point, index) => {
+          const x =
+            margin.left +
+            point.time /
+            maxTime *
+            plotWidth;
+
+          const y =
+            margin.top +
+            plotHeight -
+            point.heat /
+            maxHeat *
+            plotHeight;
+
+          if (index === 0) {
+            ctx.moveTo(
+              x,
+              y
+            );
+          } else {
+            ctx.lineTo(
+              x,
+              y
+            );
+          }
+        }
+      );
+
+      ctx.stroke();
+
+      sorted.forEach(
+        (point) => {
+          const x =
+            margin.left +
+            point.time /
+            maxTime *
+            plotWidth;
+
+          const y =
+            margin.top +
+            plotHeight -
+            point.heat /
+            maxHeat *
+            plotHeight;
+
+          ctx.fillStyle =
+            "#0284c7";
+
+          ctx.beginPath();
+
+          ctx.arc(
+            x,
+            y,
+            7,
+            0,
+            Math.PI * 2
+          );
+
+          ctx.fill();
+        }
+      );
+    }
+
+    /* =====================================================
+       VERIFICARE RAPIDĂ
+       ===================================================== */
+
+    const quickCheckForm =
+      document.getElementById(
+        "quickCheckForm"
+      );
+
+    quickCheckForm
+      ?.addEventListener(
+        "submit",
+        (event) => {
+          event.preventDefault();
+
+          const questions =
+            Array.from(
+              quickCheckForm
+                .querySelectorAll(
+                  "[data-question]"
+                )
+            );
+
+          let correctAnswers = 0;
+          let answered = 0;
+
+          questions.forEach(
+            (question) => {
+              const selected =
+                question.querySelector(
+                  "input:checked"
+                );
+
+              const feedback =
+                question.querySelector(
+                  ".feedback"
+                );
+
+              question
+                .querySelectorAll(
+                  ".answer-option"
+                )
+                .forEach(
+                  (option) => {
+                    option.classList.remove(
+                      "correct",
+                      "incorrect"
+                    );
+                  }
+                );
+
+              if (!selected) {
+                feedback.textContent =
+                  "Alege un răspuns.";
+
+                return;
+              }
+
+              answered += 1;
+
+              const correct =
+                selected.value ===
+                question.dataset.correct;
+
+              const selectedLabel =
+                selected.closest(
+                  ".answer-option"
+                );
+
+              selectedLabel
+                ?.classList
+                .add(
+                  correct
+                    ? "correct"
+                    : "incorrect"
+                );
+
+              if (correct) {
+                correctAnswers += 1;
+                feedback.textContent =
+                  "✓ Corect.";
+              } else {
+                feedback.textContent =
+                  "✗ Răspuns incorect. Recitește explicația și încearcă din nou.";
+              }
+            }
+          );
+
+          const scoreBox =
+            document.getElementById(
+              "scoreBox"
+            );
+
+          scoreBox.classList.add(
+            "visible"
+          );
+
+          if (
+            answered <
+            questions.length
+          ) {
+            scoreBox.textContent =
+              `Ai răspuns la ${answered} din ${questions.length} întrebări. Completează toate răspunsurile.`;
+
+            return;
+          }
+
+          scoreBox.textContent =
+            correctAnswers ===
+            questions.length
+              ? `Excelent! Ai ${correctAnswers} răspunsuri corecte din ${questions.length}.`
+              : `Ai ${correctAnswers} răspunsuri corecte din ${questions.length}. Poți corecta răspunsurile și verifica din nou.`;
+
+          typesetMath(
+            quickCheckForm
+          );
+        }
+      );
+
+    /* =====================================================
+       HEADER, FOOTER ȘI TEMĂ
+       ===================================================== */
+
+    const COMPONENTS = {
+      header:
+        "../../../assets/components/header.html",
+
+      footer:
+        "../../../assets/components/footer.html"
+    };
+
+    const THEME_KEY =
+      "fizica-galaction-theme";
+
+    function fallbackHeader() {
+      return `
+        <header class="site-header">
+          <div class="container flex flex-between">
+            <div>
+              <h1 class="site-title">
+                Fizica Galaction
+              </h1>
+
+              <p class="site-subtitle">
+                Platformă educațională •
+                Prof. DĂNUȚ ANDRONIE
+              </p>
+            </div>
+
+            <button
+              type="button"
+              class="theme-toggle"
+              title="Schimbă tema"
+              aria-label="Schimbă tema">
+              ☀️
+            </button>
+          </div>
+        </header>
+      `;
+    }
+
+    function fallbackFooter() {
+      return `
+        <footer class="site-footer">
+          <div class="wrapper">
+            <p>
+              © 2026 • Prof. Dănuț Andronie
+            </p>
+
+            <p>
+              E-mail:
+              <a href="mailto:danutmg@gmail.com">
+                danutmg@gmail.com
+              </a>
+            </p>
+          </div>
+        </footer>
+      `;
+    }
+
+    async function loadComponent(
+      containerId,
+      componentPath,
+      fallback
+    ) {
+      const container =
+        document.getElementById(
+          containerId
+        );
+
+      if (!container) {
+        return;
+      }
+
+      try {
+        const response =
+          await fetch(
+            componentPath,
+            {
+              cache: "no-cache"
+            }
+          );
+
+        if (!response.ok) {
+          throw new Error(
+            `HTTP ${response.status}`
+          );
+        }
+
+        container.innerHTML =
+          await response.text();
+      } catch (error) {
+        container.innerHTML =
+          fallback();
+
+        console.warn(
+          `Nu s-a încărcat ${componentPath}.`,
+          error
+        );
+      }
+    }
+
+    function getSavedTheme() {
+      try {
+        const saved =
+          localStorage.getItem(
+            THEME_KEY
+          );
+
+        if (
+          saved === "light" ||
+          saved === "dark"
+        ) {
+          return saved;
+        }
+      } catch (error) {
+        console.warn(
+          "Tema nu a putut fi citită.",
+          error
+        );
+      }
+
+      return window.matchMedia(
+        "(prefers-color-scheme: light)"
+      ).matches
+        ? "light"
+        : "dark";
+    }
+
+    function applyTheme(theme) {
+      const light =
+        theme === "light";
+
+      document.body.classList.toggle(
+        "light",
+        light
+      );
+
+      document.body.classList.toggle(
+        "dark",
+        !light
+      );
+
+      document.body.dataset.theme =
+        light
+          ? "light"
+          : "dark";
+
+      document
+        .querySelectorAll(
+          ".theme-toggle"
+        )
+        .forEach(
+          (button) => {
+            button.textContent =
+              light
+                ? "🌙"
+                : "☀️";
+
+            button.title =
+              light
+                ? "Activează tema întunecată"
+                : "Activează tema luminoasă";
+
+            button.setAttribute(
+              "aria-label",
+              button.title
+            );
+          }
+        );
+    }
+
+    document.addEventListener(
+      "click",
+      (event) => {
+        const themeButton =
+          event.target.closest(
+            ".theme-toggle"
+          );
+
+        if (!themeButton) {
+          return;
+        }
+
+        const nextTheme =
+          document.body.dataset.theme ===
+          "light"
+            ? "dark"
+            : "light";
+
+        try {
+          localStorage.setItem(
+            THEME_KEY,
+            nextTheme
+          );
+        } catch (error) {
+          console.warn(
+            "Tema nu a putut fi salvată.",
+            error
+          );
+        }
+
+        applyTheme(
+          nextTheme
+        );
+      }
+    );
+
+    /* =====================================================
+       PORNIRE
+       ===================================================== */
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      async () => {
+        const theme =
+          getSavedTheme();
+
+        applyTheme(
+          theme
+        );
+
+        updateSimulation();
+        calculateMeasurements();
+
+        await Promise.all([
+          loadComponent(
+            "header-container",
+            COMPONENTS.header,
+            fallbackHeader
+          ),
+
+          loadComponent(
+            "footer-container",
+            COMPONENTS.footer,
+            fallbackFooter
+          )
+        ]);
+
+        applyTheme(
+          document.body.dataset.theme ||
+          theme
+        );
+
+        const hashMatch =
+          window.location.hash.match(
+            /^#pagina-(\d+)$/
+          );
+
+        goToPage(
+          hashMatch
+            ? Number(
+                hashMatch[1]
+              ) - 1
+            : 0
+        );
+      }
+    );
+  </script>
+</body>
+</html>

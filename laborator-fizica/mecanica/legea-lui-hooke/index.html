@@ -1,1 +1,4102 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
 
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="Laborator interactiv de fizică pentru clasa a VII-a despre legea lui Hooke, alungirea elastică și determinarea constantei elastice a unui resort.">
+
+  <title>
+    Legea lui Hooke și alungirea elastică | Laborator de fizică
+  </title>
+
+  <!-- Stilurile componentelor comune -->
+  <link
+    rel="stylesheet"
+    href="../../assets/css/layout.css">
+
+  <!-- MathJax pentru formule și fracții vizuale -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["\\(", "\\)"]],
+        displayMath: [["\\[", "\\]"]]
+      },
+      options: {
+        skipHtmlTags: [
+          "script",
+          "noscript",
+          "style",
+          "textarea",
+          "pre",
+          "code"
+        ]
+      }
+    };
+  </script>
+
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    :root {
+      --bg: #07111f;
+      --surface: #0e1b31;
+      --surface-2: #122742;
+      --surface-soft: #183653;
+      --border: #315a7e;
+      --text: #f3f8ff;
+      --muted: #c5d8ec;
+      --primary: #67e8f9;
+      --primary-strong: #22d3ee;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --danger: #fb7185;
+      --violet: #a78bfa;
+      --focus: #fde047;
+      --shadow: 0 22px 54px rgba(0, 0, 0, 0.34);
+      --radius: 24px;
+    }
+
+    body.light,
+    body[data-theme="light"] {
+      --bg: #eef6ff;
+      --surface: #ffffff;
+      --surface-2: #f2f8fd;
+      --surface-soft: #e5f1fb;
+      --border: #96b6d0;
+      --text: #10243a;
+      --muted: #36516b;
+      --primary: #0369a1;
+      --primary-strong: #0284c7;
+      --success: #047857;
+      --warning: #a16207;
+      --danger: #be123c;
+      --violet: #6d28d9;
+      --focus: #a16207;
+      --shadow: 0 18px 44px rgba(15, 35, 55, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 18px;
+      scroll-behavior: smooth;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+
+      color: var(--text);
+
+      font-family:
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+      font-size:
+        clamp(
+          1rem,
+          0.94rem + 0.34vw,
+          1.22rem
+        );
+
+      line-height: 1.68;
+
+      background:
+        radial-gradient(
+          circle at 7% 0%,
+          rgba(34, 211, 238, 0.13),
+          transparent 24%
+        ),
+        radial-gradient(
+          circle at 93% 4%,
+          rgba(167, 139, 250, 0.12),
+          transparent 24%
+        ),
+        var(--bg);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .lab-shell {
+      width:
+        min(
+          1180px,
+          calc(100% - 24px)
+        );
+
+      margin:
+        clamp(10px, 2vw, 28px)
+        auto;
+
+      padding-bottom: 28px;
+    }
+
+    .lab-card {
+      overflow: hidden;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        var(--radius);
+
+      background:
+        var(--surface);
+
+      box-shadow:
+        var(--shadow);
+    }
+
+    .lab-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+
+      padding:
+        clamp(15px, 2.2vw, 23px)
+        clamp(18px, 3vw, 34px);
+
+      border-bottom:
+        1px solid
+        var(--border);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--surface) 92%,
+          transparent
+        );
+
+      backdrop-filter:
+        blur(10px);
+    }
+
+    .lab-kicker {
+      color:
+        var(--primary);
+
+      font-size:
+        clamp(
+          0.88rem,
+          0.84rem + 0.18vw,
+          1rem
+        );
+
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .lab-title {
+      margin:
+        6px
+        0
+        12px;
+
+      color:
+        var(--text);
+
+      font-size:
+        clamp(
+          1.35rem,
+          1.05rem + 1vw,
+          2rem
+        );
+
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .progress-track {
+      flex: 1;
+
+      height: 12px;
+      overflow: hidden;
+
+      border-radius: 999px;
+
+      background:
+        color-mix(
+          in srgb,
+          var(--text) 12%,
+          transparent
+        );
+    }
+
+    .progress-fill {
+      display: block;
+
+      width: 0;
+      height: 100%;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          var(--success)
+        );
+
+      transition:
+        width
+        180ms
+        ease;
+    }
+
+    .page-counter {
+      color:
+        var(--muted);
+
+      font-size: 1rem;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .lab-pages {
+      min-height:
+        calc(100svh - 160px);
+    }
+
+    .lab-page {
+      display: none;
+
+      padding:
+        clamp(24px, 4vw, 46px)
+        clamp(18px, 4.5vw, 54px)
+        clamp(28px, 4vw, 48px);
+
+      animation:
+        page-in
+        180ms
+        ease;
+    }
+
+    .lab-page.active {
+      display: block;
+    }
+
+    @keyframes page-in {
+      from {
+        opacity: 0.3;
+        transform:
+          translateY(7px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /*
+     * Headerul apare numai în pagina 1,
+     * iar footerul numai în pagina 7.
+     */
+    #header-container,
+    #footer-container {
+      width: 100%;
+    }
+
+    #header-container {
+      margin:
+        calc(-1 * clamp(24px, 4vw, 46px))
+        calc(-1 * clamp(18px, 4.5vw, 54px))
+        clamp(28px, 4vw, 42px);
+
+      width:
+        calc(
+          100% +
+          2 * clamp(18px, 4.5vw, 54px)
+        );
+    }
+
+    #footer-container {
+      margin:
+        clamp(30px, 4vw, 48px)
+        calc(-1 * clamp(18px, 4.5vw, 54px))
+        calc(-1 * clamp(28px, 4vw, 48px));
+
+      width:
+        calc(
+          100% +
+          2 * clamp(18px, 4.5vw, 54px)
+        );
+    }
+
+    h2 {
+      margin:
+        0
+        0
+        14px;
+
+      color:
+        var(--text);
+
+      font-size:
+        clamp(
+          1.72rem,
+          1.28rem + 1.34vw,
+          2.75rem
+        );
+
+      line-height: 1.18;
+    }
+
+    h3 {
+      margin:
+        0
+        0
+        10px;
+
+      color:
+        var(--text);
+
+      font-size:
+        clamp(
+          1.18rem,
+          1.05rem + 0.44vw,
+          1.55rem
+        );
+
+      line-height: 1.3;
+    }
+
+    p {
+      margin:
+        0
+        0
+        16px;
+    }
+
+    .lead {
+      color:
+        var(--text);
+
+      font-size:
+        clamp(
+          1.12rem,
+          1rem + 0.45vw,
+          1.42rem
+        );
+
+      line-height: 1.65;
+    }
+
+    .muted {
+      color:
+        var(--muted);
+    }
+
+    .highlight {
+      color:
+        var(--success);
+
+      font-weight: 850;
+    }
+
+    .page-badge {
+      display: inline-block;
+
+      margin-bottom: 14px;
+      padding:
+        8px
+        13px;
+
+      border-radius:
+        999px;
+
+      color:
+        var(--primary);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--primary) 13%,
+          transparent
+        );
+
+      font-size: 1rem;
+      font-weight: 850;
+    }
+
+    .large-icon {
+      margin-bottom: 14px;
+
+      font-size:
+        clamp(
+          2.8rem,
+          2.2rem + 1.7vw,
+          4.2rem
+        );
+
+      line-height: 1;
+    }
+
+    .grid {
+      display: grid;
+      gap:
+        clamp(
+          14px,
+          2vw,
+          22px
+        );
+    }
+
+    .grid.two {
+      grid-template-columns: 1fr;
+    }
+
+    .grid.three {
+      grid-template-columns: 1fr;
+    }
+
+    .panel,
+    .quick-check,
+    details {
+      padding:
+        clamp(
+          17px,
+          2.4vw,
+          25px
+        );
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        20px;
+
+      background:
+        var(--surface-2);
+    }
+
+    .remember {
+      margin-top: 18px;
+
+      padding:
+        clamp(
+          16px,
+          2.2vw,
+          22px
+        );
+
+      border-left:
+        6px solid
+        var(--success);
+
+      border-radius:
+        15px;
+
+      color:
+        var(--text);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--success) 12%,
+          var(--surface)
+        );
+    }
+
+    .warning {
+      margin-top: 18px;
+
+      padding:
+        clamp(
+          16px,
+          2.2vw,
+          22px
+        );
+
+      border-left:
+        6px solid
+        var(--warning);
+
+      border-radius:
+        15px;
+
+      color:
+        var(--text);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--warning) 12%,
+          var(--surface)
+        );
+    }
+
+    .formula-box {
+      margin:
+        14px
+        0;
+
+      padding:
+        16px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        16px;
+
+      color:
+        var(--warning);
+
+      background:
+        var(--surface-soft);
+
+      font-size:
+        clamp(
+          1.25rem,
+          1.05rem + 0.65vw,
+          1.85rem
+        );
+
+      font-weight: 850;
+
+      text-align: center;
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 26px;
+    }
+
+    li {
+      margin-bottom: 12px;
+      line-height: 1.62;
+    }
+
+    .setup-list {
+      display: grid;
+      gap: 10px;
+
+      margin-top: 14px;
+    }
+
+    .setup-item {
+      display: grid;
+      grid-template-columns:
+        42px
+        1fr;
+
+      align-items: start;
+      gap: 12px;
+
+      padding:
+        12px
+        14px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        14px;
+
+      background:
+        var(--surface-soft);
+    }
+
+    .setup-icon {
+      display: grid;
+      place-items: center;
+
+      width: 42px;
+      height: 42px;
+
+      border-radius: 12px;
+
+      background:
+        color-mix(
+          in srgb,
+          var(--primary) 16%,
+          transparent
+        );
+
+      font-size: 1.45rem;
+    }
+
+    /* =====================================================
+       SIMULATORUL RESORTULUI
+       ===================================================== */
+
+    .simulator {
+      padding:
+        clamp(
+          15px,
+          2vw,
+          22px
+        );
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        22px;
+
+      background:
+        var(--surface-2);
+    }
+
+    .spring-scene {
+      position: relative;
+
+      min-height: 430px;
+      overflow: hidden;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        18px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #9bd8ff 0%,
+          #e7f5ff 72%,
+          #d8e2ec 73%,
+          #94a3b8 100%
+        );
+    }
+
+    .support-bar {
+      position: absolute;
+      left: 18%;
+      right: 18%;
+      top: 36px;
+
+      height: 22px;
+
+      border:
+        4px solid
+        #172033;
+
+      border-radius:
+        10px;
+
+      background:
+        #475569;
+    }
+
+    .support-hook {
+      position: absolute;
+      left: 50%;
+      top: 55px;
+
+      width: 10px;
+      height: 24px;
+
+      border-radius:
+        999px;
+
+      background:
+        #172033;
+
+      transform:
+        translateX(-50%);
+    }
+
+    .spring {
+      position: absolute;
+      left: 50%;
+      top: 78px;
+
+      width: 86px;
+      height: 190px;
+
+      transform:
+        translateX(-50%);
+    }
+
+    .spring-line {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    .spring-path {
+      fill: none;
+      stroke: #475569;
+      stroke-width: 7;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .mass-block {
+      position: absolute;
+      left: 50%;
+      top: 266px;
+
+      width: 120px;
+      min-height: 74px;
+
+      padding:
+        13px
+        10px;
+
+      border:
+        4px solid
+        #172033;
+
+      border-radius:
+        14px;
+
+      color: #172033;
+
+      background:
+        linear-gradient(
+          135deg,
+          #fbbf24,
+          #f59e0b
+        );
+
+      font-weight: 900;
+      text-align: center;
+
+      transform:
+        translateX(-50%);
+    }
+
+    .ruler {
+      position: absolute;
+      right: 13%;
+      top: 76px;
+
+      width: 66px;
+      height: 286px;
+
+      border:
+        3px solid
+        #172033;
+
+      border-radius:
+        9px;
+
+      background:
+        repeating-linear-gradient(
+          180deg,
+          #ffffff 0 9px,
+          #cbd5e1 9px 10px
+        );
+    }
+
+    .ruler::before {
+      content: "cm";
+
+      position: absolute;
+      top: -34px;
+      left: 50%;
+
+      color: #172033;
+
+      font-size: 0.95rem;
+      font-weight: 900;
+
+      transform:
+        translateX(-50%);
+    }
+
+    .ruler-mark {
+      position: absolute;
+      right: 4px;
+
+      width: 31px;
+      height: 2px;
+
+      background:
+        #172033;
+    }
+
+    .ruler-label {
+      position: absolute;
+      left: 6px;
+
+      color: #172033;
+
+      font-size: 0.72rem;
+      font-weight: 800;
+    }
+
+    .length-arrow {
+      position: absolute;
+      left: 13%;
+      top: 78px;
+
+      width: 5px;
+      height: 190px;
+
+      background:
+        var(--violet);
+    }
+
+    .length-arrow::before,
+    .length-arrow::after {
+      content: "";
+
+      position: absolute;
+      left: 50%;
+
+      width: 15px;
+      height: 15px;
+
+      border-left:
+        4px solid
+        var(--violet);
+
+      border-top:
+        4px solid
+        var(--violet);
+    }
+
+    .length-arrow::before {
+      top: -2px;
+
+      transform:
+        translateX(-50%)
+        rotate(45deg);
+    }
+
+    .length-arrow::after {
+      bottom: -2px;
+
+      transform:
+        translateX(-50%)
+        rotate(225deg);
+    }
+
+    .length-label {
+      position: absolute;
+      left: 4%;
+      top: 155px;
+
+      min-width: 120px;
+
+      padding:
+        8px
+        10px;
+
+      border-radius: 11px;
+
+      color: #ffffff;
+
+      background:
+        #6d28d9;
+
+      font-size: 0.95rem;
+      font-weight: 850;
+      text-align: center;
+    }
+
+    .control-grid {
+      display: grid;
+      gap: 14px;
+
+      margin-top: 18px;
+    }
+
+    .control-card {
+      padding:
+        14px
+        15px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        15px;
+
+      background:
+        var(--surface-soft);
+    }
+
+    .control-card label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+
+      margin-bottom: 10px;
+
+      color:
+        var(--text);
+
+      font-weight: 800;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      min-height: 34px;
+
+      accent-color:
+        var(--primary-strong);
+    }
+
+    .results-grid {
+      display: grid;
+      gap: 12px;
+
+      margin-top: 16px;
+    }
+
+    .result-card {
+      padding:
+        14px
+        15px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        15px;
+
+      background:
+        var(--surface-soft);
+    }
+
+    .result-card strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .result-value {
+      color:
+        var(--primary);
+
+      font-size: 1.2rem;
+      font-weight: 900;
+    }
+
+    .sim-message {
+      min-height: 84px;
+
+      margin-top: 16px;
+
+      padding: 16px;
+
+      border-left:
+        5px solid
+        var(--primary);
+
+      border-radius:
+        14px;
+
+      color:
+        var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    /* =====================================================
+       TABEL ȘI GRAFIC
+       ===================================================== */
+
+    .table-wrap {
+      overflow-x: auto;
+
+      margin-top: 16px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        17px;
+    }
+
+    .measure-table {
+      width: 100%;
+      min-width: 850px;
+
+      border-collapse:
+        collapse;
+    }
+
+    .measure-table th,
+    .measure-table td {
+      padding:
+        12px
+        11px;
+
+      border-bottom:
+        1px solid
+        var(--border);
+
+      border-right:
+        1px solid
+        var(--border);
+
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .measure-table th:last-child,
+    .measure-table td:last-child {
+      border-right: 0;
+    }
+
+    .measure-table tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .measure-table th {
+      color:
+        var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    .measure-table input {
+      width: 96px;
+      min-height: 44px;
+
+      padding:
+        8px
+        9px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        10px;
+
+      color:
+        var(--text);
+
+      background:
+        var(--surface);
+    }
+
+    .measure-table output {
+      display: inline-block;
+
+      min-width: 72px;
+
+      color:
+        var(--primary);
+
+      font-weight: 850;
+    }
+
+    .average-box {
+      margin-top: 17px;
+
+      padding: 16px;
+
+      border:
+        2px solid
+        var(--success);
+
+      border-radius:
+        16px;
+
+      color:
+        var(--text);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--success) 11%,
+          var(--surface)
+        );
+
+      font-size: 1.1rem;
+      font-weight: 850;
+    }
+
+    .chart-wrap {
+      margin-top: 18px;
+
+      padding:
+        clamp(
+          14px,
+          2vw,
+          20px
+        );
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        18px;
+
+      background:
+        var(--surface-2);
+    }
+
+    #hookeChart {
+      display: block;
+
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        14px;
+
+      background: #ffffff;
+    }
+
+    /* =====================================================
+       VERIFICARE RAPIDĂ
+       ===================================================== */
+
+    .quick-check {
+      margin-bottom: 16px;
+    }
+
+    .quick-check fieldset {
+      display: grid;
+      gap: 11px;
+
+      margin: 14px 0 0;
+      padding: 0;
+
+      border: 0;
+    }
+
+    .quick-check legend {
+      margin-bottom: 12px;
+      padding: 0;
+
+      color:
+        var(--text);
+
+      font-size: 1.08rem;
+      font-weight: 850;
+    }
+
+    .answer-option {
+      display: grid;
+      grid-template-columns:
+        auto
+        1fr;
+
+      align-items: start;
+      gap: 12px;
+
+      min-height: 54px;
+
+      padding:
+        13px
+        15px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        14px;
+
+      color:
+        var(--text);
+
+      background:
+        var(--surface-soft);
+
+      cursor: pointer;
+    }
+
+    .answer-option:hover {
+      border-color:
+        var(--primary);
+    }
+
+    .answer-option input {
+      width: 22px;
+      height: 22px;
+
+      margin-top: 2px;
+
+      accent-color:
+        var(--primary-strong);
+    }
+
+    .answer-option.correct {
+      border-color:
+        var(--success);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--success) 14%,
+          var(--surface)
+        );
+    }
+
+    .answer-option.incorrect {
+      border-color:
+        var(--danger);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--danger) 12%,
+          var(--surface)
+        );
+    }
+
+    .feedback {
+      min-height: 30px;
+
+      margin-top: 12px;
+
+      color:
+        var(--text);
+
+      font-weight: 800;
+    }
+
+    .score-box {
+      display: none;
+
+      margin-top: 18px;
+
+      padding: 18px;
+
+      border:
+        2px solid
+        var(--success);
+
+      border-radius:
+        17px;
+
+      color:
+        var(--text);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--success) 11%,
+          var(--surface)
+        );
+
+      font-size: 1.1rem;
+      font-weight: 850;
+    }
+
+    .score-box.visible {
+      display: block;
+    }
+
+    /* =====================================================
+       BUTOANE
+       ===================================================== */
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      margin-top: 24px;
+    }
+
+    .button,
+    button {
+      appearance: none;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-height: 56px;
+
+      padding:
+        16px
+        22px;
+
+      border: 0;
+      border-radius: 15px;
+
+      font-size:
+        clamp(
+          1.04rem,
+          1rem + 0.18vw,
+          1.18rem
+        );
+
+      font-weight: 900;
+      text-align: center;
+      text-decoration: none;
+
+      cursor: pointer;
+
+      transition:
+        transform
+        120ms
+        ease,
+        filter
+        120ms
+        ease;
+    }
+
+    .button:hover,
+    button:hover {
+      filter:
+        brightness(1.05);
+    }
+
+    .button:active,
+    button:active {
+      transform:
+        scale(0.98);
+    }
+
+    .button:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    summary:focus-visible {
+      outline:
+        4px solid
+        var(--focus);
+
+      outline-offset: 4px;
+    }
+
+    .button-primary {
+      width: 100%;
+
+      color: #062132;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          var(--success)
+        );
+    }
+
+    .button-secondary {
+      width: 100%;
+
+      border:
+        1px solid
+        var(--border);
+
+      color:
+        var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    .button-calculate {
+      width: 100%;
+
+      color: #ffffff;
+
+      background:
+        linear-gradient(
+          90deg,
+          #7c3aed,
+          #a855f7
+        );
+    }
+
+    .button-home {
+      width: 100%;
+
+      color: #062132;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          #38bdf8
+        );
+    }
+
+    @media (min-width: 820px) {
+      .grid.two {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+      }
+
+      .grid.three {
+        grid-template-columns:
+          repeat(
+            3,
+            minmax(0, 1fr)
+          );
+      }
+
+      .control-grid {
+        grid-template-columns:
+          repeat(
+            3,
+            minmax(0, 1fr)
+          );
+      }
+
+      .results-grid {
+        grid-template-columns:
+          repeat(
+            4,
+            minmax(0, 1fr)
+          );
+      }
+
+      .controls
+      .button-secondary {
+        width: auto;
+        min-width: 170px;
+      }
+
+      .controls
+      .button-primary {
+        width: auto;
+        min-width: 240px;
+        margin-left: auto;
+      }
+
+      .controls
+      .button-calculate {
+        width: auto;
+        min-width: 250px;
+      }
+
+      .controls.end {
+        justify-content: center;
+      }
+
+      .controls.end
+      .button-home {
+        width: auto;
+        min-width: 360px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      html {
+        font-size: 17px;
+      }
+
+      .lab-shell {
+        width:
+          calc(100% - 12px);
+
+        margin:
+          6px
+          auto;
+      }
+
+      .lab-card {
+        border-radius: 19px;
+      }
+
+      .lab-page {
+        padding:
+          22px
+          14px
+          28px;
+      }
+
+      #header-container {
+        margin:
+          -22px
+          -14px
+          24px;
+
+        width:
+          calc(100% + 28px);
+      }
+
+      #footer-container {
+        margin:
+          28px
+          -14px
+          -28px;
+
+        width:
+          calc(100% + 28px);
+      }
+
+      .lab-topbar {
+        padding:
+          14px
+          15px;
+      }
+
+      .progress-row {
+        align-items:
+          flex-start;
+      }
+
+      .page-counter {
+        white-space: normal;
+      }
+
+      .spring-scene {
+        min-height: 390px;
+      }
+
+      .ruler {
+        right: 5%;
+      }
+
+      .length-label {
+        left: 2%;
+        min-width: 92px;
+        font-size: 0.82rem;
+      }
+    }
+
+    @media (
+      prefers-reduced-motion:
+      reduce
+    ) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .lab-page,
+      .progress-fill,
+      .button,
+      button {
+        animation: none;
+        transition: none;
+      }
+    }
+
+    @media print {
+      .lab-topbar,
+      .controls,
+      #header-container,
+      #footer-container {
+        display: none !important;
+      }
+
+      .lab-page {
+        display: block !important;
+        break-after: page;
+      }
+
+      body {
+        color: #000000;
+        background: #ffffff;
+      }
+
+      .lab-card,
+      .panel,
+      .quick-check,
+      .simulator,
+      .chart-wrap {
+        color: #000000;
+        background: #ffffff;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+
+<body data-page-type="lab">
+  <div class="lab-shell">
+    <div class="lab-card">
+      <div class="lab-topbar">
+        <div class="lab-kicker">
+          Laborator de fizică • Clasa a VII-a
+        </div>
+
+        <div
+          class="lab-title"
+          id="topTitle">
+          Legea lui Hooke și alungirea elastică
+        </div>
+
+        <div class="progress-row">
+          <div
+            class="progress-track"
+            aria-hidden="true">
+            <span
+              class="progress-fill"
+              id="progressFill">
+            </span>
+          </div>
+
+          <div
+            class="page-counter"
+            id="pageCounter"
+            aria-live="polite">
+            Pagina 1 din 7
+          </div>
+        </div>
+      </div>
+
+      <main
+        id="main-content"
+        class="lab-pages">
+
+        <!-- PAGINA 1: headerul comun apare numai aici -->
+        <section
+          class="lab-page active"
+          data-title="Legea lui Hooke – introducere"
+          aria-hidden="false">
+
+          <div id="header-container"></div>
+
+          <div class="page-badge">
+            Pagina 1 • Întrebarea laboratorului
+          </div>
+
+          <div
+            class="large-icon"
+            aria-hidden="true">
+            🪀
+          </div>
+
+          <h2>
+            Cum se modifică lungimea unui resort când mărim forța?
+          </h2>
+
+          <p class="lead">
+            Vom suspenda mase cunoscute de un resort și vom
+            măsura
+            <span class="highlight">
+              alungirea elastică
+            </span>.
+            Din măsurători vom determina constanta elastică
+            \(k\) a resortului.
+          </p>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Ce vei măsura</h3>
+
+              <ul>
+                <li>
+                  lungimea inițială \(l_0\);
+                </li>
+
+                <li>
+                  lungimea resortului deformat \(l\);
+                </li>
+
+                <li>
+                  alungirea \(\Delta l=l-l_0\);
+                </li>
+
+                <li>
+                  forța deformatoare \(F\).
+                </li>
+              </ul>
+            </article>
+
+            <article class="panel">
+              <h3>Ce vei determina</h3>
+
+              <p>
+                Constanta elastică:
+              </p>
+
+              <div class="formula-box">
+                \[
+                  k=\frac{F}{\Delta l}
+                \]
+              </div>
+
+              <p>
+                Unitatea de măsură în SI este:
+                \(\mathrm{N/m}\).
+              </p>
+            </article>
+          </div>
+
+          <div class="warning">
+            Nu depăși limita elastică a resortului. Folosește
+            mase mici și adaugă-le treptat.
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="1">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 2 -->
+        <section
+          class="lab-page"
+          data-title="Legea lui Hooke"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 2 • Teorie
+          </div>
+
+          <h2>
+            Deformarea elastică și legea lui Hooke
+          </h2>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Alungirea elastică</h3>
+
+              <p>
+                Resortul are inițial lungimea \(l_0\).
+                După suspendarea unei mase, lungimea devine
+                \(l\).
+              </p>
+
+              <div class="formula-box">
+                \[
+                  \Delta l=l-l_0
+                \]
+              </div>
+
+              <p>
+                În calcule, lungimile trebuie transformate în
+                metri.
+              </p>
+            </article>
+
+            <article class="panel">
+              <h3>Forța elastică</h3>
+
+              <p>
+                În domeniul elastic, modulul forței elastice
+                este direct proporțional cu alungirea:
+              </p>
+
+              <div class="formula-box">
+                \[
+                  F_e=k\Delta l
+                \]
+              </div>
+
+              <p>
+                La echilibru, modulul forței elastice este egal
+                cu greutatea corpului suspendat:
+              </p>
+
+              <div class="formula-box">
+                \[
+                  F_e=G=mg
+                \]
+              </div>
+            </article>
+          </div>
+
+          <div class="remember">
+            Dacă dublăm forța și resortul rămâne în domeniul
+            elastic, alungirea se dublează.
+          </div>
+
+          <div class="warning">
+            Legea lui Hooke este valabilă numai în limita
+            elasticității. După depășirea acestei limite,
+            resortul poate rămâne deformat.
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="0">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="2">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 3 -->
+        <section
+          class="lab-page"
+          data-title="Montajul experimental"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 3 • Pregătește experimentul
+          </div>
+
+          <h2>
+            Materiale și mod de lucru
+          </h2>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Materiale necesare</h3>
+
+              <div class="setup-list">
+                <div class="setup-item">
+                  <span
+                    class="setup-icon"
+                    aria-hidden="true">
+                    🌀
+                  </span>
+
+                  <span>
+                    resort elastic;
+                  </span>
+                </div>
+
+                <div class="setup-item">
+                  <span
+                    class="setup-icon"
+                    aria-hidden="true">
+                    🧱
+                  </span>
+
+                  <span>
+                    stativ cu cârlig;
+                  </span>
+                </div>
+
+                <div class="setup-item">
+                  <span
+                    class="setup-icon"
+                    aria-hidden="true">
+                    ⚖️
+                  </span>
+
+                  <span>
+                    set de mase marcate;
+                  </span>
+                </div>
+
+                <div class="setup-item">
+                  <span
+                    class="setup-icon"
+                    aria-hidden="true">
+                    📏
+                  </span>
+
+                  <span>
+                    riglă milimetrică;
+                  </span>
+                </div>
+
+                <div class="setup-item">
+                  <span
+                    class="setup-icon"
+                    aria-hidden="true">
+                    📝
+                  </span>
+
+                  <span>
+                    tabel pentru măsurători.
+                  </span>
+                </div>
+              </div>
+            </article>
+
+            <article class="panel">
+              <h3>Mod de lucru</h3>
+
+              <ol>
+                <li>
+                  Măsoară lungimea inițială \(l_0\), fără sarcină.
+                </li>
+
+                <li>
+                  Suspendă prima masă și așteaptă oprirea
+                  oscilațiilor.
+                </li>
+
+                <li>
+                  Măsoară noua lungime \(l\).
+                </li>
+
+                <li>
+                  Calculează \(\Delta l=l-l_0\).
+                </li>
+
+                <li>
+                  Calculează forța \(F=mg\), cu
+                  \(g=10\,\mathrm{N/kg}\).
+                </li>
+
+                <li>
+                  Determină \(k=F/\Delta l\).
+                </li>
+              </ol>
+            </article>
+          </div>
+
+          <div class="warning">
+            Rigla trebuie să fie paralelă cu resortul, iar
+            citirea se face cu ochiul la nivelul reperului pentru
+            a reduce eroarea de paralaxă.
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="1">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="3">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 4 -->
+        <section
+          class="lab-page"
+          data-title="Simulatorul resortului"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 4 • Simulează
+          </div>
+
+          <h2>
+            Simulator: resort cu masă suspendată
+          </h2>
+
+          <p class="lead">
+            Modifică masa și constanta elastică. Observă cum
+            se schimbă alungirea.
+          </p>
+
+          <div class="simulator">
+            <div
+              class="spring-scene"
+              aria-label="Resort vertical cu masă suspendată și riglă de măsurare">
+
+              <div class="support-bar"></div>
+              <div class="support-hook"></div>
+
+              <div
+                class="spring"
+                id="spring">
+                <svg
+                  class="spring-line"
+                  viewBox="0 0 86 190"
+                  preserveAspectRatio="none"
+                  aria-hidden="true">
+
+                  <path
+                    class="spring-path"
+                    id="springPath"
+                    d="">
+                  </path>
+                </svg>
+              </div>
+
+              <div
+                class="mass-block"
+                id="massBlock">
+                0,10 kg
+              </div>
+
+              <div
+                class="ruler"
+                aria-hidden="true">
+                <span
+                  class="ruler-mark"
+                  style="top: 28px;">
+                </span>
+
+                <span
+                  class="ruler-label"
+                  style="top: 18px;">
+                  10
+                </span>
+
+                <span
+                  class="ruler-mark"
+                  style="top: 88px;">
+                </span>
+
+                <span
+                  class="ruler-label"
+                  style="top: 78px;">
+                  15
+                </span>
+
+                <span
+                  class="ruler-mark"
+                  style="top: 148px;">
+                </span>
+
+                <span
+                  class="ruler-label"
+                  style="top: 138px;">
+                  20
+                </span>
+
+                <span
+                  class="ruler-mark"
+                  style="top: 208px;">
+                </span>
+
+                <span
+                  class="ruler-label"
+                  style="top: 198px;">
+                  25
+                </span>
+
+                <span
+                  class="ruler-mark"
+                  style="top: 268px;">
+                </span>
+
+                <span
+                  class="ruler-label"
+                  style="top: 258px;">
+                  30
+                </span>
+              </div>
+
+              <div
+                class="length-arrow"
+                id="lengthArrow">
+              </div>
+
+              <div
+                class="length-label"
+                id="lengthLabel">
+                \(\Delta l=4{,}0\,\mathrm{cm}\)
+              </div>
+            </div>
+
+            <div class="control-grid">
+              <div class="control-card">
+                <label for="massSlider">
+                  <span>Masă suspendată</span>
+                  <output id="massOutput">
+                    0,10 kg
+                  </output>
+                </label>
+
+                <input
+                  type="range"
+                  id="massSlider"
+                  min="0.02"
+                  max="0.40"
+                  step="0.01"
+                  value="0.10">
+              </div>
+
+              <div class="control-card">
+                <label for="kSlider">
+                  <span>Constanta elastică</span>
+                  <output id="kOutput">
+                    25 N/m
+                  </output>
+                </label>
+
+                <input
+                  type="range"
+                  id="kSlider"
+                  min="10"
+                  max="80"
+                  step="1"
+                  value="25">
+              </div>
+
+              <div class="control-card">
+                <label for="l0Slider">
+                  <span>Lungimea inițială</span>
+                  <output id="l0Output">
+                    15,0 cm
+                  </output>
+                </label>
+
+                <input
+                  type="range"
+                  id="l0Slider"
+                  min="10"
+                  max="20"
+                  step="0.5"
+                  value="15">
+              </div>
+            </div>
+
+            <div class="results-grid">
+              <div class="result-card">
+                <strong>
+                  Forța deformatoare
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="forceValue">
+                  1,00 N
+                </span>
+              </div>
+
+              <div class="result-card">
+                <strong>
+                  Alungirea
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="extensionValue">
+                  0,040 m
+                </span>
+              </div>
+
+              <div class="result-card">
+                <strong>
+                  Lungimea finală
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="finalLengthValue">
+                  19,0 cm
+                </span>
+              </div>
+
+              <div class="result-card">
+                <strong>
+                  Verificare
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="checkValue">
+                  \(F=k\Delta l\)
+                </span>
+              </div>
+            </div>
+
+            <div
+              class="sim-message"
+              id="simMessage"
+              role="status"
+              aria-live="polite">
+              O masă de 0,10 kg produce o forță de 1,00 N și o
+              alungire de 4,0 cm pentru un resort cu
+              \(k=25\,\mathrm{N/m}\).
+            </div>
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="2">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="4">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 5 -->
+        <section
+          class="lab-page"
+          data-title="Măsurători și grafic"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 5 • Măsoară și calculează
+          </div>
+
+          <h2>
+            Completează tabelul de măsurători
+          </h2>
+
+          <p class="lead">
+            Introdu lungimea inițială, masele și lungimile
+            resortului. Calculatorul determină automat
+            \(\Delta l\), \(F\), \(k\) și valoarea medie.
+          </p>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-calculate"
+              id="copySimulation">
+              Preia simulatorul în rândul 1
+            </button>
+          </div>
+
+          <div class="table-wrap">
+            <table class="measure-table">
+              <thead>
+                <tr>
+                  <th>Nr.</th>
+                  <th>
+                    \(l_0\)
+                    (cm)
+                  </th>
+                  <th>
+                    \(m\)
+                    (kg)
+                  </th>
+                  <th>
+                    \(l\)
+                    (cm)
+                  </th>
+                  <th>
+                    \(\Delta l\)
+                    (m)
+                  </th>
+                  <th>
+                    \(F=mg\)
+                    (N)
+                  </th>
+                  <th>
+                    \(k=F/\Delta l\)
+                    (N/m)
+                  </th>
+                </tr>
+              </thead>
+
+              <tbody id="measurementBody">
+                <tr data-row="1">
+                  <td>1</td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="15.0"
+                      data-field="l0"
+                      aria-label="Lungimea inițială pentru determinarea 1">
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                      value="0.05"
+                      data-field="mass"
+                      aria-label="Masa pentru determinarea 1">
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="17.0"
+                      data-field="length"
+                      aria-label="Lungimea finală pentru determinarea 1">
+                  </td>
+
+                  <td>
+                    <output data-output="extension">
+                      —
+                    </output>
+                  </td>
+
+                  <td>
+                    <output data-output="force">
+                      —
+                    </output>
+                  </td>
+
+                  <td>
+                    <output data-output="k">
+                      —
+                    </output>
+                  </td>
+                </tr>
+
+                <tr data-row="2">
+                  <td>2</td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="15.0"
+                      data-field="l0"
+                      aria-label="Lungimea inițială pentru determinarea 2">
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                      value="0.10"
+                      data-field="mass"
+                      aria-label="Masa pentru determinarea 2">
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="19.0"
+                      data-field="length"
+                      aria-label="Lungimea finală pentru determinarea 2">
+                  </td>
+
+                  <td>
+                    <output data-output="extension">
+                      —
+                    </output>
+                  </td>
+
+                  <td>
+                    <output data-output="force">
+                      —
+                    </output>
+                  </td>
+
+                  <td>
+                    <output data-output="k">
+                      —
+                    </output>
+                  </td>
+                </tr>
+
+                <tr data-row="3">
+                  <td>3</td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="15.0"
+                      data-field="l0"
+                      aria-label="Lungimea inițială pentru determinarea 3">
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                      value="0.15"
+                      data-field="mass"
+                      aria-label="Masa pentru determinarea 3">
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="21.0"
+                      data-field="length"
+                      aria-label="Lungimea finală pentru determinarea 3">
+                  </td>
+
+                  <td>
+                    <output data-output="extension">
+                      —
+                    </output>
+                  </td>
+
+                  <td>
+                    <output data-output="force">
+                      —
+                    </output>
+                  </td>
+
+                  <td>
+                    <output data-output="k">
+                      —
+                    </output>
+                  </td>
+                </tr>
+
+                <tr data-row="4">
+                  <td>4</td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="15.0"
+                      data-field="l0"
+                      aria-label="Lungimea inițială pentru determinarea 4">
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                      value="0.20"
+                      data-field="mass"
+                      aria-label="Masa pentru determinarea 4">
+                  </td>
+
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="23.0"
+                      data-field="length"
+                      aria-label="Lungimea finală pentru determinarea 4">
+                  </td>
+
+                  <td>
+                    <output data-output="extension">
+                      —
+                    </output>
+                  </td>
+
+                  <td>
+                    <output data-output="force">
+                      —
+                    </output>
+                  </td>
+
+                  <td>
+                    <output data-output="k">
+                      —
+                    </output>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-calculate"
+              id="calculateMeasurements">
+              Calculează și trasează graficul
+            </button>
+          </div>
+
+          <div
+            class="average-box"
+            id="averageBox"
+            role="status"
+            aria-live="polite">
+            Constanta elastică medie va apărea aici.
+          </div>
+
+          <div class="chart-wrap">
+            <h3>
+              Graficul forței în funcție de alungire
+            </h3>
+
+            <canvas
+              id="hookeChart"
+              width="900"
+              height="470"
+              aria-label="Graficul forței F în funcție de alungirea elastică delta l">
+            </canvas>
+
+            <p class="muted">
+              Pentru un resort care respectă legea lui Hooke,
+              punctele se află aproximativ pe o dreaptă care
+              trece prin origine. Panta dreptei reprezintă
+              constanta elastică \(k\).
+            </p>
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="3">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="5">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 6 -->
+        <section
+          class="lab-page"
+          data-title="Calcul numeric și verificare rapidă"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 6 • Aplică
+          </div>
+
+          <h2>
+            Exemplu numeric
+          </h2>
+
+          <div class="panel">
+            <p>
+              Un resort are lungimea inițială
+              \(l_0=15\,\mathrm{cm}\).
+              După suspendarea unei mase de
+              \(m=0{,}10\,\mathrm{kg}\),
+              lungimea devine
+              \(l=19\,\mathrm{cm}\).
+            </p>
+
+            <div class="formula-box">
+              \[
+                \Delta l
+                =
+                l-l_0
+                =
+                19\,\mathrm{cm}-15\,\mathrm{cm}
+                =
+                4\,\mathrm{cm}
+                =
+                0{,}04\,\mathrm{m}
+              \]
+            </div>
+
+            <div class="formula-box">
+              \[
+                F
+                =
+                mg
+                =
+                0{,}10\cdot10
+                =
+                1\,\mathrm{N}
+              \]
+            </div>
+
+            <div class="formula-box">
+              \[
+                k
+                =
+                \frac{F}{\Delta l}
+                =
+                \frac{1}{0{,}04}
+                =
+                25\,\mathrm{N/m}
+              \]
+            </div>
+          </div>
+
+          <h2 style="margin-top: 28px;">
+            Verificare rapidă
+          </h2>
+
+          <form id="quickCheckForm">
+            <section
+              class="quick-check"
+              data-question="q1"
+              data-correct="b">
+
+              <fieldset>
+                <legend>
+                  1. Alungirea elastică se calculează cu:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q1"
+                    value="a">
+
+                  <span>
+                    \(\Delta l=l+l_0\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q1"
+                    value="b">
+
+                  <span>
+                    \(\Delta l=l-l_0\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q1"
+                    value="c">
+
+                  <span>
+                    \(\Delta l=l_0-l\)
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <section
+              class="quick-check"
+              data-question="q2"
+              data-correct="c">
+
+              <fieldset>
+                <legend>
+                  2. Constanta elastică se calculează cu:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q2"
+                    value="a">
+
+                  <span>
+                    \(k=F\Delta l\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q2"
+                    value="b">
+
+                  <span>
+                    \(k=\frac{\Delta l}{F}\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q2"
+                    value="c">
+
+                  <span>
+                    \(k=\frac{F}{\Delta l}\)
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <section
+              class="quick-check"
+              data-question="q3"
+              data-correct="a">
+
+              <fieldset>
+                <legend>
+                  3. Unitatea de măsură pentru \(k\) este:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q3"
+                    value="a">
+
+                  <span>
+                    \(\mathrm{N/m}\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q3"
+                    value="b">
+
+                  <span>
+                    \(\mathrm{N\cdot m}\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q3"
+                    value="c">
+
+                  <span>
+                    \(\mathrm{kg/m}\)
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <section
+              class="quick-check"
+              data-question="q4"
+              data-correct="b">
+
+              <fieldset>
+                <legend>
+                  4. Dacă forța se dublează, iar resortul rămâne
+                  în domeniul elastic, alungirea:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q4"
+                    value="a">
+
+                  <span>
+                    se înjumătățește;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q4"
+                    value="b">
+
+                  <span>
+                    se dublează;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q4"
+                    value="c">
+
+                  <span>
+                    rămâne neschimbată.
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <button
+              type="submit"
+              class="button-primary">
+              Verifică răspunsurile
+            </button>
+
+            <div
+              class="score-box"
+              id="scoreBox"
+              role="status"
+              aria-live="polite">
+            </div>
+          </form>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="4">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="6">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 7: footerul comun apare numai aici -->
+        <section
+          class="lab-page"
+          data-title="Concluzii"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 7 • Concluzie
+          </div>
+
+          <h2>
+            Ce ai determinat?
+          </h2>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Alungirea</h3>
+
+              <div class="formula-box">
+                \[
+                  \Delta l=l-l_0
+                \]
+              </div>
+
+              <p>
+                Ea reprezintă variația lungimii resortului.
+              </p>
+            </article>
+
+            <article class="panel">
+              <h3>Legea lui Hooke</h3>
+
+              <div class="formula-box">
+                \[
+                  F_e=k\Delta l
+                \]
+              </div>
+
+              <p>
+                În domeniul elastic, forța și alungirea sunt
+                direct proporționale.
+              </p>
+            </article>
+
+            <article class="panel">
+              <h3>Constanta elastică</h3>
+
+              <div class="formula-box">
+                \[
+                  k=\frac{F}{\Delta l}
+                \]
+              </div>
+
+              <p>
+                Un resort cu \(k\) mai mare este mai rigid.
+              </p>
+            </article>
+
+            <article class="panel">
+              <h3>Graficul</h3>
+
+              <p>
+                În domeniul elastic, graficul \(F(\Delta l)\)
+                este aproximativ o dreaptă care trece prin
+                origine.
+              </p>
+            </article>
+          </div>
+
+          <div class="remember">
+            <strong>Concluzie:</strong>
+            constanta elastică a unui resort poate fi determinată
+            prin raportul dintre forța deformatoare și alungirea
+            produsă, folosind mai multe măsurători și calculând
+            media valorilor obținute.
+          </div>
+
+          <div class="warning">
+            Surse de eroare: citirea lungimii, oscilațiile
+            resortului, masa cârligului, poziția riglei,
+            transformarea centimetrilor în metri și depășirea
+            limitei elastice.
+          </div>
+
+          <div class="controls end">
+            <button
+              type="button"
+              class="button-calculate"
+              onclick="window.print()">
+              Tipărește fișa laboratorului
+            </button>
+
+            <a
+              class="button button-home"
+              href="../index.html">
+              Înapoi la laborator
+            </a>
+
+            <a
+              class="button button-secondary"
+              href="../../index.html">
+              Pagina principală
+            </a>
+          </div>
+
+          <div id="footer-container"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    "use strict";
+
+    const G = 10;
+
+    const pages = Array.from(
+      document.querySelectorAll(
+        ".lab-page"
+      )
+    );
+
+    const progressFill =
+      document.getElementById(
+        "progressFill"
+      );
+
+    const pageCounter =
+      document.getElementById(
+        "pageCounter"
+      );
+
+    const topTitle =
+      document.getElementById(
+        "topTitle"
+      );
+
+    function formatNumber(
+      value,
+      decimals = 2
+    ) {
+      return Number(value)
+        .toFixed(decimals)
+        .replace(".", ",");
+    }
+
+    function typesetMath(root) {
+      window.MathJax
+        ?.typesetPromise
+        ?.([root]);
+    }
+
+    function goToPage(index) {
+      const target =
+        Math.min(
+          Math.max(
+            Number(index) || 0,
+            0
+          ),
+          pages.length - 1
+        );
+
+      pages.forEach(
+        (page, pageIndex) => {
+          const active =
+            pageIndex === target;
+
+          page.classList.toggle(
+            "active",
+            active
+          );
+
+          page.setAttribute(
+            "aria-hidden",
+            String(!active)
+          );
+        }
+      );
+
+      const current =
+        pages[target];
+
+      topTitle.textContent =
+        current.dataset.title ||
+        "Legea lui Hooke și alungirea elastică";
+
+      pageCounter.textContent =
+        `Pagina ${target + 1} din ${pages.length}`;
+
+      progressFill.style.width =
+        `${((target + 1) / pages.length) * 100}%`;
+
+      history.replaceState(
+        null,
+        "",
+        `#pagina-${target + 1}`
+      );
+
+      window.scrollTo({
+        top: 0,
+        behavior:
+          window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+          ).matches
+            ? "auto"
+            : "smooth"
+      });
+
+      typesetMath(current);
+
+      if (target === 4) {
+        calculateMeasurements();
+      }
+    }
+
+    document.addEventListener(
+      "click",
+      (event) => {
+        const navigationButton =
+          event.target.closest(
+            "[data-go-page]"
+          );
+
+        if (!navigationButton) {
+          return;
+        }
+
+        goToPage(
+          navigationButton.dataset
+            .goPage
+        );
+      }
+    );
+
+    /* =====================================================
+       SIMULATORUL RESORTULUI
+       ===================================================== */
+
+    const massSlider =
+      document.getElementById(
+        "massSlider"
+      );
+
+    const kSlider =
+      document.getElementById(
+        "kSlider"
+      );
+
+    const l0Slider =
+      document.getElementById(
+        "l0Slider"
+      );
+
+    const massOutput =
+      document.getElementById(
+        "massOutput"
+      );
+
+    const kOutput =
+      document.getElementById(
+        "kOutput"
+      );
+
+    const l0Output =
+      document.getElementById(
+        "l0Output"
+      );
+
+    const forceValue =
+      document.getElementById(
+        "forceValue"
+      );
+
+    const extensionValue =
+      document.getElementById(
+        "extensionValue"
+      );
+
+    const finalLengthValue =
+      document.getElementById(
+        "finalLengthValue"
+      );
+
+    const massBlock =
+      document.getElementById(
+        "massBlock"
+      );
+
+    const spring =
+      document.getElementById(
+        "spring"
+      );
+
+    const springPath =
+      document.getElementById(
+        "springPath"
+      );
+
+    const lengthArrow =
+      document.getElementById(
+        "lengthArrow"
+      );
+
+    const lengthLabel =
+      document.getElementById(
+        "lengthLabel"
+      );
+
+    const simMessage =
+      document.getElementById(
+        "simMessage"
+      );
+
+    function buildSpringPath(
+      height,
+      coils = 11
+    ) {
+      const width = 86;
+      const center = width / 2;
+      const left = 16;
+      const right = 70;
+
+      const step =
+        height /
+        (coils * 2 + 2);
+
+      let y = 0;
+
+      let path =
+        `M ${center} 0 `;
+
+      y += step;
+
+      path +=
+        `L ${center} ${y} `;
+
+      for (
+        let index = 0;
+        index < coils * 2;
+        index += 1
+      ) {
+        y += step;
+
+        path +=
+          `L ${
+            index % 2 === 0
+              ? right
+              : left
+          } ${y} `;
+      }
+
+      y += step;
+
+      path +=
+        `L ${center} ${y} `;
+
+      y += step;
+
+      path +=
+        `L ${center} ${height}`;
+
+      return path;
+    }
+
+    function currentSimulation() {
+      const mass =
+        Number(massSlider.value);
+
+      const k =
+        Number(kSlider.value);
+
+      const l0Cm =
+        Number(l0Slider.value);
+
+      const force =
+        mass * G;
+
+      const extensionM =
+        force / k;
+
+      const extensionCm =
+        extensionM * 100;
+
+      const finalLengthCm =
+        l0Cm + extensionCm;
+
+      return {
+        mass,
+        k,
+        l0Cm,
+        force,
+        extensionM,
+        extensionCm,
+        finalLengthCm
+      };
+    }
+
+    function updateSimulation() {
+      const data =
+        currentSimulation();
+
+      massOutput.value =
+        `${formatNumber(
+          data.mass,
+          2
+        )} kg`;
+
+      kOutput.value =
+        `${formatNumber(
+          data.k,
+          0
+        )} N/m`;
+
+      l0Output.value =
+        `${formatNumber(
+          data.l0Cm,
+          1
+        )} cm`;
+
+      forceValue.textContent =
+        `${formatNumber(
+          data.force,
+          2
+        )} N`;
+
+      extensionValue.textContent =
+        `${formatNumber(
+          data.extensionM,
+          3
+        )} m`;
+
+      finalLengthValue.textContent =
+        `${formatNumber(
+          data.finalLengthCm,
+          1
+        )} cm`;
+
+      massBlock.textContent =
+        `${formatNumber(
+          data.mass,
+          2
+        )} kg`;
+
+      const visualHeight =
+        Math.min(
+          270,
+          150 +
+          data.extensionCm * 7
+        );
+
+      spring.style.height =
+        `${visualHeight}px`;
+
+      springPath.setAttribute(
+        "d",
+        buildSpringPath(
+          visualHeight
+        )
+      );
+
+      massBlock.style.top =
+        `${78 + visualHeight - 2}px`;
+
+      lengthArrow.style.height =
+        `${visualHeight}px`;
+
+      lengthLabel.style.top =
+        `${110 + visualHeight / 2}px`;
+
+      lengthLabel.textContent =
+        `Δl = ${formatNumber(
+          data.extensionCm,
+          1
+        )} cm`;
+
+      simMessage.textContent =
+        `Masa de ${formatNumber(
+          data.mass,
+          2
+        )} kg produce forța ${formatNumber(
+          data.force,
+          2
+        )} N. Pentru k = ${formatNumber(
+          data.k,
+          0
+        )} N/m, alungirea este ${formatNumber(
+          data.extensionCm,
+          1
+        )} cm.`;
+
+      typesetMath(
+        document.querySelector(
+          ".simulator"
+        )
+      );
+    }
+
+    [
+      massSlider,
+      kSlider,
+      l0Slider
+    ].forEach(
+      (control) => {
+        control?.addEventListener(
+          "input",
+          updateSimulation
+        );
+      }
+    );
+
+    /* =====================================================
+       TABELUL DE MĂSURĂTORI
+       ===================================================== */
+
+    function calculateRow(row) {
+      const l0Cm =
+        Number(
+          row.querySelector(
+            '[data-field="l0"]'
+          )?.value
+        );
+
+      const mass =
+        Number(
+          row.querySelector(
+            '[data-field="mass"]'
+          )?.value
+        );
+
+      const lengthCm =
+        Number(
+          row.querySelector(
+            '[data-field="length"]'
+          )?.value
+        );
+
+      const outputs = {
+        extension:
+          row.querySelector(
+            '[data-output="extension"]'
+          ),
+
+        force:
+          row.querySelector(
+            '[data-output="force"]'
+          ),
+
+        k:
+          row.querySelector(
+            '[data-output="k"]'
+          )
+      };
+
+      if (
+        !Number.isFinite(l0Cm) ||
+        !Number.isFinite(mass) ||
+        !Number.isFinite(lengthCm) ||
+        l0Cm <= 0 ||
+        mass <= 0 ||
+        lengthCm <= l0Cm
+      ) {
+        Object.values(outputs)
+          .forEach(
+            (output) => {
+              output.textContent =
+                "invalid";
+            }
+          );
+
+        return null;
+      }
+
+      const extensionM =
+        (lengthCm - l0Cm) /
+        100;
+
+      const force =
+        mass * G;
+
+      const k =
+        force /
+        extensionM;
+
+      outputs.extension.textContent =
+        formatNumber(
+          extensionM,
+          3
+        );
+
+      outputs.force.textContent =
+        formatNumber(
+          force,
+          2
+        );
+
+      outputs.k.textContent =
+        formatNumber(
+          k,
+          2
+        );
+
+      return {
+        extensionM,
+        force,
+        k
+      };
+    }
+
+    function calculateMeasurements() {
+      const rows =
+        Array.from(
+          document.querySelectorAll(
+            "#measurementBody tr"
+          )
+        );
+
+      const values =
+        rows
+          .map(
+            calculateRow
+          )
+          .filter(
+            Boolean
+          );
+
+      const averageBox =
+        document.getElementById(
+          "averageBox"
+        );
+
+      if (!values.length) {
+        averageBox.textContent =
+          "Nu există determinări valide. Verifică lungimile și masele.";
+
+        drawChart([]);
+
+        return;
+      }
+
+      const averageK =
+        values.reduce(
+          (sum, item) =>
+            sum + item.k,
+          0
+        ) /
+        values.length;
+
+      const minK =
+        Math.min(
+          ...values.map(
+            (item) => item.k
+          )
+        );
+
+      const maxK =
+        Math.max(
+          ...values.map(
+            (item) => item.k
+          )
+        );
+
+      averageBox.textContent =
+        `Constanta elastică medie: kmed = ${formatNumber(
+          averageK,
+          2
+        )} N/m. Determinări valide: ${values.length}. Interval: ${formatNumber(
+          minK,
+          2
+        )}–${formatNumber(
+          maxK,
+          2
+        )} N/m.`;
+
+      drawChart(values);
+    }
+
+    document
+      .getElementById(
+        "calculateMeasurements"
+      )
+      ?.addEventListener(
+        "click",
+        calculateMeasurements
+      );
+
+    document
+      .getElementById(
+        "copySimulation"
+      )
+      ?.addEventListener(
+        "click",
+        () => {
+          const data =
+            currentSimulation();
+
+          const firstRow =
+            document.querySelector(
+              '#measurementBody tr[data-row="1"]'
+            );
+
+          firstRow.querySelector(
+            '[data-field="l0"]'
+          ).value =
+            data.l0Cm.toFixed(1);
+
+          firstRow.querySelector(
+            '[data-field="mass"]'
+          ).value =
+            data.mass.toFixed(2);
+
+          firstRow.querySelector(
+            '[data-field="length"]'
+          ).value =
+            data.finalLengthCm.toFixed(1);
+
+          calculateMeasurements();
+        }
+      );
+
+    /* =====================================================
+       GRAFICUL F(Δl)
+       ===================================================== */
+
+    const chartCanvas =
+      document.getElementById(
+        "hookeChart"
+      );
+
+    const chartContext =
+      chartCanvas?.getContext(
+        "2d"
+      );
+
+    function drawChart(points) {
+      if (!chartContext) {
+        return;
+      }
+
+      const canvas =
+        chartCanvas;
+
+      const ctx =
+        chartContext;
+
+      const width =
+        canvas.width;
+
+      const height =
+        canvas.height;
+
+      ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+      );
+
+      ctx.fillStyle =
+        "#ffffff";
+
+      ctx.fillRect(
+        0,
+        0,
+        width,
+        height
+      );
+
+      const margin = {
+        left: 86,
+        right: 36,
+        top: 40,
+        bottom: 72
+      };
+
+      const plotWidth =
+        width -
+        margin.left -
+        margin.right;
+
+      const plotHeight =
+        height -
+        margin.top -
+        margin.bottom;
+
+      const maxX =
+        points.length
+          ? Math.max(
+              0.10,
+              ...points.map(
+                (point) =>
+                  point.extensionM
+              )
+            )
+          : 0.10;
+
+      const maxY =
+        points.length
+          ? Math.max(
+              2,
+              ...points.map(
+                (point) =>
+                  point.force
+              )
+            )
+          : 2;
+
+      ctx.strokeStyle =
+        "#cbd5e1";
+
+      ctx.lineWidth = 1;
+
+      for (
+        let index = 0;
+        index <= 5;
+        index += 1
+      ) {
+        const x =
+          margin.left +
+          plotWidth *
+          index /
+          5;
+
+        const y =
+          margin.top +
+          plotHeight *
+          index /
+          5;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+          x,
+          margin.top
+        );
+
+        ctx.lineTo(
+          x,
+          margin.top +
+          plotHeight
+        );
+
+        ctx.stroke();
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+          margin.left,
+          y
+        );
+
+        ctx.lineTo(
+          margin.left +
+          plotWidth,
+          y
+        );
+
+        ctx.stroke();
+      }
+
+      ctx.strokeStyle =
+        "#172033";
+
+      ctx.lineWidth = 3;
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        margin.left,
+        margin.top
+      );
+
+      ctx.lineTo(
+        margin.left,
+        margin.top +
+        plotHeight
+      );
+
+      ctx.lineTo(
+        margin.left +
+        plotWidth,
+        margin.top +
+        plotHeight
+      );
+
+      ctx.stroke();
+
+      ctx.fillStyle =
+        "#172033";
+
+      ctx.font =
+        "bold 20px Segoe UI";
+
+      ctx.fillText(
+        "F (N)",
+        20,
+        margin.top + 8
+      );
+
+      ctx.fillText(
+        "Δl (m)",
+        width - 100,
+        height - 20
+      );
+
+      ctx.font =
+        "16px Segoe UI";
+
+      for (
+        let index = 0;
+        index <= 5;
+        index += 1
+      ) {
+        const xValue =
+          maxX *
+          index /
+          5;
+
+        const yValue =
+          maxY *
+          (5 - index) /
+          5;
+
+        const x =
+          margin.left +
+          plotWidth *
+          index /
+          5;
+
+        const y =
+          margin.top +
+          plotHeight *
+          index /
+          5;
+
+        ctx.fillText(
+          xValue
+            .toFixed(2)
+            .replace(
+              ".",
+              ","
+            ),
+          x - 16,
+          margin.top +
+          plotHeight +
+          28
+        );
+
+        ctx.fillText(
+          yValue
+            .toFixed(1)
+            .replace(
+              ".",
+              ","
+            ),
+          43,
+          y + 6
+        );
+      }
+
+      if (!points.length) {
+        ctx.fillStyle =
+          "#475569";
+
+        ctx.font =
+          "bold 22px Segoe UI";
+
+        ctx.fillText(
+          "Completează tabelul pentru a afișa graficul.",
+          190,
+          235
+        );
+
+        return;
+      }
+
+      const sorted =
+        [...points].sort(
+          (first, second) =>
+            first.extensionM -
+            second.extensionM
+        );
+
+      ctx.strokeStyle =
+        "#0284c7";
+
+      ctx.lineWidth = 4;
+
+      ctx.beginPath();
+
+      sorted.forEach(
+        (point, index) => {
+          const x =
+            margin.left +
+            (
+              point.extensionM /
+              maxX
+            ) *
+            plotWidth;
+
+          const y =
+            margin.top +
+            plotHeight -
+            (
+              point.force /
+              maxY
+            ) *
+            plotHeight;
+
+          if (index === 0) {
+            ctx.moveTo(
+              x,
+              y
+            );
+          } else {
+            ctx.lineTo(
+              x,
+              y
+            );
+          }
+        }
+      );
+
+      ctx.stroke();
+
+      sorted.forEach(
+        (point) => {
+          const x =
+            margin.left +
+            (
+              point.extensionM /
+              maxX
+            ) *
+            plotWidth;
+
+          const y =
+            margin.top +
+            plotHeight -
+            (
+              point.force /
+              maxY
+            ) *
+            plotHeight;
+
+          ctx.fillStyle =
+            "#e11d48";
+
+          ctx.beginPath();
+
+          ctx.arc(
+            x,
+            y,
+            8,
+            0,
+            Math.PI * 2
+          );
+
+          ctx.fill();
+        }
+      );
+    }
+
+    /* =====================================================
+       VERIFICARE RAPIDĂ
+       ===================================================== */
+
+    const quickCheckForm =
+      document.getElementById(
+        "quickCheckForm"
+      );
+
+    quickCheckForm
+      ?.addEventListener(
+        "submit",
+        (event) => {
+          event.preventDefault();
+
+          const questions =
+            Array.from(
+              quickCheckForm
+                .querySelectorAll(
+                  "[data-question]"
+                )
+            );
+
+          let correctAnswers = 0;
+          let answered = 0;
+
+          questions.forEach(
+            (question) => {
+              const selected =
+                question.querySelector(
+                  "input:checked"
+                );
+
+              const feedback =
+                question.querySelector(
+                  ".feedback"
+                );
+
+              question
+                .querySelectorAll(
+                  ".answer-option"
+                )
+                .forEach(
+                  (option) => {
+                    option.classList.remove(
+                      "correct",
+                      "incorrect"
+                    );
+                  }
+                );
+
+              if (!selected) {
+                feedback.textContent =
+                  "Alege un răspuns.";
+
+                return;
+              }
+
+              answered += 1;
+
+              const correct =
+                selected.value ===
+                question.dataset.correct;
+
+              const selectedLabel =
+                selected.closest(
+                  ".answer-option"
+                );
+
+              selectedLabel
+                ?.classList
+                .add(
+                  correct
+                    ? "correct"
+                    : "incorrect"
+                );
+
+              if (correct) {
+                correctAnswers += 1;
+                feedback.textContent =
+                  "✓ Corect.";
+              } else {
+                feedback.textContent =
+                  "✗ Răspuns incorect. Recitește explicația și încearcă din nou.";
+              }
+            }
+          );
+
+          const scoreBox =
+            document.getElementById(
+              "scoreBox"
+            );
+
+          scoreBox.classList.add(
+            "visible"
+          );
+
+          if (
+            answered <
+            questions.length
+          ) {
+            scoreBox.textContent =
+              `Ai răspuns la ${answered} din ${questions.length} întrebări. Completează toate răspunsurile.`;
+
+            return;
+          }
+
+          scoreBox.textContent =
+            correctAnswers ===
+            questions.length
+              ? `Excelent! Ai ${correctAnswers} răspunsuri corecte din ${questions.length}.`
+              : `Ai ${correctAnswers} răspunsuri corecte din ${questions.length}. Poți corecta răspunsurile și verifica din nou.`;
+
+          typesetMath(
+            quickCheckForm
+          );
+        }
+      );
+
+    /* =====================================================
+       PORNIRE
+       ===================================================== */
+
+    const hashMatch =
+      window.location.hash.match(
+        /^#pagina-(\d+)$/
+      );
+
+    updateSimulation();
+    calculateMeasurements();
+
+    goToPage(
+      hashMatch
+        ? Number(
+            hashMatch[1]
+          ) - 1
+        : 0
+    );
+  </script>
+
+  <!--
+    Loader-ele sunt încărcate o singură dată.
+    Containerul headerului există numai în pagina 1.
+    Containerul footerului există numai în pagina 7.
+  -->
+  <script
+    defer
+    src="../../assets/js/config.js">
+  </script>
+
+  <script
+    defer
+    src="../../assets/js/theme-toggle.js">
+  </script>
+
+  <script
+    defer
+    src="../../assets/js/load-header.js">
+  </script>
+
+  <script
+    defer
+    src="../../assets/js/load-footer.js">
+  </script>
+</body>
+</html>

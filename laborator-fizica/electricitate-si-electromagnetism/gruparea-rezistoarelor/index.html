@@ -1,1 +1,4411 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
 
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="Laborator interactiv de fizică pentru clasa a VIII-a: gruparea rezistoarelor în serie, paralel și mixtă.">
+
+  <title>
+    Gruparea rezistoarelor | Laborator de fizică
+  </title>
+
+  <link
+    rel="stylesheet"
+    href="../../../assets/css/layout.css">
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["\\(", "\\)"]],
+        displayMath: [["\\[", "\\]"]]
+      },
+      options: {
+        skipHtmlTags: [
+          "script",
+          "noscript",
+          "style",
+          "textarea",
+          "pre",
+          "code"
+        ]
+      }
+    };
+  </script>
+
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    :root {
+      --bg: #07111f;
+      --surface: #0e1b31;
+      --surface-2: #122742;
+      --surface-soft: #183653;
+      --border: #315a7e;
+      --text: #f3f8ff;
+      --muted: #c5d8ec;
+      --primary: #67e8f9;
+      --primary-strong: #22d3ee;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --danger: #fb7185;
+      --violet: #a78bfa;
+      --focus: #fde047;
+      --shadow: 0 22px 54px rgba(0, 0, 0, 0.34);
+      --radius: 24px;
+    }
+
+    body.light,
+    body[data-theme="light"] {
+      --bg: #eef6ff;
+      --surface: #ffffff;
+      --surface-2: #f2f8fd;
+      --surface-soft: #e5f1fb;
+      --border: #96b6d0;
+      --text: #10243a;
+      --muted: #36516b;
+      --primary: #0369a1;
+      --primary-strong: #0284c7;
+      --success: #047857;
+      --warning: #a16207;
+      --danger: #be123c;
+      --violet: #6d28d9;
+      --focus: #a16207;
+      --shadow: 0 18px 44px rgba(15, 35, 55, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 18px;
+      scroll-behavior: smooth;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      color: var(--text);
+
+      font-family:
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+      font-size:
+        clamp(
+          1rem,
+          0.94rem + 0.34vw,
+          1.22rem
+        );
+
+      line-height: 1.68;
+
+      background:
+        radial-gradient(
+          circle at 8% 0%,
+          rgba(34, 211, 238, 0.13),
+          transparent 24%
+        ),
+        radial-gradient(
+          circle at 92% 4%,
+          rgba(167, 139, 250, 0.12),
+          transparent 24%
+        ),
+        var(--bg);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    .lab-shell {
+      width:
+        min(
+          1180px,
+          calc(100% - 24px)
+        );
+
+      margin:
+        clamp(10px, 2vw, 28px)
+        auto;
+
+      padding-bottom: 28px;
+    }
+
+    .lab-card {
+      overflow: hidden;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        var(--radius);
+
+      background:
+        var(--surface);
+
+      box-shadow:
+        var(--shadow);
+    }
+
+    .lab-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+
+      padding:
+        clamp(15px, 2.2vw, 23px)
+        clamp(18px, 3vw, 34px);
+
+      border-bottom:
+        1px solid
+        var(--border);
+
+      background:
+        rgba(14, 27, 49, 0.94);
+
+      backdrop-filter: blur(10px);
+    }
+
+    body.light .lab-topbar,
+    body[data-theme="light"] .lab-topbar {
+      background:
+        rgba(255, 255, 255, 0.94);
+    }
+
+    .lab-kicker {
+      color: var(--primary);
+
+      font-size:
+        clamp(
+          0.88rem,
+          0.84rem + 0.18vw,
+          1rem
+        );
+
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .lab-title {
+      margin: 6px 0 12px;
+
+      color: var(--text);
+
+      font-size:
+        clamp(
+          1.35rem,
+          1.05rem + 1vw,
+          2rem
+        );
+
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .progress-track {
+      flex: 1;
+      height: 12px;
+      overflow: hidden;
+
+      border-radius: 999px;
+
+      background:
+        rgba(255, 255, 255, 0.12);
+    }
+
+    body.light .progress-track,
+    body[data-theme="light"] .progress-track {
+      background:
+        rgba(16, 36, 58, 0.12);
+    }
+
+    .progress-fill {
+      display: block;
+      width: 0;
+      height: 100%;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          var(--success)
+        );
+
+      transition:
+        width
+        180ms
+        ease;
+    }
+
+    .page-counter {
+      color: var(--muted);
+
+      font-size: 1rem;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .lab-pages {
+      min-height:
+        calc(100svh - 160px);
+    }
+
+    .lab-page {
+      display: none;
+
+      padding:
+        clamp(24px, 4vw, 46px)
+        clamp(18px, 4.5vw, 54px)
+        clamp(28px, 4vw, 48px);
+
+      animation:
+        page-in
+        180ms
+        ease;
+    }
+
+    .lab-page.active {
+      display: block;
+    }
+
+    @keyframes page-in {
+      from {
+        opacity: 0.3;
+        transform:
+          translateY(7px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    #header-container,
+    #footer-container {
+      width: 100%;
+    }
+
+    #header-container {
+      margin:
+        calc(-1 * clamp(24px, 4vw, 46px))
+        calc(-1 * clamp(18px, 4.5vw, 54px))
+        clamp(28px, 4vw, 42px);
+
+      width:
+        calc(
+          100% +
+          2 * clamp(18px, 4.5vw, 54px)
+        );
+    }
+
+    #footer-container {
+      margin:
+        clamp(30px, 4vw, 48px)
+        calc(-1 * clamp(18px, 4.5vw, 54px))
+        calc(-1 * clamp(28px, 4vw, 48px));
+
+      width:
+        calc(
+          100% +
+          2 * clamp(18px, 4.5vw, 54px)
+        );
+    }
+
+    h2 {
+      margin: 0 0 14px;
+
+      color: var(--text);
+
+      font-size:
+        clamp(
+          1.72rem,
+          1.28rem + 1.34vw,
+          2.75rem
+        );
+
+      line-height: 1.18;
+    }
+
+    h3 {
+      margin: 0 0 10px;
+
+      color: var(--text);
+
+      font-size:
+        clamp(
+          1.18rem,
+          1.05rem + 0.44vw,
+          1.55rem
+        );
+
+      line-height: 1.3;
+    }
+
+    p {
+      margin: 0 0 16px;
+    }
+
+    .lead {
+      color: var(--text);
+
+      font-size:
+        clamp(
+          1.12rem,
+          1rem + 0.45vw,
+          1.42rem
+        );
+
+      line-height: 1.65;
+    }
+
+    .muted {
+      color: var(--muted);
+    }
+
+    .highlight {
+      color: var(--success);
+      font-weight: 850;
+    }
+
+    .page-badge {
+      display: inline-block;
+
+      margin-bottom: 14px;
+      padding: 8px 13px;
+
+      border-radius: 999px;
+
+      color: var(--primary);
+
+      background:
+        rgba(103, 232, 249, 0.12);
+
+      font-size: 1rem;
+      font-weight: 850;
+    }
+
+    body.light .page-badge,
+    body[data-theme="light"] .page-badge {
+      background:
+        rgba(3, 105, 161, 0.12);
+    }
+
+    .large-icon {
+      margin-bottom: 14px;
+
+      font-size:
+        clamp(
+          2.8rem,
+          2.2rem + 1.7vw,
+          4.2rem
+        );
+
+      line-height: 1;
+    }
+
+    .grid {
+      display: grid;
+      gap:
+        clamp(
+          14px,
+          2vw,
+          22px
+        );
+    }
+
+    .grid.two {
+      grid-template-columns: 1fr;
+    }
+
+    .grid.three {
+      grid-template-columns: 1fr;
+    }
+
+    .panel,
+    .quick-check {
+      padding:
+        clamp(
+          17px,
+          2.4vw,
+          25px
+        );
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 20px;
+
+      background:
+        var(--surface-2);
+    }
+
+    .remember {
+      margin-top: 18px;
+
+      padding:
+        clamp(
+          16px,
+          2.2vw,
+          22px
+        );
+
+      border-left:
+        6px solid
+        var(--success);
+
+      border-radius: 15px;
+
+      color: var(--text);
+
+      background:
+        rgba(52, 211, 153, 0.11);
+    }
+
+    .warning {
+      margin-top: 18px;
+
+      padding:
+        clamp(
+          16px,
+          2.2vw,
+          22px
+        );
+
+      border-left:
+        6px solid
+        var(--warning);
+
+      border-radius: 15px;
+
+      color: var(--text);
+
+      background:
+        rgba(251, 191, 36, 0.11);
+    }
+
+    .formula-box {
+      margin: 14px 0;
+      padding: 16px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 16px;
+
+      color: var(--warning);
+
+      background:
+        var(--surface-soft);
+
+      font-size:
+        clamp(
+          1.25rem,
+          1.05rem + 0.65vw,
+          1.85rem
+        );
+
+      font-weight: 850;
+      text-align: center;
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 26px;
+    }
+
+    li {
+      margin-bottom: 12px;
+      line-height: 1.62;
+    }
+
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+
+      margin-top: 16px;
+    }
+
+    .comparison-table th,
+    .comparison-table td {
+      padding: 12px 13px;
+
+      border:
+        1px solid
+        var(--border);
+
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .comparison-table th {
+      background:
+        var(--surface-soft);
+    }
+
+    /* =====================================================
+       SIMULATOR
+       ===================================================== */
+
+    .simulator {
+      padding:
+        clamp(
+          15px,
+          2vw,
+          22px
+        );
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 22px;
+
+      background:
+        var(--surface-2);
+    }
+
+    .scene-wrap {
+      overflow: hidden;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 18px;
+
+      background:
+        #ffffff;
+    }
+
+    #resistorScene {
+      display: block;
+
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+
+      background:
+        #ffffff;
+    }
+
+    .control-grid {
+      display: grid;
+      gap: 14px;
+
+      margin-top: 18px;
+    }
+
+    .control-card {
+      padding:
+        14px
+        15px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 15px;
+
+      background:
+        var(--surface-soft);
+    }
+
+    .control-card label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+
+      margin-bottom: 10px;
+
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .control-card select {
+      width: 100%;
+      min-height: 46px;
+
+      padding: 9px 11px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 10px;
+
+      color: var(--text);
+
+      background:
+        var(--surface);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      min-height: 34px;
+
+      accent-color:
+        var(--primary-strong);
+    }
+
+    .results-grid {
+      display: grid;
+      gap: 12px;
+
+      margin-top: 16px;
+    }
+
+    .result-card {
+      padding:
+        14px
+        15px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 15px;
+
+      background:
+        var(--surface-soft);
+    }
+
+    .result-card strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+
+    .result-value {
+      color: var(--primary);
+
+      font-size: 1.2rem;
+      font-weight: 900;
+    }
+
+    .sim-message {
+      min-height: 84px;
+
+      margin-top: 16px;
+      padding: 16px;
+
+      border-left:
+        5px solid
+        var(--primary);
+
+      border-radius: 14px;
+
+      color: var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    /* =====================================================
+       TABEL ȘI GRAFIC
+       ===================================================== */
+
+    .table-wrap {
+      overflow-x: auto;
+
+      margin-top: 18px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 17px;
+    }
+
+    .measure-table {
+      width: 100%;
+      min-width: 1020px;
+
+      border-collapse: collapse;
+    }
+
+    .measure-table th,
+    .measure-table td {
+      padding: 12px 11px;
+
+      border-bottom:
+        1px solid
+        var(--border);
+
+      border-right:
+        1px solid
+        var(--border);
+
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    .measure-table th:last-child,
+    .measure-table td:last-child {
+      border-right: 0;
+    }
+
+    .measure-table tbody tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .measure-table th {
+      color: var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    .measure-table input,
+    .measure-table select {
+      width: 105px;
+      min-height: 44px;
+
+      padding: 8px 9px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 10px;
+
+      color: var(--text);
+
+      background:
+        var(--surface);
+    }
+
+    .measure-table output {
+      display: inline-block;
+
+      min-width: 72px;
+
+      color: var(--primary);
+      font-weight: 850;
+    }
+
+    .average-box {
+      margin-top: 17px;
+      padding: 16px;
+
+      border:
+        2px solid
+        var(--success);
+
+      border-radius: 16px;
+
+      color: var(--text);
+
+      background:
+        rgba(52, 211, 153, 0.1);
+
+      font-size: 1.1rem;
+      font-weight: 850;
+    }
+
+    .chart-wrap {
+      margin-top: 18px;
+      padding:
+        clamp(
+          14px,
+          2vw,
+          20px
+        );
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 18px;
+
+      background:
+        var(--surface-2);
+    }
+
+    #resistanceChart {
+      display: block;
+
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 14px;
+
+      background:
+        #ffffff;
+    }
+
+    /* =====================================================
+       VERIFICARE RAPIDĂ
+       ===================================================== */
+
+    .quick-check {
+      margin-bottom: 16px;
+    }
+
+    .quick-check fieldset {
+      display: grid;
+      gap: 11px;
+
+      margin: 14px 0 0;
+      padding: 0;
+
+      border: 0;
+    }
+
+    .quick-check legend {
+      margin-bottom: 12px;
+      padding: 0;
+
+      color: var(--text);
+
+      font-size: 1.08rem;
+      font-weight: 850;
+    }
+
+    .answer-option {
+      display: grid;
+      grid-template-columns:
+        auto
+        1fr;
+
+      align-items: start;
+      gap: 12px;
+
+      min-height: 54px;
+      padding: 13px 15px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius: 14px;
+
+      color: var(--text);
+
+      background:
+        var(--surface-soft);
+
+      cursor: pointer;
+    }
+
+    .answer-option:hover {
+      border-color:
+        var(--primary);
+    }
+
+    .answer-option input {
+      width: 22px;
+      height: 22px;
+
+      margin-top: 2px;
+
+      accent-color:
+        var(--primary-strong);
+    }
+
+    .answer-option.correct {
+      border-color:
+        var(--success);
+
+      background:
+        rgba(52, 211, 153, 0.13);
+    }
+
+    .answer-option.incorrect {
+      border-color:
+        var(--danger);
+
+      background:
+        rgba(251, 113, 133, 0.12);
+    }
+
+    .feedback {
+      min-height: 30px;
+      margin-top: 12px;
+
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .score-box {
+      display: none;
+
+      margin-top: 18px;
+      padding: 18px;
+
+      border:
+        2px solid
+        var(--success);
+
+      border-radius: 17px;
+
+      color: var(--text);
+
+      background:
+        rgba(52, 211, 153, 0.1);
+
+      font-size: 1.1rem;
+      font-weight: 850;
+    }
+
+    .score-box.visible {
+      display: block;
+    }
+
+    /* =====================================================
+       BUTOANE
+       ===================================================== */
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      margin-top: 24px;
+    }
+
+    .button,
+    button {
+      appearance: none;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      min-height: 56px;
+      padding: 16px 22px;
+
+      border: 0;
+      border-radius: 15px;
+
+      font-size:
+        clamp(
+          1.04rem,
+          1rem + 0.18vw,
+          1.18rem
+        );
+
+      font-weight: 900;
+      text-align: center;
+      text-decoration: none;
+
+      cursor: pointer;
+
+      transition:
+        transform
+        120ms
+        ease,
+        filter
+        120ms
+        ease;
+    }
+
+    .button:hover,
+    button:hover {
+      filter:
+        brightness(1.05);
+    }
+
+    .button:active,
+    button:active {
+      transform:
+        scale(0.98);
+    }
+
+    .button:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    select:focus-visible {
+      outline:
+        4px solid
+        var(--focus);
+
+      outline-offset: 4px;
+    }
+
+    .button-primary {
+      width: 100%;
+
+      color: #062132;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          var(--success)
+        );
+    }
+
+    .button-secondary {
+      width: 100%;
+
+      border:
+        1px solid
+        var(--border);
+
+      color: var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    .button-calculate {
+      width: 100%;
+
+      color: #ffffff;
+
+      background:
+        linear-gradient(
+          90deg,
+          #7c3aed,
+          #a855f7
+        );
+    }
+
+    .button-home {
+      width: 100%;
+
+      color: #062132;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          #38bdf8
+        );
+    }
+
+    @media (min-width: 820px) {
+      .grid.two {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(0, 1fr)
+          );
+      }
+
+      .grid.three {
+        grid-template-columns:
+          repeat(
+            3,
+            minmax(0, 1fr)
+          );
+      }
+
+      .control-grid {
+        grid-template-columns:
+          repeat(
+            4,
+            minmax(0, 1fr)
+          );
+      }
+
+      .results-grid {
+        grid-template-columns:
+          repeat(
+            4,
+            minmax(0, 1fr)
+          );
+      }
+
+      .controls
+      .button-secondary {
+        width: auto;
+        min-width: 170px;
+      }
+
+      .controls
+      .button-primary {
+        width: auto;
+        min-width: 240px;
+        margin-left: auto;
+      }
+
+      .controls
+      .button-calculate {
+        width: auto;
+        min-width: 250px;
+      }
+
+      .controls.end {
+        justify-content: center;
+      }
+
+      .controls.end
+      .button-home {
+        width: auto;
+        min-width: 360px;
+      }
+    }
+
+    @media (max-width: 650px) {
+      html {
+        font-size: 17px;
+      }
+
+      .lab-shell {
+        width:
+          calc(100% - 12px);
+
+        margin:
+          6px
+          auto;
+      }
+
+      .lab-card {
+        border-radius: 19px;
+      }
+
+      .lab-page {
+        padding:
+          22px
+          14px
+          28px;
+      }
+
+      #header-container {
+        margin:
+          -22px
+          -14px
+          24px;
+
+        width:
+          calc(100% + 28px);
+      }
+
+      #footer-container {
+        margin:
+          28px
+          -14px
+          -28px;
+
+        width:
+          calc(100% + 28px);
+      }
+
+      .lab-topbar {
+        padding:
+          14px
+          15px;
+      }
+
+      .progress-row {
+        align-items: flex-start;
+      }
+
+      .page-counter {
+        white-space: normal;
+      }
+    }
+
+    @media (
+      prefers-reduced-motion:
+      reduce
+    ) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .lab-page,
+      .progress-fill,
+      .button,
+      button {
+        animation: none;
+        transition: none;
+      }
+    }
+
+    @media print {
+      .lab-topbar,
+      .controls,
+      #header-container,
+      #footer-container {
+        display: none !important;
+      }
+
+      .lab-page {
+        display: block !important;
+        break-after: page;
+      }
+
+      body {
+        color: #000000;
+        background: #ffffff;
+      }
+
+      .lab-card,
+      .panel,
+      .quick-check,
+      .simulator,
+      .chart-wrap {
+        color: #000000;
+        background: #ffffff;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+
+<body data-page-type="lab">
+  <div class="lab-shell">
+    <div class="lab-card">
+      <div class="lab-topbar">
+        <div class="lab-kicker">
+          Laborator de fizică • Clasa a VIII-a
+        </div>
+
+        <div
+          class="lab-title"
+          id="topTitle">
+          Gruparea rezistoarelor
+        </div>
+
+        <div class="progress-row">
+          <div
+            class="progress-track"
+            aria-hidden="true">
+            <span
+              class="progress-fill"
+              id="progressFill">
+            </span>
+          </div>
+
+          <div
+            class="page-counter"
+            id="pageCounter"
+            aria-live="polite">
+            Pagina 1 din 7
+          </div>
+        </div>
+      </div>
+
+      <main
+        id="main-content"
+        class="lab-pages">
+
+        <!-- PAGINA 1: headerul comun apare numai aici -->
+        <section
+          class="lab-page active"
+          data-title="Gruparea rezistoarelor – introducere"
+          aria-hidden="false">
+
+          <div id="header-container"></div>
+
+          <div class="page-badge">
+            Pagina 1 • Întrebarea laboratorului
+          </div>
+
+          <div
+            class="large-icon"
+            aria-hidden="true">
+            🧩
+          </div>
+
+          <h2>
+            Cum se modifică rezistența totală când grupăm mai multe rezistoare?
+          </h2>
+
+          <p class="lead">
+            Vom compara gruparea
+            <span class="highlight">
+              în serie
+            </span>,
+            gruparea
+            <span class="highlight">
+              în paralel
+            </span>
+            și o grupare mixtă.
+          </p>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Ce vei observa</h3>
+
+              <ul>
+                <li>
+                  în serie, rezistențele se adună;
+                </li>
+
+                <li>
+                  în paralel, rezistența echivalentă scade;
+                </li>
+
+                <li>
+                  curentul total depinde de \(R_{\mathrm{ech}}\);
+                </li>
+
+                <li>
+                  tensiunile și curenții se distribuie diferit.
+                </li>
+              </ul>
+            </article>
+
+            <article class="panel">
+              <h3>Ce vei determina</h3>
+
+              <div class="formula-box">
+                \[
+                  R_{\mathrm{ech}}
+                \]
+              </div>
+
+              <p>
+                Rezistența echivalentă a unei grupări de
+                rezistoare.
+              </p>
+            </article>
+          </div>
+
+          <div class="warning">
+            Folosește numai surse de joasă tensiune și verifică
+            montajul înainte de închiderea circuitului.
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="1">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 2 -->
+        <section
+          class="lab-page"
+          data-title="Gruparea în serie și paralel"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 2 • Teorie
+          </div>
+
+          <h2>
+            Legile grupării rezistoarelor
+          </h2>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Gruparea în serie</h3>
+
+              <div class="formula-box">
+                \[
+                  R_{\mathrm{ech}}
+                  =
+                  R_1+R_2+\cdots+R_n
+                \]
+              </div>
+
+              <p>
+                Intensitatea curentului este aceeași prin toate
+                rezistoarele:
+              </p>
+
+              <div class="formula-box">
+                \[
+                  I=I_1=I_2=\cdots
+                \]
+              </div>
+
+              <p>
+                Tensiunile se adună:
+              </p>
+
+              <div class="formula-box">
+                \[
+                  U=U_1+U_2+\cdots
+                \]
+              </div>
+            </article>
+
+            <article class="panel">
+              <h3>Gruparea în paralel</h3>
+
+              <div class="formula-box">
+                \[
+                  \frac{1}{R_{\mathrm{ech}}}
+                  =
+                  \frac{1}{R_1}
+                  +
+                  \frac{1}{R_2}
+                  +\cdots+
+                  \frac{1}{R_n}
+                \]
+              </div>
+
+              <p>
+                Tensiunea este aceeași pe fiecare ramură:
+              </p>
+
+              <div class="formula-box">
+                \[
+                  U=U_1=U_2=\cdots
+                \]
+              </div>
+
+              <p>
+                Curenții de ramură se adună:
+              </p>
+
+              <div class="formula-box">
+                \[
+                  I=I_1+I_2+\cdots
+                \]
+              </div>
+            </article>
+          </div>
+
+          <div class="panel" style="margin-top: 18px;">
+            <h3>Două rezistoare în paralel</h3>
+
+            <div class="formula-box">
+              \[
+                R_{\mathrm{ech}}
+                =
+                \frac{R_1R_2}{R_1+R_2}
+              \]
+            </div>
+          </div>
+
+          <div class="remember">
+            În paralel, rezistența echivalentă este mai mică decât
+            cea mai mică rezistență din grupare.
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="0">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="2">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 3 -->
+        <section
+          class="lab-page"
+          data-title="Montaj și metodă"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 3 • Montaj și măsurare
+          </div>
+
+          <h2>
+            Cum verificăm experimental?
+          </h2>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Materiale</h3>
+
+              <ul>
+                <li>
+                  sursă de joasă tensiune;
+                </li>
+
+                <li>
+                  trei rezistoare;
+                </li>
+
+                <li>
+                  ampermetru;
+                </li>
+
+                <li>
+                  voltmetru;
+                </li>
+
+                <li>
+                  întrerupător și fire.
+                </li>
+              </ul>
+            </article>
+
+            <article class="panel">
+              <h3>Mod de lucru</h3>
+
+              <ol>
+                <li>
+                  Realizează gruparea indicată.
+                </li>
+
+                <li>
+                  Măsoară tensiunea totală \(U\).
+                </li>
+
+                <li>
+                  Măsoară intensitatea totală \(I\).
+                </li>
+
+                <li>
+                  Calculează
+                  \(R_{\mathrm{ech}}=\frac{U}{I}\).
+                </li>
+
+                <li>
+                  Compară rezultatul cu formula teoretică.
+                </li>
+              </ol>
+            </article>
+          </div>
+
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Tip de grupare</th>
+                <th>Se păstrează</th>
+                <th>Se adună</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>Serie</td>
+                <td>curentul</td>
+                <td>tensiunile și rezistențele</td>
+              </tr>
+
+              <tr>
+                <td>Paralel</td>
+                <td>tensiunea</td>
+                <td>curenții de ramură</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="warning">
+            Nu modifica montajul cât timp circuitul este închis.
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="1">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="3">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 4 -->
+        <section
+          class="lab-page"
+          data-title="Simulatorul grupării"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 4 • Simulează
+          </div>
+
+          <h2>
+            Simulator: serie, paralel și mixt
+          </h2>
+
+          <div class="simulator">
+            <div class="scene-wrap">
+              <canvas
+                id="resistorScene"
+                width="960"
+                height="430"
+                aria-label="Schema unei grupări de rezistoare">
+              </canvas>
+            </div>
+
+            <div class="control-grid">
+              <div class="control-card">
+                <label for="groupingSelect">
+                  <span>Tipul grupării</span>
+                </label>
+
+                <select id="groupingSelect">
+                  <option value="series">
+                    Serie
+                  </option>
+
+                  <option value="parallel">
+                    Paralel
+                  </option>
+
+                  <option value="mixed">
+                    Mixt: \(R_1+(R_2\parallel R_3)\)
+                  </option>
+                </select>
+              </div>
+
+              <div class="control-card">
+                <label for="r1Slider">
+                  <span>\(R_1\)</span>
+                  <output id="r1Output">
+                    10,0 Ω
+                  </output>
+                </label>
+
+                <input
+                  type="range"
+                  id="r1Slider"
+                  min="5"
+                  max="100"
+                  step="5"
+                  value="10">
+              </div>
+
+              <div class="control-card">
+                <label for="r2Slider">
+                  <span>\(R_2\)</span>
+                  <output id="r2Output">
+                    20,0 Ω
+                  </output>
+                </label>
+
+                <input
+                  type="range"
+                  id="r2Slider"
+                  min="5"
+                  max="100"
+                  step="5"
+                  value="20">
+              </div>
+
+              <div class="control-card">
+                <label for="r3Slider">
+                  <span>\(R_3\)</span>
+                  <output id="r3Output">
+                    30,0 Ω
+                  </output>
+                </label>
+
+                <input
+                  type="range"
+                  id="r3Slider"
+                  min="5"
+                  max="100"
+                  step="5"
+                  value="30">
+              </div>
+            </div>
+
+            <div class="control-grid">
+              <div class="control-card">
+                <label for="voltageSlider">
+                  <span>Tensiune \(U\)</span>
+                  <output id="voltageOutput">
+                    12,0 V
+                  </output>
+                </label>
+
+                <input
+                  type="range"
+                  id="voltageSlider"
+                  min="1"
+                  max="24"
+                  step="0.5"
+                  value="12">
+              </div>
+            </div>
+
+            <div class="results-grid">
+              <div class="result-card">
+                <strong>
+                  Rezistență echivalentă
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="equivalentValue">
+                  60,00 Ω
+                </span>
+              </div>
+
+              <div class="result-card">
+                <strong>
+                  Curent total
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="totalCurrentValue">
+                  0,200 A
+                </span>
+              </div>
+
+              <div class="result-card">
+                <strong>
+                  Mărime de ramură 1
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="branchOneValue">
+                  2,00 V
+                </span>
+              </div>
+
+              <div class="result-card">
+                <strong>
+                  Mărime de ramură 2
+                </strong>
+
+                <span
+                  class="result-value"
+                  id="branchTwoValue">
+                  4,00 V
+                </span>
+              </div>
+            </div>
+
+            <div
+              class="sim-message"
+              id="simMessage"
+              role="status"
+              aria-live="polite">
+              În serie, rezistențele se adună, iar curentul este
+              același prin toate rezistoarele.
+            </div>
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="2">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="4">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 5 -->
+        <section
+          class="lab-page"
+          data-title="Măsurători și grafic"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 5 • Măsoară și calculează
+          </div>
+
+          <h2>
+            Completează tabelul de determinări
+          </h2>
+
+          <p class="lead">
+            Alege tipul grupării și introdu valorile rezistoarelor
+            și tensiunea sursei.
+          </p>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-calculate"
+              id="copySimulation">
+              Preia simulatorul în rândul 1
+            </button>
+          </div>
+
+          <div class="table-wrap">
+            <table class="measure-table">
+              <thead>
+                <tr>
+                  <th>Nr.</th>
+                  <th>Grupare</th>
+                  <th>\(R_1\) (Ω)</th>
+                  <th>\(R_2\) (Ω)</th>
+                  <th>\(R_3\) (Ω)</th>
+                  <th>\(U\) (V)</th>
+                  <th>\(R_{\mathrm{ech}}\) (Ω)</th>
+                  <th>\(I\) (A)</th>
+                </tr>
+              </thead>
+
+              <tbody id="measurementBody">
+                <tr data-row="1">
+                  <td>1</td>
+                  <td>
+                    <select
+                      data-field="grouping"
+                      aria-label="Tipul grupării pentru determinarea 1">
+                      <option value="series">Serie</option>
+                      <option value="parallel">Paralel</option>
+                      <option value="mixed">Mixt</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="10"
+                      data-field="r1"
+                      aria-label="R1 pentru determinarea 1">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="20"
+                      data-field="r2"
+                      aria-label="R2 pentru determinarea 1">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="30"
+                      data-field="r3"
+                      aria-label="R3 pentru determinarea 1">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="12"
+                      data-field="voltage"
+                      aria-label="Tensiunea pentru determinarea 1">
+                  </td>
+                  <td><output data-output="equivalent">—</output></td>
+                  <td><output data-output="current">—</output></td>
+                </tr>
+
+                <tr data-row="2">
+                  <td>2</td>
+                  <td>
+                    <select
+                      data-field="grouping"
+                      aria-label="Tipul grupării pentru determinarea 2">
+                      <option value="series">Serie</option>
+                      <option value="parallel" selected>Paralel</option>
+                      <option value="mixed">Mixt</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="10"
+                      data-field="r1"
+                      aria-label="R1 pentru determinarea 2">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="20"
+                      data-field="r2"
+                      aria-label="R2 pentru determinarea 2">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="30"
+                      data-field="r3"
+                      aria-label="R3 pentru determinarea 2">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="12"
+                      data-field="voltage"
+                      aria-label="Tensiunea pentru determinarea 2">
+                  </td>
+                  <td><output data-output="equivalent">—</output></td>
+                  <td><output data-output="current">—</output></td>
+                </tr>
+
+                <tr data-row="3">
+                  <td>3</td>
+                  <td>
+                    <select
+                      data-field="grouping"
+                      aria-label="Tipul grupării pentru determinarea 3">
+                      <option value="series">Serie</option>
+                      <option value="parallel">Paralel</option>
+                      <option value="mixed" selected>Mixt</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="10"
+                      data-field="r1"
+                      aria-label="R1 pentru determinarea 3">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="20"
+                      data-field="r2"
+                      aria-label="R2 pentru determinarea 3">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="30"
+                      data-field="r3"
+                      aria-label="R3 pentru determinarea 3">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="12"
+                      data-field="voltage"
+                      aria-label="Tensiunea pentru determinarea 3">
+                  </td>
+                  <td><output data-output="equivalent">—</output></td>
+                  <td><output data-output="current">—</output></td>
+                </tr>
+
+                <tr data-row="4">
+                  <td>4</td>
+                  <td>
+                    <select
+                      data-field="grouping"
+                      aria-label="Tipul grupării pentru determinarea 4">
+                      <option value="series">Serie</option>
+                      <option value="parallel" selected>Paralel</option>
+                      <option value="mixed">Mixt</option>
+                    </select>
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="15"
+                      data-field="r1"
+                      aria-label="R1 pentru determinarea 4">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="15"
+                      data-field="r2"
+                      aria-label="R2 pentru determinarea 4">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="15"
+                      data-field="r3"
+                      aria-label="R3 pentru determinarea 4">
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value="12"
+                      data-field="voltage"
+                      aria-label="Tensiunea pentru determinarea 4">
+                  </td>
+                  <td><output data-output="equivalent">—</output></td>
+                  <td><output data-output="current">—</output></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-calculate"
+              id="calculateMeasurements">
+              Calculează și trasează graficul
+            </button>
+          </div>
+
+          <div
+            class="average-box"
+            id="averageBox"
+            role="status"
+            aria-live="polite">
+            Rezultatele comparative vor apărea aici.
+          </div>
+
+          <div class="chart-wrap">
+            <h3>
+              Comparația rezistențelor echivalente
+            </h3>
+
+            <canvas
+              id="resistanceChart"
+              width="900"
+              height="470"
+              aria-label="Grafic comparativ al rezistențelor echivalente">
+            </canvas>
+
+            <p class="muted">
+              Barele mai înalte reprezintă o rezistență
+              echivalentă mai mare.
+            </p>
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="3">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="5">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 6 -->
+        <section
+          class="lab-page"
+          data-title="Exemplu numeric și verificare rapidă"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 6 • Aplică
+          </div>
+
+          <h2>
+            Exemplu numeric
+          </h2>
+
+          <div class="panel">
+            <p>
+              Avem trei rezistoare:
+              \(R_1=6\,\Omega\),
+              \(R_2=3\,\Omega\),
+              \(R_3=6\,\Omega\).
+            </p>
+
+            <h3>În serie</h3>
+
+            <div class="formula-box">
+              \[
+                R_{\mathrm{ech}}
+                =
+                6+3+6
+                =
+                15\,\Omega
+              \]
+            </div>
+
+            <h3>În paralel</h3>
+
+            <div class="formula-box">
+              \[
+                \frac{1}{R_{\mathrm{ech}}}
+                =
+                \frac{1}{6}
+                +
+                \frac{1}{3}
+                +
+                \frac{1}{6}
+                =
+                \frac{4}{6}
+                =
+                \frac{2}{3}
+              \]
+            </div>
+
+            <div class="formula-box">
+              \[
+                R_{\mathrm{ech}}
+                =
+                \frac{3}{2}
+                =
+                1{,}5\,\Omega
+              \]
+            </div>
+
+            <h3>Mixt: \(R_1+(R_2\parallel R_3)\)</h3>
+
+            <div class="formula-box">
+              \[
+                R_{23}
+                =
+                \frac{R_2R_3}{R_2+R_3}
+                =
+                \frac{3\cdot6}{3+6}
+                =
+                2\,\Omega
+              \]
+            </div>
+
+            <div class="formula-box">
+              \[
+                R_{\mathrm{ech}}
+                =
+                R_1+R_{23}
+                =
+                6+2
+                =
+                8\,\Omega
+              \]
+            </div>
+          </div>
+
+          <h2 style="margin-top: 28px;">
+            Verificare rapidă
+          </h2>
+
+          <form id="quickCheckForm">
+            <section
+              class="quick-check"
+              data-question="q1"
+              data-correct="b">
+
+              <fieldset>
+                <legend>
+                  1. Pentru rezistoare legate în serie:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q1"
+                    value="a">
+
+                  <span>
+                    tensiunea este aceeași pe fiecare rezistor;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q1"
+                    value="b">
+
+                  <span>
+                    intensitatea este aceeași prin fiecare
+                    rezistor;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q1"
+                    value="c">
+
+                  <span>
+                    rezistența echivalentă este mai mică decât
+                    fiecare rezistență.
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <section
+              class="quick-check"
+              data-question="q2"
+              data-correct="a">
+
+              <fieldset>
+                <legend>
+                  2. Pentru două rezistoare în paralel:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q2"
+                    value="a">
+
+                  <span>
+                    \(R_{\mathrm{ech}}
+                    =
+                    \frac{R_1R_2}{R_1+R_2}\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q2"
+                    value="b">
+
+                  <span>
+                    \(R_{\mathrm{ech}}=R_1+R_2\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q2"
+                    value="c">
+
+                  <span>
+                    \(R_{\mathrm{ech}}=R_1-R_2\)
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <section
+              class="quick-check"
+              data-question="q3"
+              data-correct="c">
+
+              <fieldset>
+                <legend>
+                  3. Într-o grupare paralelă:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q3"
+                    value="a">
+
+                  <span>
+                    curentul este obligatoriu identic pe fiecare
+                    ramură;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q3"
+                    value="b">
+
+                  <span>
+                    rezistențele se adună direct;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q3"
+                    value="c">
+
+                  <span>
+                    tensiunea este aceeași pe fiecare ramură.
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <section
+              class="quick-check"
+              data-question="q4"
+              data-correct="b">
+
+              <fieldset>
+                <legend>
+                  4. Trei rezistoare identice \(R\), în paralel,
+                  au:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q4"
+                    value="a">
+
+                  <span>
+                    \(R_{\mathrm{ech}}=3R\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q4"
+                    value="b">
+
+                  <span>
+                    \(R_{\mathrm{ech}}=\frac{R}{3}\)
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q4"
+                    value="c">
+
+                  <span>
+                    \(R_{\mathrm{ech}}=R\)
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <button
+              type="submit"
+              class="button-primary">
+              Verifică răspunsurile
+            </button>
+
+            <div
+              class="score-box"
+              id="scoreBox"
+              role="status"
+              aria-live="polite">
+            </div>
+          </form>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="4">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="6">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 7: footerul comun apare numai aici -->
+        <section
+          class="lab-page"
+          data-title="Concluzii"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 7 • Concluzie
+          </div>
+
+          <h2>
+            Ce ai verificat?
+          </h2>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Serie</h3>
+
+              <div class="formula-box">
+                \[
+                  R_{\mathrm{ech}}
+                  =
+                  R_1+R_2+\cdots
+                \]
+              </div>
+
+              <p>
+                Curentul este același, iar tensiunile se adună.
+              </p>
+            </article>
+
+            <article class="panel">
+              <h3>Paralel</h3>
+
+              <div class="formula-box">
+                \[
+                  \frac{1}{R_{\mathrm{ech}}}
+                  =
+                  \sum
+                  \frac{1}{R_i}
+                \]
+              </div>
+
+              <p>
+                Tensiunea este aceeași, iar curenții se adună.
+              </p>
+            </article>
+
+            <article class="panel">
+              <h3>Grupare mixtă</h3>
+
+              <p>
+                Circuitul se simplifică pe etape: mai întâi
+                subgrupările paralele sau serie, apoi restul
+                circuitului.
+              </p>
+            </article>
+
+            <article class="panel">
+              <h3>Verificare experimentală</h3>
+
+              <div class="formula-box">
+                \[
+                  R_{\mathrm{ech}}
+                  =
+                  \frac{U}{I}
+                \]
+              </div>
+
+              <p>
+                Valoarea măsurată se compară cu rezultatul
+                teoretic.
+              </p>
+            </article>
+          </div>
+
+          <div class="remember">
+            <strong>Concluzie:</strong>
+            modul de conectare schimbă rezistența echivalentă și,
+            implicit, curentul total din circuit.
+          </div>
+
+          <div class="warning">
+            Surse de eroare: toleranța rezistoarelor, contactele,
+            rezistența firelor, încălzirea și citirea aparatelor.
+          </div>
+
+          <div class="controls end">
+            <button
+              type="button"
+              class="button-calculate"
+              onclick="window.print()">
+              Tipărește fișa laboratorului
+            </button>
+
+            <a
+              class="button button-home"
+              href="../index.html">
+              Înapoi la capitol
+            </a>
+
+            <a
+              class="button button-secondary"
+              href="../../index.html">
+              Toate capitolele
+            </a>
+          </div>
+
+          <div id="footer-container"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    "use strict";
+
+    const pages =
+      Array.from(
+        document.querySelectorAll(
+          ".lab-page"
+        )
+      );
+
+    const progressFill =
+      document.getElementById(
+        "progressFill"
+      );
+
+    const pageCounter =
+      document.getElementById(
+        "pageCounter"
+      );
+
+    const topTitle =
+      document.getElementById(
+        "topTitle"
+      );
+
+    function formatNumber(
+      value,
+      decimals = 2
+    ) {
+      return Number(value)
+        .toFixed(decimals)
+        .replace(".", ",");
+    }
+
+    function typesetMath(root) {
+      window.MathJax
+        ?.typesetPromise
+        ?.([root]);
+    }
+
+    function goToPage(index) {
+      const target =
+        Math.min(
+          Math.max(
+            Number(index) || 0,
+            0
+          ),
+          pages.length - 1
+        );
+
+      pages.forEach(
+        (page, pageIndex) => {
+          const active =
+            pageIndex === target;
+
+          page.classList.toggle(
+            "active",
+            active
+          );
+
+          page.setAttribute(
+            "aria-hidden",
+            String(!active)
+          );
+        }
+      );
+
+      const current =
+        pages[target];
+
+      topTitle.textContent =
+        current.dataset.title ||
+        "Gruparea rezistoarelor";
+
+      pageCounter.textContent =
+        `Pagina ${target + 1} din ${pages.length}`;
+
+      progressFill.style.width =
+        `${((target + 1) / pages.length) * 100}%`;
+
+      history.replaceState(
+        null,
+        "",
+        `#pagina-${target + 1}`
+      );
+
+      window.scrollTo({
+        top: 0,
+        behavior:
+          window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+          ).matches
+            ? "auto"
+            : "smooth"
+      });
+
+      typesetMath(current);
+
+      if (target === 4) {
+        calculateMeasurements();
+      }
+    }
+
+    document.addEventListener(
+      "click",
+      (event) => {
+        const navigationButton =
+          event.target.closest(
+            "[data-go-page]"
+          );
+
+        if (!navigationButton) {
+          return;
+        }
+
+        goToPage(
+          navigationButton.dataset
+            .goPage
+        );
+      }
+    );
+
+    /* =====================================================
+       CALCULE
+       ===================================================== */
+
+    function equivalentResistance(
+      grouping,
+      r1,
+      r2,
+      r3
+    ) {
+      if (
+        grouping === "series"
+      ) {
+        return (
+          r1 +
+          r2 +
+          r3
+        );
+      }
+
+      if (
+        grouping === "parallel"
+      ) {
+        return (
+          1 /
+          (
+            1 / r1 +
+            1 / r2 +
+            1 / r3
+          )
+        );
+      }
+
+      const parallel23 =
+        r2 *
+        r3 /
+        (
+          r2 +
+          r3
+        );
+
+      return (
+        r1 +
+        parallel23
+      );
+    }
+
+    /* =====================================================
+       SIMULATOR
+       ===================================================== */
+
+    const sceneCanvas =
+      document.getElementById(
+        "resistorScene"
+      );
+
+    const sceneContext =
+      sceneCanvas?.getContext(
+        "2d"
+      );
+
+    const groupingSelect =
+      document.getElementById(
+        "groupingSelect"
+      );
+
+    const r1Slider =
+      document.getElementById(
+        "r1Slider"
+      );
+
+    const r2Slider =
+      document.getElementById(
+        "r2Slider"
+      );
+
+    const r3Slider =
+      document.getElementById(
+        "r3Slider"
+      );
+
+    const voltageSlider =
+      document.getElementById(
+        "voltageSlider"
+      );
+
+    function currentSimulation() {
+      const grouping =
+        groupingSelect.value;
+
+      const r1 =
+        Number(
+          r1Slider.value
+        );
+
+      const r2 =
+        Number(
+          r2Slider.value
+        );
+
+      const r3 =
+        Number(
+          r3Slider.value
+        );
+
+      const voltage =
+        Number(
+          voltageSlider.value
+        );
+
+      const equivalent =
+        equivalentResistance(
+          grouping,
+          r1,
+          r2,
+          r3
+        );
+
+      const totalCurrent =
+        voltage /
+        equivalent;
+
+      let branchOne;
+      let branchTwo;
+      let branchOneLabel;
+      let branchTwoLabel;
+
+      if (
+        grouping === "series"
+      ) {
+        branchOne =
+          totalCurrent *
+          r1;
+
+        branchTwo =
+          totalCurrent *
+          r2;
+
+        branchOneLabel =
+          "U₁";
+
+        branchTwoLabel =
+          "U₂";
+      } else if (
+        grouping === "parallel"
+      ) {
+        branchOne =
+          voltage /
+          r1;
+
+        branchTwo =
+          voltage /
+          r2;
+
+        branchOneLabel =
+          "I₁";
+
+        branchTwoLabel =
+          "I₂";
+      } else {
+        const parallel23 =
+          r2 *
+          r3 /
+          (
+            r2 +
+            r3
+          );
+
+        const parallelVoltage =
+          totalCurrent *
+          parallel23;
+
+        branchOne =
+          totalCurrent *
+          r1;
+
+        branchTwo =
+          parallelVoltage /
+          r2;
+
+        branchOneLabel =
+          "U₁";
+
+        branchTwoLabel =
+          "I₂";
+      }
+
+      return {
+        grouping,
+        r1,
+        r2,
+        r3,
+        voltage,
+        equivalent,
+        totalCurrent,
+        branchOne,
+        branchTwo,
+        branchOneLabel,
+        branchTwoLabel
+      };
+    }
+
+    function updateSimulation() {
+      const data =
+        currentSimulation();
+
+      document.getElementById(
+        "r1Output"
+      ).value =
+        `${formatNumber(
+          data.r1,
+          1
+        )} Ω`;
+
+      document.getElementById(
+        "r2Output"
+      ).value =
+        `${formatNumber(
+          data.r2,
+          1
+        )} Ω`;
+
+      document.getElementById(
+        "r3Output"
+      ).value =
+        `${formatNumber(
+          data.r3,
+          1
+        )} Ω`;
+
+      document.getElementById(
+        "voltageOutput"
+      ).value =
+        `${formatNumber(
+          data.voltage,
+          1
+        )} V`;
+
+      document.getElementById(
+        "equivalentValue"
+      ).textContent =
+        `${formatNumber(
+          data.equivalent,
+          2
+        )} Ω`;
+
+      document.getElementById(
+        "totalCurrentValue"
+      ).textContent =
+        `${formatNumber(
+          data.totalCurrent,
+          3
+        )} A`;
+
+      document.getElementById(
+        "branchOneValue"
+      ).textContent =
+        `${data.branchOneLabel} = ${formatNumber(
+          data.branchOne,
+          3
+        )} ${
+          data.branchOneLabel.startsWith("U")
+            ? "V"
+            : "A"
+        }`;
+
+      document.getElementById(
+        "branchTwoValue"
+      ).textContent =
+        `${data.branchTwoLabel} = ${formatNumber(
+          data.branchTwo,
+          3
+        )} ${
+          data.branchTwoLabel.startsWith("U")
+            ? "V"
+            : "A"
+        }`;
+
+      const message =
+        document.getElementById(
+          "simMessage"
+        );
+
+      if (
+        data.grouping === "series"
+      ) {
+        message.textContent =
+          "În serie, rezistențele se adună, curentul este același, iar tensiunile se împart.";
+      } else if (
+        data.grouping === "parallel"
+      ) {
+        message.textContent =
+          "În paralel, tensiunea este aceeași pe fiecare ramură, iar curenții de ramură se adună.";
+      } else {
+        message.textContent =
+          "În gruparea mixtă, se calculează mai întâi echivalentul paralel R₂||R₃, apoi se adună cu R₁.";
+      }
+
+      drawScene(
+        data
+      );
+
+      typesetMath(
+        document.querySelector(
+          ".lab-page.active"
+        )
+      );
+    }
+
+    function drawResistor(
+      ctx,
+      x1,
+      y1,
+      x2,
+      y2,
+      label
+    ) {
+      const horizontal =
+        Math.abs(
+          x2 -
+          x1
+        ) >=
+        Math.abs(
+          y2 -
+          y1
+        );
+
+      ctx.save();
+
+      ctx.strokeStyle =
+        "#e11d48";
+
+      ctx.lineWidth = 6;
+      ctx.lineCap =
+        "round";
+
+      ctx.beginPath();
+
+      if (horizontal) {
+        const length =
+          x2 -
+          x1;
+
+        let x = x1;
+
+        ctx.moveTo(
+          x1,
+          y1
+        );
+
+        for (
+          let index = 1;
+          index <= 8;
+          index += 1
+        ) {
+          x =
+            x1 +
+            length *
+            index /
+            9;
+
+          ctx.lineTo(
+            x,
+            y1 +
+            (
+              index % 2 === 0
+                ? 16
+                : -16
+            )
+          );
+        }
+
+        ctx.lineTo(
+          x2,
+          y2
+        );
+
+        ctx.stroke();
+
+        ctx.fillStyle =
+          "#172033";
+
+        ctx.font =
+          "bold 17px Segoe UI";
+
+        ctx.textAlign =
+          "center";
+
+        ctx.fillText(
+          label,
+          (
+            x1 +
+            x2
+          ) /
+          2,
+          y1 - 34
+        );
+      } else {
+        const length =
+          y2 -
+          y1;
+
+        let y = y1;
+
+        ctx.moveTo(
+          x1,
+          y1
+        );
+
+        for (
+          let index = 1;
+          index <= 8;
+          index += 1
+        ) {
+          y =
+            y1 +
+            length *
+            index /
+            9;
+
+          ctx.lineTo(
+            x1 +
+            (
+              index % 2 === 0
+                ? 16
+                : -16
+            ),
+            y
+          );
+        }
+
+        ctx.lineTo(
+          x2,
+          y2
+        );
+
+        ctx.stroke();
+
+        ctx.fillStyle =
+          "#172033";
+
+        ctx.font =
+          "bold 17px Segoe UI";
+
+        ctx.textAlign =
+          "left";
+
+        ctx.fillText(
+          label,
+          x1 + 30,
+          (
+            y1 +
+            y2
+          ) /
+          2
+        );
+      }
+
+      ctx.restore();
+    }
+
+    function drawScene(data) {
+      if (!sceneContext) {
+        return;
+      }
+
+      const ctx =
+        sceneContext;
+
+      const width =
+        sceneCanvas.width;
+
+      const height =
+        sceneCanvas.height;
+
+      ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+      );
+
+      ctx.fillStyle =
+        "#ffffff";
+
+      ctx.fillRect(
+        0,
+        0,
+        width,
+        height
+      );
+
+      ctx.strokeStyle =
+        "#172033";
+
+      ctx.lineWidth = 5;
+      ctx.lineCap =
+        "round";
+
+      const left = 90;
+      const right =
+        width - 90;
+
+      const top = 85;
+      const bottom =
+        height - 85;
+
+      /*
+       * Sursa.
+       */
+      ctx.beginPath();
+
+      ctx.moveTo(
+        left,
+        top
+      );
+
+      ctx.lineTo(
+        left,
+        165
+      );
+
+      ctx.moveTo(
+        left,
+        265
+      );
+
+      ctx.lineTo(
+        left,
+        bottom
+      );
+
+      ctx.moveTo(
+        left - 24,
+        190
+      );
+
+      ctx.lineTo(
+        left + 24,
+        190
+      );
+
+      ctx.moveTo(
+        left - 14,
+        235
+      );
+
+      ctx.lineTo(
+        left + 14,
+        235
+      );
+
+      ctx.stroke();
+
+      ctx.fillStyle =
+        "#172033";
+
+      ctx.font =
+        "bold 17px Segoe UI";
+
+      ctx.textAlign =
+        "center";
+
+      ctx.fillText(
+        `${formatNumber(
+          data.voltage,
+          1
+        )} V`,
+        left,
+        292
+      );
+
+      if (
+        data.grouping === "series"
+      ) {
+        ctx.beginPath();
+
+        ctx.moveTo(
+          left,
+          top
+        );
+
+        ctx.lineTo(
+          240,
+          top
+        );
+
+        ctx.moveTo(
+          720,
+          top
+        );
+
+        ctx.lineTo(
+          right,
+          top
+        );
+
+        ctx.lineTo(
+          right,
+          bottom
+        );
+
+        ctx.lineTo(
+          left,
+          bottom
+        );
+
+        ctx.stroke();
+
+        drawResistor(
+          ctx,
+          240,
+          top,
+          380,
+          top,
+          `R₁=${formatNumber(
+            data.r1,
+            0
+          )}Ω`
+        );
+
+        drawResistor(
+          ctx,
+          410,
+          top,
+          550,
+          top,
+          `R₂=${formatNumber(
+            data.r2,
+            0
+          )}Ω`
+        );
+
+        drawResistor(
+          ctx,
+          580,
+          top,
+          720,
+          top,
+          `R₃=${formatNumber(
+            data.r3,
+            0
+          )}Ω`
+        );
+      } else if (
+        data.grouping === "parallel"
+      ) {
+        ctx.beginPath();
+
+        ctx.moveTo(
+          left,
+          top
+        );
+
+        ctx.lineTo(
+          250,
+          top
+        );
+
+        ctx.lineTo(
+          250,
+          bottom
+        );
+
+        ctx.moveTo(
+          250,
+          top
+        );
+
+        ctx.lineTo(
+          right,
+          top
+        );
+
+        ctx.lineTo(
+          right,
+          bottom
+        );
+
+        ctx.lineTo(
+          left,
+          bottom
+        );
+
+        ctx.moveTo(
+          750,
+          top
+        );
+
+        ctx.lineTo(
+          750,
+          bottom
+        );
+
+        ctx.stroke();
+
+        drawResistor(
+          ctx,
+          250,
+          155,
+          750,
+          155,
+          `R₁=${formatNumber(
+            data.r1,
+            0
+          )}Ω`
+        );
+
+        drawResistor(
+          ctx,
+          250,
+          230,
+          750,
+          230,
+          `R₂=${formatNumber(
+            data.r2,
+            0
+          )}Ω`
+        );
+
+        drawResistor(
+          ctx,
+          250,
+          305,
+          750,
+          305,
+          `R₃=${formatNumber(
+            data.r3,
+            0
+          )}Ω`
+        );
+      } else {
+        ctx.beginPath();
+
+        ctx.moveTo(
+          left,
+          top
+        );
+
+        ctx.lineTo(
+          220,
+          top
+        );
+
+        ctx.moveTo(
+          420,
+          top
+        );
+
+        ctx.lineTo(
+          500,
+          top
+        );
+
+        ctx.lineTo(
+          500,
+          300
+        );
+
+        ctx.moveTo(
+          780,
+          top
+        );
+
+        ctx.lineTo(
+          right,
+          top
+        );
+
+        ctx.lineTo(
+          right,
+          bottom
+        );
+
+        ctx.lineTo(
+          left,
+          bottom
+        );
+
+        ctx.moveTo(
+          780,
+          top
+        );
+
+        ctx.lineTo(
+          780,
+          300
+        );
+
+        ctx.stroke();
+
+        drawResistor(
+          ctx,
+          220,
+          top,
+          420,
+          top,
+          `R₁=${formatNumber(
+            data.r1,
+            0
+          )}Ω`
+        );
+
+        drawResistor(
+          ctx,
+          500,
+          180,
+          780,
+          180,
+          `R₂=${formatNumber(
+            data.r2,
+            0
+          )}Ω`
+        );
+
+        drawResistor(
+          ctx,
+          500,
+          300,
+          780,
+          300,
+          `R₃=${formatNumber(
+            data.r3,
+            0
+          )}Ω`
+        );
+      }
+
+      ctx.fillStyle =
+        "#172033";
+
+      ctx.font =
+        "bold 18px Segoe UI";
+
+      ctx.textAlign =
+        "left";
+
+      ctx.fillText(
+        `Rech = ${formatNumber(
+          data.equivalent,
+          2
+        )} Ω`,
+        610,
+        height - 38
+      );
+
+      ctx.fillText(
+        `I = ${formatNumber(
+          data.totalCurrent,
+          3
+        )} A`,
+        770,
+        height - 38
+      );
+    }
+
+    [
+      groupingSelect,
+      r1Slider,
+      r2Slider,
+      r3Slider,
+      voltageSlider
+    ].forEach(
+      (control) => {
+        control?.addEventListener(
+          control.tagName === "SELECT"
+            ? "change"
+            : "input",
+          updateSimulation
+        );
+      }
+    );
+
+    /* =====================================================
+       TABELUL DE MĂSURĂTORI
+       ===================================================== */
+
+    function calculateRow(row) {
+      const grouping =
+        row.querySelector(
+          '[data-field="grouping"]'
+        )?.value;
+
+      const r1 =
+        Number(
+          row.querySelector(
+            '[data-field="r1"]'
+          )?.value
+        );
+
+      const r2 =
+        Number(
+          row.querySelector(
+            '[data-field="r2"]'
+          )?.value
+        );
+
+      const r3 =
+        Number(
+          row.querySelector(
+            '[data-field="r3"]'
+          )?.value
+        );
+
+      const voltage =
+        Number(
+          row.querySelector(
+            '[data-field="voltage"]'
+          )?.value
+        );
+
+      const equivalentOutput =
+        row.querySelector(
+          '[data-output="equivalent"]'
+        );
+
+      const currentOutput =
+        row.querySelector(
+          '[data-output="current"]'
+        );
+
+      if (
+        !Number.isFinite(r1) ||
+        !Number.isFinite(r2) ||
+        !Number.isFinite(r3) ||
+        !Number.isFinite(voltage) ||
+        r1 <= 0 ||
+        r2 <= 0 ||
+        r3 <= 0 ||
+        voltage <= 0
+      ) {
+        equivalentOutput.textContent =
+          "invalid";
+
+        currentOutput.textContent =
+          "invalid";
+
+        return null;
+      }
+
+      const equivalent =
+        equivalentResistance(
+          grouping,
+          r1,
+          r2,
+          r3
+        );
+
+      const current =
+        voltage /
+        equivalent;
+
+      equivalentOutput.textContent =
+        formatNumber(
+          equivalent,
+          3
+        );
+
+      currentOutput.textContent =
+        formatNumber(
+          current,
+          3
+        );
+
+      return {
+        grouping,
+        r1,
+        r2,
+        r3,
+        voltage,
+        equivalent,
+        current
+      };
+    }
+
+    function calculateMeasurements() {
+      const rows =
+        Array.from(
+          document.querySelectorAll(
+            "#measurementBody tr"
+          )
+        );
+
+      const values =
+        rows
+          .map(
+            calculateRow
+          )
+          .filter(
+            Boolean
+          );
+
+      const averageBox =
+        document.getElementById(
+          "averageBox"
+        );
+
+      if (!values.length) {
+        averageBox.textContent =
+          "Nu există determinări valide. Verifică valorile introduse.";
+
+        drawChart([]);
+
+        return;
+      }
+
+      const smallest =
+        values.reduce(
+          (minimum, item) =>
+            item.equivalent <
+            minimum.equivalent
+              ? item
+              : minimum
+        );
+
+      const largest =
+        values.reduce(
+          (maximum, item) =>
+            item.equivalent >
+            maximum.equivalent
+              ? item
+              : maximum
+        );
+
+      const labels = {
+        series: "serie",
+        parallel: "paralel",
+        mixed: "mixt"
+      };
+
+      averageBox.textContent =
+        `Cea mai mică rezistență echivalentă: ${formatNumber(
+          smallest.equivalent,
+          3
+        )} Ω (${labels[smallest.grouping]}). Cea mai mare: ${formatNumber(
+          largest.equivalent,
+          3
+        )} Ω (${labels[largest.grouping]}).`;
+
+      drawChart(
+        values
+      );
+    }
+
+    document
+      .getElementById(
+        "calculateMeasurements"
+      )
+      ?.addEventListener(
+        "click",
+        calculateMeasurements
+      );
+
+    document
+      .getElementById(
+        "copySimulation"
+      )
+      ?.addEventListener(
+        "click",
+        () => {
+          const data =
+            currentSimulation();
+
+          const firstRow =
+            document.querySelector(
+              '#measurementBody tr[data-row="1"]'
+            );
+
+          firstRow.querySelector(
+            '[data-field="grouping"]'
+          ).value =
+            data.grouping;
+
+          firstRow.querySelector(
+            '[data-field="r1"]'
+          ).value =
+            data.r1.toFixed(2);
+
+          firstRow.querySelector(
+            '[data-field="r2"]'
+          ).value =
+            data.r2.toFixed(2);
+
+          firstRow.querySelector(
+            '[data-field="r3"]'
+          ).value =
+            data.r3.toFixed(2);
+
+          firstRow.querySelector(
+            '[data-field="voltage"]'
+          ).value =
+            data.voltage.toFixed(2);
+
+          calculateMeasurements();
+        }
+      );
+
+    /* =====================================================
+       GRAFIC
+       ===================================================== */
+
+    const chartCanvas =
+      document.getElementById(
+        "resistanceChart"
+      );
+
+    const chartContext =
+      chartCanvas?.getContext(
+        "2d"
+      );
+
+    function drawChart(values) {
+      if (!chartContext) {
+        return;
+      }
+
+      const ctx =
+        chartContext;
+
+      const width =
+        chartCanvas.width;
+
+      const height =
+        chartCanvas.height;
+
+      ctx.clearRect(
+        0,
+        0,
+        width,
+        height
+      );
+
+      ctx.fillStyle =
+        "#ffffff";
+
+      ctx.fillRect(
+        0,
+        0,
+        width,
+        height
+      );
+
+      const margin = {
+        left: 90,
+        right: 40,
+        top: 42,
+        bottom: 90
+      };
+
+      const plotWidth =
+        width -
+        margin.left -
+        margin.right;
+
+      const plotHeight =
+        height -
+        margin.top -
+        margin.bottom;
+
+      ctx.strokeStyle =
+        "#172033";
+
+      ctx.lineWidth = 3;
+
+      ctx.beginPath();
+
+      ctx.moveTo(
+        margin.left,
+        margin.top
+      );
+
+      ctx.lineTo(
+        margin.left,
+        margin.top +
+        plotHeight
+      );
+
+      ctx.lineTo(
+        margin.left +
+        plotWidth,
+        margin.top +
+        plotHeight
+      );
+
+      ctx.stroke();
+
+      ctx.fillStyle =
+        "#172033";
+
+      ctx.font =
+        "bold 19px Segoe UI";
+
+      ctx.fillText(
+        "Rech (Ω)",
+        18,
+        margin.top + 6
+      );
+
+      if (!values.length) {
+        ctx.font =
+          "bold 22px Segoe UI";
+
+        ctx.fillStyle =
+          "#475569";
+
+        ctx.fillText(
+          "Completează tabelul pentru a afișa graficul.",
+          205,
+          235
+        );
+
+        return;
+      }
+
+      const maxValue =
+        Math.max(
+          ...values.map(
+            (item) =>
+              item.equivalent
+          ),
+          1
+        );
+
+      const barGap =
+        32;
+
+      const barWidth =
+        (
+          plotWidth -
+          barGap *
+          (
+            values.length +
+            1
+          )
+        ) /
+        values.length;
+
+      const names = {
+        series: "Serie",
+        parallel: "Paralel",
+        mixed: "Mixt"
+      };
+
+      values.forEach(
+        (item, index) => {
+          const x =
+            margin.left +
+            barGap +
+            index *
+            (
+              barWidth +
+              barGap
+            );
+
+          const barHeight =
+            item.equivalent /
+            maxValue *
+            (
+              plotHeight -
+              35
+            );
+
+          const y =
+            margin.top +
+            plotHeight -
+            barHeight;
+
+          const colors = [
+            "#0284c7",
+            "#047857",
+            "#7c3aed",
+            "#e11d48"
+          ];
+
+          ctx.fillStyle =
+            colors[
+              index %
+              colors.length
+            ];
+
+          ctx.fillRect(
+            x,
+            y,
+            barWidth,
+            barHeight
+          );
+
+          ctx.fillStyle =
+            "#172033";
+
+          ctx.font =
+            "bold 16px Segoe UI";
+
+          ctx.textAlign =
+            "center";
+
+          ctx.fillText(
+            formatNumber(
+              item.equivalent,
+              2
+            ),
+            x +
+            barWidth /
+            2,
+            y - 10
+          );
+
+          ctx.fillText(
+            `${index + 1}. ${names[item.grouping]}`,
+            x +
+            barWidth /
+            2,
+            margin.top +
+            plotHeight +
+            28
+          );
+        }
+      );
+
+      ctx.textAlign =
+        "left";
+    }
+
+    /* =====================================================
+       VERIFICARE RAPIDĂ
+       ===================================================== */
+
+    const quickCheckForm =
+      document.getElementById(
+        "quickCheckForm"
+      );
+
+    quickCheckForm
+      ?.addEventListener(
+        "submit",
+        (event) => {
+          event.preventDefault();
+
+          const questions =
+            Array.from(
+              quickCheckForm
+                .querySelectorAll(
+                  "[data-question]"
+                )
+            );
+
+          let correctAnswers = 0;
+          let answered = 0;
+
+          questions.forEach(
+            (question) => {
+              const selected =
+                question.querySelector(
+                  "input:checked"
+                );
+
+              const feedback =
+                question.querySelector(
+                  ".feedback"
+                );
+
+              question
+                .querySelectorAll(
+                  ".answer-option"
+                )
+                .forEach(
+                  (option) => {
+                    option.classList.remove(
+                      "correct",
+                      "incorrect"
+                    );
+                  }
+                );
+
+              if (!selected) {
+                feedback.textContent =
+                  "Alege un răspuns.";
+
+                return;
+              }
+
+              answered += 1;
+
+              const correct =
+                selected.value ===
+                question.dataset.correct;
+
+              const selectedLabel =
+                selected.closest(
+                  ".answer-option"
+                );
+
+              selectedLabel
+                ?.classList
+                .add(
+                  correct
+                    ? "correct"
+                    : "incorrect"
+                );
+
+              if (correct) {
+                correctAnswers += 1;
+                feedback.textContent =
+                  "✓ Corect.";
+              } else {
+                feedback.textContent =
+                  "✗ Răspuns incorect. Recitește explicația și încearcă din nou.";
+              }
+            }
+          );
+
+          const scoreBox =
+            document.getElementById(
+              "scoreBox"
+            );
+
+          scoreBox.classList.add(
+            "visible"
+          );
+
+          if (
+            answered <
+            questions.length
+          ) {
+            scoreBox.textContent =
+              `Ai răspuns la ${answered} din ${questions.length} întrebări. Completează toate răspunsurile.`;
+
+            return;
+          }
+
+          scoreBox.textContent =
+            correctAnswers ===
+            questions.length
+              ? `Excelent! Ai ${correctAnswers} răspunsuri corecte din ${questions.length}.`
+              : `Ai ${correctAnswers} răspunsuri corecte din ${questions.length}. Poți corecta răspunsurile și verifica din nou.`;
+
+          typesetMath(
+            quickCheckForm
+          );
+        }
+      );
+
+    /* =====================================================
+       HEADER, FOOTER ȘI TEMĂ
+       ===================================================== */
+
+    const COMPONENTS = {
+      header:
+        "../../../assets/components/header.html",
+
+      footer:
+        "../../../assets/components/footer.html"
+    };
+
+    const THEME_KEY =
+      "fizica-galaction-theme";
+
+    function fallbackHeader() {
+      return `
+        <header class="site-header">
+          <div class="container flex flex-between">
+            <div>
+              <h1 class="site-title">
+                Fizica Galaction
+              </h1>
+
+              <p class="site-subtitle">
+                Platformă educațională •
+                Prof. DĂNUȚ ANDRONIE
+              </p>
+            </div>
+
+            <button
+              type="button"
+              class="theme-toggle"
+              title="Schimbă tema"
+              aria-label="Schimbă tema">
+              ☀️
+            </button>
+          </div>
+        </header>
+      `;
+    }
+
+    function fallbackFooter() {
+      return `
+        <footer class="site-footer">
+          <div class="wrapper">
+            <p>
+              © 2026 • Prof. Dănuț Andronie
+            </p>
+
+            <p>
+              E-mail:
+              <a href="mailto:danutmg@gmail.com">
+                danutmg@gmail.com
+              </a>
+            </p>
+          </div>
+        </footer>
+      `;
+    }
+
+    async function loadComponent(
+      containerId,
+      componentPath,
+      fallback
+    ) {
+      const container =
+        document.getElementById(
+          containerId
+        );
+
+      if (!container) {
+        return;
+      }
+
+      try {
+        const response =
+          await fetch(
+            componentPath,
+            {
+              cache: "no-cache"
+            }
+          );
+
+        if (!response.ok) {
+          throw new Error(
+            `HTTP ${response.status}`
+          );
+        }
+
+        container.innerHTML =
+          await response.text();
+      } catch (error) {
+        container.innerHTML =
+          fallback();
+
+        console.warn(
+          `Nu s-a încărcat ${componentPath}.`,
+          error
+        );
+      }
+    }
+
+    function getSavedTheme() {
+      try {
+        const saved =
+          localStorage.getItem(
+            THEME_KEY
+          );
+
+        if (
+          saved === "light" ||
+          saved === "dark"
+        ) {
+          return saved;
+        }
+      } catch (error) {
+        console.warn(
+          "Tema nu a putut fi citită.",
+          error
+        );
+      }
+
+      return window.matchMedia(
+        "(prefers-color-scheme: light)"
+      ).matches
+        ? "light"
+        : "dark";
+    }
+
+    function applyTheme(theme) {
+      const light =
+        theme === "light";
+
+      document.body.classList.toggle(
+        "light",
+        light
+      );
+
+      document.body.classList.toggle(
+        "dark",
+        !light
+      );
+
+      document.body.dataset.theme =
+        light
+          ? "light"
+          : "dark";
+
+      document
+        .querySelectorAll(
+          ".theme-toggle"
+        )
+        .forEach(
+          (button) => {
+            button.textContent =
+              light
+                ? "🌙"
+                : "☀️";
+
+            button.title =
+              light
+                ? "Activează tema întunecată"
+                : "Activează tema luminoasă";
+
+            button.setAttribute(
+              "aria-label",
+              button.title
+            );
+          }
+        );
+    }
+
+    document.addEventListener(
+      "click",
+      (event) => {
+        const themeButton =
+          event.target.closest(
+            ".theme-toggle"
+          );
+
+        if (!themeButton) {
+          return;
+        }
+
+        const nextTheme =
+          document.body.dataset.theme ===
+          "light"
+            ? "dark"
+            : "light";
+
+        try {
+          localStorage.setItem(
+            THEME_KEY,
+            nextTheme
+          );
+        } catch (error) {
+          console.warn(
+            "Tema nu a putut fi salvată.",
+            error
+          );
+        }
+
+        applyTheme(
+          nextTheme
+        );
+      }
+    );
+
+    /* =====================================================
+       PORNIRE
+       ===================================================== */
+
+    document.addEventListener(
+      "DOMContentLoaded",
+      async () => {
+        const theme =
+          getSavedTheme();
+
+        applyTheme(
+          theme
+        );
+
+        updateSimulation();
+        calculateMeasurements();
+
+        await Promise.all([
+          loadComponent(
+            "header-container",
+            COMPONENTS.header,
+            fallbackHeader
+          ),
+
+          loadComponent(
+            "footer-container",
+            COMPONENTS.footer,
+            fallbackFooter
+          )
+        ]);
+
+        applyTheme(
+          document.body.dataset.theme ||
+          theme
+        );
+
+        const hashMatch =
+          window.location.hash.match(
+            /^#pagina-(\d+)$/
+          );
+
+        goToPage(
+          hashMatch
+            ? Number(
+                hashMatch[1]
+              ) - 1
+            : 0
+        );
+      }
+    );
+  </script>
+</body>
+</html>

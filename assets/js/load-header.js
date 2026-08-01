@@ -1,58 +1,52 @@
 /**
  * load-header.js — Fizica Galaction
  *
- * Încarcă assets/components/header.html și:
- * - rezolvă rutele prin config.js;
- * - marchează pagina curentă;
- * - activează meniul mobil;
- * - reconectează butonul de temă;
- * - emite evenimentul „headerLoaded”.
+ * Încarcă antetul comun din:
+ * assets/components/header.html
  *
- * Container acceptat:
- *
- * <div id="header-container"></div>
- *
- * sau:
- *
- * <div data-site-header></div>
+ * Funcții:
+ * - determină automat rădăcina proiectului;
+ * - funcționează din orice subdirector;
+ * - încarcă automat layout.css;
+ * - evită încărcarea dublă;
+ * - reconectează butonul zi/noapte;
+ * - rezolvă rutele data-site-route;
+ * - emite evenimentul headerLoaded;
+ * - oferă un antet minimal dacă fetch() eșuează.
  */
 
 (function () {
   "use strict";
 
-  const APP_NAME = "Fizica Galaction";
+  const APP_NAME =
+    "Fizica Galaction";
+
   const COMPONENT_PATH =
     "assets/components/header.html";
+
+  const LAYOUT_PATH =
+    "assets/css/layout.css";
+
   const CONTAINER_SELECTOR =
-    "[data-site-header], #header-container";
+    "#header-container, [data-site-header]";
 
-  const scriptElement =
-    document.currentScript;
-
+  /*
+   * document.currentScript trebuie citit în momentul
+   * executării fișierului.
+   */
   const scriptUrl =
-    scriptElement?.src || "";
+    document.currentScript?.src || "";
 
   const app =
     (window.FizicaGalaction =
       window.FizicaGalaction || {});
 
-  const fallbackRoutes = Object.freeze({
-    home: "index.html",
-    grade6: "clasa6/index.html",
-    grade7: "clasa7/index.html",
-    grade8: "clasa8/index.html",
-    laboratory:
-      "laborator-fizica/index.html",
-    login: "login/index.html"
-  });
+  let loadingPromise = null;
 
-  let loadPromise = null;
+  /* =======================================================
+     CONFIGURAȚIE ȘI RUTE
+     ======================================================= */
 
-  /**
-   * Returnează configurația centrală, dacă este disponibilă.
-   *
-   * @returns {object}
-   */
   function getConfig() {
     return (
       app.config?.data ||
@@ -62,10 +56,13 @@
   }
 
   /**
-   * Determină rădăcina site-ului din config.js sau din URL-ul
-   * scriptului load-header.js.
+   * Determină rădăcina proiectului.
    *
-   * @returns {string}
+   * Pentru:
+   * /fizica-galaction/assets/js/load-header.js
+   *
+   * rezultatul este:
+   * /fizica-galaction/
    */
   function getSiteRoot() {
     const configuredRoot =
@@ -89,12 +86,10 @@
   }
 
   /**
-   * Rezolvă o cale raportată la rădăcina site-ului.
-   *
-   * @param {string} path
-   * @returns {string}
+   * Creează o adresă absolută raportată la rădăcina
+   * proiectului.
    */
-  function resolveSiteUrl(path) {
+  function resolveSiteUrl(path = "") {
     if (
       typeof app.config?.resolve ===
       "function"
@@ -102,100 +97,108 @@
       return app.config.resolve(path);
     }
 
+    const normalizedPath =
+      String(path)
+        .trim()
+        .replace(/^\/+/, "");
+
     return new URL(
-      String(path || "").replace(
-        /^\/+/,
-        ""
-      ),
+      normalizedPath,
       getSiteRoot()
     ).href;
   }
 
-  /**
-   * URL-ul componentei.
-   *
-   * @returns {string}
-   */
-  function getComponentUrl() {
-    const configured =
+  function getHeaderUrl() {
+    const configuredPath =
       getConfig().routes?.header;
 
     return resolveSiteUrl(
-      configured || COMPONENT_PATH
+      configuredPath ||
+      COMPONENT_PATH
     );
   }
-/**
- * Încarcă o singură dată stilurile structurale necesare
- * headerului și footerului.
- */
-function ensureLayoutStyles() {
-  const stylesheetId =
-    "fizica-galaction-layout-css";
 
-  if (
-    document.getElementById(
-      stylesheetId
-    )
-  ) {
-    return;
-  }
+  /* =======================================================
+     CSS
+     ======================================================= */
 
-  const link =
-    document.createElement("link");
-
-  link.id = stylesheetId;
-  link.rel = "stylesheet";
-
-  link.href =
-    typeof app.config?.resolve ===
-      "function"
-      ? app.config.resolve(
-          "assets/css/layout.css"
-        )
-      : new URL(
-          "../css/layout.css",
-          scriptUrl ||
-            document.baseURI
-        ).href;
-
-  document.head.appendChild(link);
-}
   /**
-   * Normalizează o cale pentru compararea rutelor.
+   * Încarcă automat layout.css.
    *
-   * @param {string} value
-   * @returns {string}
+   * Astfel, paginile care au uitat să includă acest CSS
+   * nu mai afișează antetul în stilul implicit al browserului.
    */
-  function normalizePath(value) {
-    try {
-      const url = new URL(
-        value,
-        document.baseURI
-      );
+  function ensureLayoutStyles() {
+    const stylesheetUrl =
+      resolveSiteUrl(LAYOUT_PATH);
 
-      let path = decodeURIComponent(
-        url.pathname
-      )
-        .replace(/\/index\.html$/i, "/")
-        .replace(/\/+/g, "/");
+    const existingLink =
+      Array.from(
+        document.querySelectorAll(
+          'link[rel="stylesheet"]'
+        )
+      ).find((link) => {
+        try {
+          return (
+            new URL(
+              link.href,
+              document.baseURI
+            ).href === stylesheetUrl
+          );
+        } catch (_) {
+          return false;
+        }
+      });
 
-      if (
-        path.length > 1 &&
-        !path.endsWith("/")
-      ) {
-        path += "/";
-      }
-
-      return path;
-    } catch (_) {
-      return "";
+    if (existingLink) {
+      return existingLink;
     }
+
+    const link =
+      document.createElement("link");
+
+    link.id =
+      "fizica-galaction-layout-css";
+
+    link.rel = "stylesheet";
+    link.href = stylesheetUrl;
+
+    document.head.appendChild(link);
+
+    return link;
   }
 
+  /* =======================================================
+     RUTE DIN HEADER
+     ======================================================= */
+
+  const fallbackRoutes =
+    Object.freeze({
+      home:
+        "index.html",
+
+      grade6:
+        "clasa6/index.html",
+
+      grade7:
+        "clasa7/index.html",
+
+      grade8:
+        "clasa8/index.html",
+
+      laboratory:
+        "laborator-fizica/index.html",
+
+      login:
+        "login/index.html"
+    });
+
   /**
-   * Înlocuiește rutele simbolice din componentă.
+   * Pentru elemente precum:
    *
-   * @param {Element} container
+   * <a data-site-route="home">
+   *
+   * completează automat href-ul corect.
    */
   function resolveRoutes(container) {
     const routes = {
@@ -210,6 +213,7 @@ function ensureLayoutStyles() {
       .forEach((link) => {
         const routeName =
           link.dataset.siteRoute;
+
         const route =
           routes[routeName];
 
@@ -220,63 +224,11 @@ function ensureLayoutStyles() {
       });
   }
 
-  /**
-   * Marchează legătura activă.
-   *
-   * @param {Element} container
-   */
-  function markCurrentPage(container) {
-    const current =
-      normalizePath(
-        window.location.href
-      );
+  /* =======================================================
+     MAIN ȘI ACCESIBILITATE
+     ======================================================= */
 
-    container
-      .querySelectorAll(
-        "a[data-site-route]"
-      )
-      .forEach((link) => {
-        const target =
-          normalizePath(link.href);
-
-        const isHome =
-          link.dataset.siteRoute ===
-          "home";
-
-        const active = isHome
-          ? current === target
-          : (
-              current === target ||
-              (
-                target !== "/" &&
-                current.startsWith(
-                  target
-                )
-              )
-            );
-
-        link.classList.toggle(
-          "is-active",
-          active
-        );
-
-        if (active) {
-          link.setAttribute(
-            "aria-current",
-            "page"
-          );
-        } else {
-          link.removeAttribute(
-            "aria-current"
-          );
-        }
-      });
-  }
-
-  /**
-   * Asigură ținta pentru skip-link.
-   */
-  function ensureMainTarget() {
+  function ensureMainContentId() {
     const main =
       document.querySelector("main");
 
@@ -285,201 +237,346 @@ function ensureLayoutStyles() {
     }
   }
 
-  /**
-   * Activează meniul mobil.
-   *
-   * @param {Element} container
-   */
-  function connectMobileMenu(container) {
-    const button =
-      container.querySelector(
-        "[data-menu-toggle]"
-      );
+  /* =======================================================
+     SISTEMUL ZI / NOAPTE
+     ======================================================= */
 
-    const navigation =
-      container.querySelector(
-        "[data-site-navigation]"
-      );
+  function getThemeStorageKey() {
+    return (
+      getConfig().theme
+        ?.storageKey ||
+      getConfig().storage
+        ?.theme ||
+      "fizica-galaction-theme"
+    );
+  }
+
+  function getCurrentTheme() {
+    if (
+      document.body.classList
+        .contains("dark")
+    ) {
+      return "dark";
+    }
 
     if (
-      !button ||
-      !navigation ||
-      button.dataset.connected ===
-        "true"
+      document.body.classList
+        .contains("light")
     ) {
-      return;
+      return "light";
     }
 
-    function setOpen(open) {
-      navigation.classList.toggle(
-        "is-open",
-        open
-      );
+    const dataTheme =
+      document.body.dataset.theme;
 
-      button.setAttribute(
-        "aria-expanded",
-        String(open)
-      );
-
-      button.setAttribute(
-        "aria-label",
-        open
-          ? "Închide meniul de navigare"
-          : "Deschide meniul de navigare"
-      );
-
-      const icon =
-        button.querySelector(
-          "[aria-hidden='true']"
-        );
-
-      if (icon) {
-        icon.textContent =
-          open ? "✕" : "☰";
-      }
+    if (
+      dataTheme === "dark" ||
+      dataTheme === "light"
+    ) {
+      return dataTheme;
     }
 
-    button.addEventListener(
-      "click",
-      () => {
-        setOpen(
-          button.getAttribute(
-            "aria-expanded"
-          ) !== "true"
+    try {
+      const savedTheme =
+        localStorage.getItem(
+          getThemeStorageKey()
         );
+
+      if (
+        savedTheme === "dark" ||
+        savedTheme === "light"
+      ) {
+        return savedTheme;
       }
-    );
+    } catch (_) {
+      /*
+       * localStorage poate fi indisponibil
+       * în anumite moduri private.
+       */
+    }
 
-    navigation.addEventListener(
-      "click",
-      (event) => {
-        if (
-          event.target.closest("a")
-        ) {
-          setOpen(false);
-        }
-      }
-    );
-
-    document.addEventListener(
-      "keydown",
-      (event) => {
-        if (
-          event.key === "Escape" &&
-          button.getAttribute(
-            "aria-expanded"
-          ) === "true"
-        ) {
-          setOpen(false);
-          button.focus();
-        }
-      }
-    );
-
-    window
-      .matchMedia(
-        "(min-width: 721px)"
-      )
-      .addEventListener(
-        "change",
-        (event) => {
-          if (event.matches) {
-            setOpen(false);
-          }
-        }
-      );
-
-    button.dataset.connected =
-      "true";
+    return window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    ).matches
+      ? "dark"
+      : "light";
   }
 
   /**
-   * Reconectează butonul de temă după încărcarea dinamică.
+   * Actualizează aspectul și descrierea butonului.
    *
-   * Este compatibil atât cu viitorul API central, cât și cu
-   * ThemeManager-ul existent.
+   * Pe tema luminoasă afișează luna:
+   * utilizatorul poate trece la tema întunecată.
    *
-   * @param {Element} container
+   * Pe tema întunecată afișează soarele:
+   * utilizatorul poate trece la tema luminoasă.
    */
-  function reconnectTheme(container) {
+  function updateThemeButton(
+    button,
+    theme = getCurrentTheme()
+  ) {
+    if (!button) {
+      return;
+    }
+
+    const dark =
+      theme === "dark";
+
+    const icon =
+      dark ? "☀️" : "🌙";
+
+    const label =
+      dark
+        ? "Activează tema luminoasă"
+        : "Activează tema întunecată";
+
+    button.textContent = icon;
+    button.title = label;
+
+    button.setAttribute(
+      "aria-label",
+      label
+    );
+
+    button.setAttribute(
+      "aria-pressed",
+      String(dark)
+    );
+  }
+
+  /**
+   * Comutare de rezervă.
+   *
+   * Este folosită numai când theme-toggle.js nu este încă
+   * disponibil.
+   */
+  function fallbackToggleTheme(
+    button
+  ) {
+    const current =
+      getCurrentTheme();
+
+    const next =
+      current === "dark"
+        ? "light"
+        : "dark";
+
+    document.body.classList.remove(
+      "light",
+      "dark",
+      "light-mode"
+    );
+
+    document.body.classList.add(
+      next
+    );
+
+    document.body.dataset.theme =
+      next;
+
+    try {
+      localStorage.setItem(
+        getThemeStorageKey(),
+        next
+      );
+    } catch (_) {
+      /*
+       * Tema rămâne activă chiar dacă preferința
+       * nu poate fi salvată.
+       */
+    }
+
+    updateThemeButton(
+      button,
+      next
+    );
+
+    document.dispatchEvent(
+      new CustomEvent(
+        "themeChanged",
+        {
+          detail: {
+            theme: next
+          }
+        }
+      )
+    );
+
+    document.dispatchEvent(
+      new CustomEvent(
+        "fizica:theme-change",
+        {
+          detail: {
+            theme: next
+          }
+        }
+      )
+    );
+  }
+
+  /**
+   * Reconectează butonul după ce header.html a fost
+   * introdus în DOM.
+   */
+  function connectThemeButton(
+    container = document
+  ) {
     const button =
       container.querySelector(
         ".theme-toggle"
       );
 
     if (!button) {
-      return;
+      return false;
     }
 
-    if (
-      typeof app.theme
-        ?.reconnectButton ===
-      "function"
-    ) {
-      app.theme.reconnectButton(
-        button
-      );
-      return;
-    }
+    button.type = "button";
 
-    if (
-      typeof window.themeManager
-        ?.reconnectButton ===
-      "function"
-    ) {
+    /*
+     * ThemeManager a fost creat înainte ca antetul
+     * dinamic să existe. Îi transmitem noul buton.
+     */
+    if (window.themeManager) {
       window.themeManager
-        .reconnectButton(button);
-      return;
+        .THEME_BUTTON = button;
     }
 
-    const manager =
-      window.themeManager;
-
+    /*
+     * Ascultătorul este adăugat o singură dată.
+     */
     if (
-      manager &&
-      typeof manager.toggleTheme ===
-        "function" &&
       button.dataset
         .themeConnected !== "true"
     ) {
-      manager.THEME_BUTTON =
-        button;
-
       button.addEventListener(
         "click",
-        () => manager.toggleTheme()
-      );
+        () => {
+          const manager =
+            window.themeManager;
 
-      manager
-        .createThemeToggleButton?.();
+          if (
+            manager &&
+            typeof manager
+              .toggleTheme ===
+              "function"
+          ) {
+            manager.THEME_BUTTON =
+              button;
+
+            manager.toggleTheme();
+
+            updateThemeButton(
+              button,
+              manager.getCurrentTheme?.() ||
+                getCurrentTheme()
+            );
+
+            return;
+          }
+
+          fallbackToggleTheme(
+            button
+          );
+        }
+      );
 
       button.dataset
         .themeConnected = "true";
     }
+
+    updateThemeButton(
+      button
+    );
+
+    return true;
   }
 
   /**
-   * Pregătește componenta după injectare.
-   *
-   * @param {Element} container
-   * @param {boolean} fallback
+   * Dacă ThemeManager se inițializează imediat după antet,
+   * reconectarea este repetată fără a dubla evenimentul click.
    */
-  function prepareComponent(
+  function scheduleThemeReconnect(
+    container
+  ) {
+    connectThemeButton(
+      container
+    );
+
+    window.setTimeout(
+      () => {
+        connectThemeButton(
+          container
+        );
+      },
+      0
+    );
+
+    window.setTimeout(
+      () => {
+        connectThemeButton(
+          container
+        );
+      },
+      250
+    );
+  }
+
+  /*
+   * ThemeManager emite acest eveniment după schimbarea temei.
+   * Actualizăm din nou pictograma și eticheta accesibilă.
+   */
+  document.addEventListener(
+    "themeChanged",
+    (event) => {
+      const button =
+        document.querySelector(
+          ".theme-toggle"
+        );
+
+      updateThemeButton(
+        button,
+        event.detail?.theme ||
+          getCurrentTheme()
+      );
+    }
+  );
+
+  document.addEventListener(
+    "fizica:theme-change",
+    (event) => {
+      const button =
+        document.querySelector(
+          ".theme-toggle"
+        );
+
+      updateThemeButton(
+        button,
+        event.detail?.theme ||
+          getCurrentTheme()
+      );
+    }
+  );
+
+  /* =======================================================
+     PREGĂTIREA COMPONENTEI
+     ======================================================= */
+
+  function prepareHeader(
     container,
     fallback = false
   ) {
-    ensureMainTarget();
+    ensureMainContentId();
     resolveRoutes(container);
-    markCurrentPage(container);
-    connectMobileMenu(container);
-    reconnectTheme(container);
+    scheduleThemeReconnect(
+      container
+    );
 
     container.dataset
       .headerLoaded = "true";
 
     const header =
       container.querySelector(
-        "[data-site-header-component], .site-header"
+        ".site-header"
       );
 
     document.dispatchEvent(
@@ -491,25 +588,12 @@ function ensureLayoutStyles() {
             header,
             fallback,
             source:
-              getComponentUrl()
+              getHeaderUrl()
           }
         }
       )
     );
 
-    emitContentUpdated(
-      container
-    );
-  }
-
-  /**
-   * Anunță aplicația că DOM-ul a fost actualizat.
-   *
-   * @param {Element} container
-   */
-  function emitContentUpdated(
-    container
-  ) {
     document.dispatchEvent(
       new CustomEvent(
         "fizica:content-updated",
@@ -525,145 +609,166 @@ function ensureLayoutStyles() {
     );
   }
 
-  /**
-   * Fallback minimal când fetch nu este disponibil.
-   *
-   * Nu reproduce întregul meniu, pentru ca header.html să rămână
-   * singura sursă a navigării principale.
-   *
-   * @param {Element} container
-   */
-  function createFallback(container) {
+  /* =======================================================
+     HEADER DE REZERVĂ
+     ======================================================= */
+
+  function createFallbackHeader(
+    container
+  ) {
     container.innerHTML = `
       <header
-        class="site-header"
+        class="site-header site-header--identity"
         data-site-header-component>
-        <div class="container header-inner">
-          <a
-            class="site-logo"
-            data-site-route="home"
-            href="${resolveSiteUrl(
-              fallbackRoutes.home
-            )}">
-            <span aria-hidden="true">
-              ⚛️
-            </span>
-            <span class="site-brand">
+
+        <div
+          class="container site-header__identity">
+
+          <div class="site-header__text">
+            <p class="site-title">
               Fizica Galaction
-            </span>
-          </a>
+            </p>
+
+            <p class="site-teacher">
+              Prof. Dănuț Andronie
+            </p>
+
+            <p class="site-motto">
+              „Fizica nu este dominată de formule,
+              ci de logică.”
+            </p>
+          </div>
 
           <button
             type="button"
             class="theme-toggle"
-            aria-label="Schimbă tema"
-            title="Schimbă tema">
-            <span aria-hidden="true">
-              ◐
-            </span>
+            aria-label="Activează tema întunecată"
+            title="Activează tema întunecată">
+            🌙
           </button>
         </div>
       </header>
     `;
 
-    prepareComponent(
+    prepareHeader(
       container,
       true
     );
   }
 
-  /**
-   * Încarcă headerul.
-   *
-   * @param {{force?: boolean}} options
-   * @returns {Promise<Element | null>}
-   */
+  /* =======================================================
+     ÎNCĂRCAREA HEADERULUI
+     ======================================================= */
+
   async function loadHeader(
     options = {}
   ) {
     ensureLayoutStyles();
-    
+
     const container =
       document.querySelector(
         CONTAINER_SELECTOR
       );
 
     if (!container) {
+      console.warn(
+        `[${APP_NAME}] Nu există #header-container în pagină.`
+      );
+
       return null;
     }
 
+    /*
+     * Nu încărca din nou componenta dacă este deja prezentă.
+     */
     if (
       container.dataset
         .headerLoaded === "true" &&
       !options.force
     ) {
-      return container;
-    }
-
-    if (
-      loadPromise &&
-      !options.force
-    ) {
-      return loadPromise;
-    }
-
-    loadPromise = (async () => {
-      container.setAttribute(
-        "aria-busy",
-        "true"
+      scheduleThemeReconnect(
+        container
       );
 
-      try {
-        const response = await fetch(
-          getComponentUrl(),
-          {
-            cache: "no-cache",
-            credentials:
-              "same-origin"
-          }
+      return container;
+    }
+
+    /*
+     * Evită două cereri fetch simultane.
+     */
+    if (
+      loadingPromise &&
+      !options.force
+    ) {
+      return loadingPromise;
+    }
+
+    loadingPromise =
+      (async () => {
+        container.setAttribute(
+          "aria-busy",
+          "true"
         );
 
-        if (!response.ok) {
-          throw new Error(
-            `Headerul nu a putut fi încărcat (${response.status}).`
+        try {
+          const response =
+            await fetch(
+              getHeaderUrl(),
+              {
+                cache: "no-cache",
+                credentials:
+                  "same-origin"
+              }
+            );
+
+          if (!response.ok) {
+            throw new Error(
+              `Headerul nu a putut fi încărcat. Cod HTTP: ${response.status}.`
+            );
+          }
+
+          const html =
+            await response.text();
+
+          container.innerHTML =
+            html;
+
+          prepareHeader(
+            container,
+            false
           );
+
+          console.info(
+            `[${APP_NAME}] Header încărcat.`
+          );
+        } catch (error) {
+          console.error(
+            `[${APP_NAME}] Eroare la încărcarea headerului:`,
+            error
+          );
+
+          createFallbackHeader(
+            container
+          );
+        } finally {
+          container.removeAttribute(
+            "aria-busy"
+          );
+
+          loadingPromise = null;
         }
 
-        container.innerHTML =
-          await response.text();
+        return container;
+      })();
 
-        prepareComponent(
-          container,
-          false
-        );
-      } catch (error) {
-        console.warn(
-          `[${APP_NAME}]`,
-          error
-        );
-
-        createFallback(
-          container
-        );
-      } finally {
-        container.removeAttribute(
-          "aria-busy"
-        );
-        loadPromise = null;
-      }
-
-      return container;
-    })();
-
-    return loadPromise;
+    return loadingPromise;
   }
 
   /**
-   * Reaplică rutele și stările după o schimbare de pagină.
-   *
-   * @returns {Element | null}
+   * Reaplică legăturile și butonul temei fără să
+   * descarce din nou componenta.
    */
-  function refresh() {
+  function refreshHeader() {
     const container =
       document.querySelector(
         CONTAINER_SELECTOR
@@ -674,21 +779,39 @@ function ensureLayoutStyles() {
     }
 
     resolveRoutes(container);
-    markCurrentPage(container);
-    reconnectTheme(container);
+    scheduleThemeReconnect(
+      container
+    );
 
     return container;
   }
 
+  /* =======================================================
+     API PUBLIC
+     ======================================================= */
+
   const api = {
-    load: loadHeader,
     init: loadHeader,
-    refresh,
-    getComponentUrl
+    load: loadHeader,
+    refresh: refreshHeader,
+    reconnectThemeButton:
+      connectThemeButton,
+    getComponentUrl:
+      getHeaderUrl,
+    getSiteRoot
   };
 
   app.headerLoader = api;
-  window.loadHeader = loadHeader;
+
+  window.loadHeader =
+    loadHeader;
+
+  window.refreshHeader =
+    refreshHeader;
+
+  /* =======================================================
+     PORNIRE AUTOMATĂ
+     ======================================================= */
 
   if (
     document.readyState ===
@@ -696,8 +819,12 @@ function ensureLayoutStyles() {
   ) {
     document.addEventListener(
       "DOMContentLoaded",
-      () => loadHeader(),
-      { once: true }
+      () => {
+        loadHeader();
+      },
+      {
+        once: true
+      }
     );
   } else {
     loadHeader();

@@ -1,1 +1,2808 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
 
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+  <meta
+    name="description"
+    content="Laborator interactiv de fizică pentru clasa a VI-a despre inerția corpurilor, masa ca măsură a inerției și siguranța în mijloacele de transport.">
+
+  <title>Inerția corpurilor | Laborator de fizică</title>
+
+  <!-- Stilurile componentelor comune -->
+  <link
+    rel="stylesheet"
+    href="../../assets/css/layout.css">
+
+  <!-- MathJax pentru formule și comparații numerice -->
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [["\\(", "\\)"]],
+        displayMath: [["\\[", "\\]"]]
+      },
+      options: {
+        skipHtmlTags: [
+          "script",
+          "noscript",
+          "style",
+          "textarea",
+          "pre",
+          "code"
+        ]
+      }
+    };
+  </script>
+
+  <script
+    defer
+    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+
+  <style>
+    :root {
+      --bg: #06111f;
+      --surface: #0d1b2e;
+      --surface-2: #122842;
+      --surface-soft: #17314f;
+      --border: #315777;
+      --text: #f4f8ff;
+      --muted: #c6d8eb;
+      --primary: #67e8f9;
+      --primary-strong: #22d3ee;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --danger: #fb7185;
+      --focus: #fde047;
+      --shadow: 0 22px 54px rgba(0, 0, 0, 0.34);
+      --radius: 24px;
+    }
+
+    body.light,
+    body[data-theme="light"] {
+      --bg: #eef6ff;
+      --surface: #ffffff;
+      --surface-2: #f1f7fd;
+      --surface-soft: #e5f1fb;
+      --border: #98b7d1;
+      --text: #10243a;
+      --muted: #334e68;
+      --primary: #0369a1;
+      --primary-strong: #0284c7;
+      --success: #047857;
+      --warning: #a16207;
+      --danger: #be123c;
+      --focus: #a16207;
+      --shadow: 0 18px 44px rgba(15, 35, 55, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      font-size: 18px;
+      scroll-behavior: smooth;
+    }
+
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+
+      color: var(--text);
+
+      font-family:
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+      font-size: clamp(
+        1rem,
+        0.94rem + 0.34vw,
+        1.22rem
+      );
+
+      line-height: 1.68;
+
+      background:
+        radial-gradient(
+          circle at 8% 0%,
+          rgba(34, 211, 238, 0.13),
+          transparent 24%
+        ),
+        radial-gradient(
+          circle at 92% 4%,
+          rgba(52, 211, 153, 0.12),
+          transparent 24%
+        ),
+        var(--bg);
+    }
+
+    a {
+      color: inherit;
+    }
+
+    button,
+    input {
+      font: inherit;
+    }
+
+    .lab-shell {
+      width: min(
+        1120px,
+        calc(100% - 24px)
+      );
+
+      margin:
+        clamp(10px, 2vw, 28px)
+        auto;
+
+      padding-bottom: 28px;
+    }
+
+    .lab-card {
+      overflow: hidden;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        var(--radius);
+
+      background:
+        var(--surface);
+
+      box-shadow:
+        var(--shadow);
+    }
+
+    .lab-topbar {
+      position: sticky;
+      top: 0;
+      z-index: 30;
+
+      padding:
+        clamp(15px, 2.2vw, 23px)
+        clamp(18px, 3vw, 34px);
+
+      border-bottom:
+        1px solid
+        var(--border);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--surface) 92%,
+          transparent
+        );
+
+      backdrop-filter:
+        blur(10px);
+    }
+
+    .lab-kicker {
+      color:
+        var(--primary);
+
+      font-size:
+        clamp(
+          0.88rem,
+          0.84rem + 0.18vw,
+          1rem
+        );
+
+      font-weight: 850;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .lab-title {
+      margin:
+        6px
+        0
+        12px;
+
+      color:
+        var(--text);
+
+      font-size:
+        clamp(
+          1.4rem,
+          1.08rem + 1vw,
+          2rem
+        );
+
+      font-weight: 900;
+      line-height: 1.2;
+    }
+
+    .progress-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .progress-track {
+      flex: 1;
+
+      height: 12px;
+      overflow: hidden;
+
+      border-radius: 999px;
+
+      background:
+        color-mix(
+          in srgb,
+          var(--text) 12%,
+          transparent
+        );
+    }
+
+    .progress-fill {
+      display: block;
+
+      width: 0;
+      height: 100%;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          var(--success)
+        );
+
+      transition:
+        width
+        180ms
+        ease;
+    }
+
+    .page-counter {
+      color:
+        var(--muted);
+
+      font-size: 1rem;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .lab-pages {
+      min-height:
+        calc(
+          100svh - 160px
+        );
+    }
+
+    .lab-page {
+      display: none;
+
+      padding:
+        clamp(24px, 4vw, 46px)
+        clamp(18px, 4.5vw, 54px)
+        clamp(28px, 4vw, 48px);
+
+      animation:
+        page-in
+        180ms
+        ease;
+    }
+
+    .lab-page.active {
+      display: block;
+    }
+
+    @keyframes page-in {
+      from {
+        opacity: 0.3;
+        transform:
+          translateY(7px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /*
+     * Headerul apare numai în pagina 1,
+     * iar footerul numai în pagina 7.
+     */
+    #header-container,
+    #footer-container {
+      width: 100%;
+    }
+
+    #header-container {
+      margin:
+        calc(
+          -1 *
+          clamp(
+            24px,
+            4vw,
+            46px
+          )
+        )
+        calc(
+          -1 *
+          clamp(
+            18px,
+            4.5vw,
+            54px
+          )
+        )
+        clamp(
+          28px,
+          4vw,
+          42px
+        );
+
+      width:
+        calc(
+          100% +
+          2 *
+          clamp(
+            18px,
+            4.5vw,
+            54px
+          )
+        );
+    }
+
+    #footer-container {
+      margin:
+        clamp(
+          30px,
+          4vw,
+          48px
+        )
+        calc(
+          -1 *
+          clamp(
+            18px,
+            4.5vw,
+            54px
+          )
+        )
+        calc(
+          -1 *
+          clamp(
+            28px,
+            4vw,
+            48px
+          )
+        );
+
+      width:
+        calc(
+          100% +
+          2 *
+          clamp(
+            18px,
+            4.5vw,
+            54px
+          )
+        );
+    }
+
+    h2 {
+      margin:
+        0
+        0
+        14px;
+
+      color:
+        var(--text);
+
+      font-size:
+        clamp(
+          1.75rem,
+          1.3rem + 1.35vw,
+          2.8rem
+        );
+
+      line-height: 1.18;
+    }
+
+    h3 {
+      margin:
+        0
+        0
+        10px;
+
+      color:
+        var(--text);
+
+      font-size:
+        clamp(
+          1.18rem,
+          1.05rem + 0.44vw,
+          1.55rem
+        );
+
+      line-height: 1.3;
+    }
+
+    p {
+      margin:
+        0
+        0
+        16px;
+    }
+
+    .lead {
+      color:
+        var(--text);
+
+      font-size:
+        clamp(
+          1.12rem,
+          1rem + 0.45vw,
+          1.42rem
+        );
+
+      line-height: 1.65;
+    }
+
+    .muted {
+      color:
+        var(--muted);
+    }
+
+    .highlight {
+      color:
+        var(--success);
+
+      font-weight: 850;
+    }
+
+    .page-badge {
+      display:
+        inline-block;
+
+      margin-bottom:
+        14px;
+
+      padding:
+        8px
+        13px;
+
+      border-radius:
+        999px;
+
+      color:
+        var(--primary);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--primary) 13%,
+          transparent
+        );
+
+      font-size: 1rem;
+      font-weight: 850;
+    }
+
+    .large-icon {
+      margin-bottom:
+        14px;
+
+      font-size:
+        clamp(
+          2.8rem,
+          2.2rem + 1.7vw,
+          4.2rem
+        );
+
+      line-height: 1;
+    }
+
+    .grid {
+      display: grid;
+      gap:
+        clamp(
+          14px,
+          2vw,
+          22px
+        );
+    }
+
+    .grid.two {
+      grid-template-columns:
+        1fr;
+    }
+
+    .panel,
+    .quick-check,
+    details {
+      padding:
+        clamp(
+          17px,
+          2.4vw,
+          25px
+        );
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        20px;
+
+      background:
+        var(--surface-2);
+    }
+
+    .remember {
+      margin-top:
+        18px;
+
+      padding:
+        clamp(
+          16px,
+          2.2vw,
+          22px
+        );
+
+      border-left:
+        6px solid
+        var(--success);
+
+      border-radius:
+        15px;
+
+      color:
+        var(--text);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--success) 12%,
+          var(--surface)
+        );
+    }
+
+    .warning {
+      margin-top:
+        18px;
+
+      padding:
+        clamp(
+          16px,
+          2.2vw,
+          22px
+        );
+
+      border-left:
+        6px solid
+        var(--warning);
+
+      border-radius:
+        15px;
+
+      color:
+        var(--text);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--warning) 12%,
+          var(--surface)
+        );
+    }
+
+    .formula-box {
+      margin:
+        14px
+        0;
+
+      padding:
+        16px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        16px;
+
+      color:
+        var(--warning);
+
+      background:
+        var(--surface-soft);
+
+      font-size:
+        clamp(
+          1.25rem,
+          1.05rem + 0.65vw,
+          1.85rem
+        );
+
+      font-weight: 850;
+
+      text-align: center;
+    }
+
+    ul,
+    ol {
+      margin: 0;
+      padding-left: 26px;
+    }
+
+    li {
+      margin-bottom:
+        12px;
+
+      line-height: 1.62;
+    }
+
+    .experiment-table {
+      width: 100%;
+      border-collapse:
+        collapse;
+
+      margin-top: 15px;
+    }
+
+    .experiment-table th,
+    .experiment-table td {
+      padding:
+        12px
+        13px;
+
+      border:
+        1px solid
+        var(--border);
+
+      text-align: left;
+      vertical-align: top;
+    }
+
+    .experiment-table th {
+      color:
+        var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    .experiment-visual {
+      position: relative;
+
+      display: grid;
+      place-items: center;
+
+      min-height: 250px;
+      overflow: hidden;
+
+      margin-top: 16px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        20px;
+
+      background:
+        linear-gradient(
+          180deg,
+          var(--surface-soft),
+          var(--surface-2)
+        );
+    }
+
+    .glass {
+      position: absolute;
+      bottom: 30px;
+
+      width: 130px;
+      height: 132px;
+
+      border:
+        7px solid
+        color-mix(
+          in srgb,
+          var(--primary) 72%,
+          white
+        );
+
+      border-top:
+        0;
+
+      border-radius:
+        0
+        0
+        25px
+        25px;
+
+      opacity: 0.88;
+    }
+
+    .card-strip {
+      position: absolute;
+      bottom: 162px;
+
+      width: 210px;
+      height: 17px;
+
+      border-radius: 8px;
+
+      background:
+        var(--warning);
+
+      transition:
+        transform
+        350ms
+        ease;
+    }
+
+    .coin {
+      position: absolute;
+      bottom: 179px;
+
+      width: 44px;
+      height: 44px;
+
+      border:
+        4px solid
+        #f6c85f;
+
+      border-radius: 50%;
+
+      background:
+        #d39b22;
+
+      box-shadow:
+        inset
+        0
+        0
+        0
+        4px
+        #edbd4d;
+
+      transition:
+        transform
+        450ms
+        ease
+        120ms;
+    }
+
+    .experiment-visual.run
+    .card-strip {
+      transform:
+        translateX(260px);
+    }
+
+    .experiment-visual.run
+    .coin {
+      transform:
+        translateY(112px);
+    }
+
+    .simulator {
+      padding:
+        clamp(
+          15px,
+          2vw,
+          22px
+        );
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        22px;
+
+      background:
+        var(--surface-2);
+    }
+
+    .sim-scene {
+      position: relative;
+
+      min-height: 310px;
+      overflow: hidden;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        18px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #85c8f8 0%,
+          #c8e9ff 52%,
+          #7c8997 53%,
+          #374151 100%
+        );
+    }
+
+    .road-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 43px;
+
+      height: 7px;
+
+      background:
+        repeating-linear-gradient(
+          90deg,
+          #f8fafc 0 48px,
+          transparent 48px 82px
+        );
+
+      opacity: 0.9;
+    }
+
+    .bus {
+      position: absolute;
+      left: 7%;
+      bottom: 65px;
+
+      width: min(
+        600px,
+        84%
+      );
+
+      height: 164px;
+
+      border:
+        5px solid
+        #10243a;
+
+      border-radius:
+        27px
+        27px
+        17px
+        17px;
+
+      background:
+        linear-gradient(
+          180deg,
+          #facc15,
+          #eab308
+        );
+    }
+
+    .bus::before,
+    .bus::after {
+      content: "";
+
+      position: absolute;
+      bottom: -31px;
+
+      width: 52px;
+      height: 52px;
+
+      border:
+        8px solid
+        #111827;
+
+      border-radius: 50%;
+
+      background:
+        #64748b;
+    }
+
+    .bus::before {
+      left: 63px;
+    }
+
+    .bus::after {
+      right: 63px;
+    }
+
+    .window-row {
+      position: absolute;
+      left: 35px;
+      right: 35px;
+      top: 24px;
+
+      display: grid;
+      grid-template-columns:
+        repeat(
+          4,
+          1fr
+        );
+
+      gap: 15px;
+    }
+
+    .window {
+      height: 58px;
+
+      border:
+        4px solid
+        #10243a;
+
+      border-radius: 11px;
+
+      background:
+        #bde8ff;
+    }
+
+    .passenger {
+      position: absolute;
+      left: 48%;
+      bottom: 28px;
+
+      width: 54px;
+      height: 85px;
+
+      transform:
+        translateX(-50%);
+
+      transition:
+        transform
+        500ms
+        cubic-bezier(
+          0.2,
+          0.8,
+          0.2,
+          1
+        );
+    }
+
+    .passenger::before {
+      content: "";
+
+      position: absolute;
+      left: 14px;
+      top: 0;
+
+      width: 28px;
+      height: 28px;
+
+      border-radius: 50%;
+
+      background:
+        #f2bb8f;
+    }
+
+    .passenger::after {
+      content: "";
+
+      position: absolute;
+      left: 8px;
+      top: 30px;
+
+      width: 40px;
+      height: 55px;
+
+      border-radius:
+        12px
+        12px
+        7px
+        7px;
+
+      background:
+        #2563eb;
+    }
+
+    .seatbelt {
+      position: absolute;
+      left: 6px;
+      top: 31px;
+      z-index: 2;
+
+      width: 50px;
+      height: 6px;
+
+      border-radius:
+        999px;
+
+      background:
+        #ef4444;
+
+      transform:
+        rotate(58deg);
+
+      opacity: 0;
+
+      transition:
+        opacity
+        140ms
+        ease;
+    }
+
+    .passenger.belted
+    .seatbelt {
+      opacity: 1;
+    }
+
+    .passenger.accelerate {
+      transform:
+        translateX(
+          calc(
+            -50% - 58px
+          )
+        )
+        rotate(-8deg);
+    }
+
+    .passenger.brake {
+      transform:
+        translateX(
+          calc(
+            -50% + 94px
+          )
+        )
+        rotate(14deg);
+    }
+
+    .passenger.brake.belted {
+      transform:
+        translateX(
+          calc(
+            -50% + 24px
+          )
+        )
+        rotate(4deg);
+    }
+
+    .sim-controls {
+      display: grid;
+      gap: 12px;
+
+      margin-top: 16px;
+    }
+
+    .switch-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      min-height: 54px;
+
+      padding:
+        12px
+        15px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        14px;
+
+      background:
+        var(--surface-soft);
+    }
+
+    .switch-row input {
+      width: 24px;
+      height: 24px;
+
+      accent-color:
+        var(--success);
+    }
+
+    .sim-message {
+      min-height: 88px;
+
+      margin-top: 16px;
+
+      padding:
+        16px;
+
+      border-left:
+        5px solid
+        var(--primary);
+
+      border-radius:
+        14px;
+
+      color:
+        var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    .quick-check {
+      margin-bottom: 16px;
+    }
+
+    .quick-check fieldset {
+      display: grid;
+      gap: 11px;
+
+      margin: 14px 0 0;
+      padding: 0;
+
+      border: 0;
+    }
+
+    .quick-check legend {
+      margin-bottom: 12px;
+      padding: 0;
+
+      color:
+        var(--text);
+
+      font-size: 1.08rem;
+      font-weight: 850;
+    }
+
+    .answer-option {
+      display: grid;
+      grid-template-columns:
+        auto
+        1fr;
+
+      align-items: start;
+      gap: 12px;
+
+      min-height: 54px;
+
+      padding:
+        13px
+        15px;
+
+      border:
+        1px solid
+        var(--border);
+
+      border-radius:
+        14px;
+
+      color:
+        var(--text);
+
+      background:
+        var(--surface-soft);
+
+      cursor: pointer;
+    }
+
+    .answer-option:hover {
+      border-color:
+        var(--primary);
+    }
+
+    .answer-option input {
+      width: 22px;
+      height: 22px;
+
+      margin-top: 2px;
+
+      accent-color:
+        var(--primary-strong);
+    }
+
+    .answer-option.correct {
+      border-color:
+        var(--success);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--success) 14%,
+          var(--surface)
+        );
+    }
+
+    .answer-option.incorrect {
+      border-color:
+        var(--danger);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--danger) 12%,
+          var(--surface)
+        );
+    }
+
+    .feedback {
+      min-height: 30px;
+
+      margin-top: 12px;
+
+      color:
+        var(--text);
+
+      font-weight: 800;
+    }
+
+    .score-box {
+      display: none;
+
+      margin-top: 18px;
+
+      padding: 18px;
+
+      border:
+        2px solid
+        var(--success);
+
+      border-radius:
+        17px;
+
+      color:
+        var(--text);
+
+      background:
+        color-mix(
+          in srgb,
+          var(--success) 11%,
+          var(--surface)
+        );
+
+      font-size: 1.1rem;
+      font-weight: 850;
+    }
+
+    .score-box.visible {
+      display: block;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      margin-top: 24px;
+    }
+
+    .button,
+    button {
+      appearance: none;
+
+      display:
+        inline-flex;
+
+      align-items:
+        center;
+
+      justify-content:
+        center;
+
+      min-height:
+        56px;
+
+      padding:
+        16px
+        22px;
+
+      border: 0;
+      border-radius:
+        15px;
+
+      font-size:
+        clamp(
+          1.04rem,
+          1rem + 0.18vw,
+          1.18rem
+        );
+
+      font-weight: 900;
+      text-align: center;
+      text-decoration: none;
+
+      cursor: pointer;
+
+      transition:
+        transform
+        120ms
+        ease,
+        filter
+        120ms
+        ease;
+    }
+
+    .button:hover,
+    button:hover {
+      filter:
+        brightness(1.05);
+    }
+
+    .button:active,
+    button:active {
+      transform:
+        scale(0.98);
+    }
+
+    .button:focus-visible,
+    button:focus-visible,
+    input:focus-visible,
+    summary:focus-visible {
+      outline:
+        4px solid
+        var(--focus);
+
+      outline-offset:
+        4px;
+    }
+
+    .button-primary {
+      width: 100%;
+
+      color: #062132;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          var(--success)
+        );
+    }
+
+    .button-secondary {
+      width: 100%;
+
+      border:
+        1px solid
+        var(--border);
+
+      color:
+        var(--text);
+
+      background:
+        var(--surface-soft);
+    }
+
+    .button-danger {
+      width: 100%;
+
+      color: #ffffff;
+
+      background:
+        linear-gradient(
+          90deg,
+          #e11d48,
+          #fb7185
+        );
+    }
+
+    .button-home {
+      width: 100%;
+
+      color: #062132;
+
+      background:
+        linear-gradient(
+          90deg,
+          var(--primary-strong),
+          #38bdf8
+        );
+    }
+
+    @media (min-width: 820px) {
+      .grid.two {
+        grid-template-columns:
+          repeat(
+            2,
+            minmax(
+              0,
+              1fr
+            )
+          );
+      }
+
+      .sim-controls {
+        grid-template-columns:
+          repeat(
+            3,
+            minmax(
+              0,
+              1fr
+            )
+          );
+      }
+
+      .controls
+      .button-secondary {
+        width: auto;
+        min-width: 170px;
+      }
+
+      .controls
+      .button-primary {
+        width: auto;
+        min-width: 240px;
+        margin-left: auto;
+      }
+
+      .controls.end {
+        justify-content:
+          center;
+      }
+
+      .controls.end
+      .button-home {
+        width: auto;
+        min-width: 360px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      html {
+        font-size: 17px;
+      }
+
+      .lab-shell {
+        width:
+          calc(
+            100% - 12px
+          );
+
+        margin:
+          6px
+          auto;
+      }
+
+      .lab-card {
+        border-radius:
+          19px;
+      }
+
+      .lab-page {
+        padding:
+          22px
+          14px
+          28px;
+      }
+
+      #header-container {
+        margin:
+          -22px
+          -14px
+          24px;
+
+        width:
+          calc(
+            100% + 28px
+          );
+      }
+
+      #footer-container {
+        margin:
+          28px
+          -14px
+          -28px;
+
+        width:
+          calc(
+            100% + 28px
+          );
+      }
+
+      .lab-topbar {
+        padding:
+          14px
+          15px;
+      }
+
+      .progress-row {
+        align-items:
+          flex-start;
+      }
+
+      .page-counter {
+        white-space:
+          normal;
+      }
+
+      .bus {
+        left: 4%;
+        width: 92%;
+        height: 150px;
+      }
+
+      .window-row {
+        left: 22px;
+        right: 22px;
+        gap: 8px;
+      }
+
+      .window {
+        height: 52px;
+      }
+    }
+
+    @media (
+      prefers-reduced-motion:
+      reduce
+    ) {
+      html {
+        scroll-behavior:
+          auto;
+      }
+
+      .lab-page,
+      .progress-fill,
+      .passenger,
+      .card-strip,
+      .coin,
+      .button,
+      button {
+        animation: none;
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body data-page-type="lab">
+  <div class="lab-shell">
+    <div class="lab-card">
+      <div class="lab-topbar">
+        <div class="lab-kicker">
+          Laborator de fizică • Clasa a VI-a
+        </div>
+
+        <div
+          class="lab-title"
+          id="topTitle">
+          Inerția corpurilor
+        </div>
+
+        <div class="progress-row">
+          <div
+            class="progress-track"
+            aria-hidden="true">
+            <span
+              class="progress-fill"
+              id="progressFill">
+            </span>
+          </div>
+
+          <div
+            class="page-counter"
+            id="pageCounter"
+            aria-live="polite">
+            Pagina 1 din 7
+          </div>
+        </div>
+      </div>
+
+      <main
+        id="main-content"
+        class="lab-pages">
+
+        <!-- PAGINA 1: headerul comun apare numai aici -->
+        <section
+          class="lab-page active"
+          data-title="Inerția corpurilor – introducere"
+          aria-hidden="false">
+
+          <div id="header-container"></div>
+
+          <div class="page-badge">
+            Pagina 1 • Observă
+          </div>
+
+          <div
+            class="large-icon"
+            aria-hidden="true">
+            🚌
+          </div>
+
+          <h2>
+            De ce ne aplecăm înainte când autobuzul frânează?
+          </h2>
+
+          <p class="lead">
+            Corpul tău se deplasează împreună cu autobuzul.
+            Când autobuzul se oprește brusc, corpul tău are
+            tendința să-și păstreze
+            <span class="highlight">
+              starea de mișcare
+            </span>.
+          </p>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Ce vei descoperi</h3>
+
+              <ul>
+                <li>
+                  ce este inerția;
+                </li>
+
+                <li>
+                  cum se manifestă la pornire și la oprire;
+                </li>
+
+                <li>
+                  de ce masa măsoară inerția;
+                </li>
+
+                <li>
+                  de ce centura de siguranță este importantă.
+                </li>
+              </ul>
+            </article>
+
+            <article class="panel">
+              <h3>Întrebarea laboratorului</h3>
+
+              <p>
+                Ce se întâmplă cu un corp atunci când încercăm
+                să-i schimbăm brusc starea de repaus sau de
+                mișcare?
+              </p>
+            </article>
+          </div>
+
+          <div class="warning">
+            În timpul experimentelor nu folosi pahare fragile.
+            Este recomandat un pahar din plastic transparent.
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="1">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 2 -->
+        <section
+          class="lab-page"
+          data-title="Ce este inerția?"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 2 • Reține
+          </div>
+
+          <h2>
+            Inerția este o proprietate a tuturor corpurilor
+          </h2>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Corp aflat în repaus</h3>
+
+              <p>
+                Un corp aflat în repaus tinde să rămână în
+                repaus atunci când nu este obligat din exterior
+                să-și schimbe starea.
+              </p>
+
+              <p>
+                Exemplu: moneda așezată pe carton tinde să-și
+                păstreze poziția când cartonul este tras brusc.
+              </p>
+            </article>
+
+            <article class="panel">
+              <h3>Corp aflat în mișcare</h3>
+
+              <p>
+                Un corp aflat în mișcare tinde să-și păstreze
+                mișcarea rectilinie și uniformă atunci când nu
+                este obligat din exterior să o schimbe.
+              </p>
+
+              <p>
+                Exemplu: la frânarea autobuzului, pasagerul tinde
+                să continue mișcarea înainte.
+              </p>
+            </article>
+          </div>
+
+          <div class="remember">
+            <strong>Reține:</strong>
+            inerția este proprietatea generală a corpurilor de
+            a-și păstra starea de repaus sau de mișcare rectilinie
+            și uniformă și de a se opune schimbării acestei stări.
+          </div>
+
+          <div class="warning">
+            Inerția <strong>nu este o forță</strong>. Este o
+            proprietate a corpului.
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="0">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="2">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 3 -->
+        <section
+          class="lab-page"
+          data-title="Masa și inerția"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 3 • Compară
+          </div>
+
+          <h2>
+            Masa măsoară inerția unui corp
+          </h2>
+
+          <p class="lead">
+            Un corp cu masă mai mare se opune mai mult
+            schimbării stării sale de mișcare.
+          </p>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Cutie goală</h3>
+
+              <p>
+                Este mai ușor de pus în mișcare și mai ușor de
+                oprit.
+              </p>
+
+              <p>
+                Exemplu de masă:
+                <strong>1 kg</strong>.
+              </p>
+            </article>
+
+            <article class="panel">
+              <h3>Cutie încărcată</h3>
+
+              <p>
+                Este mai greu de pus în mișcare și mai greu de
+                oprit.
+              </p>
+
+              <p>
+                Exemplu de masă:
+                <strong>4 kg</strong>.
+              </p>
+            </article>
+          </div>
+
+          <div class="formula-box">
+            \[
+              \frac{m_2}{m_1}
+              =
+              \frac{4\,\mathrm{kg}}{1\,\mathrm{kg}}
+              =
+              4
+            \]
+          </div>
+
+          <p>
+            În exemplul de mai sus, al doilea corp are masa de
+            patru ori mai mare. Prin urmare, are și inerția mai
+            mare.
+          </p>
+
+          <div class="remember">
+            <strong>Masa</strong> este o mărime fizică
+            fundamentală care măsoară inerția unui corp.
+            Unitatea de măsură în SI este kilogramul:
+            \(\left[m\right]_{SI}=\mathrm{kg}\).
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="1">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="3">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 4 -->
+        <section
+          class="lab-page"
+          data-title="Experimentul cu moneda"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 4 • Experimentează
+          </div>
+
+          <h2>
+            Experiment: moneda, cartonul și paharul
+          </h2>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Materiale</h3>
+
+              <ul>
+                <li>
+                  un pahar din plastic transparent;
+                </li>
+
+                <li>
+                  o bucată de carton neted;
+                </li>
+
+                <li>
+                  o monedă;
+                </li>
+
+                <li>
+                  o masă stabilă.
+                </li>
+              </ul>
+            </article>
+
+            <article class="panel">
+              <h3>Mod de lucru</h3>
+
+              <ol>
+                <li>
+                  Așază cartonul peste gura paharului.
+                </li>
+
+                <li>
+                  Pune moneda în centrul cartonului.
+                </li>
+
+                <li>
+                  Trage cartonul repede, pe direcție orizontală.
+                </li>
+
+                <li>
+                  Observă mișcarea monedei.
+                </li>
+              </ol>
+            </article>
+          </div>
+
+          <div
+            class="experiment-visual"
+            id="coinExperiment"
+            aria-label="Animație cu o monedă care cade într-un pahar după tragerea cartonului">
+
+            <div class="glass"></div>
+            <div class="card-strip"></div>
+            <div class="coin"></div>
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-primary"
+              id="runCoinExperiment">
+              Trage cartonul
+            </button>
+
+            <button
+              type="button"
+              class="button-secondary"
+              id="resetCoinExperiment">
+              Resetează experimentul
+            </button>
+          </div>
+
+          <table class="experiment-table">
+            <thead>
+              <tr>
+                <th>Observație</th>
+                <th>Explicație</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>
+                  Cartonul se deplasează lateral.
+                </td>
+
+                <td>
+                  Asupra cartonului acționează mâna.
+                </td>
+              </tr>
+
+              <tr>
+                <td>
+                  Moneda rămâne aproape de poziția inițială și
+                  cade în pahar.
+                </td>
+
+                <td>
+                  Din cauza inerției, moneda tinde să-și păstreze
+                  starea de repaus.
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="2">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="4">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 5 -->
+        <section
+          class="lab-page"
+          data-title="Simulatorul autobuzului"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 5 • Simulează
+          </div>
+
+          <h2>
+            Simulator: pasagerul din autobuz
+          </h2>
+
+          <p class="lead">
+            Pornește și frânează autobuzul. Activează centura
+            pentru a observa cum limitează deplasarea
+            pasagerului.
+          </p>
+
+          <div class="simulator">
+            <div
+              class="sim-scene"
+              aria-label="Autobuz cu pasager, folosit pentru simularea inerției">
+
+              <div class="road-line"></div>
+
+              <div class="bus">
+                <div class="window-row">
+                  <div class="window"></div>
+                  <div class="window"></div>
+                  <div class="window"></div>
+                  <div class="window"></div>
+                </div>
+
+                <div
+                  class="passenger"
+                  id="passenger">
+                  <span class="seatbelt"></span>
+                </div>
+              </div>
+            </div>
+
+            <label class="switch-row">
+              <input
+                type="checkbox"
+                id="seatbeltToggle">
+
+              <span>
+                Activează centura de siguranță
+              </span>
+            </label>
+
+            <div class="sim-controls">
+              <button
+                type="button"
+                class="button-primary"
+                id="accelerateBus">
+                Pornește autobuzul
+              </button>
+
+              <button
+                type="button"
+                class="button-danger"
+                id="brakeBus">
+                Frânează brusc
+              </button>
+
+              <button
+                type="button"
+                class="button-secondary"
+                id="resetBus">
+                Resetează
+              </button>
+            </div>
+
+            <div
+              class="sim-message"
+              id="simMessage"
+              role="status"
+              aria-live="polite">
+              Autobuzul este în repaus. Pasagerul este în repaus
+              împreună cu autobuzul.
+            </div>
+          </div>
+
+          <div class="remember">
+            Centura nu elimină inerția. Ea acționează asupra
+            corpului și limitează deplasarea lui înainte atunci
+            când vehiculul frânează.
+          </div>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="3">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="5">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 6 -->
+        <section
+          class="lab-page"
+          data-title="Verificare rapidă"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 6 • Verifică
+          </div>
+
+          <h2>
+            Verificare rapidă
+          </h2>
+
+          <p class="lead">
+            Alege câte un răspuns la fiecare întrebare.
+          </p>
+
+          <form id="quickCheckForm">
+            <section
+              class="quick-check"
+              data-question="q1"
+              data-correct="b">
+
+              <fieldset>
+                <legend>
+                  1. Ce este inerția?
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q1"
+                    value="a">
+
+                  <span>
+                    O forță care împinge toate corpurile înainte.
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q1"
+                    value="b">
+
+                  <span>
+                    Proprietatea corpurilor de a-și păstra starea
+                    de repaus sau de mișcare și de a se opune
+                    schimbării acesteia.
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q1"
+                    value="c">
+
+                  <span>
+                    O unitate de măsură pentru viteză.
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <section
+              class="quick-check"
+              data-question="q2"
+              data-correct="c">
+
+              <fieldset>
+                <legend>
+                  2. La frânarea bruscă a autobuzului, pasagerul
+                  tinde să se deplaseze:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q2"
+                    value="a">
+
+                  <span>
+                    înapoi;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q2"
+                    value="b">
+
+                  <span>
+                    în sus;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q2"
+                    value="c">
+
+                  <span>
+                    înainte, în sensul în care se deplasa
+                    autobuzul.
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <section
+              class="quick-check"
+              data-question="q3"
+              data-correct="a">
+
+              <fieldset>
+                <legend>
+                  3. Ce mărime fizică măsoară inerția?
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q3"
+                    value="a">
+
+                  <span>
+                    Masa.
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q3"
+                    value="b">
+
+                  <span>
+                    Temperatura.
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q3"
+                    value="c">
+
+                  <span>
+                    Lungimea.
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <section
+              class="quick-check"
+              data-question="q4"
+              data-correct="b">
+
+              <fieldset>
+                <legend>
+                  4. În experimentul cu moneda, aceasta cade în
+                  pahar deoarece:
+                </legend>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q4"
+                    value="a">
+
+                  <span>
+                    cartonul atrage moneda în jos;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q4"
+                    value="b">
+
+                  <span>
+                    moneda tinde să-și păstreze starea de repaus
+                    când cartonul este tras brusc;
+                  </span>
+                </label>
+
+                <label class="answer-option">
+                  <input
+                    type="radio"
+                    name="q4"
+                    value="c">
+
+                  <span>
+                    moneda nu are masă.
+                  </span>
+                </label>
+              </fieldset>
+
+              <div
+                class="feedback"
+                aria-live="polite">
+              </div>
+            </section>
+
+            <button
+              type="submit"
+              class="button-primary">
+              Verifică răspunsurile
+            </button>
+
+            <div
+              class="score-box"
+              id="scoreBox"
+              role="status"
+              aria-live="polite">
+            </div>
+          </form>
+
+          <div class="controls">
+            <button
+              type="button"
+              class="button-secondary"
+              data-go-page="4">
+              Înapoi
+            </button>
+
+            <button
+              type="button"
+              class="button-primary"
+              data-go-page="6">
+              Mergi mai departe
+            </button>
+          </div>
+        </section>
+
+        <!-- PAGINA 7: footerul comun apare numai aici -->
+        <section
+          class="lab-page"
+          data-title="Concluzii"
+          aria-hidden="true">
+
+          <div class="page-badge">
+            Pagina 7 • Concluzie
+          </div>
+
+          <h2>
+            Ce ai descoperit?
+          </h2>
+
+          <div class="grid two">
+            <article class="panel">
+              <h3>Inerția</h3>
+
+              <p>
+                Toate corpurile tind să-și păstreze starea de
+                repaus sau de mișcare rectilinie și uniformă.
+              </p>
+            </article>
+
+            <article class="panel">
+              <h3>Masa</h3>
+
+              <p>
+                Masa măsoară inerția. Un corp cu masă mai mare
+                se opune mai mult schimbării stării sale.
+              </p>
+            </article>
+
+            <article class="panel">
+              <h3>Experimentul</h3>
+
+              <p>
+                Moneda cade în pahar deoarece, la tragerea
+                bruscă a cartonului, tinde să-și păstreze
+                starea de repaus.
+              </p>
+            </article>
+
+            <article class="panel">
+              <h3>Siguranța</h3>
+
+              <p>
+                Centura de siguranță limitează deplasarea
+                corpului înainte la frânarea vehiculului.
+              </p>
+            </article>
+          </div>
+
+          <div class="remember">
+            <strong>Ideea finală:</strong>
+            inerția explică numeroase situații din viața
+            cotidiană: pornirea și frânarea vehiculelor,
+            scuturarea obiectelor, mișcarea bagajelor și
+            necesitatea centurii de siguranță.
+          </div>
+
+          <div class="controls end">
+            <a
+              class="button button-home"
+              href="../index.html">
+              Înapoi la laborator
+            </a>
+
+            <a
+              class="button button-secondary"
+              href="../../index.html">
+              Pagina principală
+            </a>
+          </div>
+
+          <div id="footer-container"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    "use strict";
+
+    const pages = Array.from(
+      document.querySelectorAll(
+        ".lab-page"
+      )
+    );
+
+    const progressFill =
+      document.getElementById(
+        "progressFill"
+      );
+
+    const pageCounter =
+      document.getElementById(
+        "pageCounter"
+      );
+
+    const topTitle =
+      document.getElementById(
+        "topTitle"
+      );
+
+    function typesetMath(root) {
+      window.MathJax
+        ?.typesetPromise
+        ?.([root]);
+    }
+
+    function goToPage(index) {
+      const target =
+        Math.min(
+          Math.max(
+            Number(index) || 0,
+            0
+          ),
+          pages.length - 1
+        );
+
+      pages.forEach(
+        (page, pageIndex) => {
+          const active =
+            pageIndex === target;
+
+          page.classList.toggle(
+            "active",
+            active
+          );
+
+          page.setAttribute(
+            "aria-hidden",
+            String(!active)
+          );
+        }
+      );
+
+      const current =
+        pages[target];
+
+      topTitle.textContent =
+        current.dataset.title ||
+        "Inerția corpurilor";
+
+      pageCounter.textContent =
+        `Pagina ${target + 1} din ${pages.length}`;
+
+      progressFill.style.width =
+        `${((target + 1) / pages.length) * 100}%`;
+
+      history.replaceState(
+        null,
+        "",
+        `#pagina-${target + 1}`
+      );
+
+      window.scrollTo({
+        top: 0,
+        behavior:
+          window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+          ).matches
+            ? "auto"
+            : "smooth"
+      });
+
+      typesetMath(current);
+    }
+
+    document.addEventListener(
+      "click",
+      (event) => {
+        const navigationButton =
+          event.target.closest(
+            "[data-go-page]"
+          );
+
+        if (!navigationButton) {
+          return;
+        }
+
+        goToPage(
+          navigationButton.dataset
+            .goPage
+        );
+      }
+    );
+
+    /*
+     * Experimentul monedă–carton–pahar.
+     */
+    const coinExperiment =
+      document.getElementById(
+        "coinExperiment"
+      );
+
+    document
+      .getElementById(
+        "runCoinExperiment"
+      )
+      ?.addEventListener(
+        "click",
+        () => {
+          coinExperiment
+            ?.classList
+            .remove("run");
+
+          requestAnimationFrame(
+            () => {
+              coinExperiment
+                ?.classList
+                .add("run");
+            }
+          );
+        }
+      );
+
+    document
+      .getElementById(
+        "resetCoinExperiment"
+      )
+      ?.addEventListener(
+        "click",
+        () => {
+          coinExperiment
+            ?.classList
+            .remove("run");
+        }
+      );
+
+    /*
+     * Simulatorul autobuzului.
+     */
+    const passenger =
+      document.getElementById(
+        "passenger"
+      );
+
+    const seatbeltToggle =
+      document.getElementById(
+        "seatbeltToggle"
+      );
+
+    const simMessage =
+      document.getElementById(
+        "simMessage"
+      );
+
+    function resetPassenger() {
+      passenger?.classList.remove(
+        "accelerate",
+        "brake"
+      );
+
+      simMessage.textContent =
+        "Autobuzul este în repaus. Pasagerul este în repaus împreună cu autobuzul.";
+    }
+
+    seatbeltToggle
+      ?.addEventListener(
+        "change",
+        () => {
+          passenger?.classList.toggle(
+            "belted",
+            seatbeltToggle.checked
+          );
+
+          simMessage.textContent =
+            seatbeltToggle.checked
+              ? "Centura este activă. Ea va limita deplasarea pasagerului la frânare."
+              : "Centura este dezactivată. La frânare, pasagerul se poate deplasa mult înainte.";
+        }
+      );
+
+    document
+      .getElementById(
+        "accelerateBus"
+      )
+      ?.addEventListener(
+        "click",
+        () => {
+          passenger?.classList.remove(
+            "brake"
+          );
+
+          passenger?.classList.add(
+            "accelerate"
+          );
+
+          simMessage.textContent =
+            "Autobuzul pornește înainte. Din cauza inerției, corpul pasagerului tinde să rămână în repaus și se înclină înapoi față de autobuz.";
+        }
+      );
+
+    document
+      .getElementById(
+        "brakeBus"
+      )
+      ?.addEventListener(
+        "click",
+        () => {
+          passenger?.classList.remove(
+            "accelerate"
+          );
+
+          passenger?.classList.add(
+            "brake"
+          );
+
+          simMessage.textContent =
+            seatbeltToggle?.checked
+              ? "Autobuzul frânează. Pasagerul tinde să continue mișcarea înainte, dar centura îi limitează deplasarea."
+              : "Autobuzul frânează. Pasagerul tinde să continue mișcarea înainte și se deplasează mult față de autobuz.";
+        }
+      );
+
+    document
+      .getElementById(
+        "resetBus"
+      )
+      ?.addEventListener(
+        "click",
+        resetPassenger
+      );
+
+    /*
+     * Verificarea rapidă.
+     */
+    const quickCheckForm =
+      document.getElementById(
+        "quickCheckForm"
+      );
+
+    quickCheckForm
+      ?.addEventListener(
+        "submit",
+        (event) => {
+          event.preventDefault();
+
+          const questions =
+            Array.from(
+              quickCheckForm
+                .querySelectorAll(
+                  "[data-question]"
+                )
+            );
+
+          let correctAnswers = 0;
+          let answered = 0;
+
+          questions.forEach(
+            (question) => {
+              const selected =
+                question.querySelector(
+                  "input:checked"
+                );
+
+              const feedback =
+                question.querySelector(
+                  ".feedback"
+                );
+
+              question
+                .querySelectorAll(
+                  ".answer-option"
+                )
+                .forEach(
+                  (option) => {
+                    option.classList.remove(
+                      "correct",
+                      "incorrect"
+                    );
+                  }
+                );
+
+              if (!selected) {
+                feedback.textContent =
+                  "Alege un răspuns.";
+
+                return;
+              }
+
+              answered += 1;
+
+              const correct =
+                selected.value ===
+                question.dataset.correct;
+
+              const selectedLabel =
+                selected.closest(
+                  ".answer-option"
+                );
+
+              selectedLabel
+                ?.classList
+                .add(
+                  correct
+                    ? "correct"
+                    : "incorrect"
+                );
+
+              if (correct) {
+                correctAnswers += 1;
+                feedback.textContent =
+                  "✓ Corect.";
+              } else {
+                feedback.textContent =
+                  "✗ Răspuns incorect. Recitește explicația și încearcă din nou.";
+              }
+            }
+          );
+
+          const scoreBox =
+            document.getElementById(
+              "scoreBox"
+            );
+
+          scoreBox.classList.add(
+            "visible"
+          );
+
+          if (
+            answered <
+            questions.length
+          ) {
+            scoreBox.textContent =
+              `Ai răspuns la ${answered} din ${questions.length} întrebări. Completează toate răspunsurile.`;
+
+            return;
+          }
+
+          scoreBox.textContent =
+            correctAnswers ===
+            questions.length
+              ? `Excelent! Ai ${correctAnswers} răspunsuri corecte din ${questions.length}.`
+              : `Ai ${correctAnswers} răspunsuri corecte din ${questions.length}. Poți corecta răspunsurile și verifica din nou.`;
+        }
+      );
+
+    /*
+     * Deschide pagina indicată în adresă.
+     */
+    const hashMatch =
+      window.location.hash.match(
+        /^#pagina-(\d+)$/
+      );
+
+    goToPage(
+      hashMatch
+        ? Number(hashMatch[1]) - 1
+        : 0
+    );
+  </script>
+
+  <!--
+    Loader-ele sunt încărcate o singură dată.
+    Containerul headerului există numai în pagina 1.
+    Containerul footerului există numai în pagina 7.
+  -->
+  <script
+    defer
+    src="../../assets/js/config.js">
+  </script>
+
+  <script
+    defer
+    src="../../assets/js/theme-toggle.js">
+  </script>
+
+  <script
+    defer
+    src="../../assets/js/load-header.js">
+  </script>
+
+  <script
+    defer
+    src="../../assets/js/load-footer.js">
+  </script>
+</body>
+</html>

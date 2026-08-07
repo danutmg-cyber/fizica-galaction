@@ -2,22 +2,11 @@
 <html lang="ro">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Laborator interactiv de fizică pentru clasa a VII-a: conservarea energiei mecanice, aruncare verticală, simulare pe plan înclinat, măsurători, grafic și verificare rapidă.">
+  <title>Conservarea energiei mecanice | Laborator de fizică</title>
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0">
-
-  <meta
-    name="description"
-    content="Laborator interactiv de fizică pentru clasa a VII-a despre conservarea energiei mecanice și transformarea energiei potențiale gravitaționale în energie cinetică pe un jgheab sau plan înclinat.">
-
-  <title>
-    Conservarea energiei mecanice | Laborator de fizică
-  </title>
-
-  <link
-    rel="stylesheet"
-    href="../../assets/css/layout.css">
+  <link rel="stylesheet" href="../../assets/css/layout.css">
 
   <script>
     window.MathJax = {
@@ -26,22 +15,11 @@
         displayMath: [["\\[", "\\]"]]
       },
       options: {
-        skipHtmlTags: [
-          "script",
-          "noscript",
-          "style",
-          "textarea",
-          "pre",
-          "code"
-        ]
+        skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
       }
     };
   </script>
-
-  <script
-    defer
-    src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
-  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
 
   <style>
     :root {
@@ -61,6 +39,7 @@
       --focus: #fde047;
       --shadow: 0 22px 54px rgba(0, 0, 0, 0.34);
       --radius: 24px;
+      --nav-h: 88px;
     }
 
     body.light,
@@ -82,144 +61,76 @@
       --shadow: 0 18px 44px rgba(15, 35, 55, 0.16);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     html {
       font-size: 18px;
       scroll-behavior: smooth;
     }
 
-    html,
-    body {
+    html, body {
       margin: 0;
       padding: 0;
     }
 
     body {
       min-height: 100vh;
+      padding-bottom: calc(var(--nav-h) + env(safe-area-inset-bottom) + 22px);
       color: var(--text);
-
-      font-family:
-        "Segoe UI",
-        Roboto,
-        Arial,
-        sans-serif;
-
-      font-size:
-        clamp(
-          1rem,
-          0.94rem + 0.34vw,
-          1.22rem
-        );
-
+      font-family: "Segoe UI", Roboto, Arial, sans-serif;
+      font-size: clamp(1rem, 0.94rem + 0.34vw, 1.2rem);
       line-height: 1.68;
-
       background:
-        radial-gradient(
-          circle at 8% 0%,
-          rgba(34, 211, 238, 0.13),
-          transparent 24%
-        ),
-        radial-gradient(
-          circle at 92% 4%,
-          rgba(52, 211, 153, 0.12),
-          transparent 24%
-        ),
+        radial-gradient(circle at 8% 0%, rgba(34, 211, 238, 0.13), transparent 24%),
+        radial-gradient(circle at 92% 4%, rgba(52, 211, 153, 0.12), transparent 24%),
         var(--bg);
     }
 
-    a {
-      color: inherit;
-    }
+    a { color: inherit; }
+    button, input { font: inherit; }
 
-    button,
-    input {
-      font: inherit;
+    button:focus-visible,
+    a:focus-visible,
+    input:focus-visible {
+      outline: 3px solid var(--focus);
+      outline-offset: 3px;
     }
 
     .lab-shell {
-      width:
-        min(
-          1180px,
-          calc(100% - 24px)
-        );
-
-      margin:
-        clamp(10px, 2vw, 28px)
-        auto;
-
-      padding-bottom: 28px;
+      width: min(1180px, calc(100% - 22px));
+      margin: clamp(10px, 2vw, 28px) auto;
     }
 
     .lab-card {
       overflow: hidden;
-
-      border:
-        1px solid
-        var(--border);
-
-      border-radius:
-        var(--radius);
-
-      background:
-        var(--surface);
-
-      box-shadow:
-        var(--shadow);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--surface);
+      box-shadow: var(--shadow);
     }
 
     .lab-topbar {
       position: sticky;
       top: 0;
       z-index: 30;
-
-      padding:
-        clamp(15px, 2.2vw, 23px)
-        clamp(18px, 3vw, 34px);
-
-      border-bottom:
-        1px solid
-        var(--border);
-
-      background:
-        color-mix(
-          in srgb,
-          var(--surface) 92%,
-          transparent
-        );
-
-      backdrop-filter: blur(10px);
+      padding: clamp(14px, 2vw, 22px) clamp(17px, 3vw, 34px);
+      border-bottom: 1px solid var(--border);
+      background: color-mix(in srgb, var(--surface) 94%, transparent);
+      backdrop-filter: blur(12px);
     }
 
     .lab-kicker {
       color: var(--primary);
-
-      font-size:
-        clamp(
-          0.88rem,
-          0.84rem + 0.18vw,
-          1rem
-        );
-
+      font-size: clamp(0.82rem, 0.78rem + 0.18vw, 0.96rem);
       font-weight: 850;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.075em;
       text-transform: uppercase;
     }
 
     .lab-title {
-      margin: 6px 0 12px;
-
+      margin: 5px 0 11px;
       color: var(--text);
-
-      font-size:
-        clamp(
-          1.35rem,
-          1.05rem + 1vw,
-          2rem
-        );
-
+      font-size: clamp(1.25rem, 1.05rem + 0.85vw, 1.85rem);
       font-weight: 900;
       line-height: 1.2;
     }
@@ -232,586 +143,361 @@
 
     .progress-track {
       flex: 1;
-
-      height: 12px;
+      height: 11px;
       overflow: hidden;
-
       border-radius: 999px;
-
-      background:
-        color-mix(
-          in srgb,
-          var(--text) 12%,
-          transparent
-        );
+      background: color-mix(in srgb, var(--text) 12%, transparent);
     }
 
     .progress-fill {
       display: block;
-
-      width: 0;
+      width: 12.5%;
       height: 100%;
-
-      background:
-        linear-gradient(
-          90deg,
-          var(--primary-strong),
-          var(--success)
-        );
-
-      transition:
-        width
-        180ms
-        ease;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--primary-strong), var(--success));
+      transition: width 180ms ease;
     }
 
     .page-counter {
       color: var(--muted);
-
-      font-size: 1rem;
-      font-weight: 750;
+      font-size: 0.92rem;
+      font-weight: 780;
       white-space: nowrap;
     }
 
     .lab-pages {
-      min-height:
-        calc(100svh - 160px);
+      min-height: calc(100svh - 180px);
     }
 
     .lab-page {
       display: none;
-
       padding:
         clamp(24px, 4vw, 46px)
         clamp(18px, 4.5vw, 54px)
-        clamp(28px, 4vw, 48px);
-
-      animation:
-        page-in
-        180ms
-        ease;
+        clamp(38px, 5vw, 60px);
+      animation: page-in 180ms ease;
     }
 
-    .lab-page.active {
-      display: block;
-    }
+    .lab-page.active { display: block; }
 
     @keyframes page-in {
-      from {
-        opacity: 0.3;
-        transform:
-          translateY(7px);
-      }
-
-      to {
-        opacity: 1;
-        transform: none;
-      }
+      from { opacity: 0.25; transform: translateY(7px); }
+      to { opacity: 1; transform: none; }
     }
 
     #header-container,
-    #footer-container {
-      width: 100%;
-    }
+    #footer-container { width: 100%; }
 
     #header-container {
       margin:
         calc(-1 * clamp(24px, 4vw, 46px))
         calc(-1 * clamp(18px, 4.5vw, 54px))
-        clamp(28px, 4vw, 42px);
-
-      width:
-        calc(
-          100% +
-          2 * clamp(18px, 4.5vw, 54px)
-        );
+        clamp(26px, 4vw, 40px);
+      width: calc(100% + 2 * clamp(18px, 4.5vw, 54px));
     }
 
     #footer-container {
       margin:
-        clamp(30px, 4vw, 48px)
+        clamp(28px, 4vw, 46px)
         calc(-1 * clamp(18px, 4.5vw, 54px))
-        calc(-1 * clamp(28px, 4vw, 48px));
-
-      width:
-        calc(
-          100% +
-          2 * clamp(18px, 4.5vw, 54px)
-        );
+        calc(-1 * clamp(38px, 5vw, 60px));
+      width: calc(100% + 2 * clamp(18px, 4.5vw, 54px));
     }
 
+    h1, h2, h3 { color: var(--text); }
+    h1 {
+      margin: 0 0 14px;
+      font-size: clamp(2rem, 1.45rem + 2vw, 3.5rem);
+      line-height: 1.08;
+    }
     h2 {
       margin: 0 0 14px;
-
-      color: var(--text);
-
-      font-size:
-        clamp(
-          1.72rem,
-          1.28rem + 1.34vw,
-          2.75rem
-        );
-
+      font-size: clamp(1.65rem, 1.28rem + 1.25vw, 2.65rem);
       line-height: 1.18;
     }
-
     h3 {
       margin: 0 0 10px;
-
-      color: var(--text);
-
-      font-size:
-        clamp(
-          1.18rem,
-          1.05rem + 0.44vw,
-          1.55rem
-        );
-
+      font-size: clamp(1.15rem, 1.04rem + 0.42vw, 1.48rem);
       line-height: 1.3;
     }
 
-    p {
-      margin: 0 0 16px;
-    }
+    p { margin: 0 0 16px; }
 
     .lead {
       color: var(--text);
-
-      font-size:
-        clamp(
-          1.12rem,
-          1rem + 0.45vw,
-          1.42rem
-        );
-
-      line-height: 1.65;
+      font-size: clamp(1.08rem, 1rem + 0.42vw, 1.38rem);
+      line-height: 1.62;
     }
 
-    .muted {
-      color: var(--muted);
-    }
-
-    .highlight {
-      color: var(--success);
-      font-weight: 850;
-    }
+    .muted { color: var(--muted); }
+    .highlight { color: var(--success); font-weight: 850; }
 
     .page-badge {
       display: inline-block;
-
-      margin-bottom: 14px;
-      padding: 8px 13px;
-
+      margin-bottom: 13px;
+      padding: 7px 13px;
       border-radius: 999px;
-
       color: var(--primary);
-
-      background:
-        color-mix(
-          in srgb,
-          var(--primary) 13%,
-          transparent
-        );
-
-      font-size: 1rem;
+      background: color-mix(in srgb, var(--primary) 13%, transparent);
+      font-size: 0.95rem;
       font-weight: 850;
     }
 
-    .large-icon {
-      margin-bottom: 14px;
-
-      font-size:
-        clamp(
-          2.8rem,
-          2.2rem + 1.7vw,
-          4.2rem
-        );
-
-      line-height: 1;
-    }
-
+    .hero-grid,
+    .concept-grid,
     .grid {
       display: grid;
-      gap:
-        clamp(
-          14px,
-          2vw,
-          22px
-        );
+      gap: clamp(16px, 2.3vw, 26px);
     }
 
-    .grid.two {
+    .hero-grid,
+    .concept-grid {
       grid-template-columns: 1fr;
+      align-items: center;
     }
 
-    .grid.three {
-      grid-template-columns: 1fr;
-    }
+    .grid.two,
+    .grid.three { grid-template-columns: 1fr; }
 
     .panel,
     .quick-check,
     details {
-      padding:
-        clamp(
-          17px,
-          2.4vw,
-          25px
-        );
-
-      border:
-        1px solid
-        var(--border);
-
+      padding: clamp(17px, 2.4vw, 25px);
+      border: 1px solid var(--border);
       border-radius: 20px;
+      background: var(--surface-2);
+    }
 
+    .visual-card {
+      overflow: hidden;
+      padding: clamp(8px, 1.5vw, 16px);
+      border: 1px solid var(--border);
+      border-radius: 22px;
       background:
-        var(--surface-2);
+        linear-gradient(145deg,
+          color-mix(in srgb, var(--primary) 8%, var(--surface-2)),
+          color-mix(in srgb, var(--success) 6%, var(--surface-2)));
+    }
+
+    .lesson-svg {
+      display: block;
+      width: 100%;
+      height: auto;
+      min-height: 260px;
+      max-height: min(58svh, 590px);
+      object-fit: contain;
+    }
+
+    .hero-svg {
+      min-height: 300px;
+      max-height: 570px;
+    }
+
+    .fact-strip {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 11px;
+      margin: 18px 0 0;
+    }
+
+    .fact {
+      padding: 13px 15px;
+      border: 1px solid var(--border);
+      border-radius: 15px;
+      background: var(--surface-soft);
+    }
+
+    .fact strong {
+      display: block;
+      margin-bottom: 3px;
+      color: var(--primary);
+    }
+
+    .remember,
+    .warning,
+    .insight {
+      margin-top: 18px;
+      padding: clamp(15px, 2.2vw, 22px);
+      border-radius: 15px;
+      color: var(--text);
     }
 
     .remember {
-      margin-top: 18px;
-      padding:
-        clamp(
-          16px,
-          2.2vw,
-          22px
-        );
-
-      border-left:
-        6px solid
-        var(--success);
-
-      border-radius: 15px;
-
-      color: var(--text);
-
-      background:
-        color-mix(
-          in srgb,
-          var(--success) 12%,
-          var(--surface)
-        );
+      border-left: 6px solid var(--success);
+      background: color-mix(in srgb, var(--success) 12%, var(--surface));
     }
 
     .warning {
-      margin-top: 18px;
-      padding:
-        clamp(
-          16px,
-          2.2vw,
-          22px
-        );
+      border-left: 6px solid var(--warning);
+      background: color-mix(in srgb, var(--warning) 12%, var(--surface));
+    }
 
-      border-left:
-        6px solid
-        var(--warning);
-
-      border-radius: 15px;
-
-      color: var(--text);
-
-      background:
-        color-mix(
-          in srgb,
-          var(--warning) 12%,
-          var(--surface)
-        );
+    .insight {
+      border-left: 6px solid var(--primary);
+      background: color-mix(in srgb, var(--primary) 10%, var(--surface));
     }
 
     .formula-box {
       margin: 14px 0;
-      padding: 16px;
-
-      border:
-        1px solid
-        var(--border);
-
+      padding: 15px;
+      overflow-x: auto;
+      border: 1px solid var(--border);
       border-radius: 16px;
-
       color: var(--warning);
-
-      background:
-        var(--surface-soft);
-
-      font-size:
-        clamp(
-          1.25rem,
-          1.05rem + 0.65vw,
-          1.85rem
-        );
-
+      background: var(--surface-soft);
+      font-size: clamp(1.16rem, 1.03rem + 0.58vw, 1.75rem);
       font-weight: 850;
       text-align: center;
     }
 
-    ul,
-    ol {
-      margin: 0;
-      padding-left: 26px;
-    }
-
-    li {
-      margin-bottom: 12px;
-      line-height: 1.62;
-    }
-
-    .setup-list {
+    .energy-flow {
       display: grid;
+      grid-template-columns: 1fr;
       gap: 10px;
-
-      margin-top: 14px;
+      margin-top: 16px;
     }
 
-    .setup-item {
-      display: grid;
-      grid-template-columns:
-        42px
-        1fr;
-
-      align-items: start;
+    .energy-flow .flow-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       gap: 12px;
-
       padding: 12px 14px;
-
-      border:
-        1px solid
-        var(--border);
-
+      border: 1px solid var(--border);
       border-radius: 14px;
-
-      background:
-        var(--surface-soft);
+      background: var(--surface-soft);
+      font-weight: 800;
     }
 
-    .setup-icon {
-      display: grid;
-      place-items: center;
-
-      width: 42px;
-      height: 42px;
-
-      border-radius: 12px;
-
-      background:
-        color-mix(
-          in srgb,
-          var(--primary) 16%,
-          transparent
-        );
-
-      font-size: 1.45rem;
-    }
+    .up { color: var(--success); }
+    .down { color: var(--primary); }
+    .zero { color: var(--warning); }
 
     /* =====================================================
        SIMULATOR
        ===================================================== */
 
     .simulator {
-      padding:
-        clamp(
-          15px,
-          2vw,
-          22px
-        );
-
-      border:
-        1px solid
-        var(--border);
-
+      padding: clamp(15px, 2vw, 22px);
+      border: 1px solid var(--border);
       border-radius: 22px;
-
-      background:
-        var(--surface-2);
+      background: var(--surface-2);
     }
 
     .scene-wrap {
       overflow: hidden;
-
-      border:
-        1px solid
-        var(--border);
-
+      border: 1px solid var(--border);
       border-radius: 18px;
-
       background: #ffffff;
     }
 
-    #energyScene {
+    #energyScene,
+    #energyChart {
       display: block;
-
       width: 100%;
       max-width: 100%;
       height: auto;
+    }
 
+    #energyScene {
       background:
         linear-gradient(
           180deg,
           #9bd8ff 0%,
           #e8f6ff 72%,
           #d8e2ec 73%,
-          #94a3b8 100%
-        );
+          #94a3b8 100%);
     }
 
-    .control-grid {
+    .control-grid,
+    .results-grid {
       display: grid;
-      gap: 14px;
-
-      margin-top: 18px;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      margin-top: 16px;
     }
 
-    .control-card {
-      padding: 14px 15px;
-
-      border:
-        1px solid
-        var(--border);
-
+    .control-card,
+    .result-card,
+    .energy-bar {
+      padding: 13px 15px;
+      border: 1px solid var(--border);
       border-radius: 15px;
-
-      background:
-        var(--surface-soft);
+      background: var(--surface-soft);
     }
 
-    .control-card label {
+    .control-card label,
+    .energy-bar header {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       gap: 12px;
-
-      margin-bottom: 10px;
-
-      color: var(--text);
-      font-weight: 800;
+      margin-bottom: 9px;
+      font-weight: 850;
     }
 
     input[type="range"] {
       width: 100%;
       min-height: 34px;
-
-      accent-color:
-        var(--primary-strong);
-    }
-
-    .results-grid {
-      display: grid;
-      gap: 12px;
-
-      margin-top: 16px;
-    }
-
-    .result-card {
-      padding: 14px 15px;
-
-      border:
-        1px solid
-        var(--border);
-
-      border-radius: 15px;
-
-      background:
-        var(--surface-soft);
+      accent-color: var(--primary-strong);
     }
 
     .result-card strong {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
     }
 
     .result-value {
       color: var(--primary);
-
-      font-size: 1.2rem;
+      font-size: 1.18rem;
       font-weight: 900;
     }
 
     .energy-bars {
       display: grid;
-      gap: 12px;
-
-      margin-top: 16px;
-    }
-
-    .energy-bar {
-      padding: 13px 15px;
-
-      border:
-        1px solid
-        var(--border);
-
-      border-radius: 14px;
-
-      background:
-        var(--surface-soft);
-    }
-
-    .energy-bar header {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-
-      margin-bottom: 8px;
-
-      font-weight: 850;
+      gap: 10px;
+      margin-top: 15px;
     }
 
     .bar-track {
       height: 16px;
       overflow: hidden;
-
       border-radius: 999px;
-
-      background:
-        color-mix(
-          in srgb,
-          var(--text) 12%,
-          transparent
-        );
+      background: color-mix(in srgb, var(--text) 12%, transparent);
     }
 
     .bar-fill {
       display: block;
       height: 100%;
-
-      border-radius: 999px;
-
-      transition:
-        width
-        140ms
-        ease;
+      border-radius: inherit;
+      transition: width 140ms ease;
     }
 
-    .bar-ep {
-      background: #fbbf24;
-    }
-
-    .bar-ec {
-      background: #38bdf8;
-    }
-
-    .bar-em {
-      background: #34d399;
-    }
-
-    .bar-loss {
-      background: #fb7185;
-    }
+    .bar-ep { background: #fbbf24; }
+    .bar-ec { background: #38bdf8; }
+    .bar-em { background: #34d399; }
+    .bar-loss { background: #fb7185; }
 
     .sim-message {
-      min-height: 84px;
-
-      margin-top: 16px;
-      padding: 16px;
-
-      border-left:
-        5px solid
-        var(--primary);
-
+      min-height: 76px;
+      margin-top: 15px;
+      padding: 15px;
+      border-left: 5px solid var(--primary);
       border-radius: 14px;
-
       color: var(--text);
+      background: var(--surface-soft);
+    }
 
-      background:
-        var(--surface-soft);
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+
+    .action-row button,
+    .action-row a {
+      flex: 1 1 190px;
     }
 
     /* =====================================================
@@ -820,137 +506,75 @@
 
     .table-wrap {
       overflow-x: auto;
-
-      margin-top: 18px;
-
-      border:
-        1px solid
-        var(--border);
-
+      margin-top: 17px;
+      border: 1px solid var(--border);
       border-radius: 17px;
     }
 
     .measure-table {
       width: 100%;
-      min-width: 980px;
-
+      min-width: 920px;
       border-collapse: collapse;
     }
 
     .measure-table th,
     .measure-table td {
-      padding: 12px 11px;
-
-      border-bottom:
-        1px solid
-        var(--border);
-
-      border-right:
-        1px solid
-        var(--border);
-
+      padding: 11px 10px;
+      border-bottom: 1px solid var(--border);
+      border-right: 1px solid var(--border);
       text-align: center;
       vertical-align: middle;
     }
 
     .measure-table th:last-child,
-    .measure-table td:last-child {
-      border-right: 0;
-    }
+    .measure-table td:last-child { border-right: 0; }
 
-    .measure-table tbody tr:last-child td {
-      border-bottom: 0;
-    }
+    .measure-table tbody tr:last-child td { border-bottom: 0; }
 
     .measure-table th {
       color: var(--text);
-
-      background:
-        var(--surface-soft);
+      background: var(--surface-soft);
     }
 
     .measure-table input {
       width: 96px;
       min-height: 44px;
-
       padding: 8px 9px;
-
-      border:
-        1px solid
-        var(--border);
-
+      border: 1px solid var(--border);
       border-radius: 10px;
-
       color: var(--text);
-
-      background:
-        var(--surface);
+      background: var(--surface);
     }
 
     .measure-table output {
       display: inline-block;
-
       min-width: 72px;
-
       color: var(--primary);
       font-weight: 850;
     }
 
     .average-box {
-      margin-top: 17px;
-      padding: 16px;
-
-      border:
-        2px solid
-        var(--success);
-
+      margin-top: 16px;
+      padding: 15px;
+      border: 2px solid var(--success);
       border-radius: 16px;
-
       color: var(--text);
-
-      background:
-        color-mix(
-          in srgb,
-          var(--success) 11%,
-          var(--surface)
-        );
-
-      font-size: 1.1rem;
+      background: color-mix(in srgb, var(--success) 11%, var(--surface));
+      font-size: 1.06rem;
       font-weight: 850;
     }
 
     .chart-wrap {
       margin-top: 18px;
-      padding:
-        clamp(
-          14px,
-          2vw,
-          20px
-        );
-
-      border:
-        1px solid
-        var(--border);
-
+      padding: clamp(14px, 2vw, 20px);
+      border: 1px solid var(--border);
       border-radius: 18px;
-
-      background:
-        var(--surface-2);
+      background: var(--surface-2);
     }
 
     #energyChart {
-      display: block;
-
-      width: 100%;
-      max-width: 100%;
-      height: auto;
-
-      border:
-        1px solid
-        var(--border);
-
+      border: 1px solid var(--border);
       border-radius: 14px;
-
       background: #ffffff;
     }
 
@@ -959,412 +583,272 @@
        ===================================================== */
 
     .quick-check {
-      margin-bottom: 16px;
+      margin-bottom: 15px;
     }
 
     .quick-check fieldset {
       display: grid;
-      gap: 11px;
-
-      margin: 14px 0 0;
+      gap: 10px;
+      margin: 13px 0 0;
       padding: 0;
-
       border: 0;
     }
 
     .quick-check legend {
-      margin-bottom: 12px;
+      margin-bottom: 11px;
       padding: 0;
-
       color: var(--text);
-
-      font-size: 1.08rem;
+      font-size: 1.06rem;
       font-weight: 850;
     }
 
     .answer-option {
       display: grid;
-      grid-template-columns:
-        auto
-        1fr;
-
+      grid-template-columns: auto 1fr;
       align-items: start;
       gap: 12px;
-
       min-height: 54px;
       padding: 13px 15px;
-
-      border:
-        1px solid
-        var(--border);
-
+      border: 1px solid var(--border);
       border-radius: 14px;
-
       color: var(--text);
-
-      background:
-        var(--surface-soft);
-
+      background: var(--surface-soft);
       cursor: pointer;
     }
 
-    .answer-option:hover {
-      border-color:
-        var(--primary);
-    }
+    .answer-option:hover { border-color: var(--primary); }
 
     .answer-option input {
       width: 22px;
       height: 22px;
-
       margin-top: 2px;
-
-      accent-color:
-        var(--primary-strong);
+      accent-color: var(--primary-strong);
     }
 
     .answer-option.correct {
-      border-color:
-        var(--success);
-
-      background:
-        color-mix(
-          in srgb,
-          var(--success) 14%,
-          var(--surface)
-        );
+      border-color: var(--success);
+      background: color-mix(in srgb, var(--success) 14%, var(--surface));
     }
 
     .answer-option.incorrect {
-      border-color:
-        var(--danger);
-
-      background:
-        color-mix(
-          in srgb,
-          var(--danger) 12%,
-          var(--surface)
-        );
+      border-color: var(--danger);
+      background: color-mix(in srgb, var(--danger) 12%, var(--surface));
     }
 
     .feedback {
       min-height: 30px;
-      margin-top: 12px;
-
+      margin-top: 11px;
       color: var(--text);
       font-weight: 800;
     }
 
     .score-box {
       display: none;
-
-      margin-top: 18px;
-      padding: 18px;
-
-      border:
-        2px solid
-        var(--success);
-
+      margin-top: 17px;
+      padding: 17px;
+      border: 2px solid var(--success);
       border-radius: 17px;
-
-      color: var(--text);
-
-      background:
-        color-mix(
-          in srgb,
-          var(--success) 11%,
-          var(--surface)
-        );
-
-      font-size: 1.1rem;
+      background: color-mix(in srgb, var(--success) 11%, var(--surface));
+      font-size: 1.08rem;
       font-weight: 850;
     }
 
-    .score-box.visible {
-      display: block;
-    }
-
     /* =====================================================
-       BUTOANE
+       BUTOANE + NAVIGAȚIE PERSISTENTĂ
        ===================================================== */
-
-    .controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-
-      margin-top: 24px;
-    }
 
     .button,
     button {
-      appearance: none;
+      border: 0;
+      cursor: pointer;
+    }
 
+    .button,
+    .button-primary,
+    .button-secondary,
+    .button-calculate,
+    .button-home {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-
-      min-height: 56px;
-      padding: 16px 22px;
-
-      border: 0;
-      border-radius: 15px;
-
-      font-size:
-        clamp(
-          1.04rem,
-          1rem + 0.18vw,
-          1.18rem
-        );
-
-      font-weight: 900;
-      text-align: center;
+      min-height: 50px;
+      padding: 12px 18px;
+      border-radius: 14px;
       text-decoration: none;
-
-      cursor: pointer;
-
-      transition:
-        transform
-        120ms
-        ease,
-        filter
-        120ms
-        ease;
-    }
-
-    .button:hover,
-    button:hover {
-      filter: brightness(1.05);
-    }
-
-    .button:active,
-    button:active {
-      transform: scale(0.98);
-    }
-
-    .button:focus-visible,
-    button:focus-visible,
-    input:focus-visible,
-    summary:focus-visible {
-      outline:
-        4px solid
-        var(--focus);
-
-      outline-offset: 4px;
+      font-weight: 850;
+      line-height: 1.2;
     }
 
     .button-primary {
-      width: 100%;
-
-      color: #062132;
-
-      background:
-        linear-gradient(
-          90deg,
-          var(--primary-strong),
-          var(--success)
-        );
+      color: #05242c;
+      background: var(--primary);
     }
 
     .button-secondary {
-      width: 100%;
-
-      border:
-        1px solid
-        var(--border);
-
       color: var(--text);
-
-      background:
-        var(--surface-soft);
+      border: 1px solid var(--border);
+      background: var(--surface-soft);
     }
 
     .button-calculate {
-      width: 100%;
-
-      color: #ffffff;
-
-      background:
-        linear-gradient(
-          90deg,
-          #7c3aed,
-          #a855f7
-        );
-    }
-
-    .button-danger {
-      width: 100%;
-
-      color: #ffffff;
-
-      background:
-        linear-gradient(
-          90deg,
-          #e11d48,
-          #fb7185
-        );
+      color: #03271c;
+      background: var(--success);
     }
 
     .button-home {
+      color: #2a1800;
+      background: var(--warning);
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .persistent-nav {
+      position: fixed;
+      left: 50%;
+      bottom: max(10px, env(safe-area-inset-bottom));
+      z-index: 80;
+      transform: translateX(-50%);
+      width: min(1120px, calc(100% - 20px));
+      min-height: var(--nav-h);
+      display: grid;
+      grid-template-columns: minmax(92px, 0.7fr) auto minmax(165px, 1fr);
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: color-mix(in srgb, var(--surface) 95%, transparent);
+      box-shadow: 0 16px 42px rgba(0,0,0,.35);
+      backdrop-filter: blur(14px);
+    }
+
+    .persistent-nav .nav-status {
+      min-width: 70px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 800;
+      text-align: center;
+    }
+
+    .persistent-nav button {
       width: 100%;
-
-      color: #062132;
-
-      background:
-        linear-gradient(
-          90deg,
-          var(--primary-strong),
-          #38bdf8
-        );
+      min-height: 56px;
     }
 
-    @media (min-width: 820px) {
-      .grid.two {
-        grid-template-columns:
-          repeat(
-            2,
-            minmax(0, 1fr)
-          );
-      }
-
-      .grid.three {
-        grid-template-columns:
-          repeat(
-            3,
-            minmax(0, 1fr)
-          );
-      }
-
-      .control-grid {
-        grid-template-columns:
-          repeat(
-            4,
-            minmax(0, 1fr)
-          );
-      }
-
-      .results-grid {
-        grid-template-columns:
-          repeat(
-            4,
-            minmax(0, 1fr)
-          );
-      }
-
-      .controls
-      .button-secondary,
-      .controls
-      .button-danger {
-        width: auto;
-        min-width: 170px;
-      }
-
-      .controls
-      .button-primary {
-        width: auto;
-        min-width: 240px;
-        margin-left: auto;
-      }
-
-      .controls
-      .button-calculate {
-        width: auto;
-        min-width: 250px;
-      }
-
-      .controls.end {
-        justify-content: center;
-      }
-
-      .controls.end
-      .button-home {
-        width: auto;
-        min-width: 360px;
-      }
+    .next-nav {
+      color: #03271c;
+      background: var(--success);
+      font-weight: 900;
     }
 
-    @media (max-width: 650px) {
-      html {
-        font-size: 17px;
-      }
+    .prev-nav {
+      color: var(--text);
+      border: 1px solid var(--border);
+      background: var(--surface-soft);
+      font-weight: 850;
+    }
+
+    .end-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .end-links > * { flex: 1 1 220px; }
+
+    /* =====================================================
+       RESPONSIVE
+       ===================================================== */
+
+    @media (min-width: 760px) {
+      .hero-grid { grid-template-columns: minmax(0, 1fr) minmax(340px, 0.92fr); }
+      .concept-grid { grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr); }
+      .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .fact-strip { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .control-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .results-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .energy-flow { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 620px) {
+      :root { --nav-h: 82px; }
+
+      html { font-size: 16px; }
 
       .lab-shell {
-        width:
-          calc(100% - 12px);
-
-        margin: 6px auto;
+        width: min(100%, calc(100% - 10px));
+        margin: 5px auto;
       }
 
-      .lab-card {
-        border-radius: 19px;
+      .lab-card { border-radius: 18px; }
+
+      .lab-topbar {
+        padding: 12px 14px;
       }
 
       .lab-page {
-        padding:
-          22px
-          14px
-          28px;
+        padding: 22px 14px 34px;
       }
 
-      #header-container {
-        margin:
-          -22px
-          -14px
-          24px;
-
-        width:
-          calc(100% + 28px);
+      .lesson-svg {
+        min-height: 220px;
+        max-height: 48svh;
       }
 
-      #footer-container {
-        margin:
-          28px
-          -14px
-          -28px;
-
-        width:
-          calc(100% + 28px);
+      .hero-svg {
+        min-height: 245px;
       }
 
-      .lab-topbar {
-        padding:
-          14px
-          15px;
+      .persistent-nav {
+        grid-template-columns: 88px 1fr;
+        grid-template-areas:
+          "status status"
+          "prev next";
+        gap: 7px;
+        min-height: auto;
+        padding: 8px;
+        border-radius: 17px;
       }
 
-      .progress-row {
-        align-items: flex-start;
+      .persistent-nav .nav-status {
+        grid-area: status;
+        line-height: 1;
       }
 
-      .page-counter {
-        white-space: normal;
+      .prev-nav { grid-area: prev; }
+      .next-nav { grid-area: next; }
+
+      .persistent-nav button {
+        min-height: 50px;
+        padding: 10px 9px;
       }
     }
 
-    @media (
-      prefers-reduced-motion:
-      reduce
-    ) {
-      html {
-        scroll-behavior: auto;
-      }
-
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
       .lab-page,
       .progress-fill,
-      .button,
-      button,
-      .bar-fill {
-        animation: none;
-        transition: none;
-      }
+      .bar-fill { animation: none; transition: none; }
     }
 
     @media print {
       .lab-topbar,
-      .controls,
+      .persistent-nav,
       #header-container,
-      #footer-container {
+      #footer-container,
+      .action-row {
         display: none !important;
+      }
+
+      body {
+        padding: 0;
+        color: #000;
+        background: #fff;
       }
 
       .lab-page {
@@ -1372,18 +856,14 @@
         break-after: page;
       }
 
-      body {
-        color: #000000;
-        background: #ffffff;
-      }
-
       .lab-card,
       .panel,
       .quick-check,
       .simulator,
-      .chart-wrap {
-        color: #000000;
-        background: #ffffff;
+      .chart-wrap,
+      .visual-card {
+        color: #000;
+        background: #fff;
         box-shadow: none;
       }
     }
@@ -1393,41 +873,26 @@
 <body data-page-type="lab">
   <div class="lab-shell">
     <div class="lab-card">
-      <div class="lab-topbar">
-        <div class="lab-kicker">
-          Laborator de fizică • Clasa a VII-a
-        </div>
 
-        <div
-          class="lab-title"
-          id="topTitle">
-          Conservarea energiei mecanice
-        </div>
+      <header class="lab-topbar">
+        <div class="lab-kicker">Laborator de fizică • Clasa a VII-a</div>
+        <div class="lab-title" id="topTitle">Conservarea energiei mecanice</div>
 
         <div class="progress-row">
-          <div
-            class="progress-track"
-            aria-hidden="true">
-            <span
-              class="progress-fill"
-              id="progressFill">
-            </span>
+          <div class="progress-track" aria-hidden="true">
+            <span class="progress-fill" id="progressFill"></span>
           </div>
-
-          <div
-            class="page-counter"
-            id="pageCounter"
-            aria-live="polite">
-            Pagina 1 din 7
+          <div class="page-counter" id="pageCounter" aria-live="polite">
+            Pagina 1 din 8
           </div>
         </div>
-      </div>
+      </header>
 
-      <main
-        id="main-content"
-        class="lab-pages">
+      <main id="main-content" class="lab-pages">
 
-        <!-- PAGINA 1: headerul comun apare numai aici -->
+        <!-- ==================================================
+             PAGINA 1 • COPERTĂ / INTRODUCERE
+             ================================================== -->
         <section
           class="lab-page active"
           data-title="Conservarea energiei mecanice – introducere"
@@ -1435,332 +900,314 @@
 
           <div id="header-container"></div>
 
-          <div class="page-badge">
-            Pagina 1 • Întrebarea laboratorului
-          </div>
+          <div class="page-badge">Pagina 1 • Explorează</div>
 
-          <div
-            class="large-icon"
-            aria-hidden="true">
-            🛝
-          </div>
+          <div class="hero-grid">
+            <div>
+              <h1>Conservarea energiei mecanice</h1>
 
-          <h2>
-            Ce se întâmplă cu energia unui corp care coboară?
-          </h2>
-
-          <p class="lead">
-            Vom lăsa un corp să alunece sau să se rostogolească
-            pe un jgheab ori plan înclinat. Pe măsură ce
-            înălțimea scade,
-            <span class="highlight">
-              energia potențială gravitațională
-            </span>
-            se transformă în
-            <span class="highlight">
-              energie cinetică
-            </span>.
-          </p>
-
-          <div class="grid two">
-            <article class="panel">
-              <h3>Ce vei observa</h3>
-
-              <ul>
-                <li>
-                  energia potențială scade;
-                </li>
-
-                <li>
-                  viteza corpului crește;
-                </li>
-
-                <li>
-                  energia cinetică crește;
-                </li>
-
-                <li>
-                  energia mecanică rămâne aproximativ constantă.
-                </li>
-              </ul>
-            </article>
-
-            <article class="panel">
-              <h3>Ce vei determina</h3>
-
-              <ul>
-                <li>
-                  \(E_p=mgh\);
-                </li>
-
-                <li>
-                  \(E_c=\frac{mv^2}{2}\);
-                </li>
-
-                <li>
-                  \(E_m=E_p+E_c\);
-                </li>
-
-                <li>
-                  pierderile de energie prin frecare.
-                </li>
-              </ul>
-            </article>
-          </div>
-
-          <div class="warning">
-            Fixează bine jgheabul sau planul. Folosește corpuri
-            mici și nu le lăsa să cadă de pe masă.
-          </div>
-
-          <div class="controls">
-            <button
-              type="button"
-              class="button-primary"
-              data-go-page="1">
-              Mergi mai departe
-            </button>
-          </div>
-        </section>
-
-        <!-- PAGINA 2 -->
-        <section
-          class="lab-page"
-          data-title="Energia mecanică"
-          aria-hidden="true">
-
-          <div class="page-badge">
-            Pagina 2 • Teorie
-          </div>
-
-          <h2>
-            Energia potențială, cinetică și mecanică
-          </h2>
-
-          <div class="grid two">
-            <article class="panel">
-              <h3>Energia potențială gravitațională</h3>
+              <p class="lead">
+                Urmărește ce se întâmplă cu energia unui corp atunci când
+                <strong>urcă</strong>, ajunge la <strong>înălțimea maximă</strong>,
+                apoi <strong>coboară</strong> până la nivelul \(h=0\).
+              </p>
 
               <div class="formula-box">
                 \[
+                  E_m = E_c + E_p
+                \]
+              </div>
+
+              <div class="formula-box">
+                \[
+                  E_c=\frac{mv^2}{2},
+                  \qquad
                   E_p=mgh
                 \]
               </div>
 
-              <p>
-                Depinde de masa corpului, accelerația
-                gravitațională și înălțimea față de nivelul de
-                referință.
-              </p>
-            </article>
+              <div class="remember">
+                <strong>Ideea-cheie:</strong>
+                dacă frecările sunt neglijabile, energia mecanică
+                \(E_m\) rămâne constantă, chiar dacă \(E_c\) și
+                \(E_p\) se transformă una în cealaltă.
+              </div>
+            </div>
 
-            <article class="panel">
-              <h3>Energia cinetică</h3>
+            <div class="visual-card">
+              <img
+                class="lesson-svg hero-svg"
+                src="../../assets/svg/experiments/mechanics/energie-mecanica/00-conservarea-energiei-mecanice.svg"
+                alt="Rezumat vizual al conservării energiei mecanice: corpul urcă, atinge înălțimea maximă, coboară și ajunge la h egal cu zero.">
+            </div>
+          </div>
+
+          <div class="fact-strip">
+            <div class="fact">
+              <strong>Energia cinetică</strong>
+              depinde de masă și de pătratul vitezei.
+            </div>
+            <div class="fact">
+              <strong>Energia potențială</strong>
+              depinde de masă, gravitație și înălțime.
+            </div>
+            <div class="fact">
+              <strong>Energia mecanică</strong>
+              este suma \(E_c+E_p\).
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================
+             PAGINA 2 • CORPUL URCĂ
+             ================================================== -->
+        <section
+          class="lab-page"
+          data-title="Corpul urcă"
+          aria-hidden="true">
+
+          <div class="page-badge">Pagina 2 • Observă</div>
+
+          <div class="concept-grid">
+            <div class="visual-card">
+              <img
+                class="lesson-svg"
+                src="../../assets/svg/experiments/mechanics/energie-mecanica/01-corpul-urca.svg"
+                alt="Corp aruncat vertical în sus; viteza este orientată în sus, accelerația gravitațională în jos, înălțimea crește.">
+            </div>
+
+            <div>
+              <h2>1. Corpul urcă</h2>
+
+              <p class="lead">
+                În timpul urcării, gravitația încetinește corpul.
+                Viteza scade, dar corpul ajunge la înălțimi tot mai mari.
+              </p>
+
+              <div class="energy-flow">
+                <div class="flow-item">
+                  <span>Înălțime \(h\)</span>
+                  <strong class="up">crește ↑</strong>
+                </div>
+                <div class="flow-item">
+                  <span>Viteză \(v\)</span>
+                  <strong class="down">scade ↓</strong>
+                </div>
+                <div class="flow-item">
+                  <span>\(E_m\)</span>
+                  <strong class="highlight">constantă</strong>
+                </div>
+              </div>
 
               <div class="formula-box">
                 \[
-                  E_c=\frac{mv^2}{2}
+                  E_p \uparrow,
+                  \qquad
+                  E_c \downarrow,
+                  \qquad
+                  E_m=\text{constantă}
+                \]
+              </div>
+
+              <div class="insight">
+                Energia cinetică nu „dispare”. Ea se transformă treptat
+                în energie potențială gravitațională.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================
+             PAGINA 3 • ÎNĂLȚIME MAXIMĂ
+             ================================================== -->
+        <section
+          class="lab-page"
+          data-title="Înălțimea maximă"
+          aria-hidden="true">
+
+          <div class="page-badge">Pagina 3 • Moment-cheie</div>
+
+          <div class="concept-grid">
+            <div class="visual-card">
+              <img
+                class="lesson-svg"
+                src="../../assets/svg/experiments/mechanics/energie-mecanica/03-inaltime-maxima.svg"
+                alt="Corpul la înălțimea maximă, unde viteza instantanee este zero, energia cinetică este zero și energia potențială este maximă.">
+            </div>
+
+            <div>
+              <h2>2. La înălțimea maximă</h2>
+
+              <p class="lead">
+                În punctul cel mai înalt, corpul se oprește pentru o clipă
+                înainte de a începe să coboare.
+              </p>
+
+              <div class="formula-box">
+                \[
+                  v=0
+                \]
+              </div>
+
+              <div class="formula-box">
+                \[
+                  E_c=\frac{m\cdot0^2}{2}=0
+                \]
+              </div>
+
+              <div class="formula-box">
+                \[
+                  E_p=E_{p,\max}=E_m
+                \]
+              </div>
+
+              <div class="warning">
+                <strong>Atenție:</strong> la înălțimea maximă
+                viteza este zero, dar accelerația gravitațională
+                nu este zero. Ea rămâne orientată vertical în jos.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================
+             PAGINA 4 • CORPUL COBOARĂ
+             ================================================== -->
+        <section
+          class="lab-page"
+          data-title="Corpul coboară"
+          aria-hidden="true">
+
+          <div class="page-badge">Pagina 4 • Observă transformarea inversă</div>
+
+          <div class="concept-grid">
+            <div class="visual-card">
+              <img
+                class="lesson-svg"
+                src="../../assets/svg/experiments/mechanics/energie-mecanica/02-corpul-coboara.svg"
+                alt="Corp aflat în coborâre; viteza și accelerația gravitațională sunt orientate în jos, înălțimea scade.">
+            </div>
+
+            <div>
+              <h2>3. Corpul coboară</h2>
+
+              <p class="lead">
+                La coborâre, gravitația accelerează corpul.
+                Înălțimea scade, iar viteza crește.
+              </p>
+
+              <div class="energy-flow">
+                <div class="flow-item">
+                  <span>Înălțime \(h\)</span>
+                  <strong class="down">scade ↓</strong>
+                </div>
+                <div class="flow-item">
+                  <span>Viteză \(v\)</span>
+                  <strong class="up">crește ↑</strong>
+                </div>
+                <div class="flow-item">
+                  <span>\(E_m\)</span>
+                  <strong class="highlight">constantă</strong>
+                </div>
+              </div>
+
+              <div class="formula-box">
+                \[
+                  E_p \downarrow,
+                  \qquad
+                  E_c \uparrow,
+                  \qquad
+                  E_m=\text{constantă}
+                \]
+              </div>
+
+              <div class="insight">
+                Energia potențială gravitațională se transformă în
+                energie cinetică.
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==================================================
+             PAGINA 5 • h = 0
+             ================================================== -->
+        <section
+          class="lab-page"
+          data-title="Viteza la h = 0"
+          aria-hidden="true">
+
+          <div class="page-badge">Pagina 5 • La nivelul de referință</div>
+
+          <div class="concept-grid">
+            <div class="visual-card">
+              <img
+                class="lesson-svg"
+                src="../../assets/svg/experiments/mechanics/energie-mecanica/04-viteza-la-h-zero.svg"
+                alt="Corpul la nivelul h egal cu zero; energia potențială este zero, energia cinetică și viteza au valori maxime.">
+            </div>
+
+            <div>
+              <h2>4. Viteza la \(h=0\)</h2>
+
+              <p class="lead">
+                Alegem nivelul \(h=0\) ca nivel de referință pentru energia
+                potențială gravitațională.
+              </p>
+
+              <div class="formula-box">
+                \[
+                  E_p=mgh=0
+                \]
+              </div>
+
+              <div class="formula-box">
+                \[
+                  E_c=E_m
                 \]
               </div>
 
               <p>
-                Depinde de masă și de pătratul vitezei corpului.
+                Dacă mișcarea este ideală și corpul a pornit de la
+                înălțimea \(h_0\), atunci:
               </p>
-            </article>
-          </div>
 
-          <div class="panel" style="margin-top: 18px;">
-            <h3>Energia mecanică</h3>
-
-            <div class="formula-box">
-              \[
-                E_m=E_p+E_c
-              \]
-            </div>
-
-            <p>
-              Dacă frecarea și rezistența aerului sunt
-              neglijabile, energia mecanică se conservă:
-            </p>
-
-            <div class="formula-box">
-              \[
-                E_{m1}=E_{m2}
-              \]
-            </div>
-          </div>
-
-          <div class="remember">
-            La coborâre, scăderea energiei potențiale este egală
-            cu creșterea energiei cinetice, în cazul ideal.
-          </div>
-
-          <div class="controls">
-            <button
-              type="button"
-              class="button-secondary"
-              data-go-page="0">
-              Înapoi
-            </button>
-
-            <button
-              type="button"
-              class="button-primary"
-              data-go-page="2">
-              Mergi mai departe
-            </button>
-          </div>
-        </section>
-
-        <!-- PAGINA 3 -->
-        <section
-          class="lab-page"
-          data-title="Montajul experimental"
-          aria-hidden="true">
-
-          <div class="page-badge">
-            Pagina 3 • Pregătește experimentul
-          </div>
-
-          <h2>
-            Materiale și mod de lucru
-          </h2>
-
-          <div class="grid two">
-            <article class="panel">
-              <h3>Materiale necesare</h3>
-
-              <div class="setup-list">
-                <div class="setup-item">
-                  <span
-                    class="setup-icon"
-                    aria-hidden="true">
-                    🛝
-                  </span>
-
-                  <span>
-                    jgheab sau plan înclinat;
-                  </span>
-                </div>
-
-                <div class="setup-item">
-                  <span
-                    class="setup-icon"
-                    aria-hidden="true">
-                    ⚪
-                  </span>
-
-                  <span>
-                    bilă sau cărucior;
-                  </span>
-                </div>
-
-                <div class="setup-item">
-                  <span
-                    class="setup-icon"
-                    aria-hidden="true">
-                    📏
-                  </span>
-
-                  <span>
-                    riglă sau ruletă;
-                  </span>
-                </div>
-
-                <div class="setup-item">
-                  <span
-                    class="setup-icon"
-                    aria-hidden="true">
-                    ⚖️
-                  </span>
-
-                  <span>
-                    balanță;
-                  </span>
-                </div>
-
-                <div class="setup-item">
-                  <span
-                    class="setup-icon"
-                    aria-hidden="true">
-                    ⏱️
-                  </span>
-
-                  <span>
-                    cronometru sau senzor de viteză.
-                  </span>
-                </div>
+              <div class="formula-box">
+                \[
+                  \frac{mv^2}{2}=mgh_0
+                  \quad\Rightarrow\quad
+                  v=\sqrt{2gh_0}
+                \]
               </div>
-            </article>
 
-            <article class="panel">
-              <h3>Mod de lucru</h3>
-
-              <ol>
-                <li>
-                  Măsoară masa corpului \(m\).
-                </li>
-
-                <li>
-                  Măsoară înălțimea inițială \(h\).
-                </li>
-
-                <li>
-                  Eliberează corpul fără împingere.
-                </li>
-
-                <li>
-                  Măsoară viteza la baza planului.
-                </li>
-
-                <li>
-                  Calculează \(E_p=mgh\).
-                </li>
-
-                <li>
-                  Calculează \(E_c=\frac{mv^2}{2}\).
-                </li>
-              </ol>
-            </article>
-          </div>
-
-          <div class="warning">
-            Dacă folosești o bilă care se rostogolește, o parte
-            din energie este energie cinetică de rotație.
-            Pentru un model simplificat, folosește un cărucior
-            sau menționează această sursă de diferență.
-          </div>
-
-          <div class="controls">
-            <button
-              type="button"
-              class="button-secondary"
-              data-go-page="1">
-              Înapoi
-            </button>
-
-            <button
-              type="button"
-              class="button-primary"
-              data-go-page="3">
-              Mergi mai departe
-            </button>
+              <div class="remember">
+                Dacă revine la același nivel de la care a fost lansat
+                și nu există pierderi, corpul are același
+                <strong>modul al vitezei</strong> ca la lansare,
+                dar sensul este opus.
+              </div>
+            </div>
           </div>
         </section>
 
-        <!-- PAGINA 4 -->
+        <!-- ==================================================
+             PAGINA 6 • SIMULATOR
+             ================================================== -->
         <section
           class="lab-page"
           data-title="Simulatorul transformării energiei"
           aria-hidden="true">
 
-          <div class="page-badge">
-            Pagina 4 • Simulează
-          </div>
+          <div class="page-badge">Pagina 6 • Simulează și calculează</div>
 
-          <h2>
-            Simulator: transformarea \(E_p\) în \(E_c\)
-          </h2>
+          <h2>Simulator: coborârea pe un plan înclinat</h2>
+
+          <p class="lead">
+            Același principiu al conservării energiei poate fi studiat
+            experimental cu un corp care coboară de la o anumită înălțime.
+            Modifică parametrii și urmărește transformarea
+            \(E_p\rightarrow E_c\).
+          </p>
 
           <div class="simulator">
             <div class="scene-wrap">
@@ -1776,507 +1223,221 @@
               <div class="control-card">
                 <label for="massSlider">
                   <span>Masă \(m\)</span>
-                  <output id="massOutput">
-                    0,50 kg
-                  </output>
+                  <output id="massOutput">0,50 kg</output>
                 </label>
-
-                <input
-                  type="range"
-                  id="massSlider"
-                  min="0.10"
-                  max="2.00"
-                  step="0.05"
-                  value="0.50">
+                <input id="massSlider" type="range" min="0.10" max="2.00" step="0.05" value="0.50">
               </div>
 
               <div class="control-card">
                 <label for="heightSlider">
                   <span>Înălțime inițială \(h_0\)</span>
-                  <output id="heightOutput">
-                    0,80 m
-                  </output>
+                  <output id="heightOutput">0,80 m</output>
                 </label>
-
-                <input
-                  type="range"
-                  id="heightSlider"
-                  min="0.10"
-                  max="1.50"
-                  step="0.05"
-                  value="0.80">
+                <input id="heightSlider" type="range" min="0.20" max="2.00" step="0.05" value="0.80">
               </div>
 
               <div class="control-card">
                 <label for="lossSlider">
                   <span>Pierderi prin frecare</span>
-                  <output id="lossOutput">
-                    0%
-                  </output>
+                  <output id="lossOutput">0%</output>
                 </label>
-
-                <input
-                  type="range"
-                  id="lossSlider"
-                  min="0"
-                  max="40"
-                  step="1"
-                  value="0">
+                <input id="lossSlider" type="range" min="0" max="40" step="1" value="0">
               </div>
 
               <div class="control-card">
                 <label for="positionSlider">
                   <span>Poziția pe traseu</span>
-                  <output id="positionOutput">
-                    0%
-                  </output>
+                  <output id="positionOutput">0%</output>
                 </label>
-
-                <input
-                  type="range"
-                  id="positionSlider"
-                  min="0"
-                  max="100"
-                  step="1"
-                  value="0">
+                <input id="positionSlider" type="range" min="0" max="100" step="1" value="0">
               </div>
+            </div>
+
+            <div class="action-row">
+              <button id="playSimulation" class="button-primary" type="button">
+                Pornește coborârea
+              </button>
+              <button id="resetSimulation" class="button-secondary" type="button">
+                Reset
+              </button>
             </div>
 
             <div class="results-grid">
               <div class="result-card">
-                <strong>
-                  Înălțime curentă
-                </strong>
-
-                <span
-                  class="result-value"
-                  id="currentHeightValue">
-                  0,80 m
-                </span>
+                <strong>Înălțime curentă</strong>
+                <span id="currentHeightValue" class="result-value">0,80 m</span>
               </div>
-
               <div class="result-card">
-                <strong>
-                  Viteză
-                </strong>
-
-                <span
-                  class="result-value"
-                  id="speedValue">
-                  0,00 m/s
-                </span>
+                <strong>Viteză</strong>
+                <span id="speedValue" class="result-value">0,00 m/s</span>
               </div>
-
               <div class="result-card">
-                <strong>
-                  Energie mecanică
-                </strong>
-
-                <span
-                  class="result-value"
-                  id="mechanicalValue">
-                  4,00 J
-                </span>
-              </div>
-
-              <div class="result-card">
-                <strong>
-                  Energie disipată
-                </strong>
-
-                <span
-                  class="result-value"
-                  id="lossValue">
-                  0,00 J
-                </span>
+                <strong>Energie disipată</strong>
+                <span id="lossValue" class="result-value">0,00 J</span>
               </div>
             </div>
 
             <div class="energy-bars">
               <div class="energy-bar">
                 <header>
-                  <span>
-                    \(E_p\)
-                  </span>
-
-                  <span id="epValue">
-                    4,00 J
-                  </span>
+                  <span>\(E_p\)</span>
+                  <span id="epValue">4,00 J</span>
                 </header>
-
-                <div class="bar-track">
-                  <span
-                    class="bar-fill bar-ep"
-                    id="epBar">
-                  </span>
-                </div>
+                <div class="bar-track"><span id="epBar" class="bar-fill bar-ep"></span></div>
               </div>
 
               <div class="energy-bar">
                 <header>
-                  <span>
-                    \(E_c\)
-                  </span>
-
-                  <span id="ecValue">
-                    0,00 J
-                  </span>
+                  <span>\(E_c\)</span>
+                  <span id="ecValue">0,00 J</span>
                 </header>
-
-                <div class="bar-track">
-                  <span
-                    class="bar-fill bar-ec"
-                    id="ecBar">
-                  </span>
-                </div>
+                <div class="bar-track"><span id="ecBar" class="bar-fill bar-ec"></span></div>
               </div>
 
               <div class="energy-bar">
                 <header>
-                  <span>
-                    \(E_m\)
-                  </span>
-
-                  <span id="emValue">
-                    4,00 J
-                  </span>
+                  <span>\(E_m=E_p+E_c\)</span>
+                  <span id="emValue">4,00 J</span>
                 </header>
-
-                <div class="bar-track">
-                  <span
-                    class="bar-fill bar-em"
-                    id="emBar">
-                  </span>
-                </div>
+                <div class="bar-track"><span id="emBar" class="bar-fill bar-em"></span></div>
               </div>
 
               <div class="energy-bar">
                 <header>
-                  <span>
-                    Energie disipată
-                  </span>
-
-                  <span id="dissipatedValue">
-                    0,00 J
-                  </span>
+                  <span>Energie disipată</span>
+                  <span id="dissipatedValue">0,00 J</span>
                 </header>
-
-                <div class="bar-track">
-                  <span
-                    class="bar-fill bar-loss"
-                    id="lossBar">
-                  </span>
-                </div>
+                <div class="bar-track"><span id="lossBar" class="bar-fill bar-loss"></span></div>
               </div>
             </div>
 
-            <div class="controls">
-              <button
-                type="button"
-                class="button-calculate"
-                id="playSimulation">
-                Pornește coborârea
-              </button>
-
-              <button
-                type="button"
-                class="button-secondary"
-                id="resetSimulation">
-                Resetează
-              </button>
-            </div>
-
-            <div
-              class="sim-message"
-              id="simMessage"
-              role="status"
-              aria-live="polite">
-              La început, corpul are energie potențială maximă
-              și energie cinetică nulă.
-            </div>
+            <div class="sim-message" id="simMessage" aria-live="polite"></div>
           </div>
 
-          <div class="controls">
-            <button
-              type="button"
-              class="button-secondary"
-              data-go-page="2">
-              Înapoi
-            </button>
+          <div class="grid two" style="margin-top:20px;">
+            <article class="panel">
+              <h3>Calculul energiei potențiale</h3>
+              <div class="formula-box">
+                \[
+                  E_p=mgh
+                \]
+              </div>
+              <p>
+                Exemplu numeric:
+                \(m=0{,}50\,\mathrm{kg}\),
+                \(h=0{,}80\,\mathrm{m}\),
+                \(g=10\,\mathrm{N/kg}\).
+              </p>
+              <div class="formula-box">
+                \[
+                  E_p=0{,}50\cdot10\cdot0{,}80=4\,\mathrm{J}
+                \]
+              </div>
+            </article>
 
-            <button
-              type="button"
-              class="button-primary"
-              data-go-page="4">
-              Mergi mai departe
-            </button>
+            <article class="panel">
+              <h3>Calculul energiei cinetice</h3>
+              <div class="formula-box">
+                \[
+                  E_c=\frac{mv^2}{2}
+                \]
+              </div>
+              <p>
+                Dacă \(m=0{,}50\,\mathrm{kg}\) și \(v=4\,\mathrm{m/s}\):
+              </p>
+              <div class="formula-box">
+                \[
+                  E_c=
+                  \frac{0{,}50\cdot4^2}{2}
+                  =4\,\mathrm{J}
+                \]
+              </div>
+            </article>
           </div>
         </section>
 
-        <!-- PAGINA 5 -->
+        <!-- ==================================================
+             PAGINA 7 • MĂSURĂTORI + GRAFIC
+             ================================================== -->
         <section
           class="lab-page"
           data-title="Măsurători și grafic"
           aria-hidden="true">
 
-          <div class="page-badge">
-            Pagina 5 • Măsoară și calculează
-          </div>
+          <div class="page-badge">Pagina 7 • Măsoară și reprezintă</div>
 
-          <h2>
-            Completează tabelul de măsurători
-          </h2>
+          <h2>Tabel de măsurători</h2>
 
-          <p class="lead">
-            Introdu masa, înălțimea inițială și viteza măsurată
-            la baza planului.
+          <p>
+            Introdu valorile experimentale. Pentru fiecare determinare se calculează
+            \(E_p=mgh\), \(E_c=\frac{mv^2}{2}\), diferența energetică și randamentul
+            transformării.
           </p>
-
-          <div class="controls">
-            <button
-              type="button"
-              class="button-calculate"
-              id="copySimulation">
-              Preia simulatorul în rândul 1
-            </button>
-          </div>
 
           <div class="table-wrap">
             <table class="measure-table">
               <thead>
                 <tr>
                   <th>Nr.</th>
-                  <th>
-                    \(m\)
-                    (kg)
-                  </th>
-                  <th>
-                    \(h\)
-                    (m)
-                  </th>
-                  <th>
-                    \(v\)
-                    (m/s)
-                  </th>
-                  <th>
-                    \(E_p=mgh\)
-                    (J)
-                  </th>
-                  <th>
-                    \(E_c=\frac{mv^2}{2}\)
-                    (J)
-                  </th>
-                  <th>
-                    Diferență
-                    (J)
-                  </th>
-                  <th>
-                    Randament
-                    (%)
-                  </th>
+                  <th>\(m\) (kg)</th>
+                  <th>\(h\) (m)</th>
+                  <th>\(v\) (m/s)</th>
+                  <th>\(E_p\) (J)</th>
+                  <th>\(E_c\) (J)</th>
+                  <th>\(|E_p-E_c|\) (J)</th>
+                  <th>\(\eta=\frac{E_c}{E_p}\cdot100\%\)</th>
                 </tr>
               </thead>
-
               <tbody id="measurementBody">
                 <tr data-row="1">
                   <td>1</td>
-
-                  <td>
-                    <input
-                      type="number"
-                      min="0.01"
-                      step="0.01"
-                      value="0.50"
-                      data-field="mass"
-                      aria-label="Masa pentru determinarea 1">
-                  </td>
-
-                  <td>
-                    <input
-                      type="number"
-                      min="0.01"
-                      step="0.01"
-                      value="0.40"
-                      data-field="height"
-                      aria-label="Înălțimea pentru determinarea 1">
-                  </td>
-
-                  <td>
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value="2.70"
-                      data-field="speed"
-                      aria-label="Viteza pentru determinarea 1">
-                  </td>
-
-                  <td>
-                    <output data-output="ep">
-                      —
-                    </output>
-                  </td>
-
-                  <td>
-                    <output data-output="ec">
-                      —
-                    </output>
-                  </td>
-
-                  <td>
-                    <output data-output="difference">
-                      —
-                    </output>
-                  </td>
-
-                  <td>
-                    <output data-output="efficiency">
-                      —
-                    </output>
-                  </td>
+                  <td><input type="number" min="0.01" step="0.01" value="0.50" data-field="mass" aria-label="Masa pentru determinarea 1"></td>
+                  <td><input type="number" min="0.01" step="0.01" value="0.80" data-field="height" aria-label="Înălțimea pentru determinarea 1"></td>
+                  <td><input type="number" min="0" step="0.01" value="4.00" data-field="speed" aria-label="Viteza pentru determinarea 1"></td>
+                  <td><output data-output="ep">—</output></td>
+                  <td><output data-output="ec">—</output></td>
+                  <td><output data-output="difference">—</output></td>
+                  <td><output data-output="efficiency">—</output></td>
                 </tr>
 
                 <tr data-row="2">
                   <td>2</td>
-
-                  <td>
-                    <input
-                      type="number"
-                      min="0.01"
-                      step="0.01"
-                      value="0.50"
-                      data-field="mass"
-                      aria-label="Masa pentru determinarea 2">
-                  </td>
-
-                  <td>
-                    <input
-                      type="number"
-                      min="0.01"
-                      step="0.01"
-                      value="0.60"
-                      data-field="height"
-                      aria-label="Înălțimea pentru determinarea 2">
-                  </td>
-
-                  <td>
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value="3.30"
-                      data-field="speed"
-                      aria-label="Viteza pentru determinarea 2">
-                  </td>
-
-                  <td>
-                    <output data-output="ep">
-                      —
-                    </output>
-                  </td>
-
-                  <td>
-                    <output data-output="ec">
-                      —
-                    </output>
-                  </td>
-
-                  <td>
-                    <output data-output="difference">
-                      —
-                    </output>
-                  </td>
-
-                  <td>
-                    <output data-output="efficiency">
-                      —
-                    </output>
-                  </td>
+                  <td><input type="number" min="0.01" step="0.01" value="0.50" data-field="mass" aria-label="Masa pentru determinarea 2"></td>
+                  <td><input type="number" min="0.01" step="0.01" value="0.60" data-field="height" aria-label="Înălțimea pentru determinarea 2"></td>
+                  <td><input type="number" min="0" step="0.01" value="3.30" data-field="speed" aria-label="Viteza pentru determinarea 2"></td>
+                  <td><output data-output="ep">—</output></td>
+                  <td><output data-output="ec">—</output></td>
+                  <td><output data-output="difference">—</output></td>
+                  <td><output data-output="efficiency">—</output></td>
                 </tr>
 
                 <tr data-row="3">
                   <td>3</td>
-
-                  <td>
-                    <input
-                      type="number"
-                      min="0.01"
-                      step="0.01"
-                      value="0.50"
-                      data-field="mass"
-                      aria-label="Masa pentru determinarea 3">
-                  </td>
-
-                  <td>
-                    <input
-                      type="number"
-                      min="0.01"
-                      step="0.01"
-                      value="0.80"
-                      data-field="height"
-                      aria-label="Înălțimea pentru determinarea 3">
-                  </td>
-
-                  <td>
-                    <input
-                      type="number"
-                      min="0"
-                      step="0.01"
-                      value="3.82"
-                      data-field="speed"
-                      aria-label="Viteza pentru determinarea 3">
-                  </td>
-
-                  <td>
-                    <output data-output="ep">
-                      —
-                    </output>
-                  </td>
-
-                  <td>
-                    <output data-output="ec">
-                      —
-                    </output>
-                  </td>
-
-                  <td>
-                    <output data-output="difference">
-                      —
-                    </output>
-                  </td>
-
-                  <td>
-                    <output data-output="efficiency">
-                      —
-                    </output>
-                  </td>
+                  <td><input type="number" min="0.01" step="0.01" value="0.50" data-field="mass" aria-label="Masa pentru determinarea 3"></td>
+                  <td><input type="number" min="0.01" step="0.01" value="0.40" data-field="height" aria-label="Înălțimea pentru determinarea 3"></td>
+                  <td><input type="number" min="0" step="0.01" value="2.70" data-field="speed" aria-label="Viteza pentru determinarea 3"></td>
+                  <td><output data-output="ep">—</output></td>
+                  <td><output data-output="ec">—</output></td>
+                  <td><output data-output="difference">—</output></td>
+                  <td><output data-output="efficiency">—</output></td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <div class="controls">
-            <button
-              type="button"
-              class="button-calculate"
-              id="calculateMeasurements">
-              Calculează rezultatele
+          <div class="action-row">
+            <button id="calculateMeasurements" class="button-calculate" type="button">
+              Calculează tabelul
             </button>
           </div>
 
-          <div
-            class="average-box"
-            id="averageBox"
-            role="status"
-            aria-live="polite">
-            Randamentul mediu va apărea aici.
+          <div class="average-box" id="averageEfficiency" aria-live="polite">
+            Randament mediu: —
           </div>
 
-          <div class="chart-wrap">
-            <h3>
-              Graficul transformării energiilor
-            </h3>
+          <h2 style="margin-top:30px;">Graficul energiilor</h2>
 
+          <div class="chart-wrap">
             <canvas
               id="energyChart"
               width="900"
@@ -2284,48 +1445,30 @@
               aria-label="Graficul energiei potențiale, cinetice și mecanice în funcție de poziția corpului">
             </canvas>
 
-            <p class="muted">
-              În cazul ideal, \(E_p\) scade, \(E_c\) crește, iar
-              \(E_m\) rămâne constantă.
+            <p class="muted" style="margin-top:12px;">
+              Cu pierderi nule, \(E_p\) scade, \(E_c\) crește,
+              iar \(E_m\) rămâne constantă. Dacă introduci frecare în simulator,
+              \(E_m\) scade cu energia disipată.
             </p>
-          </div>
-
-          <div class="controls">
-            <button
-              type="button"
-              class="button-secondary"
-              data-go-page="3">
-              Înapoi
-            </button>
-
-            <button
-              type="button"
-              class="button-primary"
-              data-go-page="5">
-              Mergi mai departe
-            </button>
           </div>
         </section>
 
-        <!-- PAGINA 6 -->
+        <!-- ==================================================
+             PAGINA 8 • EXEMPLU + VERIFICARE RAPIDĂ
+             ================================================== -->
         <section
           class="lab-page"
-          data-title="Exemplu numeric și verificare rapidă"
+          data-title="Verificare rapidă și concluzie"
           aria-hidden="true">
 
-          <div class="page-badge">
-            Pagina 6 • Aplică
-          </div>
+          <div class="page-badge">Pagina 8 • Aplică și verifică</div>
 
-          <h2>
-            Exemplu numeric
-          </h2>
+          <h2>Exemplu rezolvat</h2>
 
           <div class="panel">
             <p>
               Un corp cu masa \(m=0{,}50\,\mathrm{kg}\) pornește
-              din repaus de la înălțimea
-              \(h=0{,}80\,\mathrm{m}\).
+              din repaus de la înălțimea \(h=0{,}80\,\mathrm{m}\).
               Considerăm \(g=10\,\mathrm{N/kg}\).
             </p>
 
@@ -2341,9 +1484,7 @@
               \]
             </div>
 
-            <p>
-              În cazul ideal, la baza planului:
-            </p>
+            <p>În cazul ideal, la nivelul \(h=0\):</p>
 
             <div class="formula-box">
               \[
@@ -2370,343 +1511,152 @@
             </div>
           </div>
 
-          <h2 style="margin-top: 28px;">
-            Verificare rapidă
-          </h2>
+          <h2 style="margin-top:28px;">Verificare rapidă</h2>
 
           <form id="quickCheckForm">
-            <section
-              class="quick-check"
-              data-question="q1"
-              data-correct="b">
 
+            <section class="quick-check" data-question="q1" data-correct="b">
+              <fieldset>
+                <legend>1. Energia mecanică este:</legend>
+
+                <label class="answer-option">
+                  <input type="radio" name="q1" value="a">
+                  <span>diferența dintre energia potențială și energia cinetică;</span>
+                </label>
+
+                <label class="answer-option">
+                  <input type="radio" name="q1" value="b">
+                  <span>suma dintre energia potențială și energia cinetică;</span>
+                </label>
+
+                <label class="answer-option">
+                  <input type="radio" name="q1" value="c">
+                  <span>produsul dintre energie și timp.</span>
+                </label>
+              </fieldset>
+              <div class="feedback" aria-live="polite"></div>
+            </section>
+
+            <section class="quick-check" data-question="q2" data-correct="c">
+              <fieldset>
+                <legend>2. Când corpul coboară fără frecare:</legend>
+
+                <label class="answer-option">
+                  <input type="radio" name="q2" value="a">
+                  <span>\(E_p\) și \(E_c\) scad;</span>
+                </label>
+
+                <label class="answer-option">
+                  <input type="radio" name="q2" value="b">
+                  <span>\(E_p\) crește și \(E_c\) scade;</span>
+                </label>
+
+                <label class="answer-option">
+                  <input type="radio" name="q2" value="c">
+                  <span>\(E_p\) scade și \(E_c\) crește.</span>
+                </label>
+              </fieldset>
+              <div class="feedback" aria-live="polite"></div>
+            </section>
+
+            <section class="quick-check" data-question="q3" data-correct="a">
+              <fieldset>
+                <legend>3. Energia cinetică se calculează cu:</legend>
+
+                <label class="answer-option">
+                  <input type="radio" name="q3" value="a">
+                  <span>\(E_c=\frac{mv^2}{2}\)</span>
+                </label>
+
+                <label class="answer-option">
+                  <input type="radio" name="q3" value="b">
+                  <span>\(E_c=mgh\)</span>
+                </label>
+
+                <label class="answer-option">
+                  <input type="radio" name="q3" value="c">
+                  <span>\(E_c=mv\)</span>
+                </label>
+              </fieldset>
+              <div class="feedback" aria-live="polite"></div>
+            </section>
+
+            <section class="quick-check" data-question="q4" data-correct="b">
               <fieldset>
                 <legend>
-                  1. Energia mecanică este:
+                  4. Dacă există frecare, o parte din energia mecanică se transformă în:
                 </legend>
 
                 <label class="answer-option">
-                  <input
-                    type="radio"
-                    name="q1"
-                    value="a">
-
-                  <span>
-                    diferența dintre energia potențială și
-                    energia cinetică;
-                  </span>
+                  <input type="radio" name="q4" value="a">
+                  <span>masă;</span>
                 </label>
 
                 <label class="answer-option">
-                  <input
-                    type="radio"
-                    name="q1"
-                    value="b">
-
-                  <span>
-                    suma dintre energia potențială și energia
-                    cinetică;
-                  </span>
+                  <input type="radio" name="q4" value="b">
+                  <span>energie internă și căldură;</span>
                 </label>
 
                 <label class="answer-option">
-                  <input
-                    type="radio"
-                    name="q1"
-                    value="c">
-
-                  <span>
-                    produsul dintre energie și timp.
-                  </span>
+                  <input type="radio" name="q4" value="c">
+                  <span>timp.</span>
                 </label>
               </fieldset>
-
-              <div
-                class="feedback"
-                aria-live="polite">
-              </div>
+              <div class="feedback" aria-live="polite"></div>
             </section>
 
-            <section
-              class="quick-check"
-              data-question="q2"
-              data-correct="c">
-
+            <section class="quick-check" data-question="q5" data-correct="c">
               <fieldset>
-                <legend>
-                  2. Când corpul coboară fără frecare:
-                </legend>
+                <legend>5. La înălțimea maximă a aruncării verticale:</legend>
 
                 <label class="answer-option">
-                  <input
-                    type="radio"
-                    name="q2"
-                    value="a">
-
-                  <span>
-                    \(E_p\) și \(E_c\) scad;
-                  </span>
+                  <input type="radio" name="q5" value="a">
+                  <span>viteza și accelerația gravitațională sunt zero;</span>
                 </label>
 
                 <label class="answer-option">
-                  <input
-                    type="radio"
-                    name="q2"
-                    value="b">
-
-                  <span>
-                    \(E_p\) crește și \(E_c\) scade;
-                  </span>
+                  <input type="radio" name="q5" value="b">
+                  <span>energia potențială este zero;</span>
                 </label>
 
                 <label class="answer-option">
-                  <input
-                    type="radio"
-                    name="q2"
-                    value="c">
-
-                  <span>
-                    \(E_p\) scade și \(E_c\) crește.
-                  </span>
+                  <input type="radio" name="q5" value="c">
+                  <span>\(v=0\), \(E_c=0\), iar \(E_p\) este maximă.</span>
                 </label>
               </fieldset>
-
-              <div
-                class="feedback"
-                aria-live="polite">
-              </div>
+              <div class="feedback" aria-live="polite"></div>
             </section>
 
-            <section
-              class="quick-check"
-              data-question="q3"
-              data-correct="a">
-
-              <fieldset>
-                <legend>
-                  3. Energia cinetică se calculează cu:
-                </legend>
-
-                <label class="answer-option">
-                  <input
-                    type="radio"
-                    name="q3"
-                    value="a">
-
-                  <span>
-                    \(E_c=\frac{mv^2}{2}\)
-                  </span>
-                </label>
-
-                <label class="answer-option">
-                  <input
-                    type="radio"
-                    name="q3"
-                    value="b">
-
-                  <span>
-                    \(E_c=mgh\)
-                  </span>
-                </label>
-
-                <label class="answer-option">
-                  <input
-                    type="radio"
-                    name="q3"
-                    value="c">
-
-                  <span>
-                    \(E_c=mv\)
-                  </span>
-                </label>
-              </fieldset>
-
-              <div
-                class="feedback"
-                aria-live="polite">
-              </div>
-            </section>
-
-            <section
-              class="quick-check"
-              data-question="q4"
-              data-correct="b">
-
-              <fieldset>
-                <legend>
-                  4. Dacă există frecare, o parte din energia
-                  mecanică se transformă în:
-                </legend>
-
-                <label class="answer-option">
-                  <input
-                    type="radio"
-                    name="q4"
-                    value="a">
-
-                  <span>
-                    masă;
-                  </span>
-                </label>
-
-                <label class="answer-option">
-                  <input
-                    type="radio"
-                    name="q4"
-                    value="b">
-
-                  <span>
-                    energie internă și căldură;
-                  </span>
-                </label>
-
-                <label class="answer-option">
-                  <input
-                    type="radio"
-                    name="q4"
-                    value="c">
-
-                  <span>
-                    timp.
-                  </span>
-                </label>
-              </fieldset>
-
-              <div
-                class="feedback"
-                aria-live="polite">
-              </div>
-            </section>
-
-            <button
-              type="submit"
-              class="button-primary">
-              Verifică răspunsurile
-            </button>
-
-            <div
-              class="score-box"
-              id="scoreBox"
-              role="status"
-              aria-live="polite">
+            <div class="action-row">
+              <button id="checkAnswers" class="button-calculate" type="button">
+                Verifică răspunsurile
+              </button>
+              <button id="resetQuiz" class="button-secondary" type="button">
+                Resetează
+              </button>
             </div>
+
+            <div id="scoreBox" class="score-box" aria-live="polite"></div>
           </form>
-
-          <div class="controls">
-            <button
-              type="button"
-              class="button-secondary"
-              data-go-page="4">
-              Înapoi
-            </button>
-
-            <button
-              type="button"
-              class="button-primary"
-              data-go-page="6">
-              Mergi mai departe
-            </button>
-          </div>
-        </section>
-
-        <!-- PAGINA 7: footerul comun apare numai aici -->
-        <section
-          class="lab-page"
-          data-title="Concluzii"
-          aria-hidden="true">
-
-          <div class="page-badge">
-            Pagina 7 • Concluzie
-          </div>
-
-          <h2>
-            Ce ai descoperit?
-          </h2>
-
-          <div class="grid two">
-            <article class="panel">
-              <h3>Energia potențială</h3>
-
-              <div class="formula-box">
-                \[
-                  E_p=mgh
-                \]
-              </div>
-
-              <p>
-                Scade pe măsură ce corpul coboară.
-              </p>
-            </article>
-
-            <article class="panel">
-              <h3>Energia cinetică</h3>
-
-              <div class="formula-box">
-                \[
-                  E_c=\frac{mv^2}{2}
-                \]
-              </div>
-
-              <p>
-                Crește pe măsură ce viteza corpului crește.
-              </p>
-            </article>
-
-            <article class="panel">
-              <h3>Energia mecanică</h3>
-
-              <div class="formula-box">
-                \[
-                  E_m=E_p+E_c
-                \]
-              </div>
-
-              <p>
-                Rămâne constantă în absența forțelor disipative.
-              </p>
-            </article>
-
-            <article class="panel">
-              <h3>Frecarea</h3>
-
-              <p>
-                Transformă o parte din energia mecanică în
-                energie internă și căldură.
-              </p>
-            </article>
-          </div>
 
           <div class="remember">
             <strong>Concluzie:</strong>
-            pe planul înclinat, energia potențială
-            gravitațională se transformă treptat în energie
-            cinetică. În cazul ideal, suma lor rămâne constantă.
+            în absența frecărilor, energia mecanică se conservă.
+            Energia cinetică și energia potențială se transformă una în cealaltă,
+            însă suma lor rămâne constantă.
           </div>
 
-          <div class="warning">
-            Surse de eroare: măsurarea înălțimii, măsurarea
-            vitezei, frecarea, rezistența aerului, rotația
-            corpului și eliberarea cu impuls.
-          </div>
-
-          <div class="controls end">
-            <button
-              type="button"
-              class="button-calculate"
-              onclick="window.print()">
+          <div class="end-links">
+            <button type="button" class="button-calculate" onclick="window.print()">
               Tipărește fișa laboratorului
             </button>
 
-            <a
-              class="button button-home"
-              href="../index.html">
-              Înapoi la laborator
+            <a class="button button-home" href="../index.html">
+              Înapoi la Mecanică
             </a>
 
-            <a
-              class="button button-secondary"
-              href="../../index.html">
-              Pagina principală
+            <a class="button button-secondary" href="../../index.html">
+              Laboratorul de Fizică
             </a>
           </div>
 
@@ -2716,129 +1666,105 @@
     </div>
   </div>
 
+  <!-- NAVIGAȚIE PERMANENT VIZIBILĂ -->
+  <nav class="persistent-nav" aria-label="Navigarea lecției">
+    <button id="prevPage" type="button" class="prev-nav">
+      ← Înapoi
+    </button>
+
+    <div id="bottomStatus" class="nav-status" aria-live="polite">
+      1 / 8
+    </div>
+
+    <button id="nextPage" type="button" class="next-nav">
+      Mergi mai departe →
+    </button>
+  </nav>
+
   <script>
     "use strict";
 
     const G = 10;
 
-    const pages = Array.from(
-      document.querySelectorAll(
-        ".lab-page"
-      )
-    );
+    /* =====================================================
+       PAGINARE
+       ===================================================== */
 
-    const progressFill =
-      document.getElementById(
-        "progressFill"
-      );
+    const pages = Array.from(document.querySelectorAll(".lab-page"));
+    const progressFill = document.getElementById("progressFill");
+    const pageCounter = document.getElementById("pageCounter");
+    const bottomStatus = document.getElementById("bottomStatus");
+    const topTitle = document.getElementById("topTitle");
+    const prevPageButton = document.getElementById("prevPage");
+    const nextPageButton = document.getElementById("nextPage");
 
-    const pageCounter =
-      document.getElementById(
-        "pageCounter"
-      );
+    let currentPage = 0;
 
-    const topTitle =
-      document.getElementById(
-        "topTitle"
-      );
-
-    function formatNumber(
-      value,
-      decimals = 2
-    ) {
+    function formatNumber(value, decimals = 2) {
       return Number(value)
         .toFixed(decimals)
         .replace(".", ",");
     }
 
     function typesetMath(root) {
-      window.MathJax
-        ?.typesetPromise
-        ?.([root]);
+      window.MathJax?.typesetPromise?.([root]);
     }
 
     function goToPage(index) {
-      const target =
-        Math.min(
-          Math.max(
-            Number(index) || 0,
-            0
-          ),
-          pages.length - 1
-        );
+      const target = Math.min(Math.max(Number(index) || 0, 0), pages.length - 1);
+      currentPage = target;
 
-      pages.forEach(
-        (page, pageIndex) => {
-          const active =
-            pageIndex === target;
-
-          page.classList.toggle(
-            "active",
-            active
-          );
-
-          page.setAttribute(
-            "aria-hidden",
-            String(!active)
-          );
-        }
-      );
-
-      const current =
-        pages[target];
-
-      topTitle.textContent =
-        current.dataset.title ||
-        "Conservarea energiei mecanice";
-
-      pageCounter.textContent =
-        `Pagina ${target + 1} din ${pages.length}`;
-
-      progressFill.style.width =
-        `${((target + 1) / pages.length) * 100}%`;
-
-      history.replaceState(
-        null,
-        "",
-        `#pagina-${target + 1}`
-      );
-
-      window.scrollTo({
-        top: 0,
-        behavior:
-          window.matchMedia(
-            "(prefers-reduced-motion: reduce)"
-          ).matches
-            ? "auto"
-            : "smooth"
+      pages.forEach((page, pageIndex) => {
+        const active = pageIndex === target;
+        page.classList.toggle("active", active);
+        page.setAttribute("aria-hidden", String(!active));
       });
 
-      typesetMath(current);
+      const percentage = ((target + 1) / pages.length) * 100;
+      progressFill.style.width = `${percentage}%`;
+      pageCounter.textContent = `Pagina ${target + 1} din ${pages.length}`;
+      bottomStatus.textContent = `${target + 1} / ${pages.length}`;
+      topTitle.textContent = pages[target].dataset.title || "Conservarea energiei mecanice";
 
-      if (target === 4) {
+      prevPageButton.disabled = target === 0;
+
+      if (target === pages.length - 1) {
+        nextPageButton.textContent = "Laborator finalizat ✓";
+        nextPageButton.disabled = true;
+      } else {
+        nextPageButton.textContent = "Mergi mai departe →";
+        nextPageButton.disabled = false;
+      }
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      typesetMath(pages[target]);
+
+      if (target === 5) {
+        updateSimulation();
+      }
+
+      if (target === 6) {
         calculateMeasurements();
         drawEnergyChart();
       }
     }
 
-    document.addEventListener(
-      "click",
-      (event) => {
-        const navigationButton =
-          event.target.closest(
-            "[data-go-page]"
-          );
+    prevPageButton.addEventListener("click", () => goToPage(currentPage - 1));
+    nextPageButton.addEventListener("click", () => goToPage(currentPage + 1));
 
-        if (!navigationButton) {
-          return;
-        }
+    document.addEventListener("keydown", (event) => {
+      const tag = document.activeElement?.tagName?.toLowerCase();
+      if (tag === "input" || tag === "textarea" || tag === "select") return;
 
-        goToPage(
-          navigationButton.dataset
-            .goPage
-        );
+      if (event.key === "ArrowRight" && currentPage < pages.length - 1) {
+        goToPage(currentPage + 1);
       }
-    );
+
+      if (event.key === "ArrowLeft" && currentPage > 0) {
+        goToPage(currentPage - 1);
+      }
+    });
 
     /* =====================================================
        SIMULATOR
@@ -2847,112 +1773,37 @@
     let animationId = null;
     let previousAnimationTime = 0;
 
-    const sceneCanvas =
-      document.getElementById(
-        "energyScene"
-      );
+    const sceneCanvas = document.getElementById("energyScene");
+    const sceneContext = sceneCanvas?.getContext("2d");
 
-    const sceneContext =
-      sceneCanvas?.getContext(
-        "2d"
-      );
+    const massSlider = document.getElementById("massSlider");
+    const heightSlider = document.getElementById("heightSlider");
+    const lossSlider = document.getElementById("lossSlider");
+    const positionSlider = document.getElementById("positionSlider");
 
-    const massSlider =
-      document.getElementById(
-        "massSlider"
-      );
+    const massOutput = document.getElementById("massOutput");
+    const heightOutput = document.getElementById("heightOutput");
+    const lossOutput = document.getElementById("lossOutput");
+    const positionOutput = document.getElementById("positionOutput");
 
-    const heightSlider =
-      document.getElementById(
-        "heightSlider"
-      );
+    function simulationAt(progressValue = Number(positionSlider.value) / 100) {
+      const mass = Number(massSlider.value);
+      const initialHeight = Number(heightSlider.value);
+      const lossFraction = Number(lossSlider.value) / 100;
+      const progress = Math.min(Math.max(progressValue, 0), 1);
 
-    const lossSlider =
-      document.getElementById(
-        "lossSlider"
-      );
+      const currentHeight = initialHeight * (1 - progress);
+      const initialMechanical = mass * G * initialHeight;
+      const potential = mass * G * currentHeight;
+      const transformed = initialMechanical - potential;
 
-    const positionSlider =
-      document.getElementById(
-        "positionSlider"
-      );
+      const dissipated = transformed * lossFraction;
+      const kinetic = Math.max(0, transformed - dissipated);
+      const mechanical = potential + kinetic;
 
-    const massOutput =
-      document.getElementById(
-        "massOutput"
-      );
-
-    const heightOutput =
-      document.getElementById(
-        "heightOutput"
-      );
-
-    const lossOutput =
-      document.getElementById(
-        "lossOutput"
-      );
-
-    const positionOutput =
-      document.getElementById(
-        "positionOutput"
-      );
-
-    function currentSimulation() {
-      const mass =
-        Number(massSlider.value);
-
-      const initialHeight =
-        Number(heightSlider.value);
-
-      const lossFraction =
-        Number(lossSlider.value) /
-        100;
-
-      const progress =
-        Number(positionSlider.value) /
-        100;
-
-      const currentHeight =
-        initialHeight *
-        (
-          1 -
-          progress
-        );
-
-      const initialMechanical =
-        mass *
-        G *
-        initialHeight;
-
-      const potential =
-        mass *
-        G *
-        currentHeight;
-
-      const transformed =
-        initialMechanical -
-        potential;
-
-      const dissipated =
-        transformed *
-        lossFraction;
-
-      const kinetic =
-        transformed -
-        dissipated;
-
-      const mechanical =
-        potential +
-        kinetic;
-
-      const speed =
-        mass > 0
-          ? Math.sqrt(
-              2 *
-              kinetic /
-              mass
-            )
-          : 0;
+      const speed = mass > 0
+        ? Math.sqrt((2 * kinetic) / mass)
+        : 0;
 
       return {
         mass,
@@ -2962,1326 +1813,579 @@
         currentHeight,
         initialMechanical,
         potential,
+        transformed,
+        dissipated,
         kinetic,
         mechanical,
-        dissipated,
         speed
       };
     }
 
+    function currentSimulation() {
+      return simulationAt(Number(positionSlider.value) / 100);
+    }
+
     function updateSimulation() {
-      const data =
-        currentSimulation();
+      const data = currentSimulation();
 
-      massOutput.value =
-        `${formatNumber(
-          data.mass,
-          2
-        )} kg`;
+      massOutput.value = `${formatNumber(data.mass, 2)} kg`;
+      heightOutput.value = `${formatNumber(data.initialHeight, 2)} m`;
+      lossOutput.value = `${formatNumber(data.lossFraction * 100, 0)}%`;
+      positionOutput.value = `${formatNumber(data.progress * 100, 0)}%`;
 
-      heightOutput.value =
-        `${formatNumber(
-          data.initialHeight,
-          2
-        )} m`;
+      document.getElementById("currentHeightValue").textContent =
+        `${formatNumber(data.currentHeight, 2)} m`;
 
-      lossOutput.value =
-        `${formatNumber(
-          data.lossFraction *
-          100,
-          0
-        )}%`;
+      document.getElementById("speedValue").textContent =
+        `${formatNumber(data.speed, 2)} m/s`;
 
-      positionOutput.value =
-        `${formatNumber(
-          data.progress *
-          100,
-          0
-        )}%`;
+      document.getElementById("lossValue").textContent =
+        `${formatNumber(data.dissipated, 2)} J`;
 
-      document.getElementById(
-        "currentHeightValue"
-      ).textContent =
-        `${formatNumber(
-          data.currentHeight,
-          2
-        )} m`;
+      document.getElementById("epValue").textContent =
+        `${formatNumber(data.potential, 2)} J`;
 
-      document.getElementById(
-        "speedValue"
-      ).textContent =
-        `${formatNumber(
-          data.speed,
-          2
-        )} m/s`;
+      document.getElementById("ecValue").textContent =
+        `${formatNumber(data.kinetic, 2)} J`;
 
-      document.getElementById(
-        "mechanicalValue"
-      ).textContent =
-        `${formatNumber(
-          data.mechanical,
-          2
-        )} J`;
+      document.getElementById("emValue").textContent =
+        `${formatNumber(data.mechanical, 2)} J`;
 
-      document.getElementById(
-        "lossValue"
-      ).textContent =
-        `${formatNumber(
-          data.dissipated,
-          2
-        )} J`;
+      document.getElementById("dissipatedValue").textContent =
+        `${formatNumber(data.dissipated, 2)} J`;
 
-      document.getElementById(
-        "epValue"
-      ).textContent =
-        `${formatNumber(
-          data.potential,
-          2
-        )} J`;
+      const maxEnergy = Math.max(data.initialMechanical, 0.001);
 
-      document.getElementById(
-        "ecValue"
-      ).textContent =
-        `${formatNumber(
-          data.kinetic,
-          2
-        )} J`;
+      document.getElementById("epBar").style.width =
+        `${Math.max(0, Math.min(100, 100 * data.potential / maxEnergy))}%`;
 
-      document.getElementById(
-        "emValue"
-      ).textContent =
-        `${formatNumber(
-          data.mechanical,
-          2
-        )} J`;
+      document.getElementById("ecBar").style.width =
+        `${Math.max(0, Math.min(100, 100 * data.kinetic / maxEnergy))}%`;
 
-      document.getElementById(
-        "dissipatedValue"
-      ).textContent =
-        `${formatNumber(
-          data.dissipated,
-          2
-        )} J`;
+      document.getElementById("emBar").style.width =
+        `${Math.max(0, Math.min(100, 100 * data.mechanical / maxEnergy))}%`;
 
-      const maxEnergy =
-        Math.max(
-          data.initialMechanical,
-          0.0001
-        );
+      document.getElementById("lossBar").style.width =
+        `${Math.max(0, Math.min(100, 100 * data.dissipated / maxEnergy))}%`;
 
-      document.getElementById(
-        "epBar"
-      ).style.width =
-        `${data.potential / maxEnergy * 100}%`;
+      const message = document.getElementById("simMessage");
 
-      document.getElementById(
-        "ecBar"
-      ).style.width =
-        `${data.kinetic / maxEnergy * 100}%`;
-
-      document.getElementById(
-        "emBar"
-      ).style.width =
-        `${data.mechanical / maxEnergy * 100}%`;
-
-      document.getElementById(
-        "lossBar"
-      ).style.width =
-        `${data.dissipated / maxEnergy * 100}%`;
-
-      const simMessage =
-        document.getElementById(
-          "simMessage"
-        );
-
-      if (
-        data.progress === 0
-      ) {
-        simMessage.textContent =
-          "La început, corpul are energie potențială maximă și energie cinetică nulă.";
-      } else if (
-        data.lossFraction === 0
-      ) {
-        simMessage.textContent =
-          "Energia potențială se transformă în energie cinetică, iar energia mecanică rămâne constantă.";
+      if (data.progress < 0.01) {
+        message.innerHTML =
+          `La început, corpul are aproape numai energie potențială:
+           <strong>E<sub>p</sub> = ${formatNumber(data.potential, 2)} J</strong>.`;
+      } else if (data.progress > 0.99 && data.lossFraction === 0) {
+        message.innerHTML =
+          `La baza planului, h = 0 și energia potențială s-a transformat în energie cinetică.
+           <strong>E<sub>c</sub> = E<sub>m</sub> = ${formatNumber(data.kinetic, 2)} J</strong>.`;
+      } else if (data.lossFraction === 0) {
+        message.innerHTML =
+          `Energia potențială scade, energia cinetică crește, iar
+           <strong>E<sub>m</sub> = ${formatNumber(data.mechanical, 2)} J</strong>
+           rămâne constantă.`;
       } else {
-        simMessage.textContent =
-          `O parte din energia mecanică, ${formatNumber(
-            data.dissipated,
-            2
-          )} J, s-a transformat în energie internă și căldură.`;
+        message.innerHTML =
+          `O parte din energia mecanică, aproximativ
+           <strong>${formatNumber(data.dissipated, 2)} J</strong>,
+           s-a transformat în energie internă și căldură.`;
       }
 
-      drawScene(
-        data
-      );
+      drawScene(data);
+      drawEnergyChart();
     }
 
     function drawScene(data) {
-      if (!sceneContext) {
-        return;
-      }
+      if (!sceneContext) return;
 
-      const ctx =
-        sceneContext;
+      const ctx = sceneContext;
+      const canvas = sceneCanvas;
+      const width = canvas.width;
+      const height = canvas.height;
 
-      const canvas =
-        sceneCanvas;
+      ctx.clearRect(0, 0, width, height);
 
-      const width =
-        canvas.width;
+      const gradient = ctx.createLinearGradient(0, 0, 0, height);
+      gradient.addColorStop(0, "#9bd8ff");
+      gradient.addColorStop(0.72, "#e8f6ff");
+      gradient.addColorStop(0.73, "#d8e2ec");
+      gradient.addColorStop(1, "#94a3b8");
 
-      const height =
-        canvas.height;
-
-      ctx.clearRect(
-        0,
-        0,
-        width,
-        height
-      );
-
-      const gradient =
-        ctx.createLinearGradient(
-          0,
-          0,
-          0,
-          height
-        );
-
-      gradient.addColorStop(
-        0,
-        "#9bd8ff"
-      );
-
-      gradient.addColorStop(
-        0.72,
-        "#e8f6ff"
-      );
-
-      gradient.addColorStop(
-        0.73,
-        "#d8e2ec"
-      );
-
-      gradient.addColorStop(
-        1,
-        "#94a3b8"
-      );
-
-      ctx.fillStyle =
-        gradient;
-
-      ctx.fillRect(
-        0,
-        0,
-        width,
-        height
-      );
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, width, height);
 
       const startX = 110;
       const startY = 95;
+      const endX = width - 90;
+      const endY = height - 95;
 
-      const endX =
-        width - 90;
+      // sol
+      ctx.fillStyle = "#78909c";
+      ctx.fillRect(0, endY + 32, width, height - endY - 32);
 
-      const endY =
-        height - 95;
-
-      ctx.strokeStyle =
-        "#5b3a1f";
-
+      // plan înclinat
+      ctx.strokeStyle = "#5b3a1f";
       ctx.lineWidth = 24;
       ctx.lineCap = "round";
-
       ctx.beginPath();
-
-      ctx.moveTo(
-        startX,
-        startY
-      );
-
-      ctx.lineTo(
-        endX,
-        endY
-      );
-
+      ctx.moveTo(startX, startY);
+      ctx.lineTo(endX, endY);
       ctx.stroke();
 
-      ctx.strokeStyle =
-        "#d8a66a";
-
+      ctx.strokeStyle = "#d8a66a";
       ctx.lineWidth = 15;
-
       ctx.beginPath();
-
-      ctx.moveTo(
-        startX,
-        startY
-      );
-
-      ctx.lineTo(
-        endX,
-        endY
-      );
-
+      ctx.moveTo(startX, startY);
+      ctx.lineTo(endX, endY);
       ctx.stroke();
 
-      ctx.strokeStyle =
-        "#334155";
-
-      ctx.lineWidth = 3;
-      ctx.setLineDash([8, 7]);
-
+      // linie de nivel
+      ctx.strokeStyle = "#334155";
+      ctx.lineWidth = 2;
+      ctx.setLineDash([8, 8]);
       ctx.beginPath();
-
-      ctx.moveTo(
-        startX,
-        endY
-      );
-
-      ctx.lineTo(
-        startX,
-        startY
-      );
-
+      ctx.moveTo(55, endY + 25);
+      ctx.lineTo(width - 45, endY + 25);
       ctx.stroke();
-
       ctx.setLineDash([]);
 
-      ctx.fillStyle =
-        "#172033";
-
-      ctx.font =
-        "bold 18px Segoe UI";
-
-      ctx.fillText(
-        `h₀ = ${formatNumber(
-          data.initialHeight,
-          2
-        )} m`,
-        28,
-        205
-      );
-
-      const x =
-        startX +
-        (
-          endX -
-          startX
-        ) *
-        data.progress;
-
-      const y =
-        startY +
-        (
-          endY -
-          startY
-        ) *
-        data.progress;
+      // corp
+      const x = startX + (endX - startX) * data.progress;
+      const y = startY + (endY - startY) * data.progress;
 
       ctx.save();
+      ctx.translate(x, y - 22);
 
-      const angle =
-        Math.atan2(
-          endY -
-          startY,
-          endX -
-          startX
-        );
+      const ballGradient = ctx.createRadialGradient(-8, -10, 5, 0, 0, 30);
+      ballGradient.addColorStop(0, "#ecfeff");
+      ballGradient.addColorStop(0.35, "#67e8f9");
+      ballGradient.addColorStop(1, "#0891b2");
 
-      ctx.translate(
-        x,
-        y - 23
-      );
-
-      ctx.rotate(
-        angle
-      );
-
-      ctx.fillStyle =
-        "#f59e0b";
-
-      ctx.strokeStyle =
-        "#172033";
-
-      ctx.lineWidth = 4;
-
+      ctx.fillStyle = ballGradient;
       ctx.beginPath();
-
-      ctx.roundRect(
-        -38,
-        -30,
-        76,
-        60,
-        12
-      );
-
+      ctx.arc(0, 0, 27, 0, Math.PI * 2);
       ctx.fill();
+
+      ctx.strokeStyle = "#0e7490";
+      ctx.lineWidth = 3;
       ctx.stroke();
-
-      ctx.fillStyle =
-        "#172033";
-
-      ctx.font =
-        "bold 15px Segoe UI";
-
-      ctx.textAlign =
-        "center";
-
-      ctx.fillText(
-        `${formatNumber(
-          data.mass,
-          2
-        )} kg`,
-        0,
-        5
-      );
 
       ctx.restore();
 
-      ctx.fillStyle =
-        "rgba(255,255,255,.94)";
-
-      ctx.strokeStyle =
-        "#172033";
-
+      // înălțime curentă
+      const groundY = endY + 25;
+      ctx.strokeStyle = "#f59e0b";
       ctx.lineWidth = 3;
-
+      ctx.setLineDash([6, 6]);
       ctx.beginPath();
-
-      ctx.roundRect(
-        width - 260,
-        28,
-        230,
-        116,
-        16
-      );
-
-      ctx.fill();
+      ctx.moveTo(x - 62, y - 22);
+      ctx.lineTo(x - 62, groundY);
       ctx.stroke();
+      ctx.setLineDash([]);
 
-      ctx.fillStyle =
-        "#172033";
+      ctx.fillStyle = "#7c2d12";
+      ctx.font = "bold 22px Segoe UI, Arial";
+      ctx.fillText(`h = ${formatNumber(data.currentHeight, 2)} m`, Math.max(18, x - 205), (y + groundY) / 2);
 
-      ctx.textAlign =
-        "left";
+      // vector v
+      if (data.speed > 0.05) {
+        const dx = endX - startX;
+        const dy = endY - startY;
+        const length = Math.hypot(dx, dy);
+        const ux = dx / length;
+        const uy = dy / length;
+        const arrowLength = 55 + Math.min(65, data.speed * 13);
 
-      ctx.font =
-        "bold 18px Segoe UI";
+        const ax1 = x + 35 * ux;
+        const ay1 = y - 22 + 35 * uy;
+        const ax2 = ax1 + arrowLength * ux;
+        const ay2 = ay1 + arrowLength * uy;
 
-      ctx.fillText(
-        `Ep = ${formatNumber(
-          data.potential,
-          2
-        )} J`,
-        width - 238,
-        62
-      );
+        ctx.strokeStyle = "#059669";
+        ctx.fillStyle = "#059669";
+        ctx.lineWidth = 6;
+        ctx.beginPath();
+        ctx.moveTo(ax1, ay1);
+        ctx.lineTo(ax2, ay2);
+        ctx.stroke();
 
-      ctx.fillText(
-        `Ec = ${formatNumber(
-          data.kinetic,
-          2
-        )} J`,
-        width - 238,
-        94
-      );
+        const angle = Math.atan2(uy, ux);
+        ctx.beginPath();
+        ctx.moveTo(ax2, ay2);
+        ctx.lineTo(ax2 - 18 * Math.cos(angle - 0.45), ay2 - 18 * Math.sin(angle - 0.45));
+        ctx.lineTo(ax2 - 18 * Math.cos(angle + 0.45), ay2 - 18 * Math.sin(angle + 0.45));
+        ctx.closePath();
+        ctx.fill();
 
-      ctx.fillText(
-        `Em = ${formatNumber(
-          data.mechanical,
-          2
-        )} J`,
-        width - 238,
-        126
-      );
+        ctx.fillStyle = "#064e3b";
+        ctx.font = "bold 21px Segoe UI, Arial";
+        ctx.fillText(`v = ${formatNumber(data.speed, 2)} m/s`, ax1 + 12, ay1 - 18);
+      }
+
+      // etichete
+      ctx.fillStyle = "#172033";
+      ctx.font = "bold 21px Segoe UI, Arial";
+      ctx.fillText("Poziție inițială", 46, 62);
+      ctx.fillText("h = 0", width - 128, groundY + 35);
+
+      ctx.fillStyle = "rgba(15, 23, 42, .82)";
+      ctx.fillRect(width - 275, 28, 235, 104);
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 18px Segoe UI, Arial";
+      ctx.fillText(`Ep = ${formatNumber(data.potential, 2)} J`, width - 250, 58);
+      ctx.fillText(`Ec = ${formatNumber(data.kinetic, 2)} J`, width - 250, 85);
+      ctx.fillText(`Em = ${formatNumber(data.mechanical, 2)} J`, width - 250, 112);
     }
 
-    [
-      massSlider,
-      heightSlider,
-      lossSlider,
-      positionSlider
-    ].forEach(
-      (control) => {
-        control?.addEventListener(
-          "input",
-          updateSimulation
-        );
+    [massSlider, heightSlider, lossSlider, positionSlider].forEach((slider) => {
+      slider.addEventListener("input", updateSimulation);
+    });
+
+    document.getElementById("playSimulation").addEventListener("click", (event) => {
+      const button = event.currentTarget;
+
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+        button.textContent = "Pornește coborârea";
+        return;
       }
-    );
 
-    document
-      .getElementById(
-        "playSimulation"
-      )
-      ?.addEventListener(
-        "click",
-        () => {
-          const button =
-            document.getElementById(
-              "playSimulation"
-            );
+      if (Number(positionSlider.value) >= 100) {
+        positionSlider.value = 0;
+        updateSimulation();
+      }
 
-          if (animationId) {
-            cancelAnimationFrame(
-              animationId
-            );
+      button.textContent = "Oprește coborârea";
+      previousAnimationTime = performance.now();
 
-            animationId = null;
-            button.textContent =
-              "Pornește coborârea";
+      function animate(now) {
+        const delta = (now - previousAnimationTime) / 1000;
+        previousAnimationTime = now;
 
-            return;
-          }
+        let next = Number(positionSlider.value) + delta * 24;
 
-          button.textContent =
-            "Oprește coborârea";
-
-          previousAnimationTime =
-            performance.now();
-
-          function animate(now) {
-            const delta =
-              (
-                now -
-                previousAnimationTime
-              ) /
-              1000;
-
-            previousAnimationTime =
-              now;
-
-            let next =
-              Number(
-                positionSlider.value
-              ) +
-              delta *
-              24;
-
-            if (next >= 100) {
-              next = 100;
-
-              positionSlider.value =
-                next;
-
-              updateSimulation();
-
-              animationId = null;
-
-              button.textContent =
-                "Pornește coborârea";
-
-              return;
-            }
-
-            positionSlider.value =
-              next;
-
-            updateSimulation();
-
-            animationId =
-              requestAnimationFrame(
-                animate
-              );
-          }
-
-          animationId =
-            requestAnimationFrame(
-              animate
-            );
-        }
-      );
-
-    document
-      .getElementById(
-        "resetSimulation"
-      )
-      ?.addEventListener(
-        "click",
-        () => {
-          if (animationId) {
-            cancelAnimationFrame(
-              animationId
-            );
-
-            animationId = null;
-          }
-
-          positionSlider.value = 0;
-
-          document.getElementById(
-            "playSimulation"
-          ).textContent =
-            "Pornește coborârea";
-
+        if (next >= 100) {
+          next = 100;
+          positionSlider.value = next;
           updateSimulation();
+          animationId = null;
+          button.textContent = "Pornește coborârea";
+          return;
         }
-      );
+
+        positionSlider.value = next;
+        updateSimulation();
+        animationId = requestAnimationFrame(animate);
+      }
+
+      animationId = requestAnimationFrame(animate);
+    });
+
+    document.getElementById("resetSimulation").addEventListener("click", () => {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
+
+      positionSlider.value = 0;
+      document.getElementById("playSimulation").textContent = "Pornește coborârea";
+      updateSimulation();
+    });
 
     /* =====================================================
        TABELUL DE MĂSURĂTORI
        ===================================================== */
 
     function calculateRow(row) {
-      const mass =
-        Number(
-          row.querySelector(
-            '[data-field="mass"]'
-          )?.value
-        );
+      const mass = Number(row.querySelector('[data-field="mass"]')?.value);
+      const height = Number(row.querySelector('[data-field="height"]')?.value);
+      const speed = Number(row.querySelector('[data-field="speed"]')?.value);
 
-      const height =
-        Number(
-          row.querySelector(
-            '[data-field="height"]'
-          )?.value
-        );
-
-      const speed =
-        Number(
-          row.querySelector(
-            '[data-field="speed"]'
-          )?.value
-        );
-
-      const outputs = {
-        ep:
-          row.querySelector(
-            '[data-output="ep"]'
-          ),
-
-        ec:
-          row.querySelector(
-            '[data-output="ec"]'
-          ),
-
-        difference:
-          row.querySelector(
-            '[data-output="difference"]'
-          ),
-
-        efficiency:
-          row.querySelector(
-            '[data-output="efficiency"]'
-          )
-      };
-
-      if (
-        !Number.isFinite(mass) ||
-        !Number.isFinite(height) ||
-        !Number.isFinite(speed) ||
-        mass <= 0 ||
-        height <= 0 ||
-        speed < 0
-      ) {
-        Object.values(outputs)
-          .forEach(
-            (output) => {
-              output.textContent =
-                "invalid";
-            }
-          );
-
+      if (!(mass > 0) || !(height > 0) || speed < 0) {
+        ["ep", "ec", "difference", "efficiency"].forEach((key) => {
+          row.querySelector(`[data-output="${key}"]`).value = "—";
+        });
         return null;
       }
 
-      const ep =
-        mass *
-        G *
-        height;
+      const ep = mass * G * height;
+      const ec = 0.5 * mass * speed * speed;
+      const difference = Math.abs(ep - ec);
+      const efficiency = ep > 0 ? (ec / ep) * 100 : 0;
 
-      const ec =
-        mass *
-        speed *
-        speed /
-        2;
+      row.querySelector('[data-output="ep"]').value = `${formatNumber(ep, 2)} J`;
+      row.querySelector('[data-output="ec"]').value = `${formatNumber(ec, 2)} J`;
+      row.querySelector('[data-output="difference"]').value = `${formatNumber(difference, 2)} J`;
+      row.querySelector('[data-output="efficiency"]').value = `${formatNumber(efficiency, 1)}%`;
 
-      const difference =
-        ep -
-        ec;
-
-      const efficiency =
-        ep > 0
-          ? ec /
-            ep *
-            100
-          : 0;
-
-      outputs.ep.textContent =
-        formatNumber(
-          ep,
-          3
-        );
-
-      outputs.ec.textContent =
-        formatNumber(
-          ec,
-          3
-        );
-
-      outputs.difference.textContent =
-        formatNumber(
-          difference,
-          3
-        );
-
-      outputs.efficiency.textContent =
-        formatNumber(
-          efficiency,
-          1
-        );
-
-      return {
-        ep,
-        ec,
-        difference,
-        efficiency
-      };
+      return efficiency;
     }
 
     function calculateMeasurements() {
-      const rows =
-        Array.from(
-          document.querySelectorAll(
-            "#measurementBody tr"
-          )
-        );
+      const rows = Array.from(document.querySelectorAll("#measurementBody tr"));
+      const efficiencies = rows
+        .map(calculateRow)
+        .filter((value) => Number.isFinite(value));
 
-      const values =
-        rows
-          .map(
-            calculateRow
-          )
-          .filter(
-            Boolean
-          );
+      const box = document.getElementById("averageEfficiency");
 
-      const averageBox =
-        document.getElementById(
-          "averageBox"
-        );
-
-      if (!values.length) {
-        averageBox.textContent =
-          "Nu există determinări valide. Verifică masa, înălțimea și viteza.";
-
+      if (!efficiencies.length) {
+        box.textContent = "Randament mediu: —";
         return;
       }
 
-      const averageEfficiency =
-        values.reduce(
-          (sum, item) =>
-            sum +
-            item.efficiency,
-          0
-        ) /
-        values.length;
-
-      const averageLoss =
-        values.reduce(
-          (sum, item) =>
-            sum +
-            item.difference,
-          0
-        ) /
-        values.length;
-
-      averageBox.textContent =
-        `Randament mediu: ${formatNumber(
-          averageEfficiency,
-          1
-        )}%. Diferență energetică medie: ${formatNumber(
-          averageLoss,
-          3
-        )} J.`;
+      const average = efficiencies.reduce((sum, value) => sum + value, 0) / efficiencies.length;
+      box.textContent = `Randament mediu: ${formatNumber(average, 1)}%`;
     }
 
-    document
-      .getElementById(
-        "calculateMeasurements"
-      )
-      ?.addEventListener(
-        "click",
-        calculateMeasurements
-      );
+    document.getElementById("calculateMeasurements")
+      .addEventListener("click", calculateMeasurements);
 
-    document
-      .getElementById(
-        "copySimulation"
-      )
-      ?.addEventListener(
-        "click",
-        () => {
-          const data =
-            currentSimulation();
-
-          const firstRow =
-            document.querySelector(
-              '#measurementBody tr[data-row="1"]'
-            );
-
-          firstRow.querySelector(
-            '[data-field="mass"]'
-          ).value =
-            data.mass.toFixed(2);
-
-          firstRow.querySelector(
-            '[data-field="height"]'
-          ).value =
-            data.initialHeight.toFixed(2);
-
-          const bottomKinetic =
-            data.initialMechanical *
-            (
-              1 -
-              data.lossFraction
-            );
-
-          const bottomSpeed =
-            Math.sqrt(
-              2 *
-              bottomKinetic /
-              data.mass
-            );
-
-          firstRow.querySelector(
-            '[data-field="speed"]'
-          ).value =
-            bottomSpeed.toFixed(2);
-
-          calculateMeasurements();
-        }
-      );
+    document.getElementById("measurementBody")
+      .addEventListener("input", calculateMeasurements);
 
     /* =====================================================
        GRAFICUL ENERGIILOR
        ===================================================== */
 
-    const chartCanvas =
-      document.getElementById(
-        "energyChart"
-      );
-
-    const chartContext =
-      chartCanvas?.getContext(
-        "2d"
-      );
+    const chartCanvas = document.getElementById("energyChart");
+    const chartContext = chartCanvas?.getContext("2d");
 
     function drawEnergyChart() {
-      if (!chartContext) {
-        return;
-      }
+      if (!chartContext) return;
 
-      const data =
-        currentSimulation();
+      const ctx = chartContext;
+      const canvas = chartCanvas;
+      const width = canvas.width;
+      const height = canvas.height;
 
-      const ctx =
-        chartContext;
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, width, height);
 
-      const canvas =
-        chartCanvas;
-
-      const width =
-        canvas.width;
-
-      const height =
-        canvas.height;
-
-      ctx.clearRect(
-        0,
-        0,
-        width,
-        height
-      );
-
-      ctx.fillStyle =
-        "#ffffff";
-
-      ctx.fillRect(
-        0,
-        0,
-        width,
-        height
-      );
+      const base = simulationAt(0);
 
       const margin = {
         left: 86,
         right: 36,
-        top: 40,
+        top: 42,
         bottom: 72
       };
 
-      const plotWidth =
-        width -
-        margin.left -
-        margin.right;
+      const plotWidth = width - margin.left - margin.right;
+      const plotHeight = height - margin.top - margin.bottom;
+      const maxEnergy = Math.max(base.initialMechanical, 1);
 
-      const plotHeight =
-        height -
-        margin.top -
-        margin.bottom;
-
-      const maxEnergy =
-        Math.max(
-          data.initialMechanical,
-          1
-        );
-
-      ctx.strokeStyle =
-        "#cbd5e1";
-
+      // grid
+      ctx.strokeStyle = "#d7e0e8";
       ctx.lineWidth = 1;
 
-      for (
-        let index = 0;
-        index <= 5;
-        index += 1
-      ) {
-        const x =
-          margin.left +
-          plotWidth *
-          index /
-          5;
-
-        const y =
-          margin.top +
-          plotHeight *
-          index /
-          5;
+      for (let index = 0; index <= 5; index += 1) {
+        const x = margin.left + plotWidth * index / 5;
+        const y = margin.top + plotHeight * index / 5;
 
         ctx.beginPath();
-
-        ctx.moveTo(
-          x,
-          margin.top
-        );
-
-        ctx.lineTo(
-          x,
-          margin.top +
-          plotHeight
-        );
-
+        ctx.moveTo(x, margin.top);
+        ctx.lineTo(x, margin.top + plotHeight);
         ctx.stroke();
 
         ctx.beginPath();
-
-        ctx.moveTo(
-          margin.left,
-          y
-        );
-
-        ctx.lineTo(
-          margin.left +
-          plotWidth,
-          y
-        );
-
+        ctx.moveTo(margin.left, y);
+        ctx.lineTo(margin.left + plotWidth, y);
         ctx.stroke();
       }
 
-      ctx.strokeStyle =
-        "#172033";
-
+      // axes
+      ctx.strokeStyle = "#172033";
       ctx.lineWidth = 3;
-
       ctx.beginPath();
-
-      ctx.moveTo(
-        margin.left,
-        margin.top
-      );
-
-      ctx.lineTo(
-        margin.left,
-        margin.top +
-        plotHeight
-      );
-
-      ctx.lineTo(
-        margin.left +
-        plotWidth,
-        margin.top +
-        plotHeight
-      );
-
+      ctx.moveTo(margin.left, margin.top);
+      ctx.lineTo(margin.left, margin.top + plotHeight);
+      ctx.lineTo(margin.left + plotWidth, margin.top + plotHeight);
       ctx.stroke();
 
-      ctx.fillStyle =
-        "#172033";
+      // labels
+      ctx.fillStyle = "#172033";
+      ctx.font = "16px Segoe UI, Arial";
+      ctx.textAlign = "center";
 
-      ctx.font =
-        "bold 20px Segoe UI";
-
-      ctx.fillText(
-        "E (J)",
-        20,
-        margin.top + 8
-      );
-
-      ctx.fillText(
-        "poziție (%)",
-        width - 140,
-        height - 20
-      );
-
-      ctx.font =
-        "16px Segoe UI";
-
-      for (
-        let index = 0;
-        index <= 5;
-        index += 1
-      ) {
-        const xValue =
-          100 *
-          index /
-          5;
-
-        const yValue =
-          maxEnergy *
-          (5 - index) /
-          5;
-
-        const x =
-          margin.left +
-          plotWidth *
-          index /
-          5;
-
-        const y =
-          margin.top +
-          plotHeight *
-          index /
-          5;
-
-        ctx.fillText(
-          formatNumber(
-            xValue,
-            0
-          ),
-          x - 10,
-          margin.top +
-          plotHeight +
-          28
-        );
-
-        ctx.fillText(
-          formatNumber(
-            yValue,
-            1
-          ),
-          40,
-          y + 6
-        );
+      for (let index = 0; index <= 5; index += 1) {
+        const x = margin.left + plotWidth * index / 5;
+        ctx.fillText(`${index * 20}%`, x, margin.top + plotHeight + 30);
       }
 
-      const curves = {
-        ep: [],
-        ec: [],
-        em: []
-      };
-
-      for (
-        let index = 0;
-        index <= 50;
-        index += 1
-      ) {
-        const progress =
-          index /
-          50;
-
-        const potential =
-          data.initialMechanical *
-          (
-            1 -
-            progress
-          );
-
-        const transformed =
-          data.initialMechanical -
-          potential;
-
-        const dissipated =
-          transformed *
-          data.lossFraction;
-
-        const kinetic =
-          transformed -
-          dissipated;
-
-        const mechanical =
-          potential +
-          kinetic;
-
-        curves.ep.push({
-          progress,
-          value:
-            potential
-        });
-
-        curves.ec.push({
-          progress,
-          value:
-            kinetic
-        });
-
-        curves.em.push({
-          progress,
-          value:
-            mechanical
-        });
+      ctx.textAlign = "right";
+      for (let index = 0; index <= 5; index += 1) {
+        const value = maxEnergy * (1 - index / 5);
+        const y = margin.top + plotHeight * index / 5 + 5;
+        ctx.fillText(formatNumber(value, 1), margin.left - 14, y);
       }
 
-      function drawCurve(
-        points,
-        color
-      ) {
-        ctx.strokeStyle =
-          color;
+      ctx.save();
+      ctx.translate(24, margin.top + plotHeight / 2);
+      ctx.rotate(-Math.PI / 2);
+      ctx.textAlign = "center";
+      ctx.fillText("Energie (J)", 0, 0);
+      ctx.restore();
 
+      ctx.textAlign = "center";
+      ctx.fillText("Poziția pe traseu", margin.left + plotWidth / 2, height - 18);
+
+      function yFor(value) {
+        return margin.top + plotHeight * (1 - value / maxEnergy);
+      }
+
+      function xFor(progress) {
+        return margin.left + plotWidth * progress;
+      }
+
+      function drawCurve(color, accessor, dashed = false) {
+        ctx.strokeStyle = color;
         ctx.lineWidth = 4;
-
+        ctx.setLineDash(dashed ? [10, 8] : []);
         ctx.beginPath();
 
-        points.forEach(
-          (point, index) => {
-            const x =
-              margin.left +
-              point.progress *
-              plotWidth;
+        for (let i = 0; i <= 100; i += 1) {
+          const p = i / 100;
+          const data = simulationAt(p);
+          const x = xFor(p);
+          const y = yFor(accessor(data));
 
-            const y =
-              margin.top +
-              plotHeight -
-              point.value /
-              maxEnergy *
-              plotHeight;
-
-            if (index === 0) {
-              ctx.moveTo(
-                x,
-                y
-              );
-            } else {
-              ctx.lineTo(
-                x,
-                y
-              );
-            }
-          }
-        );
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
 
         ctx.stroke();
+        ctx.setLineDash([]);
       }
 
-      drawCurve(
-        curves.ep,
-        "#f59e0b"
-      );
+      drawCurve("#f59e0b", (data) => data.potential);
+      drawCurve("#0284c7", (data) => data.kinetic);
+      drawCurve("#059669", (data) => data.mechanical, true);
 
-      drawCurve(
-        curves.ec,
-        "#0284c7"
-      );
+      // current point marker
+      const current = currentSimulation();
+      const currentX = xFor(current.progress);
 
-      drawCurve(
-        curves.em,
-        "#047857"
-      );
+      ctx.strokeStyle = "#7c3aed";
+      ctx.lineWidth = 2;
+      ctx.setLineDash([6, 5]);
+      ctx.beginPath();
+      ctx.moveTo(currentX, margin.top);
+      ctx.lineTo(currentX, margin.top + plotHeight);
+      ctx.stroke();
+      ctx.setLineDash([]);
 
-      ctx.font =
-        "bold 17px Segoe UI";
+      // legend
+      const legendY = 20;
+      const legendItems = [
+        ["#f59e0b", "Ep"],
+        ["#0284c7", "Ec"],
+        ["#059669", "Em"],
+        ["#7c3aed", "poziția curentă"]
+      ];
 
-      ctx.fillStyle =
-        "#f59e0b";
+      ctx.font = "bold 15px Segoe UI, Arial";
+      ctx.textAlign = "left";
 
-      ctx.fillText(
-        "Ep",
-        width - 105,
-        68
-      );
-
-      ctx.fillStyle =
-        "#0284c7";
-
-      ctx.fillText(
-        "Ec",
-        width - 105,
-        95
-      );
-
-      ctx.fillStyle =
-        "#047857";
-
-      ctx.fillText(
-        "Em",
-        width - 105,
-        122
-      );
+      let legendX = margin.left;
+      legendItems.forEach(([color, label]) => {
+        ctx.fillStyle = color;
+        ctx.fillRect(legendX, legendY - 11, 22, 5);
+        ctx.fillStyle = "#172033";
+        ctx.fillText(label, legendX + 29, legendY - 3);
+        legendX += label === "poziția curentă" ? 170 : 92;
+      });
     }
 
     /* =====================================================
        VERIFICARE RAPIDĂ
        ===================================================== */
 
-    const quickCheckForm =
-      document.getElementById(
-        "quickCheckForm"
-      );
+    const quickCheckForm = document.getElementById("quickCheckForm");
+    const scoreBox = document.getElementById("scoreBox");
 
-    quickCheckForm
-      ?.addEventListener(
-        "submit",
-        (event) => {
-          event.preventDefault();
+    function checkQuickAnswers() {
+      const checks = Array.from(document.querySelectorAll(".quick-check"));
+      let score = 0;
+      let answered = 0;
 
-          const questions =
-            Array.from(
-              quickCheckForm
-                .querySelectorAll(
-                  "[data-question]"
-                )
-            );
+      checks.forEach((check) => {
+        const correctValue = check.dataset.correct;
+        const selected = check.querySelector("input[type='radio']:checked");
+        const feedback = check.querySelector(".feedback");
+        const options = Array.from(check.querySelectorAll(".answer-option"));
 
-          let correctAnswers = 0;
-          let answered = 0;
+        options.forEach((option) => {
+          option.classList.remove("correct", "incorrect");
+        });
 
-          questions.forEach(
-            (question) => {
-              const selected =
-                question.querySelector(
-                  "input:checked"
-                );
-
-              const feedback =
-                question.querySelector(
-                  ".feedback"
-                );
-
-              question
-                .querySelectorAll(
-                  ".answer-option"
-                )
-                .forEach(
-                  (option) => {
-                    option.classList.remove(
-                      "correct",
-                      "incorrect"
-                    );
-                  }
-                );
-
-              if (!selected) {
-                feedback.textContent =
-                  "Alege un răspuns.";
-
-                return;
-              }
-
-              answered += 1;
-
-              const correct =
-                selected.value ===
-                question.dataset.correct;
-
-              const selectedLabel =
-                selected.closest(
-                  ".answer-option"
-                );
-
-              selectedLabel
-                ?.classList
-                .add(
-                  correct
-                    ? "correct"
-                    : "incorrect"
-                );
-
-              if (correct) {
-                correctAnswers += 1;
-                feedback.textContent =
-                  "✓ Corect.";
-              } else {
-                feedback.textContent =
-                  "✗ Răspuns incorect. Recitește explicația și încearcă din nou.";
-              }
-            }
-          );
-
-          const scoreBox =
-            document.getElementById(
-              "scoreBox"
-            );
-
-          scoreBox.classList.add(
-            "visible"
-          );
-
-          if (
-            answered <
-            questions.length
-          ) {
-            scoreBox.textContent =
-              `Ai răspuns la ${answered} din ${questions.length} întrebări. Completează toate răspunsurile.`;
-
-            return;
-          }
-
-          scoreBox.textContent =
-            correctAnswers ===
-            questions.length
-              ? `Excelent! Ai ${correctAnswers} răspunsuri corecte din ${questions.length}.`
-              : `Ai ${correctAnswers} răspunsuri corecte din ${questions.length}. Poți corecta răspunsurile și verifica din nou.`;
-
-          typesetMath(
-            quickCheckForm
-          );
+        if (!selected) {
+          feedback.textContent = "Alege o variantă.";
+          return;
         }
-      );
+
+        answered += 1;
+        const selectedLabel = selected.closest(".answer-option");
+
+        if (selected.value === correctValue) {
+          score += 1;
+          selectedLabel.classList.add("correct");
+          feedback.textContent = "✓ Corect.";
+        } else {
+          selectedLabel.classList.add("incorrect");
+          const correctInput = check.querySelector(`input[value="${correctValue}"]`);
+          correctInput?.closest(".answer-option")?.classList.add("correct");
+          feedback.textContent = "✗ Mai verifică ideea fizică evidențiată în lecție.";
+        }
+      });
+
+      scoreBox.style.display = "block";
+
+      if (answered < checks.length) {
+        scoreBox.textContent =
+          `Ai răspuns la ${answered} din ${checks.length} întrebări. Scor curent: ${score}/${checks.length}.`;
+        return;
+      }
+
+      const percent = Math.round(score / checks.length * 100);
+      let message = "Revezi situațiile din primele pagini.";
+
+      if (percent >= 80) message = "Foarte bine! Ai înțeles transformarea energiilor.";
+      else if (percent >= 60) message = "Bine. Mai exersează momentele-cheie ale mișcării.";
+
+      scoreBox.textContent =
+        `Scor: ${score}/${checks.length} (${percent}%). ${message}`;
+    }
+
+    document.getElementById("checkAnswers")
+      .addEventListener("click", checkQuickAnswers);
+
+    document.getElementById("resetQuiz")
+      .addEventListener("click", () => {
+        quickCheckForm.reset();
+        scoreBox.style.display = "none";
+        scoreBox.textContent = "";
+
+        document.querySelectorAll(".answer-option")
+          .forEach((option) => option.classList.remove("correct", "incorrect"));
+
+        document.querySelectorAll(".feedback")
+          .forEach((feedback) => feedback.textContent = "");
+      });
 
     /* =====================================================
-       PORNIRE
+       INIȚIALIZARE
        ===================================================== */
 
-    const hashMatch =
-      window.location.hash.match(
-        /^#pagina-(\d+)$/
-      );
-
-    updateSimulation();
     calculateMeasurements();
-    drawEnergyChart();
-
-    goToPage(
-      hashMatch
-        ? Number(
-            hashMatch[1]
-          ) - 1
-        : 0
-    );
+    updateSimulation();
+    goToPage(0);
   </script>
 
-  <script
-    defer
-    src="../../assets/js/config.js">
-  </script>
-
-  <script
-    defer
-    src="../../assets/js/theme-toggle.js">
-  </script>
-
-  <script
-    defer
-    src="../../assets/js/load-header.js">
-  </script>
-
-  <script
-    defer
-    src="../../assets/js/load-footer.js">
-  </script>
+  <script defer src="../../assets/js/theme-toggle.js"></script>
+  <script defer src="../../assets/js/load-header.js"></script>
+  <script defer src="../../assets/js/load-footer.js"></script>
 </body>
 </html>

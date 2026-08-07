@@ -407,6 +407,30 @@
           #e8f6ff 72%,
           #d8e2ec 73%,
           #94a3b8 100%);
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+    }
+
+    #energyScene.is-dragging {
+      cursor: grabbing;
+    }
+
+    .drag-instruction {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 0 0 12px;
+      padding: 12px 14px;
+      border: 1px solid var(--primary);
+      border-radius: 14px;
+      color: var(--text);
+      background: color-mix(in srgb, var(--primary) 9%, var(--surface));
+      font-weight: 800;
+    }
+
+    .drag-instruction strong {
+      color: var(--primary);
     }
 
     .control-grid,
@@ -1210,12 +1234,17 @@
           </p>
 
           <div class="simulator">
+            <div class="drag-instruction">
+              <span aria-hidden="true">☝️</span>
+              <span><strong>Trage corpul</strong> mai sus sau mai jos pe plan. Energiile și graficul se modifică instantaneu.</span>
+            </div>
+
             <div class="scene-wrap">
               <canvas
                 id="energyScene"
                 width="960"
                 height="430"
-                aria-label="Corp care coboară pe un plan înclinat">
+                aria-label="Simulator interactiv: trage corpul mai sus sau mai jos pe planul înclinat pentru a modifica energiile">
               </canvas>
             </div>
 
@@ -1776,6 +1805,69 @@
     const sceneCanvas = document.getElementById("energyScene");
     const sceneContext = sceneCanvas?.getContext("2d");
 
+    let isDraggingBody = false;
+
+    function getSceneGeometry() {
+      const width = sceneCanvas.width;
+      const height = sceneCanvas.height;
+
+      return {
+        width,
+        height,
+        startX: 110,
+        startY: 95,
+        endX: width - 90,
+        endY: height - 95
+      };
+    }
+
+    function eventToCanvasPoint(event) {
+      const rect = sceneCanvas.getBoundingClientRect();
+
+      return {
+        x: (event.clientX - rect.left) * (sceneCanvas.width / rect.width),
+        y: (event.clientY - rect.top) * (sceneCanvas.height / rect.height)
+      };
+    }
+
+    function projectedProgressFromPoint(point) {
+      const { startX, startY, endX, endY } = getSceneGeometry();
+
+      // Centrul corpului este desenat la 22 px deasupra suprafeței planului.
+      const ax = startX;
+      const ay = startY - 22;
+      const bx = endX;
+      const by = endY - 22;
+      const dx = bx - ax;
+      const dy = by - ay;
+
+      const raw =
+        ((point.x - ax) * dx + (point.y - ay) * dy) /
+        (dx * dx + dy * dy);
+
+      return Math.min(1, Math.max(0, raw));
+    }
+
+    function distanceToBody(point) {
+      const { startX, startY, endX, endY } = getSceneGeometry();
+      const progress = Number(positionSlider.value) / 100;
+      const x = startX + (endX - startX) * progress;
+      const y = startY + (endY - startY) * progress - 22;
+      return Math.hypot(point.x - x, point.y - y);
+    }
+
+    function distanceToRamp(point) {
+      const { startX, startY, endX, endY } = getSceneGeometry();
+      const progress = projectedProgressFromPoint({
+        x: point.x,
+        y: point.y - 22
+      });
+
+      const x = startX + (endX - startX) * progress;
+      const y = startY + (endY - startY) * progress;
+      return Math.hypot(point.x - x, point.y - y);
+    }
+
     const massSlider = document.getElementById("massSlider");
     const heightSlider = document.getElementById("heightSlider");
     const lossSlider = document.getElementById("lossSlider");
@@ -1873,7 +1965,8 @@
       if (data.progress < 0.01) {
         message.innerHTML =
           `La început, corpul are aproape numai energie potențială:
-           <strong>E<sub>p</sub> = ${formatNumber(data.potential, 2)} J</strong>.`;
+           <strong>E<sub>p</sub> = ${formatNumber(data.potential, 2)} J</strong>.
+           Trage corpul spre baza planului și urmărește cum crește E<sub>c</sub>.`;
       } else if (data.progress > 0.99 && data.lossFraction === 0) {
         message.innerHTML =
           `La baza planului, h = 0 și energia potențială s-a transformat în energie cinetică.
@@ -1899,8 +1992,7 @@
 
       const ctx = sceneContext;
       const canvas = sceneCanvas;
-      const width = canvas.width;
-      const height = canvas.height;
+      const { width, height, startX, startY, endX, endY } = getSceneGeometry();
 
       ctx.clearRect(0, 0, width, height);
 
@@ -1912,11 +2004,6 @@
 
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, width, height);
-
-      const startX = 110;
-      const startY = 95;
-      const endX = width - 90;
-      const endY = height - 95;
 
       // sol
       ctx.fillStyle = "#78909c";
@@ -1968,6 +2055,15 @@
       ctx.strokeStyle = "#0e7490";
       ctx.lineWidth = 3;
       ctx.stroke();
+
+      // Inel interactiv: arată că obiectul poate fi prins și tras.
+      ctx.strokeStyle = isDraggingBody ? "#047857" : "rgba(255,255,255,.88)";
+      ctx.lineWidth = isDraggingBody ? 5 : 3;
+      ctx.setLineDash(isDraggingBody ? [] : [5, 5]);
+      ctx.beginPath();
+      ctx.arc(0, 0, 36, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.setLineDash([]);
 
       ctx.restore();
 
@@ -2035,6 +2131,88 @@
       ctx.fillText(`Ep = ${formatNumber(data.potential, 2)} J`, width - 250, 58);
       ctx.fillText(`Ec = ${formatNumber(data.kinetic, 2)} J`, width - 250, 85);
       ctx.fillText(`Em = ${formatNumber(data.mechanical, 2)} J`, width - 250, 112);
+
+      ctx.fillStyle = "rgba(15, 23, 42, .78)";
+      ctx.fillRect(34, height - 57, 295, 38);
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 17px Segoe UI, Arial";
+      ctx.fillText(
+        isDraggingBody ? "Eliberează corpul în poziția dorită" : "Prinde și trage corpul pe plan",
+        52,
+        height - 31
+      );
+    }
+
+    function stopSimulationAnimation() {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
+
+      const playButton = document.getElementById("playSimulation");
+      if (playButton) {
+        playButton.textContent = "Pornește coborârea";
+      }
+    }
+
+    function setProgressFromPointer(event) {
+      const point = eventToCanvasPoint(event);
+      const progress = projectedProgressFromPoint(point);
+      positionSlider.value = String(progress * 100);
+      updateSimulation();
+    }
+
+    if (sceneCanvas) {
+      sceneCanvas.addEventListener("pointerdown", (event) => {
+        const point = eventToCanvasPoint(event);
+
+        // Corpul este ținta principală. Acceptăm și atingerea apropiată de rampă,
+        // pentru ca interacțiunea să fie comodă pe telefoane și tablete.
+        if (distanceToBody(point) > 62 && distanceToRamp(point) > 52) {
+          return;
+        }
+
+        event.preventDefault();
+        stopSimulationAnimation();
+
+        isDraggingBody = true;
+        sceneCanvas.classList.add("is-dragging");
+        sceneCanvas.setPointerCapture?.(event.pointerId);
+
+        setProgressFromPointer(event);
+      });
+
+      sceneCanvas.addEventListener("pointermove", (event) => {
+        if (!isDraggingBody) return;
+
+        event.preventDefault();
+        setProgressFromPointer(event);
+      });
+
+      function finishDragging(event) {
+        if (!isDraggingBody) return;
+
+        isDraggingBody = false;
+        sceneCanvas.classList.remove("is-dragging");
+
+        if (
+          event?.pointerId !== undefined &&
+          sceneCanvas.hasPointerCapture?.(event.pointerId)
+        ) {
+          sceneCanvas.releasePointerCapture?.(event.pointerId);
+        }
+
+        updateSimulation();
+      }
+
+      sceneCanvas.addEventListener("pointerup", finishDragging);
+      sceneCanvas.addEventListener("pointercancel", finishDragging);
+      sceneCanvas.addEventListener("lostpointercapture", () => {
+        if (!isDraggingBody) return;
+        isDraggingBody = false;
+        sceneCanvas.classList.remove("is-dragging");
+        updateSimulation();
+      });
     }
 
     [massSlider, heightSlider, lossSlider, positionSlider].forEach((slider) => {
@@ -2045,11 +2223,12 @@
       const button = event.currentTarget;
 
       if (animationId) {
-        cancelAnimationFrame(animationId);
-        animationId = null;
-        button.textContent = "Pornește coborârea";
+        stopSimulationAnimation();
         return;
       }
+
+      isDraggingBody = false;
+      sceneCanvas?.classList.remove("is-dragging");
 
       if (Number(positionSlider.value) >= 100) {
         positionSlider.value = 0;
@@ -2083,13 +2262,11 @@
     });
 
     document.getElementById("resetSimulation").addEventListener("click", () => {
-      if (animationId) {
-        cancelAnimationFrame(animationId);
-        animationId = null;
-      }
+      stopSimulationAnimation();
+      isDraggingBody = false;
+      sceneCanvas?.classList.remove("is-dragging");
 
       positionSlider.value = 0;
-      document.getElementById("playSimulation").textContent = "Pornește coborârea";
       updateSimulation();
     });
 

@@ -1,1 +1,3580 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<title>Test inițial – Fizică – Clasa a VI-a</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+<style>
+:root{
+  --bg:#eef2f7;
+  --card:#ffffff;
+  --accent:#3498db;
+  --accent-dark:#217dbb;
+  --green:#1e9b57;
+  --orange:#f39c12;
+  --red:#c0392b;
+  --text:#243447;
+  --muted:#667085;
+  --border:#d8e1ec;
+  --soft:#f7f9fc;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  display:flex;
+  justify-content:center;
+}
+
+.wrapper{
+  width:100%;
+  max-width:980px;
+  padding:16px;
+}
+
+header,
+.card,
+.question-card,
+.result-card{
+  background:var(--card);
+  border-radius:16px;
+  padding:20px;
+  margin-bottom:16px;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+
+header{text-align:center}
+
+h1{
+  margin:8px 0;
+  font-size:2rem;
+}
+
+h2{margin-top:0}
+
+h3{
+  margin:6px 0;
+  font-weight:normal;
+  color:#555;
+}
+
+p,li{line-height:1.55}
+
+label{
+  font-weight:bold;
+  display:block;
+  margin:12px 0 6px;
+}
+
+input[type="text"]{
+  width:100%;
+  max-width:450px;
+  padding:11px;
+  border:1px solid #c9d6e2;
+  border-radius:8px;
+  font-size:1rem;
+  background:white;
+}
+
+button{
+  border:none;
+  border-radius:999px;
+  padding:10px 17px;
+  font-size:.95rem;
+  cursor:pointer;
+  background:var(--accent);
+  color:white;
+  margin:6px 4px 6px 0;
+}
+
+button:hover:not(:disabled){
+  background:var(--accent-dark);
+}
+
+button:disabled{
+  background:#a8b4c0;
+  cursor:not-allowed;
+}
+
+button.success{background:var(--green)}
+button.success:hover:not(:disabled){background:#147a42}
+
+.hidden{display:none!important}
+
+.notice{
+  background:var(--soft);
+  border-left:5px solid var(--accent);
+  border-radius:10px;
+  padding:12px 14px;
+  margin:14px 0;
+}
+
+.warning{
+  background:#fff7e6;
+  border-left:5px solid var(--orange);
+  border-radius:10px;
+  padding:12px 14px;
+  margin:14px 0;
+}
+
+.meta-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:12px;
+}
+
+.option-toggle{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  margin:12px 0;
+  padding:10px 12px;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:#f8fbfe;
+  max-width:450px;
+}
+
+.option-toggle input{
+  width:18px;
+  height:18px;
+}
+
+.option-toggle label{
+  display:inline;
+  margin:0;
+  font-weight:normal;
+}
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:20;
+  background:rgba(238,242,247,.96);
+  backdrop-filter:blur(6px);
+  padding:8px 0;
+  margin-bottom:10px;
+}
+
+.progress-card{
+  background:white;
+  border-radius:14px;
+  padding:12px 16px;
+  box-shadow:0 4px 12px rgba(0,0,0,.08);
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.progress-bar{
+  width:100%;
+  height:10px;
+  border-radius:999px;
+  background:#dce5ef;
+  overflow:hidden;
+}
+
+.progress-fill{
+  width:0;
+  height:100%;
+  background:var(--accent);
+  transition:.2s ease;
+}
+
+.question-card{
+  border-left:5px solid var(--accent);
+}
+
+.question-title{
+  font-size:1.08rem;
+  font-weight:bold;
+  margin-bottom:14px;
+  line-height:1.55;
+}
+
+.item-type{
+  display:inline-block;
+  color:#52616f;
+  background:#edf3f8;
+  border-radius:999px;
+  font-size:.78rem;
+  padding:4px 9px;
+  margin-bottom:10px;
+}
+
+.answer-options label{
+  display:block;
+  font-weight:normal;
+  background:var(--soft);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:10px 11px;
+  margin:8px 0;
+  cursor:pointer;
+}
+
+.answer-options input{
+  width:auto;
+  margin-right:8px;
+}
+
+.question-nav{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.question-status{
+  font-weight:bold;
+  font-size:1.05rem;
+  margin-top:14px;
+  padding:10px 12px;
+  border-radius:10px;
+  display:inline-block;
+}
+
+.status-correct{
+  color:#176b3a;
+  background:#ecfdf3;
+  border:1px solid #b7e5c7;
+}
+
+.status-wrong{
+  color:#962d22;
+  background:#fff1f0;
+  border:1px solid #f3b5ac;
+}
+
+.measure-box{
+  overflow-x:auto;
+  margin:14px 0;
+}
+
+.measure-table{
+  border-collapse:collapse;
+  margin:0;
+}
+
+.measure-table th,
+.measure-table td{
+  border:1px solid var(--border);
+  padding:8px 12px;
+  text-align:center;
+}
+
+.measure-table th{
+  background:#edf6ff;
+}
+
+.grade{
+  font-size:2.4rem;
+  font-weight:bold;
+  color:var(--green);
+}
+
+.review-table-wrapper{
+  overflow-x:auto;
+  margin-top:14px;
+}
+
+.review-table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+.review-table th,
+.review-table td{
+  border:1px solid var(--border);
+  padding:9px;
+  text-align:left;
+  vertical-align:top;
+}
+
+.review-table th{background:#edf6ff}
+
+.review-ok{
+  color:#176b3a;
+  font-weight:bold;
+}
+
+.review-wrong{
+  color:#962d22;
+  font-weight:bold;
+}
+
+.save-panel{
+  background:#eef7ff;
+  border-left:5px solid var(--accent);
+  border-radius:10px;
+  padding:12px 14px;
+  margin:14px 0;
+}
+
+.save-panel.done{
+  background:#ecfdf3;
+  border-left-color:var(--green);
+}
+
+.save-panel.error{
+  background:#fff1f0;
+  border-left-color:var(--red);
+}
+
+.small{
+  color:var(--muted);
+  font-size:.9rem;
+}
+
+.footer{
+  text-align:center;
+  color:var(--muted);
+  font-size:.9rem;
+  padding:18px 8px 26px;
+}
+
+@media(max-width:700px){
+  .wrapper{padding:10px}
+  h1{font-size:1.5rem}
+  header,.card,.question-card,.result-card{padding:15px}
+  .meta-grid{grid-template-columns:1fr}
+  .topbar{position:static}
+  .question-nav{flex-direction:column}
+  button{width:100%}
+  input[type="text"]{max-width:100%}
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+<header>
+  <h1>Test online – Evaluare inițială</h1>
+  <h2>Fizică – Clasa a VI-a</h2>
+  <h3>
+    Unități de măsură, măsurări, transformări și cunoștințe din anii anteriori
+  </h3>
+  <div class="small">
+    Material realizat de prof. Dănuț Andronie
+  </div>
+</header>
+
+
+<section id="startCard" class="card">
+
+  <h2>Înscriere elev</h2>
+
+  <div class="meta-grid">
+    <div>
+      <label for="studentName">Numele și prenumele elevului</label>
+      <input
+        id="studentName"
+        type="text"
+        autocomplete="name"
+        placeholder="Ex.: Popescu Andrei"
+      >
+    </div>
+
+    <div>
+      <label for="studentClass">Clasa</label>
+      <input
+        id="studentClass"
+        type="text"
+        placeholder="Ex.: a VI-a A"
+      >
+    </div>
+  </div>
+
+  <div class="option-toggle">
+    <input
+      id="screenWarningToggle"
+      type="checkbox"
+      checked
+    >
+    <label for="screenWarningToggle">
+      <strong>Avertizare schimbare ecran</strong> –
+      afișează un mesaj atunci când revii în test după părăsirea paginii.
+    </label>
+  </div>
+
+  <div class="warning">
+    <b>Testul conține 20 de itemi.</b><br><br>
+
+    Tipuri de itemi: alegere multiplă, alegere duală și completare.<br><br>
+
+    <b>Notare:</b> nota este de la 1 la 10, cu
+    <b>1 punct din oficiu</b>. Cei 20 de itemi valorează împreună
+    9 puncte.<br><br>
+
+    <b>Timp recomandat:</b> 45 de minute.<br><br>
+
+    Pentru itemii numerici scrie numai numărul cerut, fără unitatea
+    de măsură, dacă enunțul solicită acest lucru. Poți utiliza
+    punct sau virgulă pentru zecimale.
+  </div>
+
+  <div class="notice">
+    <b>Important:</b> testul verifică dacă același elev și aceeași clasă
+    au mai trimis deja un rezultat. Părăsirile ecranului sunt înregistrate
+    împreună cu itemul la care s-au produs.
+  </div>
+
+  <button
+    class="success"
+    id="startTestBtn"
+    onclick="startTest()"
+  >
+    Începe testul
+  </button>
+
+  <p id="startCheckMessage" class="small hidden"></p>
+
+</section>
+
+
+<section id="testArea" class="hidden">
+
+  <div class="topbar">
+    <div class="progress-card">
+
+      <div>
+        <b id="studentInfo"></b><br>
+        <span class="small">
+          Variantă:
+          <span id="variantIdLabel"></span>
+        </span>
+      </div>
+
+      <div>
+        Întrebarea
+        <b id="currentQuestionLabel">1</b>
+        /
+        <span id="totalCount">20</span><br>
+
+        <span class="small">
+          <b id="answeredCount">0</b>
+          întrebări verificate
+        </span>
+      </div>
+
+      <div class="progress-bar">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div id="questionsContainer"></div>
+
+
+  <div class="card question-nav">
+
+    <button
+      class="success"
+      id="checkBtn"
+      onclick="checkCurrentQuestion()"
+    >
+      Verifică răspunsul
+    </button>
+
+    <button
+      id="nextBtn"
+      onclick="goToNextQuestion()"
+      disabled
+    >
+      Următoarea întrebare
+    </button>
+
+    <button
+      class="success hidden"
+      id="finishBtn"
+      onclick="submitTest()"
+    >
+      Finalizează testul
+    </button>
+
+  </div>
+
+</section>
+
+
+<section id="resultArea" class="result-card hidden">
+
+  <h2>Rezultatul testului</h2>
+
+  <div class="grade" id="gradeDisplay">
+    Nota 0
+  </div>
+
+  <p id="resultDetails"></p>
+
+  <div id="resultReview"></div>
+
+  <div id="savePanel" class="save-panel hidden">
+    <strong id="saveTitle">
+      Se salvează rezultatul...
+    </strong>
+    <br>
+    <span id="saveMessage">
+      Nu închide pagina.
+    </span>
+  </div>
+
+  <p id="sheetStatus" class="small"></p>
+
+  <button
+    id="downloadPdfBtn"
+    class="success"
+    onclick="downloadReportPDF()"
+    disabled
+  >
+    Descarcă rezultatele testului
+  </button>
+
+</section>
+
+
+<div class="footer">
+  Material realizat de <b>prof. Dănuț Andronie</b>.
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   CONFIGURARE
+========================================================= */
+
+const GOOGLE_SCRIPT_URL =
+  "https://script.google.com/macros/s/AKfycbyAF8SJ6rlknV2ktjvSO596f3BsrCpF_LvfooKgzCU8dTDg0AWFelNNSIS-4BUc_CjT/exec";
+
+const QUESTION_COUNT = 20;
+
+const OFFICIAL_POINTS = 1;
+const TEST_POINTS = 9;
+
+const SAVE_WAIT_SECONDS = 15;
+
+const SAVE_RETRY_DELAYS_MS = [
+  0,
+  5000,
+  10000
+];
+
+const PRIOR_ATTEMPT_CHECK_TIMEOUT_MS = 8000;
+
+
+/* =========================================================
+   SETURI NUMERICE
+   Sunt 10 seturi distincte.
+========================================================= */
+
+const NUMERIC_VARIANTS = [
+
+{
+  lenM:1.2,
+  lenCm:350,
+  timeMin:3,
+  timeClaimS:180,
+  timeClaimTrue:true,
+  massKg:2.5,
+  areaM2:1.2,
+  volumeDm3:2.5,
+  measures:[15.2,15.4,15.3,15.1,15.5],
+  rugM:1.9,
+  steps:4,
+  stepH:20,
+  stepW:35,
+  rectL:8,
+  rectW:5,
+  boxL:4,
+  boxW:3,
+  boxH:2
+},
+
+{
+  lenM:2.4,
+  lenCm:475,
+  timeMin:4,
+  timeClaimS:270,
+  timeClaimTrue:false,
+  massKg:3.2,
+  areaM2:2.3,
+  volumeDm3:1.8,
+  measures:[18.3,18.7,18.5,18.2,18.6],
+  rugM:2.2,
+  steps:5,
+  stepH:18,
+  stepW:32,
+  rectL:9,
+  rectW:6,
+  boxL:5,
+  boxW:3,
+  boxH:2
+},
+
+{
+  lenM:3.5,
+  lenCm:620,
+  timeMin:5,
+  timeClaimS:300,
+  timeClaimTrue:true,
+  massKg:1.8,
+  areaM2:1.5,
+  volumeDm3:3.2,
+  measures:[21.1,20.8,21.3,20.9,21.0],
+  rugM:2.1,
+  steps:4,
+  stepH:22,
+  stepW:38,
+  rectL:7,
+  rectW:4,
+  boxL:6,
+  boxW:3,
+  boxH:2
+},
+
+{
+  lenM:1.75,
+  lenCm:285,
+  timeMin:6,
+  timeClaimS:390,
+  timeClaimTrue:false,
+  massKg:4.5,
+  areaM2:2.7,
+  volumeDm3:4.1,
+  measures:[12.6,12.9,12.5,12.8,12.7],
+  rugM:2.3,
+  steps:5,
+  stepH:20,
+  stepW:30,
+  rectL:10,
+  rectW:4,
+  boxL:5,
+  boxW:4,
+  boxH:3
+},
+
+{
+  lenM:2.65,
+  lenCm:540,
+  timeMin:7,
+  timeClaimS:420,
+  timeClaimTrue:true,
+  massKg:2.75,
+  areaM2:3.4,
+  volumeDm3:2.2,
+  measures:[16.4,16.8,16.3,16.6,16.5],
+  rugM:2.5,
+  steps:6,
+  stepH:17,
+  stepW:28,
+  rectL:12,
+  rectW:5,
+  boxL:4,
+  boxW:4,
+  boxH:3
+},
+
+{
+  lenM:4.2,
+  lenCm:725,
+  timeMin:8,
+  timeClaimS:510,
+  timeClaimTrue:false,
+  massKg:5.4,
+  areaM2:1.8,
+  volumeDm3:3.6,
+  measures:[23.7,23.4,23.9,23.5,23.6],
+  rugM:2.4,
+  steps:4,
+  stepH:25,
+  stepW:40,
+  rectL:11,
+  rectW:7,
+  boxL:6,
+  boxW:4,
+  boxH:2
+},
+
+{
+  lenM:0.85,
+  lenCm:430,
+  timeMin:9,
+  timeClaimS:540,
+  timeClaimTrue:true,
+  massKg:3.6,
+  areaM2:2.1,
+  volumeDm3:1.5,
+  measures:[14.2,14.6,14.4,14.1,14.5],
+  rugM:1.7,
+  steps:3,
+  stepH:20,
+  stepW:45,
+  rectL:13,
+  rectW:4,
+  boxL:7,
+  boxW:3,
+  boxH:2
+},
+
+{
+  lenM:3.25,
+  lenCm:815,
+  timeMin:10,
+  timeClaimS:630,
+  timeClaimTrue:false,
+  massKg:6.25,
+  areaM2:3.2,
+  volumeDm3:2.8,
+  measures:[19.3,19.8,19.5,19.2,19.7],
+  rugM:2.25,
+  steps:5,
+  stepH:16,
+  stepW:34,
+  rectL:9,
+  rectW:7,
+  boxL:5,
+  boxW:5,
+  boxH:2
+},
+
+{
+  lenM:1.45,
+  lenCm:365,
+  timeMin:12,
+  timeClaimS:720,
+  timeClaimTrue:true,
+  massKg:1.65,
+  areaM2:2.5,
+  volumeDm3:4.5,
+  measures:[17.9,17.4,17.6,17.8,17.5],
+  rugM:2.15,
+  steps:4,
+  stepH:18,
+  stepW:42,
+  rectL:14,
+  rectW:3,
+  boxL:8,
+  boxW:3,
+  boxH:2
+},
+
+{
+  lenM:2.85,
+  lenCm:950,
+  timeMin:15,
+  timeClaimS:930,
+  timeClaimTrue:false,
+  massKg:7.5,
+  areaM2:4.2,
+  volumeDm3:3.5,
+  measures:[24.1,24.6,24.3,24.8,24.4],
+  rugM:2.5,
+  steps:6,
+  stepH:15,
+  stepW:30,
+  rectL:15,
+  rectW:4,
+  boxL:6,
+  boxW:5,
+  boxH:3
+}
+
+];
+
+
+/* =========================================================
+   STAREA TESTULUI
+========================================================= */
+
+let currentQuestions = [];
+let currentQuestionIndex = 0;
+
+let variantId = "";
+let numericVariantIndex = 0;
+
+let submitted = false;
+
+let lastReportPayload = null;
+
+let screenWarningEnabled = true;
+
+
+/* =========================================================
+   MONITORIZARE SCHIMBARE ECRAN
+========================================================= */
+
+const INTEGRITY_WARNING_MESSAGE =
+  "Atenție! Ai părăsit ecranul testului. Evenimentul a fost înregistrat.";
+
+let integrityLog = {
+  exitCount:0,
+  awayStart:null,
+  awayItem:null,
+  awayQuestion:"",
+  totalAwaySeconds:0,
+  events:[]
+};
+
+
+/* =========================================================
+   FUNCȚII UTILE
+========================================================= */
+
+function shuffle(array){
+
+  const a = [...array];
+
+  for(let i=a.length-1;i>0;i--){
+
+    const j =
+      Math.floor(Math.random()*(i+1));
+
+    [a[i],a[j]] =
+      [a[j],a[i]];
+  }
+
+  return a;
+}
+
+
+function escapeHtml(text){
+
+  return String(text)
+
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+
+function normalizeText(value){
+
+  return String(value)
+
+    .trim()
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/ă/g,"a")
+    .replace(/â/g,"a")
+    .replace(/î/g,"i")
+    .replace(/ș/g,"s")
+    .replace(/ş/g,"s")
+    .replace(/ț/g,"t")
+    .replace(/ţ/g,"t")
+    .replace(/\s+/g," ");
+}
+
+
+function parseNumeric(value){
+
+  const cleaned =
+    String(value)
+      .trim()
+      .replace(/\s+/g,"")
+      .replace(",",".")
+      .replace(/[^0-9.\-]/g,"");
+
+  if(
+    cleaned === "" ||
+    cleaned === "-" ||
+    cleaned === "."
+  ){
+    return null;
+  }
+
+  const n = parseFloat(cleaned);
+
+  return Number.isFinite(n)
+    ? n
+    : null;
+}
+
+
+function round2(n){
+
+  return Math.round(
+    (Number(n)+Number.EPSILON)*100
+  )/100;
+}
+
+
+function formatNumber(n){
+
+  return String(round2(n))
+    .replace(".",",");
+}
+
+
+function hashText(text){
+
+  let hash = 2166136261;
+
+  for(let i=0;i<text.length;i++){
+
+    hash ^= text.charCodeAt(i);
+
+    hash = Math.imul(
+      hash,
+      16777619
+    );
+  }
+
+  return hash >>> 0;
+}
+
+
+function chooseNumericVariant(name,cls){
+
+  const key =
+    normalizeText(name) +
+    "|" +
+    normalizeText(cls);
+
+  return hashText(key)
+    % NUMERIC_VARIANTS.length;
+}
+
+
+function generateVariantId(){
+
+  const now = new Date();
+
+  const rand =
+    Math.random()
+      .toString(36)
+      .slice(2,8)
+      .toUpperCase();
+
+  const setNumber =
+    numericVariantIndex + 1;
+
+  return (
+    "FIZ6I-" +
+    now.getFullYear() +
+    String(now.getMonth()+1).padStart(2,"0") +
+    String(now.getDate()).padStart(2,"0") +
+    "-" +
+    String(now.getHours()).padStart(2,"0") +
+    String(now.getMinutes()).padStart(2,"0") +
+    "-S" +
+    setNumber +
+    "-" +
+    rand
+  );
+}
+
+
+/* =========================================================
+   CONSTRUIREA CELOR 20 DE ITEMI
+========================================================= */
+
+function buildQuestions(d){
+
+  const questions = [];
+
+
+  /* -------------------------------------------------------
+     1. Lungime – alegere
+  ------------------------------------------------------- */
+
+  const len1 =
+    round2(d.lenM*100);
+
+  questions.push({
+
+    type:"choice",
+    itemType:"Alegere multiplă",
+    category:"lungime",
+
+    prompt:
+      `Transformă <b>${formatNumber(d.lenM)} m</b> în centimetri.`,
+
+    options:[
+      `${formatNumber(len1)} cm`,
+      `${formatNumber(d.lenM*10)} cm`,
+      `${formatNumber(d.lenM*1000)} cm`,
+      `${formatNumber(d.lenM)} cm`
+    ],
+
+    answer:[
+      `${formatNumber(len1)} cm`
+    ]
+
+  });
+
+
+  /* -------------------------------------------------------
+     2. Lungime – completare
+  ------------------------------------------------------- */
+
+  const len2 =
+    round2(d.lenCm/100);
+
+  questions.push({
+
+    type:"input",
+    itemType:"Completare",
+    category:"lungime",
+    numeric:true,
+    tolerance:0.001,
+
+    prompt:
+      `Transformă <b>${formatNumber(d.lenCm)} cm</b> în metri. ` +
+      `Scrie numai valoarea numerică.`,
+
+    answer:[
+      String(len2)
+    ]
+
+  });
+
+
+  /* -------------------------------------------------------
+     3. Timp – alegere
+  ------------------------------------------------------- */
+
+  const sec =
+    d.timeMin*60;
+
+  questions.push({
+
+    type:"choice",
+    itemType:"Alegere multiplă",
+    category:"timp",
+
+    prompt:
+      `Câte secunde sunt în <b>${d.timeMin} minute</b>?`,
+
+    options:[
+      `${sec} s`,
+      `${d.timeMin*100} s`,
+      `${d.timeMin*30} s`,
+      `${d.timeMin+60} s`
+    ],
+
+    answer:[
+      `${sec} s`
+    ]
+
+  });
+
+
+  /* -------------------------------------------------------
+     4. Timp – alegere duală
+  ------------------------------------------------------- */
+
+  questions.push({
+
+    type:"choice",
+    itemType:"Alegere duală",
+    category:"timp",
+
+    prompt:
+      `Afirmația „<b>${d.timeMin} min = ` +
+      `${d.timeClaimS} s</b>” este:`,
+
+    options:[
+      "Adevărat",
+      "Fals"
+    ],
+
+    answer:[
+      d.timeClaimTrue
+        ? "Adevărat"
+        : "Fals"
+    ]
+
+  });
+
+
+  /* -------------------------------------------------------
+     5. Masă – transformare
+  ------------------------------------------------------- */
+
+  const massG =
+    round2(d.massKg*1000);
+
+  questions.push({
+
+    type:"choice",
+    itemType:"Alegere multiplă",
+    category:"masă",
+
+    prompt:
+      `Transformă <b>${formatNumber(d.massKg)} kg</b> în grame.`,
+
+    options:[
+      `${formatNumber(massG)} g`,
+      `${formatNumber(d.massKg*100)} g`,
+      `${formatNumber(d.massKg*10)} g`,
+      `${formatNumber(d.massKg)} g`
+    ],
+
+    answer:[
+      `${formatNumber(massG)} g`
+    ]
+
+  });
+
+
+  /* -------------------------------------------------------
+     6. Arie – transformare
+  ------------------------------------------------------- */
+
+  const areaCm2 =
+    round2(d.areaM2*10000);
+
+  questions.push({
+
+    type:"input",
+    itemType:"Completare",
+    category:"arie",
+    numeric:true,
+    tolerance:0.01,
+
+    prompt:
+      `Transformă <b>${formatNumber(d.areaM2)} m²</b> în cm². ` +
+      `Scrie numai valoarea numerică.`,
+
+    answer:[
+      String(areaCm2)
+    ]
+
+  });
+
+
+  /* -------------------------------------------------------
+     7. Volum – transformare
+  ------------------------------------------------------- */
+
+  const volumeCm3 =
+    round2(d.volumeDm3*1000);
+
+  questions.push({
+
+    type:"choice",
+    itemType:"Alegere multiplă",
+    category:"volum",
+
+    prompt:
+      `Transformă <b>${formatNumber(d.volumeDm3)} dm³</b> în cm³.`,
+
+    options:[
+      `${formatNumber(volumeCm3)} cm³`,
+      `${formatNumber(d.volumeDm3*100)} cm³`,
+      `${formatNumber(d.volumeDm3*10)} cm³`,
+      `${formatNumber(d.volumeDm3)} cm³`
+    ],
+
+    answer:[
+      `${formatNumber(volumeCm3)} cm³`
+    ]
+
+  });
+
+
+  /* -------------------------------------------------------
+     8. Instrument pentru lungime
+  ------------------------------------------------------- */
+
+  questions.push({
+
+    type:"choice",
+    itemType:"Alegere multiplă",
+    category:"instrumente",
+
+    prompt:
+      `Ce instrument este potrivit pentru măsurarea lungimii unei mese?`,
+
+    options:[
+      "Ruletă",
+      "Cronometru",
+      "Balanță",
+      "Cilindru gradat"
+    ],
+
+    answer:[
+      "Ruletă"
+    ]
+
+  });
+
+
+  /* -------------------------------------------------------
+     9. Instrument pentru timp
+  ------------------------------------------------------- */
+
+  questions.push({
+
+    type:"choice",
+    itemType:"Alegere multiplă",
+    category:"instrumente",
+
+    prompt:
+      `Cu ce instrument putem măsura durata unei alergări?`,
+
+    options:[
+      "Cronometru",
+      "Rigla",
+      "Balanța",
+      "Cilindrul gradat"
+    ],
+
+    answer:[
+      "Cronometru"
+    ]
+
+  });
+
+
+  /* -------------------------------------------------------
+     10. Instrument pentru masă
+  ------------------------------------------------------- */
+
+  questions.push({
+
+    type:"choice",
+    itemType:"Alegere multiplă",
+    category:"instrumente",
+
+    prompt:
+      `Ce instrument utilizăm pentru măsurarea masei unui obiect?`,
+
+    options:[
+      "Balanță",
+      "Ruletă",
+      "Cronometru",
+      "Termometru"
+    ],
+
+    answer:[
+      "Balanță"
+    ]
+
+  });
+
+
+  /* -------------------------------------------------------
+     11. Determinarea ariei
+  ------------------------------------------------------- */
+
+  questions.push({
+
+    type:"choice",
+    itemType:"Alegere multiplă",
+    category:"instrumente",
+
+    prompt:
+      `Pentru a determina aria unei mese dreptunghiulare, ` +
+      `trebuie să îi măsurăm lungimea și lățimea. ` +
+      `Ce instrument este potrivit?`,
+
+    options:[
+      "Ruletă",
+      "Cronometru",
+      "Balanță",
+      "Termometru"
+    ],
+
+    answer:[
+      "Ruletă"
+    ]
+
+  });
+
+
+  /* -------------------------------------------------------
+     12. Instrument pentru volumul unui lichid
+  ------------------------------------------------------- */
+
+  questions.push({
+
+    type:"choice",
+    itemType:"Alegere multiplă",
+    category:"instrumente",
+
+    prompt:
+      `Cu ce instrument putem măsura volumul unei cantități de apă?`,
+
+    options:[
+      "Cilindru gradat",
+      "Cronometru",
+      "Balanță",
+      "Ruletă"
+    ],
+
+    answer:[
+      "Cilindru gradat"
+    ]
+
+  });
+
+
+  /* -------------------------------------------------------
+     13. Transformare de stare – topire
+  ------------------------------------------------------- */
+
+  questions.push({
+
+    type:"choice",
+    itemType:"Alegere multiplă",
+    category:"stări de agregare",
+
+    prompt:
+      `Trecerea unei substanțe din stare solidă în stare lichidă ` +
+      `se numește:`,
+
+    options:[
+      "Topire",
+      "Solidificare",
+      "Condensare",
+      "Vaporizare"
+    ],
+
+    answer:[
+      "Topire"
+    ]
+
+  });
+
+
+  /* -------------------------------------------------------
+     14. Transformare de stare – dual
+  ------------------------------------------------------- */
+
+  questions.push({
+
+    type:"choice",
+    itemType:"Alegere duală",
+    category:"stări de agregare",
+
+    prompt:
+      `Afirmația „Prin <b>condensare</b>, o substanță trece ` +
+      `din stare gazoasă în stare lichidă” este:`,
+
+    options:[
+      "Adevărat",
+      "Fals"
+    ],
+
+    answer:[
+      "Adevărat"
+    ]
+
+  });
+
+
+  /* -------------------------------------------------------
+     15. Transformare de stare – completare
+  ------------------------------------------------------- */
+
+  questions.push({
+
+    type:"input",
+    itemType:"Completare",
+    category:"stări de agregare",
+    numeric:false,
+
+    prompt:
+      `Completează: trecerea unei substanțe din stare lichidă ` +
+      `în stare gazoasă se numește __________.`,
+
+    answer:[
+      "vaporizare"
+    ]
+
+  });
+
+
+  /* -------------------------------------------------------
+     16. Ordine crescătoare a măsurătorilor
+  ------------------------------------------------------- */
+
+  const displayedMeasures =
+    shuffle([...d.measures]);
+
+  const sorted =
+    [...d.measures]
+      .sort((a,b)=>a-b);
+
+  const ascending =
+    sorted.map(formatNumber).join(" cm; ") + " cm";
+
+  const descending =
+    [...sorted]
+      .reverse()
+      .map(formatNumber)
+      .join(" cm; ") + " cm";
+
+  const swap12 =
+    [
+      sorted[1],
+      sorted[0],
+      sorted[2],
+      sorted[3],
+      sorted[4]
+    ]
+      .map(formatNumber)
+      .join(" cm; ") + " cm";
+
+  const swap23 =
+    [
+      sorted[0],
+      sorted[2],
+      sorted[1],
+      sorted[3],
+      sorted[4]
+    ]
+      .map(formatNumber)
+      .join(" cm; ") + " cm";
+
+  const measurementTable =
+    `
+    <div class="measure-box">
+      <table class="measure-table">
+        <tr>
+          <th>Măsurare</th>
+          ${displayedMeasures.map(
+            (_,i)=>`<th>${i+1}</th>`
+          ).join("")}
+        </tr>
+        <tr>
+          <th>Lungime</th>
+          ${displayedMeasures.map(
+            x=>`<td>${formatNumber(x)} cm</td>`
+          ).join("")}
+        </tr>
+      </table>
+    </div>
+    `;
+
+  questions.push({
+
+    type:"choice",
+    itemType:"Alegere multiplă",
+    category:"interpretarea măsurătorilor",
+
+    prompt:
+      `Mai mulți elevi au obținut valorile de mai jos. ` +
+      `Alege șirul în care valorile sunt scrise ` +
+      `<b>în ordine crescătoare</b>.` +
+      measurementTable,
+
+    options:[
+      ascending,
+      descending,
+      swap12,
+      swap23
+    ],
+
+    answer:[
+      ascending
+    ]
+
+  });
+
+
+  /* -------------------------------------------------------
+     17. Diferența maxim-minim
+  ------------------------------------------------------- */
+
+  const minimum =
+    Math.min(...d.measures);
+
+  const maximum =
+    Math.max(...d.measures);
+
+  const difference =
+    round2(maximum-minimum);
+
+  const differenceTable =
+    `
+    <div class="measure-box">
+      <table class="measure-table">
+        <tr>
+          <th>Elev</th>
+          ${d.measures.map(
+            (_,i)=>`<th>${i+1}</th>`
+          ).join("")}
+        </tr>
+        <tr>
+          <th>Valoare</th>
+          ${d.measures.map(
+            x=>`<td>${formatNumber(x)} cm</td>`
+          ).join("")}
+        </tr>
+      </table>
+    </div>
+    `;
+
+  questions.push({
+
+    type:"input",
+    itemType:"Problemă – completare",
+    category:"interpretarea măsurătorilor",
+    numeric:true,
+    tolerance:0.001,
+
+    prompt:
+      `Stabilește diferența dintre <b>cea mai mare</b> și ` +
+      `<b>cea mai mică</b> valoare măsurată de elevi.` +
+      differenceTable +
+      `Scrie numai valoarea numerică, în centimetri.`,
+
+    answer:[
+      String(difference)
+    ]
+
+  });
+
+
+  /* -------------------------------------------------------
+     18. Problema covorașului
+  ------------------------------------------------------- */
+
+  const stairLengthCm =
+    d.steps *
+    (d.stepH+d.stepW);
+
+  const rugLengthCm =
+    d.rugM*100;
+
+  const extraRug =
+    round2(
+      stairLengthCm-rugLengthCm
+    );
+
+  questions.push({
+
+    type:"input",
+    itemType:"Problemă – completare",
+    category:"problemă practică",
+    numeric:true,
+    tolerance:0.001,
+
+    prompt:
+      `Cu un covoraș de <b>${formatNumber(d.rugM)} m</b> lungime ` +
+      `dorim să acoperim o scară cu <b>${d.steps} trepte</b>. ` +
+      `Fiecare treaptă are <b>${d.stepH} cm înălțime</b> și ` +
+      `<b>${d.stepW} cm lățime</b>. ` +
+      `Cu câți centimetri ar trebui să fie mai lung covorașul ` +
+      `pentru a acoperi complet scara? ` +
+      `Scrie numai valoarea numerică.`,
+
+    answer:[
+      String(extraRug)
+    ]
+
+  });
+
+
+  /* -------------------------------------------------------
+     19. Aria dreptunghiului
+  ------------------------------------------------------- */
+
+  const rectArea =
+    d.rectL*d.rectW;
+
+  questions.push({
+
+    type:"input",
+    itemType:"Problemă – completare",
+    category:"arie",
+    numeric:true,
+    tolerance:0.001,
+
+    prompt:
+      `Un dreptunghi are lungimea de <b>${d.rectL} cm</b> ` +
+      `și lățimea de <b>${d.rectW} cm</b>. ` +
+      `Calculează aria sa. ` +
+      `Scrie numai valoarea numerică, în cm².`,
+
+    answer:[
+      String(rectArea)
+    ]
+
+  });
+
+
+  /* -------------------------------------------------------
+     20. Volumul paralelipipedului
+  ------------------------------------------------------- */
+
+  const boxVolume =
+    d.boxL *
+    d.boxW *
+    d.boxH;
+
+  questions.push({
+
+    type:"input",
+    itemType:"Problemă – completare",
+    category:"volum",
+    numeric:true,
+    tolerance:0.001,
+
+    prompt:
+      `O cutie în formă de paralelipiped dreptunghic are ` +
+      `dimensiunile <b>${d.boxL} cm</b>, ` +
+      `<b>${d.boxW} cm</b> și <b>${d.boxH} cm</b>. ` +
+      `Calculează volumul cutiei. ` +
+      `Scrie numai valoarea numerică, în cm³.`,
+
+    answer:[
+      String(boxVolume)
+    ]
+
+  });
+
+
+  /*
+    Ordinea celor 20 de întrebări este diferită.
+    Ordinea variantelor de răspuns este, de asemenea,
+    amestecată.
+  */
+
+  return shuffle(questions)
+    .map((q,index)=>({
+
+      ...q,
+
+      id:`q${index+1}`,
+
+      options:
+        q.options
+          ? shuffle([...q.options])
+          : undefined,
+
+      studentAnswer:"",
+      checked:false,
+      correct:false
+
+    }));
+
+}
+
+
+/* =========================================================
+   INTEGRITATE / SCHIMBAREA ECRANULUI
+========================================================= */
+
+function resetIntegrityLog(){
+
+  integrityLog = {
+    exitCount:0,
+    awayStart:null,
+    awayItem:null,
+    awayQuestion:"",
+    totalAwaySeconds:0,
+    events:[]
+  };
+}
+
+
+function isTestActive(){
+
+  const testArea =
+    document.getElementById(
+      "testArea"
+    );
+
+  return Boolean(
+    testArea &&
+    !testArea.classList.contains("hidden") &&
+    currentQuestions.length>0 &&
+    !submitted
+  );
+}
+
+
+function getCurrentIntegrityItem(){
+
+  return currentQuestionIndex+1;
+}
+
+
+function getCurrentIntegrityQuestion(){
+
+  const q =
+    currentQuestions[
+      currentQuestionIndex
+    ];
+
+  if(!q){
+    return "";
+  }
+
+  return q.prompt
+    .replace(/<[^>]*>/g," ")
+    .replace(/\s+/g," ")
+    .trim();
+}
+
+
+function handleScreenExit(){
+
+  if(
+    !isTestActive() ||
+    integrityLog.awayStart
+  ){
+    return;
+  }
+
+  integrityLog.awayStart =
+    Date.now();
+
+  integrityLog.awayItem =
+    getCurrentIntegrityItem();
+
+  integrityLog.awayQuestion =
+    getCurrentIntegrityQuestion();
+
+  integrityLog.exitCount++;
+
+  integrityLog.events.push({
+
+    tip:"iesire_din_ecran",
+
+    item:
+      integrityLog.awayItem,
+
+    intrebare:
+      integrityLog.awayQuestion,
+
+    ora:
+      new Date()
+        .toLocaleString("ro-RO")
+
+  });
+
+}
+
+
+function handleScreenReturn(){
+
+  if(
+    !isTestActive() ||
+    !integrityLog.awayStart
+  ){
+    return;
+  }
+
+  const durationSeconds =
+    Math.max(
+      1,
+      Math.round(
+        (
+          Date.now() -
+          integrityLog.awayStart
+        )/1000
+      )
+    );
+
+  integrityLog.totalAwaySeconds +=
+    durationSeconds;
+
+  integrityLog.events.push({
+
+    tip:"revenire_in_test",
+
+    item:
+      integrityLog.awayItem,
+
+    intrebare:
+      integrityLog.awayQuestion,
+
+    durataSecunde:
+      durationSeconds,
+
+    oraPlecare:
+      new Date(
+        integrityLog.awayStart
+      ).toLocaleString("ro-RO"),
+
+    oraRevenire:
+      new Date()
+        .toLocaleString("ro-RO")
+
+  });
+
+  integrityLog.awayStart = null;
+  integrityLog.awayItem = null;
+  integrityLog.awayQuestion = "";
+
+  if(screenWarningEnabled){
+
+    setTimeout(()=>{
+      alert(
+        INTEGRITY_WARNING_MESSAGE
+      );
+    },100);
+
+  }
+
+}
+
+
+document.addEventListener(
+  "visibilitychange",
+  function(){
+
+    if(document.hidden){
+      handleScreenExit();
+    }
+    else{
+      handleScreenReturn();
+    }
+
+  }
+);
+
+
+/* Blocarea copierii/lipirii pe durata testului */
+
+document.addEventListener(
+  "contextmenu",
+  function(event){
+
+    if(!isTestActive()){
+      return;
+    }
+
+    event.preventDefault();
+
+    alert(
+      "Click dreapta nu este permis în timpul testului."
+    );
+  }
+);
+
+
+document.addEventListener(
+  "copy",
+  function(event){
+
+    if(!isTestActive()){
+      return;
+    }
+
+    event.preventDefault();
+
+    alert(
+      "Copierea nu este permisă în timpul testului."
+    );
+  }
+);
+
+
+document.addEventListener(
+  "cut",
+  function(event){
+
+    if(!isTestActive()){
+      return;
+    }
+
+    event.preventDefault();
+
+    alert(
+      "Decuparea textului nu este permisă în timpul testului."
+    );
+  }
+);
+
+
+document.addEventListener(
+  "paste",
+  function(event){
+
+    if(!isTestActive()){
+      return;
+    }
+
+    event.preventDefault();
+
+    alert(
+      "Lipirea textului nu este permisă în timpul testului."
+    );
+  }
+);
+
+
+/* =========================================================
+   VERIFICAREA UNEI ÎNCERCĂRI ANTERIOARE
+========================================================= */
+
+async function checkPriorAttempt(
+  name,
+  cls
+){
+
+  const url =
+    `${GOOGLE_SCRIPT_URL}` +
+    `?action=check` +
+    `&nume=${encodeURIComponent(name)}` +
+    `&clasa=${encodeURIComponent(cls)}`;
+
+  const controller =
+    new AbortController();
+
+  const timeoutId =
+    setTimeout(
+      ()=>controller.abort(),
+      PRIOR_ATTEMPT_CHECK_TIMEOUT_MS
+    );
+
+  try{
+
+    const response =
+      await fetch(
+        url,
+        {
+          method:"GET",
+          signal:controller.signal
+        }
+      );
+
+    clearTimeout(timeoutId);
+
+    if(!response.ok){
+
+      return {
+        found:false,
+        checked:false
+      };
+    }
+
+    const data =
+      await response.json();
+
+    return {
+
+      found:Boolean(data.found),
+
+      timestamp:
+        data.timestamp,
+
+      nota:
+        data.nota,
+
+      checked:
+        !data.error
+
+    };
+
+  }
+  catch(error){
+
+    clearTimeout(timeoutId);
+
+    console.error(error);
+
+    return {
+      found:false,
+      checked:false
+    };
+  }
+
+}
+
+
+function setStartCheckMessage(
+  text,
+  isError
+){
+
+  const el =
+    document.getElementById(
+      "startCheckMessage"
+    );
+
+  if(!text){
+
+    el.classList.add("hidden");
+    el.innerText = "";
+
+    return;
+  }
+
+  el.classList.remove("hidden");
+
+  el.style.color =
+    isError
+      ? "var(--red)"
+      : "var(--muted)";
+
+  el.innerText = text;
+}
+
+
+/* =========================================================
+   PORNIREA TESTULUI
+========================================================= */
+
+async function startTest(){
+
+  const name =
+    document
+      .getElementById("studentName")
+      .value
+      .trim();
+
+  const cls =
+    document
+      .getElementById("studentClass")
+      .value
+      .trim();
+
+
+  if(!name || !cls){
+
+    alert(
+      "Completează numele, prenumele și clasa înainte de a începe testul."
+    );
+
+    return;
+  }
+
+
+  screenWarningEnabled =
+    document
+      .getElementById(
+        "screenWarningToggle"
+      )
+      .checked;
+
+
+  const startBtn =
+    document.getElementById(
+      "startTestBtn"
+    );
+
+  startBtn.disabled = true;
+  startBtn.innerText =
+    "Se verifică...";
+
+
+  setStartCheckMessage(
+    "Se verifică dacă ai mai susținut acest test...",
+    false
+  );
+
+
+  const priorAttempt =
+    await checkPriorAttempt(
+      name,
+      cls
+    );
+
+
+  if(priorAttempt.found){
+
+    startBtn.disabled = false;
+
+    startBtn.innerText =
+      "Începe testul";
+
+    const notaText =
+      priorAttempt.nota !== undefined
+        ? ` (nota ${priorAttempt.nota})`
+        : "";
+
+    setStartCheckMessage(
+      `Ai susținut deja acest test${notaText}. ` +
+      `O nouă încercare se poate face numai cu acordul profesorului.`,
+      true
+    );
+
+    return;
+  }
+
+
+  if(!priorAttempt.checked){
+
+    setStartCheckMessage(
+      "Verificarea automată a unei încercări anterioare nu a putut fi realizată. Testul va continua.",
+      true
+    );
+
+  }
+  else{
+
+    setStartCheckMessage(
+      "",
+      false
+    );
+  }
+
+
+  numericVariantIndex =
+    chooseNumericVariant(
+      name,
+      cls
+    );
+
+
+  const numericSet =
+    NUMERIC_VARIANTS[
+      numericVariantIndex
+    ];
+
+
+  submitted = false;
+
+  variantId =
+    generateVariantId();
+
+
+  currentQuestions =
+    buildQuestions(
+      numericSet
+    );
+
+
+  currentQuestionIndex = 0;
+
+  resetIntegrityLog();
+
+
+  document
+    .getElementById("startCard")
+    .classList
+    .add("hidden");
+
+
+  document
+    .getElementById("testArea")
+    .classList
+    .remove("hidden");
+
+
+  document.getElementById(
+    "studentInfo"
+  ).innerText =
+    `${name} – ${cls}`;
+
+
+  document.getElementById(
+    "variantIdLabel"
+  ).innerText =
+    variantId;
+
+
+  document.getElementById(
+    "totalCount"
+  ).innerText =
+    currentQuestions.length;
+
+
+  renderCurrentQuestion();
+
+  updateProgress();
+
+  scrollToTop();
+
+}
+
+
+/* =========================================================
+   AFIȘAREA ITEMULUI
+========================================================= */
+
+function renderCurrentQuestion(){
+
+  const container =
+    document.getElementById(
+      "questionsContainer"
+    );
+
+
+  const q =
+    currentQuestions[
+      currentQuestionIndex
+    ];
+
+
+  if(!q){
+
+    container.innerHTML =
+      `<div class="question-card">
+        Nu s-a putut încărca întrebarea.
+      </div>`;
+
+    return;
+  }
+
+
+  let answerHtml = "";
+
+
+  if(q.type === "choice"){
+
+    answerHtml =
+      `<div class="answer-options">
+        ${
+          q.options
+            .map(
+              (opt,index)=>`
+                <label>
+                  <input
+                    type="radio"
+                    name="${q.id}"
+                    value="${escapeHtml(opt)}"
+                    ${
+                      q.studentAnswer === opt
+                        ? "checked"
+                        : ""
+                    }
+                    ${
+                      q.checked
+                        ? "disabled"
+                        : ""
+                    }
+                  >
+
+                  <b>
+                    ${String.fromCharCode(97+index)})
+                  </b>
+
+                  ${escapeHtml(opt)}
+                </label>
+              `
+            )
+            .join("")
+        }
+      </div>`;
+
+  }
+  else{
+
+    const placeholder =
+      q.numeric
+        ? "Scrie numai numărul"
+        : "Scrie răspunsul";
+
+    answerHtml =
+      `<input
+        id="${q.id}"
+        type="text"
+        inputmode="${
+          q.numeric
+            ? "decimal"
+            : "text"
+        }"
+        placeholder="${placeholder}"
+        value="${escapeHtml(q.studentAnswer)}"
+        ${
+          q.checked
+            ? "disabled"
+            : ""
+        }
+      >`;
+  }
+
+
+  let feedbackHtml = "";
+
+
+  if(q.checked){
+
+    feedbackHtml =
+      q.correct
+
+      ? `<div class="question-status status-correct">
+          Corect.
+        </div>`
+
+      : `<div class="question-status status-wrong">
+          Greșit.
+        </div>`;
+  }
+
+
+  container.innerHTML =
+    `
+    <div class="question-card">
+
+      <div class="item-type">
+        ${escapeHtml(q.itemType)}
+      </div>
+
+      <div class="question-title">
+
+        ${currentQuestionIndex+1}.
+
+        ${q.prompt}
+
+      </div>
+
+      ${answerHtml}
+
+      ${feedbackHtml}
+
+    </div>
+    `;
+
+
+  document.getElementById(
+    "currentQuestionLabel"
+  ).innerText =
+    currentQuestionIndex+1;
+
+
+  updateButtons();
+
+  updateProgress();
+
+}
+
+
+/* =========================================================
+   VERIFICAREA RĂSPUNSULUI
+========================================================= */
+
+function getCurrentAnswer(){
+
+  const q =
+    currentQuestions[
+      currentQuestionIndex
+    ];
+
+
+  if(q.type === "choice"){
+
+    const checked =
+      document.querySelector(
+        `input[name="${q.id}"]:checked`
+      );
+
+    return checked
+      ? checked.value
+      : "";
+  }
+
+
+  const input =
+    document.getElementById(
+      q.id
+    );
+
+  return input
+    ? input.value
+    : "";
+}
+
+
+function isCorrect(
+  q,
+  value
+){
+
+  if(q.numeric){
+
+    const v =
+      parseNumeric(value);
+
+    if(v === null){
+      return false;
+    }
+
+    const tolerance =
+      q.tolerance !== undefined
+        ? q.tolerance
+        : 0.01;
+
+
+    return q.answer.some(
+      ans=>{
+
+        const correctValue =
+          parseNumeric(ans);
+
+        return (
+          correctValue !== null &&
+          Math.abs(
+            correctValue-v
+          ) <= tolerance
+        );
+      }
+    );
+  }
+
+
+  const normalized =
+    normalizeText(value);
+
+
+  return q.answer.some(
+    ans=>
+      normalizeText(ans) ===
+      normalized
+  );
+}
+
+
+function checkCurrentQuestion(){
+
+  const q =
+    currentQuestions[
+      currentQuestionIndex
+    ];
+
+
+  if(q.checked){
+    return;
+  }
+
+
+  const studentAnswer =
+    getCurrentAnswer()
+      .trim();
+
+
+  if(!studentAnswer){
+
+    alert(
+      "Scrie sau alege un răspuns înainte de verificare."
+    );
+
+    return;
+  }
+
+
+  const ok =
+    isCorrect(
+      q,
+      studentAnswer
+    );
+
+
+  q.studentAnswer =
+    studentAnswer;
+
+  q.checked = true;
+
+  q.correct = ok;
+
+
+  renderCurrentQuestion();
+
+}
+
+
+/* =========================================================
+   NAVIGARE
+========================================================= */
+
+function goToNextQuestion(){
+
+  const q =
+    currentQuestions[
+      currentQuestionIndex
+    ];
+
+
+  if(!q.checked){
+
+    alert(
+      "Mai întâi verifică răspunsul."
+    );
+
+    return;
+  }
+
+
+  if(
+    currentQuestionIndex <
+    currentQuestions.length-1
+  ){
+
+    currentQuestionIndex++;
+
+    renderCurrentQuestion();
+
+    scrollToTop();
+  }
+}
+
+
+function updateButtons(){
+
+  const q =
+    currentQuestions[
+      currentQuestionIndex
+    ];
+
+
+  const isLast =
+    currentQuestionIndex ===
+    currentQuestions.length-1;
+
+
+  document.getElementById(
+    "checkBtn"
+  ).disabled =
+    q.checked;
+
+
+  document.getElementById(
+    "nextBtn"
+  ).disabled =
+    !q.checked || isLast;
+
+
+  document.getElementById(
+    "nextBtn"
+  ).classList.toggle(
+    "hidden",
+    isLast
+  );
+
+
+  document.getElementById(
+    "finishBtn"
+  ).classList.toggle(
+    "hidden",
+    !isLast
+  );
+
+
+  document.getElementById(
+    "finishBtn"
+  ).disabled =
+    !q.checked ||
+    submitted;
+}
+
+
+function updateProgress(){
+
+  const answered =
+    currentQuestions.filter(
+      q=>q.checked
+    ).length;
+
+
+  document.getElementById(
+    "answeredCount"
+  ).innerText =
+    answered;
+
+
+  const percent =
+    currentQuestions.length
+
+    ? answered /
+      currentQuestions.length *
+      100
+
+    : 0;
+
+
+  document.getElementById(
+    "progressFill"
+  ).style.width =
+    `${percent}%`;
+}
+
+
+/* =========================================================
+   RAPORT INTEGRITATE
+========================================================= */
+
+function formatDuration(seconds){
+
+  const total =
+    Math.max(
+      0,
+      Number(seconds)||0
+    );
+
+
+  const minutes =
+    Math.floor(total/60);
+
+  const sec =
+    total%60;
+
+
+  if(minutes === 0){
+
+    return `${sec} secunde`;
+  }
+
+
+  return (
+    `${minutes} min ` +
+    `${sec} s`
+  );
+}
+
+
+function getIntegrityReturnEvents(){
+
+  return integrityLog.events.filter(
+    event=>
+      event.tip ===
+      "revenire_in_test"
+  );
+}
+
+
+function getIntegrityItemsSummary(){
+
+  const items =
+    [...new Set(
+      getIntegrityReturnEvents()
+        .map(event=>event.item)
+    )];
+
+
+  if(items.length === 0){
+
+    return (
+      "Nu s-au înregistrat " +
+      "părăsiri ale ecranului."
+    );
+  }
+
+
+  return items.join(", ");
+}
+
+
+/* =========================================================
+   FINALIZARE ȘI NOTARE
+========================================================= */
+
+function submitTest(){
+
+  if(submitted){
+    return;
+  }
+
+
+  const unchecked =
+    currentQuestions.filter(
+      q=>!q.checked
+    ).length;
+
+
+  if(unchecked>0){
+
+    alert(
+      `Mai ai ${unchecked} întrebări neverificate.`
+    );
+
+    return;
+  }
+
+
+  submitted = true;
+
+
+  const correct =
+    currentQuestions.filter(
+      q=>q.correct
+    ).length;
+
+
+  const percentage =
+    correct /
+    currentQuestions.length;
+
+
+  const grade =
+    Math.max(
+      1,
+      OFFICIAL_POINTS +
+      percentage *
+      TEST_POINTS
+    );
+
+
+  const roundedGrade =
+    Math.round(
+      grade*100
+    )/100;
+
+
+  const answerRows =
+    currentQuestions.map(
+      (q,index)=>({
+
+        nr:index+1,
+
+        prompt:
+          q.prompt
+            .replace(/<[^>]*>/g," ")
+            .replace(/\s+/g," ")
+            .trim(),
+
+        category:
+          q.category,
+
+        type:
+          q.itemType,
+
+        studentAnswer:
+          q.studentAnswer,
+
+        correct:
+          q.correct
+
+      })
+    );
+
+
+  const payload = {
+
+    timestamp:
+      new Date().toISOString(),
+
+    test:
+      "Evaluare inițială – Fizică – Clasa a VI-a",
+
+    variantId,
+
+    numericSet:
+      numericVariantIndex+1,
+
+    studentName:
+      document
+        .getElementById(
+          "studentName"
+        )
+        .value
+        .trim(),
+
+    studentClass:
+      document
+        .getElementById(
+          "studentClass"
+        )
+        .value
+        .trim(),
+
+    correct,
+
+    total:
+      currentQuestions.length,
+
+    officialPoints:
+      OFFICIAL_POINTS,
+
+    testPoints:
+      TEST_POINTS,
+
+    grade:
+      roundedGrade,
+
+    answers:
+      answerRows,
+
+    integrityExitCount:
+      integrityLog.exitCount,
+
+    integrityTotalAwaySeconds:
+      integrityLog.totalAwaySeconds,
+
+    integrityTotalAwayFormatted:
+      formatDuration(
+        integrityLog.totalAwaySeconds
+      ),
+
+    integrityItemsSummary:
+      getIntegrityItemsSummary(),
+
+    integrityEvents:
+      integrityLog.events
+
+  };
+
+
+  document
+    .getElementById(
+      "testArea"
+    )
+    .classList
+    .add("hidden");
+
+
+  showResult(payload);
+
+  sendToGoogleSheet(payload);
+
+}
+
+
+/* =========================================================
+   AFIȘAREA REZULTATULUI
+========================================================= */
+
+function showResult(payload){
+
+  lastReportPayload =
+    payload;
+
+
+  document
+    .getElementById(
+      "resultArea"
+    )
+    .classList
+    .remove("hidden");
+
+
+  document.getElementById(
+    "gradeDisplay"
+  ).innerText =
+    `Nota ${payload.grade}`;
+
+
+  const integrityReturns =
+    payload.integrityEvents.filter(
+      e=>
+        e.tip ===
+        "revenire_in_test"
+    );
+
+
+  const integrityTable =
+    integrityReturns.length
+
+    ? `
+      <div class="review-table-wrapper">
+
+        <table class="review-table">
+
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Durată</th>
+              <th>Ora ieșirii</th>
+              <th>Ora revenirii</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+          ${
+            integrityReturns
+              .map(
+                event=>`
+                <tr>
+                  <td>
+                    ${escapeHtml(event.item)}
+                  </td>
+
+                  <td>
+                    ${escapeHtml(event.durataSecunde)}
+                    s
+                  </td>
+
+                  <td>
+                    ${escapeHtml(event.oraPlecare)}
+                  </td>
+
+                  <td>
+                    ${escapeHtml(event.oraRevenire)}
+                  </td>
+                </tr>
+                `
+              )
+              .join("")
+          }
+
+          </tbody>
+
+        </table>
+
+      </div>
+      `
+
+    : `<p class="small">
+        Nu s-au înregistrat părăsiri ale ecranului.
+      </p>`;
+
+
+  document.getElementById(
+    "resultDetails"
+  ).innerHTML =
+    `
+      Elev:
+      <b>${escapeHtml(payload.studentName)}</b>
+      <br>
+
+      Clasa:
+      <b>${escapeHtml(payload.studentClass)}</b>
+      <br>
+
+      Răspunsuri corecte:
+      <b>${payload.correct}</b>
+      din
+      <b>${payload.total}</b>
+      <br>
+
+      Punctaj:
+      ${OFFICIAL_POINTS} punct din oficiu +
+      ${
+        Math.round(
+          (
+            payload.correct /
+            payload.total *
+            TEST_POINTS
+          )*100
+        )/100
+      }
+      puncte din test.
+
+      <div class="warning">
+
+        <b>Avertizare schimbare ecran</b>
+        <br>
+
+        Ieșiri din ecran:
+        <b>
+          ${payload.integrityExitCount}
+        </b>
+        <br>
+
+        Timp total în afara ecranului:
+        <b>
+          ${escapeHtml(
+            payload.integrityTotalAwayFormatted
+          )}
+        </b>
+        <br>
+
+        Itemi afectați:
+        <b>
+          ${escapeHtml(
+            payload.integrityItemsSummary
+          )}
+        </b>
+
+        ${integrityTable}
+
+      </div>
+    `;
+
+
+  const reviewRows =
+    payload.answers
+      .map(
+        item=>{
+
+          const resultText =
+            item.correct
+              ? "Corect"
+              : "Greșit";
+
+          const resultClass =
+            item.correct
+              ? "review-ok"
+              : "review-wrong";
+
+          return `
+            <tr>
+
+              <td>
+                ${item.nr}
+              </td>
+
+              <td>
+                ${escapeHtml(item.prompt)}
+              </td>
+
+              <td>
+                ${escapeHtml(item.studentAnswer)}
+              </td>
+
+              <td class="${resultClass}">
+                ${resultText}
+              </td>
+
+            </tr>
+          `;
+        }
+      )
+      .join("");
+
+
+  document.getElementById(
+    "resultReview"
+  ).innerHTML =
+    `
+      <h3>
+        Rezumatul răspunsurilor
+      </h3>
+
+      <p class="small">
+        Răspunsul corect nu este afișat.
+      </p>
+
+      <div class="review-table-wrapper">
+
+        <table class="review-table">
+
+          <thead>
+            <tr>
+              <th>Nr.</th>
+              <th>Întrebarea</th>
+              <th>Răspunsul elevului</th>
+              <th>Rezultat</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            ${reviewRows}
+          </tbody>
+
+        </table>
+
+      </div>
+    `;
+
+
+  document
+    .getElementById(
+      "resultArea"
+    )
+    .scrollIntoView({
+      behavior:"smooth"
+    });
+
+}
+
+
+/* =========================================================
+   TRANSMITEREA ÎN GOOGLE SHEET
+   Sunt folosite 3 încercări.
+   Apps Script elimină duplicatele după variantId.
+========================================================= */
+
+function updateSavePanel(
+  state,
+  title,
+  message
+){
+
+  const panel =
+    document.getElementById(
+      "savePanel"
+    );
+
+  const saveTitle =
+    document.getElementById(
+      "saveTitle"
+    );
+
+  const saveMessage =
+    document.getElementById(
+      "saveMessage"
+    );
+
+
+  panel.classList.remove(
+    "hidden",
+    "done",
+    "error"
+  );
+
+
+  if(state==="done"){
+    panel.classList.add("done");
+  }
+
+  if(state==="error"){
+    panel.classList.add("error");
+  }
+
+
+  saveTitle.innerText =
+    title;
+
+  saveMessage.innerText =
+    message;
+}
+
+
+function sendPayloadAttempt(
+  payload,
+  attemptNumber
+){
+
+  try{
+
+    const iframeName =
+      `sheetFrame_` +
+      `${attemptNumber}_` +
+      `${Date.now()}`;
+
+
+    const iframe =
+      document.createElement(
+        "iframe"
+      );
+
+    iframe.name =
+      iframeName;
+
+    iframe.style.display =
+      "none";
+
+
+    document.body.appendChild(
+      iframe
+    );
+
+
+    const form =
+      document.createElement(
+        "form"
+      );
+
+    form.method =
+      "POST";
+
+    form.action =
+      GOOGLE_SCRIPT_URL;
+
+    form.target =
+      iframeName;
+
+    form.style.display =
+      "none";
+
+
+    const input =
+      document.createElement(
+        "input"
+      );
+
+    input.type =
+      "hidden";
+
+    input.name =
+      "payload";
+
+    input.value =
+      JSON.stringify(payload);
+
+
+    form.appendChild(input);
+
+    document.body.appendChild(
+      form
+    );
+
+
+    form.submit();
+
+
+    setTimeout(
+      ()=>{
+
+        form.remove();
+
+        iframe.remove();
+
+      },
+      30000
+    );
+
+
+    return true;
+
+  }
+  catch(error){
+
+    console.error(error);
+
+    return false;
+  }
+
+}
+
+
+function sendToGoogleSheet(payload){
+
+  document.getElementById(
+    "downloadPdfBtn"
+  ).disabled = true;
+
+
+  updateSavePanel(
+    "saving",
+    "Se salvează rezultatul...",
+    "Nu închide pagina."
+  );
+
+
+  document.getElementById(
+    "sheetStatus"
+  ).innerText =
+    "Se transmite rezultatul profesorului.";
+
+
+  SAVE_RETRY_DELAYS_MS.forEach(
+    (delay,index)=>{
+
+      setTimeout(
+        ()=>{
+
+          updateSavePanel(
+            "saving",
+            `Se salvează rezultatul – încercarea ${index+1}/${SAVE_RETRY_DELAYS_MS.length}`,
+            "Nu închide pagina."
+          );
+
+
+          sendPayloadAttempt(
+            payload,
+            index+1
+          );
+
+        },
+        delay
+      );
+
+    }
+  );
+
+
+  setTimeout(
+    ()=>{
+
+      updateSavePanel(
+        "done",
+        "Rezultatul a fost transmis profesorului.",
+        "Poți descărca raportul testului."
+      );
+
+
+      document.getElementById(
+        "sheetStatus"
+      ).innerText =
+        "Test finalizat. Rezultatul a fost transmis.";
+
+
+      document.getElementById(
+        "downloadPdfBtn"
+      ).disabled = false;
+
+    },
+    SAVE_WAIT_SECONDS*1000
+  );
+
+}
+
+
+/* =========================================================
+   RAPORT PDF
+========================================================= */
+
+function downloadReportPDF(){
+
+  if(!lastReportPayload){
+
+    alert(
+      "Raportul nu este disponibil."
+    );
+
+    return;
+  }
+
+
+  if(typeof html2pdf === "undefined"){
+
+    alert(
+      "Modulul PDF nu s-a încărcat. Verifică conexiunea la internet."
+    );
+
+    return;
+  }
+
+
+  const payload =
+    lastReportPayload;
+
+
+  const safeName =
+    (
+      payload.studentName ||
+      "elev"
+    )
+    .replace(
+      /[^a-zA-Z0-9ăâîșțĂÂÎȘȚ -]/g,
+      ""
+    )
+    .trim()
+    .replace(/\s+/g,"-");
+
+
+  const answerRows =
+    payload.answers
+      .map(
+        item=>`
+          <tr>
+
+            <td style="
+              border:1px solid #ccc;
+              padding:6px;
+              text-align:center;
+            ">
+              ${item.nr}
+            </td>
+
+            <td style="
+              border:1px solid #ccc;
+              padding:6px;
+            ">
+              ${escapeHtml(item.prompt)}
+            </td>
+
+            <td style="
+              border:1px solid #ccc;
+              padding:6px;
+              text-align:center;
+              font-weight:bold;
+              color:${
+                item.correct
+                  ? "#176b3a"
+                  : "#962d22"
+              };
+            ">
+              ${
+                item.correct
+                  ? "Corect"
+                  : "Greșit"
+              }
+            </td>
+
+          </tr>
+        `
+      )
+      .join("");
+
+
+  const report =
+    document.createElement(
+      "div"
+    );
+
+
+  report.style.cssText =
+    `
+    width:760px;
+    max-width:100%;
+    padding:24px;
+    background:white;
+    color:#243447;
+    font-family:Arial,sans-serif;
+    `;
+
+
+  report.innerHTML =
+    `
+    <h1 style="
+      text-align:center;
+      margin-bottom:4px;
+    ">
+      Evaluare inițială – Fizică
+    </h1>
+
+    <h2 style="
+      text-align:center;
+      margin-top:0;
+      font-size:18px;
+    ">
+      Clasa a VI-a
+    </h2>
+
+    <p>
+      <b>Elev:</b>
+      ${escapeHtml(payload.studentName)}
+      <br>
+
+      <b>Clasa:</b>
+      ${escapeHtml(payload.studentClass)}
+      <br>
+
+      <b>Nota:</b>
+      ${escapeHtml(payload.grade)}
+      <br>
+
+      <b>Răspunsuri corecte:</b>
+      ${payload.correct}
+      din
+      ${payload.total}
+      <br>
+
+      <b>Variantă:</b>
+      ${escapeHtml(payload.variantId)}
+    </p>
+
+    <h3>
+      Avertizare schimbare ecran
+    </h3>
+
+    <p>
+      Ieșiri:
+      <b>
+        ${payload.integrityExitCount}
+      </b>
+      <br>
+
+      Timp total:
+      <b>
+        ${escapeHtml(
+          payload.integrityTotalAwayFormatted
+        )}
+      </b>
+      <br>
+
+      Itemi afectați:
+      <b>
+        ${escapeHtml(
+          payload.integrityItemsSummary
+        )}
+      </b>
+    </p>
+
+    <h3>
+      Rezumatul itemilor
+    </h3>
+
+    <table style="
+      width:100%;
+      border-collapse:collapse;
+      font-size:11px;
+    ">
+
+      <thead>
+
+        <tr>
+
+          <th style="
+            border:1px solid #ccc;
+            padding:6px;
+            background:#edf6ff;
+          ">
+            Nr.
+          </th>
+
+          <th style="
+            border:1px solid #ccc;
+            padding:6px;
+            background:#edf6ff;
+          ">
+            Întrebarea
+          </th>
+
+          <th style="
+            border:1px solid #ccc;
+            padding:6px;
+            background:#edf6ff;
+          ">
+            Rezultat
+          </th>
+
+        </tr>
+
+      </thead>
+
+      <tbody>
+        ${answerRows}
+      </tbody>
+
+    </table>
+
+    <p style="
+      font-size:11px;
+      text-align:center;
+      margin-top:15px;
+      color:#667085;
+    ">
+      Material realizat de prof. Dănuț Andronie
+    </p>
+    `;
+
+
+  const options = {
+
+    margin:0.35,
+
+    filename:
+      `rezultat-test-initial-clasa-6-${safeName}.pdf`,
+
+    image:{
+      type:"jpeg",
+      quality:.98
+    },
+
+    html2canvas:{
+      scale:2,
+      useCORS:true,
+      backgroundColor:"#ffffff"
+    },
+
+    jsPDF:{
+      unit:"in",
+      format:"a4",
+      orientation:"portrait"
+    },
+
+    pagebreak:{
+      mode:[
+        "css",
+        "legacy"
+      ]
+    }
+
+  };
+
+
+  html2pdf()
+    .set(options)
+    .from(report)
+    .save();
+
+}
+
+
+/* =========================================================
+   SCROLL
+========================================================= */
+
+function scrollToTop(){
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+}
+
+</script>
+
+</body>
+</html>

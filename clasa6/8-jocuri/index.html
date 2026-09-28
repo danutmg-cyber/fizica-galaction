@@ -1,243 +1,121 @@
 <!DOCTYPE html>
 <html lang="ro">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Jocuri interactive | Clasa a VI-a | Fizica Galaction</title>
+    <title>Jocuri interactive - Clasa a VI-a</title>
 
-  <meta name="description" content="Jocuri interactive de fizică pentru clasa a VI-a: unități de măsură, viteză și densitate, antrenament pe niveluri, calcul pas cu pas și clasamente.">
+    <link rel="stylesheet" href="../../assets/css/style.css">
 
-  <link rel="stylesheet" href="../../assets/css/style.css">
+    <style>
+        .jocuri-container {
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 20px;
+            text-align: center;
+        }
 
-  <style>
-    :root {
-      --joc-bg: #0f172a;
-      --joc-card: #1e293b;
-      --joc-card-2: #243145;
-      --joc-text: #f8fafc;
-      --joc-text-soft: #e2e8f0;
-      --joc-muted: #cbd5e1;
-      --joc-primary: #22d3ee;
-      --joc-primary-2: #67e8f9;
-      --joc-green: #22c55e;
-      --joc-yellow: #fbbf24;
-      --joc-border: rgba(148, 163, 184, 0.35);
-      --joc-shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
-      --joc-radius: 18px;
-    }
+        .jocuri-container h1 {
+            margin-bottom: 30px;
+        }
 
-    * {
-      box-sizing: border-box;
-    }
+        .jocuri-butoane {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
 
-    body.games-page {
-      background:
-        radial-gradient(circle at top left, rgba(34, 211, 238, 0.13), transparent 32rem),
-        radial-gradient(circle at bottom right, rgba(34, 197, 94, 0.10), transparent 28rem),
-        var(--joc-bg) !important;
-      color: var(--joc-text) !important;
-    }
+        .joc-button {
+            display: block;
+            padding: 18px 20px;
 
-    .games-page .page-content {
-      padding-top: 18px;
-      padding-bottom: 28px;
-    }
+            border-radius: 12px;
 
-    .games-page .card,
-    .games-page .page-hero {
-      background: linear-gradient(180deg, rgba(30, 41, 59, 0.98), rgba(30, 41, 59, 0.92)) !important;
-      color: var(--joc-text) !important;
-      border: 1px solid var(--joc-border) !important;
-      border-radius: var(--joc-radius) !important;
-      box-shadow: var(--joc-shadow);
-    }
+            background-color: #2563eb;
+            color: white;
 
-    /* Titluri uniforme */
-    .games-page .page-title,
-    .games-page .section-title,
-    .games-page .card > h1,
-    .games-page .card > h2 {
-      font-size: clamp(1.35rem, 5vw, 1.75rem) !important;
-      line-height: 1.18;
-      margin-bottom: 14px;
-      color: #ffffff !important;
-      letter-spacing: -0.01em;
-    }
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 700;
 
-    .games-page .link-card h3,
-    .games-page .teacher-item strong {
-      font-size: clamp(1.05rem, 4vw, 1.25rem) !important;
-      line-height: 1.25;
-      color: #ffffff !important;
-      margin: 0;
-    }
+            transition:
+                transform 0.2s ease,
+                background-color 0.2s ease;
+        }
 
-    .games-page p,
-    .games-page li,
-    .games-page .small-muted {
-      color: var(--joc-text-soft) !important;
-      font-size: clamp(1rem, 3.7vw, 1.08rem);
-    }
+        .joc-button:hover {
+            background-color: #1d4ed8;
+            transform: translateY(-2px);
+        }
 
-    .games-page .quote {
-      color: #fef3c7 !important;
-      background: rgba(251, 191, 36, 0.12);
-      border-left: 5px solid var(--joc-yellow);
-      border-radius: 14px;
-      padding: 12px 14px;
-      margin: 14px 0;
-      font-weight: 700;
-    }
+        .back-button {
+            margin-top: 30px;
+            background-color: #475569;
+        }
 
-    .games-page .grid {
-      gap: 16px;
-    }
+        .back-button:hover {
+            background-color: #334155;
+        }
 
-    .games-page .link-card {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      min-height: 170px;
-      padding: 18px !important;
-      background:
-        linear-gradient(135deg, rgba(34, 211, 238, 0.12), rgba(34, 197, 94, 0.08)),
-        var(--joc-card-2) !important;
-      color: var(--joc-text) !important;
-      border: 1px solid rgba(103, 232, 249, 0.32) !important;
-      border-radius: 18px !important;
-      text-decoration: none !important;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.24);
-      transition: transform 0.15s ease, border-color 0.15s ease, filter 0.15s ease;
-    }
+        @media (max-width: 600px) {
+            .jocuri-container {
+                margin: 20px auto;
+                padding: 16px;
+            }
 
-    .games-page .link-card:hover,
-    .games-page .link-card:focus {
-      transform: translateY(-2px);
-      border-color: var(--joc-primary-2) !important;
-      filter: brightness(1.05);
-      outline: none;
-    }
-
-    .game-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: auto;
-    }
-
-    .badge-local {
-      display: inline-flex;
-      align-items: center;
-      min-height: 34px;
-      padding: 7px 11px;
-      border-radius: 999px;
-      font-weight: 850;
-      font-size: 0.92rem;
-      border: 1px solid rgba(255, 255, 255, 0.24);
-      color: #ffffff;
-      background: rgba(15, 23, 42, 0.55);
-      line-height: 1;
-    }
-
-    .badge-ready { background: rgba(34, 197, 94, 0.28); color: #dcfce7; }
-    .badge-training { background: rgba(59, 130, 246, 0.28); color: #dbeafe; }
-    .badge-ranking { background: rgba(251, 191, 36, 0.25); color: #fef3c7; }
-    .badge-soon { background: rgba(148, 163, 184, 0.26); color: #f8fafc; }
-
-    .games-page .actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
-
-    .games-page .button {
-      min-height: 54px;
-      display: inline-flex !important;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 13px 18px !important;
-      border-radius: 14px !important;
-      background: var(--joc-primary) !important;
-      color: #082f49 !important;
-      border: 2px solid var(--joc-primary-2) !important;
-      font-weight: 900 !important;
-      text-decoration: none !important;
-      box-shadow: 0 10px 24px rgba(34, 211, 238, 0.24);
-      letter-spacing: 0.01em;
-    }
-
-    .games-page .button:hover,
-    .games-page .button:focus { filter: brightness(1.08); outline: 3px solid rgba(103, 232, 249, 0.38); outline-offset: 2px; }
-
-    .games-page .alert-info { background: rgba(34, 211, 238, 0.10) !important; border: 1px solid rgba(34, 211, 238, 0.38) !important; color: #e0faff !important; border-radius: 14px !important; padding: 14px !important; font-weight: 650; }
-
-    .games-page .footer-meta { color: var(--joc-text-soft) !important; font-size: 0.95rem; }
-
-    @media (max-width: 520px) { .games-page .link-card { min-height: 140px; } }
-  </style>
+            .joc-button {
+                padding: 16px;
+                font-size: 1rem;
+            }
+        }
+    </style>
 </head>
-<body class="games-page" data-page-type="special">
-  <div id="header-container"></div>
 
-  <main class="page-content wrapper">
-    <section class="page-hero">
-      <h1 class="page-title">Jocuri interactive pentru clasa a VI-a</h1>
-      <p class="lead">Antrenează-ți abilitățile, concurează cu colegii și învață prin jocuri practice.</p>
-      <div class="quote">„Fizica devine mai ușoară când înțelegi ce se întâmplă în spatele formulelor.”</div>
-      <div class="actions">
-        <a class="button" href="../index.html">Înapoi la Clasa a VI-a</a>
-      </div>
-    </section>
+<body>
 
-    <section class="card">
-      <h2 class="section-title">Jocuri disponibile</h2>
-      <div class="grid">
-        <a class="link-card" href="unitati/index.html">
-          <h3>📏 Unități de măsură</h3>
-          <p>Identifică mărimile și unitățile corecte într-un set de exerciții interactive.</p>
-          <div class="game-meta">
-            <span class="badge-local badge-ready">Nivel începător</span>
-            <span class="badge-local badge-training">Antrenament</span>
-          </div>
+    <div id="header-container"></div>
+
+    <main class="jocuri-container">
+
+        <h1>🎮 Jocuri interactive</h1>
+
+        <div class="jocuri-butoane">
+
+            <a
+                class="joc-button"
+                href="unitati-de-masura/index.html"
+            >
+                📏 Campionii Unităților de Măsură
+            </a>
+
+            <a
+                class="joc-button"
+                href="viteza-si-densitatea/index.html"
+            >
+                🚗 Campionii Vitezei și Densității
+            </a>
+
+        </div>
+
+        <a
+            class="joc-button back-button"
+            href="../index.html"
+        >
+            ← Înapoi la Clasa a VI-a
         </a>
 
-        <a class="link-card" href="viteza/index.html">
-          <h3>🚗 Viteză și timp</h3>
-          <p>Calculează viteza, timpul și distanța în scenarii reale.</p>
-          <div class="game-meta">
-            <span class="badge-local badge-ready">Nivel intermediar</span>
-            <span class="badge-local badge-ranking">Clasament</span>
-          </div>
-        </a>
+    </main>
 
-        <a class="link-card" href="densitate/index.html">
-          <h3>⚖️ Densitate și masă</h3>
-          <p>Determină densitatea substanțelor și compară rezultatele.</p>
-          <div class="game-meta">
-            <span class="badge-local badge-training">Nivel avansat</span>
-            <span class="badge-local badge-soon">În curând</span>
-          </div>
-        </a>
-      </div>
-    </section>
+    <div id="footer-container"></div>
 
-    <section class="card">
-      <h2 class="section-title">Despre jocuri</h2>
-      <p>Jocurile sunt create pentru a consolida conceptele învățate în clasă. Fiecare joc are niveluri multiple și feedback imediat.</p>
-      <div class="alert-info">Aceste jocuri funcționează cel mai bine pe browser modern (Chrome, Firefox, Edge).</div>
-    </section>
+    <script defer src="../../assets/js/config.js"></script>
+    <script defer src="../../assets/js/theme-toggle.js"></script>
+    <script defer src="../../assets/js/navigation.js"></script>
+    <script defer src="../../assets/js/progress.js"></script>
+    <script defer src="../../assets/js/load-header.js"></script>
+    <script defer src="../../assets/js/load-footer.js"></script>
+    <script defer src="../../assets/js/app.js"></script>
 
-    <footer class="card footer-meta">
-      <p>În caz de probleme, scrie la <strong>danutmg@gmail.com</strong></p>
-    </footer>
-  </main>
-
-  <div id="footer-container"></div>
-
-  <script defer src="../../assets/js/config.js"></script>
-  <script defer src="../../assets/js/theme-toggle.js"></script>
-  <script defer src="../../assets/js/navigation.js"></script>
-  <script defer src="../../assets/js/progress.js"></script>
-  <script defer src="../../assets/js/load-header.js"></script>
-  <script defer src="../../assets/js/load-footer.js"></script>
-  <script defer src="../../assets/js/app.js"></script>
 </body>
 </html>

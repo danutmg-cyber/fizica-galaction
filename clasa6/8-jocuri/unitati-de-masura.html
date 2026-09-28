@@ -1,1729 +1,234 @@
 <!DOCTYPE html>
 <html lang="ro">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Joc interactiv de fizică pentru clasa a VI-a: transformări între unități de lungime, masă, timp, arie și volum.">
-  <title>Campionii Unităților de Măsură</title>
-
-  <style>
-    :root {
-      --bg: #07111f;
-      --card: #142033;
-      --card2: #0b1323;
-      --text: #f8fafc;
-      --muted: #dbeafe;
-      --cyan: #22d3ee;
-      --green: #22c55e;
-      --yellow: #fbbf24;
-      --red: #fb7185;
-      --line: #6b83a8;
-    }
-
-    * { box-sizing: border-box; }
-    html { font-size: 18px; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
-      background:
-        radial-gradient(circle at top left, rgba(34, 211, 238, .18), transparent 34rem),
-        linear-gradient(180deg, #07111f, #0f172a);
-      color: var(--text);
-      line-height: 1.5;
-    }
-
-    button, input { font: inherit; }
-    button { touch-action: manipulation; }
-    h1, h2, h3, p { margin-top: 0; }
-    h1 { font-size: clamp(1.65rem, 5vw, 2.7rem); line-height: 1.08; }
-    h2 { font-size: clamp(1.3rem, 4vw, 1.85rem); }
-    h3 { font-size: clamp(1.05rem, 3.3vw, 1.3rem); }
-    p, li, label { font-size: clamp(1rem, 3vw, 1.12rem); }
-
-    .app {
-      width: min(100%, 980px);
-      margin: 0 auto;
-      min-height: 100svh;
-      padding: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .top {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      padding: 8px;
-      border: 1px solid rgba(148, 163, 184, .35);
-      border-radius: 0 0 14px 14px;
-      background: rgba(7, 17, 31, .96);
-      box-shadow: 0 14px 40px rgba(0, 0, 0, .28);
-      backdrop-filter: blur(10px);
-    }
-
-    .toprow {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .title { font-weight: 950; }
-    .tag { color: var(--muted); margin: 2px 0 0; font-size: .92rem; }
-
-    .pill {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 34px;
-      padding: 6px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(34, 211, 238, .65);
-      background: rgba(34, 211, 238, .14);
-      font-weight: 900;
-      text-align: center;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 6px;
-      margin-top: 7px;
-    }
-
-    .stat {
-      min-width: 0;
-      padding: 6px;
-      border: 1px solid rgba(148, 163, 184, .35);
-      border-radius: 12px;
-      background: #07111f;
-    }
-
-    .stat small { display: block; color: #d8e8ff; font-size: .68rem; }
-    .stat strong {
-      display: block;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
-      font-size: .9rem;
-    }
-
-    .bar {
-      height: 8px;
-      margin-top: 7px;
-      overflow: hidden;
-      border: 1px solid rgba(148, 163, 184, .35);
-      border-radius: 99px;
-      background: #020617;
-    }
-
-    .bar span {
-      display: block;
-      width: 0;
-      height: 100%;
-      background: linear-gradient(90deg, var(--cyan), var(--green), var(--yellow));
-      transition: width .25s ease;
-    }
-
-    .screen {
-      flex: 1;
-      display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 4px 0 12px;
-    }
-
-    .card {
-      width: 100%;
-      padding: clamp(14px, 3.2vw, 24px);
-      border: 1px solid rgba(148, 163, 184, .35);
-      border-radius: 18px;
-      background: linear-gradient(180deg, rgba(20, 32, 51, .98), rgba(15, 23, 42, .98));
-      box-shadow: 0 14px 38px rgba(0, 0, 0, .38);
-    }
-
-    .hero-home {
-      display: grid;
-      grid-template-columns: minmax(0, 1.05fr) minmax(280px, .95fr);
-      gap: 18px;
-      align-items: stretch;
-    }
-
-    .badge {
-      display: inline-flex;
-      gap: 8px;
-      padding: 7px 11px;
-      margin-bottom: 7px;
-      border: 1px solid rgba(251, 191, 36, .52);
-      border-radius: 999px;
-      background: rgba(251, 191, 36, .14);
-      color: #fff7cd;
-      font-weight: 950;
-      font-size: .9rem;
-    }
-
-    .home-note {
-      margin: 12px 0;
-      padding: 12px 14px;
-      border: 1px solid rgba(251, 191, 36, .55);
-      border-radius: 16px;
-      background: rgba(251, 191, 36, .11);
-      color: #fff7cd;
-      font-weight: 800;
-    }
-
-    .details-box {
-      overflow: hidden;
-      padding: 0;
-      border: 1px solid rgba(148, 163, 184, .35);
-      border-radius: 16px;
-      background: #08111f;
-    }
-
-    .details-box summary {
-      cursor: pointer;
-      padding: 12px 14px;
-      list-style: none;
-      color: #e0f2fe;
-      font-weight: 1000;
-    }
-
-    .details-box summary::-webkit-details-marker { display: none; }
-    .details-box summary::after { content: " +"; color: #67e8f9; }
-    .details-box[open] summary::after { content: " −"; }
-
-    .details-content {
-      padding: 12px 14px;
-      border-top: 1px solid rgba(148, 163, 184, .25);
-    }
-
-    .details-content ul { margin: 0; padding-left: 1.15rem; }
-    .details-content li { margin: 6px 0; }
-
-    .avatar-board {
-      min-height: 260px;
-      padding: 18px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 10px;
-      text-align: center;
-      border: 1px solid rgba(34, 211, 238, .42);
-      border-radius: 22px;
-      background: linear-gradient(135deg, rgba(34, 211, 238, .18), rgba(34, 197, 94, .12)), #07111f;
-    }
-
-    .big-icon { font-size: 4.2rem; }
-
-    .hero-stat-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-top: 10px;
-    }
-
-    .hero-stat {
-      padding: 10px;
-      border: 1px solid rgba(148, 163, 184, .35);
-      border-radius: 14px;
-      background: #07111f;
-    }
-
-    .hero-stat strong { display: block; color: #fff0a8; font-size: 1.2rem; }
-    .hero-stat span { display: block; color: #dbeafe; font-size: .84rem; font-weight: 800; }
-
-    .tiers {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 9px;
-      margin: 10px 0;
-    }
-
-    .tier {
-      min-height: 125px;
-      padding: 11px;
-      cursor: pointer;
-      text-align: left;
-      border: 2px solid rgba(148, 163, 184, .35);
-      border-radius: 16px;
-      background: #0b1323;
-      color: white;
-    }
-
-    .tier strong { display: block; font-size: 1.08rem; }
-    .tier span { display: block; color: #d8e8ff; font-size: .92rem; line-height: 1.3; }
-    .tier .mini { margin-top: 5px; color: #fff0a8; font-weight: 950; }
-    .tier.sel { border-color: #67e8f9; box-shadow: 0 0 0 4px rgba(34, 211, 238, .16); }
-    .tier.lock { opacity: .55; cursor: not-allowed; }
-
-    .inputs {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      margin: 12px 0;
-    }
-
-    .inp { display: grid; gap: 7px; }
-    label { color: white; font-weight: 900; }
-
-    input[type="text"] {
-      width: 100%;
-      min-height: 52px;
-      padding: 12px;
-      border: 2px solid var(--line);
-      border-radius: 14px;
-      outline: none;
-      background: #050b15;
-      color: #fff;
-      font-weight: 750;
-    }
-
-    input::placeholder { color: #91a6c7; }
-    input:focus { border-color: #67e8f9; box-shadow: 0 0 0 4px rgba(34, 211, 238, .2); }
-
-    .buttons {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-      gap: 9px;
-      margin-top: 12px;
-    }
-
-    .buttons.single { grid-template-columns: 1fr; }
-
-    .btn {
-      min-height: 52px;
-      padding: 12px 14px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      border: 0;
-      border-radius: 15px;
-      box-shadow: 0 10px 24px rgba(0, 0, 0, .22);
-      color: #06101f;
-      font-size: clamp(1rem, 3.3vw, 1.12rem);
-      font-weight: 1000;
-      text-align: center;
-      text-decoration: none;
-    }
-
-    .btn:disabled { opacity: .55; cursor: not-allowed; }
-    .primary { background: var(--cyan); }
-    .success { background: var(--green); }
-    .warning { background: var(--yellow); }
-    .secondary { background: #31435f; color: white; border: 1px solid var(--line); }
-    .danger { background: linear-gradient(135deg, #ef4444, #be123c); color: white; }
-
-    .info-mini-grid {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 12px;
-      margin: 14px 0;
-    }
-
-    .box {
-      padding: 12px;
-      border: 1px solid rgba(148, 163, 184, .35);
-      border-radius: 15px;
-      background: var(--card2);
-    }
-
-    .good { background: rgba(34, 197, 94, .11); border-color: rgba(34, 197, 94, .55); }
-    .warn { background: rgba(251, 191, 36, .11); border-color: rgba(251, 191, 36, .55); }
-
-    .qcard { display: grid; gap: 10px; }
-
-    .qhead {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
-      padding: 8px 10px;
-      border: 1px solid rgba(34, 211, 238, .35);
-      border-radius: 14px;
-      background: rgba(34, 211, 238, .1);
-    }
-
-    .qhead strong { color: #e0f2fe; }
-    .points {
-      padding: 5px 9px;
-      border-radius: 999px;
-      background: var(--yellow);
-      color: #3b2500;
-      font-weight: 1000;
-      white-space: nowrap;
-    }
-
-    .q-title { margin: 0; font-size: clamp(1.2rem, 4.8vw, 1.65rem); }
-    .problem { margin-bottom: 8px; color: white; font-size: clamp(1.15rem, 4.4vw, 1.55rem); font-weight: 900; line-height: 1.28; }
-
-    .known {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin: 2px 0;
-    }
-
-    .known span {
-      padding: 6px 9px;
-      border: 1px solid rgba(148, 163, 184, .38);
-      border-radius: 999px;
-      background: #091426;
-      color: #e0f2fe;
-      font-size: .95rem;
-      font-weight: 900;
-    }
-
-    .answer {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 92px;
-      gap: 8px;
-      align-items: end;
-      padding: 8px;
-      margin-top: 4px;
-      border: 1px solid rgba(148, 163, 184, .28);
-      border-radius: 14px;
-      background: rgba(8, 17, 31, .72);
-    }
-
-    .answer input { min-height: 50px; text-align: center; font-size: 1.15rem; }
-
-    .unit {
-      min-height: 50px;
-      display: grid;
-      place-items: center;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: #1e2a42;
-      color: #fff0a8;
-      font-weight: 1000;
-    }
-
-    .rules-line { margin: 0; color: #dbeafe; font-size: .9rem; }
-
-    .feedback {
-      min-height: 48px;
-      padding: 10px;
-      margin-top: 8px;
-      border: 1px solid rgba(148, 163, 184, .32);
-      border-radius: 15px;
-      background: #08111f;
-      font-weight: 800;
-    }
-
-    .feedback:empty { display: none; }
-    .feedback.ok, .ok { background: rgba(34, 197, 94, .13); border-color: rgba(34, 197, 94, .58); color: #dcfce7; }
-    .feedback.no, .no { background: rgba(251, 113, 133, .13); border-color: rgba(251, 113, 133, .58); color: #ffe4e6; }
-
-    .solution {
-      padding: 10px;
-      margin-top: 8px;
-      border: 1px solid rgba(34, 211, 238, .45);
-      border-radius: 15px;
-      background: rgba(34, 211, 238, .11);
-      color: #eefcff;
-      font-size: .95rem;
-    }
-
-    .quick { display: grid; gap: 9px; }
-    .variants { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-
-    .variant {
-      min-height: 50px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px;
-      cursor: pointer;
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      background: #16243a;
-      color: white;
-      font-weight: 850;
-    }
-
-    .scoregrid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 9px;
-    }
-
-    .tile {
-      padding: 11px;
-      text-align: center;
-      border: 1px solid rgba(148, 163, 184, .35);
-      border-radius: 15px;
-      background: #0b1323;
-    }
-
-    .tile strong { display: block; color: #fff0a8; font-size: clamp(1.45rem, 5vw, 2.1rem); }
-
-    .cert {
-      margin-top: 18px;
-      padding: clamp(16px, 4vw, 30px);
-      text-align: center;
-      border: 4px solid #f59e0b;
-      border-radius: 20px;
-      background: #fffaf0;
-      color: #111827;
-    }
-
-    .cert h2 { color: #92400e; font-size: clamp(1.8rem, 6vw, 2.7rem); }
-    .cert p { color: #111827; }
-    .cert .name {
-      display: inline-block;
-      padding: 4px 18px;
-      margin: 8px 0 12px;
-      border-bottom: 3px solid #92400e;
-      font-size: clamp(1.4rem, 5vw, 2.1rem);
-      font-weight: 1000;
-    }
-    .cert .sig { margin-top: 24px; text-align: right; font-weight: 950; }
-
-    .online-status {
-      margin-top: 14px;
-      padding: 12px;
-      border: 1px solid rgba(34, 211, 238, .45);
-      border-radius: 16px;
-      background: rgba(34, 211, 238, .10);
-      color: #e0faff;
-      font-weight: 850;
-    }
-
-    .online-board { display: grid; gap: 8px; margin-top: 12px; }
-    .online-row {
-      display: grid;
-      grid-template-columns: 54px 1fr 86px;
-      gap: 8px;
-      align-items: center;
-      padding: 10px;
-      border: 1px solid rgba(148, 163, 184, .35);
-      border-radius: 14px;
-      background: #07111f;
-    }
-    .online-row.me { border-color: rgba(34, 197, 94, .75); background: rgba(34, 197, 94, .14); }
-    .online-rank { color: #fff0a8; font-weight: 1000; }
-    .online-score { text-align: right; color: #bbf7d0; font-weight: 1000; }
-    .online-name { color: #f8fafc; font-weight: 900; }
-    .online-meta { display: block; color: #cbd5e1; font-size: .86rem; }
-
-    .admin-reset-panel {
-      margin-top: 14px;
-      padding: 12px;
-      border: 1px solid rgba(251, 113, 133, .65);
-      border-radius: 16px;
-      background: rgba(251, 113, 133, .12);
-    }
-
-    .admin-reset-panel h3, .admin-reset-panel p { color: #ffe4e6; }
-
-    .toast {
-      position: fixed;
-      left: 50%;
-      bottom: 18px;
-      z-index: 100;
-      width: min(calc(100% - 28px), 620px);
-      padding: 14px;
-      display: none;
-      transform: translateX(-50%);
-      text-align: center;
-      border: 1px solid rgba(34, 211, 238, .55);
-      border-radius: 18px;
-      background: #020617;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, .45);
-      font-weight: 900;
-    }
-
-    .toast.show { display: block; }
-
-    .confetti {
-      position: fixed;
-      inset: 0;
-      z-index: 120;
-      overflow: hidden;
-      pointer-events: none;
-    }
-
-    .confetti span {
-      position: absolute;
-      top: -24px;
-      width: 10px;
-      height: 16px;
-      opacity: .92;
-      animation: fall 1.35s linear forwards;
-    }
-
-    @keyframes fall { to { transform: translateY(110vh) rotate(720deg); } }
-
-    @media (max-width: 820px) {
-      .hero-home, .tiers, .inputs, .info-mini-grid { grid-template-columns: 1fr; }
-      .avatar-board { min-height: auto; }
-      .answer { grid-template-columns: 1fr; }
-      .variants { grid-template-columns: 1fr; }
-      .scoregrid { grid-template-columns: 1fr; }
-      .online-row { grid-template-columns: 44px 1fr 70px; }
-    }
-
-    @media (max-width: 520px) {
-      html { font-size: 16.5px; }
-      .app { padding: 6px; }
-      .card { padding: 12px; border-radius: 16px; }
-      .top { padding: 6px; }
-      .toprow { grid-template-columns: 1fr; }
-      .tag { display: none; }
-      .stats { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
-      .stat { padding: 4px 3px; text-align: center; }
-      .stat small { font-size: .56rem; }
-      .stat strong { font-size: .7rem; }
-      .bar { height: 6px; }
-      .hero-stat-grid { grid-template-columns: 1fr; }
-      .qhead { align-items: flex-start; flex-direction: column; }
-      .points { width: 100%; text-align: center; }
-      .buttons { grid-template-columns: 1fr; }
-    }
-
-    @media print {
-      body { background: white !important; color: black !important; }
-      .top, .buttons, .feedback, .online-status, .online-board { display: none !important; }
-      .app { padding: 0; }
-      .card { padding: 0; border: 0; box-shadow: none; background: white; }
-      .cert {
-        min-height: 90vh;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        box-shadow: none;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Test interactiv pentru exersarea transformărilor între unități de măsură la clasa a VI-a."
+    >
+
+    <title>
+        Campionii Unităților de Măsură
+    </title>
+
+    <!-- Stilul general al platformei -->
+    <link
+        rel="stylesheet"
+        href="../../assets/css/style.css"
+    >
+
+    <!-- Stilul comun tuturor testelor -->
+    <link
+        rel="stylesheet"
+        href="../../assets/css/test-style.css"
+    >
+
+    <style>
+        /*
+         * Doar ajustări minime pentru această pagină.
+         * Stilurile testului sunt în test-style.css.
+         */
+
+        body {
+            min-height: 100vh;
+        }
+
+        .test-page {
+            width: 100%;
+            min-height: 100vh;
+        }
+    </style>
 </head>
 
-<body>
-  <div class="app">
-    <header class="top" id="top" style="display:none">
-      <div class="toprow">
-        <div>
-          <div class="title">Campionii Unităților de Măsură</div>
-          <p class="tag" id="sub">Antrenament</p>
-        </div>
-        <div class="pill" id="part">🏅 Participări: 0/4</div>
-      </div>
 
-      <div class="stats">
-        <div class="stat"><small>Jucător</small><strong id="sn">-</strong></div>
-        <div class="stat"><small>Scor</small><strong id="ss">0 p</strong></div>
-        <div class="stat"><small>Nivel</small><strong id="sl">MEDIU</strong></div>
-        <div class="stat"><small>Progres</small><strong id="sp">0%</strong></div>
-      </div>
+<body
+    class="class-6"
+    data-class="6"
+>
 
-      <div class="bar"><span id="bar"></span></div>
-    </header>
+    <main class="test-page">
 
-    <main class="screen">
-      <section class="card" id="card"></section>
+        <!--
+            Motorul testului va genera aici:
+            - titlul;
+            - indicațiile;
+            - datele elevului;
+            - nivelurile;
+            - întrebările;
+            - rezultatul.
+        -->
+        <div
+            id="testApp"
+            data-test-engine
+        ></div>
+
     </main>
-  </div>
 
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <div class="confetti" id="confetti" aria-hidden="true"></div>
 
-  <script>
-    (() => {
-      "use strict";
+    <!-- =====================================================
+         1. SALVAREA PROFILULUI ȘI A PROGRESULUI
+    ====================================================== -->
 
-      const COUNT = 20;
-      const BASE = 100;
-      const BONUS = 25;
-      const LS = "campionii_unitatilor_masura_progress_v1";
-      const LS_PLAYER_ID = "campionii_unitatilor_masura_player_id_v1";
+    <script
+        src="../../assets/js/test-storage.js"
+    ></script>
 
-      const ADMIN_MODE =
-        new URLSearchParams(location.search).get("admin") === "1" ||
-        location.hash === "#admin";
 
-      const GOOGLE_SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbxCSfxRaU_5wiu555kA347-BLp0GNbyHFmY4JBIUp2RXaAcZl5VDsT1hBpXwA9WDrI1FQ/exec";
+    <!-- =====================================================
+         2. CONȚINUTUL TESTULUI
+    ====================================================== -->
 
-      const ONLINE_KEY = "FIZICA_GALACTION_TOATE_JOCURILE_2026";
-      const GAME_ID = "clasa6-unitati-de-masura";
+    <script
+        src="../../assets/js/unitati-de-masura.js"
+    ></script>
 
-      const TIERS = {
-        1: {
-          label: "MEDIU",
-          mult: 1,
-          icon: "🟢",
-          desc: "Conversii directe, potrivite pentru antrenament de bază."
-        },
-        2: {
-          label: "RIDICAT",
-          mult: 1.5,
-          icon: "🟡",
-          desc: "Conversii cu arie, volum, masă și timp. Punctaj ×1,5."
-        },
-        3: {
-          label: "AVANSAT",
-          mult: 2,
-          icon: "🔴",
-          desc: "Conversii combinate și rezultate cu zecimale. Punctaj ×2."
+
+    <!-- =====================================================
+         CONFIGURAȚIE SIMPLIFICATĂ PENTRU ELEVI
+    ====================================================== -->
+
+    <script>
+        /*
+         * unitati-de-masura.js a creat deja window.TEST_DATA.
+         *
+         * Aici simplificăm textele afișate elevului,
+         * fără să modificăm motorul general.
+         */
+
+        if (window.TEST_DATA) {
+
+            /*
+             * Descriere scurtă.
+             */
+            window.TEST_DATA.descriere =
+                "Exersează transformările între unități de măsură.";
+
+
+            /*
+             * Câteva indicații simple la început.
+             */
+            window.TEST_DATA.instructiuni = [
+
+                "Completează datele elevului; ele se păstrează în acest browser.",
+
+                "Rezolvă cele 20 de exerciții și verifică fiecare răspuns.",
+
+                "Nivelul următor se deblochează după finalizarea nivelului curent.",
+
+                "La 100% treci automat la nivelul următor.",
+
+                "Diploma se deblochează după ce finalizezi Nivelul 3."
+            ];
+
+
+            /*
+             * Reducem informațiile suplimentare
+             * afișate în zona întrebărilor.
+             */
+            window.TEST_DATA.config =
+                window.TEST_DATA.config || {};
+
+
+            /*
+             * Nu este necesar să afișăm permanent
+             * punctajul fiecărei întrebări.
+             */
+            window.TEST_DATA.config.showQuestionPoints =
+                false;
+
+
+            /*
+             * Feedback imediat după verificare.
+             */
+            window.TEST_DATA.config.immediateFeedback =
+                true;
+
+
+            /*
+             * Explicația rămâne disponibilă,
+             * fiind utilă elevului când greșește.
+             */
+            window.TEST_DATA.config.showExplanations =
+                true;
+
+
+            /*
+             * Elevul trebuie să răspundă
+             * înainte de a continua.
+             */
+            window.TEST_DATA.config.requireAllAnswers =
+                true;
+
+
+            /*
+             * Poate reveni la întrebarea precedentă.
+             */
+            window.TEST_DATA.config.allowBack =
+                true;
+
+
+            /*
+             * Profilul elevului se păstrează
+             * între niveluri.
+             */
+            window.TEST_DATA.config.persistStudentProfile =
+                true;
+
+
+            /*
+             * Testul neterminat poate fi reluat.
+             */
+            window.TEST_DATA.config.saveProgress =
+                true;
+
+            window.TEST_DATA.config.restoreProgress =
+                true;
         }
-      };
+    </script>
 
-      const U = {
-        length: { name: "lungime", f: { mm: .001, cm: .01, dm: .1, m: 1, km: 1000 } },
-        mass:   { name: "masă",    f: { mg: .000001, g: .001, kg: 1, q: 100, t: 1000 } },
-        time:   { name: "timp",    f: { s: 1, min: 60, h: 3600 } },
-        area:   { name: "arie",    f: { "cm²": .0001, "dm²": .01, "m²": 1 } },
-        volume: { name: "volum",   f: { "cm³": .000001, mL: .000001, "dm³": .001, L: .001, "m³": 1 } }
-      };
 
-      const BAD = [
-        "prost", "proasta", "idiot", "idioata", "bou", "vaca",
-        "pula", "pizda", "muie", "cur", "cacat", "rahat", "jeg"
-      ];
+    <!-- =====================================================
+         3. MOTORUL COMUN AL TESTELOR
+    ====================================================== -->
 
-      let S = {
-        page: "home",
-        tier: 1,
-        level: "MEDIU",
-        mult: 1,
-        score: 0,
-        i: 0,
-        name: "",
-        cls: "",
-        school: "",
-        loc: "",
-        playerId: "",
-        qs: [],
-        ans: {},
-        quick: {},
-        quickDone: false,
-        quickScore: 0,
-        finished: false,
-        after: null,
-        onlineStatus: "",
-        onlineLeaders: [],
-        onlineMonthly: [],
-        onlineSent: false,
-        lastSubmissionId: ""
-      };
+    <script
+        src="../../assets/js/test-engine.js"
+    ></script>
 
-      const $ = id => document.getElementById(id);
-      const card = $("card");
-      const top = $("top");
 
-      function rnd() {
-        if (window.crypto && typeof window.crypto.getRandomValues === "function") {
-          const a = new Uint32Array(1);
-          window.crypto.getRandomValues(a);
-          return a[0] / 4294967296;
-        }
-        return Math.random();
-      }
+    <!-- =====================================================
+         4. PORNIRE
+    ====================================================== -->
 
-      function ri(a, b) {
-        return Math.floor(rnd() * (b - a + 1)) + a;
-      }
+    <script>
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
 
-      function pick(a) {
-        return a[ri(0, a.length - 1)];
-      }
+                if (
+                    typeof window.initTestEngine ===
+                    "function"
+                ) {
 
-      function sh(a) {
-        const copy = a.slice();
-        for (let i = copy.length - 1; i > 0; i--) {
-          const j = ri(0, i);
-          [copy[i], copy[j]] = [copy[j], copy[i]];
-        }
-        return copy;
-      }
+                    window.initTestEngine();
 
-      function one(n) {
-        return Math.round((Number(n) + Number.EPSILON) * 10) / 10;
-      }
+                } else {
 
-      function val(n) {
-        return Number.isInteger(Number(n))
-          ? String(n)
-          : String(one(n)).replace(".", ",");
-      }
-
-      function ro(n) {
-        n = Number(n);
-        if (!Number.isFinite(n)) return "";
-        const d = Number.isInteger(n)
-          ? 0
-          : Math.abs(n) < .01
-            ? 6
-            : Math.abs(n) < 1
-              ? 4
-              : Math.abs(n) < 100
-                ? 3
-                : 1;
-        return String(Number(n.toFixed(d))).replace(".", ",");
-      }
-
-      function esc(s) {
-        return String(s).replace(/[&<>"']/g, m => ({
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          '"': "&quot;",
-          "'": "&#039;"
-        }[m]));
-      }
-
-      function parseNumber(v) {
-        const text = String(v || "")
-          .trim()
-          .replace(/[\s\u00A0]+/g, "")
-          .replace(/,/g, ".")
-          .replace(/[−–—]/g, "-");
-
-        const m = text.match(/[-+]?\d*\.?\d+(?:e[-+]?\d+)?/i);
-        return m ? Number(m[0]) : NaN;
-      }
-
-      function decimals(n) {
-        return (String(Number(n.toFixed(10))).split(".")[1] || "").length;
-      }
-
-      function trunc1(n) {
-        return n >= 0
-          ? Math.floor((n + Number.EPSILON) * 10) / 10
-          : Math.ceil((n - Number.EPSILON) * 10) / 10;
-      }
-
-      function correct(v, a) {
-        if (!Number.isFinite(v)) return false;
-        a = Number(a);
-
-        if (Math.abs(v - a) <= Math.max(1e-8, Math.abs(a) * 1e-7)) return true;
-
-        if (decimals(a) > 1) {
-          const rounded = Math.round((a + Number.EPSILON) * 10) / 10;
-          const truncated = trunc1(a);
-          return Math.abs(v - rounded) <= .051 || Math.abs(v - truncated) <= .051;
-        }
-
-        return Math.abs(v - a) <= Math.max(.001, Math.abs(a) * .00001);
-      }
-
-      function toast(message) {
-        const el = $("toast");
-        el.textContent = message;
-        el.classList.add("show");
-        clearTimeout(toast.timer);
-        toast.timer = setTimeout(() => el.classList.remove("show"), 2300);
-      }
-
-      function confetti() {
-        const c = $("confetti");
-        c.innerHTML = "";
-        ["#22d3ee", "#22c55e", "#fbbf24", "#fb7185", "#fff"].forEach(col => {
-          for (let i = 0; i < 14; i++) {
-            const s = document.createElement("span");
-            s.style.left = rnd() * 100 + "%";
-            s.style.background = col;
-            s.style.animationDelay = rnd() * .35 + "s";
-            c.appendChild(s);
-          }
-        });
-        setTimeout(() => { c.innerHTML = ""; }, 1700);
-      }
-
-      function defaultProgress() {
-        return {
-          participations: 0,
-          unlockedTier: 1,
-          bestScore: 0,
-          bestLevel: "MEDIU"
-        };
-      }
-
-      function prog() {
-        try {
-          return JSON.parse(localStorage.getItem(LS)) || defaultProgress();
-        } catch (e) {
-          return defaultProgress();
-        }
-      }
-
-      function save(p) {
-        try {
-          localStorage.setItem(LS, JSON.stringify(p));
-        } catch (e) {}
-      }
-
-      function isGoogleConfigured() {
-        return /^https:\/\/script\.google\.com\/macros\/s\//.test(GOOGLE_SCRIPT_URL);
-      }
-
-      function getPlayerId() {
-        try {
-          let id = localStorage.getItem(LS_PLAYER_ID);
-          if (id) return id;
-          id = "u-" + Date.now().toString(36) + "-" + Math.floor(rnd() * 1e12).toString(36);
-          localStorage.setItem(LS_PLAYER_ID, id);
-          return id;
-        } catch (e) {
-          return "u-" + Date.now().toString(36) + "-" + Math.floor(rnd() * 1e12).toString(36);
-        }
-      }
-
-      function submissionId() {
-        return "sub-" + Date.now().toString(36) + "-" + Math.floor(rnd() * 1e12).toString(36);
-      }
-
-      function weekKey() {
-        const d = new Date();
-        const day = d.getDay() || 7;
-        const th = new Date(d);
-        th.setDate(d.getDate() + 4 - day);
-        const y = new Date(th.getFullYear(), 0, 1);
-        const w = Math.ceil((((th - y) / 86400000) + 1) / 7);
-        return th.getFullYear() + "-W" + String(w).padStart(2, "0");
-      }
-
-      function monthKey() {
-        const d = new Date();
-        return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0");
-      }
-
-      function jsonp(params, timeout = 8000) {
-        return new Promise((resolve, reject) => {
-          if (!isGoogleConfigured()) {
-            reject(new Error("Google Script URL nu este configurat."));
-            return;
-          }
-
-          const cb = "unitati_cb_" + Date.now() + "_" + Math.floor(rnd() * 1e9);
-          const q = new URLSearchParams({ ...params, callback: cb });
-          const script = document.createElement("script");
-          let done = false;
-
-          const timer = setTimeout(() => {
-            cleanup();
-            reject(new Error("Timp expirat la conectarea cu Google Sheets."));
-          }, timeout);
-
-          function cleanup() {
-            if (done) return;
-            done = true;
-            clearTimeout(timer);
-            try { delete window[cb]; } catch (e) { window[cb] = undefined; }
-            if (script.parentNode) script.parentNode.removeChild(script);
-          }
-
-          window[cb] = data => {
-            cleanup();
-            resolve(data || {});
-          };
-
-          script.onerror = () => {
-            cleanup();
-            reject(new Error("Nu s-a putut contacta Google Apps Script."));
-          };
-
-          script.src = GOOGLE_SCRIPT_URL + "?" + q.toString();
-          document.body.appendChild(script);
-        });
-      }
-
-      function leaderboardHtml(list) {
-        if (!Array.isArray(list) || !list.length) {
-          return '<div class="feedback">Nu există încă rezultate în clasamentul online pentru acest joc.</div>';
-        }
-
-        const myId = S.playerId || "";
-
-        return '<div class="online-board">' + list.slice(0, 8).map(r => {
-          const me = myId && String(r.playerId || "") === myId;
-          return `
-            <div class="online-row ${me ? "me" : ""}">
-              <div class="online-rank">#${esc(r.loc || "-")}</div>
-              <div>
-                <span class="online-name">${esc(r.name || "Jucător")}${me ? " (tu)" : ""}</span>
-                <span class="online-meta">${esc(r.className || "")} • ${esc(r.schoolName || "")} • ${esc(r.locality || "")} • ${esc(r.gameLevel || "")}</span>
-              </div>
-              <div class="online-score">${esc(r.score || 0)} p</div>
-            </div>`;
-        }).join("") + "</div>";
-      }
-
-      async function loadOnlineLeaderboard() {
-        if (!isGoogleConfigured()) return;
-        try {
-          const data = await jsonp({
-            action: "leaderboard",
-            gameId: GAME_ID,
-            key: ONLINE_KEY
-          });
-
-          if (data && data.ok) {
-            S.onlineLeaders = data.weekly || [];
-            S.onlineMonthly = data.monthly || [];
-            if (S.page === "final") render();
-          }
-        } catch (e) {}
-      }
-
-      async function sendScoreToGoogle() {
-        if (!isGoogleConfigured()) {
-          S.onlineStatus = "Clasamentul online nu este activat.";
-          if (S.page === "final") render();
-          return;
-        }
-
-        const correctAnswers = Object.values(S.ans).filter(x => x.correct).length;
-        const p = S.after || prog();
-
-        if (!S.lastSubmissionId) S.lastSubmissionId = submissionId();
-
-        const payload = {
-          action: "submit",
-          key: ONLINE_KEY,
-          gameId: GAME_ID,
-          submissionId: S.lastSubmissionId,
-          playerId: S.playerId || getPlayerId(),
-          name: S.name,
-          className: S.cls,
-          schoolName: S.school,
-          locality: S.loc,
-          gameLevel: S.level,
-          tier: S.tier,
-          scoreMultiplier: S.mult,
-          score: S.score,
-          maxScore: COUNT * BASE * S.mult + QQ.length * BONUS * S.mult,
-          correctAnswers,
-          localParticipations: p.participations || 0,
-          weekKey: weekKey(),
-          monthKey: monthKey(),
-          pageUrl: location.href,
-          userAgent: navigator.userAgent
-        };
-
-        S.onlineStatus = "Se trimite rezultatul către clasamentul online...";
-        if (S.page === "final") render();
-
-        try {
-          const data = await jsonp({
-            action: "submit",
-            key: ONLINE_KEY,
-            gameId: GAME_ID,
-            payload: JSON.stringify(payload)
-          });
-
-          if (data && data.ok) {
-            S.onlineSent = true;
-            S.onlineStatus = data.duplicate
-              ? "Rezultatul era deja înregistrat în Google Sheets."
-              : "Rezultatul a fost înregistrat în Google Sheets.";
-            S.onlineLeaders = data.weekly || [];
-            S.onlineMonthly = data.monthly || [];
-          } else {
-            S.onlineStatus = "Rezultatul nu a fost salvat: " + (data && data.error ? data.error : "eroare necunoscută");
-          }
-        } catch (e) {
-          S.onlineStatus = "Nu s-a putut trimite rezultatul: " + (e.message || e);
-        }
-
-        if (S.page === "final") render();
-      }
-
-      async function resetLocalProgress() {
-        if (!ADMIN_MODE) return;
-
-        if (!isGoogleConfigured()) {
-          toast("Pentru resetare cu parolă trebuie configurat Google Apps Script.");
-          return;
-        }
-
-        const parola = prompt("Introduceți parola profesorului pentru resetarea jocului.");
-        if (!parola) {
-          toast("Resetarea a fost anulată.");
-          return;
-        }
-
-        const confirmation = prompt(
-          "Resetarea șterge rezultatele din Google Sheets și progresul local din acest browser. Pentru confirmare scrie RESET."
+                    console.error(
+                        "test-engine.js nu a fost încărcat corect."
+                    );
+                }
+            }
         );
+    </script>
 
-        if (String(confirmation || "").trim().toUpperCase() !== "RESET") {
-          toast("Resetarea a fost anulată.");
-          return;
-        }
-
-        try {
-          const data = await jsonp({
-            action: "resetGame",
-            gameId: GAME_ID,
-            key: ONLINE_KEY,
-            adminCode: parola,
-            confirm: "RESET"
-          });
-
-          if (!data || !data.ok) {
-            toast(data && data.error ? data.error : "Resetarea nu a reușit.");
-            return;
-          }
-
-          try { localStorage.removeItem(LS); } catch (e) {}
-          try { localStorage.removeItem(LS_PLAYER_ID); } catch (e) {}
-
-          S = {
-            page: "home",
-            tier: 1,
-            level: "MEDIU",
-            mult: 1,
-            score: 0,
-            i: 0,
-            name: "",
-            cls: "",
-            school: "",
-            loc: "",
-            playerId: "",
-            qs: [],
-            ans: {},
-            quick: {},
-            quickDone: false,
-            quickScore: 0,
-            finished: false,
-            after: null,
-            onlineStatus: "",
-            onlineLeaders: [],
-            onlineMonthly: [],
-            onlineSent: false,
-            lastSubmissionId: ""
-          };
-
-          setTier(1);
-          toast("Jocul a fost resetat complet.");
-          render();
-        } catch (e) {
-          toast("Resetarea nu a reușit: " + (e.message || e));
-        }
-      }
-
-      window.resetUnitatiMasuraProgress = resetLocalProgress;
-
-      function bad(t) {
-        const normalized = String(t)
-          .toLowerCase()
-          .normalize("NFD")
-          .replace(/[\u0300-\u036f]/g, "");
-        return BAD.some(w => normalized.includes(w));
-      }
-
-      function conv(cat, v, from, to) {
-        return Number(v) * U[cat].f[from] / U[cat].f[to];
-      }
-
-      function qconv(cat, from, to, vals) {
-        const v = pick(vals);
-        const answer = conv(cat, v, from, to);
-        return {
-          title: "Conversie de " + U[cat].name,
-          text: `Transformă ${val(v)} ${from} în ${to}.`,
-          known: [`${val(v)} ${from}`, `? ${to}`],
-          unit: to,
-          answer,
-          solution: `${val(v)} ${from} = ${ro(answer)} ${to}.`
-        };
-      }
-
-      function qmix(cat, au, bu, tu, av, bv, op = "+") {
-        const a = pick(av);
-        const b = pick(bv);
-        const x = conv(cat, a, au, tu);
-        const y = conv(cat, b, bu, tu);
-        const result = op === "-" ? x - y : x + y;
-
-        return {
-          title: "Conversie combinată",
-          text: `${op === "-" ? "Scade" : "Calculează suma"}: ${val(a)} ${au} ${op} ${val(b)} ${bu}. Exprimă rezultatul în ${tu}.`,
-          known: [`${val(a)} ${au}`, `${val(b)} ${bu}`, `în ${tu}`],
-          unit: tu,
-          answer: result,
-          solution: `${val(a)} ${au} = ${ro(x)} ${tu}; ${val(b)} ${bu} = ${ro(y)} ${tu}; rezultatul este ${ro(result)} ${tu}.`
-        };
-      }
-
-      function med() {
-        return [
-          () => qconv("length", "m", "cm", [.5, 1, 1.2, 1.5, 2, 2.5, 3, 4, 5, 7.5]),
-          () => qconv("length", "cm", "m", [50, 100, 150, 200, 250, 300, 500, 750]),
-          () => qconv("length", "km", "m", [.2, .5, 1, 1.5, 2, 2.5, 3]),
-          () => qconv("length", "m", "mm", [.5, 1, 1.5, 2, 2.5, 3, 4]),
-          () => qconv("mass", "kg", "g", [.5, 1, 1.2, 1.5, 2, 2.5, 3, 3.5]),
-          () => qconv("mass", "g", "kg", [500, 1000, 1200, 1500, 2000, 2500, 3000]),
-          () => qconv("time", "min", "s", [.5, 1, 1.5, 2, 2.5, 3, 4, 5, 10]),
-          () => qconv("time", "h", "min", [.5, 1, 1.5, 2, 2.5, 3]),
-          () => qconv("volume", "L", "mL", [.5, 1, 1.2, 1.5, 2, 2.5, 3]),
-          () => qconv("volume", "mL", "L", [500, 1000, 1500, 2000, 2500, 3000])
-        ];
-      }
-
-      function high() {
-        return [
-          () => qconv("length", "dm", "cm", [1, 1.5, 2, 2.5, 3, 4, 5, 8]),
-          () => qconv("length", "mm", "cm", [10, 20, 50, 100, 150, 250, 500]),
-          () => qconv("length", "dm", "m", [5, 10, 15, 20, 25, 30, 50]),
-          () => qconv("mass", "q", "kg", [.5, 1, 1.5, 2, 2.5, 3, 5]),
-          () => qconv("mass", "kg", "q", [50, 100, 150, 200, 250, 500]),
-          () => qconv("mass", "t", "kg", [.5, 1, 1.2, 1.5, 2, 2.5]),
-          () => qconv("mass", "kg", "t", [500, 1000, 1500, 2000, 2500]),
-          () => qconv("time", "h", "s", [.5, 1, 1.5, 2, 2.5]),
-          () => qconv("time", "s", "min", [30, 60, 90, 120, 180, 300, 600]),
-          () => qconv("area", "m²", "dm²", [.5, 1, 1.5, 2, 2.5, 3]),
-          () => qconv("area", "dm²", "cm²", [1, 1.5, 2, 2.5, 4, 5, 10]),
-          () => qconv("area", "dm²", "m²", [10, 15, 20, 25, 50, 75, 100]),
-          () => qconv("volume", "m³", "dm³", [.1, .2, .3, .5, 1, 1.5]),
-          () => qconv("volume", "dm³", "cm³", [.5, 1, 1.5, 2, 2.5, 3]),
-          () => qconv("volume", "cm³", "mL", [10, 50, 100, 250, 500, 750, 1000])
-        ];
-      }
-
-      function adv() {
-        return [
-          () => qmix("length", "m", "cm", "cm", [.5, 1, 1.2, 1.5, 2, 2.5], [20, 40, 75, 100, 150]),
-          () => qmix("length", "km", "m", "m", [.2, .5, 1, 1.2, 1.5], [50, 150, 200, 500]),
-          () => qmix("mass", "kg", "g", "kg", [.5, 1, 1.2, 1.5, 2.5], [100, 250, 500, 750]),
-          () => qmix("mass", "t", "kg", "kg", [.5, 1, 1.5, 2], [100, 200, 500, 750]),
-          () => qmix("time", "h", "min", "min", [.5, 1, 1.5, 2, 2.5], [15, 30, 45, 90]),
-          () => qmix("volume", "L", "mL", "L", [.5, 1, 1.2, 1.5, 2], [100, 250, 500, 750]),
-          () => qconv("area", "cm²", "m²", [1000, 1500, 2000, 2500, 4000, 7500, 10000]),
-          () => qconv("area", "m²", "cm²", [.1, .2, .5, 1, 1.5, 2]),
-          () => qconv("volume", "cm³", "L", [250, 500, 750, 1000, 1500, 2500]),
-          () => qconv("volume", "m³", "L", [.1, .2, .3, .5, 1, 1.2]),
-          () => qconv("mass", "g", "q", [5000, 10000, 15000, 25000, 50000]),
-          () => qconv("mass", "q", "t", [.5, 1, 1.5, 2, 2.5, 5, 10]),
-          () => qmix("area", "m²", "dm²", "dm²", [.5, 1, 1.5, 2], [10, 50, 75, 100]),
-          () => qmix("volume", "dm³", "cm³", "cm³", [.5, 1, 1.5, 2.5], [100, 500, 750, 1000])
-        ];
-      }
-
-      function makeSet(tier) {
-        const pool = tier === 1 ? med() : tier === 2 ? high() : adv();
-        const qs = [];
-        const seen = new Set();
-        let safe = 0;
-
-        while (qs.length < COUNT && safe++ < 500) {
-          const q = pick(pool)();
-          const key = q.text + "|" + q.unit;
-          if (!seen.has(key)) {
-            seen.add(key);
-            qs.push(q);
-          }
-        }
-
-        while (qs.length < COUNT) qs.push(pick(pool)());
-
-        return sh(qs).map((q, i) => ({ ...q, id: i + 1 }));
-      }
-
-      function setTier(t) {
-        const p = prog();
-        const unlocked = p.unlockedTier || 1;
-        const chosen = Math.min(Math.max(1, Number(t) || 1), unlocked);
-        const info = TIERS[chosen];
-        S.tier = chosen;
-        S.level = info.label;
-        S.mult = info.mult;
-      }
-
-      function pts(x) {
-        return Math.round(x * S.mult);
-      }
-
-      function tierHtml(selected, unlocked) {
-        return `<div class="tiers">${[1, 2, 3].map(t => {
-          const info = TIERS[t];
-          const locked = t > unlocked;
-          return `
-            <button class="tier ${t === selected ? "sel" : ""} ${locked ? "lock" : ""}"
-                    data-t="${t}" ${locked ? "disabled" : ""}>
-              <strong>${info.icon} ${info.label}</strong>
-              <span>${info.desc}</span>
-              <span class="mini">${locked ? "Blocat: termină nivelul anterior" : t === selected ? "Selectat" : "Disponibil"}</span>
-            </button>`;
-        }).join("")}</div>`;
-      }
-
-      function update() {
-        const show = S.page !== "home";
-        top.style.display = show ? "" : "none";
-        if (!show) return;
-
-        const p = prog();
-        const pct = S.page === "final"
-          ? 100
-          : S.page === "quick"
-            ? 92
-            : S.page === "question"
-              ? Math.round((S.i + 1) / COUNT * 90)
-              : 0;
-
-        if (S.page === "question") {
-          $("sub").textContent = `Exercițiul ${S.i + 1}/${COUNT} • ${S.level}`;
-          $("part").textContent = `${S.score} p • ${pct}%`;
-        } else if (S.page === "quick") {
-          $("sub").textContent = `Bonus final • ${S.level}`;
-          $("part").textContent = `${S.score} p • ${pct}%`;
-        } else {
-          $("sub").textContent = `${S.level} • 20 exerciții • diploma după 4 participări`;
-          $("part").textContent = `🏅 Participări: ${p.participations || 0}/4`;
-        }
-
-        $("sn").textContent = S.name || "-";
-        $("ss").textContent = S.score + " p";
-        $("sl").textContent = S.level;
-        $("sp").textContent = pct + "%";
-        $("bar").style.width = pct + "%";
-      }
-
-      function render() {
-        update();
-        const pages = { home, info, question, quick, final };
-        pages[S.page]();
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-
-      function home() {
-        const p = prog();
-        if (S.tier > (p.unlockedTier || 1)) setTier(p.unlockedTier || 1);
-
-        card.innerHTML = `
-          <div class="hero-home">
-            <div>
-              <div class="badge">🎮 Joc de fizică • clasa a VI-a</div>
-              <h1>Campionii Unităților de Măsură</h1>
-              <p class="tag">Exersezi transformări între unități de măsură, pe 3 trepte de dificultate, cu diplomă după 4 participări finalizate.</p>
-
-              <div class="home-note">
-                🎓 Diploma devine disponibilă după <strong>4 participări finalizate</strong>, salvate în browserul aceluiași telefon, tabletă sau calculator.
-              </div>
-
-              <details class="details-box">
-                <summary>Informații importante despre diplomă și date</summary>
-                <div class="details-content">
-                  <ul>
-                    <li>Participările sunt calculate local, în browserul acestui dispozitiv.</li>
-                    <li>Dacă schimbi dispozitivul sau ștergi datele browserului, jocul local nu mai vede participările anterioare.</li>
-                    <li>Numele și prenumele sunt folosite pentru diplomă și, dacă este activ clasamentul, pentru rezultatul trimis către Google Sheets.</li>
-                    <li>Dacă nu dorești diplomă nominală, poți folosi un nume fictiv civilizat.</li>
-                    <li>Profesorul poate reseta progresul și clasamentul din modul de administrare.</li>
-                  </ul>
-                </div>
-              </details>
-
-              <h2>Alege nivelul</h2>
-              ${tierHtml(S.tier, p.unlockedTier || 1)}
-
-              <div class="inputs">
-                <div class="inp">
-                  <label for="n">Numele și prenumele / nume fictiv</label>
-                  <input id="n" type="text" maxlength="50" autocomplete="off" placeholder="Ex.: Andrei Popescu">
-                </div>
-                <div class="inp">
-                  <label for="c">Clasa</label>
-                  <input id="c" type="text" maxlength="12" autocomplete="off" placeholder="Ex.: 6A">
-                </div>
-                <div class="inp">
-                  <label for="sc">Școala</label>
-                  <input id="sc" type="text" maxlength="80" autocomplete="off" placeholder="Ex.: Școala Gimnazială ...">
-                </div>
-                <div class="inp">
-                  <label for="l">Localitatea</label>
-                  <input id="l" type="text" maxlength="60" autocomplete="off" placeholder="Ex.: Mangalia">
-                </div>
-              </div>
-
-              <div class="buttons">
-                <a class="btn secondary" href="index.html">← Înapoi la jocuri</a>
-                <button class="btn success" id="start" type="button">Începe antrenamentul</button>
-              </div>
-
-              ${ADMIN_MODE ? `
-                <div class="admin-reset-panel">
-                  <h3>🔐 Administrare profesor</h3>
-                  <p>Resetarea este protejată cu parola profesorului din Google Apps Script și șterge clasamentul online al acestui joc, apoi progresul local.</p>
-                  <button type="button" class="btn danger" id="resetProgress">🔴 Resetează jocul și clasamentul</button>
-                </div>` : ""}
-            </div>
-
-            <div class="avatar-board" aria-hidden="true">
-              <div class="big-icon">📏</div>
-              <h2>20 de provocări</h2>
-              <p class="tag">lungime • masă • timp • arie • volum • conversii</p>
-              <p class="tag">Nivel selectat: <strong>${TIERS[S.tier].label}</strong> • punctaj ×${TIERS[S.tier].mult}</p>
-              <div class="hero-stat-grid">
-                <div class="hero-stat"><strong>${p.participations || 0}/4</strong><span>participări</span></div>
-                <div class="hero-stat"><strong>${p.bestScore || 0}</strong><span>scor maxim</span></div>
-                <div class="hero-stat"><strong>${esc(p.bestLevel || "MEDIU")}</strong><span>nivel maxim</span></div>
-              </div>
-            </div>
-          </div>`;
-
-        document.querySelectorAll(".tier").forEach(b => {
-          b.onclick = () => {
-            setTier(b.dataset.t);
-            render();
-          };
-        });
-
-        if (ADMIN_MODE && $("resetProgress")) {
-          $("resetProgress").onclick = resetLocalProgress;
-        }
-
-        $("start").onclick = () => {
-          const combined = [$("n").value, $("c").value, $("sc").value, $("l").value].join(" ");
-
-          if (bad(combined)) {
-            toast("Te rog să folosești un nume și date civilizate.");
-            return;
-          }
-
-          S.name = $("n").value.trim() || "Jucător";
-          S.cls = $("c").value.trim() || "-";
-          S.school = $("sc").value.trim() || "-";
-          S.loc = $("l").value.trim() || "-";
-          S.playerId = getPlayerId();
-          S.score = 0;
-          S.i = 0;
-          S.ans = {};
-          S.quick = {};
-          S.quickDone = false;
-          S.quickScore = 0;
-          S.finished = false;
-          S.after = null;
-          S.onlineStatus = "";
-          S.onlineSent = false;
-          S.onlineLeaders = [];
-          S.onlineMonthly = [];
-          S.lastSubmissionId = "";
-          S.qs = makeSet(S.tier);
-          S.page = "info";
-          render();
-        };
-
-        $("n").focus();
-      }
-
-      function info() {
-        card.innerHTML = `
-          <h1>📘 Start rapid</h1>
-          <p class="problem">Nivel ales: <strong>${TIERS[S.tier].icon} ${S.level}</strong>. Ai 20 de exerciții. Fiecare problemă are o singură încercare.</p>
-
-          <div class="info-mini-grid">
-            <div class="box good">
-              <h3>Ce exersezi?</h3>
-              <p>Transformări între unități de lungime, masă, timp, arie și volum.</p>
-            </div>
-            <div class="box warn">
-              <h3>Zecimale</h3>
-              <p>Poți scrie cu virgulă sau punct. La rezultate cu multe zecimale este acceptată și varianta la o zecimală.</p>
-            </div>
-            <div class="box">
-              <h3>Încercări</h3>
-              <p>Ai o singură încercare. La greșeală primești rezolvarea și 0 puncte.</p>
-            </div>
-            <div class="box">
-              <h3>Punctaj</h3>
-              <p>MEDIU ×1 • RIDICAT ×1,5 • AVANSAT ×2.</p>
-            </div>
-          </div>
-
-          <div class="buttons">
-            <button class="btn secondary" id="back" type="button">Înapoi</button>
-            <button class="btn success" id="next" type="button">Mergi mai departe</button>
-          </div>`;
-
-        $("back").onclick = () => { S.page = "home"; render(); };
-        $("next").onclick = () => { S.page = "question"; render(); };
-      }
-
-      function question() {
-        const q = S.qs[S.i];
-        const st = S.ans[q.id] || { checked: false, value: "" };
-
-        card.innerHTML = `
-          <div class="qcard">
-            <div class="qhead">
-              <strong>Exercițiul ${S.i + 1}/${COUNT} • ${S.level}</strong>
-              <span class="points">+${pts(BASE)} p</span>
-            </div>
-
-            <h2 class="q-title">${q.title}</h2>
-            <p class="problem">${q.text}</p>
-
-            <div class="known">${q.known.map(k => `<span>${esc(k)}</span>`).join("")}</div>
-
-            <div class="answer">
-              <div>
-                <label for="a">Răspuns numeric</label>
-                <input id="a" type="text" inputmode="decimal" autocomplete="off"
-                       placeholder="Scrie răspunsul" value="${esc(st.value || "")}" ${st.checked ? "disabled" : ""}>
-              </div>
-              <div class="unit">${q.unit}</div>
-            </div>
-
-            <p class="rules-line">Scrie doar numărul. Sunt acceptate zecimale cu virgulă sau punct: 2,5 / 2.5.</p>
-
-            ${st.checked ? `<div class="feedback ${st.correct ? "ok" : "no"}">${st.msg}</div>` : ""}
-            ${st.checked ? `<div class="solution"><strong>Rezolvare:</strong><br>${q.solution}${st.correct ? "" : "<br><br>Curaj! Data viitoare te vei descurca mai bine."}</div>` : ""}
-
-            <div class="buttons">
-              <button class="btn secondary" id="back" type="button">Înapoi</button>
-              <button class="btn primary" id="check" type="button" ${st.checked ? "disabled" : ""}>Verifică</button>
-              <button class="btn success" id="next" type="button" ${st.checked ? "" : "disabled"}>${S.i === COUNT - 1 ? "Bonus" : "Mai departe"}</button>
-            </div>
-          </div>`;
-
-        $("back").onclick = () => {
-          if (S.i > 0) S.i--;
-          else S.page = "info";
-          render();
-        };
-
-        $("check").onclick = () => {
-          const raw = $("a").value;
-          const v = parseNumber(raw);
-
-          if (!Number.isFinite(v)) {
-            toast("Scrie un număr pentru răspuns.");
-            return;
-          }
-
-          const ok = correct(v, q.answer);
-          const gain = ok ? pts(BASE) : 0;
-
-          if (ok) {
-            S.score += gain;
-            confetti();
-          }
-
-          S.ans[q.id] = {
-            checked: true,
-            correct: ok,
-            value: raw,
-            msg: ok
-              ? `Corect! Ai câștigat ${gain} puncte.`
-              : `Răspuns greșit. Primești 0 puncte. Răspunsul corect este ${ro(q.answer)} ${q.unit}.`
-          };
-
-          render();
-        };
-
-        $("next").onclick = () => {
-          if (S.i < COUNT - 1) {
-            S.i++;
-            render();
-          } else {
-            S.page = "quick";
-            render();
-          }
-        };
-
-        const a = $("a");
-        if (a && !st.checked) {
-          a.focus();
-          a.onkeydown = e => {
-            if (e.key === "Enter") $("check").click();
-          };
-        }
-      }
-
-      const QQ = [
-        ["Unitatea SI pentru lungime este:", ["metrul", "kilometrul", "centimetrul"], 0],
-        ["Unitatea SI pentru masă este:", ["gramul", "kilogramul", "tona"], 1],
-        ["1 h are:", ["60 s", "600 s", "3600 s"], 2],
-        ["1 dm³ este egal cu:", ["1 L", "10 L", "100 L"], 0],
-        ["1 q este egal cu:", ["10 kg", "100 kg", "1000 kg"], 1]
-      ];
-
-      function quick() {
-        card.innerHTML = `
-          <h1>⚡ Verificare rapidă – bonus</h1>
-          <p class="problem">Răspunde la 5 întrebări scurte. Fiecare răspuns corect aduce ${pts(BONUS)} puncte.</p>
-
-          <div class="quick">
-            ${QQ.map((q, i) => `
-              <div class="box">
-                <h3>${i + 1}. ${q[0]}</h3>
-                <div class="variants">
-                  ${q[1].map((op, j) => `
-                    <label class="variant">
-                      <input type="radio" name="q${i}" value="${j}"
-                             ${S.quick[i] === j ? "checked" : ""}
-                             ${S.quickDone ? "disabled" : ""}>
-                      <span><strong>${String.fromCharCode(65 + j)}.</strong> ${op}</span>
-                    </label>`).join("")}
-                </div>
-              </div>`).join("")}
-          </div>
-
-          <div class="feedback ${S.quickDone ? "ok" : ""}">
-            ${S.quickDone ? `Bonus finalizat: ${S.quickScore} puncte.` : "Alege câte o variantă la fiecare întrebare."}
-          </div>
-
-          <div class="buttons">
-            <button class="btn secondary" id="back" type="button">Înapoi</button>
-            <button class="btn primary" id="check" type="button" ${S.quickDone ? "disabled" : ""}>Verifică bonusul</button>
-            <button class="btn success" id="fin" type="button" ${S.quickDone ? "" : "disabled"}>Vezi rezultatul</button>
-          </div>`;
-
-        QQ.forEach((q, i) => {
-          document.querySelectorAll(`input[name="q${i}"]`).forEach(inp => {
-            inp.onchange = () => { S.quick[i] = Number(inp.value); };
-          });
-        });
-
-        $("back").onclick = () => {
-          S.page = "question";
-          S.i = COUNT - 1;
-          render();
-        };
-
-        $("check").onclick = () => {
-          if (Object.keys(S.quick).length < QQ.length) {
-            toast("Alege un răspuns la fiecare întrebare.");
-            return;
-          }
-
-          let c = 0;
-          QQ.forEach((q, i) => {
-            if (S.quick[i] === q[2]) c++;
-          });
-
-          S.quickScore = pts(c * BONUS);
-          S.score += S.quickScore;
-          S.quickDone = true;
-
-          if (c >= 4) confetti();
-          render();
-        };
-
-        $("fin").onclick = () => {
-          if (!S.finished) {
-            S.finished = true;
-            const p = prog();
-            const levels = ["MEDIU", "RIDICAT", "AVANSAT"];
-            const bestLevel = levels.indexOf(S.level) >= levels.indexOf(p.bestLevel || "MEDIU")
-              ? S.level
-              : (p.bestLevel || "MEDIU");
-
-            S.after = {
-              participations: (p.participations || 0) + 1,
-              unlockedTier: Math.min(3, Math.max(p.unlockedTier || 1, S.tier + 1)),
-              bestScore: Math.max(p.bestScore || 0, S.score),
-              bestLevel,
-              lastPlayed: new Date().toISOString()
-            };
-
-            save(S.after);
-          }
-
-          S.page = "final";
-          render();
-          sendScoreToGoogle();
-        };
-      }
-
-      function diploma(p) {
-        if ((p.participations || 0) < 4) return "";
-
-        return `
-          <div class="cert" id="diploma">
-            <h2>FELICITĂRI!</h2>
-            <p>Se adeverește prin prezenta că</p>
-            <div class="name">${esc(S.name)}</div>
-            <p>
-              de la școala <strong>${esc(S.school)}</strong>, din localitatea
-              <strong>${esc(S.loc)}</strong>, a participat la competiția
-              <strong>Campionii fizicii – etapa unitățile de măsură</strong>,
-              nivelul <strong>${esc(S.level)}</strong>, și a finalizat cel puțin
-              <strong>4 exersări</strong>.
-            </p>
-            <p>Scorul obținut la această participare: <strong>${S.score} puncte</strong>.</p>
-            <div class="sig">Semnează: prof. Dănuț Andronie</div>
-          </div>`;
-      }
-
-      function final() {
-        const p = S.after || prog();
-        const cor = Object.values(S.ans).filter(x => x.correct).length;
-        const need = Math.max(0, 4 - (p.participations || 0));
-        const next = S.tier < 3 && (p.unlockedTier || 1) >= S.tier + 1;
-
-        const diplomaMessage = p.participations >= 4
-          ? "Ai cel puțin 4 participări salvate în browserul acestui dispozitiv. Diploma este afișată mai jos."
-          : `Mai ai nevoie de ${need} participare/participări finalizate pe acest dispozitiv.`;
-
-        const onlineBox = isGoogleConfigured()
-          ? `
-              <div class="online-status">${esc(S.onlineStatus || "Clasamentul online este activ. Rezultatul se trimite la finalizarea jocului.")}</div>
-              <h2 style="margin-top:16px">🏆 Clasament online săptămânal</h2>
-              ${leaderboardHtml(S.onlineLeaders)}
-              <div class="buttons single">
-                <button class="btn primary" id="resend" type="button">Retrimite / actualizează clasamentul</button>
-              </div>`
-          : '<div class="online-status">Clasamentul online nu este activat.</div>';
-
-        card.innerHTML = `
-          <h1>🏁 Rezultat final</h1>
-          <p class="problem">Ai finalizat nivelul ${S.level}.</p>
-
-          <div class="scoregrid">
-            <div class="tile"><strong>${S.score}</strong><span>puncte</span></div>
-            <div class="tile"><strong>${cor}/${COUNT}</strong><span>exerciții corecte</span></div>
-            <div class="tile"><strong>${p.participations}/4</strong><span>participări pentru diplomă</span></div>
-          </div>
-
-          <div class="box ${p.participations >= 4 ? "good" : "warn"}" style="margin-top:14px">
-            <h3>${p.participations >= 4 ? "🎓 Diplomă disponibilă" : "🎓 Încă puțin până la diplomă"}</h3>
-            <p>${diplomaMessage}</p>
-          </div>
-
-          ${diploma(p)}
-          ${onlineBox}
-
-          <div class="buttons">
-            ${next ? '<button class="btn warning" id="nt" type="button">Treci la nivelul următor</button>' : ""}
-            <button class="btn success" id="again" type="button">Joacă din nou</button>
-            <button class="btn secondary" id="exit" type="button">Înapoi la jocuri</button>
-            ${p.participations >= 4 ? '<button class="btn primary" id="print" type="button">Tipărește / salvează diploma</button>' : ""}
-          </div>`;
-
-        if ($("nt")) {
-          $("nt").onclick = () => {
-            setTier(S.tier + 1);
-            S.page = "home";
-            render();
-          };
-        }
-
-        $("again").onclick = () => {
-          S.page = "home";
-          render();
-        };
-
-        $("exit").onclick = () => {
-          location.href = "index.html";
-        };
-
-        if ($("print")) $("print").onclick = () => window.print();
-        if ($("resend")) $("resend").onclick = () => sendScoreToGoogle();
-      }
-
-      setTier(1);
-      render();
-      loadOnlineLeaderboard();
-    })();
-  </script>
 </body>
+
 </html>

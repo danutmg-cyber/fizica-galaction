@@ -8,7 +8,7 @@
  * - cele 3 niveluri;
  * - regulile de progresie;
  * - câmpurile elevului;
- * - generarea celor 20 de exerciții;
+ * - generarea celor 30 de exerciții;
  * - configurația transmisă către test-engine.js.
  *
  * Ordinea recomandată în HTML:
@@ -22,7 +22,7 @@
   "use strict";
 
   const GROUP_ID = "unitati-de-masura";
-  const QUESTION_COUNT = 20;
+  const QUESTION_COUNT = 30;
 
   /* =========================================================
      NIVELURI
@@ -1337,7 +1337,7 @@
   }
 
   /* =========================================================
-     GENERAREA CELOR 20 DE ÎNTREBĂRI
+     GENERAREA CELOR 30 DE ÎNTREBĂRI
   ========================================================= */
 
   function buildQuestionSet(level) {
@@ -1487,7 +1487,7 @@
 
     descriere:
       LEVEL_INFO.description +
-      " Testul conține 20 de exerciții " +
+      " Testul conține 30 de exerciții " +
       "și păstrează progresul în acest browser.",
 
     disciplina:
@@ -1510,7 +1510,7 @@
 
     instructiuni: [
 
-      "Rezolvă toate cele 20 de exerciții.",
+      "Rezolvă toate cele 30 de exerciții.",
 
       "Scrie doar răspunsul numeric; " +
       "unitatea cerută este afișată lângă câmp.",

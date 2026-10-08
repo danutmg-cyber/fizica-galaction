@@ -5,9 +5,10 @@ const APP=window.FizicaGalaction=window.FizicaGalaction||{};
 const fmt=n=>Number(Number(n).toPrecision(12)).toString().replace(".",",");
 function random(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 function mix(values,r){const a=values.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function buildVariant(catalog){
+function buildVariant(catalog,attempt=1){
+ if(!Number.isSafeInteger(attempt)||attempt<1)throw Error("Încercare invalidă.");
  if(!Number.isInteger(catalog)||catalog<1||catalog>30)throw Error("Numărul din catalog trebuie să fie între 1 și 30.");
- const v=catalog,r=random(v*104729),items=[];
+ const v=catalog+30*(attempt-1),r=random(v*104729),items=[];
  const add=(family,type,prompt,correctAnswer,extra={})=>{
   items.push({id:"v"+String(v).padStart(2,"0")+"-q"+String(family+1).padStart(2,"0"),family,type,prompt,correctAnswer,points:1,si:family<10,...extra});
  };
@@ -62,7 +63,7 @@ function buildVariant(catalog){
  pairing(15,"Asociază fiecare observație cu starea fizică pe care o descrie.",[["O bicicletă se deplasează față de poarta casei","Stare mecanică"],["Ceaiul este mai cald decât apa din pahar","Stare termică"],["Un magnet atrage cuie din fier","Stare de magnetizare"]]);
  pairing(16,"Asociază fiecare mărime fizică cu unitatea sa în SI.",[["Lungimea unei mese","m"],["Masa unui ghiozdan","kg"],["Durata unei pauze","s"]]);
  const ribbon=(1247+31*v)/100,part=(387+7*v)/100;
- numeric(17,"Dintr-o panglică de "+fmt(ribbon)+" m se taie o bucată de "+fmt(part)+" m. Calculează lungimea panglicii rămase.",ribbon-part,"m");
+ numeric(17,"Dintr-o panglică de "+fmt(ribbon)+" m se taie o bucată de "+fmt(part)+" cm. Calculează lungimea panglicii rămase.",ribbon-part/100,"m");
  const contents=(237+13*v)/100,box=(137+3*v)/100;
  numeric(18,"O cutie goală are masa de "+fmt(box)+" kg, iar obiectele puse în ea au masa de "+fmt(contents)+" kg. Calculează masa cutiei cu obiecte.",contents+box,"kg");
  add(19,"text","Aerul dintr-un balon se află în stare de agregare ... . Completează cuvântul lipsă.",["gazoasă","gazoasa"],{instruction:"Scrie un singur cuvânt."});
@@ -77,12 +78,12 @@ const testConfig={
  confirmBeforeSubmit:false,allowRestart:false,allowPrint:false,
  integrityMonitoring:true,startImmediately:false,showTimer:false
 };
-function createData(v,student){
- return {id:"concepte6-v"+String(v).padStart(2,"0"),title:"Concepte de bază în fizică",
+function createData(v,student,attempt=1){
+ return {id:"concepte6-r2-v"+String(v).padStart(2,"0")+"-a"+attempt,title:"Concepte de bază în fizică",
  subtitle:"",className:"a VI-a",chapter:"Concepte de bază în fizică",
  instructions:["Folosește ciorna pentru calcule.","După confirmarea răspunsului nu mai poți reveni la item."],
  studentFields:[{id:"nume",label:"Elev",required:true},{id:"catalog",label:"Număr în catalog",required:true}],
- questions:buildVariant(v),config:{...testConfig},
+ questions:buildVariant(v,attempt),config:{...testConfig},
  progression:{groupId:"concepte6-evaluare",level:1,totalLevels:1,autoAdvance:false,unlockNextOnComplete:false},links:{},student};
 }
 APP.concepte6Test=Object.freeze({buildVariant,createData});
@@ -91,9 +92,11 @@ function boot(){
  if(!form||!host)return;
  const error=document.getElementById("variant-error");
  let started=false,lastQuestionId="";
- const profileKey="concepte6-evaluare-20261008-r6:"+location.pathname;
+ const profileKey="concepte6-evaluare-20261008-r8:"+location.pathname;
+ const counterKey=profileKey+":counter";
+ let attempt=1;
  function remember(student,completed=null){
-  try{localStorage.setItem(profileKey,JSON.stringify({student,completed}));}catch(_){}
+  try{localStorage.setItem(profileKey,JSON.stringify({student,attempt,completed}));}catch(_){}
  }
  document.addEventListener("fizica:test-complete",()=>{
   const state=window.TestEngine.getState();
@@ -116,6 +119,16 @@ function boot(){
   if(card&&q?.id!==lastQuestionId){
    lastQuestionId=q.id;const prompt=card.querySelector(".fg-test__prompt");
    if(prompt){prompt.tabIndex=-1;prompt.focus({preventScroll:true});}
+  }
+  const result=host.querySelector(".fg-test__result-summary");
+  if(s?.submitted&&result&&!result.querySelector("[data-new-attempt]")){
+   const button=document.createElement("button");button.type="button";
+   button.className="fg-test__button";button.dataset.newAttempt="";
+   button.textContent="Începe o nouă încercare";
+   button.onclick=()=>{
+    try{localStorage.removeItem(profileKey);}catch(_){}
+    location.reload();
+   };result.append(button);
   }
   const status=document.getElementById("session-status");
   const text=s?.submitted?"Încarcă PDF-ul în Google Classroom.":"";
@@ -143,7 +156,12 @@ function boot(){
   if(!Number.isInteger(v)||v<1||v>30){error.textContent="Numărul din catalog trebuie să fie un întreg între 1 și 30.";return;}
   if(!window.TestEngine||!APP.testReport){error.textContent="Testul nu poate fi pornit. Anunță profesorul.";return;}
   const student={nume:name,catalog:String(v)};
-  window.TEST_DATA=createData(v,student);
+  try{
+   const counters=JSON.parse(localStorage.getItem(counterKey)||"{}");
+   attempt=(Number(counters[v])||0)+1;counters[v]=attempt;
+   localStorage.setItem(counterKey,JSON.stringify(counters));
+  }catch(_){attempt=1+Math.floor(Date.now()/1000)%1000;}
+  window.TEST_DATA=createData(v,student,attempt);
   window.TEST_DATA.config.integrityMonitoring=true;
   try{
    host.hidden=false;window.initTestEngine({mount:host});
@@ -155,10 +173,11 @@ function boot(){
  try{
   const saved=JSON.parse(localStorage.getItem(profileKey)||"null");
   const student=saved?.student,v=Number(student?.catalog);
+  attempt=Number(saved?.attempt)||1;
   if(student?.nume&&Number.isInteger(v)&&v>=1&&v<=30&&window.TestEngine&&APP.testStorage){
    document.getElementById("student-name").value=student.nume;
    document.getElementById("catalog-number").value=v;
-   window.TEST_DATA=createData(v,student);
+   window.TEST_DATA=createData(v,student,attempt);
    if(saved.completed)APP.testStorage.saveSession(window.TEST_DATA.id,saved.completed);
    host.hidden=false;window.initTestEngine({mount:host});
    if(window.TestEngine.getState().started){
@@ -175,3 +194,4 @@ function boot(){
 }
 if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",boot,{once:true});else boot();
 })(window,document);
+

@@ -1,500 +1,57 @@
-<script>
-(() => {
-  "use strict";
-
-  /* Opțiune vizibilă înainte de începerea testului. */
-  const setting = document.createElement("label");
-  setting.className = "option";
-  setting.innerHTML = `
-    <input id="anti-copy-enabled" type="checkbox" checked>
-    <span>Anticopiere: monitorizează părăsirea paginii
-      și blochează copierea/lipirea în test</span>
-  `;
-  $("start").insertBefore(setting, $("start").querySelector(".actions"));
-
-  const explanation = document.createElement("p");
-  explanation.className = "muted";
-  explanation.style.fontSize = "14px";
-  explanation.textContent =
-    "Părăsirile paginii se înregistrează în PDF, pentru itemul afișat. " +
-    "Răspunsurile respective vor fi marcate cu roșu. " +
-    "Monitorizarea nu modifică automat punctajul.";
-  setting.after(explanation);
-
-  /* Avertizare în pagină, fără ferestre native care pierd focalizarea. */
-  const warning = document.createElement("div");
-  warning.hidden = true;
-  warning.className = "note";
-  warning.style.cssText =
-    "border:2px solid #b42318;background:#fff0ee;" +
-    "color:#8b1e16;margin-bottom:20px";
-  warning.setAttribute("role", "alert");
-  warning.innerHTML = `
-    <p id="screen-warning-text"></p>
-    <button type="button" id="acknowledge-screen-warning">
-      Am înțeles
-    </button>
-  `;
-  $("exam").prepend(warning);
-
-  const inlineError = document.createElement("p");
-  inlineError.className = "error";
-  inlineError.setAttribute("role", "alert");
-  $("question").after(inlineError);
-
-  class ScreenLog {
-    constructor() { this.reset(false); }
-
-    reset(enabled) {
-      this.enabled = enabled;
-      this.items = {};
-      this.open = null;
-    }
-
-    leave(id, reason, epoch, tick) {
-      if (!this.enabled) return;
-
-      /* Blur și visibilitychange pot descrie aceeași părăsire. */
-      if (this.open) {
-        if (!this.open.reasons.includes(reason))
-          this.open.reasons.push(reason);
-        return;
-      }
-
-      const event = {
-        start: epoch,
-        tick,
-        end: null,
-        seconds: null,
-        reasons: [reason]
-      };
-
-      (this.items[id] ??= []).push(event);
-      this.open = event;
-    }
-
-    back(epoch, tick) {
-      if (!this.open) return;
-      this.open.end = epoch;
-      this.open.seconds = Math.max(0, (tick - this.open.tick) / 1000);
-      this.open = null;
-    }
-  }
-
-  const screenLog = new ScreenLog();
-  let acknowledgementRequired = false;
-
-  function monitoringActive() {
-    return screenLog.enabled &&
-      questions.length > 0 &&
-      !finalized &&
-      !$("exam").hidden;
-  }
-
-  function leaveScreen(reason) {
-    if (!monitoringActive()) return;
-
-    screenLog.leave(
-      questions[current].id,
-      reason,
-      Date.now(),
-      performance.now()
-    );
-
-    acknowledgementRequired = true;
-    warning.hidden = false;
-    $("screen-warning-text").textContent =
-      `Atenție! Ai părăsit pagina testului la itemul ${current + 1}. ` +
-      "Evenimentul este înregistrat. Revino în pagină pentru a continua.";
-    $("acknowledge-screen-warning").disabled = true;
-    $("question").inert = true;
-  }
-
-  function returnToScreen() {
-    if (!monitoringActive() || document.hidden || !document.hasFocus())
-      return;
-
-    const event = screenLog.open;
-    screenLog.back(Date.now(), performance.now());
-    $("question").inert = false;
-
-    if (event) {
-      warning.hidden = false;
-      $("screen-warning-text").textContent =
-        "Ai revenit în pagina testului. " +
-        `Absență înregistrată: ${fmt(event.seconds)} secunde. ` +
-        "Răspunsul acestui item va apărea cu roșu în PDF.";
-    }
-
-    $("acknowledge-screen-warning").disabled = false;
-  }
-
-  window.addEventListener("blur", () =>
-    leaveScreen("Fereastra a pierdut focalizarea"));
-
-  window.addEventListener("focus", returnToScreen);
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden)
-      leaveScreen("Pagina a devenit ascunsă");
-    else
-      returnToScreen();
-  });
-
-  $("acknowledge-screen-warning").onclick = () => {
-    if (document.hidden || !document.hasFocus() || screenLog.open) return;
-    acknowledgementRequired = false;
-    warning.hidden = true;
-    inlineError.textContent = "";
-    $("question").inert = false;
-  };
-
-  /* Inițializare înaintea handlerului existent de pornire. */
-  $("start").addEventListener("submit", () => {
-    const v = Number($("catalog").value);
-    if (!Number.isInteger(v) || v < 1 || v > 30) return;
-
-    screenLog.reset($("anti-copy-enabled").checked);
-    acknowledgementRequired = false;
-    warning.hidden = true;
-    inlineError.textContent = "";
-    $("question").inert = false;
-  }, true);
-
-  /* Limitări locale de copiere; nu reprezintă protecție absolută. */
-  ["copy", "cut", "paste", "contextmenu"].forEach(eventName => {
-    $("exam").addEventListener(eventName, event => {
-      if (!monitoringActive()) return;
-      event.preventDefault();
-      inlineError.textContent =
-        "Copierea, lipirea și meniul contextual sunt dezactivate în test.";
-    }, true);
-  });
-
-  $("exam").addEventListener("keydown", event => {
-    if (!monitoringActive()) return;
-    if ((event.ctrlKey || event.metaKey) &&
-        ["c", "x", "v"].includes(event.key.toLowerCase())) {
-      event.preventDefault();
-      inlineError.textContent =
-        "Copierea și lipirea sunt dezactivate în test.";
-    }
-  }, true);
-
-  function canProceed() {
-    inlineError.textContent = "";
-
-    if (screenLog.open || acknowledgementRequired) {
-      inlineError.textContent =
-        "Revino în pagină și confirmă avertizarea înainte de a continua.";
-      return false;
-    }
-
-    const q = questions[current];
-    if (!answered(q)) {
-      inlineError.textContent =
-        "Completează răspunsul înainte de a continua.";
-      return false;
-    }
-
-    if (q.type === "fill" &&
-        typeof q.answer === "number" &&
-        !Number.isFinite(numeric(answers[q.id]))) {
-      inlineError.textContent =
-        "Introdu numai un număr, fără unitate. " +
-        "Poți folosi virgulă sau punct zecimal.";
-      return false;
-    }
-    return true;
-  }
-
-  /* Evită avertizările native din vechiul handler. */
-  $("next").addEventListener("click", event => {
-    if (!canProceed()) {
-      event.preventDefault();
-      event.stopImmediatePropagation();
-    }
-  }, true);
-
-  /*
-    Finalizare directă: fără confirm() care ar putea genera
-    artificial un eveniment de pierdere a focalizării.
-  */
-  $("finish").textContent = "Finalizează definitiv testul";
-  $("finish").onclick = () => {
-    if (finalized || !canProceed()) return;
-
-    finalized = true;
-    finishedAt = new Date();
-    warning.hidden = true;
-    $("question").inert = false;
-
-    const total = totalPoints();
-    const grade = 1 + 9 * total / 20;
-    const count = Object.values(screenLog.items)
-      .reduce((sum, events) => sum + events.length, 0);
-
-    $("exam").hidden = true;
-    $("results").hidden = false;
-    $("result-identity").textContent =
-      `${studentName} · Număr în catalog: ${variant} · ` +
-      finishedAt.toLocaleString("ro-RO");
-
-    $("grade").textContent =
-      `Nota ${grade.toFixed(2).replace(".", ",")}`;
-
-    $("points").textContent =
-      `${total.toFixed(2).replace(".", ",")} puncte din 20. ` +
-      (screenLog.enabled
-        ? `Părăsiri ale paginii înregistrate: ${count}.`
-        : "Monitorizarea anticopiere a fost dezactivată.");
-
-    $("review").innerHTML = questions.map((q, i) => {
-      const events = screenLog.items[q.id] || [];
-      const points = score(q, answers[q.id]);
-      const departure = events.length
-        ? events.map(event =>
-            `${new Date(event.start).toLocaleString("ro-RO")} · ` +
-            `${fmt(event.seconds ?? 0)} s`
-          ).join("; ")
-        : screenLog.enabled ? "Nicio părăsire" : "Monitorizare oprită";
-
-      return `
-        <article class="review">
-          <h3>${i + 1}. ${escapeHTML(q.prompt)}</h3>
-          <div>Punctaj: ${points.toFixed(2).replace(".", ",")} / 1</div>
-          <div ${events.length ? 'style="color:#b42318"' : ""}>
-            Răspunsul elevului:
-            ${escapeHTML(answerText(q, answers[q.id]))}
-          </div>
-          <div>Barem: ${escapeHTML(answerText(q, q.answer))}</div>
-          <div>Părăsirea paginii: ${escapeHTML(departure)}</div>
-        </article>`;
-    }).join("");
-
-    $("result-heading").focus();
-  };
-
-  /* PDF tabelar, font Courier pentru împachetare precisă. */
-  const PDF_FONT_SIZE = 8.5;
-  const PDF_LINE_HEIGHT = 11;
-  const PDF_LEFT = 40;
-  const PDF_BOTTOM = 45;
-  const PDF_WIDTHS = [230, 100, 45, 140];
-
-  function pdfText(x, y, value, red = false, size = PDF_FONT_SIZE) {
-    return [
-      red ? "0.72 0.08 0.08 rg" : "0 0 0 rg",
-      `BT /F1 ${size} Tf ${x} ${y} Td`,
-      `(${pdfLiteral(ascii(value))}) Tj ET`
-    ].join("\n");
-  }
-
-  function columnLines(text, column) {
-    /* Courier: lățimea unui caracter = 0,6 × mărimea fontului. */
-    const chars = Math.floor(
-      (PDF_WIDTHS[column] - 10) / (PDF_FONT_SIZE * 0.6)
-    );
-    return String(text).split("\n")
-      .flatMap(line => wrap(line, chars));
-  }
-
-  function departureText(q, itemNumber) {
-    if (!screenLog.enabled) return "Monitorizare oprită";
-    const events = screenLog.items[q.id] || [];
-    if (!events.length) return "Nicio părăsire";
-
-    return events.map((event, i) => [
-      `Item ${itemNumber}, ieșire ${i + 1}`,
-      new Date(event.start).toLocaleString("ro-RO"),
-      `Durată: ${fmt(event.seconds ?? 0)} s`,
-      `Motiv: ${event.reasons.join("; ")}`
-    ].join("\n")).join("\n\n");
-  }
-
-  function questionForPDF(q, index) {
-    let text = `${index + 1}. ${q.prompt}`;
-
-    if (q.type === "mc" || q.type === "tf") {
-      text += "\n" + q.options.map((option, i) =>
-        `${String.fromCharCode(97 + i)}) ${option}` +
-        (choiceUnit(q) ? " " + choiceUnit(q) : "")
-      ).join("; ");
-    } else if (q.type === "pair") {
-      text += "\nColoana A: " + q.left.join("; ");
-      text += "\nColoana B: " + q.options.join("; ");
-    }
-    return text;
-  }
-
-  reportPages = function() {
-    const pages = [];
-    let commands = [];
-    let y = 0;
-
-    function drawRow(columns, height, redAnswer = false) {
-      let x = PDF_LEFT;
-
-      columns.forEach((lines, column) => {
-        commands.push(
-          `0.65 0.7 0.75 RG 0.5 w ` +
-          `${x} ${y - height} ${PDF_WIDTHS[column]} ${height} re S`
-        );
-
-        lines.forEach((line, i) => {
-          commands.push(pdfText(
-            x + 5,
-            y - 13 - i * PDF_LINE_HEIGHT,
-            line,
-            column === 1 && redAnswer
-          ));
-        });
-        x += PDF_WIDTHS[column];
-      });
-      y -= height;
-    }
-
-    function newPage() {
-      if (commands.length) pages.push(commands);
-      commands = [];
-      y = 798;
-
-      const total = totalPoints();
-      const header = [
-        "TEST DE FIZICA - CLASA A VII-A",
-        ...wrap(
-          `Elev: ${studentName} | Varianta / catalog: ${variant}`, 95
-        ),
-        `Finalizat: ${finishedAt.toLocaleString("ro-RO")}`,
-        `Punctaj: ${total.toFixed(2)}/20 | ` +
-          `Nota: ${(1 + 9 * total / 20).toFixed(2)}`,
-        screenLog.enabled
-          ? "Anticopiere: activata. Raspuns rosu = parasire la acel item."
-          : "Anticopiere: dezactivata.",
-        "Coloana timp: momentul iesirii si durata absentei.",
-        "Evenimentele nu modifica automat punctajul."
-      ];
-
-      header.forEach(line => {
-        commands.push(pdfText(PDF_LEFT, y, line));
-        y -= PDF_LINE_HEIGHT;
-      });
-      y -= 10;
-
-      drawRow([
-        columnLines("Întrebarea", 0),
-        columnLines("Răspunsul elevului", 1),
-        columnLines("Punctaj", 2),
-        columnLines("Timpul părăsirii paginii", 3)
-      ], 42);
-    }
-
-    newPage();
-
-    questions.forEach((q, index) => {
-      const columns = [
-        columnLines(questionForPDF(q, index), 0),
-        columnLines(answerText(q, answers[q.id]), 1),
-        columnLines(
-          score(q, answers[q.id]).toFixed(2).replace(".", ",") + "/1",
-          2
-        ),
-        columnLines(departureText(q, index + 1), 3)
-      ];
-
-      const length = Math.max(...columns.map(lines => lines.length));
-      const redAnswer = (screenLog.items[q.id] || []).length > 0;
-      let offset = 0;
-
-      /* Împarte rândurile foarte lungi pe pagini, fără a pierde evenimente. */
-      while (offset < length) {
-        const continuation = offset > 0;
-        const available = Math.floor(
-          (y - PDF_BOTTOM - 10) / PDF_LINE_HEIGHT
-        ) - (continuation ? 1 : 0);
-
-        if (available < 1) {
-          newPage();
-          continue;
-        }
-
-        const take = Math.min(available, length - offset);
-        const segment = columns.map(lines =>
-          lines.slice(offset, offset + take)
-        );
-
-        if (continuation) {
-          segment[0].unshift(`Item ${index + 1} (continuare)`);
-          for (let column = 1; column < 4; column++)
-            segment[column].unshift("");
-        }
-
-        const height =
-          (take + (continuation ? 1 : 0)) * PDF_LINE_HEIGHT + 10;
-        drawRow(segment, height, redAnswer);
-        offset += take;
-
-        if (offset < length) newPage();
-      }
-    });
-
-    if (commands.length) pages.push(commands);
-    return pages;
-  };
-
-  makePDF = function(pages) {
-    const objects = ["", "",
-      "<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>"
-    ];
-    const kids = [];
-    const add = value => {
-      objects.push(value);
-      return objects.length;
-    };
-
-    pages.forEach((commands, i) => {
-      const stream = commands.join("\n") + "\n" +
-        pdfText(40, 25, `Pagina ${i + 1}/${pages.length}`);
-
-      const streamId = add(
-        `<< /Length ${stream.length} >>\n` +
-        `stream\n${stream}\nendstream`
-      );
-
-      const pageId = add(
-        "<< /Type /Page /Parent 2 0 R " +
-        "/MediaBox [0 0 595 842] " +
-        "/Resources << /Font << /F1 3 0 R >> >> " +
-        `/Contents ${streamId} 0 R >>`
-      );
-      kids.push(`${pageId} 0 R`);
-    });
-
-    objects[0] = "<< /Type /Catalog /Pages 2 0 R >>";
-    objects[1] =
-      `<< /Type /Pages /Count ${kids.length} ` +
-      `/Kids [${kids.join(" ")}] >>`;
-
-    let data = "%PDF-1.4\n";
-    const offsets = [];
-
-    objects.forEach((object, i) => {
-      offsets.push(data.length);
-      data += `${i + 1} 0 obj\n${object}\nendobj\n`;
-    });
-
-    const xref = data.length;
-    data += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
-
-    offsets.forEach(offset => {
-      data += `${String(offset).padStart(10, "0")} 00000 n \n`;
-    });
-
-    data +=
-      `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\n` +
-      `startxref\n${xref}\n%%EOF`;
-
-    return new Blob([data], { type: "application/pdf" });
-  };
-})();
-</script>
+<!doctype html>
+<html lang="ro">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Test interactiv de fizică pentru clasa a VII-a: experiment, relații metrice, mărimi scalare și vectoriale, transformări în SI.">
+<title>Test · Concepte de bază în fizică · Clasa a VII-a</title>
+<link rel="stylesheet" href="../../../assets/css/test-style.css">
+<link rel="stylesheet" href="../../../assets/css/concepte7-test.css">
+<script defer src="../../../assets/js/test-storage.js"></script>
+<script defer src="../../../assets/js/test-engine.js"></script>
+<script defer src="../../../assets/js/test-report.js"></script>
+<script defer src="../../../assets/js/concepte7-test.js"></script>
+</head>
+<body>
+<main class="assessment">
+<header class="assessment-header">
+<p class="eyebrow">Fizica Galaction · Clasa a VII-a</p>
+<h1>Concepte de bază în fizică</h1>
+<p>Experiment · Relații metrice · Mărimi scalare și vectoriale</p>
+<div class="badges"><span>20 de itemi</span><span>10 transformări în SI</span><span>30 de variante</span></div>
+</header>
+<section id="registration" class="registration">
+<h2>Identificarea elevului</h2>
+<p>Numărul din catalog atribuit de profesor determină varianta ta. Verifică numărul înainte de a începe.</p>
+<form id="variant-form">
+<div class="registration-grid">
+<label for="student-name">Nume și prenume<input id="student-name" name="nume" required maxlength="80" autocomplete="name"></label>
+<label for="catalog-number">Număr în catalog<input id="catalog-number" name="catalog" type="number" min="1" max="30" step="1" required inputmode="numeric" placeholder="1–30"></label>
+</div>
+<label class="monitoring-option"><input type="checkbox" id="monitoring-enabled" checked><span>Monitorizare anticopiere: înregistrează părăsirea paginii</span></label>
+<ul class="instructions">
+<li>Folosește ciorna pentru calcule. Scrie numai numărul când unitatea este afișată.</li>
+<li>Poți verifica și modifica răspunsul curent înainte de confirmare. După trecerea la următorul item, nu mai poți reveni.</li>
+<li>Fiecare item valorează 1 punct. La asociere, toate cele trei perechi trebuie să fie corecte pentru punctajul itemului.</li>
+<li>Nota calculată este 1 + 9 × punctaj / 20.</li>
+<li>Dacă părăsești pagina, vei fi avertizat la revenire. Itemul, ora și durata absenței se înregistrează în PDF când monitorizarea este activată.</li>
+<li>Răspunsul și punctajul itemilor afectați sunt roșii. Profesorul decide penalizarea; punctajul nu se diminuează automat.</li>
+<li>La final, descarcă PDF-ul în telefon și atașează-l la tema din Google Classroom.</li>
+</ul>
+<div class="important">Nu reîncărca pagina în timpul testului. Reîncărcarea începe o încercare nouă și pierde răspunsurile.</div>
+<p id="variant-error" class="form-error" role="alert"></p>
+<button type="submit" class="start-button">Începe testul</button>
+</form>
+</section>
+<p id="session-status" class="session-status" role="status" aria-live="polite"></p>
+<div id="testApp" data-test-engine hidden></div>
+<aside id="source-note" class="source-note">
+<p>Testul folosește noțiunile din <a href="./lectia-1.html">Lecția 1</a>, <a href="./lectia-2.html">Lecția 2</a>, <a href="./lectia-3.html">Lecția 3</a> și <a href="./lectia-4.html">Lecția 4</a>.</p>
+<p>Pentru colegii de bancă, profesorul poate atribui numere consecutive din catalog: familiile de itemi diferă la aceeași poziție. Pagina nu sincronizează ritmul de lucru.</p>
+<p>Monitorizarea semnalează schimbarea paginii sau a focalizării, nu dovedește copierea. Nu se trimit automat răspunsurile către Classroom.</p>
+<a href="./index.html">Înapoi la lecții</a>
+</aside>
+<noscript><p class="important">Activează JavaScript pentru a folosi testul și exportul PDF.</p></noscript>
+</main>
+</body>
+</html>

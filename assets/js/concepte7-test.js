@@ -75,7 +75,7 @@ const testConfig={
  questionsPerPage:1,shuffleQuestions:false,shuffleOptions:false,allowBack:false,
  keyboard:false,updateHash:false,requireAllAnswers:true,immediateFeedback:false,
  lockAfterCheck:true,showCorrectAnswers:false,showExplanations:false,
- persistStudentProfile:false,saveProgress:false,restoreProgress:false,
+ persistStudentProfile:false,saveProgress:true,restoreProgress:true,
  confirmBeforeSubmit:false,allowRestart:false,allowPrint:false,
  integrityMonitoring:true,startImmediately:false,showTimer:false
 };
@@ -93,6 +93,15 @@ function boot(){
  if(!form||!host)return;
  const error=document.getElementById("variant-error");
  let started=false,lastQuestionId="";
+ const profileKey="concepte7-evaluare-20261008-r6:"+location.pathname;
+ function remember(student,completed=null){
+  try{localStorage.setItem(profileKey,JSON.stringify({student,completed}));}catch(_){}
+ }
+ document.addEventListener("fizica:test-complete",()=>{
+  const state=window.TestEngine.getState();
+  remember(state.student,{status:"running",student:state.student,answers:state.answers,checked:state.checked,
+   currentIndex:state.currentIndex,startedAt:state.startedAt,remainingSeconds:state.remainingSeconds});
+ });
  function decorate(){
   const q=window.TestEngine?.getCurrentQuestion?.(),s=window.TestEngine?.getState?.();
   const card=host.querySelector("[data-question-id]");
@@ -140,10 +149,28 @@ function boot(){
   window.TEST_DATA.config.integrityMonitoring=true;
   try{
    host.hidden=false;window.initTestEngine({mount:host});
-   if(!window.TestEngine.start({student})){host.hidden=true;error.textContent="Testul nu a putut fi pornit.";return;}
-   started=true;document.getElementById("registration").hidden=true;decorate();
+   if(!window.TestEngine.getState().started&&!window.TestEngine.start({student})){host.hidden=true;error.textContent="Testul nu a putut fi pornit.";return;}
+   started=true;remember(student);document.getElementById("registration").hidden=true;decorate();
   }catch(cause){host.hidden=true;error.textContent="Testul nu poate fi pornit. Anunță profesorul.";console.error(cause);}
  });
+ // Reîncarcă mai întâi varianta, apoi lasă motorul să restaureze sesiunea.
+ try{
+  const saved=JSON.parse(localStorage.getItem(profileKey)||"null");
+  const student=saved?.student,v=Number(student?.catalog);
+  if(student?.nume&&Number.isInteger(v)&&v>=1&&v<=30&&window.TestEngine&&APP.testStorage){
+   document.getElementById("student-name").value=student.nume;
+   document.getElementById("catalog-number").value=v;
+   window.TEST_DATA=createData(v,student);
+   if(saved.completed)APP.testStorage.saveSession(window.TEST_DATA.id,saved.completed);
+   host.hidden=false;window.initTestEngine({mount:host});
+   if(window.TestEngine.getState().started){
+    started=true;document.getElementById("registration").hidden=true;
+    if(saved.completed)window.TestEngine.submit();
+    decorate();
+   }else host.hidden=true;
+  }
+ }catch(cause){console.error(cause);}
+ window.addEventListener("pagehide",()=>window.TestEngine?.save?.());
  window.addEventListener("beforeunload",event=>{
   const s=window.TestEngine?.getState?.();if(started&&!s?.submitted){event.preventDefault();event.returnValue="";}
  });

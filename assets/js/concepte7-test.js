@@ -2,13 +2,12 @@
 (function(window,document){
 "use strict";
 const APP=window.FizicaGalaction=window.FizicaGalaction||{};
-const contexts=["laborator","atelier","bibliotecă","sală","curte","grădină","parc","teren","magazie","garaj","hol","muzeu","seră","bucătărie","depozit","cabinet","piscină","stadion","sală de sport","fabrică","port","stație","piață","pădure","livadă","campus","observator","studio","aeroport","șantier"];
 const fmt=n=>Number(Number(n).toPrecision(12)).toString().replace(".",",");
 function random(seed){return()=>{seed|=0;seed=seed+0x6D2B79F5|0;let t=Math.imul(seed^seed>>>15,1|seed);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296;};}
 function mix(values,r){const a=values.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 function buildVariant(catalog){
  if(!Number.isInteger(catalog)||catalog<1||catalog>30)throw Error("Numărul din catalog trebuie să fie între 1 și 30.");
- const v=catalog,r=random(v*104729),where=contexts[v-1],items=[];
+ const v=catalog,r=random(v*104729),items=[];
  const add=(family,type,prompt,correctAnswer,extra={})=>{
   items.push({id:"v"+String(v).padStart(2,"0")+"-q"+String(family+1).padStart(2,"0"),family,type,prompt,correctAnswer,points:1,si:family<10,...extra});
  };
@@ -26,49 +25,49 @@ function buildVariant(catalog){
   add(family,"numeric",prompt,Number(Number(value).toPrecision(12)),{unit,tolerance:Math.max(1e-12,Math.abs(value)*1e-9),instruction:"Scrie numai valoarea numerică. Poți folosi virgulă sau punct zecimal.",placeholder:"Valoarea calculată"});
  }
  let x=(1743+37*v)/10;
- conversion(0,"În "+where+", un fir pentru un experiment are "+fmt(x)+" cm. Exprimă lungimea în metri.",x/100,"m");
+ conversion(0,"O panglică pentru împachetarea unui cadou are "+fmt(x)+" cm. Exprimă lungimea în metri.",x/100,"m");
  x=(38765+137*v)/10;
- conversion(1,"În "+where+", masa unui corp este "+fmt(x)+" g. Exprimă masa în kilograme.",x/1000,"kg");
+ conversion(1,"Masa unui pepene este "+fmt(x)+" g. Exprimă masa în kilograme.",x/1000,"kg");
  const minutes=12+v,seconds=17+v;
- conversion(2,"În "+where+", înregistrarea datelor durează "+minutes+" minute și "+seconds+" secunde. Exprimă durata totală în secunde.",minutes*60+seconds,"s");
+ conversion(2,"Drumul până la școală durează "+minutes+" minute și "+seconds+" secunde. Exprimă durata totală în secunde.",minutes*60+seconds,"s");
  x=(43217+113*v)/10;
- dual(3,"În "+where+", "+fmt(x)+" mm reprezintă "+fmt(x/(v%2?1000:100))+" m.",Boolean(v%2));
+ dual(3,"Un cablu are lungimea de "+fmt(x)+" mm. Un elev afirmă că aceasta reprezintă "+fmt(x/(v%2?1000:100))+" m.",Boolean(v%2));
  x=(8731+97*v)/10;
- dual(4,"În "+where+", "+fmt(x)+" cm² reprezintă "+fmt(x/(v%2?100:10000))+" m².",!Boolean(v%2));
- pairing(5,"Asociază lungimile măsurate în "+where+" cu valorile lor în SI (m).",[
-  [fmt((2467+31*v)/10)+" cm",fmt((2467+31*v)/1000)],
-  [fmt((58731+127*v)/10)+" mm",fmt((58731+127*v)/10000)],
-  [fmt((173+11*v)/100)+" km",fmt((173+11*v)*10)]]);
- pairing(6,"Asociază duratele din experimentul realizat în "+where+" cu valorile în SI (s).",[
-  [fmt((173+13*v)/10)+" min",fmt((173+13*v)*6)],
-  [fmt((127+7*v)/100)+" h",fmt((127+7*v)*36)],
-  [fmt((4371+53*v)/10)+" ms",fmt((4371+53*v)/10000)]]);
+ dual(4,"Aria unei fotografii este "+fmt(x)+" cm². Un elev afirmă că aceasta reprezintă "+fmt(x/(v%2?100:10000))+" m².",!Boolean(v%2));
+ x=(2467+31*v)/100;
+ pairing(5,"Transformă lungimile în metri. Asociază fiecare valoare cu rezultatul corect.",[
+ [fmt(x)+" mm",fmt(x/1000)],[fmt(x)+" cm",fmt(x/100)],[fmt(x)+" dm",fmt(x/10)]]);
+ x=(173+13*v)/100;
+ pairing(6,"Transformă masele în kilograme. Asociază fiecare valoare cu rezultatul corect.",[
+ [fmt(x)+" mg",fmt(x/1e6)],[fmt(x)+" g",fmt(x/1000)],[fmt(x)+" t",fmt(x*1000)]]);
  x=(176543+211*v)/10;
- numeric(7,"În "+where+", volumul unui corp este "+fmt(x)+" cm³. Exprimă volumul în m³.",x/1e6,"m³");
+ numeric(7,"Un recipient pentru apa de ploaie are volumul de "+fmt(x)+" cm³. Exprimă volumul în m³.",x/1e6,"m³");
  x=(3871+43*v)/100;
- numeric(8,"În "+where+", o suprafață măsurată are "+fmt(x)+" dm². Exprimă aria în m².",x/100,"m²");
+ numeric(8,"Suprafața unui raft este "+fmt(x)+" dm². Exprimă aria în m².",x/100,"m²");
  x=(276543+317*v)/10;
- numeric(9,"În "+where+", masa unui eșantion este "+fmt(x)+" mg. Exprimă masa în kg.",x/1e6,"kg");
- single(10,"După "+(12+v)+" măsurări făcute în "+where+", pe ce trebuie să se bazeze concluzia experimentului?","Rezultatele măsurate și analizate",
- ["Rezultatele măsurate și analizate","Părerea unui coleg","Numai ipoteza inițială","Aspectul instrumentelor"]);
- single(11,"În "+where+", se notează masa m = "+fmt((235+17*v)/100)+" kg. Ce fel de mărime fizică este masa?","Scalară",["Scalară","Vectorială","O direcție","Un sens"]);
- single(12,"În "+where+", o forță are valoarea "+(17+3*v)+" N. Ce trebuie precizat, în plus față de valoare și unitate, pentru a o descrie ca vector?","Direcția și sensul",
- ["Direcția și sensul","Numai simbolul","Numai numele instrumentului","Numărul de măsurări"]);
- dual(13,"În experimentul cu "+(8+v)+" măsurări din "+where+", pentru a studia efectul lungimii firului, elevul "+
- (v%2?"modifică numai lungimea și păstrează ceilalți factori constanți":"modifică simultan lungimea, masa și metoda de măsurare")+
- ". Procedura este potrivită pentru izolarea efectului lungimii.",Boolean(v%2));
- const k=7+v;
- dual(14,"Un triunghi dreptunghic măsurat în "+where+" are catetele "+(3*k)+" cm și "+(4*k)+" cm. Ipotenuza este "+(v%2?5*k:7*k)+" cm.",Boolean(v%2));
- pairing(15,"În "+where+", triunghiul ABC, dreptunghic în A, are AB = "+(3*k)+" cm și AC = "+(4*k)+" cm; AD este perpendiculară pe BC. Asociază elementele.",
- [["AB și AC","Catete"],["BC","Ipotenuză"],["AD","Înălțime pe ipotenuză"]]);
- pairing(16,"În "+where+", un corp de "+fmt((17+v)/10)+" kg este reprezentat într-o schiță. Asociază descrierile cu noțiunile.",
- [["Masa corpului: "+fmt((17+v)/10)+" kg","Mărime scalară"],["Dreapta orizontală a unei săgeți","Direcția vectorului"],["Săgeata orientată spre est","Sensul vectorului"]]);
- const scale=(37+v)/10;
- numeric(17,"În "+where+", un triunghi dreptunghic are catetele "+fmt(5*scale)+" cm și "+fmt(12*scale)+" cm. Calculează ipotenuza folosind teorema lui Pitagora.",13*scale,"cm");
+ numeric(9,"Masa unei porții de condimente este "+fmt(x)+" mg. Exprimă masa în kg.",x/1e6,"kg");
+ const phenomena=[
+ ["Pe exteriorul unui pahar rece apar picături de apă. Ce fenomen explică formarea lor?","Condensarea",["Condensarea","Evaporarea","Topirea","Solidificarea"]],
+ ["Un cub de gheață lăsat pe masă devine apă. Ce fenomen are loc?","Topirea",["Topirea","Condensarea","Evaporarea","Solidificarea"]],
+ ["Rufele ude se usucă la aer. Ce fenomen explică dispariția apei din țesătură?","Evaporarea",["Evaporarea","Condensarea","Topirea","Solidificarea"]]
+ ];
+ const ph=phenomena[(v-1)%3];single(10,ph[0],ph[1],ph[2]);
+ single(11,"Un rucsac are masa de "+fmt((235+17*v)/100)+" kg. Care grup conține numai mărimi fizice scalare?","Masă, durată, temperatură",["Masă, durată, temperatură","Forță, masă, temperatură","Deplasare, durată, masă","Forță, deplasare, temperatură"]);
+ single(12,"Un copil trage o sanie cu o forță de "+(17+3*v)+" N. Ce informații mai sunt necesare pentru a descrie vectorul forță?","Direcția și sensul",["Direcția și sensul","Durata și temperatura","Masa și volumul saniei","Distanța și durata"]);
+ dual(13,v%2?"Când o minge cade, își schimbă poziția față de sol. Acesta este un fenomen mecanic.":"Când un cub de gheață se topește, fenomenul observat este mecanic.",Boolean(v%2));
+ dual(14,v%2?"Două forțe cu aceeași valoare, pe aceeași direcție, dar cu sensuri opuse sunt vectori diferiți.":"Două forțe cu aceeași valoare, pe aceeași direcție, dar cu sensuri opuse sunt același vector.",Boolean(v%2));
+ pairing(15,"Asociază fiecare mărime fizică folosită în viața cotidiană cu unitatea sa în SI.",[["Durata drumului până la școală","s"],["Masa rucsacului","kg"],["Temperatura aerului","K"]]);
+ pairing(16,"Un colet de "+fmt((17+v)/10)+" kg este transportat spre est. Asociază descrierile cu noțiunile.",[["Masa coletului","Mărime scalară"],["Dreapta orizontală a săgeții","Direcția vectorului"],["Orientarea săgeții spre est","Sensul vectorului"]]);
+ // Diferențele orizontală și verticală formează un triunghi 3-4-5.
+ const k=1+v/10,east=10,north=23+v,west=10+3*k,south=north-4*k;
+ const distance=east+north+west+south,displacement=5*k;
+ pairing(17,"Te deplasezi "+fmt(east)+" m spre est, apoi "+fmt(north)+" m spre nord, apoi "+fmt(west)+" m spre vest și "+fmt(south)+" m spre sud. Desenează pe ciornă o schemă cu săgeți; marchează punctul de plecare și punctul de sosire. Calculează distanța totală parcursă și modulul deplasării față de punctul de plecare. Precizează și orientarea deplasării. Asociază rezultatele.",[
+ ["Distanța totală parcursă",fmt(distance)+" m"],
+ ["Modulul deplasării",fmt(displacement)+" m"],
+ ["Orientarea deplasării","Nord-vest"]]);
  const strength=13+v,arrow=(27+v)/10;
- numeric(18,"La reprezentarea unui vector în "+where+", scara este 1 cm pentru "+strength+" N. Săgeata are lungimea "+fmt(arrow)+" cm. Calculează valoarea forței reprezentate.",strength*arrow,"N");
- add(19,"text","Înaintea celor "+(9+v)+" măsurări din "+where+", elevul formulează o presupunere care va fi verificată experimental. Completează denumirea acestei etape/noțiuni.",["ipoteză","ipoteza"],
- {instruction:"Scrie un singur cuvânt.",placeholder:"Denumirea noțiunii"});
+ numeric(18,"Forța cu care un copil trage un cărucior este reprezentată la scara de 1 cm pentru "+strength+" N. Săgeata are lungimea de "+fmt(arrow)+" cm. Calculează valoarea forței.",strength*arrow,"N");
+ add(19,"text","Pentru a comunica rezultatul măsurării lungimii unei mese, scrii o valoare numerică și o ... de măsură. Completează cuvântul lipsă.","unitate",{instruction:"Scrie un singur cuvânt."});
  const base=mix(Array.from({length:20},(_,i)=>i),random(20261008));
  return base.map((_,position)=>items.find(q=>q.family===base[(position+(v-1)*7)%20]));
 }

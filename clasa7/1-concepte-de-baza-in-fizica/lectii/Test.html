@@ -1,747 +1,288 @@
-<!doctype html>
-<html lang="ro">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Test de fizică • Clasa a VII-a</title>
-<style>
-:root{
-  color-scheme:light;
-  --ink:#142b40;--muted:#53697b;--blue:#155dc2;
-  --line:#d8e2ec;--bg:#eef3f8;--good:#136c44;--bad:#a32929
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);
-  font:17px/1.6 system-ui,-apple-system,"Segoe UI",sans-serif}
-main{max-width:900px;margin:auto;padding:28px 18px 60px}
-header{margin-bottom:25px}
-.eyebrow{font-size:13px;letter-spacing:.12em;text-transform:uppercase;
-  color:var(--blue);font-weight:750}
-h1{font-size:clamp(27px,5vw,42px);line-height:1.15;margin:10px 0}
-h2{font-size:24px;line-height:1.4}
-p{margin:12px 0}
-.card{background:white;border:1px solid var(--line);border-radius:20px;
-  padding:clamp(20px,4vw,35px);box-shadow:0 10px 30px #16365309}
-.muted{color:var(--muted)}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
-label{display:block;font-weight:650}
-input,select,button{font:inherit}
-input,select{width:100%;padding:12px;border:1px solid #9aafc1;
-  border-radius:10px;background:white;color:var(--ink)}
-input:focus,select:focus,button:focus-visible{
-  outline:3px solid #74a9ef;outline-offset:3px}
-button{border:0;border-radius:11px;padding:12px 20px;
-  background:var(--blue);color:white;font-weight:650;cursor:pointer}
-button.secondary{background:#e9f0f8;color:var(--ink)}
-button:disabled{opacity:.45;cursor:default}
-.actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:24px}
-.meta{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
-  font-size:14px;color:var(--muted)}
-progress{width:100%;height:9px;accent-color:var(--blue);margin:14px 0}
-fieldset{border:0;padding:0;margin:0}
-legend{padding:0;font-weight:700;font-size:22px;margin:14px 0 24px}
-.option{display:flex;align-items:center;gap:12px;border:1px solid var(--line);
-  border-radius:12px;padding:13px;margin:10px 0;font-weight:500;cursor:pointer}
-.option:has(input:checked){background:#edf5ff;border-color:var(--blue)}
-.option input{width:20px;height:20px;flex:none;accent-color:var(--blue)}
-.pair{display:grid;grid-template-columns:1fr 1fr;gap:14px;
-  align-items:center;padding:12px 0;border-bottom:1px solid var(--line)}
-nav{display:flex;flex-wrap:wrap;gap:6px;margin-top:20px}
-nav button{padding:5px;min-width:35px;background:white;color:var(--ink);
-  border:1px solid var(--line)}
-nav button.done{background:#dff1e8;border-color:#77b894}
-nav button.current{outline:2px solid var(--blue)}
-.note{padding:14px 18px;background:#e8eff7;border-radius:12px;font-size:14px}
-.error{color:var(--bad)}
-.score{font-size:48px;line-height:1.2;font-weight:800;color:var(--blue)}
-.review{padding:20px 0;border-bottom:1px solid var(--line)}
-.review h3{font-size:17px;margin:0 0 8px}
-.correct{color:var(--good)}
-.incorrect{color:var(--bad)}
-footer{font-size:13px;color:var(--muted);margin-top:25px}
-a{color:var(--blue)}
-[hidden]{display:none!important}
-@media(max-width:600px){
-  .grid,.pair{grid-template-columns:1fr}
-  .pair{gap:5px}
-  button{flex-grow:1}
-  nav button{flex-grow:0}
-}
-@media print{
-  body{background:white}
-  .actions,nav,footer{display:none}
-  .card{box-shadow:none;border:0;padding:0}
-}
-</style>
-</head>
-<body>
-<main>
-<header>
-  <div class="eyebrow">Fizică • Clasa a VII-a</div>
-  <h1>Concepte de bază în fizică</h1>
-  <p class="muted">20 de itemi · 10 transformări în SI · 30 de variante</p>
-</header>
-
-<section id="intro" class="card">
-  <h2>Începe testul</h2>
-  <p>Introdu numărul din catalog atribuit de profesor.
-    Acesta determină varianta ta și ordinea întrebărilor.</p>
-  <form id="start">
-    <div class="grid">
-      <label>Numele elevului
-        <input id="student" maxlength="80" autocomplete="name"
-          placeholder="Nume și prenume">
-      </label>
-      <label>Numărul din catalog
-        <input id="catalog" type="number" min="1" max="30" step="1"
-          required placeholder="1–30">
-      </label>
-    </div>
-    <p>La completare, scrie numai valoarea numerică atunci când unitatea
-      este afișată. Poți folosi virgulă sau punct zecimal.</p>
-    <p>Fiecare item valorează 1 punct. La asociere, punctajul este
-      proporțional cu numărul perechilor corecte.
-      Nota = 1 + 9 × punctaj / 20.</p>
-    <div class="note">
-      Poți reveni la orice întrebare înainte de finalizare.
-      Nu reîncărca pagina: progresul se păstrează doar cât timp
-      aceasta rămâne deschisă.
-    </div>
-    <p id="start-error" class="error" role="alert"></p>
-    <div class="actions"><button type="submit">Începe testul</button></div>
-  </form>
-</section>
-
-<section id="exam" class="card" hidden aria-label="Test">
-  <div class="meta">
-    <span id="identity"></span><span id="position"></span>
-  </div>
-  <progress id="progress" max="20" value="0"
-    aria-label="Numărul itemilor completați"></progress>
-  <div id="question"></div>
-  <div class="actions">
-    <button id="previous" class="secondary">Înapoi</button>
-    <button id="next">Următorul</button>
-    <button id="finish" class="secondary">Finalizează testul</button>
-  </div>
-  <nav id="navigation" aria-label="Navigare între itemi"></nav>
-  <p class="muted" style="font-size:14px">
-    Verde = item completat. Contur albastru = itemul curent.
-  </p>
-</section>
-
-<section id="results" class="card" hidden>
-  <h2 id="result-heading" tabindex="-1">Rezultatul testului</h2>
-  <p id="result-identity"></p>
-  <div class="score" id="grade"></div>
-  <p id="points"></p>
-  <div class="actions">
-    <button id="download">Descarcă PDF</button>
-    <button id="new-test" class="secondary">Test nou</button>
-  </div>
-  <p id="pdf-status" role="status" class="muted"></p>
-  <div id="review"></div>
-</section>
-
-<section id="checks" class="card" hidden>
-  <h2>Verificarea generatorului</h2>
-  <pre id="check-output" style="white-space:pre-wrap"></pre>
-</section>
-
-<footer>
-  <p>
-    Material original pentru evaluarea noțiunilor introductive.
-    <a href="https://github.com/danutmg-cyber/fizica-galaction/tree/main/clasa7/1-concepte-de-baza-in-fizica/lectii"
-       target="_blank" rel="noopener">Sursa solicitată</a>
-    conține „Pagina este în lucru” la verificarea din 8 octombrie 2026.
-  </p>
-  <p>
-    Nu se trimit date către un server. Variantele au enunțuri distincte,
-    dar pagina nu sincronizează elevii. Profesorul verifică alocarea
-    numerelor din catalog. Baremul unui test static poate fi consultat
-    în codul paginii.
-  </p>
-</footer>
-</main>
-
 <script>
 "use strict";
 
-/* Generator determinist: aceeași variantă la fiecare deschidere. */
-const fmt = n => Number(n.toPrecision(10)).toString().replace(".", ",");
-const scenes = [
-  "laborator","atelier","bibliotecă","sală","curte","grădină",
-  "parc","teren","magazie","garaj","hol","muzeu","seră","bucătărie",
-  "depozit","cabinet","piscină","stadion","sală de sport","fabrică",
-  "port","stație","piață","pădure","livadă","campus","observator",
-  "studio","aeroport","șantier"
-];
+/* Înlocuiește generatorul anterior cu itemi mai dificili. */
+const initialBuild = build;
 
-function rng(seed) {
-  return () => {
-    seed |= 0;
-    seed = seed + 0x6D2B79F5 | 0;
-    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
-    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
-    return ((t ^ t >>> 14) >>> 0) / 4294967296;
-  };
-}
+build = function(v) {
+  const q = initialBuild(v);
+  const loc = scenes[v - 1];
+  const r = rng(v * 104729);
+  const get = id => q.find(item => item.id === id);
 
-function shuffle(a, r) {
-  a = a.slice();
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(r() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
-
-function build(v) {
-  if (!Number.isInteger(v) || v < 1 || v > 30)
-    throw Error("Numărul din catalog trebuie să fie între 1 și 30.");
-
-  const r = rng(v * 7919), q = [], loc = scenes[v - 1];
-  const add = (id, type, prompt, answer, extra = {}) =>
-    q.push({ id, type, prompt, answer, si: id < 10, ...extra });
-  const mc = (id, p, a, opts) =>
-    add(id, "mc", p, a, { options: shuffle(opts, r) });
-  const tf = (id, p, a) =>
-    add(id, "tf", p, a, { options: ["Adevărat", "Fals"] });
-  const fill = (id, p, a, unit = "") =>
-    add(id, "fill", p, a, { unit });
-  const pair = (id, p, rows) =>
-    add(id, "pair", p, rows.map(x => x[1]), {
-      left: rows.map(x => x[0]),
-      options: shuffle(rows.map(x => x[1]), r)
+  function multi(id, prompt, value) {
+    Object.assign(get(id), {
+      prompt,
+      answer: fmt(value),
+      options: shuffle(
+        [value, value * 10, value * 100, value / 10].map(fmt),
+        r
+      )
     });
-
-  /* Exact 10 itemi despre transformări în SI: id 0–9. */
-  let x = 100 + 7 * v;
-  mc(0, `În ${loc}, o panglică are ${x} cm. Alege lungimea în SI.`,
-    fmt(x / 100),
-    [fmt(x / 100), fmt(x / 10), fmt(x * 100), fmt(x / 1000)]);
-
-  x = 200 + 11 * v;
-  mc(1, `În ${loc}, un corp are masa ${x} g. Alege masa în SI.`,
-    fmt(x / 1000),
-    [fmt(x / 1000), fmt(x / 100), fmt(x * 1000), fmt(x / 10)]);
-
-  x = 2 + v;
-  mc(2, `În ${loc}, un interval durează ${x} min. Alege durata în SI.`,
-    fmt(x * 60),
-    [fmt(x * 60), fmt(x / 60), fmt(x * 100), fmt(x)]);
-
-  x = 300 + 13 * v;
-  tf(3, `În ${loc}, ${x} mm reprezintă ${
-    fmt(x / (v % 2 ? 1000 : 100))} m.`,
-    v % 2 ? "Adevărat" : "Fals");
-
-  x = 40 + 3 * v;
-  tf(4, `În ${loc}, ${x} cm² reprezintă ${
-    fmt(x / (v % 2 ? 100 : 10000))} m².`,
-    v % 2 ? "Fals" : "Adevărat");
-
-  pair(5, `Asociază măsurările din ${loc} cu valorile în SI (m).`, [
-    [`${20 + v} cm`, fmt((20 + v) / 100)],
-    [`${500 + v} mm`, fmt((500 + v) / 1000)],
-    [`${2 + v} km`, fmt((2 + v) * 1000)]
-  ]);
-
-  pair(6, `Asociază duratele măsurate în ${loc} cu valorile în SI (s).`, [
-    [`${4 + v} min`, fmt((4 + v) * 60)],
-    [`${1 + v} h`, fmt((1 + v) * 3600)],
-    [`${100 + v} ms`, fmt((100 + v) / 1000)]
-  ]);
-
-  fill(7, `În ${loc}, un volum este ${700 + 17 * v} cm³.
-    Completează valoarea în SI.`, (700 + 17 * v) / 1e6, "m³");
-
-  fill(8, `În ${loc}, o suprafață este ${50 + v} dm².
-    Completează valoarea în SI.`, (50 + v) / 100, "m²");
-
-  fill(9, `În ${loc}, masa unui obiect este ${1000 + 19 * v} mg.
-    Completează valoarea în SI.`, (1000 + 19 * v) / 1e6, "kg");
-
-  /* 10 itemi de concepte și măsurare, fără transformări în SI. */
-  mc(10, `În ${loc}, lungimea unei mese se măsoară de ${2 + v} ori.
-    Ce instrument este potrivit?`,
-    "Rigla", ["Rigla", "Balanța", "Cronometrul", "Termometrul"]);
-
-  mc(11, `În ${loc}, ${1 + v} cuburi de gheață se topesc.
-    Ce fel de fenomen este topirea?`,
-    "Fenomen fizic",
-    ["Fenomen fizic", "Fenomen chimic",
-     "Unitate de măsură", "Instrument de măsură"]);
-
-  mc(12, `În ${loc}, un elev înregistrează ${10 + v} măsurări
-    ale duratei. Ce unitate SI utilizează?`,
-    "Secunda", ["Secunda", "Minutul", "Ora", "Ziua"]);
-
-  tf(13, `În ${loc}, un elev spune că rezultatul unei măsurări
-    de ${30 + v} cm conține o valoare numerică și o unitate de măsură.`,
-    "Adevărat");
-
-  tf(14, `În ${loc}, după ${2 + v} măsurări, un elev afirmă
-    că masa se măsoară cu cronometrul.`, "Fals");
-
-  pair(15, `La cele ${3 + v} stații de lucru din ${loc},
-    asociază mărimea cu instrumentul potrivit.`, [
-    ["Lungime", "Rigla"], ["Masă", "Balanța"], ["Durată", "Cronometrul"]
-  ]);
-
-  pair(16, `Pentru fișa cu ${5 + v} observații din ${loc},
-    asociază exemplul cu noțiunea.`, [
-    ["O bilă de metal", "Corp fizic"],
-    ["Fierul din bilă", "Substanță"],
-    ["Căderea bilei", "Fenomen fizic"]
-  ]);
-
-  fill(17, `În ${loc}, lungimea unui obiect este măsurată de trei ori:
-    ${100 + v} cm, ${102 + v} cm, ${104 + v} cm.
-    Completează media aritmetică, în cm.`, 102 + v, "cm");
-
-  fill(18, `În ${loc}, o riglă are ${5 + v} intervale egale
-    între marcajele 0 cm și ${5 + v} cm.
-    Completează valoarea unei diviziuni, în cm.`, 1, "cm");
-
-  fill(19, `În ${loc}, o măsurare a duratei indică ${20 + v} s.
-    Completează simbolul unității SI folosite.`, "s");
-
-  return shuffle(q, r);
-}
-
-function norm(s) {
-  return String(s).trim().toLowerCase().normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-}
-
-function numeric(s) {
-  const t = String(s).trim().replace(",", ".");
-  return /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(t)
-    ? Number(t) : NaN;
-}
-
-function score(q, a) {
-  if (q.type === "pair")
-    return q.answer.reduce((n, x, i) =>
-      n + (x === (a || [])[i] ? 1 : 0), 0) / q.answer.length;
-
-  if (typeof q.answer === "number") {
-    const n = numeric(a);
-    return Number.isFinite(n) &&
-      Math.abs(n - q.answer) <=
-        Math.max(1e-12, Math.abs(q.answer) * 1e-8) ? 1 : 0;
   }
-  return norm(a ?? "") === norm(q.answer) ? 1 : 0;
-}
 
-/* Interfață */
-const $ = id => document.getElementById(id);
-const escapeHTML = s => String(s).replace(/[&<>"']/g, c =>
-  ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
-const typeNames = {
-  mc:"Alegere multiplă", tf:"Alegere duală",
-  pair:"Tip pereche", fill:"Completare"
+  function pairs(id, prompt, rows) {
+    Object.assign(get(id), {
+      prompt,
+      left: rows.map(row => row[0]),
+      answer: rows.map(row => row[1]),
+      options: shuffle(rows.map(row => row[1]), r)
+    });
+  }
+
+  /* Exact 10 itemi de transformare în SI. */
+  let x = (1743 + 37 * v) / 10;
+  multi(
+    0,
+    `În ${loc}, un cablu are ${fmt(x)} cm.
+     Alege valoarea lungimii în metri.`,
+    x / 100
+  );
+
+  x = (38765 + 137 * v) / 10;
+  multi(
+    1,
+    `În ${loc}, masa unui recipient este ${fmt(x)} g.
+     Alege valoarea masei în kilograme.`,
+    x / 1000
+  );
+
+  const minutes = 12 + v;
+  const seconds = 17 + v;
+  multi(
+    2,
+    `În ${loc}, o măsurare durează ${minutes} minute
+     și ${seconds} secunde. Alege durata în secunde.`,
+    minutes * 60 + seconds
+  );
+
+  x = (43217 + 113 * v) / 10;
+  Object.assign(get(3), {
+    prompt:
+      `În ${loc}, ${fmt(x)} mm reprezintă
+       ${fmt(x / (v % 2 ? 1000 : 100))} m.`,
+    answer: v % 2 ? "Adevărat" : "Fals"
+  });
+
+  x = (8731 + 97 * v) / 10;
+  Object.assign(get(4), {
+    prompt:
+      `În ${loc}, ${fmt(x)} cm² reprezintă
+       ${fmt(x / (v % 2 ? 100 : 10000))} m².`,
+    answer: v % 2 ? "Fals" : "Adevărat"
+  });
+
+  pairs(
+    5,
+    `Asociază lungimile din ${loc} cu valorile în metri.`,
+    [
+      [
+        `${fmt((2467 + 31 * v) / 10)} cm`,
+        fmt((2467 + 31 * v) / 1000)
+      ],
+      [
+        `${fmt((58731 + 127 * v) / 10)} mm`,
+        fmt((58731 + 127 * v) / 10000)
+      ],
+      [
+        `${fmt((173 + 11 * v) / 100)} km`,
+        fmt((173 + 11 * v) * 10)
+      ]
+    ]
+  );
+
+  pairs(
+    6,
+    `Asociază duratele din ${loc} cu valorile în secunde.`,
+    [
+      [
+        `${fmt((173 + 13 * v) / 10)} min`,
+        fmt((173 + 13 * v) * 6)
+      ],
+      [
+        `${fmt((127 + 7 * v) / 100)} h`,
+        fmt((127 + 7 * v) * 36)
+      ],
+      [
+        `${fmt((4371 + 53 * v) / 10)} ms`,
+        fmt((4371 + 53 * v) / 10000)
+      ]
+    ]
+  );
+
+  x = (176543 + 211 * v) / 10;
+  Object.assign(get(7), {
+    prompt:
+      `În ${loc}, un volum este ${fmt(x)} cm³.
+       Completează valoarea în m³.`,
+    answer: x / 1e6
+  });
+
+  x = (3871 + 43 * v) / 100;
+  Object.assign(get(8), {
+    prompt:
+      `În ${loc}, o suprafață este ${fmt(x)} dm².
+       Completează valoarea în m².`,
+    answer: x / 100
+  });
+
+  x = (276543 + 317 * v) / 10;
+  Object.assign(get(9), {
+    prompt:
+      `În ${loc}, masa unui eșantion este ${fmt(x)} mg.
+       Completează valoarea în kg.`,
+    answer: x / 1e6
+  });
+
+  /* Calcule suplimentare fără transformări în SI. */
+  const a = (1731 + 19 * v) / 10;
+  const b = (1743 + 19 * v) / 10;
+  const c = (1757 + 19 * v) / 10;
+
+  Object.assign(get(17), {
+    prompt:
+      `În ${loc}, trei măsurări ale lungimii dau
+       ${fmt(a)} cm, ${fmt(b)} cm și ${fmt(c)} cm.
+       Calculează media aritmetică în cm.
+       Rotunjește la două zecimale.`,
+    answer: Number(((a + b + c) / 3).toFixed(2))
+  });
+
+  const divisions = 8 + v;
+  const length = divisions * (17 + v) / 10;
+
+  Object.assign(get(18), {
+    prompt:
+      `În ${loc}, între marcajele 0 cm și ${fmt(length)} cm
+       ale unei rigle sunt ${divisions} intervale egale.
+       Calculează valoarea unei diviziuni în cm.`,
+    answer: (17 + v) / 10
+  });
+
+  /*
+    Ordine amestecată, apoi decalată după catalog.
+    Variantele consecutive nu au aceeași familie de item
+    pe aceeași poziție. Enunțurile și datele diferă între elevi.
+  */
+  const order = shuffle(
+    Array.from({ length: 20 }, (_, i) => i),
+    rng(20261008)
+  );
+
+  return order.map((_, i) => get(order[(i + v - 1) % 20]));
 };
-const choiceUnit = q => ({0:"m", 1:"kg", 2:"s"}[q.id] || "");
-let questions = [], answers = {}, current = 0;
-let variant = 0, studentName = "", finalized = false, finishedAt = null;
 
-function answered(q) {
-  const a = answers[q.id];
-  return q.type === "pair"
-    ? Array.isArray(a) && a.length === q.left.length &&
-      a.every(x => typeof x === "string" && x.trim() !== "")
-    : a !== undefined && String(a).trim() !== "";
-}
+/* Interfață: numai înainte. */
+const originalRender = render;
 
-$("start").addEventListener("submit", e => {
-  e.preventDefault();
-  const v = Number($("catalog").value);
-  if (!Number.isInteger(v) || v < 1 || v > 30) {
-    $("start-error").textContent = "Introdu un număr întreg de la 1 la 30.";
-    return;
-  }
-  variant = v;
-  studentName = $("student").value.trim() || "Elev";
-  questions = build(v);
-  answers = {};
-  current = 0;
-  finalized = false;
-  finishedAt = null;
-  $("intro").hidden = true;
-  $("results").hidden = true;
-  $("exam").hidden = false;
-  render();
-});
+render = function() {
+  originalRender();
 
-function refreshNavigation() {
-  const completed = questions.filter(answered).length;
-  $("progress").value = completed;
-  $("position").textContent =
-    `Itemul ${current + 1}/20 · Completate: ${completed}/20`;
+  $("previous").hidden = true;
+  $("navigation").hidden = true;
 
-  $("navigation").innerHTML = questions.map((q, i) =>
-    `<button type="button" data-index="${i}"
-      class="${answered(q) ? "done" : ""} ${i === current ? "current" : ""}"
-      ${i === current ? 'aria-current="step"' : ""}
-      aria-label="Itemul ${i + 1}${answered(q) ? ", completat" : ""}">
-      ${i + 1}</button>`).join("");
-}
+  const navigationHint = $("navigation").nextElementSibling;
+  if (navigationHint) navigationHint.hidden = true;
 
-function render() {
-  const q = questions[current], a = answers[q.id];
-  $("identity").textContent = `${studentName} · Varianta ${variant}`;
-  const legend = `<legend id="question-title" tabindex="-1">${
-    escapeHTML(q.prompt)}</legend>`;
-  let controls = "";
+  const last = current === questions.length - 1;
+  $("next").hidden = last;
+  $("next").textContent = "Confirmă răspunsul și continuă";
+  $("finish").hidden = !last;
 
-  if (q.type === "mc" || q.type === "tf") {
-    controls = q.options.map((option, i) => `
-      <label class="option">
-        <input type="radio" name="answer" value="${i}"
-          ${a === option ? "checked" : ""}>
-        <span>${escapeHTML(option)}${
-          choiceUnit(q) ? " " + escapeHTML(choiceUnit(q)) : ""}</span>
-      </label>`).join("");
-  } else if (q.type === "pair") {
-    controls = q.left.map((left, i) => `
-      <div class="pair">
-        <label for="pair-${i}">${escapeHTML(left)}</label>
-        <select id="pair-${i}" data-row="${i}">
-          <option value="">Alege perechea</option>
-          ${q.options.map((option, j) => `
-            <option value="${j}" ${
-              (a || [])[i] === option ? "selected" : ""}>${
-              escapeHTML(option)}</option>`).join("")}
-        </select>
-      </div>`).join("");
-  } else {
-    controls = `
-      <label for="fill-answer">Răspuns${q.unit
-        ? " (" + escapeHTML(q.unit) + ")" : ""}</label>
-      <input id="fill-answer" type="text" maxlength="80"
-        ${typeof q.answer === "number" ? 'inputmode="decimal"' : ""}
-        autocomplete="off" value="${escapeHTML(a ?? "")}">
-      ${typeof q.answer === "number"
-        ? '<p class="muted">Scrie numai numărul, fără unitate.</p>' : ""}`;
+  /* Literele urmăresc ordinea reală a variantelor de răspuns. */
+  if (questions[current].type === "mc") {
+    $("question").querySelectorAll(".option span")
+      .forEach((span, i) => {
+        span.textContent =
+          `${String.fromCharCode(97 + i)}) ${span.textContent}`;
+      });
   }
 
-  $("question").innerHTML =
-    `<div class="eyebrow">${typeNames[q.type]} · ${
-      q.si ? "Transformare în SI" : "Concepte și măsurare"}</div>
-     <fieldset>${legend}${controls}</fieldset>`;
-  $("previous").disabled = current === 0;
-  $("next").disabled = current === questions.length - 1;
-  refreshNavigation();
-  $("question-title").focus();
-}
-
-function record(e) {
-  if (finalized) return;
-  const q = questions[current], target = e.target;
-
-  if (target.name === "answer") {
-    answers[q.id] = q.options[Number(target.value)];
-  } else if (target.id === "fill-answer") {
-    answers[q.id] = target.value;
-  } else if (target.matches("select[data-row]")) {
-    if (!answers[q.id]) answers[q.id] = q.left.map(() => "");
-    answers[q.id][Number(target.dataset.row)] =
-      target.value === "" ? "" : q.options[Number(target.value)];
-  } else return;
-  refreshNavigation();
-}
-$("question").addEventListener("input", record);
-$("question").addEventListener("change", record);
-
-$("previous").onclick = () => {
-  if (current > 0) { current--; render(); }
+  const warning = document.createElement("p");
+  warning.className = "note";
+  warning.textContent =
+    "Verifică răspunsul înainte de a continua. " +
+    "După trecerea la itemul următor, nu mai poți reveni.";
+  $("question").appendChild(warning);
 };
+
+/* Dezactivează vechile acțiuni de revenire. */
+$("previous").onclick = null;
+$("navigation").onclick = null;
+
+function validCurrentAnswer() {
+  const q = questions[current];
+
+  if (!answered(q)) {
+    alert("Completează răspunsul înainte de a continua.");
+    return false;
+  }
+
+  if (q.type === "fill" && typeof q.answer === "number") {
+    if (!Number.isFinite(numeric(answers[q.id]))) {
+      alert(
+        "Introdu numai un număr, fără unitate. " +
+        "Poți folosi virgulă sau punct zecimal."
+      );
+      return false;
+    }
+  }
+
+  return true;
+}
+
 $("next").onclick = () => {
-  if (current < questions.length - 1) { current++; render(); }
-};
-$("navigation").onclick = e => {
-  const b = e.target.closest("button[data-index]");
-  if (b) { current = Number(b.dataset.index); render(); }
+  if (finalized || !validCurrentAnswer()) return;
+  if (current >= questions.length - 1) return;
+  current++;
+  render();
 };
 
-function answerText(q, a) {
-  if (q.type === "pair")
-    return q.left.map((left, i) =>
-      `${left} → ${(a || [])[i] || "—"}`).join("; ");
-  const value = a === undefined || String(a).trim() === ""
-    ? "—" : typeof a === "number" ? fmt(a) : String(a);
-  return value === "—" ? value : value +
-    (q.unit || choiceUnit(q) ? " " + (q.unit || choiceUnit(q)) : "");
-}
-
-function totalPoints() {
-  return questions.reduce((sum, q) => sum + score(q, answers[q.id]), 0);
-}
+/* La final se verifică și completarea ultimului item. */
+const originalFinish = $("finish").onclick;
 
 $("finish").onclick = () => {
-  const missing = questions.filter(q => !answered(q)).length;
-  const message = missing
-    ? `Ai ${missing} itemi incompleți. Răspunsurile lipsă primesc 0 puncte.
-Finalizezi testul? După finalizare nu mai poți modifica răspunsurile.`
-    : "Finalizezi testul? După finalizare nu mai poți modifica răspunsurile.";
-  if (!confirm(message)) return;
-
-  finalized = true;
-  finishedAt = new Date();
-  const total = totalPoints(), grade = 1 + 9 * total / 20;
-  $("exam").hidden = true;
-  $("results").hidden = false;
-  $("result-identity").textContent =
-    `${studentName} · Număr în catalog: ${variant} · ${
-      finishedAt.toLocaleString("ro-RO")}`;
-  $("grade").textContent = `Nota ${grade.toFixed(2).replace(".", ",")}`;
-  $("points").textContent =
-    `${total.toFixed(2).replace(".", ",")} puncte din 20.`;
-  $("review").innerHTML = questions.map((q, i) => {
-    const points = score(q, answers[q.id]);
-    return `<article class="review">
-      <h3>${i + 1}. ${escapeHTML(q.prompt)}</h3>
-      <div class="${points === 1 ? "correct" : "incorrect"}">
-        Punctaj: ${points.toFixed(2).replace(".", ",")} / 1
-      </div>
-      <div>Răspunsul tău: ${escapeHTML(answerText(q, answers[q.id]))}</div>
-      <div>Barem: ${escapeHTML(answerText(q, q.answer))}</div>
-    </article>`;
-  }).join("");
-  $("result-heading").focus();
+  if (finalized || !validCurrentAnswer()) return;
+  originalFinish();
 };
 
-$("new-test").onclick = () => {
-  if (confirm("Revii la formular? Descarcă mai întâi PDF-ul dacă ai nevoie de rezultat.")) {
-    $("results").hidden = true;
-    $("intro").hidden = false;
-    $("start-error").textContent = "";
-    $("catalog").focus();
-  }
-};
+/* Actualizează instrucțiunile de pe pagina de început. */
+const introNote = $("intro").querySelector(".note");
+introNote.textContent =
+  "Folosește ciorna pentru calcule. Poți modifica răspunsul doar " +
+  "la itemul afișat. După confirmare, treci înainte și nu mai " +
+  "poți reveni. Nu reîncărca pagina: progresul se pierde.";
 
-/*
-  Export PDF local, cu font standard Helvetica.
-  Diacriticele sunt transliterate; interfața rămâne în română.
-  Nu folosește servicii sau biblioteci externe.
-*/
-function ascii(s) {
-  return String(s).normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-    .replace(/²/g, "^2").replace(/³/g, "^3")
-    .replace(/→/g, "->").replace(/[—–]/g, "-")
-    .replace(/×/g, "x").replace(/·/g, " | ")
-    .replace(/[^\x20-\x7e\n]/g, "?");
-}
+/* Elimină instrucțiunea veche despre revenire. */
+$("intro").querySelectorAll("p").forEach(p => {
+  if (p.textContent.includes("Poți reveni la orice întrebare"))
+    p.textContent =
+      "Verifică fiecare răspuns înainte de a trece la itemul următor.";
+});
 
-function wrap(text, width = 86) {
-  const words = ascii(text).replace(/\s+/g, " ").trim().split(" ");
-  const lines = [];
-  let line = "";
-  for (let word of words) {
-    while (word.length > width) {
-      if (line) { lines.push(line); line = ""; }
-      lines.push(word.slice(0, width));
-      word = word.slice(width);
-    }
-    if (!word) continue;
-    if (line && line.length + word.length + 1 > width) {
-      lines.push(line);
-      line = word;
-    } else line += (line ? " " : "") + word;
-  }
-  if (line) lines.push(line);
-  return lines.length ? lines : [""];
-}
-
-function pdfLiteral(s) {
-  return s.replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
-}
-
-function makePDF(pages) {
-  /* Tot textul este ASCII: lungimile și offseturile sunt în octeți. */
-  const objects = [];
-  const add = s => { objects.push(s); return objects.length; };
-  add(""); // 1: catalog
-  add(""); // 2: pagini
-  const font = add("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>");
-  const kids = [];
-
-  pages.forEach((lines, i) => {
-    const content = [
-      "BT", "/F1 10 Tf", "14 TL", "48 790 Td",
-      ...lines.flatMap(line => [`(${pdfLiteral(line)}) Tj`, "T*"]),
-      "ET",
-      "BT /F1 9 Tf 48 30 Td",
-      `(Pagina ${i + 1} / ${pages.length}) Tj ET`
-    ].join("\n");
-    const stream = add(`<< /Length ${content.length} >>
-stream
-${content}
-endstream`);
-    const page = add(`<< /Type /Page /Parent 2 0 R
-/MediaBox [0 0 595 842]
-/Resources << /Font << /F1 ${font} 0 R >> >>
-/Contents ${stream} 0 R >>`);
-    kids.push(`${page} 0 R`);
-  });
-  objects[0] = "<< /Type /Catalog /Pages 2 0 R >>";
-  objects[1] = `<< /Type /Pages /Count ${kids.length} /Kids [${kids.join(" ")}] >>`;
-
-  let data = "%PDF-1.4\n";
-  const offsets = [0];
-  objects.forEach((obj, i) => {
-    offsets.push(data.length);
-    data += `${i + 1} 0 obj\n${obj}\nendobj\n`;
-  });
-  const xref = data.length;
-  data += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
-  offsets.slice(1).forEach(offset => {
-    data += `${String(offset).padStart(10, "0")} 00000 n \n`;
-  });
-  data += `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>
-startxref
-${xref}
-%%EOF`;
-  return new Blob([data], { type: "application/pdf" });
-}
-
-function reportPages() {
-  const total = totalPoints();
-  const heading = [
-    "TEST DE FIZICA - CLASA A VII-A",
-    "Concepte de baza in fizica",
-    ...wrap(`Elev: ${studentName} | Numar in catalog / varianta: ${variant}`),
-    ...wrap(`Finalizat: ${finishedAt.toLocaleString("ro-RO")}`),
-    `Punctaj: ${total.toFixed(2)} / 20 | Nota: ${(1 + 9 * total / 20).toFixed(2)}`,
-    "20 itemi, dintre care exact 10 transformari in SI.",
-    "Asocierile primesc punctaj proportional. Nota = 1 + 9 x punctaj / 20.",
-    ""
-  ];
-  const pages = [];
-  let page = heading.slice();
-  const limit = 50;
-
-  function appendBlock(block) {
-    if (page.length + block.length > limit) {
-      pages.push(page);
-      page = [`Fizica VII | Varianta ${variant} | Continuare`, ""];
-    }
-    for (const line of block) {
-      if (page.length >= limit) {
-        pages.push(page);
-        page = [`Fizica VII | Varianta ${variant} | Continuare`, ""];
-      }
-      page.push(line);
-    }
-  }
-
-  questions.forEach((q, i) => {
-    const block = [
-      ...wrap(`${i + 1}. [${typeNames[q.type]}] ${q.prompt}`)
-    ];
-    if (q.type === "mc" || q.type === "tf") {
-      block.push(...wrap("Optiuni: " + q.options.map((option, j) =>
-        `${String.fromCharCode(65 + j)}) ${option}${
-          choiceUnit(q) ? " " + choiceUnit(q) : ""}`).join("; ")));
-    } else if (q.type === "pair") {
-      block.push(...wrap("Coloana A: " + q.left.join("; ")));
-      block.push(...wrap("Coloana B: " + q.options.join("; ")));
-    }
-    block.push(
-      ...wrap("Raspuns elev: " + answerText(q, answers[q.id])),
-      ...wrap("Barem: " + answerText(q, q.answer)),
-      `Punctaj item: ${score(q, answers[q.id]).toFixed(2)} / 1`,
-      ""
-    );
-    appendBlock(block);
-  });
-
-  appendBlock([
-    ...wrap("Material original. Pagina lectiilor indicata in cerinta era in lucru la verificare."),
-    ...wrap("Raport generat local in browser. Rezultatul nu este autentificat de un server.")
-  ]);
-  if (page.length) pages.push(page);
-  return pages;
-}
-
-$("download").onclick = () => {
-  if (!finalized) return;
-  try {
-    const blob = makePDF(reportPages());
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `test-fizica-VII-varianta-${String(variant).padStart(2, "0")}.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    setTimeout(() => URL.revokeObjectURL(url), 30000);
-    $("pdf-status").textContent =
-      "PDF generat. Textul din PDF folosește litere fără diacritice.";
-  } catch (error) {
-    $("pdf-status").textContent =
-      "Descărcarea a eșuat. Poți salva rezultatul ca PDF folosind imprimarea browserului.";
-    console.error(error);
-  }
-};
-
-/* Deschide index.html?verificare pentru verificarea celor 30 de variante. */
-function runChecks() {
-  const assert = (ok, message) => { if (!ok) throw Error(message); };
-  const all = Array.from({ length: 30 }, (_, i) => build(i + 1));
-
-  for (let v = 1; v <= 30; v++) {
-    const q = all[v - 1];
-    assert(q.length === 20, `Varianta ${v}: număr de itemi`);
-    assert(q.filter(x => x.si).length === 10, `Varianta ${v}: itemi SI`);
-    assert(new Set(q.map(x => x.id)).size === 20, "Identificatori repetați");
-    assert(new Set(q.map(x => x.type)).size === 4, "Lipsește un tip de item");
-    assert(JSON.stringify(q) === JSON.stringify(build(v)), "Variantă instabilă");
-    assert(q.reduce((n, x) => n + score(x, x.answer), 0) === 20,
-      "Baremul nu acordă punctaj maxim răspunsurilor corecte");
-
-    for (const x of q) {
-      if (x.type === "mc" || x.type === "pair")
-        assert(new Set(x.options).size === x.options.length,
-          "Opțiuni duplicate");
-      assert(score(x, x.type === "pair" ? [] : "") === 0,
-        "Răspunsul gol primește punctaj");
-    }
-  }
-  for (let id = 0; id < 20; id++)
-    assert(new Set(all.map(q => q.find(x => x.id === id).prompt)).size === 30,
-      `Familia ${id}: enunțuri repetate`);
-
-  const sample = build(1).find(q => q.id === 7);
-  assert(score(sample, fmt(sample.answer)) === 1, "Virgulă zecimală");
-  assert(score(sample, String(sample.answer)) === 1, "Punct zecimal");
-  assert(score(sample, "abc") === 0, "Valoare nenumerică");
-  assert(score(sample, sample.answer * 10) === 0, "Răspuns numeric greșit");
-
-  const pairing = build(1).find(q => q.id === 5);
-  assert(Math.abs(score(pairing, [pairing.answer[0], "", ""]) - 1/3) < 1e-12,
-    "Punctaj proporțional incorect");
-
-  return [
-    "OK: 30 de variante deterministe.",
-    "OK: fiecare variantă are 20 de itemi și exact 10 transformări în SI.",
-    "OK: toate cele 4 tipuri de itemi în fiecare variantă.",
-    "OK: 600 de enunțuri distincte.",
-    "OK: opțiuni fără duplicate.",
-    "OK: barem, răspunsuri goale, separator zecimal și punctaj proporțional.",
-    "",
-    "Aceste verificări nu înlocuiesc testarea vizuală a interfeței și a PDF-ului."
-  ].join("\n");
-}
-
+/* Verificări pentru generatorul actualizat. */
 if (new URLSearchParams(location.search).has("verificare")) {
-  $("intro").hidden = true;
-  $("checks").hidden = false;
-  try { $("check-output").textContent = runChecks(); }
-  catch (error) { $("check-output").textContent = "EROARE: " + error.message; }
+  try {
+    const report = runChecks();
+    const all = Array.from({ length: 30 }, (_, i) => build(i + 1));
+
+    for (let v = 0; v < 29; v++) {
+      for (let position = 0; position < 20; position++) {
+        if (all[v][position].id === all[v + 1][position].id) {
+          throw Error(
+            `Variantele ${v + 1} și ${v + 2} au aceeași familie ` +
+            `de item la poziția ${position + 1}.`
+          );
+        }
+      }
+    }
+
+    $("check-output").textContent =
+      report +
+      "\nOK: variantele consecutive au familii diferite " +
+      "la fiecare poziție.";
+  } catch (error) {
+    $("check-output").textContent = "EROARE: " + error.message;
+  }
 }
 </script>
-</body>
-</html>

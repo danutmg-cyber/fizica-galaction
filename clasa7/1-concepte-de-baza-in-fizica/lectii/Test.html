@@ -1,288 +1,500 @@
 <script>
-"use strict";
+(() => {
+  "use strict";
 
-/* Înlocuiește generatorul anterior cu itemi mai dificili. */
-const initialBuild = build;
+  /* Opțiune vizibilă înainte de începerea testului. */
+  const setting = document.createElement("label");
+  setting.className = "option";
+  setting.innerHTML = `
+    <input id="anti-copy-enabled" type="checkbox" checked>
+    <span>Anticopiere: monitorizează părăsirea paginii
+      și blochează copierea/lipirea în test</span>
+  `;
+  $("start").insertBefore(setting, $("start").querySelector(".actions"));
 
-build = function(v) {
-  const q = initialBuild(v);
-  const loc = scenes[v - 1];
-  const r = rng(v * 104729);
-  const get = id => q.find(item => item.id === id);
+  const explanation = document.createElement("p");
+  explanation.className = "muted";
+  explanation.style.fontSize = "14px";
+  explanation.textContent =
+    "Părăsirile paginii se înregistrează în PDF, pentru itemul afișat. " +
+    "Răspunsurile respective vor fi marcate cu roșu. " +
+    "Monitorizarea nu modifică automat punctajul.";
+  setting.after(explanation);
 
-  function multi(id, prompt, value) {
-    Object.assign(get(id), {
-      prompt,
-      answer: fmt(value),
-      options: shuffle(
-        [value, value * 10, value * 100, value / 10].map(fmt),
-        r
-      )
-    });
-  }
-
-  function pairs(id, prompt, rows) {
-    Object.assign(get(id), {
-      prompt,
-      left: rows.map(row => row[0]),
-      answer: rows.map(row => row[1]),
-      options: shuffle(rows.map(row => row[1]), r)
-    });
-  }
-
-  /* Exact 10 itemi de transformare în SI. */
-  let x = (1743 + 37 * v) / 10;
-  multi(
-    0,
-    `În ${loc}, un cablu are ${fmt(x)} cm.
-     Alege valoarea lungimii în metri.`,
-    x / 100
-  );
-
-  x = (38765 + 137 * v) / 10;
-  multi(
-    1,
-    `În ${loc}, masa unui recipient este ${fmt(x)} g.
-     Alege valoarea masei în kilograme.`,
-    x / 1000
-  );
-
-  const minutes = 12 + v;
-  const seconds = 17 + v;
-  multi(
-    2,
-    `În ${loc}, o măsurare durează ${minutes} minute
-     și ${seconds} secunde. Alege durata în secunde.`,
-    minutes * 60 + seconds
-  );
-
-  x = (43217 + 113 * v) / 10;
-  Object.assign(get(3), {
-    prompt:
-      `În ${loc}, ${fmt(x)} mm reprezintă
-       ${fmt(x / (v % 2 ? 1000 : 100))} m.`,
-    answer: v % 2 ? "Adevărat" : "Fals"
-  });
-
-  x = (8731 + 97 * v) / 10;
-  Object.assign(get(4), {
-    prompt:
-      `În ${loc}, ${fmt(x)} cm² reprezintă
-       ${fmt(x / (v % 2 ? 100 : 10000))} m².`,
-    answer: v % 2 ? "Fals" : "Adevărat"
-  });
-
-  pairs(
-    5,
-    `Asociază lungimile din ${loc} cu valorile în metri.`,
-    [
-      [
-        `${fmt((2467 + 31 * v) / 10)} cm`,
-        fmt((2467 + 31 * v) / 1000)
-      ],
-      [
-        `${fmt((58731 + 127 * v) / 10)} mm`,
-        fmt((58731 + 127 * v) / 10000)
-      ],
-      [
-        `${fmt((173 + 11 * v) / 100)} km`,
-        fmt((173 + 11 * v) * 10)
-      ]
-    ]
-  );
-
-  pairs(
-    6,
-    `Asociază duratele din ${loc} cu valorile în secunde.`,
-    [
-      [
-        `${fmt((173 + 13 * v) / 10)} min`,
-        fmt((173 + 13 * v) * 6)
-      ],
-      [
-        `${fmt((127 + 7 * v) / 100)} h`,
-        fmt((127 + 7 * v) * 36)
-      ],
-      [
-        `${fmt((4371 + 53 * v) / 10)} ms`,
-        fmt((4371 + 53 * v) / 10000)
-      ]
-    ]
-  );
-
-  x = (176543 + 211 * v) / 10;
-  Object.assign(get(7), {
-    prompt:
-      `În ${loc}, un volum este ${fmt(x)} cm³.
-       Completează valoarea în m³.`,
-    answer: x / 1e6
-  });
-
-  x = (3871 + 43 * v) / 100;
-  Object.assign(get(8), {
-    prompt:
-      `În ${loc}, o suprafață este ${fmt(x)} dm².
-       Completează valoarea în m².`,
-    answer: x / 100
-  });
-
-  x = (276543 + 317 * v) / 10;
-  Object.assign(get(9), {
-    prompt:
-      `În ${loc}, masa unui eșantion este ${fmt(x)} mg.
-       Completează valoarea în kg.`,
-    answer: x / 1e6
-  });
-
-  /* Calcule suplimentare fără transformări în SI. */
-  const a = (1731 + 19 * v) / 10;
-  const b = (1743 + 19 * v) / 10;
-  const c = (1757 + 19 * v) / 10;
-
-  Object.assign(get(17), {
-    prompt:
-      `În ${loc}, trei măsurări ale lungimii dau
-       ${fmt(a)} cm, ${fmt(b)} cm și ${fmt(c)} cm.
-       Calculează media aritmetică în cm.
-       Rotunjește la două zecimale.`,
-    answer: Number(((a + b + c) / 3).toFixed(2))
-  });
-
-  const divisions = 8 + v;
-  const length = divisions * (17 + v) / 10;
-
-  Object.assign(get(18), {
-    prompt:
-      `În ${loc}, între marcajele 0 cm și ${fmt(length)} cm
-       ale unei rigle sunt ${divisions} intervale egale.
-       Calculează valoarea unei diviziuni în cm.`,
-    answer: (17 + v) / 10
-  });
-
-  /*
-    Ordine amestecată, apoi decalată după catalog.
-    Variantele consecutive nu au aceeași familie de item
-    pe aceeași poziție. Enunțurile și datele diferă între elevi.
-  */
-  const order = shuffle(
-    Array.from({ length: 20 }, (_, i) => i),
-    rng(20261008)
-  );
-
-  return order.map((_, i) => get(order[(i + v - 1) % 20]));
-};
-
-/* Interfață: numai înainte. */
-const originalRender = render;
-
-render = function() {
-  originalRender();
-
-  $("previous").hidden = true;
-  $("navigation").hidden = true;
-
-  const navigationHint = $("navigation").nextElementSibling;
-  if (navigationHint) navigationHint.hidden = true;
-
-  const last = current === questions.length - 1;
-  $("next").hidden = last;
-  $("next").textContent = "Confirmă răspunsul și continuă";
-  $("finish").hidden = !last;
-
-  /* Literele urmăresc ordinea reală a variantelor de răspuns. */
-  if (questions[current].type === "mc") {
-    $("question").querySelectorAll(".option span")
-      .forEach((span, i) => {
-        span.textContent =
-          `${String.fromCharCode(97 + i)}) ${span.textContent}`;
-      });
-  }
-
-  const warning = document.createElement("p");
+  /* Avertizare în pagină, fără ferestre native care pierd focalizarea. */
+  const warning = document.createElement("div");
+  warning.hidden = true;
   warning.className = "note";
-  warning.textContent =
-    "Verifică răspunsul înainte de a continua. " +
-    "După trecerea la itemul următor, nu mai poți reveni.";
-  $("question").appendChild(warning);
-};
+  warning.style.cssText =
+    "border:2px solid #b42318;background:#fff0ee;" +
+    "color:#8b1e16;margin-bottom:20px";
+  warning.setAttribute("role", "alert");
+  warning.innerHTML = `
+    <p id="screen-warning-text"></p>
+    <button type="button" id="acknowledge-screen-warning">
+      Am înțeles
+    </button>
+  `;
+  $("exam").prepend(warning);
 
-/* Dezactivează vechile acțiuni de revenire. */
-$("previous").onclick = null;
-$("navigation").onclick = null;
+  const inlineError = document.createElement("p");
+  inlineError.className = "error";
+  inlineError.setAttribute("role", "alert");
+  $("question").after(inlineError);
 
-function validCurrentAnswer() {
-  const q = questions[current];
+  class ScreenLog {
+    constructor() { this.reset(false); }
 
-  if (!answered(q)) {
-    alert("Completează răspunsul înainte de a continua.");
-    return false;
+    reset(enabled) {
+      this.enabled = enabled;
+      this.items = {};
+      this.open = null;
+    }
+
+    leave(id, reason, epoch, tick) {
+      if (!this.enabled) return;
+
+      /* Blur și visibilitychange pot descrie aceeași părăsire. */
+      if (this.open) {
+        if (!this.open.reasons.includes(reason))
+          this.open.reasons.push(reason);
+        return;
+      }
+
+      const event = {
+        start: epoch,
+        tick,
+        end: null,
+        seconds: null,
+        reasons: [reason]
+      };
+
+      (this.items[id] ??= []).push(event);
+      this.open = event;
+    }
+
+    back(epoch, tick) {
+      if (!this.open) return;
+      this.open.end = epoch;
+      this.open.seconds = Math.max(0, (tick - this.open.tick) / 1000);
+      this.open = null;
+    }
   }
 
-  if (q.type === "fill" && typeof q.answer === "number") {
-    if (!Number.isFinite(numeric(answers[q.id]))) {
-      alert(
-        "Introdu numai un număr, fără unitate. " +
-        "Poți folosi virgulă sau punct zecimal."
-      );
+  const screenLog = new ScreenLog();
+  let acknowledgementRequired = false;
+
+  function monitoringActive() {
+    return screenLog.enabled &&
+      questions.length > 0 &&
+      !finalized &&
+      !$("exam").hidden;
+  }
+
+  function leaveScreen(reason) {
+    if (!monitoringActive()) return;
+
+    screenLog.leave(
+      questions[current].id,
+      reason,
+      Date.now(),
+      performance.now()
+    );
+
+    acknowledgementRequired = true;
+    warning.hidden = false;
+    $("screen-warning-text").textContent =
+      `Atenție! Ai părăsit pagina testului la itemul ${current + 1}. ` +
+      "Evenimentul este înregistrat. Revino în pagină pentru a continua.";
+    $("acknowledge-screen-warning").disabled = true;
+    $("question").inert = true;
+  }
+
+  function returnToScreen() {
+    if (!monitoringActive() || document.hidden || !document.hasFocus())
+      return;
+
+    const event = screenLog.open;
+    screenLog.back(Date.now(), performance.now());
+    $("question").inert = false;
+
+    if (event) {
+      warning.hidden = false;
+      $("screen-warning-text").textContent =
+        "Ai revenit în pagina testului. " +
+        `Absență înregistrată: ${fmt(event.seconds)} secunde. ` +
+        "Răspunsul acestui item va apărea cu roșu în PDF.";
+    }
+
+    $("acknowledge-screen-warning").disabled = false;
+  }
+
+  window.addEventListener("blur", () =>
+    leaveScreen("Fereastra a pierdut focalizarea"));
+
+  window.addEventListener("focus", returnToScreen);
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden)
+      leaveScreen("Pagina a devenit ascunsă");
+    else
+      returnToScreen();
+  });
+
+  $("acknowledge-screen-warning").onclick = () => {
+    if (document.hidden || !document.hasFocus() || screenLog.open) return;
+    acknowledgementRequired = false;
+    warning.hidden = true;
+    inlineError.textContent = "";
+    $("question").inert = false;
+  };
+
+  /* Inițializare înaintea handlerului existent de pornire. */
+  $("start").addEventListener("submit", () => {
+    const v = Number($("catalog").value);
+    if (!Number.isInteger(v) || v < 1 || v > 30) return;
+
+    screenLog.reset($("anti-copy-enabled").checked);
+    acknowledgementRequired = false;
+    warning.hidden = true;
+    inlineError.textContent = "";
+    $("question").inert = false;
+  }, true);
+
+  /* Limitări locale de copiere; nu reprezintă protecție absolută. */
+  ["copy", "cut", "paste", "contextmenu"].forEach(eventName => {
+    $("exam").addEventListener(eventName, event => {
+      if (!monitoringActive()) return;
+      event.preventDefault();
+      inlineError.textContent =
+        "Copierea, lipirea și meniul contextual sunt dezactivate în test.";
+    }, true);
+  });
+
+  $("exam").addEventListener("keydown", event => {
+    if (!monitoringActive()) return;
+    if ((event.ctrlKey || event.metaKey) &&
+        ["c", "x", "v"].includes(event.key.toLowerCase())) {
+      event.preventDefault();
+      inlineError.textContent =
+        "Copierea și lipirea sunt dezactivate în test.";
+    }
+  }, true);
+
+  function canProceed() {
+    inlineError.textContent = "";
+
+    if (screenLog.open || acknowledgementRequired) {
+      inlineError.textContent =
+        "Revino în pagină și confirmă avertizarea înainte de a continua.";
       return false;
     }
-  }
 
-  return true;
-}
-
-$("next").onclick = () => {
-  if (finalized || !validCurrentAnswer()) return;
-  if (current >= questions.length - 1) return;
-  current++;
-  render();
-};
-
-/* La final se verifică și completarea ultimului item. */
-const originalFinish = $("finish").onclick;
-
-$("finish").onclick = () => {
-  if (finalized || !validCurrentAnswer()) return;
-  originalFinish();
-};
-
-/* Actualizează instrucțiunile de pe pagina de început. */
-const introNote = $("intro").querySelector(".note");
-introNote.textContent =
-  "Folosește ciorna pentru calcule. Poți modifica răspunsul doar " +
-  "la itemul afișat. După confirmare, treci înainte și nu mai " +
-  "poți reveni. Nu reîncărca pagina: progresul se pierde.";
-
-/* Elimină instrucțiunea veche despre revenire. */
-$("intro").querySelectorAll("p").forEach(p => {
-  if (p.textContent.includes("Poți reveni la orice întrebare"))
-    p.textContent =
-      "Verifică fiecare răspuns înainte de a trece la itemul următor.";
-});
-
-/* Verificări pentru generatorul actualizat. */
-if (new URLSearchParams(location.search).has("verificare")) {
-  try {
-    const report = runChecks();
-    const all = Array.from({ length: 30 }, (_, i) => build(i + 1));
-
-    for (let v = 0; v < 29; v++) {
-      for (let position = 0; position < 20; position++) {
-        if (all[v][position].id === all[v + 1][position].id) {
-          throw Error(
-            `Variantele ${v + 1} și ${v + 2} au aceeași familie ` +
-            `de item la poziția ${position + 1}.`
-          );
-        }
-      }
+    const q = questions[current];
+    if (!answered(q)) {
+      inlineError.textContent =
+        "Completează răspunsul înainte de a continua.";
+      return false;
     }
 
-    $("check-output").textContent =
-      report +
-      "\nOK: variantele consecutive au familii diferite " +
-      "la fiecare poziție.";
-  } catch (error) {
-    $("check-output").textContent = "EROARE: " + error.message;
+    if (q.type === "fill" &&
+        typeof q.answer === "number" &&
+        !Number.isFinite(numeric(answers[q.id]))) {
+      inlineError.textContent =
+        "Introdu numai un număr, fără unitate. " +
+        "Poți folosi virgulă sau punct zecimal.";
+      return false;
+    }
+    return true;
   }
-}
+
+  /* Evită avertizările native din vechiul handler. */
+  $("next").addEventListener("click", event => {
+    if (!canProceed()) {
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+  }, true);
+
+  /*
+    Finalizare directă: fără confirm() care ar putea genera
+    artificial un eveniment de pierdere a focalizării.
+  */
+  $("finish").textContent = "Finalizează definitiv testul";
+  $("finish").onclick = () => {
+    if (finalized || !canProceed()) return;
+
+    finalized = true;
+    finishedAt = new Date();
+    warning.hidden = true;
+    $("question").inert = false;
+
+    const total = totalPoints();
+    const grade = 1 + 9 * total / 20;
+    const count = Object.values(screenLog.items)
+      .reduce((sum, events) => sum + events.length, 0);
+
+    $("exam").hidden = true;
+    $("results").hidden = false;
+    $("result-identity").textContent =
+      `${studentName} · Număr în catalog: ${variant} · ` +
+      finishedAt.toLocaleString("ro-RO");
+
+    $("grade").textContent =
+      `Nota ${grade.toFixed(2).replace(".", ",")}`;
+
+    $("points").textContent =
+      `${total.toFixed(2).replace(".", ",")} puncte din 20. ` +
+      (screenLog.enabled
+        ? `Părăsiri ale paginii înregistrate: ${count}.`
+        : "Monitorizarea anticopiere a fost dezactivată.");
+
+    $("review").innerHTML = questions.map((q, i) => {
+      const events = screenLog.items[q.id] || [];
+      const points = score(q, answers[q.id]);
+      const departure = events.length
+        ? events.map(event =>
+            `${new Date(event.start).toLocaleString("ro-RO")} · ` +
+            `${fmt(event.seconds ?? 0)} s`
+          ).join("; ")
+        : screenLog.enabled ? "Nicio părăsire" : "Monitorizare oprită";
+
+      return `
+        <article class="review">
+          <h3>${i + 1}. ${escapeHTML(q.prompt)}</h3>
+          <div>Punctaj: ${points.toFixed(2).replace(".", ",")} / 1</div>
+          <div ${events.length ? 'style="color:#b42318"' : ""}>
+            Răspunsul elevului:
+            ${escapeHTML(answerText(q, answers[q.id]))}
+          </div>
+          <div>Barem: ${escapeHTML(answerText(q, q.answer))}</div>
+          <div>Părăsirea paginii: ${escapeHTML(departure)}</div>
+        </article>`;
+    }).join("");
+
+    $("result-heading").focus();
+  };
+
+  /* PDF tabelar, font Courier pentru împachetare precisă. */
+  const PDF_FONT_SIZE = 8.5;
+  const PDF_LINE_HEIGHT = 11;
+  const PDF_LEFT = 40;
+  const PDF_BOTTOM = 45;
+  const PDF_WIDTHS = [230, 100, 45, 140];
+
+  function pdfText(x, y, value, red = false, size = PDF_FONT_SIZE) {
+    return [
+      red ? "0.72 0.08 0.08 rg" : "0 0 0 rg",
+      `BT /F1 ${size} Tf ${x} ${y} Td`,
+      `(${pdfLiteral(ascii(value))}) Tj ET`
+    ].join("\n");
+  }
+
+  function columnLines(text, column) {
+    /* Courier: lățimea unui caracter = 0,6 × mărimea fontului. */
+    const chars = Math.floor(
+      (PDF_WIDTHS[column] - 10) / (PDF_FONT_SIZE * 0.6)
+    );
+    return String(text).split("\n")
+      .flatMap(line => wrap(line, chars));
+  }
+
+  function departureText(q, itemNumber) {
+    if (!screenLog.enabled) return "Monitorizare oprită";
+    const events = screenLog.items[q.id] || [];
+    if (!events.length) return "Nicio părăsire";
+
+    return events.map((event, i) => [
+      `Item ${itemNumber}, ieșire ${i + 1}`,
+      new Date(event.start).toLocaleString("ro-RO"),
+      `Durată: ${fmt(event.seconds ?? 0)} s`,
+      `Motiv: ${event.reasons.join("; ")}`
+    ].join("\n")).join("\n\n");
+  }
+
+  function questionForPDF(q, index) {
+    let text = `${index + 1}. ${q.prompt}`;
+
+    if (q.type === "mc" || q.type === "tf") {
+      text += "\n" + q.options.map((option, i) =>
+        `${String.fromCharCode(97 + i)}) ${option}` +
+        (choiceUnit(q) ? " " + choiceUnit(q) : "")
+      ).join("; ");
+    } else if (q.type === "pair") {
+      text += "\nColoana A: " + q.left.join("; ");
+      text += "\nColoana B: " + q.options.join("; ");
+    }
+    return text;
+  }
+
+  reportPages = function() {
+    const pages = [];
+    let commands = [];
+    let y = 0;
+
+    function drawRow(columns, height, redAnswer = false) {
+      let x = PDF_LEFT;
+
+      columns.forEach((lines, column) => {
+        commands.push(
+          `0.65 0.7 0.75 RG 0.5 w ` +
+          `${x} ${y - height} ${PDF_WIDTHS[column]} ${height} re S`
+        );
+
+        lines.forEach((line, i) => {
+          commands.push(pdfText(
+            x + 5,
+            y - 13 - i * PDF_LINE_HEIGHT,
+            line,
+            column === 1 && redAnswer
+          ));
+        });
+        x += PDF_WIDTHS[column];
+      });
+      y -= height;
+    }
+
+    function newPage() {
+      if (commands.length) pages.push(commands);
+      commands = [];
+      y = 798;
+
+      const total = totalPoints();
+      const header = [
+        "TEST DE FIZICA - CLASA A VII-A",
+        ...wrap(
+          `Elev: ${studentName} | Varianta / catalog: ${variant}`, 95
+        ),
+        `Finalizat: ${finishedAt.toLocaleString("ro-RO")}`,
+        `Punctaj: ${total.toFixed(2)}/20 | ` +
+          `Nota: ${(1 + 9 * total / 20).toFixed(2)}`,
+        screenLog.enabled
+          ? "Anticopiere: activata. Raspuns rosu = parasire la acel item."
+          : "Anticopiere: dezactivata.",
+        "Coloana timp: momentul iesirii si durata absentei.",
+        "Evenimentele nu modifica automat punctajul."
+      ];
+
+      header.forEach(line => {
+        commands.push(pdfText(PDF_LEFT, y, line));
+        y -= PDF_LINE_HEIGHT;
+      });
+      y -= 10;
+
+      drawRow([
+        columnLines("Întrebarea", 0),
+        columnLines("Răspunsul elevului", 1),
+        columnLines("Punctaj", 2),
+        columnLines("Timpul părăsirii paginii", 3)
+      ], 42);
+    }
+
+    newPage();
+
+    questions.forEach((q, index) => {
+      const columns = [
+        columnLines(questionForPDF(q, index), 0),
+        columnLines(answerText(q, answers[q.id]), 1),
+        columnLines(
+          score(q, answers[q.id]).toFixed(2).replace(".", ",") + "/1",
+          2
+        ),
+        columnLines(departureText(q, index + 1), 3)
+      ];
+
+      const length = Math.max(...columns.map(lines => lines.length));
+      const redAnswer = (screenLog.items[q.id] || []).length > 0;
+      let offset = 0;
+
+      /* Împarte rândurile foarte lungi pe pagini, fără a pierde evenimente. */
+      while (offset < length) {
+        const continuation = offset > 0;
+        const available = Math.floor(
+          (y - PDF_BOTTOM - 10) / PDF_LINE_HEIGHT
+        ) - (continuation ? 1 : 0);
+
+        if (available < 1) {
+          newPage();
+          continue;
+        }
+
+        const take = Math.min(available, length - offset);
+        const segment = columns.map(lines =>
+          lines.slice(offset, offset + take)
+        );
+
+        if (continuation) {
+          segment[0].unshift(`Item ${index + 1} (continuare)`);
+          for (let column = 1; column < 4; column++)
+            segment[column].unshift("");
+        }
+
+        const height =
+          (take + (continuation ? 1 : 0)) * PDF_LINE_HEIGHT + 10;
+        drawRow(segment, height, redAnswer);
+        offset += take;
+
+        if (offset < length) newPage();
+      }
+    });
+
+    if (commands.length) pages.push(commands);
+    return pages;
+  };
+
+  makePDF = function(pages) {
+    const objects = ["", "",
+      "<< /Type /Font /Subtype /Type1 /BaseFont /Courier >>"
+    ];
+    const kids = [];
+    const add = value => {
+      objects.push(value);
+      return objects.length;
+    };
+
+    pages.forEach((commands, i) => {
+      const stream = commands.join("\n") + "\n" +
+        pdfText(40, 25, `Pagina ${i + 1}/${pages.length}`);
+
+      const streamId = add(
+        `<< /Length ${stream.length} >>\n` +
+        `stream\n${stream}\nendstream`
+      );
+
+      const pageId = add(
+        "<< /Type /Page /Parent 2 0 R " +
+        "/MediaBox [0 0 595 842] " +
+        "/Resources << /Font << /F1 3 0 R >> >> " +
+        `/Contents ${streamId} 0 R >>`
+      );
+      kids.push(`${pageId} 0 R`);
+    });
+
+    objects[0] = "<< /Type /Catalog /Pages 2 0 R >>";
+    objects[1] =
+      `<< /Type /Pages /Count ${kids.length} ` +
+      `/Kids [${kids.join(" ")}] >>`;
+
+    let data = "%PDF-1.4\n";
+    const offsets = [];
+
+    objects.forEach((object, i) => {
+      offsets.push(data.length);
+      data += `${i + 1} 0 obj\n${object}\nendobj\n`;
+    });
+
+    const xref = data.length;
+    data += `xref\n0 ${objects.length + 1}\n0000000000 65535 f \n`;
+
+    offsets.forEach(offset => {
+      data += `${String(offset).padStart(10, "0")} 00000 n \n`;
+    });
+
+    data +=
+      `trailer\n<< /Size ${objects.length + 1} /Root 1 0 R >>\n` +
+      `startxref\n${xref}\n%%EOF`;
+
+    return new Blob([data], { type: "application/pdf" });
+  };
+})();
 </script>

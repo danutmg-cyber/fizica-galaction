@@ -191,6 +191,123 @@
       margin:14px 0;
     }
     svg{max-width:100%; height:auto; display:block; margin:auto}
+    .lab-grid{
+      display:grid;
+      gap:14px;
+      margin-top:14px;
+    }
+    .lab-panel{
+      background:rgba(20,38,61,.9);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:14px;
+    }
+    .lab-panel h3{margin-bottom:8px}
+    .value-display{
+      color:#67e8f9;
+      font-size:clamp(25px, 6vw, 38px);
+      font-weight:950;
+      text-align:center;
+    }
+    .range-control{
+      width:100%;
+      min-height:42px;
+      accent-color:#22d3ee;
+    }
+    .direction-note{
+      color:#cbd5e1;
+      text-align:center;
+      font-size:clamp(16px, 3.8vw, 21px);
+      font-weight:750;
+    }
+    .measurement-list{
+      display:grid;
+      gap:12px;
+      margin-top:14px;
+    }
+    .measurement{
+      background:rgba(20,38,61,.92);
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:14px;
+    }
+    .measurement.active{
+      border-color:var(--accent);
+      box-shadow:0 0 0 2px rgba(34,211,238,.18);
+    }
+    .measurement-head{
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      justify-content:space-between;
+      gap:8px;
+    }
+    .measurement-head h3{margin:0}
+    .measurement-task{margin:10px 0}
+    .hang-btn,.comma-btn{
+      border:0;
+      border-radius:12px;
+      min-height:46px;
+      padding:9px 13px;
+      font:inherit;
+      font-size:clamp(16px, 3.9vw, 21px);
+      font-weight:900;
+      cursor:pointer;
+    }
+    .hang-btn{background:#164e63;color:#cffafe}
+    .answer-row{
+      display:grid;
+      grid-template-columns:minmax(0, 1fr) auto;
+      gap:8px;
+      align-items:end;
+      margin-top:10px;
+    }
+    .answer-row label{
+      display:grid;
+      gap:5px;
+      color:#e0f2fe;
+      font-size:clamp(15px, 3.5vw, 19px);
+      font-weight:800;
+    }
+    .answer-input{
+      width:100%;
+      min-height:50px;
+      border:2px solid rgba(148,163,184,.48);
+      border-radius:12px;
+      padding:8px 12px;
+      background:#f8fafc;
+      color:#0f172a;
+      font:inherit;
+      font-size:22px;
+    }
+    .comma-btn{
+      background:#facc15;
+      color:#422006;
+      min-width:54px;
+      font-size:25px;
+    }
+    .scale-label{
+      color:#cbd5e1;
+      text-align:center;
+      font-size:clamp(15px, 3.5vw, 19px);
+      font-weight:800;
+    }
+    .measurement-feedback{
+      min-height:1.35em;
+      margin:8px 0 0;
+      font-weight:900;
+    }
+    .visually-hidden{
+      position:absolute;
+      width:1px;
+      height:1px;
+      padding:0;
+      margin:-1px;
+      overflow:hidden;
+      clip:rect(0,0,0,0);
+      white-space:nowrap;
+      border:0;
+    }
     .quick-check{
       display:grid;
       gap:14px;
@@ -318,6 +435,7 @@
       .grid2{grid-template-columns:1fr 1fr}
       .answers{grid-template-columns:1fr 1fr 1fr}
       .answers.two{grid-template-columns:1fr 1fr}
+      .lab-grid{grid-template-columns:1fr 1fr}
     }
   </style>
 </head>
@@ -369,6 +487,46 @@
         <div class="warning">
           Două mărimi pot avea aceeași valoare numerică, dar efecte diferite, dacă au direcții sau sensuri diferite.
         </div>
+      </article>
+    </section>
+
+    <section class="page" data-title="Laborator">
+      <article class="card">
+        <h2>Laborator: scalar sau vector?</h2>
+        <p>Mișcă glisorul și urmărește cum se schimbă <span class="kw">valoarea</span> forței. Masa este scalară; greutatea este o forță vectorială, orientată în jos.</p>
+        <div class="lab-grid">
+          <div class="lab-panel">
+            <h3>Masa – mărime scalară</h3>
+            <p class="direction-note">Masa se descrie prin număr și unitate, fără săgeată.</p>
+            <div class="value-display" id="massReadout" aria-live="polite">1 kg</div>
+            <label for="massSlider">Modifică masa corpului:</label>
+            <input class="range-control" id="massSlider" type="range" min="0.5" max="2" step="0.5" value="1">
+            <div class="direction-note">0,5 kg · 1 kg · 1,5 kg · 2 kg</div>
+          </div>
+          <div class="lab-panel">
+            <h3>Greutatea – mărime vectorială</h3>
+            <p class="direction-note">Lungimea săgeții arată valoarea; vârful arată sensul forței.</p>
+            <div class="svg-wrap">
+              <svg viewBox="0 0 300 290" role="img" aria-labelledby="weightTitle weightDesc">
+                <title id="weightTitle">Vectorul greutății corpului</title>
+                <desc id="weightDesc">Săgeată orientată în jos. Lungimea ei crește când masa corpului crește.</desc>
+                <defs>
+                  <marker id="weightArrowHead" markerWidth="12" markerHeight="12" refX="6" refY="6" orient="auto">
+                    <path d="M0,0 L12,6 L0,12 z" fill="#67e8f9"/>
+                  </marker>
+                </defs>
+                <rect x="121" y="20" width="58" height="42" rx="8" fill="#facc15" stroke="#fef3c7" stroke-width="3"/>
+                <text x="150" y="48" text-anchor="middle" fill="#422006" font-size="21" font-weight="900">corp</text>
+                <g id="weightArrow" transform="translate(150 70) scale(1 0.5)" style="transition:transform .35s ease">
+                  <line x1="0" y1="0" x2="0" y2="145" stroke="#67e8f9" stroke-width="9" marker-end="url(#weightArrowHead)"/>
+                </g>
+                <text x="150" y="265" text-anchor="middle" fill="#f8fafc" font-size="25" font-weight="900" id="forceReadout">F<tspan baseline-shift="sub" font-size="17">g</tspan> = 10 N</text>
+              </svg>
+            </div>
+            <div class="direction-note">Direcție: verticală · sens: în jos · \(g \approx 10\,\text{N/kg}\)</div>
+          </div>
+        </div>
+        <div class="notice">Observă: când masa se dublează, se dublează și valoarea greutății. Săgeata rămâne orientată în jos, dar devine mai lungă.</div>
       </article>
     </section>
 
@@ -450,6 +608,67 @@
       </article>
     </section>
 
+    <section class="page" data-title="Fișă de lucru">
+      <article class="card">
+        <h2>Fișă de lucru: citește dinamometrul</h2>
+        <p>Atârnă pe rând fiecare masă. Citește forța pe scară și introdu valoarea în <span class="kw">newtoni (N)</span>. Folosește \(g \approx 10\,\text{N/kg}\).</p>
+        <p class="warning">La ultima măsurare, masa este dată în grame: transform-o mai întâi în kilograme. Pentru zecimale poți folosi virgula sau punctul.</p>
+
+        <div class="lab-panel">
+          <h3 id="activeMassLabel" aria-live="polite">Alege o masă pentru a începe.</h3>
+          <svg viewBox="0 0 360 340" role="img" aria-labelledby="scaleTitle scaleDescription">
+            <title id="scaleTitle">Dinamometru cu arc și scară gradată</title>
+            <desc id="scaleDescription">Scara este gradată în newtoni. Indicatorul se deplasează când este agățată o masă.</desc>
+            <rect x="48" y="12" width="264" height="240" rx="18" fill="#0f172a" stroke="#94a3b8" stroke-width="4"/>
+            <rect x="72" y="29" width="216" height="207" rx="10" fill="#172b42"/>
+            <text x="87" y="52" fill="#bae6fd" font-size="17" font-weight="900">N</text>
+            <g id="dynamometerTicks"></g>
+            <line id="dynamometerPointer" x1="100" y1="65" x2="255" y2="65" stroke="#fb7185" stroke-width="5"/>
+            <polygon id="dynamometerPointerHead" points="255,56 273,65 255,74" fill="#fb7185"/>
+            <line x1="180" y1="252" x2="180" y2="270" stroke="#cbd5e1" stroke-width="5"/>
+            <path d="M180 270 C155 277,205 284,180 291 C155 298,205 305,180 312" fill="none" stroke="#67e8f9" stroke-width="5"/>
+            <path d="M180 312 L180 318" stroke="#67e8f9" stroke-width="5"/>
+            <rect x="151" y="318" width="58" height="20" rx="8" fill="#facc15" stroke="#fef3c7" stroke-width="3"/>
+          </svg>
+          <div class="scale-label" id="scaleRangeLabel">Scară: selectează o masă.</div>
+        </div>
+
+        <div class="measurement-list">
+          <div class="measurement" data-force="1" data-range="2" data-mass="100 g">
+            <div class="measurement-head"><h3>Măsurarea 1 – Încălzire</h3><button class="hang-btn" type="button" onclick="hangMass(this)">Atârnă masa: 100 g</button></div>
+            <p class="measurement-task">Citește indicația dinamometrului și notează forța în N.</p>
+            <div class="answer-row"><label>Forța (N)<input class="answer-input" type="text" inputmode="decimal" autocomplete="off" aria-label="Răspunsul pentru măsurarea 1, în newtoni"></label><button class="comma-btn" type="button" aria-label="Inserează virgulă" onclick="insertComma(this)">,</button></div>
+            <button class="small-btn check" type="button" onclick="checkMeasurement(this)">Verifică</button><p class="measurement-feedback" aria-live="polite"></p>
+          </div>
+          <div class="measurement" data-force="5" data-range="10" data-mass="500 g">
+            <div class="measurement-head"><h3>Măsurarea 2 – Exersare</h3><button class="hang-btn" type="button" onclick="hangMass(this)">Atârnă masa: 500 g</button></div>
+            <p class="measurement-task">Citește indicația dinamometrului și notează forța în N.</p>
+            <div class="answer-row"><label>Forța (N)<input class="answer-input" type="text" inputmode="decimal" autocomplete="off" aria-label="Răspunsul pentru măsurarea 2, în newtoni"></label><button class="comma-btn" type="button" aria-label="Inserează virgulă" onclick="insertComma(this)">,</button></div>
+            <button class="small-btn check" type="button" onclick="checkMeasurement(this)">Verifică</button><p class="measurement-feedback" aria-live="polite"></p>
+          </div>
+          <div class="measurement" data-force="12" data-range="20" data-mass="1,2 kg">
+            <div class="measurement-head"><h3>Măsurarea 3 – Atenție la scară</h3><button class="hang-btn" type="button" onclick="hangMass(this)">Atârnă masa: 1,2 kg</button></div>
+            <p class="measurement-task">Citește indicația dinamometrului și notează forța în N.</p>
+            <div class="answer-row"><label>Forța (N)<input class="answer-input" type="text" inputmode="decimal" autocomplete="off" aria-label="Răspunsul pentru măsurarea 3, în newtoni"></label><button class="comma-btn" type="button" aria-label="Inserează virgulă" onclick="insertComma(this)">,</button></div>
+            <button class="small-btn check" type="button" onclick="checkMeasurement(this)">Verifică</button><p class="measurement-feedback" aria-live="polite"></p>
+          </div>
+          <div class="measurement" data-force="25" data-range="50" data-mass="2,5 kg">
+            <div class="measurement-head"><h3>Măsurarea 4 – Forță mai mare</h3><button class="hang-btn" type="button" onclick="hangMass(this)">Atârnă masa: 2,5 kg</button></div>
+            <p class="measurement-task">Citește indicația dinamometrului și notează forța în N.</p>
+            <div class="answer-row"><label>Forța (N)<input class="answer-input" type="text" inputmode="decimal" autocomplete="off" aria-label="Răspunsul pentru măsurarea 4, în newtoni"></label><button class="comma-btn" type="button" aria-label="Inserează virgulă" onclick="insertComma(this)">,</button></div>
+            <button class="small-btn check" type="button" onclick="checkMeasurement(this)">Verifică</button><p class="measurement-feedback" aria-live="polite"></p>
+          </div>
+          <div class="measurement" data-force="12.5" data-range="25" data-mass="1250 g">
+            <div class="measurement-head"><h3>Măsurarea 5 – Provocarea submultiplilor</h3><button class="hang-btn" type="button" onclick="hangMass(this)">Atârnă masa: 1250 g</button></div>
+            <p class="measurement-task">Transformă masa din grame în kilograme, apoi citește forța în N. Scrie rezultatul cu o zecimală.</p>
+            <div class="answer-row"><label>Forța (N)<input class="answer-input" type="text" inputmode="decimal" autocomplete="off" aria-label="Răspunsul pentru măsurarea 5, în newtoni"></label><button class="comma-btn" type="button" aria-label="Inserează virgulă" onclick="insertComma(this)">,</button></div>
+            <button class="small-btn check" type="button" onclick="checkMeasurement(this)">Verifică</button><p class="measurement-feedback" aria-live="polite"></p>
+          </div>
+        </div>
+        <div class="notice" id="measurementScore" aria-live="polite">Măsurători corecte: 0 din 5</div>
+      </article>
+    </section>
+
     <section class="page" data-title="Verificare">
       <article class="card">
         <h2>Verificare rapidă</h2>
@@ -525,6 +744,97 @@
   const pageCounter = document.getElementById('pageCounter');
   let current = 0;
 
+  function updateSimulation(){
+    const mass = Number(document.getElementById('massSlider').value);
+    const force = mass * 10;
+    document.getElementById('massReadout').textContent = mass.toLocaleString('ro-RO') + ' kg';
+    document.getElementById('forceReadout').firstChild.textContent = 'F';
+    document.getElementById('forceReadout').lastChild.textContent = ' = ' + force.toLocaleString('ro-RO') + ' N';
+    document.getElementById('weightArrow').setAttribute('transform', 'translate(150 70) scale(1 ' + (mass / 2) + ')');
+  }
+
+  function hangMass(button){
+    const measurement = button.closest('.measurement');
+    const force = Number(measurement.dataset.force);
+    const maxForce = Number(measurement.dataset.range);
+    const scaleTop = 65;
+    const scaleBottom = 220;
+    const ticks = document.getElementById('dynamometerTicks');
+    ticks.replaceChildren();
+
+    for(let i = 0; i <= 10; i++){
+      const y = scaleTop + (scaleBottom - scaleTop) * i / 10;
+      const tick = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      tick.setAttribute('x1', i % 2 === 0 ? '225' : '235');
+      tick.setAttribute('x2', '250');
+      tick.setAttribute('y1', String(y));
+      tick.setAttribute('y2', String(y));
+      tick.setAttribute('stroke', '#cbd5e1');
+      tick.setAttribute('stroke-width', '2');
+      ticks.appendChild(tick);
+
+      if(i % 2 === 0){
+        const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        label.setAttribute('x', '215');
+        label.setAttribute('y', String(y + 5));
+        label.setAttribute('text-anchor', 'end');
+        label.setAttribute('fill', '#f8fafc');
+        label.setAttribute('font-size', '15');
+        label.textContent = String(maxForce * i / 10).replace('.', ',');
+        ticks.appendChild(label);
+      }
+    }
+
+    const pointerY = scaleTop + (scaleBottom - scaleTop) * force / maxForce;
+    document.getElementById('dynamometerPointer').setAttribute('y1', String(pointerY));
+    document.getElementById('dynamometerPointer').setAttribute('y2', String(pointerY));
+    document.getElementById('dynamometerPointerHead').setAttribute('points', '255,' + (pointerY - 9) + ' 273,' + pointerY + ' 255,' + (pointerY + 9));
+    document.getElementById('activeMassLabel').textContent = 'Masa atârnată: ' + measurement.dataset.mass;
+    document.getElementById('scaleRangeLabel').textContent = 'Scară: 0–' + maxForce + ' N · fiecare diviziune mare = ' + (maxForce / 5).toLocaleString('ro-RO') + ' N';
+    document.querySelectorAll('.measurement').forEach(item => item.classList.toggle('active', item === measurement));
+  }
+
+  function insertComma(button){
+    const input = button.parentElement.querySelector('.answer-input');
+    const start = input.selectionStart === null ? input.value.length : input.selectionStart;
+    const end = input.selectionEnd === null ? input.value.length : input.selectionEnd;
+    input.setRangeText(',', start, end, 'end');
+    input.focus();
+  }
+
+  function checkMeasurement(button){
+    const measurement = button.closest('.measurement');
+    const input = measurement.querySelector('.answer-input');
+    const feedback = measurement.querySelector('.measurement-feedback');
+    const normalized = input.value.trim().replace(/\s/g, '').replace(',', '.');
+
+    if(!normalized){
+      feedback.textContent = 'Scrie mai întâi valoarea citită.';
+      feedback.className = 'measurement-feedback bad';
+      return;
+    }
+
+    const value = Number(normalized);
+    if(!Number.isFinite(value)){
+      feedback.textContent = 'Introdu un număr valid; poți folosi virgula sau punctul.';
+      feedback.className = 'measurement-feedback bad';
+      return;
+    }
+
+    if(Math.abs(value - Number(measurement.dataset.force)) <= 0.05){
+      feedback.textContent = 'Corect! Ai citit bine dinamometrul.';
+      feedback.className = 'measurement-feedback good';
+      measurement.dataset.correct = 'true';
+    } else {
+      feedback.textContent = 'Mai verifică poziția indicatorului și unitatea N.';
+      feedback.className = 'measurement-feedback bad';
+      delete measurement.dataset.correct;
+    }
+
+    const correctCount = document.querySelectorAll('.measurement[data-correct="true"]').length;
+    document.getElementById('measurementScore').textContent = 'Măsurători corecte: ' + correctCount + ' din 5';
+  }
+
   function updatePage(){
     pages.forEach((p, i) => p.classList.toggle('active', i === current));
     topBanner.style.display = current === 0 ? 'block' : 'none';
@@ -593,6 +903,8 @@
     if(event.key === 'ArrowLeft') prevPage();
   });
 
+  document.getElementById('massSlider').addEventListener('input', updateSimulation);
+  updateSimulation();
   updatePage();
 </script>
 </body>

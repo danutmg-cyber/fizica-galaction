@@ -79,8 +79,9 @@ function numeric(build) {
     const offset = previous < 0 ? 0 : 1;
     const index = (previous + 1 + Math.floor(Math.random() * (dataSets.length - offset))) % dataSets.length;
     previous = index;
-    const [prompt, result, unit, explanation] = build(dataSets[index]);
-    const choices = [result, result + 1, result + 2, result + 3].map(value => format(value, unit));
+    const [prompt, result, unit, explanation, alternatives = []] = build(dataSets[index]);
+    const values = [result, ...alternatives, result + 1, result - 1, result + 2, result + 3];
+    const choices = [...new Set(values.map(value => format(value, unit)))].slice(0, 4);
     return [prompt, choices, 0, explanation];
   };
 }
@@ -160,6 +161,48 @@ const missions = [
     ["Un tren merge drept cu viteză constantă. Care este accelerația medie?", ["0 m/s²", "1 m/s²", "Egală cu viteza", "Depinde doar de durată"], 0, "Viteza rămâne aceeași, deci variația ei este zero."]
   ]]
 ];
+const practice = [
+  [
+    ["Un tren trece complet printr-un tunel. Pentru a calcula durata de la intrarea locomotivei până la ieșirea ultimului vagon, ce trebuie să cunoști, pe lângă viteză?", ["Lungimile trenului și tunelului", "Doar lungimea tunelului", "Doar lungimea trenului", "Numărul locurilor din tren"], 0, "Locomotiva trebuie să parcurgă lungimea tunelului plus lungimea trenului pentru ca și ultimul vagon să iasă."],
+    ["Două biciclete merg alături, drept, cu aceeași viteză și în același sens. Cum este una față de cealaltă?", ["În mișcare accelerată", "În repaus", "În mișcare în sens opus", "Depinde de lungimea drumului"], 1, "Distanța și poziția relativă dintre biciclete rămân constante."],
+    ["Ce informație lipsește din afirmația «Mingea se află la 3 m» ca să putem indica poziția pe o axă?", ["Masa mingii", "Durata deplasării", "Reperul și direcția față de acesta", "Unitatea vitezei"], 2, "Pentru poziție contează de unde măsurăm și în ce direcție."]
+  ],
+  [
+    ["Un alergător trece de două ori prin același punct și este mereu în mișcare între treceri. Ce poți deduce?", ["A parcurs o distanță mai mare decât zero", "A stat pe loc tot timpul", "A avut neapărat viteză constantă", "A mers obligatoriu în linie dreaptă"], 0, "Revenirea la aceeași poziție nu anulează lungimea traseului."],
+    ["O roată de bicicletă se rostogolește. Față de ce reper un punct de pe jantă descrie un cerc?", ["Față de sol", "Față de centrul roții", "Față de un copac", "Față de punctul de plecare de pe sol"], 1, "Punctul rămâne la distanță constantă de centrul roții."]
+  ],
+  [
+    numeric(({ start }) => [`Câte secunde înseamnă ${start} min?`, start * 60, "s", "Un minut are 60 s. Înmulțești numărul de minute cu 60.", [start, start * 100, start * 3600]]),
+    numeric(({ start }) => [`Câte secunde înseamnă ${numberFormat.format(start / 2)} h?`, start * 1800, "s", "O oră are 3 600 s. Înmulțești valoarea în ore cu 3 600.", [start * 30, start * 3600, start * 180]]),
+    numeric(({ start }) => [`Câte secunde înseamnă 1 h și ${start} min?`, 3600 + start * 60, "s", "Transformi ora în 3 600 s și minutele în secunde, apoi aduni.", [3600 + start, 60 + start * 60, start * 60]]),
+    numeric(({ start }) => [`Transformă 2 h, ${start} min și 15 s în secunde.`, 7215 + start * 60, "s", `2 × 3 600 + ${start} × 60 + 15 = ${7215 + start * 60} s.`, [7215 + start, 7200 + start * 60, 135 + start * 60]]),
+    numeric(({ start }) => [`Transformă ${numberFormat.format(start / 10)} km în metri.`, start * 100, "m", "Un kilometru are 1 000 m. Înmulțești numărul de kilometri cu 1 000.", [start * 10, start * 1000, start]]),
+    numeric(({ start }) => [`Traseul are 1 km și ${start * 10} m. Câți metri are în total?`, 1000 + start * 10, "m", "Transformi 1 km în 1 000 m și aduni segmentul exprimat deja în metri.", [100 + start * 10, start * 10, 1000 + start]]),
+    numeric(({ start }) => [`Un elev pleacă la cronometrul de 1 min și ${start} s și sosește la 2 min și 35 s. Care este Δt?`, 95 - start, "s", `Momentele sunt ${60 + start} s și 155 s. Calculezi 155 − ${60 + start}.`, [155, 155 + 60 + start, 35 - start]]),
+    numeric(({ start }) => [`Pe o axă, un mobil trece de la x₁ = ${start} m la x₂ = −4 m. Care este Δx = x₂ − x₁?`, -4 - start, "m", "Scazi poziția inițială din cea finală. Semnul minus indică sensul negativ.", [4 + start, start - 4, -4]])
+  ],
+  [
+    numeric(({ start }) => [`Un autobuz circulă cu ${start * 18} km/h. Ce viteză are în m/s?`, start * 5, "m/s", "Împarți viteza în km/h la 3,6.", [start * 18, start * 18 * 3.6, start * 0.5]]),
+    numeric(({ start }) => [`O trotinetă merge cu ${numberFormat.format(start * 1.8)} km/h. Ce viteză are în m/s?`, start / 2, "m/s", "Împarți la 3,6. Echivalent: înmulțești cu 5 și împarți la 18.", [start, start * 1.8, start * 5]]),
+    numeric(({ start }) => [`Un biciclist parcurge ${numberFormat.format(start / 10)} km în 3 min și 20 s. Care este viteza medie în m/s?`, start / 2, "m/s", `Transformi distanța în ${start * 100} m și timpul în 200 s, apoi împarți.`, [start, start / 10, start * 5]]),
+    numeric(({ start }) => [`Un mobil merge ${numberFormat.format(start / 10)} km în 1 min și 40 s. Care este viteza medie în m/s?`, start, "m/s", `Transformi distanța în ${start * 100} m și timpul în 100 s, apoi împarți.`, [start * 100, start * 10, start / 10]]),
+    numeric(({ start }) => [`Un elev merge ${start * 30} m până la poartă în 20 s și revine în 40 s. Ce viteză medie are pe tot traseul?`, start, "m/s", `Distanța totală este ${start * 60} m, iar durata totală este 60 s.`, [0, start * 1.5, start / 2]])
+  ],
+  [
+    numeric(({ start }) => [`Un mobil pleacă de la x₁ = −${start} m și ajunge la x₂ = 5 m. Cât este Δx?`, start + 5, "m", `Scăderea unei poziții negative devine adunare: 5 − (−${start}).`, [5 - start, -start - 5, -start]]),
+    numeric(({ start }) => [`La t₁ = ${start} s, x₁ = 20 m. La t₂ = ${start + 10} s, x₂ = ${20 + start * 5} m. Care este viteza dacă mișcarea este rectilinie uniformă?`, start / 2, "m/s", `Δx = ${start * 5} m și Δt = 10 s. Împarți Δx la Δt.`, [start * 5, (20 + start * 5) / 10, start * 2]]),
+    numeric(({ start }) => [`Un mobil pleacă de la x = 0 m, ajunge la x = ${start} m, apoi revine la x = 1 m. Ce distanță a parcurs?`, 2 * start - 1, "m", `Aduni cele două segmente: ${start} m la dus și ${start - 1} m la întoarcere.`, [1, start, start - 1]]),
+    numeric(({ start }) => [`O mașină merge fără să se întoarcă de la borna de ${numberFormat.format(2 + start / 10)} km la borna de 2 km în 100 s. Care este viteza medie, exprimată în m/s?`, start, "m/s", `Δx = −${start * 100} m. Pe acest traseu direct, distanța este ${start * 100} m. Viteza medie ca distanță ÷ durată este pozitivă.`, [-start, start * 100, start / 10]])
+  ],
+  [
+    numeric(({ start }) => [`O bicicletă trece de la 2 m/s la ${2 + start * 2} m/s în 4 s. Care este accelerația medie?`, start / 2, "m/s²", `Δv = ${2 + start * 2} − 2 m/s. Împarți Δv la 4 s.`, [(2 + start * 2) / 4, -start / 2, start * 2]]),
+    numeric(({ start }) => [`Un cărucior are viteza ${start + 2} m/s la t₁ = 3 s și viteza 2 m/s la t₂ = 13 s. Care este accelerația medie, cu sensul mișcării ales pozitiv?`, -start / 10, "m/s²", `Δt = 13 − 3 = 10 s, iar Δv = 2 − ${start + 2} = −${start} m/s.`, [start / 10, -(start + 2) / 10, 0]]),
+    numeric(({ start }) => [`Un mobil pornește din repaus și atinge ${numberFormat.format(start * 3.6)} km/h în 10 s. Calculează accelerația medie în m/s².`, start / 10, "m/s²", `Mai întâi transformi viteza: împarți la 3,6 și obții ${start} m/s. Apoi împarți la 10 s.`, [start, start * .36, start * 10]])
+  ]
+];
+
+practice.forEach((items, index) => missions[index][1].push(...items));
+
 const game = document.querySelector("#game");
 const keyPrefix = "fizica-galaction:descopera-nota-10:misiunea-";
 const missionHeading = document.querySelector("#mission");
@@ -331,7 +374,8 @@ function startMission(index) {
   } else {
     const [title, items] = missions[index];
     missionHeading.textContent = "Misiunea " + (index + 1) + " · " + title;
-    currentRound = shuffle(items);
+    const firstChallenge = items.length - practice[index].length;
+    currentRound = [...shuffle(items.slice(0, firstChallenge)), ...items.slice(firstChallenge)];
   }
   play(currentRound);
 }

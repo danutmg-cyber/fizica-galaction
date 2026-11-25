@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="ro">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Descoperă nota 10 la interacțiuni</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  min-height: 100vh; margin: 0; padding: clamp(1rem, 5vw, 3rem);
+  color: #f6f8ff; font: 1rem/1.55 system-ui, sans-serif;
+  background: radial-gradient(ellipse at top right, #47387c, transparent 55%), #10152e;
+}
+main, nav { max-width: 53rem; margin: auto; }
+nav { display: flex; align-items: center; justify-content: space-between; gap: .75rem; }
+a { color: #b5f9eb; }
+h1 { max-width: 17ch; margin: 0; font-size: clamp(2rem, 7vw, 4rem); line-height: 1.06; letter-spacing: -.045em; }
+h1 span { color: #6ff1d4; }
+.hero { position: relative; overflow: hidden; padding: clamp(1.25rem, 6vw, 3rem) 0; }
+.hero p { color: #dcd5ff; margin: 0 0 .65rem; font-weight: 700; }
+section { background: #20284b; border: 1px solid #66649b; padding: clamp(1rem, 4vw, 2rem); border-radius: 1.25rem; box-shadow: 0 10px 0 #0b1024; }
+h2 { margin: 0 0 1rem; }
+h3 { font-size: clamp(1.15rem, 4vw, 1.65rem); line-height: 1.3; }
+button { min-height: 44px; padding: .65rem 1rem; font: inherit; font-weight: 700; border-radius: .75rem; border: 1px solid transparent; cursor: pointer; }
+button:focus-visible, a:focus-visible { outline: 3px solid #ffdc83; outline-offset: 3px; }
+.sound { color: #f6f8ff; background: #29264d; border-color: #867eb8; }
+.action { display: block; margin-top: .85rem; color: #102225; background: #6ff1d4; }
+.action:hover { background: #a3ffeb; }
+.choices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+.choice { display: flex; gap: .65rem; align-items: center; text-align: left; color: #fff; background: #303b64; border-color: #777eab; }
+.choice span { background: #161e3e; color: #c4fcf1; border-radius: .45rem; padding: .2rem .55rem; }
+.choice:hover:not(:disabled) { background: #47568d; }
+.choice:disabled { cursor: default; }
+.choice.correct { background: #155743; border-color: #6ff1d4; }
+.choice.wrong { background: #713047; border-color: #ff9ab4; }
+.feedback { padding: .7rem 1rem; background: #161e3e; border-radius: .65rem; }
+.feedback:empty { padding: 0; margin: 0; }
+.step { color: #dedcff; }
+progress { display: block; width: 100%; height: .65rem; accent-color: #6ff1d4; }
+.stars { color: #ffdc83; font-size: 2rem; letter-spacing: .15em; margin: .5rem 0; }
+.rank { padding: .85rem 1rem; margin: 1rem 0; background: #161e3e; border-left: .25rem solid #6ff1d4; border-radius: .65rem; }
+.rank p { margin: 0 0 .4rem; }
+.rank p:last-child { margin-bottom: 0; }
+.encouragement { margin-bottom: 0; color: #b5f9eb; font-weight: 700; }
+@media (max-width: 36rem) { .choices { grid-template-columns: 1fr; } }
+</style>
+<nav aria-label="Navigare joc">
+<a href="./">← Înapoi la capitol</a>
+<button class="sound" id="sound" type="button" aria-pressed="false">Sunet oprit</button>
+</nav>
+<main>
+<header class="hero">
+<p>Fizică · Clasa a VII-a</p>
+<h1>Descoperă <span>nota 10</span> la interacțiuni</h1>
+</header>
+<section aria-labelledby="mission">
+<h2 id="mission">Alege o misiune</h2>
+<div id="game"></div>
+</section>
+</main>
+<script>
+const numberFormat = new Intl.NumberFormat("ro-RO", { maximumFractionDigits: 1 });
+const dataSets = Array.from({ length: 30 }, (_, index) => index + 2);
+
+function numeric(build) {
+  let previous = -1;
+  return () => {
+    const offset = previous < 0 ? 0 : 1;
+    const index = (previous + 1 + Math.floor(Math.random() * (dataSets.length - offset))) % dataSets.length;
+    previous = index;
+    const [prompt, result, unit, explanation, alternatives = []] = build(dataSets[index]);
+    const values = [result, ...alternatives, result + 1, result - 1, result + 2, result + 3];
+    const choices = [...new Set(values.map(value => format(value, unit)))].slice(0, 4);
+    return [prompt, choices, 0, explanation];
+  };
+}
+
+function format(value, unit) {
+  return unit ? numberFormat.format(value) + " " + unit : numberFormat.format(value);
+}
+
+function shuffle(items) {
+  const copy = [...items];
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const other = Math.floor(Math.random() * (index + 1));
+    [copy[index], copy[other]] = [copy[other], copy[index]];
+  }
+  return copy;
+}
+
+const missions = [
+  ["Interacțiunea și efectele ei", [
+    ["Ce este o interacțiune?",["Acțiunea reciprocă dintre corpuri","Mișcarea unui singur corp","Masa comună a două corpuri","Distanța dintre două corpuri"],0,"Într-o interacțiune, fiecare corp acționează asupra celuilalt."],
+    ["Care este un exemplu de interacțiune la distanță?",["Un magnet atrage o agrafă fără să o atingă","O mână comprimă un burete","O rachetă lovește o minge","O roată apasă pe șosea"],0,"Atracția magnetică se manifestă și fără contact."],
+    ["O minge își schimbă direcția, păstrând valoarea vitezei. Ce efect observi?",["Dinamic","Static","Exclusiv plastic","Niciun efect"],0,"Schimbarea direcției vitezei este o modificare a mișcării."],
+    ["Ce arată că deformarea unui arc este elastică?",["Arcul revine la forma inițială după ce îl eliberezi","Arcul rămâne mai lung","Arcul se rupe","Arcul își schimbă masa"],0,"Deformarea elastică dispare după încetarea acțiunii."],
+    ["Ce tip de deformare observi dacă plastilina își păstrează noua formă?",["Plastică","Elastică","Gravitațională","Magnetică"],0,"Deformarea plastică persistă după încetarea acțiunii."],
+    ["O minge de cauciuc se turtește la impact și ricoșează. Ce efecte observi?",["Static și dinamic","Doar static","Doar dinamic","Niciun efect"],0,"Turtirea este efectul static, iar schimbarea mișcării este efectul dinamic."]
+  ]],
+  ["Forța, măsură a interacțiunii", [
+    ["Cu ce instrument măsori o forță?",["Dinamometru","Balanță","Cronometru","Ruletă"],0,"Dinamometrul indică modulul forței."],
+    ["Care este unitatea SI pentru forță?",["Newtonul (N)","Kilogramul (kg)","Joulul (J)","Pascalul (Pa)"],0,"Forța se măsoară în newtoni."],
+    ["Ce diferență există între două forțe orizontale, una spre dreapta și cealaltă spre stânga?",["Au sensuri opuse","Au direcții perpendiculare","Au obligatoriu module diferite","Au direcții diferite"],0,"Ambele sunt pe direcție orizontală, dar săgețile arată în sensuri opuse."],
+    ["Ce date descriu complet o forță aplicată unui corp?",["Punct de aplicație, direcție, sens și modul","Doar modulul și unitatea","Doar direcția și sensul","Punctul de aplicație și masa"],0,"Locul de aplicare, orientarea și valoarea sunt necesare pentru reprezentare."],
+    numeric(n => [`Transformă ${n * 100} mN în N.`, n / 10, "N", "Împarți valoarea în milinewtoni la 1 000.", [n, n * 10, n * 100]]),
+    numeric(n => [`Transformă ${numberFormat.format(n / 10)} kN în N.`, n * 100, "N", "Înmulțești valoarea în kilonewtoni cu 1 000.", [n, n * 10, n * 1000]]),
+    numeric(n => [`Scara desenului este 1 cm pentru 2 N. Ce modul reprezintă o săgeată de ${numberFormat.format(n / 10)} cm?`, n / 5, "N", "Înmulțești lungimea săgeții cu 2 N pentru fiecare centimetru.", [n / 10, n / 20, n]])
+  ]],
+  ["Principiul inerției", [
+    ["Ce măsoară inerția unui corp?",["Masa","Viteza","Volumul","Accelerația"],0,"La aceeași acțiune, corpul cu masă mai mare își schimbă mai greu mișcarea."],
+    ["Un autobuz frânează brusc. De ce tind pasagerii să se deplaseze spre înainte față de el?",["Corpurile lor tind să își păstreze viteza inițială","Masa lor crește brusc","Greutatea lor devine orizontală","Autobuzul îi atrage magnetic"],0,"Prin inerție, pasagerii tind să continue mișcarea pe care o aveau înainte de frânare."],
+    ["Un corp se deplasează drept cu viteză constantă. Care este rezultanta forțelor într-un reper inerțial?",["Zero","Egală cu greutatea în orice situație","Orientată obligatoriu în sensul vitezei","Din ce în ce mai mare"],0,"Viteza constantă în direcție și sens presupune accelerație nulă."],
+    ["Un corp aflat în repaus este tras cu două forțe opuse egale, iar celelalte forțe se echilibrează. Ce se întâmplă?",["Rămâne în repaus","Pleacă spre dreapta","Pleacă spre stânga","Accelerează vertical"],0,"Rezultanta este nulă, deci corpul își păstrează repausul."],
+    ["Un cărucior gol și unul încărcat primesc aceeași forță rezultantă. Care își schimbă mai greu viteza?",["Cel încărcat","Cel gol","Ambele la fel","Cel care are roțile mai mari, indiferent de masă"],0,"Masa mai mare înseamnă inerție mai mare."],
+    ["Un corp are viteză nenulă, iar rezultanta devine zero. Ce urmează într-un reper inerțial?",["Continuă drept, cu aceeași viteză","Se oprește imediat","Accelerează","Își schimbă sensul"],0,"Pentru a păstra viteza, rezultanta trebuie să fie zero."]
+  ]],
+  ["Principiul fundamental al mecanicii", [
+    ["Ce reprezintă R în relația R = m × a?",["Rezultanta tuturor forțelor asupra corpului","Masa corpului","Viteza corpului","Cea mai mare forță aplicată"],0,"Mai întâi stabilești rezultanta, apoi calculezi accelerația."],
+    ["Un cărucior merge spre dreapta, dar rezultanta este spre stânga. În ce sens este accelerația?",["Spre stânga","Spre dreapta","În sus","Accelerația este zero"],0,"Accelerația are sensul rezultantei, chiar dacă viteza are alt sens."],
+    ["Masa se dublează, iar rezultanta rămâne aceeași. Ce se întâmplă cu accelerația?",["Se înjumătățește","Se dublează","Rămâne aceeași","Devine zero"],0,"Din a = R/m rezultă că accelerația scade când masa crește."],
+    numeric(n => [`Rezultanta asupra unui corp de 2 kg este ${n} N. Calculează accelerația.`, n / 2, "m/s²", "Aplici a = R/m și împarți rezultanta la 2 kg.", [n, n * 2, n + 2]]),
+    numeric(n => [`Un mobil de ${n} kg are accelerația de 2,5 m/s². Care este rezultanta?`, n * 2.5, "N", "Înmulțești masa cu accelerația: R = m × a.", [n / 2.5, n * 2, n * 5]]),
+    numeric(n => [`Un cărucior de 500 g este tras spre dreapta cu ${n + 3} N și spre stânga cu 3 N. Forțele verticale se echilibrează. Care este modulul accelerației?`, n * 2, "m/s²", `Rezultanta este ${n} N, iar 500 g = 0,5 kg. Împarți rezultanta la masă.`, [n, n / 2, (n + 3) * 2]])
+  ]],
+  ["Acțiunea și reacțiunea", [
+    ["Pe ce corpuri acționează forțele unei perechi acțiune–reacțiune?",["Pe două corpuri diferite","Pe același corp","Doar pe corpul mai ușor","Doar pe corpul care se mișcă"],0,"Fiecare corp exercită o forță asupra celuilalt."],
+    ["O mână împinge un perete. Care este reacțiunea?",["Forța peretelui asupra mâinii","Greutatea mâinii","Forța mâinii asupra peretelui","Normala podelei asupra persoanei"],0,"Identifici reacțiunea inversând corpurile asupra cărora se exercită forțele."],
+    ["Cum sunt forțele dintr-o pereche acțiune–reacțiune?",["Egale ca modul, cu aceeași direcție și sensuri opuse","Egale ca modul și cu același sens","Diferite ca modul și perpendiculare","Egale doar dacă masele sunt egale"],0,"Proprietățile perechii se păstrează indiferent de mase."],
+    ["O carte stă pe o masă. De ce greutatea și normala asupra cărții nu formează o pereche acțiune–reacțiune?",["Ambele forțe sunt aplicate cărții","Forțele au sensuri opuse","Forțele au aceeași direcție","Ambele se măsoară în N"],0,"Două forțe ale unei astfel de perechi trebuie să fie aplicate unor corpuri diferite."],
+    ["Un înotător împinge apa înapoi. Ce îl propulsează înainte?",["Forța exercitată de apă asupra înotătorului","Forța înotătorului asupra apei","Greutatea înotătorului","Inerția apei, fără vreo forță asupra înotătorului"],0,"Apa răspunde la împingerea înapoi cu o forță asupra înotătorului orientată înainte."],
+    numeric(n => [`Un corp A exercită asupra lui B o forță de ${numberFormat.format(n / 10)} N. Care este modulul forței exercitate de B asupra lui A?`, n / 10, "N", "Forța pereche are același modul, indiferent de masa corpurilor.", [0, n / 5, n]])
+  ]],
+  ["Forța de greutate", [
+    ["Care este sensul greutății unui corp în apropierea suprafeței Pământului?",["Spre centrul Pământului","În sus, spre cer","Spre dreapta","În sensul vitezei corpului"],0,"Forța gravitațională a Pământului este orientată pe verticala locului, în jos."],
+    ["Ce se întâmplă cu masa și greutatea unui obiect dus într-un loc cu g mai mic?",["Masa rămâne aceeași, greutatea scade","Ambele scad","Masa scade, greutatea rămâne aceeași","Ambele rămân la fel"],0,"Masa obiectului este aceeași, dar în G = m × g valoarea lui g scade."],
+    ["Ce unitate se folosește pentru g în relația G = m × g, dacă masa este în kg și greutatea în N?",["N/kg","kg/N","N","kg"],0,"Raportul dintre greutate și masă se exprimă în newtoni pe kilogram."],
+    numeric(n => [`Un corp are masa de ${n} kg. Calculează greutatea, folosind g = 10 N/kg.`, n * 10, "N", "Aplici G = m × g.", [n, n / 10, n * 100]]),
+    numeric(n => [`Un obiect are masa de ${n * 500} g. Ce greutate are, dacă g = 10 N/kg?`, n * 5, "N", "Împarți masa în grame la 1 000 și apoi o înmulțești cu 10 N/kg.", [n / 2, n * 50, n * 500]]),
+    numeric(n => [`Un corp are greutatea de ${n * 5} N într-un loc unde g = 10 N/kg. Care este masa lui?`, n / 2, "kg", "Împarți G la g pentru a afla masa.", [n * 5, n * 50, n]])
+  ]],
+  ["Apăsarea normală și reacțiunea suportului", [
+    ["Cum este orientată forța normală exercitată de suport?",["Perpendicular pe suprafața de contact","Paralel cu suprafața de contact","Întotdeauna vertical, indiferent de suport","În sensul frecării"],0,"Pe o rampă, normala este perpendiculară pe rampă."],
+    ["Care este perechea de reacțiune a forței suportului asupra unui obiect?",["Forța de apăsare a obiectului asupra suportului","Forța de greutate asupra obiectului","Forța de frecare asupra obiectului","O a doua forță normală aplicată obiectului"],0,"Perechea este aplicată suportului, iar normala este aplicată obiectului."],
+    ["Când este N = G pentru o cutie pe o masă orizontală?",["Când nu există alte forțe verticale și accelerația verticală este zero","Ori de câte ori există contact","Doar când cutia accelerează în sus","Doar când masa este exprimată în grame"],0,"În aceste condiții, normala și greutatea se echilibrează."],
+    ["Ce echilibrează normala unei rampe pentru un corp fără accelerație perpendiculară pe rampă, dacă nu există alte forțe pe acea direcție?",["Componenta greutății perpendiculară pe rampă","Întreaga greutate în orice situație","Componenta greutății paralelă cu rampa","Doar frecarea"],0,"Compari componentele perpendiculare pe plan."],
+    numeric(n => [`O cutie are greutatea de ${n * 5} N. O apeși vertical în jos cu ${n} N, iar cutia rămâne în repaus pe masă. Care este normala?`, n * 6, "N", "Normala echilibrează greutatea și forța suplimentară de apăsare.", [n * 5, n * 4, n]]),
+    numeric(n => [`O cutie are greutatea de ${n * 5} N. O tragi vertical în sus cu ${n} N, fără să o desprinzi de masă. Cutia rămâne în repaus. Care este normala?`, n * 4, "N", "Tracțiunea susține o parte din greutate, deci N = G − F.", [n * 5, n * 6, n]])
+  ]],
+  ["Forța de frecare", [
+    ["Cum este orientată frecarea de alunecare asupra unei cutii care alunecă spre dreapta pe podeaua fixă?",["Spre stânga, paralel cu podeaua","Spre dreapta","În jos, perpendicular pe podea","În sus, perpendicular pe podea"],0,"Frecarea de alunecare se opune alunecării relative."],
+    ["Ce unitate are coeficientul de frecare μ?",["Nu are unitate","N","kg","N/kg"],0,"μ este raportul dintre două forțe și unitățile lor se simplifică."],
+    ["Ce se întâmplă în modelul școlar dacă așezi aceeași cutie pe o față mai lată și o lași să alunece pe același material, cu aceeași normală?",["Forța de frecare rămâne aceeași","Forța de frecare crește proporțional cu aria","Forța de frecare devine zero","Coeficientul crește proporțional cu aria"],0,"Modelul Ff = μ × N nu include aria aparentă de contact."],
+    ["O cutie stă pe loc când o împingi orizontal cu 3 N. Singura altă forță orizontală este frecarea. Cât este frecarea statică?",["3 N, în sens opus împingerii","0 N","3 N, în sensul împingerii","Obligatoriu egală cu forța de frecare la alunecare"],0,"În repaus rezultanta orizontală este zero. Frecarea statică se adaptează până la o limită."],
+    numeric(n => [`O cutie alunecă pe un plan. Normala este ${n * 5} N și μ = 0,3. Care este modulul frecării?`, n * 1.5, "N", "Înmulțești coeficientul cu normala: Ff = μ × N.", [n * 5, n * 3, n * 15]]),
+    numeric(n => [`O cutie alunecă pe podea. Normala este ${n * 10} N, iar frecarea este ${n * (1 + n % 8)} N. Cât este μ?`, (1 + n % 8) / 10, "", "Împarți modulul frecării la normală. Ambele se măsoară în newtoni, deci μ nu are unitate.", [0, 1, 10]]),
+    numeric(n => [`O ladă de 2 kg alunecă pe podea. O tragi orizontal în sensul mișcării cu ${n + 4} N. Cât este accelerația dacă μ = 0,2 și g = 10 N/kg?`, n / 2, "m/s²", `Normala este 20 N, deci frecarea este 4 N. Rămân ${n} N în sensul tracțiunii. Împarți la masa de 2 kg.`, [n, (n + 4) / 2, 0]])
+  ]],
+  ["Tensiunea în fir", [
+    ["În ce direcție acționează tensiunea unui fir întins asupra corpului legat?",["De-a lungul firului","Perpendicular pe fir","Întotdeauna orizontal","În sens opus față de celălalt capăt al firului"],0,"Firul trage corpul către celălalt capăt, pe direcția firului."],
+    ["Ce poate face un fir flexibil întins?",["Poate trage","Poate împinge","Poate trage și împinge la fel","Schimbă masa corpului"],0,"Un fir flexibil transmite o forță de tracțiune."],
+    ["Un corp atârnă în repaus și asupra lui acționează doar greutatea și tensiunea. Cum sunt modulele celor două forțe?",["Egale","Tensiunea e mai mare","Greutatea e mai mare","Ambele sunt zero"],0,"În repaus, rezultanta este zero, deci T = G."],
+    ["Un corp atârnat este ridicat cu accelerație orientată în sus. Cum este tensiunea față de greutate dacă acționează doar aceste două forțe?",["Mai mare","Mai mică","Egală","Tensiunea este zero"],0,"Rezultanta este în sus, deci T − G este pozitiv."],
+    numeric(n => [`Un corp de ${n * 500} g atârnă în repaus de un fir vertical și asupra lui acționează doar tensiunea și greutatea. Cât este tensiunea la g = 10 N/kg?`, n * 5, "N", "Transformi masa în kg, apoi tensiunea este egală cu greutatea.", [n / 2, n * 50, n * 500]]),
+    numeric(n => [`Un corp atârnat de masă ${n} kg este ridicat cu accelerația constantă de 1,5 m/s². Asupra lui acționează doar firul și greutatea. Ce tensiune este în fir la g = 10 N/kg?`, n * 11.5, "N", "Din T − G = m × a rezultă T = m × (g + a).", [n * 10, n * 8.5, n * 1.5]]),
+    numeric(n => [`Un corp de ${n} kg are accelerația verticală de 0,5 m/s² în jos și este tras în sus doar de fir, pe lângă acțiunea greutății. Care este tensiunea la g = 10 N/kg?`, n * 9.5, "N", "Alegi sensul pozitiv în jos: G − T = m × a. Rezultă T = m × (g − a).", [n * 10, n * 10.5, n * 0.5]])
+  ]]
+];
+const basicCounts = [3,3,3,3,3,3,3,3,3];
+
+const game = document.querySelector("#game");
+const keyPrefix = "fizica-galaction:interactiuni-vii:misiunea-";
+const missionHeading = document.querySelector("#mission");
+const soundButton = document.querySelector("#sound");
+const AudioEngine = window.AudioContext || window.webkitAudioContext;
+let audio;
+let soundEnabled = false;
+const tunes = {
+  correct: [523, 659, 784],
+  wrong: [349, 262],
+  win: [523, 659, 784, 1047]
+};
+
+function playSound(cue) {
+  if (!soundEnabled || audio?.state !== "running") return;
+  tunes[cue].forEach((frequency, index) => {
+    const note = audio.createOscillator();
+    const volume = audio.createGain();
+    const start = audio.currentTime + index * .095;
+    note.type = "sine";
+    note.frequency.value = frequency;
+    volume.gain.setValueAtTime(.001, start);
+    volume.gain.exponentialRampToValueAtTime(.085, start + .025);
+    volume.gain.exponentialRampToValueAtTime(.001, start + .15);
+    note.connect(volume).connect(audio.destination);
+    note.start(start);
+    note.stop(start + .16);
+  });
+}
+
+function updateSound(enabled) {
+  soundEnabled = enabled;
+  soundButton.textContent = enabled ? "Sunet pornit" : "Sunet oprit";
+  soundButton.setAttribute("aria-pressed", String(enabled));
+}
+
+if (AudioEngine) {
+  soundButton.onclick = async () => {
+    updateSound(!soundEnabled);
+    if (!soundEnabled) return;
+    try {
+      audio ??= new AudioEngine();
+      await audio.resume();
+      playSound("correct");
+    } catch {
+      updateSound(false);
+    }
+  };
+} else {
+  soundButton.hidden = true;
+}
+const records = Array.from({ length: missions.length + 1 }, (_, index) => {
+  try {
+    const stars = Number(localStorage.getItem(keyPrefix + (index + 1)));
+    return [1, 2, 3].includes(stars) ? stars : 0;
+  } catch { return 0; }
+});
+const ranks = [
+  [0, "Explorator"],
+  [6, "Detectiv al forțelor"],
+  [12, "Pilot de precizie"],
+  [18, "Expert în interacțiuni"],
+  [27, "Maestru al forțelor"]
+];
+let activeMission = 0;
+let currentRound = [];
+
+function add(tag, content, parent = game) {
+  const element = document.createElement(tag);
+  element.textContent = content;
+  parent.append(element);
+  return element;
+}
+
+function action(label, handler) {
+  const button = add("button", label);
+  button.className = "action";
+  button.onclick = handler;
+  return button;
+}
+
+function heading(label) {
+  const element = add("h3", label);
+  element.tabIndex = -1;
+  element.focus();
+}
+
+function showRank() {
+  const missionStars = records.slice(0, missions.length).reduce((total, stars) => total + stars, 0);
+  const champion = missionStars === missions.length * 3 && records[missions.length] === 3;
+  const next = ranks.find(([threshold]) => threshold > missionStars);
+  const [, rank] = ranks.filter(([threshold]) => threshold <= missionStars).at(-1);
+  const panel = add("div", "");
+  panel.className = "rank";
+  add("p", "Rangul tău · " + (champion ? "Campion de nota 10" : rank), panel);
+  add("p", missionStars + "/" + (missions.length * 3) + " stele în misiuni", panel);
+  if (next) add("p", "Încă " + (next[0] - missionStars) + " ★ până la rangul „" + next[1] + "”.", panel);
+  else if (!champion) add("p", "Câștigă trei stele în provocarea finală pentru rangul „Campion de nota 10”.", panel);
+}
+
+function play(round, firstScore = null) {
+  let position = 0;
+  const mistakes = [];
+  function showQuestion() {
+    game.replaceChildren();
+    const question = round[position];
+    const [prompt, choices, correct, explanation] = typeof question === "function" ? question() : question;
+    const order = shuffle(choices.map((_, index) => index));
+    add("p", (firstScore === null ? "Întrebare " : "Reluare ") + (position + 1) + " din " + round.length).className = "step";
+    const progress = add("progress", "");
+    progress.max = round.length;
+    progress.value = position;
+    progress.setAttribute("aria-label", "Întrebări parcurse");
+    heading(prompt);
+    const grid = add("div", "");
+    grid.className = "choices";
+    const buttons = order.map((index, positionInGrid) => {
+      const button = add("button", "", grid);
+      button.className = "choice";
+      add("span", "ABCD"[positionInGrid], button).setAttribute("aria-hidden", "true");
+      button.append(document.createTextNode(choices[index]));
+      button.onclick = () => {
+        buttons.forEach(answer => { answer.disabled = true; });
+        buttons[order.indexOf(correct)].classList.add("correct");
+        progress.value = position + 1;
+        if (index !== correct) {
+          mistakes.push(question);
+          button.classList.add("wrong");
+        }
+        playSound(index === correct ? "correct" : "wrong");
+        feedback.textContent = (index === correct ? "Corect! " : "Răspuns corect: " + choices[correct] + ". ") + explanation;
+        action("Continuă", () => {
+          position += 1;
+          if (position < round.length) showQuestion();
+          else finish(firstScore ?? round.length - mistakes.length, mistakes);
+        }).focus();
+      };
+      return button;
+    });
+    const feedback = add("p", "");
+    feedback.className = "feedback";
+    feedback.setAttribute("role", "status");
+  }
+  showQuestion();
+}
+
+function finish(score, mistakes) {
+  const stars = mistakes.length === 0 ? 3 : score / currentRound.length >= .75 ? 2 : 1;
+  records[activeMission] = Math.max(records[activeMission], stars);
+  try { localStorage.setItem(keyPrefix + (activeMission + 1), String(records[activeMission])); } catch {}
+  game.replaceChildren();
+  heading(stars === 3 ? "Misiune stăpânită!" : "Misiune parcursă");
+  add("div", "★".repeat(stars) + "☆".repeat(3 - stars)).className = "stars";
+  if (stars === 3) playSound("win");
+  add("p", stars + " din 3 stele");
+  add("p", score + " din " + currentRound.length + " răspunsuri corecte din prima încercare.");
+  showRank();
+  if (mistakes.length) action("Reia întrebările greșite", () => play(mistakes, score));
+  action("Joacă din nou", () => startMission(activeMission));
+  action("Alege altă misiune", showMissions);
+  add("p", "Felicitări! Ești tot mai aproape de nota 10").className = "encouragement";
+}
+
+function startMission(index) {
+  activeMission = index;
+  if (index === missions.length) {
+    missionHeading.textContent = "Provocarea de nota 10";
+    currentRound = shuffle(missions.flatMap(([, items]) => shuffle(items).slice(0, 2)));
+  } else {
+    const [title, items] = missions[index];
+    missionHeading.textContent = "Misiunea " + (index + 1) + " · " + title;
+    const firstChallenge = basicCounts[index];
+    currentRound = [...shuffle(items.slice(0, firstChallenge)), ...items.slice(firstChallenge)];
+  }
+  play(currentRound);
+}
+
+function showMissions() {
+  game.replaceChildren();
+  missionHeading.textContent = "Alege o misiune";
+  showRank();
+  add("p", "Câștigi trei stele când rezolvi corect toate întrebările, inclusiv la reluare.");
+  missions.forEach(([title], index) => {
+    const stars = records[index];
+    action((index + 1) + ". " + title + " · " + stars + "/3 stele", () => startMission(index));
+  });
+  if (records.slice(0, missions.length).every(stars => stars === 3)) {
+    action("Provocarea de nota 10 · " + records[missions.length] + "/3 stele", () => startMission(missions.length));
+  } else {
+    add("p", "Provocarea de nota 10 se deblochează când ai câte trei stele la fiecare misiune.");
+  }
+}
+
+showMissions();
+</script>

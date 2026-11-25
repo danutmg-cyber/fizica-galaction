@@ -60,8 +60,103 @@ const questions = [
   ["Autobuzul se îndepărtează de stație. Care este reperul?", ["Stația", "Autobuzul", "Șoferul", "Distanța parcursă"], 0, "Poziția autobuzului este descrisă față de stație."],
   ["Cu ce precizăm unde se află mobilul și la ce moment?", ["Doar cu un ceas", "Doar cu unitatea de lungime", "Cu un reper, axe de coordonate și un ceas", "Doar cu lungimea traiectoriei"], 2, "Reperul și axele ne ajută să precizăm poziția, iar ceasul indică momentul."]
 ];
+const numberFormat = new Intl.NumberFormat("ro-RO", { maximumFractionDigits: 1 });
+const dataSets = Array.from({ length: 30 }, (_, index) => ({
+  tenths: 20 + index * 5,
+  duration: 10 + (index % 6) * 10,
+  start: 2 + index
+}));
+
+function numeric(build) {
+  let previous = -1;
+  return () => {
+    const offset = previous < 0 ? 0 : 1;
+    const index = (previous + 1 + Math.floor(Math.random() * (dataSets.length - offset))) % dataSets.length;
+    previous = index;
+    const [prompt, result, unit, explanation] = build(dataSets[index]);
+    const choices = [result, result + 1, result + 2, result + 3].map(value => format(value, unit));
+    return [prompt, choices, 0, explanation];
+  };
+}
+
+function format(value, unit) {
+  return numberFormat.format(value) + " " + unit;
+}
+
+function shuffle(items) {
+  const copy = [...items];
+  for (let index = copy.length - 1; index > 0; index -= 1) {
+    const other = Math.floor(Math.random() * (index + 1));
+    [copy[index], copy[other]] = [copy[other], copy[index]];
+  }
+  return copy;
+}
+
+const missions = [
+  ["Alege reperul", questions],
+  ["Urmărește traseul", [
+    ["Când este un corp în mișcare față de un reper?", ["Când își schimbă poziția față de reper", "Când are masă mare", "Când reperul este vizibil", "Când poziția rămâne aceeași"], 0, "Mișcarea se stabilește urmărind poziția corpului față de reper."],
+    ["Față de ce este în repaus un copil așezat într-un autobuz în mers?", ["Față de trotuar", "Față de scaunul său", "Față de stație", "Față de un copac de lângă drum"], 1, "Copilul își păstrează poziția față de scaun."],
+    ["Față de ce este în mișcare copilul din autobuz?", ["Față de podeaua autobuzului", "Față de scaun", "Față de un stâlp de pe marginea drumului", "Față de pasagerul așezat lângă el"], 2, "Poziția copilului față de stâlp se schimbă odată cu deplasarea autobuzului."],
+    ["Ce este traiectoria unui mobil?", ["Durata mișcării", "Lungimea totală a drumului", "Viteza la sosire", "Linia formată din pozițiile succesive"], 3, "Traiectoria descrie forma drumului urmat."],
+    ["Ce traiectorie are un lift care urcă vertical față de sol?", ["Un segment vertical", "Un cerc", "O spirală", "Un segment orizontal"], 0, "Pozițiile liftului se află pe o dreaptă verticală."],
+    ["Ce traiectorie are un copil aflat pe un carusel care se rotește complet?", ["Un segment", "Un cerc", "O spirală", "O elipsă"], 1, "Copilul rămâne la aceeași distanță de centrul caruselului."],
+    ["Un copil scapă o minge într-un tren care merge drept cu viteză constantă. Ce vede copilul și ce vede cineva de pe peron?", ["Amândoi văd o dreaptă verticală", "Amândoi văd o dreaptă orizontală", "Copilul vede o dreaptă verticală, iar persoana de pe peron vede o curbă", "Copilul vede o curbă, iar persoana de pe peron vede o dreaptă verticală"], 2, "Față de peron, mingea păstrează și o mișcare orizontală în timp ce cade."]
+  ]],
+  ["Măsoară călătoria", [
+    ["Ce măsoară distanța parcursă?", ["Lungimea drumului urmat", "Durata mișcării", "Viteza finală", "Întotdeauna distanța în linie dreaptă până la destinație"], 0, "Măsurăm întregul drum, inclusiv eventualele întoarceri."],
+    ["Care sunt unitățile SI pentru distanță și durată?", ["km și h", "m și s", "m și min", "cm și s"], 1, "Distanța se exprimă în metri, iar durata în secunde."],
+    numeric(({ start }) => [`Mergi ${start} m până la poartă și revii. Ce distanță parcurgi?`, 2 * start, "m", `Aduni drumul dus și drumul întors: ${start} + ${start} = ${2 * start} m.`]),
+    numeric(({ start, duration }) => [`Cronometrul arată ${start} s la start și ${start + duration} s la sosire. Care este durata?`, duration, "s", `Scazi momentul inițial din cel final: ${start + duration} − ${start} = ${duration} s.`]),
+    numeric(({ start }) => [`Câte secunde înseamnă 2 min și ${start} s?`, 120 + start, "s", `Două minute înseamnă 120 s, la care adaugi ${start} s.`])
+  ]],
+  ["Calculează viteza", [
+    ["Cum calculezi viteza medie?", ["Durata ÷ distanța", "Distanța totală ÷ durata totală", "Distanța × durata", "Media vitezelor de la plecare și sosire"], 1, "Împarți lungimea întregului traseu la timpul total."],
+    ["Care este unitatea SI pentru viteză?", ["m", "m/s²", "m/s", "s/m"], 2, "Viteza exprimă distanța parcursă pe unitatea de timp."],
+    numeric(({ tenths, duration }) => {
+      const distance = tenths * (duration / 10);
+      return [`Parcurgi ${distance} m în ${duration} s. Care este viteza medie?`, tenths / 10, "m/s", `${distance} ÷ ${duration} = ${format(tenths / 10, "m/s")}.`];
+    }),
+    numeric(({ tenths }) => [`Transformă ${format(tenths * 36 / 100, "km/h")} în m/s.`, tenths / 10, "m/s", "Împarți valoarea în km/h la 3,6."]),
+    numeric(({ tenths }) => [`Transformă ${format(tenths / 10, "m/s")} în km/h.`, tenths * 36 / 100, "km/h", "Înmulțești valoarea în m/s cu 3,6."]),
+    numeric(({ tenths, duration }) => {
+      const distance = tenths * (duration / 10 + 1);
+      return [`Parcurgi ${distance} m în ${duration} s de pedalare și faci o pauză de 10 s pe traseu. Care este viteza medie?`, tenths / 10, "m/s", `Incluzi pauza: ${distance} ÷ ${duration + 10} = ${format(tenths / 10, "m/s")}.`];
+    })
+  ]],
+  ["Citește graficul", [
+    ["Cum se deplasează un mobil în mișcare rectilinie uniformă?", ["Pe cerc, cu viteză constantă", "Pe o dreaptă, cu viteză constantă", "Pe o dreaptă, cu viteză tot mai mare", "Pe orice traseu"], 1, "Rectilinie înseamnă în linie dreaptă, iar uniformă înseamnă cu viteză constantă."],
+    numeric(({ tenths, duration }) => [`Un robot merge drept cu ${format(tenths / 10, "m/s")} timp de ${duration} s. Ce distanță parcurge?`, tenths * (duration / 10), "m", "La viteză constantă, distanța este viteza înmulțită cu durata."]),
+    numeric(({ tenths, duration }) => [`Un robot parcurge ${tenths * (duration / 10)} m cu viteza constantă de ${format(tenths / 10, "m/s")}. Cât durează deplasarea?`, duration, "s", "Împarți distanța parcursă la viteză."]),
+    ["Pe ce axă se află timpul într-un grafic poziție–timp?", ["Pe axa orizontală", "Pe axa verticală", "Pe ambele axe", "Pe axa poziției"], 0, "Timpul este variabila reprezentată orizontal."],
+    ["Ce face mobilul când graficul poziție–timp este orizontal?", ["Accelerează", "Încetinește", "Stă pe loc", "Se întoarce"], 2, "Un segment orizontal arată că poziția rămâne constantă."],
+    numeric(({ tenths, duration, start }) => {
+      const end = start + tenths * (duration / 10);
+      return [`În graficul poziție–timp, o dreaptă unește (0 s, ${start} m) cu (${duration} s, ${end} m). Care este viteza?`, tenths / 10, "m/s", `Împarți variația poziției la durată: (${end} − ${start}) ÷ ${duration}.`];
+    }),
+    ["Pe același grafic poziție–timp, care dintre două drepte ascendente indică o viteză mai mare?", ["Cea cu poziția inițială mai mare", "Cea mai apropiată de orizontală", "Ambele indică aceeași viteză", "Cea mai înclinată față de orizontală"], 3, "Pe grafic, într-un timp egal, dreapta mai înclinată urcă mai mult."]
+  ]],
+  ["Pornește și frânează", [
+    ["Ce se întâmplă cu viteza unui trotinist care pornește din repaus și prinde viteză?", ["Crește de la zero", "Scade până la zero", "Rămâne zero", "Este constantă și diferită de zero"], 0, "Pornirea din repaus înseamnă că viteza inițială este zero."],
+    ["Ce valoare are viteza unei biciclete la finalul frânării până la oprire?", ["0 m/s", "1 m/s", "Viteza inițială", "De două ori viteza inițială"], 0, "Un corp oprit are viteza zero."],
+    ["Cum se calculează accelerația medie în mișcare rectilinie?", ["Distanța ÷ durata", "Viteza finală ÷ durata în toate situațiile", "(Viteza inițială − viteza finală) ÷ durata", "(Viteza finală − viteza inițială) ÷ durata"], 3, "Scazi viteza inițială din cea finală și împarți la intervalul de timp."],
+    ["Care este unitatea SI pentru accelerație?", ["m/s", "s/m", "m/s²", "km/h"], 2, "Accelerația exprimă variația vitezei pe secundă."],
+    numeric(({ tenths, start }) => {
+      const seconds = 2 + start % 5;
+      const speed = tenths * seconds / 10;
+      return [`Un cărucior pornește din repaus și atinge ${format(speed, "m/s")} în ${seconds} s. Care este accelerația medie?`, tenths / 10, "m/s²", `Împarți variația vitezei, ${format(speed, "m/s")}, la ${seconds} s.`];
+    }),
+    numeric(({ tenths, start }) => {
+      const seconds = 2 + start % 5;
+      const speed = tenths * seconds / 10;
+      return [`Un cărucior frânează de la ${format(speed, "m/s")} până la oprire în ${seconds} s. Sensul deplasării este pozitiv. Care este accelerația medie?`, -tenths / 10, "m/s²", `Variația vitezei este 0 − ${numberFormat.format(speed)} m/s. Împarți la ${seconds} s.`];
+    }),
+    ["Un tren merge drept cu viteză constantă. Care este accelerația medie?", ["0 m/s²", "1 m/s²", "Egală cu viteza", "Depinde doar de durată"], 0, "Viteza rămâne aceeași, deci variația ei este zero."]
+  ]]
+];
 const game = document.querySelector("#game");
-const key = "fizica-galaction:descopera-nota-10:misiunea-1";
+const keyPrefix = "fizica-galaction:descopera-nota-10:misiunea-";
+const missionHeading = document.querySelector("#mission");
 const soundButton = document.querySelector("#sound");
 const AudioEngine = window.AudioContext || window.webkitAudioContext;
 let audio;
@@ -110,8 +205,11 @@ if (AudioEngine) {
 } else {
   soundButton.hidden = true;
 }
-let best = 0;
-try { best = Number(localStorage.getItem(key)) || 0; } catch {}
+const records = missions.map((_, index) => {
+  try { return Number(localStorage.getItem(keyPrefix + (index + 1))) || 0; } catch { return 0; }
+});
+let activeMission = 0;
+let currentRound = [];
 
 function add(tag, content, parent = game) {
   const element = document.createElement(tag);
@@ -139,7 +237,8 @@ function play(round, firstScore = null) {
   function showQuestion() {
     game.replaceChildren();
     const question = round[position];
-    const [prompt, choices, correct, explanation] = question;
+    const [prompt, choices, correct, explanation] = typeof question === "function" ? question() : question;
+    const order = shuffle(choices.map((_, index) => index));
     add("p", (firstScore === null ? "Întrebare " : "Reluare ") + (position + 1) + " din " + round.length).className = "step";
     const progress = add("progress", "");
     progress.max = round.length;
@@ -148,14 +247,14 @@ function play(round, firstScore = null) {
     heading(prompt);
     const grid = add("div", "");
     grid.className = "choices";
-    const buttons = choices.map((choice, index) => {
+    const buttons = order.map((index, positionInGrid) => {
       const button = add("button", "", grid);
       button.className = "choice";
-      add("span", "ABCD"[index], button).setAttribute("aria-hidden", "true");
-      button.append(document.createTextNode(choice));
+      add("span", "ABCD"[positionInGrid], button).setAttribute("aria-hidden", "true");
+      button.append(document.createTextNode(choices[index]));
       button.onclick = () => {
         buttons.forEach(answer => { answer.disabled = true; });
-        buttons[correct].classList.add("correct");
+        buttons[order.indexOf(correct)].classList.add("correct");
         progress.value = position + 1;
         if (index !== correct) {
           mistakes.push(question);
@@ -179,21 +278,49 @@ function play(round, firstScore = null) {
 }
 
 function finish(score, mistakes) {
-  const stars = mistakes.length === 0 ? 3 : score >= 3 ? 2 : 1;
-  best = Math.max(best, stars);
-  try { localStorage.setItem(key, String(best)); } catch {}
+  const stars = mistakes.length === 0 ? 3 : score / currentRound.length >= .75 ? 2 : 1;
+  if (activeMission < missions.length) {
+    records[activeMission] = Math.max(records[activeMission], stars);
+    try { localStorage.setItem(keyPrefix + (activeMission + 1), String(records[activeMission])); } catch {}
+  }
   game.replaceChildren();
   heading(stars === 3 ? "Misiune stăpânită!" : "Misiune parcursă");
   add("div", "★".repeat(stars) + "☆".repeat(3 - stars)).className = "stars";
   if (stars === 3) playSound("win");
-  add("p", stars + " din 3 stele · Record: " + best + " din 3");
-  add("p", score + " din 4 răspunsuri corecte din prima încercare.");
+  add("p", stars + " din 3 stele");
+  add("p", score + " din " + currentRound.length + " răspunsuri corecte din prima încercare.");
   if (mistakes.length) action("Reia întrebările greșite", () => play(mistakes, score));
-  else action("Joacă din nou", () => play(questions));
+  action("Joacă din nou", () => startMission(activeMission));
+  action("Alege altă misiune", showMissions);
 }
 
-add("p", "Câștigi trei stele când răspunzi corect la toate cele patru întrebări, inclusiv la reluare.");
-if (best) add("p", "Recordul tău: " + best + " din 3 stele");
-action("Începe misiunea", () => play(questions));
-</script>
+function startMission(index) {
+  activeMission = index;
+  if (index === missions.length) {
+    missionHeading.textContent = "Provocarea de nota 10";
+    currentRound = shuffle(missions.flatMap(([, items]) => shuffle(items).slice(0, 2)));
+  } else {
+    const [title, items] = missions[index];
+    missionHeading.textContent = "Misiunea " + (index + 1) + " · " + title;
+    currentRound = shuffle(items);
+  }
+  play(currentRound);
+}
 
+function showMissions() {
+  game.replaceChildren();
+  missionHeading.textContent = "Alege o misiune";
+  add("p", "Câștigi trei stele când rezolvi corect toate întrebările, inclusiv la reluare.");
+  missions.forEach(([title], index) => {
+    const stars = records[index];
+    action((index + 1) + ". " + title + " · " + stars + "/3 stele", () => startMission(index));
+  });
+  if (records.every(stars => stars === 3)) {
+    action("Provocarea de nota 10", () => startMission(missions.length));
+  } else {
+    add("p", "Provocarea de nota 10 se deblochează când ai câte trei stele la fiecare misiune.");
+  }
+}
+
+showMissions();
+</script>
